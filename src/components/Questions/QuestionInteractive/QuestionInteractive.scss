@@ -1,0 +1,13 @@
+.interactive-container {
+  overflow: hidden;
+  &:after {
+    clear:both;
+  }
+  > .left-column {
+    float: left;
+  }
+  > .right-column {
+    margin-left: 25px;
+    float: left;
+  }
+}
