@@ -1,3 +1,16 @@
+@import '../../styles/variables';
+
+.header {
+	height: 65px;
+	background-color: $header-bg-color;
+	border-bottom: 1px solid $border-color;
+	z-index: 400;
+	position: relative;
+}
+.saveLink {
+	float: right;
+	margin: 40px 30px 0;
+}
 .activeRoute {
   font-weight: bold;
   text-decoration: underline;
