@@ -11,9 +11,9 @@ class LearnMoreSection extends Component {
   render() {
     return (
       <section className={styles.learnMoreSection}>
-        <div>The World's most sequre application platform</div>
-          <div><FaLock size={20}/></div>
-          <div><Link to="#">Learn More</Link></div>
+        <div>The World's most secure application platform</div>
+        <div><FaLock size={24}/></div>
+        <div><Link to="#">Learn More</Link></div>
       </section>
     )
   }
