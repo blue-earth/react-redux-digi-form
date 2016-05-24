@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 
 
 var testData = {
-isRequired: false,
+    isRequired: false,
     isFocused: true,
     isDisabled: false,
     errorText: 'error text',
