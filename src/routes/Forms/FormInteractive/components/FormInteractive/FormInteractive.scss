@@ -1,0 +1,18 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+.flowLine {
+  @media only screen and (min-width: $md-min-width) {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    z-index: 100;
+    border-right: 1px solid $border-color;
+    border-left: 1px solid $border-color;
+    height: 100%;
+    margin-left: -($md-min-width / 2 - $md-container-width / 6 - 15);
+  }
+  @media only screen and (min-width: $lg-min-width) {
+    margin-left: -($lg-min-width / 2 - $lg-container-width / 6 - 15);
+  }
+}
