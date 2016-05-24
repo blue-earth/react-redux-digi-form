@@ -2,17 +2,14 @@ import QuestionInteractive from '../QuestionInteractive.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-
-
-
 var AllQuestionTypes = React.createClass({
   render: function() {
     return (
       <div>
         {
-          this.props.testingData.map(function(data) {
+          this.props.testingData.map(function(data, i) {
             return (
-                <div>
+                <div key={i}>
                     <h2>{data.type}</h2>
                     <QuestionInteractive {...data}></QuestionInteractive>
                 </div>
@@ -24,17 +21,12 @@ var AllQuestionTypes = React.createClass({
   }
 });
 
-
-
 var shortTextQuestionData = {
     questionInstruction: 'What is your First Name?',
     questionDescription: 'The first name on your passport',
     type: 'ShortText',
     isRequired: true
 };
-
-
-
 
 var mcQuestionData1 = {
     questionInstruction: 'What is the value of yoru savings and investments?',
@@ -56,6 +48,4 @@ var allQuestionsData = [
     mcQuestionData1
 ]
 
-
-ReactDOM.render(<AllQuestionTypes testingData={allQuestionsData} />,
-    document.getElementById('root'));
+ReactDOM.render(<AllQuestionTypes testingData={allQuestionsData} />, document.getElementById('root'));
