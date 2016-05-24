@@ -18,8 +18,7 @@ var testData = {
     {
         text: 'Second Selection',
         label: 'B'
-    }
-    ]
+    }]
 };
 
 const test1 = (
