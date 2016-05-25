@@ -1,8 +1,8 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
-import styles from './TextInput.scss';
+import styles from './TextInputShort.scss';
 
-class TextInput extends React.Component {
+class TextInputShort extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
@@ -27,7 +27,7 @@ class TextInput extends React.Component {
               styleName="text-input"
               min={props.minVal}
               max={props.maxVal}
-              type={props.type}
+              type="text"
               placeholder={props.placeholderText}
               {...optionals}
           />
@@ -35,7 +35,7 @@ class TextInput extends React.Component {
   }
 }
 
-TextInput.propTypes = {
+TextInputShort.propTypes = {
     isRequired: React.PropTypes.bool.isRequired,
     isFocused: React.PropTypes.bool,
     isDisabled: React.PropTypes.bool,
@@ -43,24 +43,22 @@ TextInput.propTypes = {
     placeholderText: React.PropTypes.string,
     initialValue: React.PropTypes.string,
     fullWidth: React.PropTypes.bool,
-    type: React.PropTypes.string,
     minVal: React.PropTypes.number.isRequired,
     maxVal: React.PropTypes.number.isRequired
 };
 
-TextInput.defaultProps = {
+TextInputShort.defaultProps = {
     isRequired: true,
     isFocused: true,
     isDisabled: false,
     placeholderText: '',
     initialValue: '',
     fullWidth: false,
-    type: 'text',
     minVal: 2,
     maxVal: 20
 };
 
-export default CSSModules(TextInput, styles);
+export default CSSModules(TextInputShort, styles);
 
 
 

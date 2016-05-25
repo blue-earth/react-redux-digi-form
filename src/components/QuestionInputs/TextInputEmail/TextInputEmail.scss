@@ -1,0 +1,27 @@
+.text-email {
+  padding: 4px 15px;
+  border: 1px solid #A9A9A9;
+  border-radius: 4px;
+  font-size: 20px;
+  height: 54px;
+  width: 389px;
+  background: #F8F8F8;
+}
+
+.text-email:hover, .text-email:active, .text-email:focus {
+  border: 1px solid #A3A3A3;
+  outline: none;
+}
+
+.email-desc {
+  background: #C3EEF8;
+  border-radius: 3px;
+  padding-top: 5px;
+  padding-left: 2px;
+  padding-bottom: 5px;
+  > span {
+    background: #ffffff;
+    border-radius: 3px;
+    padding: 3px 3px;
+  }
+}

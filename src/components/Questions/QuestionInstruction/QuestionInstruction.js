@@ -19,7 +19,7 @@ class QuestionDisplay extends React.Component {
         var itemTemplate = () => {
             return (
                 <div styleName="instruction-text-wrapper">
-                    <span styleName="text">{this.compileInstruction()}</span> {this.props.isRequired && isRequired}
+                    <span styleName="text">{this.compileInstruction()}</span> {isRequired}
                 </div>
             )
         };

@@ -1,7 +1,8 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
 import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js';
-import TextInput from '../../QuestionInputs/TextInput/TextInput.js';
+import TextInputShort from '../../QuestionInputs/TextInputShort/TextInputShort.js';
+import TextInputEmail from '../../QuestionInputs/TextInputEmail/TextInputEmail.js';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js';
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js';
 import styles from './QuestionInteractive.scss';
@@ -32,10 +33,13 @@ class QuestionInteractive extends React.Component {
 
         switch (this.props.type) {
             case 'ShortText':
-                ChildComponent = TextInput;
+                ChildComponent = TextInputShort;
                 break;
             case 'MultipleChoice':
                 ChildComponent = MultipleChoice;
+                break;
+            case 'Email':
+                ChildComponent = TextInputEmail;
                 break;
         }
 
