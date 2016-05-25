@@ -25,7 +25,14 @@ var firstNameData = {
     questionInstruction: 'What is your First Name?',
     questionDescription: 'The first name on your passport',
     type: 'ShortText',
-    placeholderText: 'This is short text'
+    placeholderText: 'Please enter First Name'
+};
+
+var companyABNData = {
+    questionInstruction: 'What is the companies ABN?',
+    questionDescription: 'Don\'t know, <a href="#">search on the ABR</a> or check your Trust Deed',
+    type: 'ShortText',
+    placeholderText: 'Please enter companies ABN'
 };
 
 var mcQuestionData1 = {
@@ -45,6 +52,7 @@ var mcQuestionData1 = {
 
 var allQuestionsData = [
     firstNameData,
+    companyABNData,
     mcQuestionData1
 ]
 

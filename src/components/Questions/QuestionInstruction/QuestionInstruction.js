@@ -24,7 +24,7 @@ class QuestionDisplay extends React.Component {
             )
         };
 
-        var ItemTemplate = CSSModules(itemTemplate, styles);
+        var ItemTemplate = CSSModules(itemTemplate, this.props.styles);
 
         return <ItemTemplate />;
     }
@@ -40,7 +40,7 @@ class QuestionDisplay extends React.Component {
                 )
             };
 
-            var ItemTemplate = CSSModules(itemTemplate, styles);
+            var ItemTemplate = CSSModules(itemTemplate, this.props.styles);
 
             return <ItemTemplate />;
         }

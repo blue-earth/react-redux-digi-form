@@ -44,7 +44,7 @@ class QuestionInteractive extends React.Component {
         };
 
         var BoundChildComponent =
-            CSSModules(childComponentTemplate, styles);
+            CSSModules(childComponentTemplate, this.props.styles);
 
         return (
             <div styleName="interactive-container">
