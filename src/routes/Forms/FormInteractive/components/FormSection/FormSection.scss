@@ -1,30 +1,41 @@
 @import '../../../../../styles/mixins';
 @import '../../../../../styles/variables';
 
+$items-v-padding:           5px;
+$items-active-v-padding:    40px;
+$nav-hover-color:           #000;
 .formSection {
   background-color: #fefefe;
   position: relative;
   &.active {
-    border-bottom: 2px solid $border-color;
     background-color: $bg-color1;
     .formSectionInner {
-      padding: 65px 60px 130px;
+      @media (min-width: $md-min-width) {
+        padding-top: 25 + $items-active-v-padding;
+        padding-bottom: $items-active-v-padding;
+      }
     }
     .step {
       width: 72px;
       height: 72px;
       line-height: 70px;
       font-size: 16px;
-      top: 40px;
+      top: $items-active-v-padding;
       left: -36px;
     }
     .formSectionTitle {
       color: $text-color;
+      text-transform: uppercase;
+    }
+  }
+  &.pending {
+    .formSectionTitle {
+      color: $text-light-color;
     }
   }
 }
 .formSectionInner {
-  padding: 10px 60px;
+  padding: $items-v-padding 0;
 }
 .step {
   background-color: $bg-color2;
@@ -35,7 +46,7 @@
   border: 1px solid $border-color;
   color: $text-color;
   position: absolute;
-  top: 10px;
+  top: $items-v-padding;
   left: -12px;
   width: 25px;
   height: 25px;
@@ -49,7 +60,6 @@
   color: #70C175;
 }
 .formSectionTitle {
-  text-transform: uppercase;
   color: $text-dark-color;
   margin: 0;
   font-size: 18px;
@@ -59,4 +69,33 @@
 .formSectionEdit {
   margin-left: 20px;
   text-transform: none;
+}
+.navButtonsWrapper {
+  text-align: right;
+  list-style: none;
+  margin: 15px 0 0 0;
+  @include clearfix;
+  li {
+    padding: 0;
+    display: inline-block;
+    margin: 0 5px;
+  }
+}
+.navButton {
+  border: 1px solid $border-color;
+  @include border-radius(3px);
+  display: inline-block;
+  text-align: center;
+  color: $text-color;
+  width: 40px;
+  height: 35px;
+  line-height: 33px;
+  opacity: .8;
+  @include transition(all .2s);
+  &:hover, &:focus {
+    opacity: 1;
+    background-color: $bg-color2;
+    border-color: $nav-hover-color;
+    color: $nav-hover-color;
+  }
 }

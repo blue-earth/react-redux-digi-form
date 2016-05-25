@@ -10,9 +10,24 @@
     border-right: 1px solid $border-color;
     border-left: 1px solid $border-color;
     height: 100%;
-    margin-left: -($md-min-width / 2 - $md-container-width / 6 - 15);
+    margin-left: -($md-min-width / 2 - $md-container-width / 6 - 10);
   }
   @media only screen and (min-width: $lg-min-width) {
     margin-left: -($lg-min-width / 2 - $lg-container-width / 6 - 15);
   }
+}
+
+.hrLine {
+  border-top: 2px solid $border-color;
+  margin: 15px 0;
+}
+
+.stepsWrapper {
+  padding: 15px 0;
+}
+.nextSectionTitle {
+  font-size: 18px;
+  text-transform: uppercase;
+  color: $text-color;
+  font-weight: 400;
 }

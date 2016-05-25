@@ -1,0 +1,8 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+.formRow {
+  @media (min-width: $md-min-width) {
+    padding-left: 60px;
+  }
+}

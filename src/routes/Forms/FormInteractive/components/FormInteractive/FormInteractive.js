@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import FormHeader from 'components/FormHeader'
 import FormSection from '../FormSection/FormSection'
+import FormRow from '../FormRow/FormRow'
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection'
 import styles from './FormInteractive.scss'
 
@@ -34,16 +35,34 @@ class FormInteractive extends Component {
     super(props);
   }
 
+  get renderFormSteps() {
+    return (
+      <div className={styles.stepsWrapper}>
+        <FormSection status='completed' step={1} totalSteps={5} questions={allQuestionsData} />
+        <FormSection status='completed' step={1} totalSteps={5} questions={allQuestionsData} />
+        
+        <hr className={styles.hrLine} />
+        
+        <FormSection status='active' step={2} totalSteps={5} questions={allQuestionsData} />
+        
+        <hr className={styles.hrLine} />
+        <FormRow>
+          <LearnMoreSection />
+          <h2 className={styles.nextSectionTitle}>Next Sections</h2>
+        </FormRow>
+
+        <FormSection step={3} totalSteps={5} />
+        <FormSection step={4} totalSteps={5} />
+      </div>
+    )
+  }
   render() {
     return (
       <div>
         <FormHeader />
-        { /*<h4>FormInteractive! page id {this.props.params.id}</h4> */}
         <div className={styles.flowLine}></div>
-        <FormSection status='answered' step={1} totalSteps={5} questions={allQuestionsData} />
-        <FormSection status='active' step={2} totalSteps={5} questions={allQuestionsData} />
-        <LearnMoreSection />
-        <FormSection step={3} totalSteps={5} />
+        { this.renderFormSteps }
+        { /* <h4>FormInteractive! page id {this.props.params.id}</h4> */ }
       </div>
     )
   }

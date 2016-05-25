@@ -1,14 +1,14 @@
 import React, { Component, PropTypes } from 'react'
-import { Col, Row } from 'react-bootstrap'
 import { Link } from 'react-router'
-import { MdCheck } from 'react-icons/lib/md'
+import { MdCheck, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib/md'
 import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive'
+import FormRow from '../FormRow/FormRow'
 import styles from './FormSection.scss'
 
 class FormSection extends Component {
 
   static propTypes = {
-    status: React.PropTypes.oneOf(['pending', 'active', 'answered']),
+    status: React.PropTypes.oneOf(['pending', 'active', 'completed']),
     sectionTitle: React.PropTypes.string,
     step: PropTypes.oneOfType([
       React.PropTypes.string,
@@ -59,22 +59,21 @@ class FormSection extends Component {
     const { step, totalSteps, sectionTitle } = this.props
     return (
       <section className={`${styles.formSection} ${styles.active}`}>
-        <div className="container">
-          <Row>
-            <Col xs={10} xsOffset={2}>
-              <div className={styles.step}>
-                { `${step} of ${totalSteps}` }
-              </div>
-              <div className={styles.formSectionInner}>
-                <h3 className={styles.formSectionTitle}>
-                  {sectionTitle}
-                  <Link to="#" className={styles.formSectionEdit}>Edit</Link>
-                </h3>
-                {this.renderAllQuestions}
-              </div>
-            </Col>
-          </Row>
-        </div>
+        <FormRow>
+          <div className={styles.step}>
+            { `${step} of ${totalSteps}` }
+          </div>
+          <div className={styles.formSectionInner}>
+            <h3 className={styles.formSectionTitle}>
+              {sectionTitle}
+            </h3>
+            {this.renderAllQuestions}
+          </div>
+          <ul className={styles.navButtonsWrapper}>
+            <li><Link className={styles.navButton} to="#"><MdKeyboardArrowUp size="24" /></Link></li>
+            <li><Link className={styles.navButton} to="#"><MdKeyboardArrowDown size="24" /></Link></li>
+          </ul>
+        </FormRow>
       </section>
     )
   }
@@ -83,41 +82,37 @@ class FormSection extends Component {
     const { step, totalSteps, sectionTitle } = this.props
     return (
       <section className={`${styles.formSection} ${styles.pending}`}>
-        <div className="container">
-          <Row>
-            <Col xs={10} xsOffset={2}>
-              <div className={styles.step}>
-                { step }
-              </div>
-              <div className={styles.formSectionInner}>
-                <h3 className={styles.formSectionTitle}>{sectionTitle}</h3>
-              </div>
-            </Col>
-          </Row>
-        </div>
+        <FormRow>
+          <div className={styles.step}>
+            { step }
+          </div>
+          <div className={styles.formSectionInner}>
+            <h3 className={styles.formSectionTitle}>{sectionTitle}</h3>
+          </div>
+        </FormRow>
       </section>
     )
   }
 
-  get renderAnsweredSection() {
+  get renderCompletedSection() {
     const { step, totalSteps, sectionTitle } = this.props
     return (
-      <section className={`${styles.formSection} ${styles.answered}`}>
-        <div className="container">
-          <Row>
-            <Col xs={10} xsOffset={2}>
-              <div className={styles.step}>
-                <MdCheck className={styles.greenIcon} />
-              </div>
-              <div className={styles.formSectionInner}>
-                <h3 className={styles.formSectionTitle}>{sectionTitle}</h3>
-              </div>
-            </Col>
-          </Row>
-        </div>
+      <section className={`${styles.formSection} ${styles.completed}`}>
+        <FormRow>
+          <div className={styles.step}>
+            <Link to="#"><MdCheck className={styles.greenIcon} /></Link>
+          </div>
+          <div className={styles.formSectionInner}>
+            <h3 className={styles.formSectionTitle}>
+              {sectionTitle}
+              <Link to="#" className={styles.formSectionEdit}>Edit</Link>
+            </h3>
+          </div>
+        </FormRow>
       </section>
     )
   }
+
   render() {
     const { status } = this.props
     if ( status === 'active' )
@@ -125,7 +120,7 @@ class FormSection extends Component {
     else if ( status === 'pending' )
       return this.renderPendingSection
     else
-      return this.renderAnsweredSection
+      return this.renderCompletedSection
   }
 }
 
