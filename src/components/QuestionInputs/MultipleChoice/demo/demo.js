@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 
 
 var testData = {
-isRequired: false,
+    isRequired: false,
     isFocused: true,
     isDisabled: false,
     errorText: 'error text',
@@ -18,8 +18,7 @@ isRequired: false,
     {
         text: 'Second Selection',
         label: 'B'
-    }
-    ]
+    }]
 };
 
 const test1 = (

@@ -26,6 +26,7 @@ class QuestionInteractive extends React.Component {
             />
         )
     }
+
     renderInteractiveInput() {
         var ChildComponent = '';
 
@@ -72,7 +73,7 @@ QuestionInteractive.propTypes = {
 };
 
 QuestionInteractive.defaultProps = {
-    
+
 };
 
 // export default QuestionInteractive;
