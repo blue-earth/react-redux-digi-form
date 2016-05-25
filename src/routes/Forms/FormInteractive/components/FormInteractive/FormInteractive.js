@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import FormHeader from 'components/FormHeader'
+import { Button } from 'react-bootstrap'
 import FormSection from '../FormSection/FormSection'
 import FormRow from '../FormRow/FormRow'
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection'
@@ -48,11 +49,19 @@ class FormInteractive extends Component {
         <hr className={styles.hrLine} />
         <FormRow>
           <LearnMoreSection />
+        </FormRow>
+        <FormRow>
           <h2 className={styles.nextSectionTitle}>Next Sections</h2>
         </FormRow>
 
         <FormSection step={3} totalSteps={5} />
         <FormSection step={4} totalSteps={5} />
+
+        <FormRow>
+          <div className={styles.helpButtonWrapper}>
+            <Button bsStyle="danger" block>Help</Button>
+          </div>
+        </FormRow>
       </div>
     )
   }
