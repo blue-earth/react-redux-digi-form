@@ -1,0 +1,11 @@
+$lg-min-width:				1200px;
+$md-min-width:				992px;
+$sm-min-width:				768px;
+
+$md-max-width:				$lg-min-width - 1;
+$sm-max-width:				$md-min-width - 1;
+$xs-max-width:				$sm-min-width - 1;
+
+$lg-container-width:	1170px;
+$md-container-width:	970px;
+$sm-container-width:	750px;
