@@ -2,7 +2,7 @@
 @import '../../../../../styles/variables';
 
 .flowLine {
-  @media only screen and (min-width: $md-min-width) {
+  @include media('>=md') {
     position: absolute;
     left: 50%;
     top: 0;
@@ -12,7 +12,7 @@
     height: 100%;
     margin-left: -($md-min-width / 2 - $md-container-width / 6 - 10);
   }
-  @media only screen and (min-width: $lg-min-width) {
+  @include media('>=lg') {
     margin-left: -($lg-min-width / 2 - $lg-container-width / 6 - 15);
   }
 }

@@ -2,7 +2,7 @@
 @import '../../../../../styles/variables';
 
 .formRow {
-  @media (min-width: $md-min-width) {
+  @include media('>=md') {
     padding-left: 60px;
   }
 }

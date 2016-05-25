@@ -10,7 +10,7 @@ $nav-hover-color:           #000;
   &.active {
     background-color: $bg-color1;
     .formSectionInner {
-      @media (min-width: $md-min-width) {
+      @include media('>=md') {
         padding-top: 25 + $items-active-v-padding;
         padding-bottom: $items-active-v-padding;
       }
@@ -52,7 +52,7 @@ $nav-hover-color:           #000;
   height: 25px;
   line-height: 23px;
   font-size: 16px;
-  @media (max-width: $sm-max-width) {
+  @include media('<md') {
     display: none;
   }
 }
