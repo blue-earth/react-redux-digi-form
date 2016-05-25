@@ -21,11 +21,11 @@ var AllQuestionTypes = React.createClass({
   }
 });
 
-var shortTextQuestionData = {
+var firstNameData = {
     questionInstruction: 'What is your First Name?',
     questionDescription: 'The first name on your passport',
     type: 'ShortText',
-    isRequired: true
+    placeholderText: 'This is short text'
 };
 
 var mcQuestionData1 = {
@@ -44,7 +44,7 @@ var mcQuestionData1 = {
 
 
 var allQuestionsData = [
-    shortTextQuestionData,
+    firstNameData,
     mcQuestionData1
 ]
 

@@ -24,19 +24,25 @@ class QuestionDisplay extends React.Component {
             )
         };
 
-        var ItemTemplate = CSSModules(itemTemplate, this.props.styles);
+        var ItemTemplate = CSSModules(itemTemplate, styles);
 
         return <ItemTemplate />;
     }
 
     renderDescription() {
         if (this.props.description) {
-            return (
-                <div
-                    styleName="description-text"
-                    dangerouslySetInnerHTML={{__html: this.props.description}}>
-                </div>
-            );
+            var itemTemplate = () => {
+                return (
+                    <div
+                        styleName="description-text-wrapper"
+                        dangerouslySetInnerHTML={{__html: this.props.description}}>
+                    </div>
+                )
+            };
+
+            var ItemTemplate = CSSModules(itemTemplate, styles);
+
+            return <ItemTemplate />;
         }
     }
 
@@ -55,6 +61,7 @@ class QuestionDisplay extends React.Component {
         return (
             <div styleName="question-container">
                 {this.renderInstruction()}
+                {this.renderDescription()}
             </div>
         )
     }

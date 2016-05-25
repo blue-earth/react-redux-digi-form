@@ -26,6 +26,7 @@ class QuestionInteractive extends React.Component {
             />
         )
     }
+
     renderInteractiveInput() {
         var ChildComponent = '';
 
@@ -43,7 +44,7 @@ class QuestionInteractive extends React.Component {
         };
 
         var BoundChildComponent =
-            CSSModules(childComponentTemplate, this.props.styles);
+            CSSModules(childComponentTemplate, styles);
 
         return (
             <div styleName="interactive-container">
@@ -72,7 +73,7 @@ QuestionInteractive.propTypes = {
 };
 
 QuestionInteractive.defaultProps = {
-    
+
 };
 
 // export default QuestionInteractive;

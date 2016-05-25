@@ -1,13 +1,15 @@
-
 .question-container {
   margin-bottom: 20px;
   > .instruction-text-wrapper {
     > .text {
-      font-family: 'roble_alt_boldbold';
-      font-size: 23px;
+      font-family: 'Open Sans';
+      font-size: 25px;
+      font-weight: bold;
     }
   }
   > .description-text-wrapper {
+    color: #494949;
+    font-size: 19px;
     > .text {
 
     }
@@ -16,3 +18,4 @@
 
   }
 }
+
