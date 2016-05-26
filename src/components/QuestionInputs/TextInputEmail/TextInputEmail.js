@@ -1,9 +1,8 @@
-import React from 'react';
-import CSSModules from 'react-css-modules';
+import React, { Component, PropTypes } from 'react';
 import styles from './TextInputEmail.scss';
 import { Col, Row } from 'react-bootstrap';
 
-class TextInputEmail extends React.Component {
+class TextInputEmail extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,16 +10,33 @@ class TextInputEmail extends React.Component {
     }
   }
 
+  static propTypes = {
+    isRequired: React.PropTypes.bool.isRequired,
+    isFocused: React.PropTypes.bool,
+    isDisabled: React.PropTypes.bool,
+    errorText: React.PropTypes.string,
+    placeholderText: React.PropTypes.string,
+    initialValue: React.PropTypes.string,
+    fullWidth: React.PropTypes.bool
+  };
+
+  static defaultProps = {
+    isRequired: true,
+    isFocused: true,
+    isDisabled: false,
+    placeholderText: 'test@example.com',
+    initialValue: '',
+    fullWidth: false
+  };
+
   renderInstruction() {
-    var itemTemplate = () => {
+    var ItemTemplate = () => {
       return (
-        <div styleName="email-desc">
+        <div className={styles.emailDesc}>
           <span>Please enter a valid email</span>
         </div>
       )
     };
-
-    var ItemTemplate = CSSModules(itemTemplate, this.props.styles);
 
     return <ItemTemplate />;
   }
@@ -42,7 +58,7 @@ class TextInputEmail extends React.Component {
       <div>
         {this.renderInstruction()}
         <input
-            styleName="text-email"
+            className={styles.textEmail}
             type="email"
             placeholder={props.placeholderText}
             {...optionals}
@@ -52,26 +68,7 @@ class TextInputEmail extends React.Component {
   }
 }
 
-TextInputEmail.propTypes = {
-    isRequired: React.PropTypes.bool.isRequired,
-    isFocused: React.PropTypes.bool,
-    isDisabled: React.PropTypes.bool,
-    errorText: React.PropTypes.string,
-    placeholderText: React.PropTypes.string,
-    initialValue: React.PropTypes.string,
-    fullWidth: React.PropTypes.bool
-};
-
-TextInputEmail.defaultProps = {
-    isRequired: true,
-    isFocused: true,
-    isDisabled: false,
-    placeholderText: 'test@example.com',
-    initialValue: '',
-    fullWidth: false
-};
-
-export default CSSModules(TextInputEmail, styles);
+export default TextInputEmail
 
 
 

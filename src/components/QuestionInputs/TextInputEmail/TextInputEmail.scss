@@ -1,19 +1,22 @@
-.text-email {
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.textEmail {
   padding: 4px 15px;
-  border: 1px solid #A9A9A9;
+  border: 1px solid $text-border-color;
   border-radius: 4px;
   font-size: 20px;
   height: 54px;
   width: 389px;
-  background: #F8F8F8;
+  background: $text-bg-color;
 }
 
-.text-email:hover, .text-email:active, .text-email:focus {
-  border: 1px solid #A3A3A3;
+.textEmail:hover, .textEmail:active, .textEmail:focus {
+  border: 1px solid $text-hover-border-color;
   outline: none;
 }
 
-.email-desc {
+.emailDesc {
   background: #C3EEF8;
   border-radius: 3px;
   padding-top: 5px;

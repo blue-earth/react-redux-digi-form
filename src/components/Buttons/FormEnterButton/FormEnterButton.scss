@@ -1,6 +1,9 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
 .form-enter-button {
-  border: 1px solid #C6EFF8;
-  color: #4DCCEB;
+  border: 1px solid $button-border-color;
+  color: $button-color;
   background: #FFFFFF;
   border-radius: 4px;
   cursor: pointer;

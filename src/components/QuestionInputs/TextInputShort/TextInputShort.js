@@ -1,8 +1,30 @@
-import React from 'react';
-import CSSModules from 'react-css-modules';
+import React, { Component, PropTypes } from 'react';
 import styles from './TextInputShort.scss';
 
-class TextInputShort extends React.Component {
+class TextInputShort extends Component {
+  static propTypes = {
+    isRequired: React.PropTypes.bool.isRequired,
+    isFocused: React.PropTypes.bool,
+    isDisabled: React.PropTypes.bool,
+    errorText: React.PropTypes.string,
+    placeholderText: React.PropTypes.string,
+    initialValue: React.PropTypes.string,
+    fullWidth: React.PropTypes.bool,
+    minVal: React.PropTypes.number.isRequired,
+    maxVal: React.PropTypes.number.isRequired
+  };
+
+  static defaultProps = {
+      isRequired: true,
+      isFocused: true,
+      isDisabled: false,
+      placeholderText: '',
+      initialValue: '',
+      fullWidth: false,
+      minVal: 2,
+      maxVal: 20
+  };
+
   constructor(props) {
       super(props);
       this.state = {
@@ -24,7 +46,7 @@ class TextInputShort extends React.Component {
       }
       return (
           <input
-              styleName="text-input"
+              className={styles.textInput}
               min={props.minVal}
               max={props.maxVal}
               type="text"
@@ -35,30 +57,9 @@ class TextInputShort extends React.Component {
   }
 }
 
-TextInputShort.propTypes = {
-    isRequired: React.PropTypes.bool.isRequired,
-    isFocused: React.PropTypes.bool,
-    isDisabled: React.PropTypes.bool,
-    errorText: React.PropTypes.string,
-    placeholderText: React.PropTypes.string,
-    initialValue: React.PropTypes.string,
-    fullWidth: React.PropTypes.bool,
-    minVal: React.PropTypes.number.isRequired,
-    maxVal: React.PropTypes.number.isRequired
-};
 
-TextInputShort.defaultProps = {
-    isRequired: true,
-    isFocused: true,
-    isDisabled: false,
-    placeholderText: '',
-    initialValue: '',
-    fullWidth: false,
-    minVal: 2,
-    maxVal: 20
-};
 
-export default CSSModules(TextInputShort, styles);
+export default TextInputShort
 
 
 

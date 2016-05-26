@@ -1,14 +1,17 @@
-.text-input {
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.textInput {
   padding: 4px 15px;
-  border: 1px solid #A9A9A9;
+  border: 1px solid $text-border-color;
   border-radius: 4px;
   font-size: 20px;
   height: 54px;
   width: 389px;
-  background: #F8F8F8;
+  background: $text-bg-color;
 }
 
-.text-input:hover, .text-input:active, .text-input:focus {
-  border: 1px solid #A3A3A3;
+.textInput:hover, .textInput:active, .textInput:focus {
+  border: 1px solid $text-hover-border-color;
   outline: none;
 }
