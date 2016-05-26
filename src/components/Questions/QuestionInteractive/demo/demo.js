@@ -42,6 +42,13 @@ var emailData = {
     placeholderText: ''
 };
 
+var longTextData = {
+    questionInstruction: 'Overview',
+    questionDescription: 'This is the overview',
+    type: 'LongText',
+    placeholderText: ''
+}
+
 var mcQuestionData1 = {
     questionInstruction: 'What is the value of yoru savings and investments?',
     questionDescription: null,
@@ -61,6 +68,7 @@ var allQuestionsData = [
     firstNameData,
     companyABNData,
     emailData,
+    longTextData,
     mcQuestionData1
 ]
 

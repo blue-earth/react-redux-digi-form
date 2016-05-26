@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './TextInputShort.scss';
+import styles from './TextInputLong.scss';
 
-class TextInputShort extends Component {
+class TextInputLong extends Component {
   static propTypes = {
     isRequired: React.PropTypes.bool.isRequired,
     isFocused: React.PropTypes.bool,
@@ -11,7 +11,9 @@ class TextInputShort extends Component {
     initialValue: React.PropTypes.string,
     fullWidth: React.PropTypes.bool,
     minVal: React.PropTypes.number.isRequired,
-    maxVal: React.PropTypes.number.isRequired
+    maxVal: React.PropTypes.number.isRequired,
+    rows: React.PropTypes.number,
+    cols: React.PropTypes.number
   };
 
   static defaultProps = {
@@ -22,7 +24,9 @@ class TextInputShort extends Component {
     initialValue: '',
     fullWidth: false,
     minVal: 2,
-    maxVal: 20
+    maxVal: 4096,
+    rows: 4,
+    cols: 50,
   };
 
   constructor(props) {
@@ -45,8 +49,10 @@ class TextInputShort extends Component {
         optionals['required'] = true;
     }
     return (
-      <input
+      <textarea
           className={styles.textInput}
+          rows={props.rows}
+          cols={props.cols}
           minlength={props.minVal}
           maxlength={props.maxVal}
           type="text"
@@ -57,8 +63,7 @@ class TextInputShort extends Component {
   }
 }
 
-
-export default TextInputShort
+export default TextInputLong
 
 
 

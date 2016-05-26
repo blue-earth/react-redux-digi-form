@@ -1,6 +1,7 @@
 import React, { Component, propTypes } from 'react';
 import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js';
 import TextInputShort from '../../QuestionInputs/TextInputShort/TextInputShort.js';
+import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js';
 import TextInputEmail from '../../QuestionInputs/TextInputEmail/TextInputEmail.js';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js';
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js';
@@ -48,12 +49,14 @@ class QuestionInteractive extends Component {
       case 'Email':
         ChildComponent = TextInputEmail;
         break;
+      case 'LongText':
+        ChildComponent = TextInputLong;
+        break;
     }
 
     var ChildComponentTemplate = () => {
       return <ChildComponent {...this.props} />
     };
-
 
     return (
       <div className={styles.interactiveContainer}>
