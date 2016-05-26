@@ -1,7 +1,8 @@
-import React from 'react';
-import CSSModules from 'react-css-modules';
+import React, { Component, propTypes } from 'react';
 import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js';
-import TextInput from '../../QuestionInputs/TextInput/TextInput.js';
+import TextInputShort from '../../QuestionInputs/TextInputShort/TextInputShort.js';
+import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js';
+import TextInputEmail from '../../QuestionInputs/TextInputEmail/TextInputEmail.js';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js';
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js';
 import styles from './QuestionInteractive.scss';
@@ -11,72 +12,75 @@ import styles from './QuestionInteractive.scss';
  *
  */
 
-class QuestionInteractive extends React.Component {
-    constructor(props) {
-        super(props);
+class QuestionInteractive extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  static propTypes = {
+
+  };
+
+  static defaultProps = {
+
+  };
+
+  renderQuestionDisplay() {
+    var props = this.props;
+
+    return (
+      <QuestionInstruction
+        instruction={props.questionInstruction}
+        description={props.questionDescription}
+      />
+    )
+  }
+
+  renderInteractiveInput() {
+    var ChildComponent = '';
+
+    switch (this.props.type) {
+      case 'ShortText':
+        ChildComponent = TextInputShort;
+        break;
+      case 'MultipleChoice':
+        ChildComponent = MultipleChoice;
+        break;
+      case 'Email':
+        ChildComponent = TextInputEmail;
+        break;
+      case 'LongText':
+        ChildComponent = TextInputLong;
+        break;
     }
 
-    renderQuestionDisplay() {
-        var props = this.props;
+    var ChildComponentTemplate = () => {
+      return <ChildComponent {...this.props} />
+    };
 
-        return (
-            <QuestionInstruction
-                instruction={props.questionInstruction}
-                description={props.questionDescription}
-            />
-        )
-    }
+    return (
+      <div className={styles.interactiveContainer}>
+        <div className={styles.leftColumn}>
+          <ChildComponentTemplate />
+        </div>
+        <div className={styles.rightColumn}>
+          <FormEnterButton />
+        </div>
+      </div>
+    );
+  }
 
-    renderInteractiveInput() {
-        var ChildComponent = '';
-
-        switch (this.props.type) {
-            case 'ShortText':
-                ChildComponent = TextInput;
-                break;
-            case 'MultipleChoice':
-                ChildComponent = MultipleChoice;
-                break;
-        }
-
-        var childComponentTemplate = () => {
-            return <ChildComponent {...this.props} />
-        };
-
-        var BoundChildComponent =
-            CSSModules(childComponentTemplate, this.props.styles);
-
-        return (
-            <div styleName="interactive-container">
-                <div styleName="left-column">
-                    <BoundChildComponent />
-                </div>
-                <div styleName="right-column">
-                    <FormEnterButton />
-                </div>
-            </div>
-        );
-    }
-
-    render() {
-        return (
-            <div>
-                {this.renderQuestionDisplay()}
-                {this.renderInteractiveInput()}
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div>
+        {this.renderQuestionDisplay()}
+        {this.renderInteractiveInput()}
+      </div>
+    )
+  }
 }
 
-QuestionInteractive.propTypes = {
+export default QuestionInteractive;
 
-};
-
-QuestionInteractive.defaultProps = {
-
-};
-
-// export default QuestionInteractive;
-export default CSSModules(QuestionInteractive, styles);
 
 

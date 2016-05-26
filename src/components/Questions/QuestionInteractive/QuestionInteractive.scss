@@ -1,12 +1,15 @@
-.interactive-container {
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.interactiveContainer {
   overflow: hidden;
   &:after {
     clear:both;
   }
-  > .left-column {
+  > .leftColumn {
     float: left;
   }
-  > .right-column {
+  > .rightColumn {
     margin-left: 25px;
     float: left;
   }

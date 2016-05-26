@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 class QuestionInteractiveList extends React.Component {
     constructor(props) {
         super(props);

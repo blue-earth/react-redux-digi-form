@@ -1,31 +1,30 @@
-import React from 'react';
-import CSSModules from 'react-css-modules';
+import React, { Component, PropTypes} from 'react';
 import styles from './MultipleChoice.scss';
 
 
-class MultipleChoiceItem extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        var props = this.props;
-        return (
-            <div styleName="choice-item">
-                <label styleName="label">{props.label}</label>
-                <span styleName="text">{props.text}</span>
-            </div>
-        )
-    }
-}
+class MultipleChoiceItem extends Component {
 
+  constructor(props) {
+    super(props);
+  }
 
-MultipleChoiceItem.propTypes = {
+  static propTypes = {
     label: React.PropTypes.string.isRequired,
     text: React.PropTypes.string.isRequired
-};
+  };
 
+  render() {
+    var props = this.props;
+    return (
+      <div className={styles.choiceItem}>
+        <label className={styles.label}>{props.label}</label>
+        <span className={styles.text}>{props.text}</span>
+      </div>
+    )
+  }
+}
 
-export default CSSModules(MultipleChoiceItem, styles);
+export default MultipleChoiceItem
 
 
 

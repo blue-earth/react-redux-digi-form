@@ -35,6 +35,20 @@ var companyABNData = {
     placeholderText: 'Please enter companies ABN'
 };
 
+var emailData = {
+    questionInstruction: 'What is your email address?',
+    questionDescription: '',
+    type: 'Email',
+    placeholderText: ''
+};
+
+var longTextData = {
+    questionInstruction: 'Overview',
+    questionDescription: 'This is the overview',
+    type: 'LongText',
+    placeholderText: ''
+}
+
 var mcQuestionData1 = {
     questionInstruction: 'What is the value of yoru savings and investments?',
     questionDescription: null,
@@ -53,6 +67,8 @@ var mcQuestionData1 = {
 var allQuestionsData = [
     firstNameData,
     companyABNData,
+    emailData,
+    longTextData,
     mcQuestionData1
 ]
 

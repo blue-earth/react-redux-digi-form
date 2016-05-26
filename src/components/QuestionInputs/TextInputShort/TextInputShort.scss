@@ -1,0 +1,17 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.textInput {
+  padding: 4px 15px;
+  border: 1px solid $text-border-color;
+  border-radius: 4px;
+  font-size: 20px;
+  height: 54px;
+  width: 389px;
+  background: $text-bg-color;
+}
+
+.textInput:hover, .textInput:active, .textInput:focus {
+  border: 1px solid $text-hover-border-color;
+  outline: none;
+}

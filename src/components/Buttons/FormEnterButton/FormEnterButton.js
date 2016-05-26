@@ -1,28 +1,25 @@
-import React from 'react';
-import CSSModules from 'react-css-modules';
+import React, { Component, PropTypes } from 'react';
 import styles from './FormEnterButton.scss';
 
 
-class FormEnterButton extends React.Component {
-    constructor(props) {
-        super(props);
+class FormEnterButton extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-    }
-
-    render() {
-        return (
-            <button type="button" styleName="form-enter-button">
-                <div styleName="btn-inner">
-                    <div>press</div>
-                    <div>ENTER</div>
-                </div>
-            </button>
-        )
-    }
+  render() {
+    return (
+      <button type="button" className={styles.formEnterButton}>
+        <div className={styles.btnInner}>
+          <div>press</div>
+          <div>ENTER</div>
+        </div>
+      </button>
+    )
+  }
 }
 
-
-export default CSSModules(FormEnterButton, styles);
+export default FormEnterButton
 
 
 
