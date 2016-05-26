@@ -1,7 +1,7 @@
 @import '../../../styles/mixins';
 @import '../../../styles/variables';
 
-.form-enter-button {
+.formEnterButton {
   border: 1px solid $button-border-color;
   color: $button-color;
   background: #FFFFFF;
@@ -9,7 +9,7 @@
   cursor: pointer;
   width: 89px;
   height: 64px;
-  > .btn-inner {
+  > .btnInner {
     width: 100%;
     height: 100%;
     padding-left: 3px;

@@ -1,36 +1,17 @@
-import React from 'react';
-import CSSModules from 'react-css-modules';
+import React, { Component, PropTypes } from 'react';
 import styles from './MultipleChoice.scss';
 import MultipleChoiceItem from './MultipleChoiceItem.js';
 
+class MultipleChoice extends Component {
 
-
-class MultipleChoice extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            'value': ''
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      'value': ''
     }
+  }
 
-    render() {
-        var props = this.props;
-        var choices = this.props.choices.map(function(item){
-            return <MultipleChoiceItem
-                key={item.label}
-                label={item.label}
-                text={item.text}
-            />
-        });
-        return (
-            <div styleName="choices-container">
-                {choices}
-            </div>
-        )
-    }
-}
-
-MultipleChoice.propTypes = {
+  static propTypes = {
     isRequired: React.PropTypes.bool,
     isFocused: React.PropTypes.bool,
     errorText: React.PropTypes.string,
@@ -38,9 +19,9 @@ MultipleChoice.propTypes = {
     fullWidth: React.PropTypes.bool,
     allowMultiple: React.PropTypes.bool,
     choices: React.PropTypes.array.isRequired
-};
+  };
 
-MultipleChoice.defaultProps = {
+  static defaultProps = {
     isRequired: false,
     isFocused: true,
     isDisabled: false,
@@ -51,15 +32,34 @@ MultipleChoice.defaultProps = {
     choices: [{
         text: 'First Selection',
         label: 'A'
-    },
-    {
-        text: 'Second Selection',
-        label: 'B'
-    }
+      },
+      {
+          text: 'Second Selection',
+          label: 'B'
+      }
     ]
-};
+  };
 
-export default CSSModules(MultipleChoice, styles);
+  render() {
+    var props = this.props;
+
+    var choices = this.props.choices.map(function(item){
+      return <MultipleChoiceItem
+          key={item.label}
+          label={item.label}
+          text={item.text}
+      />
+    });
+
+    return (
+      <div className="choicesContainer">
+        {choices}
+      </div>
+    )
+  }
+}
+
+export default MultipleChoice
 
 
 

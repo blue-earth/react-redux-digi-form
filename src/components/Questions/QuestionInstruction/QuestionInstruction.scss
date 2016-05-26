@@ -1,16 +1,16 @@
 @import '../../../styles/mixins';
 @import '../../../styles/variables';
 
-.question-container {
+.questionContainer {
   margin-bottom: 20px;
-  > .instruction-text-wrapper {
+  > .instructionTextWrapper {
     > .text {
       font-family: 'Open Sans';
       font-size: 25px;
       font-weight: bold;
     }
   }
-  > .description-text-wrapper {
+  > .descriptionTextWrapper {
     color: #494949;
     font-size: 19px;
     > a {
