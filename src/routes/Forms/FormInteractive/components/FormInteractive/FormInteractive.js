@@ -4,47 +4,42 @@ import { Button } from 'react-bootstrap'
 import FormSection from '../FormSection/FormSection'
 import FormRow from '../FormRow/FormRow'
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection'
+import { fetchFormIfNeeded } from 'redux/modules/formInteractive'
 import styles from './FormInteractive.scss'
 
-var shortTextQuestionData = {
-    questionInstruction: 'What is your First Name?',
-    questionDescription: 'The first name on your passport',
-    type: 'ShortText',
-    isRequired: true
-}
-
-var mcQuestionData1 = {
-    questionInstruction: 'What is the value of your savings and investments?',
-    questionDescription: null,
-    type: 'MultipleChoice',
-    choices: [{
-        label: 'A',
-        text: '$1,000,000+'
-    }, {
-        label: 'B',
-        text: '$200k - 900k'
-    }],
-    isRequired: true
-}
-var allQuestionsData = [
-    shortTextQuestionData,
-    mcQuestionData1
-]
-
 class FormInteractive extends Component {
+
   constructor(props) {
     super(props);
   }
 
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+    form: PropTypes.object.isRequired,
+    questionGroups: PropTypes.object.isRequired,
+    isFetching: PropTypes.bool.isRequired,
+    lastUpdated: PropTypes.number,
+    dispatch: PropTypes.func.isRequired
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props
+    let id = this.props.params.id
+    dispatch(fetchFormIfNeeded(id))
+  }
+
   get renderFormSteps() {
+    const { questionGroups } = this.props
+    
+    const questionGroup = typeof questionGroups['0'] !== 'undefined' ? questionGroups[0] : {questions:[], title:''} //temperary;
     return (
       <div className={styles.stepsWrapper}>
-        <FormSection status='completed' step={1} totalSteps={5} questions={allQuestionsData} />
-        <FormSection status='completed' step={1} totalSteps={5} questions={allQuestionsData} />
+        <FormSection status='completed' step={1} totalSteps={5} questionGroup={questionGroup} />
+        <FormSection status='completed' step={1} totalSteps={5} questionGroup={questionGroup} />
         
         <hr className={styles.hrLine} />
         
-        <FormSection status='active' step={2} totalSteps={5} questions={allQuestionsData} />
+        <FormSection status='active' step={2} totalSteps={5} questionGroup={questionGroup} />
         
         <hr className={styles.hrLine} />
         <FormRow>
@@ -71,7 +66,6 @@ class FormInteractive extends Component {
         <FormHeader />
         <div className={styles.flowLine}></div>
         { this.renderFormSteps }
-        { /* <h4>FormInteractive! page id {this.props.params.id}</h4> */ }
       </div>
     )
   }

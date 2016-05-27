@@ -11,7 +11,10 @@ class FormRow extends Component {
   }
 
   static propTypes = {
-    children: PropTypes.object.isRequired
+    children: PropTypes.oneOfType([
+      PropTypes.object.isRequired,
+      PropTypes.array.isRequired
+    ])
   };
 
   render() {

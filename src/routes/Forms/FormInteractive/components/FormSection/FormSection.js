@@ -9,7 +9,6 @@ class FormSection extends Component {
 
   static propTypes = {
     status: React.PropTypes.oneOf(['pending', 'active', 'completed']),
-    sectionTitle: React.PropTypes.string,
     step: PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.number
@@ -18,7 +17,7 @@ class FormSection extends Component {
       React.PropTypes.string,
       React.PropTypes.number
     ]),
-    questions: PropTypes.array,
+    questionGroup: PropTypes.object,
     logics: PropTypes.array
   }
 
@@ -30,21 +29,24 @@ class FormSection extends Component {
     status: 'pending',
     step: 1,
     totalSteps: 1,
-    sectionTitle: 'Basic Details'
+    questionGroup: {
+      title: 'Basic Details',
+      questions: []
+    }
   }
   
   get renderAllQuestions() {
-    const questions = this.props.questions
+    const { questionGroup: {questions} } = this.props
     if (questions) {
       return (
         <div>
           {
             questions.map(function(data, i) {
               return (
-                  <div key={i}>
-                      <h2>{data.type}</h2>
-                      <QuestionInteractive {...data}></QuestionInteractive>
-                  </div>
+                <div key={i}>
+                    <h2>{data.type}</h2>
+                    <QuestionInteractive {...data}></QuestionInteractive>
+                </div>
               )
             })
           }
@@ -56,7 +58,7 @@ class FormSection extends Component {
   }
 
   get renderActiveSection() {
-    const { step, totalSteps, sectionTitle } = this.props
+    const { step, totalSteps, sectionTitle, questionGroup } = this.props
     return (
       <section className={`${styles.formSection} ${styles.active}`}>
         <FormRow>
@@ -65,7 +67,7 @@ class FormSection extends Component {
           </div>
           <div className={styles.formSectionInner}>
             <h3 className={styles.formSectionTitle}>
-              {sectionTitle}
+              {questionGroup.title}
             </h3>
             {this.renderAllQuestions}
           </div>
@@ -79,7 +81,7 @@ class FormSection extends Component {
   }
 
   get renderPendingSection() {
-    const { step, totalSteps, sectionTitle } = this.props
+    const { step, totalSteps, questionGroup } = this.props
     return (
       <section className={`${styles.formSection} ${styles.pending}`}>
         <FormRow>
@@ -87,7 +89,7 @@ class FormSection extends Component {
             { step }
           </div>
           <div className={styles.formSectionInner}>
-            <h3 className={styles.formSectionTitle}>{sectionTitle}</h3>
+            <h3 className={styles.formSectionTitle}>{questionGroup.title}</h3>
           </div>
         </FormRow>
       </section>
@@ -95,7 +97,7 @@ class FormSection extends Component {
   }
 
   get renderCompletedSection() {
-    const { step, totalSteps, sectionTitle } = this.props
+    const { step, totalSteps, questionGroup } = this.props
     return (
       <section className={`${styles.formSection} ${styles.completed}`}>
         <FormRow>
@@ -104,7 +106,7 @@ class FormSection extends Component {
           </div>
           <div className={styles.formSectionInner}>
             <h3 className={styles.formSectionTitle}>
-              {sectionTitle}
+              {questionGroup.title}
               <Link to="#" className={styles.formSectionEdit}>Edit</Link>
             </h3>
           </div>

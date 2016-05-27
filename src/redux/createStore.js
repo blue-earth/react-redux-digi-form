@@ -1,5 +1,8 @@
 import { applyMiddleware, compose, createStore } from 'redux'
 import { routerMiddleware } from 'react-router-redux'
+import effects from 'redux-effects'
+import fetch, { fetchEncodeJSON } from 'redux-effects-fetch'
+import localstorage from 'redux-effects-localstorage'
 import thunk from 'redux-thunk'
 import makeRootReducer from './reducers'
 
@@ -7,7 +10,14 @@ export default (initialState = {}, history) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk, routerMiddleware(history)]
+  const middleware = [
+    effects,
+    fetch,
+    fetchEncodeJSON,
+    localstorage(window.localStorage),
+    thunk,
+    routerMiddleware(history)
+  ]
 
   // ======================================================
   // Store Enhancers
