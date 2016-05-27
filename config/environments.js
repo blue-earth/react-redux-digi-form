@@ -16,6 +16,10 @@ export default {
         host: 'http://localhost:8000',
         match: /^\/api\/.*/
       }
+    },
+    globals: {
+      ...config.globals,
+      API_URL: JSON.stringify('http://localhost')
     }
   }),
 
@@ -31,6 +35,10 @@ export default {
       chunks: true,
       chunkModules: true,
       colors: true
+    },
+    globals: {
+      ...config.globals,
+      API_URL: JSON.stringify('https://api.emondo.com.au')
     }
   })
 }
