@@ -22,7 +22,8 @@ export const INIT_FORM_STATE = {
     logics:[]
   },
   currentQuestionId: 0,
-  answers: []
+  answers: [],
+  primaryColor: '#DD4814'
 }
 // ------------------------------------
 // Actions
@@ -151,7 +152,8 @@ export default function formInteractive(state = INIT_FORM_STATE, action) {
         form: action.form,
         lastUpdated: action.receivedAt,
         isFetching: false,
-        currentQuestionId: action.currentQuestionId
+        currentQuestionId: action.currentQuestionId,
+        // primaryColor: action.primaryColor
       })
     case REQUEST_FORM:
       return Object.assign({}, state, {

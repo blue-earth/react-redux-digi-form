@@ -19,6 +19,7 @@ class FormInteractive extends Component {
     isFetching: PropTypes.bool.isRequired,
     lastUpdated: PropTypes.number,
     currentQuestionId: PropTypes.number.isRequired,
+    primaryColor: PropTypes.string,
     prevQuestion: PropTypes.func.isRequired,
     nextQuestion: PropTypes.func.isRequired,
     fetchFormIfNeeded: PropTypes.func.isRequired
@@ -31,10 +32,10 @@ class FormInteractive extends Component {
   }
 
   sectionStatus(allQuestions, currentQuestionId, questionGroup) {
-    const groupQuestions = questionGroup.questions
+    const gq = questionGroup.questions
     const curQueIdx = getQuestionIndexWithId(allQuestions, currentQuestionId)
-    const firstGroupIdx = getQuestionIndexWithId(allQuestions, groupQuestions[0].id)
-    const lastGroupIdx = getQuestionIndexWithId(allQuestions, groupQuestions[groupQuestions.length - 1].id)
+    const firstGroupIdx = getQuestionIndexWithId(allQuestions, gq[0].id)
+    const lastGroupIdx = getQuestionIndexWithId(allQuestions, gq[gq.length - 1].id)
 
     if (curQueIdx < firstGroupIdx) return 'pending'
     else if (curQueIdx <= lastGroupIdx) return 'active'
@@ -42,7 +43,8 @@ class FormInteractive extends Component {
   }
 
   get renderFormSteps() {
-    const { prevQuestion, nextQuestion, form: { questions }, currentQuestionId } = this.props
+    const { prevQuestion, nextQuestion, form: { questions }, 
+      currentQuestionId, primaryColor } = this.props
     const sectionStatus = this.sectionStatus
     const questionGroups = groupFormQuestions(questions)
     return (
@@ -54,7 +56,8 @@ class FormInteractive extends Component {
                 allQuestions={questions} questionGroup={group}
                 step={index+1} totalSteps={questionGroups.length} 
                 nextQuestion={nextQuestion} prevQuestion={prevQuestion}
-                status={sectionStatus(questions, currentQuestionId, group)} />
+                status={sectionStatus(questions, currentQuestionId, group)} 
+                primaryColor={primaryColor} />
             )
           })
         }

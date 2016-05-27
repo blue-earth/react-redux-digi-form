@@ -11,14 +11,15 @@ import _ from 'lodash'
 class FormSection extends Component {
 
   static propTypes = {
-    status: React.PropTypes.oneOf(['pending', 'active', 'completed']),
+    primaryColor: PropTypes.string,
+    status: PropTypes.oneOf(['pending', 'active', 'completed']),
     step: PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number
+      PropTypes.string,
+      PropTypes.number
     ]),
     totalSteps: PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number
+      PropTypes.string,
+      PropTypes.number
     ]),
     allQuestions: PropTypes.array.isRequired,
     questionGroup: PropTypes.object.isRequired,
@@ -43,7 +44,7 @@ class FormSection extends Component {
   }
 
   get renderAllQuestions() {
-    const { questionGroup: {questions}, currentQuestionId, allQuestions } = this.props
+    const { questionGroup: {questions}, currentQuestionId, allQuestions, primaryColor } = this.props
     const curQIdx = getQuestionIndexWithId(allQuestions, currentQuestionId)
     if (questions) {
       return (
@@ -55,6 +56,7 @@ class FormSection extends Component {
               return (
                 <div key={question.id}>
                     <QuestionInteractive {...question} 
+                      primaryColor={primaryColor}
                       status={curQIdx == idx 
                         ? 'current' : curQIdx - idx == 1 
                         ? 'next' : idx - curQIdx == 1
@@ -81,7 +83,6 @@ class FormSection extends Component {
 
   get renderActiveSection() {
     const { step, totalSteps, questionGroup, prevQuestion, nextQuestion } = this.props
-
     
     return (
       <section className={`${styles.formSection} ${styles.active}`}>

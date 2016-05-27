@@ -25,13 +25,15 @@ const mapStateToProps = (state) => {
     isFetching,
     lastUpdated,
     currentQuestionId,
-    form
+    form,
+    primaryColor
   } = formInteractive || INIT_FORM_STATE
   return {
     id : parseInt(id),
     isFetching,
     currentQuestionId,
     form,
+    primaryColor,
     lastUpdated
   }
 }
