@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
     wiring in the actions and state necessary to render a presentational
     component - in this case, the counter:   */
 
-import FormInteractiveView from '../components/FormInteractiveView'
+import FormInteractive from '../components/FormInteractive/FormInteractive'
 
 /*  Object of action creators (can also be function that returns object).
     Keys will be passed as props to presentational components. Here we are
@@ -33,4 +33,4 @@ const mapStateToProps = (state) => ({
     Selectors are composable. They can be used as input to other selectors.
     https://github.com/reactjs/reselect    */
 
-export default connect(mapStateToProps)(FormInteractiveView)
+export default connect(mapStateToProps)(FormInteractive)

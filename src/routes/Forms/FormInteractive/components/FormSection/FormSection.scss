@@ -1,0 +1,101 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+$items-v-padding:           5px;
+$items-active-v-padding:    40px;
+$nav-hover-color:           #000;
+.formSection {
+  background-color: #fefefe;
+  position: relative;
+  &.active {
+    background-color: $bg-color1;
+    .formSectionInner {
+      @include media('>=md') {
+        padding-top: 25 + $items-active-v-padding;
+        padding-bottom: $items-active-v-padding;
+      }
+    }
+    .step {
+      width: 72px;
+      height: 72px;
+      line-height: 70px;
+      font-size: 16px;
+      top: $items-active-v-padding;
+      left: -36px;
+    }
+    .formSectionTitle {
+      color: $text-color;
+      text-transform: uppercase;
+    }
+  }
+  &.pending {
+    .formSectionTitle {
+      color: $text-light-color;
+    }
+  }
+}
+.formSectionInner {
+  padding: $items-v-padding 0;
+}
+.step {
+  background-color: $bg-color2;
+  font-weight: 300;
+  text-align: center;
+  @include border-radius(50%);
+  z-index: 300;
+  border: 1px solid $border-color;
+  color: $text-color;
+  position: absolute;
+  top: $items-v-padding;
+  left: -12px;
+  width: 25px;
+  height: 25px;
+  line-height: 23px;
+  font-size: 16px;
+  @include media('<md') {
+    display: none;
+  }
+}
+.greenIcon {
+  color: #70C175;
+}
+.formSectionTitle {
+  color: $text-dark-color;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 25px;
+}
+.formSectionEdit {
+  margin-left: 20px;
+  text-transform: none;
+}
+.navButtonsWrapper {
+  text-align: right;
+  list-style: none;
+  margin: 15px 0 0 0;
+  @include clearfix;
+  li {
+    padding: 0;
+    display: inline-block;
+    margin: 0 5px;
+  }
+}
+.navButton {
+  border: 1px solid $border-color;
+  @include border-radius(3px);
+  display: inline-block;
+  text-align: center;
+  color: $text-color;
+  width: 40px;
+  height: 35px;
+  line-height: 33px;
+  opacity: .8;
+  @include transition(all .2s);
+  &:hover, &:focus {
+    opacity: 1;
+    background-color: $bg-color2;
+    border-color: $nav-hover-color;
+    color: $nav-hover-color;
+  }
+}

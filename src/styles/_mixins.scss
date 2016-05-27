@@ -1,5 +1,6 @@
 /* Mixins */
 @import 'mixins/_sass-css3-mixins.scss';
+@import 'mixins/_include-media.scss';
 
 @mixin clearfix {
   &:after {
