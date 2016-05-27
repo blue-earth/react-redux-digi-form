@@ -1,9 +1,12 @@
 import React, { Component, PropTypes } from 'react'
-import { Link } from 'react-router'
+import { Button } from 'react-bootstrap'
 import { MdCheck, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib/md'
 import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive'
 import FormRow from '../FormRow/FormRow'
+import LearnMoreSection from '../LearnMoreSection/LearnMoreSection'
+import { getQuestionIndexWithId } from 'helpers/formInteractiveHelper'
 import styles from './FormSection.scss'
+import _ from 'lodash'
 
 class FormSection extends Component {
 
@@ -17,8 +20,12 @@ class FormSection extends Component {
       React.PropTypes.string,
       React.PropTypes.number
     ]),
-    questionGroup: PropTypes.object,
-    logics: PropTypes.array
+    allQuestions: PropTypes.array.isRequired,
+    questionGroup: PropTypes.object.isRequired,
+    logics: PropTypes.array,
+    currentQuestionId: PropTypes.number.isRequired,
+    prevQuestion: PropTypes.func.isRequired,
+    nextQuestion: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -34,18 +41,25 @@ class FormSection extends Component {
       questions: []
     }
   }
-  
+
   get renderAllQuestions() {
-    const { questionGroup: {questions} } = this.props
+    const { questionGroup: {questions}, currentQuestionId, allQuestions } = this.props
+    const curQIdx = getQuestionIndexWithId(allQuestions, currentQuestionId)
     if (questions) {
       return (
         <div>
           {
-            questions.map(function(data, i) {
+            questions.map(function(question, i) {
+              const idx = getQuestionIndexWithId(allQuestions, question.id)
+              console.log(idx)
               return (
-                <div key={i}>
-                    <h2>{data.type}</h2>
-                    <QuestionInteractive {...data}></QuestionInteractive>
+                <div key={question.id}>
+                    <QuestionInteractive {...question} 
+                      status={curQIdx == idx 
+                        ? 'current' : curQIdx - idx == 1 
+                        ? 'next' : idx - curQIdx == 1
+                        ? 'prev' : 'hidden'} 
+                    />
                 </div>
               )
             })
@@ -57,25 +71,55 @@ class FormSection extends Component {
     }
   }
 
+  shouldShowActiveTitle() {
+    const { allQuestions, currentQuestionId, questionGroup } = this.props
+    const groupQuestions = questionGroup.questions
+    const curQIdx = getQuestionIndexWithId(allQuestions, currentQuestionId)
+    const firstGroupIdx = getQuestionIndexWithId(allQuestions, groupQuestions[0].id)
+    return (curQIdx == firstGroupIdx)
+  }
+
   get renderActiveSection() {
-    const { step, totalSteps, sectionTitle, questionGroup } = this.props
+    const { step, totalSteps, questionGroup, prevQuestion, nextQuestion } = this.props
+
+    
     return (
       <section className={`${styles.formSection} ${styles.active}`}>
+        <hr className={styles.hrLine} />
         <FormRow>
           <div className={styles.step}>
             { `${step} of ${totalSteps}` }
           </div>
           <div className={styles.formSectionInner}>
+            { this.shouldShowActiveTitle() && (
             <h3 className={styles.formSectionTitle}>
               {questionGroup.title}
             </h3>
+            )}
             {this.renderAllQuestions}
           </div>
           <ul className={styles.navButtonsWrapper}>
-            <li><Link className={styles.navButton} to="#"><MdKeyboardArrowUp size="24" /></Link></li>
-            <li><Link className={styles.navButton} to="#"><MdKeyboardArrowDown size="24" /></Link></li>
+            <li>
+              <Button className={styles.navButton} onClick={() => prevQuestion()}>
+                <MdKeyboardArrowUp size="24" />
+              </Button>
+            </li>
+            <li>
+              <Button className={styles.navButton} onClick={() => nextQuestion()}>
+                <MdKeyboardArrowDown size="24" />
+              </Button>
+            </li>
           </ul>
         </FormRow>
+        <hr className={styles.hrLine} />
+        <FormRow>
+          <LearnMoreSection />
+        </FormRow>
+        { step < totalSteps &&
+          <FormRow>
+            <h2 className={styles.nextSectionTitle}>Next Sections</h2>
+          </FormRow>
+        }
       </section>
     )
   }
@@ -102,12 +146,12 @@ class FormSection extends Component {
       <section className={`${styles.formSection} ${styles.completed}`}>
         <FormRow>
           <div className={styles.step}>
-            <Link to="#"><MdCheck className={styles.greenIcon} /></Link>
+            <a href="javascript:;"><MdCheck className={styles.greenIcon} /></a>
           </div>
           <div className={styles.formSectionInner}>
             <h3 className={styles.formSectionTitle}>
               {questionGroup.title}
-              <Link to="#" className={styles.formSectionEdit}>Edit</Link>
+              <a href="javascript:;" className={styles.formSectionEdit}>Edit</a>
             </h3>
           </div>
         </FormRow>

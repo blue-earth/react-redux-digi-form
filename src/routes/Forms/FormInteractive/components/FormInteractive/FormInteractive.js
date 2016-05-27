@@ -3,8 +3,8 @@ import FormHeader from 'components/FormHeader'
 import { Button } from 'react-bootstrap'
 import FormSection from '../FormSection/FormSection'
 import FormRow from '../FormRow/FormRow'
-import LearnMoreSection from '../LearnMoreSection/LearnMoreSection'
 import { fetchFormIfNeeded } from 'redux/modules/formInteractive'
+import { groupFormQuestions, getQuestionIndexWithId } from 'helpers/formInteractiveHelper.js'
 import styles from './FormInteractive.scss'
 
 class FormInteractive extends Component {
@@ -16,42 +16,48 @@ class FormInteractive extends Component {
   static propTypes = {
     id: PropTypes.number.isRequired,
     form: PropTypes.object.isRequired,
-    questionGroups: PropTypes.object.isRequired,
     isFetching: PropTypes.bool.isRequired,
     lastUpdated: PropTypes.number,
-    dispatch: PropTypes.func.isRequired
+    currentQuestionId: PropTypes.number.isRequired,
+    prevQuestion: PropTypes.func.isRequired,
+    nextQuestion: PropTypes.func.isRequired,
+    fetchFormIfNeeded: PropTypes.func.isRequired
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
+    const { fetchFormIfNeeded } = this.props
     let id = this.props.params.id
-    dispatch(fetchFormIfNeeded(id))
+    fetchFormIfNeeded(id)
+  }
+
+  sectionStatus(allQuestions, currentQuestionId, questionGroup) {
+    const groupQuestions = questionGroup.questions
+    const curQueIdx = getQuestionIndexWithId(allQuestions, currentQuestionId)
+    const firstGroupIdx = getQuestionIndexWithId(allQuestions, groupQuestions[0].id)
+    const lastGroupIdx = getQuestionIndexWithId(allQuestions, groupQuestions[groupQuestions.length - 1].id)
+
+    if (curQueIdx < firstGroupIdx) return 'pending'
+    else if (curQueIdx <= lastGroupIdx) return 'active'
+    else return 'completed'
   }
 
   get renderFormSteps() {
-    const { questionGroups } = this.props
-    
-    const questionGroup = typeof questionGroups['0'] !== 'undefined' ? questionGroups[0] : {questions:[], title:''} //temperary;
+    const { prevQuestion, nextQuestion, form: { questions }, currentQuestionId } = this.props
+    const sectionStatus = this.sectionStatus
+    const questionGroups = groupFormQuestions(questions)
     return (
       <div className={styles.stepsWrapper}>
-        <FormSection status='completed' step={1} totalSteps={5} questionGroup={questionGroup} />
-        <FormSection status='completed' step={1} totalSteps={5} questionGroup={questionGroup} />
-        
-        <hr className={styles.hrLine} />
-        
-        <FormSection status='active' step={2} totalSteps={5} questionGroup={questionGroup} />
-        
-        <hr className={styles.hrLine} />
-        <FormRow>
-          <LearnMoreSection />
-        </FormRow>
-        <FormRow>
-          <h2 className={styles.nextSectionTitle}>Next Sections</h2>
-        </FormRow>
-
-        <FormSection step={3} totalSteps={5} />
-        <FormSection step={4} totalSteps={5} />
-
+        {
+          questionGroups.map(function(group, index) {
+            return (
+              <FormSection key={index} currentQuestionId={currentQuestionId}
+                allQuestions={questions} questionGroup={group}
+                step={index+1} totalSteps={questionGroups.length} 
+                nextQuestion={nextQuestion} prevQuestion={prevQuestion}
+                status={sectionStatus(questions, currentQuestionId, group)} />
+            )
+          })
+        }
         <FormRow>
           <div className={styles.helpButtonWrapper}>
             <Button bsStyle="danger" block>Help</Button>
@@ -60,6 +66,7 @@ class FormInteractive extends Component {
       </div>
     )
   }
+
   render() {
     return (
       <div>

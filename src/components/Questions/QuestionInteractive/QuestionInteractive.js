@@ -1,4 +1,4 @@
-import React, { Component, propTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js';
 import TextInputShort from '../../QuestionInputs/TextInputShort/TextInputShort.js';
 import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js';
@@ -18,11 +18,11 @@ class QuestionInteractive extends Component {
   }
 
   static propTypes = {
-
+    status: PropTypes.oneOf(['current', 'next', 'prev', 'hidden']),
   };
 
   static defaultProps = {
-
+    status: 'current'
   };
 
   renderQuestionDisplay() {
@@ -70,13 +70,42 @@ class QuestionInteractive extends Component {
     );
   }
 
-  render() {
+  renderActiveQuestion() {
     return (
-      <div>
+      <div className={styles.activeQuestionContainer}>
         {this.renderQuestionDisplay()}
         {this.renderInteractiveInput()}
       </div>
     )
+  }
+  
+  renderNextQuestion() {
+    var props = this.props;
+    return (
+      <div>
+        <h3 className={styles.neighborInstruction}>{props.questionInstruction}</h3>
+      </div>
+    )
+  }
+  
+  renderPrevQuestion() {
+    var props = this.props;
+    return (
+      <div>
+        <h3 className={styles.neighborInstruction}>{props.questionInstruction}</h3>
+      </div>
+    )
+  }
+
+  render() {
+    const { status } = this.props
+    if ( status === 'current' )
+      return this.renderActiveQuestion()
+    else if ( status === 'next' )
+      return this.renderNextQuestion()
+    else if ( status === 'prev' )
+      return this.renderPrevQuestion()
+    return (<div></div>)
   }
 }
 

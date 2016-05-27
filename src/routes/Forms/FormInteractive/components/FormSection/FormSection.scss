@@ -2,7 +2,7 @@
 @import '../../../../../styles/variables';
 
 $items-v-padding:           5px;
-$items-active-v-padding:    40px;
+$items-active-v-padding:    30px;
 $nav-hover-color:           #000;
 .formSection {
   background-color: #fefefe;
@@ -12,7 +12,7 @@ $nav-hover-color:           #000;
     .formSectionInner {
       @include media('>=md') {
         padding-top: 25 + $items-active-v-padding;
-        padding-bottom: $items-active-v-padding;
+        padding-bottom: $items-active-v-padding - 10;
       }
     }
     .step {
@@ -91,6 +91,7 @@ $nav-hover-color:           #000;
   height: 35px;
   line-height: 33px;
   opacity: .8;
+  padding: 0;
   @include transition(all .2s);
   &:hover, &:focus {
     opacity: 1;
@@ -98,4 +99,16 @@ $nav-hover-color:           #000;
     border-color: $nav-hover-color;
     color: $nav-hover-color;
   }
+}
+
+.hrLine {
+  border-top: 2px solid $border-color;
+  margin: 15px 0;
+}
+
+.nextSectionTitle {
+  font-size: 18px;
+  text-transform: uppercase;
+  color: $text-color;
+  font-weight: 400;
 }
