@@ -1,11 +1,11 @@
-import React, { Component, propTypes } from 'react';
-import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js';
-import TextInputShort from '../../QuestionInputs/TextInputShort/TextInputShort.js';
-import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js';
-import TextInputEmail from '../../QuestionInputs/TextInputEmail/TextInputEmail.js';
-import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js';
-import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js';
-import styles from './QuestionInteractive.scss';
+import React, { Component, PropTypes } from 'react'
+import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js'
+import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.js'
+import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js'
+import TextInputEmail from '../../QuestionInputs/TextInputEmail/TextInputEmail.js'
+import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js'
+import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js'
+import styles from './QuestionInteractive.scss'
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -14,19 +14,21 @@ import styles from './QuestionInteractive.scss';
 
 class QuestionInteractive extends Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   static propTypes = {
-
+    primaryColor: PropTypes.string,
+    status: PropTypes.oneOf(['current', 'next', 'prev', 'hidden']),
   };
 
   static defaultProps = {
-
+    primaryColor: '#4dcceb',
+    status: 'current'
   };
 
   renderQuestionDisplay() {
-    var props = this.props;
+    var props = this.props
 
     return (
       <QuestionInstruction
@@ -37,26 +39,27 @@ class QuestionInteractive extends Component {
   }
 
   renderInteractiveInput() {
-    var ChildComponent = '';
+    var ChildComponent = ''
+    const props = this.props
 
-    switch (this.props.type) {
+    switch (props.type) {
       case 'ShortText':
-        ChildComponent = TextInputShort;
-        break;
+        ChildComponent = ShortTextInput
+        break
       case 'MultipleChoice':
-        ChildComponent = MultipleChoice;
-        break;
+        ChildComponent = MultipleChoice
+        break
       case 'Email':
-        ChildComponent = TextInputEmail;
-        break;
+        ChildComponent = TextInputEmail
+        break
       case 'LongText':
-        ChildComponent = TextInputLong;
-        break;
+        ChildComponent = TextInputLong
+        break
     }
 
     var ChildComponentTemplate = () => {
       return <ChildComponent {...this.props} />
-    };
+    }
 
     return (
       <div className={styles.interactiveContainer}>
@@ -64,23 +67,52 @@ class QuestionInteractive extends Component {
           <ChildComponentTemplate />
         </div>
         <div className={styles.rightColumn}>
-          <FormEnterButton />
+          <FormEnterButton primaryColor={props.primaryColor} />
         </div>
       </div>
-    );
+    )
   }
 
-  render() {
+  renderActiveQuestion() {
     return (
-      <div>
+      <div className={styles.activeQuestionContainer}>
         {this.renderQuestionDisplay()}
         {this.renderInteractiveInput()}
       </div>
     )
   }
+  
+  renderNextQuestion() {
+    var props = this.props
+    return (
+      <div>
+        <h3 className={styles.neighborInstruction}>{props.questionInstruction}</h3>
+      </div>
+    )
+  }
+  
+  renderPrevQuestion() {
+    var props = this.props
+    return (
+      <div>
+        <h3 className={styles.neighborInstruction}>{props.questionInstruction}</h3>
+      </div>
+    )
+  }
+
+  render() {
+    const { status } = this.props
+    if ( status === 'current' )
+      return this.renderActiveQuestion()
+    else if ( status === 'next' )
+      return this.renderNextQuestion()
+    else if ( status === 'prev' )
+      return this.renderPrevQuestion()
+    return (<div></div>)
+  }
 }
 
-export default QuestionInteractive;
+export default QuestionInteractive
 
 
 

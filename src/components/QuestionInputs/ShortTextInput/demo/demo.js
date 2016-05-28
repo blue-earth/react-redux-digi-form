@@ -1,4 +1,4 @@
-import TextInputShort from '../TextInputShort.js';
+import ShortTextInput from '../ShortTextInput.js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -15,8 +15,8 @@ var testData = {
 };
 
 const test1 = (
-    <TextInputShort {...testData}>
-    </TextInputShort>
+    <ShortTextInput {...testData}>
+    </ShortTextInput>
 );
 
 ReactDOM.render(test1, document.getElementById('app'));

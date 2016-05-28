@@ -7,9 +7,25 @@ class FormEnterButton extends Component {
     super(props);
   }
 
+  static propTypes = {
+    primaryColor: PropTypes.string,
+  };
+
+  static defaultProps = {
+    primaryColor: '#4dcceb'
+  };
+
   render() {
+
+    const props = this.props
+
+    var buttonStyle = {
+      color: props.primaryColor,
+      borderColor: props.primaryColor
+    }
+
     return (
-      <button type="button" className={styles.formEnterButton}>
+      <button type="button" className={styles.formEnterButton} style={buttonStyle}>
         <div className={styles.btnInner}>
           <div>press</div>
           <div>ENTER</div>
