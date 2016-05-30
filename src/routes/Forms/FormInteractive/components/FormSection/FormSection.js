@@ -4,7 +4,7 @@ import { MdCheck, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib
 import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive'
 import FormRow from '../FormRow/FormRow'
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection'
-import { getQuestionIndexWithId } from 'helpers/formInteractiveHelper'
+import { findIndexById, getContextFromAnswer } from 'helpers/formInteractiveHelper'
 import styles from './FormSection.scss'
 import _ from 'lodash'
 
@@ -25,8 +25,10 @@ class FormSection extends Component {
     questionGroup: PropTypes.object.isRequired,
     logics: PropTypes.array,
     currentQuestionId: PropTypes.number.isRequired,
+    answers: PropTypes.array.isRequired,
     prevQuestion: PropTypes.func.isRequired,
-    nextQuestion: PropTypes.func.isRequired
+    nextQuestion: PropTypes.func.isRequired,
+    storeAnswer: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -44,18 +46,25 @@ class FormSection extends Component {
   }
 
   get renderAllQuestions() {
-    const { questionGroup: {questions}, currentQuestionId, allQuestions, primaryColor } = this.props
-    const curQIdx = getQuestionIndexWithId(allQuestions, currentQuestionId)
+    const { questionGroup: {questions}, currentQuestionId, 
+      allQuestions, primaryColor, answers, storeAnswer } = this.props
+    const curQIdx = findIndexById(allQuestions, currentQuestionId)
+    const context = getContextFromAnswer(answers)
     if (questions) {
       return (
         <div>
           {
             questions.map(function(question, i) {
-              const idx = getQuestionIndexWithId(allQuestions, question.id)
+              const idx = findIndexById(allQuestions, question.id)
+              const answer = _.find(answers, {id: question.id})
+              const answerValue = typeof answer === 'object' ? answer.value : ''
               return (
                 <div key={question.id}>
                     <QuestionInteractive {...question} 
                       primaryColor={primaryColor}
+                      storeAnswer={storeAnswer}
+                      context={context}
+                      value={answerValue}
                       status={curQIdx == idx 
                         ? 'current' : curQIdx - idx == 1 
                         ? 'next' : idx - curQIdx == 1
@@ -75,8 +84,8 @@ class FormSection extends Component {
   shouldShowActiveTitle() {
     const { allQuestions, currentQuestionId, questionGroup } = this.props
     const groupQuestions = questionGroup.questions
-    const curQIdx = getQuestionIndexWithId(allQuestions, currentQuestionId)
-    const firstGroupIdx = getQuestionIndexWithId(allQuestions, groupQuestions[0].id)
+    const curQIdx = findIndexById(allQuestions, currentQuestionId)
+    const firstGroupIdx = findIndexById(allQuestions, groupQuestions[0].id)
     return (curQIdx == firstGroupIdx)
   }
 

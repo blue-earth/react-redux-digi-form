@@ -2,11 +2,13 @@ import React, { Component, PropTypes } from 'react'
 import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js'
 import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.js'
 import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js'
-import TextInputEmail from '../../QuestionInputs/TextInputEmail/TextInputEmail.js'
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js'
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js'
 import Validator from '../../Validator/Validator.js'
+import validateField from 'helpers/validationHelper'
 import styles from './QuestionInteractive.scss'
+import _ from 'lodash'
+import Hogan from 'hogan.js';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -19,6 +21,7 @@ class QuestionInteractive extends Component {
     this.state = {
       savedValue: '',
       inputState: 'init',
+      isValid: true
     }
   }
 
@@ -26,12 +29,15 @@ class QuestionInteractive extends Component {
     primaryColor: PropTypes.string,
     validations: PropTypes.array,
     status: PropTypes.oneOf(['current', 'next', 'prev', 'hidden']),
+    context: PropTypes.object,
+    storeAnswer: PropTypes.func.isRequired
   };
 
   static defaultProps = {
     primaryColor: '#4dcceb',
     validations: [],
     status: 'current',
+    context: {}
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -57,6 +63,7 @@ class QuestionInteractive extends Component {
       inputState: 'blur',
       savedValue: value
     })
+    this.checkValidField()
   }
 
   handleChange(value) {
@@ -65,18 +72,61 @@ class QuestionInteractive extends Component {
     })
   }
   
-  handleSubmit() {
+  handleButtonClick() {
+    const value = this.refs.input.value
+    this.handleEnter(value)
+  }
+
+  handleEnter(value) {
+    console.log(value)
     // Will handle Verification and save answer.
+    const { storeAnswer, id } = this.props
+    this.setState({
+      savedValue: value,
+    })
+
+    this.checkValidField()
+    
+    if (this.state.isValid) {
+      storeAnswer({
+        id: id,
+        value: this.state.savedValue
+      })
+    }
+
     console.log("handle verification and submit")
   }
 
+  checkValidField(value) {
+    const { validations } = this.props
+    const { savedValue } = this.state
+    var isValid = true
+    for (var i = 0; i < validations.length; i ++) {
+      isValid = validateField( validations[i], savedValue )
+      if (!isValid) break
+    }
+    
+    this.setState({
+      isValid: isValid
+    })
+  }
+
+  compileTemplate(template, context) {
+    if (template) {
+      var t = Hogan.compile(template);
+      return t.render(context)
+    } else {
+      return ''
+    }
+  }
+
   renderQuestionDisplay() {
-    var props = this.props
+    const { context, questionInstruction, questionDescription } = this.props
 
     return (
       <QuestionInstruction
-        instruction={props.questionInstruction}
-        description={props.questionDescription}
+        instruction={this.compileTemplate(questionInstruction, context)}
+        description={this.compileTemplate(questionDescription, context)}
       />
     )
   }
@@ -84,7 +134,8 @@ class QuestionInteractive extends Component {
   renderInteractiveInput() {
     var ChildComponent = ''
     const { type, primaryColor, validations } = this.props
-    const { inputState, savedValue } = this.state
+    const { inputState, savedValue, isValid } = this.state
+    let that = this
 
     switch (type) {
       case 'ShortTextField':
@@ -102,7 +153,7 @@ class QuestionInteractive extends Component {
     var ChildComponentTemplate = () => {
       return <ChildComponent {...this.props} 
         value={savedValue}
-        onEnterKey={this.handleSubmit.bind(this)}
+        onEnterKey={this.handleEnter.bind(this)}
         // onChange={this.handleChange.bind(this)}
         onFocus={this.handleFocus.bind(this)}
         onBlur={this.handleBlur.bind(this)} />
@@ -111,15 +162,17 @@ class QuestionInteractive extends Component {
     return (
       <div className={styles.interactiveContainer}>
         { (inputState == 'blur') &&
-          <div className={styles.leftColumn}>
-            {
-              validations.map(function(validation, index) {
-                return (
-                  <Validator {...validation} key={index} validateFor={savedValue} 
-                    primaryColor={primaryColor} />
-                )
-              })
-            }
+          <div className="clearfix">
+            <div className={styles.leftColumn}>
+              {
+                validations.map(function(validation, index) {
+                  return (
+                    <Validator {...validation} key={index} validateFor={savedValue} 
+                      primaryColor={primaryColor} />
+                  )
+                })
+              }
+            </div>
           </div>
         }
         <div className={styles.leftColumn}>
@@ -127,7 +180,8 @@ class QuestionInteractive extends Component {
         </div>
         <div className={styles.rightColumn}>
           <FormEnterButton primaryColor={primaryColor} 
-            onClick={this.handleSubmit.bind(this)} />
+            onClick={this.handleEnter.bind(this)}
+            isDisabled={!isValid} />
         </div>
       </div>
     )
@@ -143,19 +197,23 @@ class QuestionInteractive extends Component {
   }
   
   renderNextQuestion() {
-    var props = this.props
+    var { questionInstruction, context } = this.props
     return (
       <div>
-        <h3 className={styles.neighborInstruction}>{props.questionInstruction}</h3>
+        <h3 className={styles.neighborInstruction}>
+          {this.compileTemplate(questionInstruction, context)}
+        </h3>
       </div>
     )
   }
   
   renderPrevQuestion() {
-    var props = this.props
+    var { questionInstruction, context } = this.props
     return (
       <div>
-        <h3 className={styles.neighborInstruction}>{props.questionInstruction}</h3>
+        <h3 className={styles.neighborInstruction}>
+          {this.compileTemplate(questionInstruction, context)}
+        </h3>
       </div>
     )
   }

@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
-import styles from './Validator.scss';
+import React, { Component, PropTypes } from 'react'
+import validateField from 'helpers/validationHelper'
+import styles from './Validator.scss'
 
 class Validator extends Component {
   static propTypes = {
@@ -17,77 +18,62 @@ class Validator extends Component {
     primaryColor: PropTypes.string
   };
 
-  renderIsRequired(inlineStyle) {
-    const { validateFor } = this.props
-    if (typeof validateFor !== 'undefined' && 
-      (validateFor === '' || validateFor === null) ) {
-      return (
-        <div className={styles.errorField} style={inlineStyle}>
-          <span>This field is required</span>
-        </div>
-      )
-    } else {
-      return false
-    }
+  renderIsRequired() {
+    return (
+      <span>This field is required</span>
+    )
   }
 
-  renderIsEmail(inlineStyle) {
-    const { validateFor } = this.props
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    
-    if (typeof validateFor !== 'undefined' && !re.test(validateFor) ) {
-      return (
-        <div className={styles.errorField} style={inlineStyle}>
-          <span>Please enter a valid email.</span>
-        </div>
-      )
-    } else {
-      return false
-    }
+  renderIsEmail() {
+    return (
+      <span>Please enter a valid email.</span>
+    )
   }
 
-  renderMinLength(inlineStyle) {
-    const { value, validateFor } = this.props
-    if ( typeof validateFor !== 'undefined' && validateFor.length < value ) {
-      return (
-        <div className={styles.errorField} style={inlineStyle}>
-          <span>Minimum of {value} charaters are required.</span>
-        </div>
-      )
-    } else {
-      return false
-    }
+  renderMinLength() {
+    const { value } = this.props
+    return (
+      <span>Minimum of {value} charaters are required.</span>
+    )
   }
 
-  renderMaxLength(inlineStyle) {
-    const { value, validateFor } = this.props
-    if (typeof validateFor !== 'undefined' && validateFor.length > value ) {
-      return (
-        <div className={styles.errorField} style={inlineStyle}>
-          <span>Maximum of {value} charaters are required.</span>
-        </div>
-      )
-    } else {
-      return false
-    }
+  renderMaxLength() {
+    const { value } = this.props
+    return (
+      <span>Maximum of {value} charaters are required.</span>
+    )
   }
 
   render() {
-    var { type, primaryColor } = this.props
-
+    var { type, value, validateFor, primaryColor } = this.props
+    var result = validateField({type, value}, validateFor)
+    var output = false
     var validatorStyle = {
       backgroundColor: primaryColor
     }
-
-    switch (type) {
-      case 'isRequired':
-        return this.renderIsRequired(validatorStyle)
-      case 'minLength':
-        return this.renderMinLength(validatorStyle)
-      case 'maxLength':
-        return this.renderMaxLength(validatorStyle)
-      case 'isEmail':
-        return this.renderIsEmail(validatorStyle)
+    if (result === false) {
+      switch (type) {
+        case 'isRequired':
+          output = this.renderIsRequired()
+          break
+        case 'minLength':
+          output = this.renderMinLength()
+          break
+        case 'maxLength':
+          output = this.renderMaxLength()
+          break
+        case 'isEmail':
+          output = this.renderIsEmail()
+          break
+      }
+    
+      return (
+        <div className={styles.errorField} style={validatorStyle}>
+          {output}
+        </div>
+      )
+    } else {
+      return false;
     }
   }
 }

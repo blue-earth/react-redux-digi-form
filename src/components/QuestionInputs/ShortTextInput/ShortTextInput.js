@@ -15,7 +15,8 @@ class ShortTextInput extends Component {
     isDisabled: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
-    onBlur: PropTypes.func
+    onBlur: PropTypes.func,
+    onEnterKey: PropTypes.func,
   };
 
   static defaultProps = {
@@ -68,8 +69,9 @@ class ShortTextInput extends Component {
 
   handleKeypress(event) {
     const { onEnterKey } = this.props
+    console.log(event.keyCode)
     if (event.keyCode === 13 && typeof onEnterKey === 'function') {
-      onEnterKey()
+      onEnterKey(event.target.value)
     }
   }
 
@@ -110,7 +112,7 @@ class ShortTextInput extends Component {
         onChange={this.handleChange.bind(this)}
         onBlur={this.handleBlur.bind(this)}
         onFocus={this.handleFocus.bind(this)}
-        onKeypress={this.handleKeypress.bind(this)}
+        onkeydown={this.handleKeypress}
         {...optionals}
       />
     )

@@ -3,8 +3,9 @@ import FormHeader from 'components/FormHeader'
 import { Button } from 'react-bootstrap'
 import FormSection from '../FormSection/FormSection'
 import FormRow from '../FormRow/FormRow'
-import { fetchFormIfNeeded } from 'redux/modules/formInteractive'
-import { groupFormQuestions, getQuestionIndexWithId } from 'helpers/formInteractiveHelper.js'
+import { fetchFormIfNeeded, storeAnswer } from 'redux/modules/formInteractive'
+import { groupFormQuestions, findIndexById } 
+  from 'helpers/formInteractiveHelper.js'
 import styles from './FormInteractive.scss'
 
 class FormInteractive extends Component {
@@ -16,13 +17,15 @@ class FormInteractive extends Component {
   static propTypes = {
     id: PropTypes.number.isRequired,
     form: PropTypes.object.isRequired,
+    answers: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,
     lastUpdated: PropTypes.number,
     currentQuestionId: PropTypes.number.isRequired,
     primaryColor: PropTypes.string,
     prevQuestion: PropTypes.func.isRequired,
     nextQuestion: PropTypes.func.isRequired,
-    fetchFormIfNeeded: PropTypes.func.isRequired
+    fetchFormIfNeeded: PropTypes.func.isRequired,
+    storeAnswer: PropTypes.func.isRequired
   }
 
   componentWillMount() {
@@ -33,9 +36,9 @@ class FormInteractive extends Component {
 
   sectionStatus(allQuestions, currentQuestionId, questionGroup) {
     const gq = questionGroup.questions
-    const curQueIdx = getQuestionIndexWithId(allQuestions, currentQuestionId)
-    const firstGroupIdx = getQuestionIndexWithId(allQuestions, gq[0].id)
-    const lastGroupIdx = getQuestionIndexWithId(allQuestions, gq[gq.length - 1].id)
+    const curQueIdx = findIndexById(allQuestions, currentQuestionId)
+    const firstGroupIdx = findIndexById(allQuestions, gq[0].id)
+    const lastGroupIdx = findIndexById(allQuestions, gq[gq.length - 1].id)
 
     if (curQueIdx < firstGroupIdx) return 'pending'
     else if (curQueIdx <= lastGroupIdx) return 'active'
@@ -44,7 +47,7 @@ class FormInteractive extends Component {
 
   get renderFormSteps() {
     const { prevQuestion, nextQuestion, form: { questions }, 
-      currentQuestionId, primaryColor } = this.props
+      currentQuestionId, primaryColor, answers, storeAnswer } = this.props
     const sectionStatus = this.sectionStatus
     const questionGroups = groupFormQuestions(questions)
     return (
@@ -56,6 +59,7 @@ class FormInteractive extends Component {
                 allQuestions={questions} questionGroup={group}
                 step={index+1} totalSteps={questionGroups.length} 
                 nextQuestion={nextQuestion} prevQuestion={prevQuestion}
+                storeAnswer={storeAnswer} answers={answers}
                 status={sectionStatus(questions, currentQuestionId, group)} 
                 primaryColor={primaryColor} />
             )
