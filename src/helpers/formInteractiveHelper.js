@@ -27,16 +27,21 @@ export const transformQuestions = (questions) => {
     */
     
     for(var underscore_prop in q) {
-      if (underscore_prop === 'validations') continue
+      // if (underscore_prop === 'validations') continue
       var camelProp = underscoreToCamelCase(underscore_prop)
       new_q[camelProp] = q[underscore_prop];
     }
 
-    if (q.validations) {
-      q.validations.forEach( v => {
-        new_q[v.type] = (v.type == 'isRequired') ? true : v.value
-      } )
+    if (new_q.type == 'EmailField') {
+      new_q.validations = _.unionBy(new_q.validations, [{
+        type: 'isEmail'
+      }], 'type')
     }
+    // if (q.validations) {
+    //   q.validations.forEach( v => {
+    //     new_q[v.type] = (v.type == 'isRequired') ? true : v.value
+    //   } )
+    // }
     
     trQuestions.push(new_q)
   } )

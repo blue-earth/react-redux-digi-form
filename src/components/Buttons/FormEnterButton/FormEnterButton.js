@@ -9,11 +9,17 @@ class FormEnterButton extends Component {
 
   static propTypes = {
     primaryColor: PropTypes.string,
+    onClick: PropTypes.func
   };
 
   static defaultProps = {
     primaryColor: '#4dcceb'
   };
+
+  handleClick() {
+    const { onClick } = this.props
+    if (typeof onClick === 'function') onClick(value)
+  }
 
   render() {
 
@@ -25,7 +31,8 @@ class FormEnterButton extends Component {
     }
 
     return (
-      <button type="button" className={styles.formEnterButton} style={buttonStyle}>
+      <button type="button" onClick={this.handleClick.bind(this)}
+        className={styles.formEnterButton} style={buttonStyle}>
         <div className={styles.btnInner}>
           <div>press</div>
           <div>ENTER</div>

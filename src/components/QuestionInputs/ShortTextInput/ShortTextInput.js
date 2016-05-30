@@ -3,65 +3,114 @@ import styles from './ShortTextInput.scss';
 
 class ShortTextInput extends Component {
   static propTypes = {
-    primaryColor: PropTypes.string,
-    isRequired: PropTypes.bool.isRequired,
-    isFocused: PropTypes.bool,
-    isDisabled: PropTypes.bool,
-    errorText: PropTypes.string,
     placeholderText: PropTypes.string,
     initialValue: PropTypes.string,
     fullWidth: PropTypes.bool,
     type: PropTypes.string,
-    minVal: PropTypes.number.isRequired,
-    maxVal: PropTypes.number.isRequired,
-    onChange: PropTypes.func
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]),
+    primaryColor: PropTypes.string,
+    isDisabled: PropTypes.bool,
+    onChange: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func
   };
 
   static defaultProps = {
     primaryColor: '#4dcceb',
-    isRequired: true,
-    isFocused: true,
-    isDisabled: false,
     placeholderText: '',
     initialValue: '',
     fullWidth: false,
-    minVal: 2,
-    maxVal: 20,
-    type: 'text'
+    type: 'text',
   };
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      'value': ''
+      savedValue: typeof props.value !== 'undefined' ? props.value : ''
+    }
+  }
+
+  handleChange(event) {
+    const { onChange } = this.props
+    let value = event.target.value
+
+    this.setState({
+      savedValue: value
+    })
+
+    if (typeof onChange === 'function') onChange(value)
+  }
+
+  handleFocus(event) {
+    const { onFocus } = this.props
+    let value = event.target.value
+
+    this.setState({
+      savedValue: value
+    })
+
+    if (typeof onFocus === 'function') onFocus(value)
+  }
+
+  handleBlur(event) {
+    const { onBlur } = this.props
+    let value = event.target.value
+
+    this.setState({
+      savedValue: value
+    })
+
+    if (typeof onBlur === 'function') onBlur(value)
+  }
+
+  handleKeypress(event) {
+    const { onEnterKey } = this.props
+    if (event.keyCode === 13 && typeof onEnterKey === 'function') {
+      onEnterKey()
+    }
+  }
+
+  inputType(type) {
+    switch (type) {
+      case 'EmailField':
+        return 'email'
+      case 'NumberField':
+        return 'number'
+      default:
+        return 'text'
     }
   }
 
   render() {
-    var props = this.props;
-    var optionals = {};
-    if (props.isDisabled) {
-        optionals['disabled'] = 'disabled'
-    }
-    if (props.isFocused) {
-        optionals['autofocus'] = true;
-    }
-    if (props.isRequired) {
-        optionals['required'] = true;
-    }
+    var props = this.props
+    var { type, primaryColor, value } = this.props
 
     var inputStyle = {
-      color: props.primaryColor
+      color: primaryColor
     }
-    optionals['style'] = inputStyle
+
+    var optionals = {}
+    if (props.placeholderText) {
+      optionals['placeholder'] = props.placeholderText
+    }
+    if (props.isDisabled) {
+      optionals['disabled'] = 'disabled'
+    }
 
     return (
       <input
         className={styles.textInput}
-        minlength={props.minVal}
-        maxlength={props.maxVal}
-        type={props.type}
-        placeholder={props.placeholderText}
+        type={this.inputType(type)}
+        style={inputStyle}
+        ref="input"
+        value={this.state.savedValue}
+        onChange={this.handleChange.bind(this)}
+        onBlur={this.handleBlur.bind(this)}
+        onFocus={this.handleFocus.bind(this)}
+        onKeypress={this.handleKeypress.bind(this)}
         {...optionals}
       />
     )

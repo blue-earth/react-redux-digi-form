@@ -52,7 +52,6 @@ class FormSection extends Component {
           {
             questions.map(function(question, i) {
               const idx = getQuestionIndexWithId(allQuestions, question.id)
-              console.log(idx)
               return (
                 <div key={question.id}>
                     <QuestionInteractive {...question} 
@@ -82,7 +81,7 @@ class FormSection extends Component {
   }
 
   get renderActiveSection() {
-    const { step, totalSteps, questionGroup, prevQuestion, nextQuestion } = this.props
+    const { step, totalSteps, questionGroup, prevQuestion, nextQuestion, primaryColor } = this.props
     
     return (
       <section className={`${styles.formSection} ${styles.active}`}>
@@ -114,7 +113,7 @@ class FormSection extends Component {
         </FormRow>
         <hr className={styles.hrLine} />
         <FormRow>
-          <LearnMoreSection />
+          <LearnMoreSection primaryColor={primaryColor} />
         </FormRow>
         { step < totalSteps &&
           <FormRow>

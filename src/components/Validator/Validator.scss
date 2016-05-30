@@ -1,0 +1,13 @@
+.errorField {
+  background: #C3EEF8;
+  border-radius: 3px;
+  padding-top: 5px;
+  padding-left: 2px;
+  padding-bottom: 5px;
+  margin: 5px 0;
+  > span {
+    background: #ffffff;
+    border-radius: 3px;
+    padding: 3px 3px;
+  }
+}

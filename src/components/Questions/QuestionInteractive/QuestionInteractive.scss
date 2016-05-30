@@ -8,6 +8,7 @@
   }
   > .leftColumn {
     float: left;
+    width: 390px;
   }
   > .rightColumn {
     margin-left: 25px;
@@ -25,4 +26,8 @@
   margin: 0;
   font-weight: 400;
   opacity: .7;
+}
+
+.validatiorTransition {
+  transition: all .3s;
 }

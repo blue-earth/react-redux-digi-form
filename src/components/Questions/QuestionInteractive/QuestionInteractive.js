@@ -5,6 +5,7 @@ import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js'
 import TextInputEmail from '../../QuestionInputs/TextInputEmail/TextInputEmail.js'
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js'
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js'
+import Validator from '../../Validator/Validator.js'
 import styles from './QuestionInteractive.scss'
 
 /**
@@ -15,17 +16,59 @@ import styles from './QuestionInteractive.scss'
 class QuestionInteractive extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      savedValue: '',
+      inputState: 'init',
+    }
   }
 
   static propTypes = {
     primaryColor: PropTypes.string,
+    validations: PropTypes.array,
     status: PropTypes.oneOf(['current', 'next', 'prev', 'hidden']),
   };
 
   static defaultProps = {
     primaryColor: '#4dcceb',
-    status: 'current'
+    validations: [],
+    status: 'current',
   };
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const { inputState } = nextState
+    return inputState != 'focus'
+  }
+
+  componentWillReceiveProps({ value }) {
+    this.setState({
+      savedValue: value
+    })
+  }
+
+  handleFocus(value) {
+    this.setState({
+      inputState: 'focus',
+      savedValue: value
+    })
+  }
+  
+  handleBlur(value) {
+    this.setState({
+      inputState: 'blur',
+      savedValue: value
+    })
+  }
+
+  handleChange(value) {
+    this.setState({
+      savedValue: value,
+    })
+  }
+  
+  handleSubmit() {
+    // Will handle Verification and save answer.
+    console.log("handle verification and submit")
+  }
 
   renderQuestionDisplay() {
     var props = this.props
@@ -40,34 +83,51 @@ class QuestionInteractive extends Component {
 
   renderInteractiveInput() {
     var ChildComponent = ''
-    const props = this.props
+    const { type, primaryColor, validations } = this.props
+    const { inputState, savedValue } = this.state
 
-    switch (props.type) {
-      case 'ShortText':
+    switch (type) {
+      case 'ShortTextField':
+      case 'EmailField':
         ChildComponent = ShortTextInput
         break
       case 'MultipleChoice':
         ChildComponent = MultipleChoice
         break
-      case 'Email':
-        ChildComponent = TextInputEmail
-        break
-      case 'LongText':
+      case 'LongTextField':
         ChildComponent = TextInputLong
         break
     }
 
     var ChildComponentTemplate = () => {
-      return <ChildComponent {...this.props} />
+      return <ChildComponent {...this.props} 
+        value={savedValue}
+        onEnterKey={this.handleSubmit.bind(this)}
+        // onChange={this.handleChange.bind(this)}
+        onFocus={this.handleFocus.bind(this)}
+        onBlur={this.handleBlur.bind(this)} />
     }
 
     return (
       <div className={styles.interactiveContainer}>
+        { (inputState == 'blur') &&
+          <div className={styles.leftColumn}>
+            {
+              validations.map(function(validation, index) {
+                return (
+                  <Validator {...validation} key={index} validateFor={savedValue} 
+                    primaryColor={primaryColor} />
+                )
+              })
+            }
+          </div>
+        }
         <div className={styles.leftColumn}>
           <ChildComponentTemplate />
         </div>
         <div className={styles.rightColumn}>
-          <FormEnterButton primaryColor={props.primaryColor} />
+          <FormEnterButton primaryColor={primaryColor} 
+            onClick={this.handleSubmit.bind(this)} />
         </div>
       </div>
     )

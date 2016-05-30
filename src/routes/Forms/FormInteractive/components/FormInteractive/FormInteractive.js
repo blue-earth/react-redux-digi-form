@@ -25,7 +25,7 @@ class FormInteractive extends Component {
     fetchFormIfNeeded: PropTypes.func.isRequired
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { fetchFormIfNeeded } = this.props
     let id = this.props.params.id
     fetchFormIfNeeded(id)
