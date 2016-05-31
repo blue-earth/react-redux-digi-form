@@ -126,7 +126,7 @@ class QuestionInteractive extends Component {
   renderInteractiveInput() {
     var ChildComponent = ''
     const { type, primaryColor, validations } = this.props
-    const { inputState, savedValue, validateFor, isValid } = this.state
+    const { inputState, savedValue, validateFor } = this.state
     let that = this
 
     switch (type) {
@@ -172,8 +172,7 @@ class QuestionInteractive extends Component {
         </div>
         <div className={styles.rightColumn}>
           <FormEnterButton primaryColor={primaryColor} 
-            onClick={this.handleEnter.bind(this)}
-            isDisabled={!isValid} />
+            onClick={this.handleEnter.bind(this)} />
         </div>
       </div>
     )
