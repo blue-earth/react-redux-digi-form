@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import styles from './TextInputLong.scss';
+import styles from './LongTextInput.scss';
 
-class TextInputLong extends Component {
+class LongTextInput extends Component {
   static propTypes = {
     isRequired: React.PropTypes.bool.isRequired,
     isFocused: React.PropTypes.bool,

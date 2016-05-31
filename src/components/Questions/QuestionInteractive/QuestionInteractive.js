@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js'
 import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.js'
-import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js'
+import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput.js'
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js'
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js'
 import Validator from '../../Validator/Validator.js'
@@ -58,7 +58,7 @@ class QuestionInteractive extends Component {
       validateFor: value
     })
   }
-  
+
   handleBlur(value) {
     this.setState({
       inputState: 'blur',
@@ -97,7 +97,7 @@ class QuestionInteractive extends Component {
       isValid = validateField( validations[i], savedValue )
       if (!isValid) break
     }
-    
+
     this.setState({
       isValid: isValid
     }, callback)
@@ -138,12 +138,12 @@ class QuestionInteractive extends Component {
         ChildComponent = MultipleChoice
         break
       case 'LongTextField':
-        ChildComponent = TextInputLong
+        ChildComponent = LongTextInput
         break
     }
 
     var ChildComponentTemplate = () => {
-      return <ChildComponent {...this.props} 
+      return <ChildComponent {...this.props}
         value={savedValue}
         onEnterKey={this.handleEnter.bind(this)}
         onChange={this.handleChange.bind(this)}
@@ -159,7 +159,7 @@ class QuestionInteractive extends Component {
               {
                 validations.map(function(validation, index) {
                   return (
-                    <Validator {...validation} key={index} validateFor={validateFor} 
+                    <Validator {...validation} key={index} validateFor={validateFor}
                       primaryColor={primaryColor} />
                   )
                 })
@@ -171,7 +171,7 @@ class QuestionInteractive extends Component {
           <ChildComponentTemplate />
         </div>
         <div className={styles.rightColumn}>
-          <FormEnterButton primaryColor={primaryColor} 
+          <FormEnterButton primaryColor={primaryColor}
             onClick={this.handleEnter.bind(this)} />
         </div>
       </div>
@@ -186,7 +186,7 @@ class QuestionInteractive extends Component {
       </div>
     )
   }
-  
+
   renderNextQuestion() {
     var { questionInstruction, context } = this.props
     return (
@@ -197,7 +197,7 @@ class QuestionInteractive extends Component {
       </div>
     )
   }
-  
+
   renderPrevQuestion() {
     var { questionInstruction, context } = this.props
     return (
