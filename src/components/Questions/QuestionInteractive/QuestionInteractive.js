@@ -20,6 +20,7 @@ class QuestionInteractive extends Component {
     super(props)
     this.state = {
       savedValue: '',
+      validateFor: '',
       inputState: 'init',
       isValid: true
     }
@@ -54,14 +55,14 @@ class QuestionInteractive extends Component {
   handleFocus(value) {
     this.setState({
       inputState: 'focus',
-      savedValue: value
+      validateFor: value
     })
   }
   
   handleBlur(value) {
     this.setState({
       inputState: 'blur',
-      savedValue: value
+      validateFor: value
     })
     this.checkValidField()
   }
@@ -71,19 +72,10 @@ class QuestionInteractive extends Component {
       savedValue: value,
     })
   }
-  
-  handleButtonClick() {
-    const value = this.refs.input.value
-    this.handleEnter(value)
-  }
 
-  handleEnter(value) {
-    console.log(value)
+  handleEnter() {
     // Will handle Verification and save answer.
     const { storeAnswer, id } = this.props
-    this.setState({
-      savedValue: value,
-    })
 
     this.checkValidField()
     
@@ -134,7 +126,7 @@ class QuestionInteractive extends Component {
   renderInteractiveInput() {
     var ChildComponent = ''
     const { type, primaryColor, validations } = this.props
-    const { inputState, savedValue, isValid } = this.state
+    const { inputState, savedValue, validateFor, isValid } = this.state
     let that = this
 
     switch (type) {
@@ -154,7 +146,7 @@ class QuestionInteractive extends Component {
       return <ChildComponent {...this.props} 
         value={savedValue}
         onEnterKey={this.handleEnter.bind(this)}
-        // onChange={this.handleChange.bind(this)}
+        onChange={this.handleChange.bind(this)}
         onFocus={this.handleFocus.bind(this)}
         onBlur={this.handleBlur.bind(this)} />
     }
@@ -167,7 +159,7 @@ class QuestionInteractive extends Component {
               {
                 validations.map(function(validation, index) {
                   return (
-                    <Validator {...validation} key={index} validateFor={savedValue} 
+                    <Validator {...validation} key={index} validateFor={validateFor} 
                       primaryColor={primaryColor} />
                   )
                 })
