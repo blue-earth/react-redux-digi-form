@@ -6,6 +6,7 @@ class ShortTextInput extends Component {
     placeholderText: PropTypes.string,
     initialValue: PropTypes.string,
     fullWidth: PropTypes.bool,
+    autoFocus: PropTypes.bool,
     type: PropTypes.string,
     value: PropTypes.oneOfType([
       PropTypes.string,
@@ -32,10 +33,6 @@ class ShortTextInput extends Component {
     this.state = {
       savedValue: typeof props.value !== 'undefined' ? props.value : ''
     }
-  }
-
-  componentDidMount(){
-     this.refs.input.focus()
   }
 
   handleChange(event) {
@@ -92,7 +89,7 @@ class ShortTextInput extends Component {
 
   render() {
     var props = this.props
-    var { type, primaryColor, value } = this.props
+    var { type, primaryColor, value, autoFocus } = this.props
 
     var inputStyle = {
       color: primaryColor
@@ -112,6 +109,7 @@ class ShortTextInput extends Component {
         type={this.inputType(type)}
         style={inputStyle}
         ref="input"
+        autoFocus={autoFocus}
         value={this.state.savedValue}
         onChange={this.handleChange.bind(this)}
         onBlur={this.handleBlur.bind(this)}

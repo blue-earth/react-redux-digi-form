@@ -11,6 +11,7 @@ export const REQUEST_FORM = 'REQUEST_FORM'
 export const NEXT_QUESTION = 'NEXT_QUESTION'
 export const PREV_QUESTION = 'PREV_QUESTION'
 export const STORE_ANSWER = 'STORE_ANSWER'
+export const GOTO_QUESTION = 'GOTO_QUESTION'
 
 export const INIT_FORM_STATE = {
   id: 0,
@@ -150,6 +151,12 @@ const getPrevQuestion = (form, currentQuestionId) => {
   return questions[prevIdx].id
 }
 
+export const goToQuestion = (id) => {
+  return {
+    type: GOTO_QUESTION,
+    id: id
+  }
+}
 // ------------------------------------
 // Action: storeAnswer
 // ------------------------------------
@@ -193,11 +200,14 @@ const formInteractive = (state = INIT_FORM_STATE, action) => {
       return Object.assign({}, state, {
         currentQuestionId: getPrevQuestion(state.form, state.currentQuestionId),
       })
+    case GOTO_QUESTION:
+      return Object.assign({}, state, {
+        currentQuestionId: action.id,
+      })
     case STORE_ANSWER:
       return Object.assign({}, state, {
         isSubmitting: true,
         answers: mergeAnswers(state.answers, action.answer),
-        currentQuestionId: getNextQuestion(state.form, state.currentQuestionId),
       })
     default:
       return state;
