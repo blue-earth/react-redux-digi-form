@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import Hogan from 'hogan.js';
 import styles from './QuestionInstruction.scss';
 
 class QuestionDisplay extends Component {
@@ -8,37 +7,33 @@ class QuestionDisplay extends Component {
   }
 
   static propTypes = {
-    instruction: React.PropTypes.string.isRequired,
-    description: React.PropTypes.string,
-    attachment: React.PropTypes.string,
-    isRequired: React.PropTypes.bool,
-    isFocused: React.PropTypes.bool,
-    context: React.PropTypes.object
+    instruction: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
+    ]).isRequired,
+    description: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
+    ]),
+    attachment: React.PropTypes.string
   };
 
   static defaultProps = {
     instruction: 'No question text line',
     description: null,
-    attachment: null,
-    isRequired: false,
-    isFocused: false,
-    context: {}
+    attachment: null
   };
 
-  compileInstruction() {
-    var t = Hogan.compile(this.props.instruction);
-    return t.render(this.props.context);
-  }
 
   renderInstruction() {
     var isRequired = <span>*</span>;
 
     var ItemTemplate = () => {
-        return (
-            <div className={styles.instructionTextWrapper}>
-                <span className={styles.text}>{this.compileInstruction()}</span> {isRequired}
-            </div>
-        )
+      return (
+        <div className={styles.instructionTextWrapper}>
+          <span className={styles.text}>{this.props.instruction}</span>
+        </div>
+      )
     };
 
     return <ItemTemplate />;
@@ -48,9 +43,8 @@ class QuestionDisplay extends Component {
     if (this.props.description) {
       var ItemTemplate = () => {
         return (
-          <div
-            className={styles.descriptionTextWrapper}
-            dangerouslySetInnerHTML={{__html: this.props.description}}>
+          <div className={styles.descriptionTextWrapper}>
+            {this.props.description}
           </div>
         )
       };
@@ -73,8 +67,8 @@ class QuestionDisplay extends Component {
   render() {
     return (
       <div className={styles.questionContainer}>
-          {this.renderInstruction()}
-          {this.renderDescription()}
+        {this.renderInstruction()}
+        {this.renderDescription()}
       </div>
     )
   }

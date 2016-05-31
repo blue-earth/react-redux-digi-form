@@ -6,10 +6,11 @@
   &:after {
     clear:both;
   }
-  > .leftColumn {
+  .leftColumn {
     float: left;
+    width: 390px;
   }
-  > .rightColumn {
+  .rightColumn {
     margin-left: 25px;
     float: left;
   }
@@ -25,4 +26,8 @@
   margin: 0;
   font-weight: 400;
   opacity: .7;
+}
+
+.validatiorTransition {
+  transition: all .3s;
 }

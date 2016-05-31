@@ -19,7 +19,7 @@ export default {
     },
     globals: {
       ...config.globals,
-      API_URL: JSON.stringify('http://localhost')
+      API_URL: JSON.stringify('http://localhost:8000')
     }
   }),
 

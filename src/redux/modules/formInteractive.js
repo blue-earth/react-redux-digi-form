@@ -3,8 +3,6 @@ import { fetch } from 'redux-effects-fetch'
 //import R from 'ramda'
 import _ from 'lodash'
 
-// import fetch from 'isomorphic-fetch'
-
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -12,10 +10,12 @@ export const RECEIVE_FORM = 'RECEIVE_FORM'
 export const REQUEST_FORM = 'REQUEST_FORM'
 export const NEXT_QUESTION = 'NEXT_QUESTION'
 export const PREV_QUESTION = 'PREV_QUESTION'
+export const STORE_ANSWER = 'STORE_ANSWER'
 
 export const INIT_FORM_STATE = {
   id: 0,
   isFetching: false,
+  isSubmitting: false,
   lastUpdated: Date.now(),
   form: {
     questions: [],
@@ -28,7 +28,11 @@ export const INIT_FORM_STATE = {
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function fetchForm(id) {
+
+// ------------------------------------
+// Action: fetchForm
+// ------------------------------------
+export const fetchForm = (id) => {
 
   const fetchParams = {
     headers: {
@@ -39,9 +43,9 @@ export function fetchForm(id) {
     method: 'GET'
   }
 
-  const fetchSuccess = ({value}) => {
-    return dispatch => {
-      dispatch(receiveForm(id, value))
+  const fetchSuccess = ({value: {form_data}}) => {
+    return (dispatch, getState) => {
+      dispatch(receiveForm(id, form_data))
       // dispatch(doneFetchingForm()); // Hide loading spinner
     }
   }
@@ -50,37 +54,32 @@ export function fetchForm(id) {
     console.log(data)
   }
 
-  return bind(fetch(`${API_URL}/form.php`, fetchParams), fetchSuccess, fetchFail)
-
-  // return dispatch => {
-  //   // dispatch(setFetchingFormState()); // Show a loading spinner  
-  //   return fetch(`${API_URL}/form.php`, {
-  //       headers: {
-  //         'Accept': 'application/json',
-  //       },
-  //       redirect: 'follow',
-  //       method: 'GET'
-  //     })
-  //     .then(response => response.json())
-  //     .then(json => {
-  //       dispatch(receiveForm(id, json))
-  //       // dispatch(setFetchingFormState()); // Show a loading spinner
-  //     })
-  // }
-
+  return bind(fetch(`${API_URL}/form_document/api/form/${id}`, fetchParams), fetchSuccess, fetchFail)
 }
 
-export function receiveForm(id, form) {
+// ------------------------------------
+// Action: requestForm
+// ------------------------------------
+export const requestForm = () => {
+  return {
+    type: REQUEST_FORM
+  }
+}
+
+// ------------------------------------
+// Action: receiveForm
+// ------------------------------------
+export const receiveForm = (id, form) => {
   return {
     type: RECEIVE_FORM,
     id: id,
     form: form,
     receivedAt: Date.now(),
-    currentQuestionId: initcurrentQuestionId(form)
+    currentQuestionId: validateQuestionId(form)
   }
 }
 
-function shouldFetchForm(state, id) {
+const shouldFetchForm = (state, id) => {
   const formInteractive = state.formInteractive
   if (id !== formInteractive.id && !formInteractive.isFetching) {
     return true
@@ -89,20 +88,33 @@ function shouldFetchForm(state, id) {
   }
 }
 
-export function fetchFormIfNeeded(id) {
+// ------------------------------------
+// Action: fetchFormIfNeeded
+// ------------------------------------
+export const fetchFormIfNeeded = (id) => {
   return (dispatch, getState) => {
     if (shouldFetchForm(getState(), id)) {
-      return dispatch(fetchForm(id))
+      dispatch(requestForm())
+      dispatch(fetchForm(id))
     }
   }
 }
 
-const initcurrentQuestionId = (form) => {
+const validateQuestionId = (form) => {
   const questions = form.questions
   for ( var i = 0; i < questions.length; i ++ ) {
     if (questions[i].type !== 'Group') return questions[i].id
   }
   return 1
+}
+
+// ------------------------------------
+// Action: nextQuestion
+// ------------------------------------
+export const nextQuestion = () => {
+  return {
+    type: NEXT_QUESTION
+  }
 }
 
 const getNextQuestion = (form, currentQuestionId) => {
@@ -117,6 +129,15 @@ const getNextQuestion = (form, currentQuestionId) => {
   return questions[nextIdx].id
 }
 
+// ------------------------------------
+// Action: prevQuestion
+// ------------------------------------
+export const prevQuestion = () => {
+  return {
+    type: PREV_QUESTION
+  }
+}
+
 const getPrevQuestion = (form, currentQuestionId) => {
   const questions = form.questions
   var curIdx, prevIdx
@@ -129,22 +150,27 @@ const getPrevQuestion = (form, currentQuestionId) => {
   return questions[prevIdx].id
 }
 
-export function nextQuestion() {
+// ------------------------------------
+// Action: storeAnswer
+// ------------------------------------
+export const storeAnswer = ({id, value}) => {
   return {
-    type: NEXT_QUESTION
+    type: STORE_ANSWER,
+    answer: {
+      id,
+      value
+    }
   }
 }
 
-export function prevQuestion() {
-  return {
-    type: PREV_QUESTION
-  }
+const mergeAnswers = (answers, new_answer) => {
+  return _.unionBy([new_answer], answers, 'id')  
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-export default function formInteractive(state = INIT_FORM_STATE, action) {
+const formInteractive = (state = INIT_FORM_STATE, action) => {
   switch (action.type) {
     case RECEIVE_FORM:
       return Object.assign({}, state, {
@@ -167,9 +193,15 @@ export default function formInteractive(state = INIT_FORM_STATE, action) {
       return Object.assign({}, state, {
         currentQuestionId: getPrevQuestion(state.form, state.currentQuestionId),
       })
-    // case ANSWER_QUESTION:
-    //   return
+    case STORE_ANSWER:
+      return Object.assign({}, state, {
+        isSubmitting: true,
+        answers: mergeAnswers(state.answers, action.answer),
+        currentQuestionId: getNextQuestion(state.form, state.currentQuestionId),
+      })
     default:
       return state;
   }
 }
+
+export default formInteractive
