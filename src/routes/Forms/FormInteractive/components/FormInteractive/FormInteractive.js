@@ -4,9 +4,11 @@ import { Button } from 'react-bootstrap'
 import FormSection from '../FormSection/FormSection'
 import FormRow from '../FormRow/FormRow'
 import { fetchFormIfNeeded, storeAnswer } from 'redux/modules/formInteractive'
-import { groupFormQuestions, findIndexById } 
+import { groupFormQuestions, findIndexById, animateEnter, animateLeave } 
   from 'helpers/formInteractiveHelper.js'
 import styles from './FormInteractive.scss'
+
+import Animate from 'rc-animate'
 
 class FormInteractive extends Component {
 
@@ -24,6 +26,7 @@ class FormInteractive extends Component {
     primaryColor: PropTypes.string,
     prevQuestion: PropTypes.func.isRequired,
     nextQuestion: PropTypes.func.isRequired,
+    goToQuestion: PropTypes.func.isRequired,
     fetchFormIfNeeded: PropTypes.func.isRequired,
     storeAnswer: PropTypes.func.isRequired
   }
@@ -46,25 +49,33 @@ class FormInteractive extends Component {
   }
 
   get renderFormSteps() {
-    const { prevQuestion, nextQuestion, form: { questions }, 
+    const { prevQuestion, nextQuestion, goToQuestion, form: { questions }, 
       currentQuestionId, primaryColor, answers, storeAnswer } = this.props
     const sectionStatus = this.sectionStatus
     const questionGroups = groupFormQuestions(questions)
+
+    const anim = {
+      enter: animateEnter,
+      leave: animateLeave,
+    }
     return (
       <div className={styles.stepsWrapper}>
-        {
-          questionGroups.map(function(group, index) {
-            return (
-              <FormSection key={index} currentQuestionId={currentQuestionId}
-                allQuestions={questions} questionGroup={group}
-                step={index+1} totalSteps={questionGroups.length} 
-                nextQuestion={nextQuestion} prevQuestion={prevQuestion}
-                storeAnswer={storeAnswer} answers={answers}
-                status={sectionStatus(questions, currentQuestionId, group)} 
-                primaryColor={primaryColor} />
-            )
-          })
-        }
+        <Animate exclusive={true} animation={anim}>
+          {
+            questionGroups.map(function(group, index) {
+              return (
+                <FormSection key={index} currentQuestionId={currentQuestionId}
+                  allQuestions={questions} questionGroup={group}
+                  step={index+1} totalSteps={questionGroups.length} 
+                  nextQuestion={nextQuestion} prevQuestion={prevQuestion}
+                  goToQuestion={goToQuestion}
+                  storeAnswer={storeAnswer} answers={answers}
+                  status={sectionStatus(questions, currentQuestionId, group)} 
+                  primaryColor={primaryColor} />
+              )
+            })
+          }
+        </Animate>
         <FormRow>
           <div className={styles.helpButtonWrapper}>
             <Button bsStyle="danger" block>Help</Button>

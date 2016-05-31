@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js'
 import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.js'
-import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput.js'
+import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js'
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js'
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js'
 import Validator from '../../Validator/Validator.js'
@@ -54,7 +54,7 @@ class QuestionInteractive extends Component {
 
   handleFocus(value) {
     this.setState({
-      inputState: 'focus'
+      inputState: 'focus',
     })
   }
   
@@ -63,7 +63,6 @@ class QuestionInteractive extends Component {
       inputState: 'blur',
       valueIsValid: this.valueIsValid(value)
     })
-    this.checkValidField()
   }
 
   handleChange(value) {
@@ -94,7 +93,6 @@ class QuestionInteractive extends Component {
 
   valueIsValid(value) {
     const { validations } = this.props
-    const { savedValue } = this.state
     var isValid = true
     for (var i = 0; i < validations.length; i ++) {
       isValid = validateField( validations[i], value )
@@ -140,7 +138,7 @@ class QuestionInteractive extends Component {
         ChildComponent = MultipleChoice
         break
       case 'LongTextField':
-        ChildComponent = LongTextInput
+        ChildComponent = TextInputLong
         break
     }
 
@@ -225,6 +223,3 @@ class QuestionInteractive extends Component {
 }
 
 export default QuestionInteractive
-
-
-

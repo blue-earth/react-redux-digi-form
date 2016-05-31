@@ -54,16 +54,15 @@ class QuestionInteractive extends Component {
 
   handleFocus(value) {
     this.setState({
-      inputState: 'focus'
+      inputState: 'focus',
     })
   }
-  
+
   handleBlur(value) {
     this.setState({
       inputState: 'blur',
       valueIsValid: this.valueIsValid(value)
     })
-    this.checkValidField()
   }
 
   handleChange(value) {
@@ -94,14 +93,19 @@ class QuestionInteractive extends Component {
 
   valueIsValid(value) {
     const { validations } = this.props
-    const { savedValue } = this.state
     var isValid = true
     for (var i = 0; i < validations.length; i ++) {
       isValid = validateField( validations[i], value )
       if (!isValid) break
     }
 
+<<<<<<< HEAD
+    this.setState({
+      isValid: isValid
+    }, callback)
+=======
     return isValid
+>>>>>>> f912338a395a1e98ef01edf5b1e3625dfd7d06c1
   }
 
   compileTemplate(template, context) {
@@ -145,7 +149,7 @@ class QuestionInteractive extends Component {
     }
 
     var ChildComponentTemplate = () => {
-      return <ChildComponent {...this.props} 
+      return <ChildComponent {...this.props}
         value={savedValue}
         autoFocus={inputState == 'focus' || inputState == 'init'}
         onEnterKey={this.handleEnter.bind(this)}
@@ -162,7 +166,11 @@ class QuestionInteractive extends Component {
               {
                 validations.map(function(validation, index) {
                   return (
+<<<<<<< HEAD
+                    <Validator {...validation} key={index} validateFor={validateFor}
+=======
                     <Validator {...validation} key={index} validateFor={savedValue} 
+>>>>>>> f912338a395a1e98ef01edf5b1e3625dfd7d06c1
                       primaryColor={primaryColor} />
                   )
                 })
@@ -174,7 +182,7 @@ class QuestionInteractive extends Component {
           <ChildComponentTemplate />
         </div>
         <div className={styles.rightColumn}>
-          <FormEnterButton primaryColor={primaryColor} 
+          <FormEnterButton primaryColor={primaryColor}
             onClick={this.handleEnter.bind(this)} />
         </div>
       </div>
@@ -189,7 +197,7 @@ class QuestionInteractive extends Component {
       </div>
     )
   }
-  
+
   renderNextQuestion() {
     var { questionInstruction, context } = this.props
     return (
@@ -200,7 +208,7 @@ class QuestionInteractive extends Component {
       </div>
     )
   }
-  
+
   renderPrevQuestion() {
     var { questionInstruction, context } = this.props
     return (
@@ -225,6 +233,3 @@ class QuestionInteractive extends Component {
 }
 
 export default QuestionInteractive
-
-
-

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js'
 import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.js'
-import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput.js'
+import TextInputLong from '../../QuestionInputs/TextInputLong/TextInputLong.js'
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js'
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js'
 import Validator from '../../Validator/Validator.js'
@@ -20,8 +20,9 @@ class QuestionInteractive extends Component {
     super(props)
     this.state = {
       savedValue: '',
+      validateFor: '',
       inputState: 'init',
-      valueIsValid: true
+      isValid: true
     }
   }
 
@@ -30,8 +31,7 @@ class QuestionInteractive extends Component {
     validations: PropTypes.array,
     status: PropTypes.oneOf(['current', 'next', 'prev', 'hidden']),
     context: PropTypes.object,
-    storeAnswer: PropTypes.func.isRequired,
-    nextQuestion: PropTypes.func.isRequired
+    storeAnswer: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -54,54 +54,53 @@ class QuestionInteractive extends Component {
 
   handleFocus(value) {
     this.setState({
-      inputState: 'focus'
+      inputState: 'focus',
+      validateFor: value
     })
   }
   
   handleBlur(value) {
     this.setState({
       inputState: 'blur',
-      valueIsValid: this.valueIsValid(value)
+      validateFor: value
     })
     this.checkValidField()
   }
 
   handleChange(value) {
-    const { storeAnswer, id } = this.props
-    
     this.setState({
-      savedValue: value
+      savedValue: value,
     })
-    
-    if (this.valueIsValid(value)) {
-      storeAnswer({
-        id: id,
-        value: value
-      })
-    }
   }
 
   handleEnter() {
-    // We only do validation on enter, onChange submits the answer if valid.
-    const { savedValue } = this.state
-    const { nextQuestion } = this.props
-    const isValid = this.valueIsValid(savedValue)
-    this.setState({
-      valueIsValid: isValid
+    // Will handle Verification and save answer.
+    const { storeAnswer, id } = this.props
+
+    this.checkValidField(function() {
+      if (this.state.isValid) {
+        storeAnswer({
+          id: id,
+          value: this.state.savedValue
+        })
+      }
     })
-    if (isValid) nextQuestion()
+
+    console.log("handle verification and submit")
   }
 
-  valueIsValid(value) {
+  checkValidField(callback) {
     const { validations } = this.props
     const { savedValue } = this.state
     var isValid = true
     for (var i = 0; i < validations.length; i ++) {
-      isValid = validateField( validations[i], value )
+      isValid = validateField( validations[i], savedValue )
       if (!isValid) break
     }
-
-    return isValid
+    
+    this.setState({
+      isValid: isValid
+    }, callback)
   }
 
   compileTemplate(template, context) {
@@ -127,27 +126,25 @@ class QuestionInteractive extends Component {
   renderInteractiveInput() {
     var ChildComponent = ''
     const { type, primaryColor, validations } = this.props
-    const { inputState, savedValue } = this.state
+    const { inputState, savedValue, validateFor } = this.state
     let that = this
 
     switch (type) {
       case 'ShortTextField':
       case 'EmailField':
-      case 'NumberField':
         ChildComponent = ShortTextInput
         break
       case 'MultipleChoice':
         ChildComponent = MultipleChoice
         break
       case 'LongTextField':
-        ChildComponent = LongTextInput
+        ChildComponent = TextInputLong
         break
     }
 
     var ChildComponentTemplate = () => {
       return <ChildComponent {...this.props} 
         value={savedValue}
-        autoFocus={inputState == 'focus' || inputState == 'init'}
         onEnterKey={this.handleEnter.bind(this)}
         onChange={this.handleChange.bind(this)}
         onFocus={this.handleFocus.bind(this)}
@@ -162,7 +159,7 @@ class QuestionInteractive extends Component {
               {
                 validations.map(function(validation, index) {
                   return (
-                    <Validator {...validation} key={index} validateFor={savedValue} 
+                    <Validator {...validation} key={index} validateFor={validateFor} 
                       primaryColor={primaryColor} />
                   )
                 })
@@ -220,7 +217,7 @@ class QuestionInteractive extends Component {
       return this.renderNextQuestion()
     else if ( status === 'prev' )
       return this.renderPrevQuestion()
-    return false
+    return (<div></div>)
   }
 }
 

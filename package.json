@@ -111,6 +111,7 @@
     "node-sass": "^3.7.0",
     "normalize.css": "^4.1.1",
     "postcss-loader": "^0.9.0",
+    "rc-animate": "^2.0.4",
     "react": "^15.0.0",
     "react-bootstrap": "^0.29.4",
     "react-dom": "^15.0.0",
@@ -127,6 +128,7 @@
     "sass-loader": "^3.0.0",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",
+    "velocity-animate": "^1.2.3",
     "webpack": "^1.12.14",
     "yargs": "^4.0.0"
   },

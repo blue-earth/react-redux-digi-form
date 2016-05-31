@@ -1,5 +1,6 @@
 import { underscoreToCamelCase } from 'helpers/pureFunctions.js'
 import _ from 'lodash'
+import velocity from 'velocity-animate'
 
 export const transformQuestions = (questions) => {
   var trQuestions = []
@@ -48,6 +49,61 @@ export const getContextFromAnswer = (answers) => {
   return context
 }
 
+export const getFirstQuestionOfGroup = (questionGroup) => {
+  const questions = questionGroup.questions
+  if (typeof questions !== 'undefined') {
+    return questions[0].id
+  } else {
+    return 0
+  }
+}
+
 export const findIndexById = (obj_array, id) => {
   return _.findIndex(obj_array, function(o) { return o.id == id })
+}
+
+export const animateEnter = (node, done) => {
+  let ok = false
+
+  function complete() {
+    if (!ok) {
+      ok = 1
+      done()
+    }
+  }
+
+  velocity(node, 'slideDown', {
+    duration: 500,
+    complete: complete,
+  })
+  return {
+    stop() {
+      velocity(node, 'finish');
+      // velocity complete is async
+      complete();
+    }
+  }
+}
+
+export const animateLeave = (node, done) => {
+  let ok = false
+
+  function complete() {
+    if (!ok) {
+      ok = 1
+      done()
+    }
+  }
+
+  velocity(node, 'slideUp', {
+    duration: 500,
+    complete: complete,
+  })
+  return {
+    stop() {
+      velocity(node, 'finish');
+      // velocity complete is async
+      complete();
+    },
+  }
 }
