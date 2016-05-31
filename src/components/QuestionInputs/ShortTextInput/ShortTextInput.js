@@ -34,6 +34,10 @@ class ShortTextInput extends Component {
     }
   }
 
+  componentDidMount(){
+     this.refs.input.focus()
+  }
+
   handleChange(event) {
     const { onChange } = this.props
     let value = event.target.value
@@ -69,7 +73,6 @@ class ShortTextInput extends Component {
 
   handleKeyDown(event) {
     const { onEnterKey } = this.props
-    console.log(event)
     if (event.keyCode === 13 && typeof onEnterKey === 'function') {
       onEnterKey()
       this.refs.input.blur()
@@ -109,7 +112,6 @@ class ShortTextInput extends Component {
         type={this.inputType(type)}
         style={inputStyle}
         ref="input"
-        autoFocus={true}
         value={this.state.savedValue}
         onChange={this.handleChange.bind(this)}
         onBlur={this.handleBlur.bind(this)}

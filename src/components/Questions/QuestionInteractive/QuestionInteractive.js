@@ -77,19 +77,19 @@ class QuestionInteractive extends Component {
     // Will handle Verification and save answer.
     const { storeAnswer, id } = this.props
 
-    this.checkValidField()
-    
-    if (this.state.isValid) {
-      storeAnswer({
-        id: id,
-        value: this.state.savedValue
-      })
-    }
+    this.checkValidField(function() {
+      if (this.state.isValid) {
+        storeAnswer({
+          id: id,
+          value: this.state.savedValue
+        })
+      }
+    })
 
     console.log("handle verification and submit")
   }
 
-  checkValidField(value) {
+  checkValidField(callback) {
     const { validations } = this.props
     const { savedValue } = this.state
     var isValid = true
@@ -100,7 +100,7 @@ class QuestionInteractive extends Component {
     
     this.setState({
       isValid: isValid
-    })
+    }, callback)
   }
 
   compileTemplate(template, context) {
