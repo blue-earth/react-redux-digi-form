@@ -3,7 +3,6 @@ import React from 'react'
 import { Route, IndexRoute } from 'react-router'
 import CoreLayout from '../layouts/CoreLayout/CoreLayout'
 import Home from './Home'
-import CounterRoute from './Counter'
 import FormRoute from './Forms'
 
 /*  Note: Instead of using JSX, we recommend using react-router
@@ -14,8 +13,7 @@ export default (store) => ({
   component: CoreLayout,
   indexRoute: Home,
   childRoutes: [
-    FormRoute(store),
-    CounterRoute(store)
+    FormRoute(store)
   ]
 })
 

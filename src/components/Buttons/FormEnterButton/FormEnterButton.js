@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
-import styles from './FormEnterButton.scss';
+import React, { Component, PropTypes } from 'react'
+import { Button } from 'react-bootstrap'
+import styles from './FormEnterButton.scss'
 
 
 class FormEnterButton extends Component {
@@ -37,14 +38,14 @@ class FormEnterButton extends Component {
     }
 
     return (
-      <button type="button" onClick={this.handleClick.bind(this)}
+      <Button type="button" onClick={this.handleClick.bind(this)}
         className={styles.formEnterButton} style={buttonStyle}
         {...optionals}>
         <div className={styles.btnInner}>
           <div>press</div>
           <div>ENTER</div>
         </div>
-      </button>
+      </Button>
     )
   }
 }

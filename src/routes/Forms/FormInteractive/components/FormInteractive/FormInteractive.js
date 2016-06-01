@@ -4,8 +4,10 @@ import { Button } from 'react-bootstrap'
 import FormSection from '../FormSection/FormSection'
 import FormRow from '../FormRow/FormRow'
 import { fetchFormIfNeeded, storeAnswer } from 'redux/modules/formInteractive'
-import { groupFormQuestions, findIndexById, animateEnter, animateLeave } 
+import { groupFormQuestions, SlideAnimation } 
   from 'helpers/formInteractiveHelper.js'
+import { findIndexById } from 'helpers/pureFunctions'
+
 import styles from './FormInteractive.scss'
 
 import Animate from 'rc-animate'
@@ -21,14 +23,17 @@ class FormInteractive extends Component {
     form: PropTypes.object.isRequired,
     answers: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,
+    isVerifying: PropTypes.bool.isRequired,
     lastUpdated: PropTypes.number,
     currentQuestionId: PropTypes.number.isRequired,
     primaryColor: PropTypes.string,
+    verificationStatus: PropTypes.array,
     prevQuestion: PropTypes.func.isRequired,
     nextQuestion: PropTypes.func.isRequired,
     goToQuestion: PropTypes.func.isRequired,
     fetchFormIfNeeded: PropTypes.func.isRequired,
-    storeAnswer: PropTypes.func.isRequired
+    storeAnswer: PropTypes.func.isRequired,
+    verifyEmail: PropTypes.func.isRequired
   }
 
   componentWillMount() {
@@ -49,14 +54,15 @@ class FormInteractive extends Component {
   }
 
   get renderFormSteps() {
-    const { prevQuestion, nextQuestion, goToQuestion, form: { questions }, 
-      currentQuestionId, primaryColor, answers, storeAnswer } = this.props
+    const { form: { questions }, currentQuestionId } = this.props
+    const props = this.props
     const sectionStatus = this.sectionStatus
     const questionGroups = groupFormQuestions(questions)
 
+    var slideAnimation = new SlideAnimation(1000)
     const anim = {
-      enter: animateEnter,
-      leave: animateLeave,
+      enter: slideAnimation.enter,
+      leave: slideAnimation.leave,
     }
     return (
       <div className={styles.stepsWrapper}>
@@ -64,14 +70,11 @@ class FormInteractive extends Component {
           {
             questionGroups.map(function(group, index) {
               return (
-                <FormSection key={index} currentQuestionId={currentQuestionId}
+                <FormSection key={index}
                   allQuestions={questions} questionGroup={group}
-                  step={index+1} totalSteps={questionGroups.length} 
-                  nextQuestion={nextQuestion} prevQuestion={prevQuestion}
-                  goToQuestion={goToQuestion}
-                  storeAnswer={storeAnswer} answers={answers}
-                  status={sectionStatus(questions, currentQuestionId, group)} 
-                  primaryColor={primaryColor} />
+                  step={index+1} totalSteps={questionGroups.length}
+                  status={sectionStatus(questions, currentQuestionId, group)}  
+                  {...props} />
               )
             })
           }

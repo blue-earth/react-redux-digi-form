@@ -4,11 +4,14 @@ import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.j
 import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput.js'
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js'
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js'
-import Validator from '../../Validator/Validator.js'
+import Validator from '../../Validator/Validator'
+import Verifier from '../../Verifier/Verifier'
 import validateField from 'helpers/validationHelper'
 import styles from './QuestionInteractive.scss'
 import _ from 'lodash'
 import Hogan from 'hogan.js';
+import { SlideAnimation } from 'helpers/formInteractiveHelper'
+import Animate from 'rc-animate'
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -30,8 +33,11 @@ class QuestionInteractive extends Component {
     validations: PropTypes.array,
     status: PropTypes.oneOf(['current', 'next', 'prev', 'hidden']),
     context: PropTypes.object,
+    verificationStatus: PropTypes.array,
+    isVerifying: PropTypes.bool.isRequired,
     storeAnswer: PropTypes.func.isRequired,
-    nextQuestion: PropTypes.func.isRequired
+    nextQuestion: PropTypes.func.isRequired,
+    verifyEmail: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -43,12 +49,13 @@ class QuestionInteractive extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     const { inputState } = nextState
-    return inputState != 'focus'
+    return inputState != 'focus' || (nextProps.isVerifying != this.props.isVerifying)
   }
 
-  componentWillReceiveProps({ value }) {
+  componentWillReceiveProps(props) {
+
     this.setState({
-      savedValue: value
+      savedValue: props.value
     })
   }
 
@@ -84,12 +91,13 @@ class QuestionInteractive extends Component {
   handleEnter() {
     // We only do validation on enter, onChange submits the answer if valid.
     const { savedValue } = this.state
-    const { nextQuestion } = this.props
+    const { nextQuestion, isVerifying } = this.props
     const isValid = this.valueIsValid(savedValue)
+    const isVerified = this.valueIsVerified()
     this.setState({
       valueIsValid: isValid
     })
-    if (isValid) nextQuestion()
+    if (isValid && isVerified) nextQuestion()
   }
 
   valueIsValid(value) {
@@ -102,6 +110,13 @@ class QuestionInteractive extends Component {
     }
 
     return isValid
+  }
+
+  valueIsVerified() {
+    const { id, verificationStatus, isVerifying } = this.props
+    if (isVerifying) return false;
+    const unavailables = _.filter(verificationStatus, {id: id, status: false})
+    return unavailables.length == 0;
   }
 
   compileTemplate(template, context) {
@@ -126,7 +141,7 @@ class QuestionInteractive extends Component {
 
   renderInteractiveInput() {
     var ChildComponent = ''
-    const { type, primaryColor, validations } = this.props
+    const { id, type, primaryColor, validations, verificationStatus, isVerifying } = this.props
     const { inputState, savedValue } = this.state
     let that = this
 
@@ -147,35 +162,55 @@ class QuestionInteractive extends Component {
     var ChildComponentTemplate = () => {
       return <ChildComponent {...this.props} 
         value={savedValue}
+        isDisabled={isVerifying}
         autoFocus={inputState == 'focus' || inputState == 'init'}
         onEnterKey={this.handleEnter.bind(this)}
         onChange={this.handleChange.bind(this)}
         onFocus={this.handleFocus.bind(this)}
         onBlur={this.handleBlur.bind(this)} />
     }
+    const slideAnimation = new SlideAnimation(200)
+    const anim = {
+      enter: slideAnimation.enter,
+      leave: slideAnimation.leave,
+    }
 
+    const filteredValidations = _.filter(validations, function(validation) { 
+      return !validateField( validation, savedValue ) 
+    } )
     return (
       <div className={styles.interactiveContainer}>
-        { (inputState == 'blur') &&
-          <div className="clearfix">
-            <div className={styles.leftColumn}>
+        <div className="clearfix">
+          <div className={styles.leftColumn}>
+            <Animate exclusive={true} animation={anim} component="div">
+              { (inputState == 'blur')
+                ? filteredValidations.map((validation, index) => {
+                    return (
+                      <Validator {...validation} key={validation.type} validateFor={savedValue} 
+                        primaryColor={primaryColor} />
+                    )
+                  })
+                : <div key="null_key"></div>
+              }
+            </Animate>
+            <Animate exclusive={true} animation={anim} component="div">
               {
-                validations.map(function(validation, index) {
+                _.filter(verificationStatus, {id: id, status: false}).map((verification, index) => {
                   return (
-                    <Validator {...validation} key={index} validateFor={savedValue} 
+                    <Verifier {...verification} key={verification.type} 
                       primaryColor={primaryColor} />
                   )
                 })
               }
-            </div>
+            </Animate>
           </div>
-        }
+        </div>
         <div className={styles.leftColumn}>
           <ChildComponentTemplate />
         </div>
         <div className={styles.rightColumn}>
           <FormEnterButton primaryColor={primaryColor} 
-            onClick={this.handleEnter.bind(this)} />
+            onClick={this.handleEnter.bind(this)} isDisabled={isVerifying} />
         </div>
       </div>
     )

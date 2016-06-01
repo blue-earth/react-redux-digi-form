@@ -10,9 +10,12 @@
   width: 89px;
   height: 64px;
   opacity: .7;
-  @include transition(opacity .2s);
+  padding: 2px 6px;
+  @include transition(all .15s);
   &:hover, &:focus {
     opacity: 1;
+    background-color: #FFFFFF;
+    outline: none;
   }
   > .btnInner {
     width: 100%;

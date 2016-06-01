@@ -35,6 +35,10 @@ class ShortTextInput extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.savedValue != this.state.savedValue
+  }
+
   handleChange(event) {
     const { onChange } = this.props
     let value = event.target.value

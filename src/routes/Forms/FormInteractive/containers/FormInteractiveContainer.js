@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion,
-  storeAnswer, fetchFormIfNeeded } from 'redux/modules/formInteractive'
+  storeAnswer, fetchFormIfNeeded, verifyEmail } from 'redux/modules/formInteractive'
 
 /*  This is a container component. Notice it does not contain any JSX,
     nor does it import React. This component is **only** responsible for
@@ -14,11 +14,12 @@ import FormInteractive from '../components/FormInteractive/FormInteractive'
     implementing our wrapper around increment; the component doesn't care   */
 
 const mapActionCreators = {
-  prevQuestion: () => prevQuestion(),
-  nextQuestion: () => nextQuestion(),
-  fetchFormIfNeeded: fetchFormIfNeeded,
-  storeAnswer: storeAnswer,
-  goToQuestion: goToQuestion
+  prevQuestion,
+  nextQuestion,
+  fetchFormIfNeeded,
+  storeAnswer,
+  goToQuestion,
+  verifyEmail
 }
 
 const mapStateToProps = (state) => {
@@ -26,19 +27,23 @@ const mapStateToProps = (state) => {
   const {
     id,
     isFetching,
+    isVerifying,
     lastUpdated,
     currentQuestionId,
     form,
     answers,
+    verificationStatus,
     primaryColor
   } = formInteractive || INIT_FORM_STATE
   return {
     id : parseInt(id),
     isFetching,
+    isVerifying,
     currentQuestionId,
     form,
     answers,
     primaryColor,
+    verificationStatus,
     lastUpdated
   }
 }

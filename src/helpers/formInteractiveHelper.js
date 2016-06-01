@@ -1,4 +1,4 @@
-import { underscoreToCamelCase } from 'helpers/pureFunctions.js'
+import { underscoreToCamelCase, findIndexById } from 'helpers/pureFunctions.js'
 import _ from 'lodash'
 import velocity from 'velocity-animate'
 
@@ -58,11 +58,7 @@ export const getFirstQuestionOfGroup = (questionGroup) => {
   }
 }
 
-export const findIndexById = (obj_array, id) => {
-  return _.findIndex(obj_array, function(o) { return o.id == id })
-}
-
-export const animateEnter = (node, done) => {
+var animateEnter = (node, done) => {
   let ok = false
 
   function complete() {
@@ -77,15 +73,14 @@ export const animateEnter = (node, done) => {
     complete: complete,
   })
   return {
-    stop() {
+    stop: function() {
       velocity(node, 'finish');
       // velocity complete is async
       complete();
     }
   }
 }
-
-export const animateLeave = (node, done) => {
+var animateLeave = (node, done) => {
   let ok = false
 
   function complete() {
@@ -100,10 +95,58 @@ export const animateLeave = (node, done) => {
     complete: complete,
   })
   return {
-    stop() {
+    stop: function() {
       velocity(node, 'finish');
       // velocity complete is async
       complete();
     },
+  }
+}
+
+export function SlideAnimation(duration) {
+  this.duration = typeof duration !== 'undefined' ? duration : 500
+  this.enter = (node, done) => {
+    let ok = false
+
+    function complete() {
+      if (!ok) {
+        ok = 1
+        done()
+      }
+    }
+
+    velocity(node, 'slideDown', {
+      duration: this.duration,
+      complete: complete,
+    })
+    return {
+      stop: function() {
+        velocity(node, 'finish');
+        // velocity complete is async
+        complete();
+      }
+    }
+  }
+  this.leave = (node, done) => {
+    let ok = false
+
+    function complete() {
+      if (!ok) {
+        ok = 1
+        done()
+      }
+    }
+
+    velocity(node, 'slideUp', {
+      duration: this.duration,
+      complete: complete,
+    })
+    return {
+      stop: function() {
+        velocity(node, 'finish');
+        // velocity complete is async
+        complete();
+      },
+    }
   }
 }

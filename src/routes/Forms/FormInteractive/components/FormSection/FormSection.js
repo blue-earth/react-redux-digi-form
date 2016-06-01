@@ -4,8 +4,9 @@ import { MdCheck, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib
 import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive'
 import FormRow from '../FormRow/FormRow'
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection'
-import { findIndexById, getContextFromAnswer, getFirstQuestionOfGroup, 
-  animateEnter, animateLeave } from 'helpers/formInteractiveHelper'
+import { getContextFromAnswer, getFirstQuestionOfGroup, 
+  SlideAnimation } from 'helpers/formInteractiveHelper'
+import { findIndexById } from 'helpers/pureFunctions'
 import styles from './FormSection.scss'
 import _ from 'lodash'
 
@@ -28,11 +29,14 @@ class FormSection extends Component {
     questionGroup: PropTypes.object.isRequired,
     logics: PropTypes.array,
     currentQuestionId: PropTypes.number.isRequired,
+    verificationStatus: PropTypes.array,
+    isVerifying: PropTypes.bool.isRequired,
     answers: PropTypes.array.isRequired,
     prevQuestion: PropTypes.func.isRequired,
     nextQuestion: PropTypes.func.isRequired,
     goToQuestion: PropTypes.func.isRequired,
-    storeAnswer: PropTypes.func.isRequired
+    storeAnswer: PropTypes.func.isRequired,
+    verifyEmail: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -50,8 +54,8 @@ class FormSection extends Component {
   }
 
   get renderAllQuestions() {
-    const { questionGroup: {questions}, currentQuestionId, 
-      allQuestions, primaryColor, answers, storeAnswer, nextQuestion } = this.props
+    const { questionGroup: {questions}, currentQuestionId, allQuestions, verificationStatus,
+      primaryColor, answers, storeAnswer, nextQuestion, verifyEmail, isVerifying } = this.props
     const curQIdx = findIndexById(allQuestions, currentQuestionId)
     const context = getContextFromAnswer(answers)
 
@@ -64,10 +68,13 @@ class FormSection extends Component {
           <QuestionInteractive key={question.id}
             {...question} 
             primaryColor={primaryColor}
+            verificationStatus={verificationStatus}
             storeAnswer={storeAnswer}
             nextQuestion={nextQuestion}
             context={context}
             value={answerValue}
+            verifyEmail={verifyEmail}
+            isVerifying={isVerifying}
             status={curQIdx == idx 
               ? 'current' : curQIdx - idx == 1 
               ? 'next' : idx - curQIdx == 1
@@ -90,9 +97,10 @@ class FormSection extends Component {
 
   get renderActiveSection() {
     const { step, totalSteps, questionGroup, prevQuestion, nextQuestion, primaryColor } = this.props
+    const slideAnimation = new SlideAnimation
     const anim = {
-      enter: animateEnter,
-      leave: animateLeave,
+      enter: slideAnimation.enter,
+      leave: slideAnimation.leave,
     }
 
     return (
