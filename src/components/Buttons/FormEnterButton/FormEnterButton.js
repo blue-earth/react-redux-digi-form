@@ -34,7 +34,7 @@ class FormEnterButton extends Component {
 
     var optionals = {}
     if (props.isDisabled) {
-      optionals['disabled'] = 'disabled'
+      optionals['disabled'] = true
     }
 
     return (
