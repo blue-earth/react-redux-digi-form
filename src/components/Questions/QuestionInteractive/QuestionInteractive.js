@@ -1,17 +1,17 @@
-import React, { Component, PropTypes } from 'react'
-import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js'
-import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.js'
-import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput.js'
-import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js'
-import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js'
-import Validator from '../../Validator/Validator'
-import Verifier from '../../Verifier/Verifier'
-import validateField from 'helpers/validationHelper'
-import styles from './QuestionInteractive.scss'
-import _ from 'lodash'
+import React, { Component, PropTypes } from 'react';
+import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js';
+import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.js';
+import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput.js';
+import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js';
+import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js';
+import Validator from '../../Validator/Validator';
+import Verifier from '../../Verifier/Verifier';
+import validateField from 'helpers/validationHelper';
+import styles from './QuestionInteractive.scss';
+import _ from 'lodash';
 import Hogan from 'hogan.js';
-import { SlideAnimation } from 'helpers/formInteractiveHelper'
-import Animate from 'rc-animate'
+import { SlideAnimation } from 'helpers/formInteractiveHelper';
+import Animate from 'rc-animate';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -20,24 +20,61 @@ import Animate from 'rc-animate'
 
 class QuestionInteractive extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      savedValue: '',
-      inputState: 'init',
-      valueIsValid: true
-    }
-  }
+      /*
+       * savedValue: current answer value, it is saved to store when validation passes.
+       */
+      savedValue: props.value,
+
+      /*
+       * inputState: one of 'init', 'focus', 'blur', 'enter'
+       */
+      inputState: 'init'
+    };
+  };
 
   static propTypes = {
     primaryColor: PropTypes.string,
+
+    /*
+     * validations: Validations required for the question, it is a part of form response.
+     */ 
     validations: PropTypes.array,
+    
+    /*
+     * status: Status of current question.
+     *         'current' - current active question that is prompted to answer
+     *         'next' - the question next to current answer for preview
+     *         'prev' - the question prior to current question
+     *         'hidden' - the question that won't be shown
+     */
     status: PropTypes.oneOf(['current', 'next', 'prev', 'hidden']),
+
+    /*
+     * context: context variable, array of {answer_xxx: 'ANSWERED_VALUE'} for replacement by Hogan.js
+     */
     context: PropTypes.object,
+
+    /*
+     * verificationStatus: Redux state that holds the status of verification, ex. EmondoEmailService
+     */
     verificationStatus: PropTypes.array,
+
+    /*
+     * isVerifying: Redux state that holds the status whether verification is in prgress
+     */
     isVerifying: PropTypes.bool.isRequired,
+
+    /*
+     * storeAnswer: Redux action to store the answer value to Redux store.
+     */
     storeAnswer: PropTypes.func.isRequired,
-    nextQuestion: PropTypes.func.isRequired,
-    verifyEmail: PropTypes.func.isRequired
+
+    /*
+     * nextQuestion: Redux action to move to next question when the current answer is qualified.
+     */
+    nextQuestion: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -48,113 +85,114 @@ class QuestionInteractive extends Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { inputState } = nextState
-    return inputState != 'focus' || (nextProps.isVerifying != this.props.isVerifying)
+    const { inputState } = nextState;
+    return inputState != 'focus' || (nextProps.isVerifying != this.props.isVerifying);
   }
 
   componentWillReceiveProps(props) {
 
     this.setState({
       savedValue: props.value
-    })
+    });
   }
 
   handleFocus(value) {
     this.setState({
       inputState: 'focus',
-    })
+    });
   }
   
   handleBlur(value) {
     this.setState({
-      inputState: 'blur',
-      valueIsValid: this.valueIsValid(value)
-    })
+      inputState: 'blur'
+    });
   }
 
   handleChange(value) {
-    const { storeAnswer, id } = this.props
+    const { storeAnswer, id } = this.props;
     
     this.setState({
       savedValue: value
-    })
+    });
     
     if (this.valueIsValid(value)) {
       storeAnswer({
         id: id,
         value: value
-      })
+      });
     }
   }
 
   handleEnter() {
     // We only do validation on enter, onChange submits the answer if valid.
-    const { savedValue } = this.state
-    const { nextQuestion, isVerifying } = this.props
-    const isValid = this.valueIsValid(savedValue)
-    const isVerified = this.valueIsVerified()
+    const { savedValue } = this.state;
+    const { nextQuestion, isVerifying } = this.props;
+    const isValid = this.valueIsValid(savedValue);
+    const isVerified = this.valueIsVerified();
+    if (isValid && isVerified) nextQuestion();
     this.setState({
-      valueIsValid: isValid
-    })
-    if (isValid && isVerified) nextQuestion()
+      inputState: 'enter'
+    });
   }
 
   valueIsValid(value) {
-    const { validations } = this.props
-    var isValid = true
+    const { validations } = this.props;
+    var isValid = true;
     for (var i = 0; i < validations.length; i ++) {
-      isValid = validateField( validations[i], value )
-      if (!isValid) break
+      isValid = validateField( validations[i], value );
+      if (!isValid) break;
     }
 
-    return isValid
+    return isValid;
   }
 
   valueIsVerified() {
-    const { id, verificationStatus, isVerifying } = this.props
+    const { id, verificationStatus, isVerifying } = this.props;
     if (isVerifying) return false;
-    const unavailables = _.filter(verificationStatus, {id: id, status: false})
+    const unavailables = _.filter(verificationStatus, {id: id, status: false});
     return unavailables.length == 0;
   }
 
   compileTemplate(template, context) {
     if (template) {
       var t = Hogan.compile(template);
-      return t.render(context)
+      return t.render(context);
     } else {
-      return ''
+      return '';
     }
   }
 
   renderQuestionDisplay() {
-    const { context, questionInstruction, questionDescription } = this.props
+    const { context, questionInstruction, questionDescription } = this.props;
 
     return (
       <QuestionInstruction
         instruction={this.compileTemplate(questionInstruction, context)}
         description={this.compileTemplate(questionDescription, context)}
       />
-    )
+    );
   }
 
   renderInteractiveInput() {
-    var ChildComponent = ''
-    const { id, type, primaryColor, validations, verificationStatus, isVerifying } = this.props
-    const { inputState, savedValue } = this.state
-    let that = this
+    var ChildComponent = '';
+    const { id, type, primaryColor, validations, verificationStatus, isVerifying } = this.props;
+    const { inputState, savedValue } = this.state;
+    let that = this;
 
     switch (type) {
       case 'ShortTextField':
       case 'EmailField':
       case 'NumberField':
-        ChildComponent = ShortTextInput
-        break
+        ChildComponent = ShortTextInput;
+        break;
       case 'MultipleChoice':
-        ChildComponent = MultipleChoice
-        break
+        ChildComponent = MultipleChoice;
+        break;
       case 'LongTextField':
-        ChildComponent = LongTextInput
-        break
+        ChildComponent = LongTextInput;
+        break;
+      default:
+        return false;
     }
 
     var ChildComponentTemplate = () => {
@@ -167,21 +205,21 @@ class QuestionInteractive extends Component {
         onFocus={this.handleFocus.bind(this)}
         onBlur={this.handleBlur.bind(this)} />
     }
-    const slideAnimation = new SlideAnimation(200)
+    const slideAnimation = new SlideAnimation(200);
     const anim = {
       enter: slideAnimation.enter,
       leave: slideAnimation.leave,
-    }
+    };
 
     const filteredValidations = _.filter(validations, function(validation) { 
-      return !validateField( validation, savedValue ) 
+      return !validateField( validation, savedValue );
     } )
     return (
       <div className={styles.interactiveContainer}>
         <div className="clearfix">
           <div className={styles.leftColumn}>
             <Animate exclusive={true} animation={anim} component="div">
-              { (inputState == 'blur')
+              { (inputState == 'enter')
                 ? filteredValidations.map((validation, index) => {
                     return (
                       <Validator {...validation} key={validation.type} validateFor={savedValue} 
@@ -248,13 +286,13 @@ class QuestionInteractive extends Component {
   render() {
     const { status } = this.props
     if ( status === 'current' )
-      return this.renderActiveQuestion()
+      return this.renderActiveQuestion();
     else if ( status === 'next' )
-      return this.renderNextQuestion()
+      return this.renderNextQuestion();
     else if ( status === 'prev' )
-      return this.renderPrevQuestion()
-    return false
+      return this.renderPrevQuestion();
+    return false;
   }
 }
 
-export default QuestionInteractive
+export default QuestionInteractive;

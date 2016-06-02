@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from 'react'
-import validateField from 'helpers/validationHelper'
-import styles from './Validator.scss'
+import React, { Component, PropTypes } from 'react';
+import validateField from 'helpers/validationHelper';
+import styles from './Validator.scss';
 
 class Validator extends Component {
   static propTypes = {
@@ -21,27 +21,27 @@ class Validator extends Component {
   renderIsRequired() {
     return (
       <span>This field is required</span>
-    )
+    );
   }
 
   renderIsEmail() {
     return (
       <span>Please enter a valid email.</span>
-    )
+    );
   }
 
   renderMinLength() {
     const { value } = this.props
     return (
       <span>Minimum of {value} charaters are required.</span>
-    )
+    );
   }
 
   renderMaxLength() {
     const { value } = this.props
     return (
       <span>Maximum of {value} charaters are required.</span>
-    )
+    );
   }
 
   render() {
@@ -50,7 +50,7 @@ class Validator extends Component {
     var output = false
     var validatorStyle = {
       backgroundColor: primaryColor
-    }
+    };
     if (result === false) {
       switch (type) {
         case 'isRequired':
@@ -78,4 +78,4 @@ class Validator extends Component {
   }
 }
 
-export default Validator
+export default Validator;

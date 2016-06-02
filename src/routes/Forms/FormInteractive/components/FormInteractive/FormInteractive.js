@@ -1,69 +1,110 @@
-import React, { Component, PropTypes } from 'react'
-import FormHeader from 'components/FormHeader'
-import { Button } from 'react-bootstrap'
-import FormSection from '../FormSection/FormSection'
-import FormRow from '../FormRow/FormRow'
-import { fetchFormIfNeeded, storeAnswer } from 'redux/modules/formInteractive'
-import { groupFormQuestions, SlideAnimation } 
-  from 'helpers/formInteractiveHelper.js'
-import { findIndexById } from 'helpers/pureFunctions'
-
-import styles from './FormInteractive.scss'
-
-import Animate from 'rc-animate'
+import React, { Component, PropTypes } from 'react';
+import FormHeader from 'components/FormHeader';
+import { Button } from 'react-bootstrap';
+import FormSection from '../FormSection/FormSection';
+import FormRow from '../FormRow/FormRow';
+import { fetchFormIfNeeded, storeAnswer } from 'redux/modules/formInteractive';
+import { groupFormQuestions, SlideAnimation }
+  from 'helpers/formInteractiveHelper.js';
+import { findIndexById } from 'helpers/pureFunctions';
+import styles from './FormInteractive.scss';
+import Animate from 'rc-animate';
 
 class FormInteractive extends Component {
 
   constructor(props) {
     super(props);
-  }
+  };
 
   static propTypes = {
+    /*
+     * Form ID
+     */
     id: PropTypes.number.isRequired,
+    /*
+     * form: form_data of response
+     */
     form: PropTypes.object.isRequired,
+    /*
+     * answers: Redux state that stores the array of answered values
+     */
     answers: PropTypes.array.isRequired,
+    /*
+     * isFetching: Redux state that indicates whether the requested form is being fetched from backend
+     */
     isFetching: PropTypes.bool.isRequired,
+
+    /*
+     * isVerifying: Redux state that indicates the status whether verification is in prgress with backend
+     */
     isVerifying: PropTypes.bool.isRequired,
-    lastUpdated: PropTypes.number,
+
+    /*
+     * currentQuestionId: Redux state that keeps the current active question ID.
+     */
     currentQuestionId: PropTypes.number.isRequired,
+
     primaryColor: PropTypes.string,
+
+    /*
+     * currentQuestionId: Redux state that keeps the current active question ID.
+     */
     verificationStatus: PropTypes.array,
+
+    /*
+     * prevQuestion: Redux action to move to previous question.
+     */
     prevQuestion: PropTypes.func.isRequired,
+
+    /*
+     * nextQuestion: Redux action to move to next question when the current answer is qualified.
+     */
     nextQuestion: PropTypes.func.isRequired,
+
+    /*
+     * goToQuestion: Redux action to move to specific question by ID.
+     */
     goToQuestion: PropTypes.func.isRequired,
+
+    /*
+     * fetchFormIfNeeded: Redux action to fetch form from backend with ID specified by request parameters
+     */
     fetchFormIfNeeded: PropTypes.func.isRequired,
-    storeAnswer: PropTypes.func.isRequired,
-    verifyEmail: PropTypes.func.isRequired
-  }
+
+    /*
+     * storeAnswer: Redux action to store the answer value to Redux store.
+     */
+    storeAnswer: PropTypes.func.isRequired
+  };
 
   componentWillMount() {
-    const { fetchFormIfNeeded } = this.props
-    let id = this.props.params.id
-    fetchFormIfNeeded(id)
+    const { fetchFormIfNeeded } = this.props;
+    let id = this.props.params.id;
+    fetchFormIfNeeded(id);
   }
 
   sectionStatus(allQuestions, currentQuestionId, questionGroup) {
-    const gq = questionGroup.questions
-    const curQueIdx = findIndexById(allQuestions, currentQuestionId)
-    const firstGroupIdx = findIndexById(allQuestions, gq[0].id)
-    const lastGroupIdx = findIndexById(allQuestions, gq[gq.length - 1].id)
+    const gq = questionGroup.questions;
+    const curQueIdx = findIndexById(allQuestions, currentQuestionId);
+    const firstGroupIdx = findIndexById(allQuestions, gq[0].id);
+    const lastGroupIdx = findIndexById(allQuestions, gq[gq.length - 1].id);
 
-    if (curQueIdx < firstGroupIdx) return 'pending'
-    else if (curQueIdx <= lastGroupIdx) return 'active'
-    else return 'completed'
+    if (curQueIdx < firstGroupIdx) return 'pending';
+    else if (curQueIdx <= lastGroupIdx) return 'active';
+    else return 'completed';
   }
 
   get renderFormSteps() {
-    const { form: { questions }, currentQuestionId } = this.props
-    const props = this.props
-    const sectionStatus = this.sectionStatus
-    const questionGroups = groupFormQuestions(questions)
+    const { form: { questions }, currentQuestionId } = this.props;
+    const props = this.props;
+    const sectionStatus = this.sectionStatus;
+    const questionGroups = groupFormQuestions(questions);
 
-    var slideAnimation = new SlideAnimation(1000)
+    var slideAnimation = new SlideAnimation(1000);
     const anim = {
       enter: slideAnimation.enter,
       leave: slideAnimation.leave,
-    }
+    };
     return (
       <div className={styles.stepsWrapper}>
         <Animate exclusive={true} animation={anim}>
@@ -75,7 +116,7 @@ class FormInteractive extends Component {
                   step={index+1} totalSteps={questionGroups.length}
                   status={sectionStatus(questions, currentQuestionId, group)}  
                   {...props} />
-              )
+              );
             })
           }
         </Animate>
@@ -99,4 +140,4 @@ class FormInteractive extends Component {
   }
 }
 
-export default FormInteractive
+export default FormInteractive;

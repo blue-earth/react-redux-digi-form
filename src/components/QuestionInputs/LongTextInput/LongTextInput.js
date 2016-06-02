@@ -63,7 +63,4 @@ class LongTextInput extends Component {
   }
 }
 
-export default LongTextInput
-
-
-
+export default LongTextInput;

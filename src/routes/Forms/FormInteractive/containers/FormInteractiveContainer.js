@@ -1,13 +1,13 @@
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion,
-  storeAnswer, fetchFormIfNeeded, verifyEmail } from 'redux/modules/formInteractive'
+  storeAnswer, fetchFormIfNeeded } from 'redux/modules/formInteractive';
 
 /*  This is a container component. Notice it does not contain any JSX,
     nor does it import React. This component is **only** responsible for
     wiring in the actions and state necessary to render a presentational
     component - in this case, the counter:   */
 
-import FormInteractive from '../components/FormInteractive/FormInteractive'
+import FormInteractive from '../components/FormInteractive/FormInteractive';
 
 /*  Object of action creators (can also be function that returns object).
     Keys will be passed as props to presentational components. Here we are
@@ -18,23 +18,21 @@ const mapActionCreators = {
   nextQuestion,
   fetchFormIfNeeded,
   storeAnswer,
-  goToQuestion,
-  verifyEmail
-}
+  goToQuestion
+};
 
 const mapStateToProps = (state) => {
-  const { formInteractive } = state
+  const { formInteractive } = state;
   const {
     id,
     isFetching,
     isVerifying,
-    lastUpdated,
     currentQuestionId,
     form,
     answers,
     verificationStatus,
     primaryColor
-  } = formInteractive || INIT_FORM_STATE
+  } = formInteractive || INIT_FORM_STATE;
   return {
     id : parseInt(id),
     isFetching,
@@ -43,9 +41,8 @@ const mapStateToProps = (state) => {
     form,
     answers,
     primaryColor,
-    verificationStatus,
-    lastUpdated
-  }
-}
+    verificationStatus
+  };
+};
 
-export default connect(mapStateToProps, mapActionCreators)(FormInteractive)
+export default connect(mapStateToProps, mapActionCreators)(FormInteractive);

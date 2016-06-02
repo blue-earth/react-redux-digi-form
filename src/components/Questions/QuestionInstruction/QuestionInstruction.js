@@ -70,10 +70,8 @@ class QuestionDisplay extends Component {
         {this.renderInstruction()}
         {this.renderDescription()}
       </div>
-    )
+    );
   }
 }
 
-export default QuestionDisplay
-
-
+export default QuestionDisplay;

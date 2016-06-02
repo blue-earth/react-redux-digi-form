@@ -1,22 +1,22 @@
-import { bind } from 'redux-effects'
-import { fetch } from 'redux-effects-fetch'
-import { findIndexById, mergeItemIntoArray } from 'helpers/pureFunctions'
-import _ from 'lodash'
+import { bind } from 'redux-effects';
+import { fetch } from 'redux-effects-fetch';
+import { findIndexById, mergeItemIntoArray } from 'helpers/pureFunctions';
+import _ from 'lodash';
 
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const RECEIVE_FORM = 'RECEIVE_FORM'
-export const REQUEST_FORM = 'REQUEST_FORM'
-export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM'
-export const NEXT_QUESTION = 'NEXT_QUESTION'
-export const PREV_QUESTION = 'PREV_QUESTION'
-export const STORE_ANSWER = 'STORE_ANSWER'
-export const GOTO_QUESTION = 'GOTO_QUESTION'
-export const VERIFY_EMAIL = 'VERIFY_EMAIL'
-export const REQUEST_VERIFY_EMAIL = 'REQUEST_VERIFY_EMAIL'
-export const DONE_VERIFYING_EMAIL = 'DONE_VERIFYING_EMAIL'
-export const RECEIVE_VERIFY_EMAIL = 'RECEIVE_VERIFY_EMAIL'
+export const RECEIVE_FORM = 'RECEIVE_FORM';
+export const REQUEST_FORM = 'REQUEST_FORM';
+export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
+export const NEXT_QUESTION = 'NEXT_QUESTION';
+export const PREV_QUESTION = 'PREV_QUESTION';
+export const STORE_ANSWER = 'STORE_ANSWER';
+export const GOTO_QUESTION = 'GOTO_QUESTION';
+export const VERIFY_EMAIL = 'VERIFY_EMAIL';
+export const REQUEST_VERIFY_EMAIL = 'REQUEST_VERIFY_EMAIL';
+export const DONE_VERIFYING_EMAIL = 'DONE_VERIFYING_EMAIL';
+export const RECEIVE_VERIFY_EMAIL = 'RECEIVE_VERIFY_EMAIL';
 
 export const INIT_FORM_STATE = {
   id: 0,
@@ -34,7 +34,8 @@ export const INIT_FORM_STATE = {
   answers: [],
   verificationStatus:[],
   primaryColor: '#DD4814'
-}
+};
+
 // ------------------------------------
 // Actions
 // ------------------------------------
@@ -51,23 +52,23 @@ export const fetchForm = (id) => {
     },
     redirect: 'follow',
     method: 'GET'
-  }
+  };
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(receiveForm(value))
+      dispatch(receiveForm(value));
       dispatch(doneFetchingForm()); // Hide loading spinner
     }
-  }
+  };
   
   const fetchFail = (data) => {
-    console.log(data)
+    console.log(data);
     return (dispatch, getState) => {
       dispatch(doneFetchingForm()); // Hide loading spinner
     }
-  }
+  };
 
-  return bind(fetch(`${API_URL}/form_document/api/form/${id}`, fetchParams), fetchSuccess, fetchFail)
+  return bind(fetch(`${API_URL}/form_document/api/form/${id}`, fetchParams), fetchSuccess, fetchFail);
 }
 
 // ------------------------------------
@@ -76,7 +77,7 @@ export const fetchForm = (id) => {
 export const requestForm = () => {
   return {
     type: REQUEST_FORM
-  }
+  };
 }
 
 // ------------------------------------
@@ -91,7 +92,7 @@ export const receiveForm = (data) => {
     slug: data.slug,
     receivedAt: Date.now(),
     currentQuestionId: validateQuestionId(data.form_data)
-  }
+  };
 }
 
 // ------------------------------------
@@ -100,15 +101,15 @@ export const receiveForm = (data) => {
 export const doneFetchingForm = () => {
   return {
     type: DONE_FETCHING_FORM
-  }
+  };
 }
 
 const shouldFetchForm = (state, id) => {
-  const formInteractive = state.formInteractive
+  const formInteractive = state.formInteractive;
   if (id !== formInteractive.id && !formInteractive.isFetching) {
-    return true
+    return true;
   } else {
-    return false
+    return false;
   }
 }
 
@@ -118,18 +119,18 @@ const shouldFetchForm = (state, id) => {
 export const fetchFormIfNeeded = (id) => {
   return (dispatch, getState) => {
     if (shouldFetchForm(getState(), id)) {
-      dispatch(requestForm())
-      dispatch(fetchForm(id))
+      dispatch(requestForm());
+      dispatch(fetchForm(id));
     }
   }
 }
 
 const validateQuestionId = (form) => {
-  const questions = form.questions
+  const questions = form.questions;
   for ( var i = 0; i < questions.length; i ++ ) {
-    if (questions[i].type !== 'Group') return questions[i].id
+    if (questions[i].type !== 'Group') return questions[i].id;
   }
-  return 1
+  return 1;
 }
 
 // ------------------------------------
@@ -138,19 +139,19 @@ const validateQuestionId = (form) => {
 export const nextQuestion = () => {
   return {
     type: NEXT_QUESTION
-  }
+  };
 }
 
 const getNextQuestion = (form, currentQuestionId) => {
-  const questions = form.questions
-  var curIdx, nextIdx
+  const questions = form.questions;
+  var curIdx, nextIdx;
   curIdx = nextIdx = _.findIndex(questions, function(o) { return o.id == currentQuestionId; })
   while ( nextIdx < questions.length - 1 ) { 
-    var q = questions[++nextIdx]
+    var q = questions[++nextIdx];
     if (q.type != 'Group') break;
   }
-  if (questions[nextIdx].type == 'Group') nextIdx = curIdx
-  return questions[nextIdx].id
+  if (questions[nextIdx].type == 'Group') nextIdx = curIdx;
+  return questions[nextIdx].id;
 }
 
 // ------------------------------------
@@ -163,15 +164,15 @@ export const prevQuestion = () => {
 }
 
 const getPrevQuestion = (form, currentQuestionId) => {
-  const questions = form.questions
-  var curIdx, prevIdx
-  curIdx = prevIdx = _.findIndex(questions, function(o) { return o.id == currentQuestionId; })
+  const questions = form.questions;
+  var curIdx, prevIdx;
+  curIdx = prevIdx = _.findIndex(questions, function(o) { return o.id == currentQuestionId; });
   while ( prevIdx > 1 ) { 
-    var q = questions[--prevIdx]
+    var q = questions[--prevIdx];
     if (q.type != 'Group') break;
   }
-  if (questions[prevIdx].type == 'Group') prevIdx = curIdx //In case it reaches index 0 and question type is 'Group'
-  return questions[prevIdx].id
+  if (questions[prevIdx].type == 'Group') prevIdx = curIdx; //In case it reaches index 0 and question type is 'Group'
+  return questions[prevIdx].id;
 }
 
 // ------------------------------------
@@ -189,11 +190,11 @@ export const goToQuestion = (id) => {
 // ------------------------------------
 export const storeAnswer = ({id, value}) => {
   return (dispatch, getState) => {
-    const state = getState()
+    const state = getState();
 
-    dispatch(processStoreAnswer({id, value}))
+    dispatch(processStoreAnswer({id, value}));
     if ( shouldVerifyEmail(state, id) ) {
-      dispatch(verifyEmail(id, value))
+      dispatch(verifyEmail(id, value));
     }
   }
 }
@@ -203,9 +204,9 @@ const shouldVerifyEmail = (state, id) => {
   const idx = findIndexById(questions, id)
 
   if (_.indexOf(questions[idx].verifications, 'EmondoEmailFieldService') != -1)
-    return true
+    return true;
   else
-    return false
+    return false;
 }
 
 // ------------------------------------
@@ -218,7 +219,7 @@ export const processStoreAnswer = ({id, value}) => {
       id,
       value
     }
-  }
+  };
 }
 
 // ------------------------------------
@@ -227,10 +228,10 @@ export const processStoreAnswer = ({id, value}) => {
 export const verifyEmail = (questionId, email) => {
   return (dispatch, getState) => {
     //if (!getState().isVerifying) {
-      dispatch(requestVerifyEmail())
-      dispatch(processVerifyEmail(questionId, email))
+      dispatch(requestVerifyEmail());
+      dispatch(processVerifyEmail(questionId, email));
     //}
-  }
+  };
 }
 
 // ------------------------------------
@@ -239,7 +240,7 @@ export const verifyEmail = (questionId, email) => {
 export const requestVerifyEmail = () => {
   return {
     type: REQUEST_VERIFY_EMAIL
-  }
+  };
 }
 
 // ------------------------------------
@@ -256,20 +257,20 @@ export const processVerifyEmail = (questionId, email) => {
     body: JSON.stringify({
       email: email
     })
-  }
+  };
 
   const fetchSuccess = ({value: {result}}) => {
     return (dispatch, getState) => {
-      dispatch(receiveVerifyEmail(questionId, result))
+      dispatch(receiveVerifyEmail(questionId, result));
       dispatch(doneVerifyingEmail()); // Hide loading spinner
     }
-  }
+  };
   
   const fetchFail = (data) => {
     console.log(data)
-  }
+  };
 
-  return bind(fetch(`${API_URL}/verifications/api/email/verify/`, fetchParams), fetchSuccess, fetchFail)
+  return bind(fetch(`${API_URL}/verifications/api/email/verify/`, fetchParams), fetchSuccess, fetchFail);
   //return bind(fetch(`http://localhost/verify.php`, fetchParams), fetchSuccess, fetchFail)
 }
 
@@ -284,13 +285,13 @@ const receiveVerifyEmail = (questionId, status) => {
       type: 'EmondoEmailFieldService',
       status
     }
-  }
+  };
 }
 
 const doneVerifyingEmail = () => {
   return {
     type: DONE_VERIFYING_EMAIL
-  }
+  };
 }
 // ------------------------------------
 // Reducer
@@ -306,47 +307,47 @@ const formInteractive = (state = INIT_FORM_STATE, action) => {
         lastUpdated: action.receivedAt,
         currentQuestionId: action.currentQuestionId,
         // primaryColor: action.primaryColor
-      })
+      });
     case REQUEST_FORM:
       return Object.assign({}, state, {
         isFetching: true,
-      })
+      });
     case DONE_FETCHING_FORM:
       return Object.assign({}, state, {
         isFetching: false,
-      })
+      });
     case NEXT_QUESTION:
       return Object.assign({}, state, {
         currentQuestionId: getNextQuestion(state.form, state.currentQuestionId),
-      })
+      });
     case PREV_QUESTION:
       return Object.assign({}, state, {
         currentQuestionId: getPrevQuestion(state.form, state.currentQuestionId),
-      })
+      });
     case GOTO_QUESTION:
       return Object.assign({}, state, {
         currentQuestionId: action.id,
-      })
+      });
     case STORE_ANSWER:
       return Object.assign({}, state, {
         // isSubmitting: true,
         answers: mergeItemIntoArray(state.answers, action.answer),
-      })
+      });
     case REQUEST_VERIFY_EMAIL:
       return Object.assign({}, state, {
         isVerifying: true,
-      })
+      });
     case DONE_VERIFYING_EMAIL:
       return Object.assign({}, state, {
         isVerifying: false,
-      })
+      });
     case RECEIVE_VERIFY_EMAIL:
       return Object.assign({}, state, {
         verificationStatus: mergeItemIntoArray(state.verificationStatus, action.verification)
-      })
+      });
     default:
       return state;
-  }
+  };
 }
 
-export default formInteractive
+export default formInteractive;
