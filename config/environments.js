@@ -38,7 +38,7 @@ export default {
     },
     globals: {
       ...config.globals,
-      API_URL: JSON.stringify('https://emondo.com.au')
+      API_URL: JSON.stringify('https://api.emondo.com.au')
     }
   })
 }
