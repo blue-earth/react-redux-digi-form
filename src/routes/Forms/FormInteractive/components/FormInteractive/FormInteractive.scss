@@ -1,0 +1,27 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+.flowLine {
+  @include media('>=md') {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    z-index: 100;
+    border-right: 1px solid $border-color;
+    border-left: 1px solid $border-color;
+    height: 100%;
+    margin-left: -($md-min-width / 2 - $md-container-width / 6 - 10);
+  }
+  @include media('>=lg') {
+    margin-left: -($lg-min-width / 2 - $lg-container-width / 6 - 15);
+  }
+}
+
+.stepsWrapper {
+  padding: 15px 0;
+}
+.helpButtonWrapper {
+  width: 90px;
+  float: right;
+  margin-top: 10px;
+}

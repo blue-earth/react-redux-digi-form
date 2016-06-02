@@ -1,0 +1,25 @@
+.choicesContainer {
+  width: 100%;
+}
+.choiceItem {
+  border: 1px solid black;
+  padding: 2px;
+  margin: 1px;
+  cursor: pointer;
+  display: inline-block;
+  > .label {
+    text-transform: uppercase;
+    border-radius: 4px;
+    border: 1px solid black;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    text-align: center;
+    line-height: 24px;
+  }
+  > .text {
+    margin-left: 4px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}

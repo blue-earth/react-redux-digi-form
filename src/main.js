@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/lib/createBrowserHistory'
 import { useRouterHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
-import createStore from './store/createStore'
+import createStore from './redux/createStore'
 import AppContainer from './containers/AppContainer'
 
 // ========================================================
@@ -60,8 +60,12 @@ if (__DEV__ && module.hot) {
   const renderApp = render
   const renderError = (error) => {
     const RedBox = require('redbox-react')
-
-    ReactDOM.render(<RedBox error={error} />, MOUNT_NODE)
+    const errStyle = {
+      redbox: {
+        background: '#8A6D3B'
+      }
+    }
+    ReactDOM.render(<RedBox error={error} style={errStyle}/>, MOUNT_NODE)
   }
   render = () => {
     try {

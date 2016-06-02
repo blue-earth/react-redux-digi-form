@@ -1,19 +1,22 @@
-import React from 'react'
-import Header from '../../components/Header'
+import React, { Component, PropTypes } from 'react'
 import classes from './CoreLayout.scss'
 import '../../styles/core.scss'
 
-export const CoreLayout = ({ children }) => (
-  <div className='container text-center'>
-    <Header />
-    <div className={classes.mainContainer}>
-      {children}
-    </div>
-  </div>
-)
 
-CoreLayout.propTypes = {
-  children: React.PropTypes.element.isRequired
+class CoreLayout extends Component {
+  static propTypes = {
+    children: PropTypes.object.isRequired
+  };
+
+  render() {
+    const {children} = this.props
+    return (
+      <div className={classes.mainContainer}>
+        {children}
+      </div>
+    )
+  }
 }
+
 
 export default CoreLayout

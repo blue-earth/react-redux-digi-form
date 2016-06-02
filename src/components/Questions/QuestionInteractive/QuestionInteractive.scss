@@ -1,0 +1,33 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.interactiveContainer {
+  @include clearfix;
+  &:after {
+    clear:both;
+  }
+  .leftColumn {
+    float: left;
+    width: 390px;
+  }
+  .rightColumn {
+    margin-left: 25px;
+    float: left;
+  }
+}
+
+.activeQuestionContainer {
+  margin: 30px 0;
+}
+
+.neighborInstruction {
+  font-size: 22px;
+  color: $text-light-color;
+  margin: 0;
+  font-weight: 400;
+  opacity: .7;
+}
+
+.validatiorTransition {
+  transition: all .3s;
+}

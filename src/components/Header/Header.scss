@@ -1,3 +1,12 @@
+@import '../../styles/variables';
+
+.header {
+	height: 65px;
+	background-color: $header-bg-color;
+	border-bottom: 1px solid $border-color;
+	z-index: 400;
+	position: relative;
+}
 .activeRoute {
   font-weight: bold;
   text-decoration: underline;

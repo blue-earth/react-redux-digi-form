@@ -1,0 +1,64 @@
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+.form-section {
+  position: relative;
+  @include clearfix;
+  background: #f5f7f9;
+
+  .form-section-contents-column {
+    padding-top: 27px;
+    padding-left: 10px;
+  }
+}
+.form-section-opened {
+  min-height: 120px;
+  .form-section-contents-column {
+    padding-top: 42px;
+  }
+}
+
+
+.form-progress-indicator-column {
+  float: left;
+  width: 60px;
+  text-align: center;
+}
+.form-section-contents-column {
+  float: left;
+}
+
+.section-indicator-container {
+  padding: 20px 0;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+}
+
+.progress-indicator {
+  border-radius: 50%;
+  color: #9daab3;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  z-index: 2000;
+  border: 2px solid #e6ebed;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  background-color: #fff;
+  line-height: 30px;
+  margin: 0 auto;
+}
+.progress-indicator-big {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+}
+

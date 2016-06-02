@@ -1,0 +1,50 @@
+/* Mixins */
+@import 'mixins/_sass-css3-mixins.scss';
+@import 'mixins/_include-media.scss';
+
+@mixin clearfix {
+  &:after {
+    clear: both;
+    display: table;
+    content: '';
+  }
+}
+
+@mixin appearnace($value) {
+  -webkit-appearance: $value;
+  -moz-appearance: $value;
+  appearance: $value;
+}
+@mixin appearance-none {
+  @include appearnace(none);
+  &::-ms-expand {
+    display: none;
+  }
+}
+@mixin box-shadow-custom($value...) {
+  -webkit-box-shadow: $value;
+  -moz-box-shadow: $value;
+  box-shadow: $value;
+}
+@mixin user-select($value) {
+  -webkit-user-select: $value;
+  -moz-user-select: $value;
+  -ms-user-select: $value;
+  user-select: $value;
+}
+@mixin vhcenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  @include transform(translate(-50%, -50%));
+}
+@mixin vcenter {
+  position: absolute;
+  top: 50%;
+  @include transform(translateY(-50%));
+}
+@mixin hcenter {
+  position: absolute;
+  left: 50%;
+  @include transform(translateX(-50%));
+}

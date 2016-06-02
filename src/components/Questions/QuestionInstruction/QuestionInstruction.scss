@@ -1,0 +1,23 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.questionContainer {
+  margin-bottom: 20px;
+  > .instructionTextWrapper {
+    > .text {
+      font-family: 'Open Sans';
+      font-size: 25px;
+      font-weight: bold;
+    }
+  }
+  > .descriptionTextWrapper {
+    color: #494949;
+    font-size: 19px;
+    > a {
+      color: #4DCCEB;
+    }
+  }
+  > .attachment {
+
+  }
+}
