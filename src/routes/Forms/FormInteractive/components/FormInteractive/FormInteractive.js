@@ -39,7 +39,7 @@ class FormInteractive extends Component {
      */
     id: PropTypes.number.isRequired,
     /*
-     * form: form_data of response
+     * form: form_data of response, consists of questions and logics.
      */
     form: PropTypes.object.isRequired,
     /*
@@ -132,8 +132,7 @@ class FormInteractive extends Component {
           {
             questionGroups.map(function(group, index) {
               return (
-                <FormSection key={index}
-                  allQuestions={questions} questionGroup={group}
+                <FormSection key={index} questionGroup={group}
                   step={index+1} totalSteps={questionGroups.length}
                   status={sectionStatus(questions, currentQuestionId, group)}  
                   {...props} />

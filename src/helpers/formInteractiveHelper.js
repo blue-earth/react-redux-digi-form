@@ -105,3 +105,19 @@ export function SlideAnimation(duration) {
     };
   }
 }
+
+export const shouldDisablePrevButton = (form, currentQuestionId) => {
+  const questions = form.questions;
+  for ( var idx = 0; idx < questions.length - 1; idx ++ ) { 
+    if (questions[idx].type != 'Group') break;
+  }
+  return questions[idx].id === currentQuestionId;
+}
+
+export const shouldDisableNextButton = (form, currentQuestionId) => {
+  for (let logic of form.questions) {
+    const itemFound = _.find(logic.conditions, { source_field: currentQuestionId });
+    if (typeof itemFound !== 'undefined') return true;
+  }
+  return false;
+}

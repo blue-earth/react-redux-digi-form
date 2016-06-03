@@ -90,15 +90,22 @@ $nav-hover-color:           #000;
   width: 40px;
   height: 35px;
   line-height: 33px;
-  opacity: .8;
   padding: 0;
   @include transition(all .2s);
+  &:hover {
+    border-color: $nav-hover-color;
+  }
+  &:active:focus {
+    outline: none;
+  }
   &:hover, &:focus {
     outline: none;
-    opacity: 1;
-    background-color: $bg-color2;
-    border-color: $nav-hover-color;
     color: $nav-hover-color;
+    background-color: $bg-color2;
+    &[disabled] {
+      border: 1px solid $border-color;
+      color: $text-color;
+    }
   }
 }
 

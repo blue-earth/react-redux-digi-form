@@ -3,19 +3,33 @@ import validateField from 'helpers/validationHelper';
 import styles from './Validator.scss';
 
 class Validator extends Component {
+
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
+
   static propTypes = {
+    /*
+     * type: Validation type, 'isRequired', 'minLength', etc..
+     */
     type: PropTypes.string.isRequired,
+    /*
+     * value: Output text when validation returns false
+     */
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
       PropTypes.object
     ]),
+
+    /*
+     * validateFor: Value to validate
+     */
     validateFor: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
       PropTypes.object
-    ]),
-    primaryColor: PropTypes.string
+    ])
   };
 
   renderIsRequired() {
@@ -45,11 +59,11 @@ class Validator extends Component {
   }
 
   render() {
-    var { type, value, validateFor, primaryColor } = this.props
+    var { type, value, validateFor } = this.props
     var result = validateField({type, value}, validateFor)
     var output = false
     var validatorStyle = {
-      backgroundColor: primaryColor
+      backgroundColor: this.context.primaryColor
     };
     if (result === false) {
       switch (type) {

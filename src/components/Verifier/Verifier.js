@@ -2,9 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import styles from './Verifier.scss';
 
 class Verifier extends Component {
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
+
   static propTypes = {
-    type: PropTypes.string.isRequired,
-    primaryColor: PropTypes.string
+    type: PropTypes.string.isRequired
   };
 
   renderEmondoEmailFieldService() {
@@ -14,10 +17,10 @@ class Verifier extends Component {
   }
 
   render() {
-    var { type, status, verification, primaryColor } = this.props;
+    var { type, status, verification } = this.props;
     var output = false;
     var validatorStyle = {
-      backgroundColor: primaryColor
+      backgroundColor: this.context.primaryColor
     };
 
     if (status === false) {

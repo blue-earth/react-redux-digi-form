@@ -224,8 +224,7 @@ class QuestionInteractive extends Component {
               { (inputState == 'enter')
                 ? filteredValidations.map((validation, index) => {
                     return (
-                      <Validator {...validation} key={validation.type} validateFor={savedValue} 
-                        primaryColor={primaryColor} />
+                      <Validator {...validation} key={validation.type} validateFor={savedValue} />
                     )
                   })
                 : <div key="null_key"></div>
@@ -235,8 +234,7 @@ class QuestionInteractive extends Component {
               {
                 _.filter(verificationStatus, {id: id, status: false}).map((verification, index) => {
                   return (
-                    <Verifier {...verification} key={verification.type} 
-                      primaryColor={primaryColor} />
+                    <Verifier {...verification} key={verification.type} />
                   )
                 })
               }

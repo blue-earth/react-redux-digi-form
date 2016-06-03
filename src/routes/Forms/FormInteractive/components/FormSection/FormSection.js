@@ -4,8 +4,8 @@ import { MdCheck, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib
 import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive';
 import FormRow from '../FormRow/FormRow';
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection';
-import { getContextFromAnswer, getFirstQuestionOfGroup, 
-  SlideAnimation } from 'helpers/formInteractiveHelper';
+import { getContextFromAnswer, getFirstQuestionOfGroup, SlideAnimation, 
+  shouldDisableNextButton, shouldDisablePrevButton } from 'helpers/formInteractiveHelper';
 import { findIndexById } from 'helpers/pureFunctions';
 import styles from './FormSection.scss';
 import _ from 'lodash';
@@ -41,19 +41,14 @@ class FormSection extends Component {
     ]),
 
     /*
-     * allQuestions: Array of all the questions from form response.
+     * form: form_data of response, consists of questions and logics.
      */ 
-    allQuestions: PropTypes.array.isRequired,
+    form: PropTypes.object.isRequired,
 
     /*
      * questionGroup: A structured group of questions for this form section(step)
      */ 
     questionGroup: PropTypes.object.isRequired,
-
-    /*
-     * logics: Array of Logic jumps, it is a part of form response.
-     */ 
-    logics: PropTypes.array,
 
     /*
      * currentQuestionId: Redux state that keeps the current active question ID.
@@ -111,10 +106,12 @@ class FormSection extends Component {
   };
 
   get renderAllQuestions() {
-    const { questionGroup: {questions}, currentQuestionId, allQuestions, verificationStatus,
+    const { questionGroup: {questions}, currentQuestionId, form, verificationStatus,
       answers, storeAnswer, nextQuestion, isVerifying } = this.props;
+    const allQuestions = form.questions;
     const currentQuestionIndex = findIndexById(allQuestions, currentQuestionId);
     const context = getContextFromAnswer(answers);
+
     if (questions) {
       return questions.map((question, i) => {
         const idx = findIndexById(allQuestions, question.id);
@@ -150,7 +147,9 @@ class FormSection extends Component {
   }
 
   get renderActiveSection() {
-    const { step, totalSteps, questionGroup, prevQuestion, nextQuestion } = this.props;
+    const { step, totalSteps, questionGroup, prevQuestion, nextQuestion,
+      currentQuestionId, form } = this.props;
+
     const slideAnimation = new SlideAnimation;
     const anim = {
       enter: slideAnimation.enter,
@@ -176,12 +175,14 @@ class FormSection extends Component {
 
           <ul className={styles.navButtonsWrapper}>
             <li>
-              <Button className={styles.navButton} onClick={() => prevQuestion()}>
+              <Button className={styles.navButton} onClick={() => prevQuestion()}
+                disabled={shouldDisablePrevButton(form, currentQuestionId)}>
                 <MdKeyboardArrowUp size="24" />
               </Button>
             </li>
             <li>
-              <Button className={styles.navButton} onClick={() => nextQuestion()}>
+              <Button className={styles.navButton} onClick={() => nextQuestion()}
+                disabled={shouldDisableNextButton(form, currentQuestionId)}>
                 <MdKeyboardArrowDown size="24" />
               </Button>
             </li>

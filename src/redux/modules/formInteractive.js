@@ -142,7 +142,8 @@ export const nextQuestion = () => {
   };
 }
 
-const getNextQuestion = (form, currentQuestionId) => {
+const getNextQuestion = (state, currentQuestionId) => {
+  const form = state.form;
   const questions = form.questions;
   var curIdx, nextIdx;
   curIdx = nextIdx = _.findIndex(questions, function(o) { return o.id == currentQuestionId; })
@@ -163,7 +164,8 @@ export const prevQuestion = () => {
   }
 }
 
-const getPrevQuestion = (form, currentQuestionId) => {
+const getPrevQuestion = (state, currentQuestionId) => {
+  const form = state.form;
   const questions = form.questions;
   var curIdx, prevIdx;
   curIdx = prevIdx = _.findIndex(questions, function(o) { return o.id == currentQuestionId; });
@@ -318,11 +320,11 @@ const formInteractive = (state = INIT_FORM_STATE, action) => {
       });
     case NEXT_QUESTION:
       return Object.assign({}, state, {
-        currentQuestionId: getNextQuestion(state.form, state.currentQuestionId),
+        currentQuestionId: getNextQuestion(state, state.currentQuestionId),
       });
     case PREV_QUESTION:
       return Object.assign({}, state, {
-        currentQuestionId: getPrevQuestion(state.form, state.currentQuestionId),
+        currentQuestionId: getPrevQuestion(state, state.currentQuestionId),
       });
     case GOTO_QUESTION:
       return Object.assign({}, state, {
