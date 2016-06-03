@@ -34,8 +34,11 @@ class QuestionInteractive extends Component {
     };
   };
 
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
+  
   static propTypes = {
-    primaryColor: PropTypes.string,
 
     /*
      * validations: Validations required for the question, it is a part of form response.
@@ -78,7 +81,6 @@ class QuestionInteractive extends Component {
   };
 
   static defaultProps = {
-    primaryColor: '#4dcceb',
     validations: [],
     status: 'current',
     context: {}
@@ -175,8 +177,9 @@ class QuestionInteractive extends Component {
 
   renderInteractiveInput() {
     var ChildComponent = '';
-    const { id, type, primaryColor, validations, verificationStatus, isVerifying } = this.props;
+    const { id, type, validations, verificationStatus, isVerifying } = this.props;
     const { inputState, savedValue } = this.state;
+    const { primaryColor } = this.context;
     let that = this;
 
     switch (type) {

@@ -14,6 +14,15 @@ class FormInteractive extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {primaryColor: props.primaryColor};
+  };
+
+  static childContextTypes = {
+    primaryColor: PropTypes.string
+  };
+
+  getChildContext() {
+    return { primaryColor: this.state.primaryColor };
   };
 
   static propTypes = {
@@ -43,7 +52,10 @@ class FormInteractive extends Component {
      * currentQuestionId: Redux state that keeps the current active question ID.
      */
     currentQuestionId: PropTypes.number.isRequired,
-
+    
+    /*
+     * Form primary color
+     */
     primaryColor: PropTypes.string,
 
     /*
@@ -105,6 +117,7 @@ class FormInteractive extends Component {
       enter: slideAnimation.enter,
       leave: slideAnimation.leave,
     };
+
     return (
       <div className={styles.stepsWrapper}>
         <Animate exclusive={true} animation={anim}>

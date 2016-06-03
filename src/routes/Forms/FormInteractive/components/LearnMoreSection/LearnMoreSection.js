@@ -5,12 +5,14 @@ import styles from './LearnMoreSection.scss'
 
 class LearnMoreSection extends Component {
   static propTypes = {
-    primaryColor: PropTypes.string,
     link: PropTypes.string
   }
+  
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
 
   static defaultProps = {
-    primaryColor: '#4dcceb',
     link: '#'
   }
 
@@ -19,9 +21,9 @@ class LearnMoreSection extends Component {
   }
 
   render() {
-    const { link, primaryColor } = this.props
+    const { link } = this.props
     var linkStyle = {
-      color: primaryColor
+      color: this.context.primaryColor
     }
 
     return (

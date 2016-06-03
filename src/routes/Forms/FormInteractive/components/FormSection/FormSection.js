@@ -13,9 +13,11 @@ import Animate from 'rc-animate';
 
 class FormSection extends Component {
 
-  static propTypes = {
-    primaryColor: PropTypes.string,
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
 
+  static propTypes = {
     /*
      * status: Status of current section. 'active' is current section, 
      *         'completed' is all-answered section and 'pending' is to-be-answered section.
@@ -110,10 +112,10 @@ class FormSection extends Component {
 
   get renderAllQuestions() {
     const { questionGroup: {questions}, currentQuestionId, allQuestions, verificationStatus,
-      primaryColor, answers, storeAnswer, nextQuestion, isVerifying } = this.props;
+      answers, storeAnswer, nextQuestion, isVerifying } = this.props;
     const currentQuestionIndex = findIndexById(allQuestions, currentQuestionId);
     const context = getContextFromAnswer(answers);
-
+console.log(this.context.primaryColor)
     if (questions) {
       return questions.map((question, i) => {
         const idx = findIndexById(allQuestions, question.id);
@@ -121,8 +123,7 @@ class FormSection extends Component {
         const answerValue = typeof answer === 'object' ? answer.value : '';
         return (
           <QuestionInteractive key={question.id}
-            {...question} 
-            primaryColor={primaryColor}
+            {...question}
             verificationStatus={verificationStatus}
             storeAnswer={storeAnswer}
             nextQuestion={nextQuestion}
