@@ -150,7 +150,7 @@ class FormSection extends Component {
   }
 
   get renderActiveSection() {
-    const { step, totalSteps, questionGroup, prevQuestion, nextQuestion, primaryColor } = this.props;
+    const { step, totalSteps, questionGroup, prevQuestion, nextQuestion } = this.props;
     const slideAnimation = new SlideAnimation;
     const anim = {
       enter: slideAnimation.enter,
@@ -189,7 +189,7 @@ class FormSection extends Component {
         </FormRow>
         <hr className={styles.hrLine} />
         <FormRow>
-          <LearnMoreSection primaryColor={primaryColor} />
+          <LearnMoreSection />
         </FormRow>
         { step < totalSteps &&
           <FormRow>

@@ -2,6 +2,11 @@ import React, { Component, PropTypes } from 'react';
 import styles from './ShortTextInput.scss';
 
 class ShortTextInput extends Component {
+
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
+
   static propTypes = {
     placeholderText: PropTypes.string,
     initialValue: PropTypes.string,
@@ -12,7 +17,6 @@ class ShortTextInput extends Component {
       PropTypes.string,
       PropTypes.number
     ]),
-    primaryColor: PropTypes.string,
     isDisabled: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
@@ -21,7 +25,6 @@ class ShortTextInput extends Component {
   };
 
   static defaultProps = {
-    primaryColor: '#4dcceb',
     placeholderText: '',
     initialValue: '',
     fullWidth: false,
@@ -99,13 +102,15 @@ class ShortTextInput extends Component {
 
   render() {
     var props = this.props;
-    var { type, primaryColor, value, autoFocus } = this.props;
-
-    var inputStyle = {
-      color: primaryColor
-    };
-
+    var { type, value, autoFocus } = this.props;
+    var { primaryColor } = this.context;
     var optionals = {};
+
+    if ( typeof primaryColor !== 'undefined' ) {
+      optionals['style'] = {
+        color: primaryColor
+      };
+    }
     if (props.placeholderText) {
       optionals['placeholder'] = props.placeholderText
     };
@@ -117,7 +122,6 @@ class ShortTextInput extends Component {
       <input
         className={styles.textInput}
         type={this.inputType(type)}
-        style={inputStyle}
         ref="input"
         autoFocus={autoFocus}
         value={this.state.savedValue}

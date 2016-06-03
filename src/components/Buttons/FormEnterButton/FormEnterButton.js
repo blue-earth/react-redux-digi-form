@@ -9,13 +9,12 @@ class FormEnterButton extends Component {
   }
 
   static propTypes = {
-    primaryColor: PropTypes.string,
     onClick: PropTypes.func,
     isDisabled: PropTypes.bool
   };
 
-  static defaultProps = {
-    primaryColor: '#4dcceb'
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
   };
 
   handleClick() {
@@ -26,20 +25,23 @@ class FormEnterButton extends Component {
   render() {
 
     const props = this.props
+    var { primaryColor } = this.context;
+    var optionals = {};
 
-    var buttonStyle = {
-      color: props.primaryColor,
-      borderColor: props.primaryColor
+    if ( typeof primaryColor !== 'undefined' ) {
+      optionals['style'] = {
+        color: primaryColor,
+        borderColor: primaryColor
+      }
     }
 
-    var optionals = {}
     if (props.isDisabled) {
       optionals['disabled'] = true
     }
 
     return (
       <Button type="button" onClick={this.handleClick.bind(this)}
-        className={styles.formEnterButton} style={buttonStyle}
+        className={styles.formEnterButton}
         {...optionals}>
         <div className={styles.btnInner}>
           <div>press</div>

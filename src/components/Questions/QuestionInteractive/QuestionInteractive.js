@@ -179,7 +179,6 @@ class QuestionInteractive extends Component {
     var ChildComponent = '';
     const { id, type, validations, verificationStatus, isVerifying } = this.props;
     const { inputState, savedValue } = this.state;
-    const { primaryColor } = this.context;
     let that = this;
 
     switch (type) {
@@ -248,7 +247,7 @@ class QuestionInteractive extends Component {
           <ChildComponentTemplate />
         </div>
         <div className={styles.rightColumn}>
-          <FormEnterButton primaryColor={primaryColor} 
+          <FormEnterButton 
             onClick={this.handleEnter.bind(this)} isDisabled={isVerifying} />
         </div>
       </div>
