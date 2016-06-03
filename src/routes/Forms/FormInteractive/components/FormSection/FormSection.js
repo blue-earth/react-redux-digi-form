@@ -115,7 +115,6 @@ class FormSection extends Component {
       answers, storeAnswer, nextQuestion, isVerifying } = this.props;
     const currentQuestionIndex = findIndexById(allQuestions, currentQuestionId);
     const context = getContextFromAnswer(answers);
-console.log(this.context.primaryColor)
     if (questions) {
       return questions.map((question, i) => {
         const idx = findIndexById(allQuestions, question.id);
