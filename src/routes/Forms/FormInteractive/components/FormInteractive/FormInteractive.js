@@ -38,14 +38,22 @@ class FormInteractive extends Component {
      * Form ID
      */
     id: PropTypes.number.isRequired,
+
     /*
      * form: form_data of response, consists of questions and logics.
      */
     form: PropTypes.object.isRequired,
+
     /*
      * answers: Redux state that stores the array of answered values
      */
     answers: PropTypes.array.isRequired,
+
+    /*
+     * prefills: Redux state that stores the array of answer prefills values
+     */
+    prefills: PropTypes.array.isRequired,
+
     /*
      * isFetching: Redux state that indicates whether the requested form is being fetched from backend
      */

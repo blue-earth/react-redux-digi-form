@@ -1,6 +1,7 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { findIndexById, mergeItemIntoArray } from 'helpers/pureFunctions';
+import { getOutcomeWithQuestionId } from 'helpers/formInteractiveHelper';
 import _ from 'lodash';
 
 // ------------------------------------
@@ -9,10 +10,9 @@ import _ from 'lodash';
 export const RECEIVE_FORM = 'RECEIVE_FORM';
 export const REQUEST_FORM = 'REQUEST_FORM';
 export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
-export const NEXT_QUESTION = 'NEXT_QUESTION';
-export const PREV_QUESTION = 'PREV_QUESTION';
-export const STORE_ANSWER = 'STORE_ANSWER';
 export const GOTO_QUESTION = 'GOTO_QUESTION';
+export const STORE_ANSWER = 'STORE_ANSWER';
+export const ANSWER_PREFILL = 'ANSWER_PREFILL';
 export const VERIFY_EMAIL = 'VERIFY_EMAIL';
 export const REQUEST_VERIFY_EMAIL = 'REQUEST_VERIFY_EMAIL';
 export const DONE_VERIFYING_EMAIL = 'DONE_VERIFYING_EMAIL';
@@ -32,6 +32,7 @@ export const INIT_FORM_STATE = {
   slug: 'slug',
   currentQuestionId: 0,
   answers: [],
+  prefills: [],
   verificationStatus:[],
   primaryColor: '#DD4814'
 };
@@ -134,19 +135,45 @@ const validateQuestionId = (form) => {
 }
 
 // ------------------------------------
+// Action: goToQuestion
+// ------------------------------------
+export const goToQuestion = (id) => {
+  return {
+    type: GOTO_QUESTION,
+    id: id
+  }
+}
+
+// ------------------------------------
 // Action: nextQuestion
 // ------------------------------------
 export const nextQuestion = () => {
-  return {
-    type: NEXT_QUESTION
-  };
+  return (dispatch, getState) => {
+    const formInteractive = getState().formInteractive;
+    const { form: { questions }, currentQuestionId } = formInteractive;
+    var nextId = getNextQuestionId(questions, currentQuestionId);
+    const outcome = getOutcomeWithQuestionId(formInteractive, currentQuestionId);
+    if ( outcome !== false ) {
+      for (var item of outcome) {
+        // Processes outcome before going to next question
+        if (item.type === 'JumpToQuestion') {
+          nextId = item.value;
+        } else if (item.type === 'AnswerPrefill') {
+          dispatch(answerPrefill({
+            id: item.source_field,
+            value: item.value
+          }));
+        }
+
+      }
+    }
+    dispatch(goToQuestion(nextId));
+  }
 }
 
-const getNextQuestion = (state, currentQuestionId) => {
-  const form = state.form;
-  const questions = form.questions;
+const getNextQuestionId = (questions, questionId) => {
   var curIdx, nextIdx;
-  curIdx = nextIdx = _.findIndex(questions, function(o) { return o.id == currentQuestionId; })
+  curIdx = nextIdx = _.findIndex(questions, function(o) { return o.id == questionId; })
   while ( nextIdx < questions.length - 1 ) { 
     var q = questions[++nextIdx];
     if (q.type != 'Group') break;
@@ -159,32 +186,23 @@ const getNextQuestion = (state, currentQuestionId) => {
 // Action: prevQuestion
 // ------------------------------------
 export const prevQuestion = () => {
-  return {
-    type: PREV_QUESTION
+  return (dispatch, getState) => {
+    const formInteractive = getState().formInteractive;
+    const { form: { questions }, currentQuestionId } = formInteractive;
+    const prevId = getPrevQuestionId(questions, currentQuestionId);
+    dispatch(goToQuestion(prevId));
   }
 }
 
-const getPrevQuestion = (state, currentQuestionId) => {
-  const form = state.form;
-  const questions = form.questions;
+const getPrevQuestionId = (questions, questionId) => {
   var curIdx, prevIdx;
-  curIdx = prevIdx = _.findIndex(questions, function(o) { return o.id == currentQuestionId; });
+  curIdx = prevIdx = _.findIndex(questions, function(o) { return o.id == questionId; });
   while ( prevIdx > 1 ) { 
     var q = questions[--prevIdx];
     if (q.type != 'Group') break;
   }
   if (questions[prevIdx].type == 'Group') prevIdx = curIdx; //In case it reaches index 0 and question type is 'Group'
   return questions[prevIdx].id;
-}
-
-// ------------------------------------
-// Action: goToQuestion
-// ------------------------------------
-export const goToQuestion = (id) => {
-  return {
-    type: GOTO_QUESTION,
-    id: id
-  }
 }
 
 // ------------------------------------
@@ -212,12 +230,25 @@ const shouldVerifyEmail = (state, id) => {
 }
 
 // ------------------------------------
-// Action: verifyEmail
+// Action: processStoreAnswer
 // ------------------------------------
 export const processStoreAnswer = ({id, value}) => {
   return {
     type: STORE_ANSWER,
     answer: {
+      id,
+      value
+    }
+  };
+}
+
+// ------------------------------------
+// Action: answerPrefill
+// ------------------------------------
+export const answerPrefill = ({id, value}) => {
+  return {
+    type: ANSWER_PREFILL,
+    prefill: {
       id,
       value
     }
@@ -318,17 +349,13 @@ const formInteractive = (state = INIT_FORM_STATE, action) => {
       return Object.assign({}, state, {
         isFetching: false,
       });
-    case NEXT_QUESTION:
-      return Object.assign({}, state, {
-        currentQuestionId: getNextQuestion(state, state.currentQuestionId),
-      });
-    case PREV_QUESTION:
-      return Object.assign({}, state, {
-        currentQuestionId: getPrevQuestion(state, state.currentQuestionId),
-      });
     case GOTO_QUESTION:
       return Object.assign({}, state, {
         currentQuestionId: action.id,
+      });
+    case ANSWER_PREFILL:
+      return Object.assign({}, state, {
+        prefills: mergeItemIntoArray(state.prefills, action.prefill),
       });
     case STORE_ANSWER:
       return Object.assign({}, state, {

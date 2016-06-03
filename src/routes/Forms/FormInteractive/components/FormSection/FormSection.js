@@ -71,6 +71,11 @@ class FormSection extends Component {
     answers: PropTypes.array.isRequired,
 
     /*
+     * prefills: Redux state that stores the array of answer prefills values
+     */
+    prefills: PropTypes.array.isRequired,
+
+    /*
      * prevQuestion: Redux action to move to previous question.
      */
     prevQuestion: PropTypes.func.isRequired,
@@ -107,7 +112,7 @@ class FormSection extends Component {
 
   get renderAllQuestions() {
     const { questionGroup: {questions}, currentQuestionId, form, verificationStatus,
-      answers, storeAnswer, nextQuestion, isVerifying } = this.props;
+      answers, prefills, storeAnswer, nextQuestion, isVerifying } = this.props;
     const allQuestions = form.questions;
     const currentQuestionIndex = findIndexById(allQuestions, currentQuestionId);
     const context = getContextFromAnswer(answers);
@@ -115,8 +120,14 @@ class FormSection extends Component {
     if (questions) {
       return questions.map((question, i) => {
         const idx = findIndexById(allQuestions, question.id);
+        var value = '';
         const answer = _.find(answers, {id: question.id});
-        const answerValue = typeof answer === 'object' ? answer.value : '';
+        if (typeof answer === 'object') {
+          value = answer.value;
+        } else {
+          const prefill = _.find(prefills, {id: question.id});
+          if (typeof prefill === 'object') value = prefill.value;
+        }
         return (
           <QuestionInteractive key={question.id}
             {...question}
@@ -124,7 +135,7 @@ class FormSection extends Component {
             storeAnswer={storeAnswer}
             nextQuestion={nextQuestion}
             context={context}
-            value={answerValue}
+            value={value}
             isVerifying={isVerifying}
             status={currentQuestionIndex == idx 
               ? 'current' : currentQuestionIndex - idx == 1 
@@ -139,7 +150,8 @@ class FormSection extends Component {
   }
 
   shouldShowActiveTitle() {
-    const { allQuestions, currentQuestionId, questionGroup } = this.props;
+    const { form, currentQuestionId, questionGroup } = this.props;
+    const allQuestions = form.questions;
     const groupQuestions = questionGroup.questions;
     const currentQuestionIndex = findIndexById(allQuestions, currentQuestionId);
     const firstGroupIdx = findIndexById(allQuestions, groupQuestions[0].id);
@@ -158,7 +170,7 @@ class FormSection extends Component {
 
     return (
       <section className={`${styles.formSection} ${styles.active}`}>
-        <hr className={styles.hrLine} />
+        {step > 1 && <hr className={styles.hrLine} />}
         <FormRow>
           <div className={styles.step}>
             { `${step} of ${totalSteps}` }

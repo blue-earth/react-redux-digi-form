@@ -53,6 +53,3 @@ class FormEnterButton extends Component {
 }
 
 export default FormEnterButton
-
-
-

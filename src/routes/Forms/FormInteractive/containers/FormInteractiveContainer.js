@@ -30,6 +30,7 @@ const mapStateToProps = (state) => {
     currentQuestionId,
     form,
     answers,
+    prefills,
     verificationStatus,
     primaryColor
   } = formInteractive || INIT_FORM_STATE;
@@ -40,6 +41,7 @@ const mapStateToProps = (state) => {
     currentQuestionId,
     form,
     answers,
+    prefills,
     primaryColor,
     verificationStatus
   };
