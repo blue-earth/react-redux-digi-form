@@ -25,6 +25,14 @@ class FormInteractive extends Component {
     return { primaryColor: this.state.primaryColor };
   };
 
+  static childContextTypes = {
+    primaryColor: PropTypes.string
+  };
+
+  getChildContext() {
+    return { primaryColor: this.props.primaryColor };
+  };
+
   static propTypes = {
     /*
      * Form ID
