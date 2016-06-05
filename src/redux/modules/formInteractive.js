@@ -14,9 +14,9 @@ export const GOTO_QUESTION = 'GOTO_QUESTION';
 export const STORE_ANSWER = 'STORE_ANSWER';
 export const ANSWER_PREFILL = 'ANSWER_PREFILL';
 export const VERIFY_EMAIL = 'VERIFY_EMAIL';
-export const REQUEST_VERIFY_EMAIL = 'REQUEST_VERIFY_EMAIL';
-export const DONE_VERIFYING_EMAIL = 'DONE_VERIFYING_EMAIL';
-export const RECEIVE_VERIFY_EMAIL = 'RECEIVE_VERIFY_EMAIL';
+export const REQUEST_VERIFICATION = 'REQUEST_VERIFICATION';
+export const DONE_VERIFICATION = 'DONE_VERIFICATION';
+export const RECEIVE_VERIFICATION = 'RECEIVE_VERIFICATION';
 
 export const INIT_FORM_STATE = {
   id: 0,
@@ -211,22 +211,11 @@ const getPrevQuestionId = (questions, questionId) => {
 export const storeAnswer = ({id, value}) => {
   return (dispatch, getState) => {
     const state = getState();
-
+    // if ( shouldVerifyEmail(state, id) ) {
+    //   dispatch(verifyEmail(id, value));
+    // }
     dispatch(processStoreAnswer({id, value}));
-    if ( shouldVerifyEmail(state, id) ) {
-      dispatch(verifyEmail(id, value));
-    }
   }
-}
-
-const shouldVerifyEmail = (state, id) => {
-  const { formInteractive: { isVerifying, form: { questions } } } = state
-  const idx = findIndexById(questions, id)
-
-  if (_.indexOf(questions[idx].verifications, 'EmondoEmailFieldService') != -1)
-    return true;
-  else
-    return false;
 }
 
 // ------------------------------------
@@ -261,18 +250,18 @@ export const answerPrefill = ({id, value}) => {
 export const verifyEmail = (questionId, email) => {
   return (dispatch, getState) => {
     //if (!getState().isVerifying) {
-      dispatch(requestVerifyEmail());
+      dispatch(requestVerification());
       dispatch(processVerifyEmail(questionId, email));
     //}
   };
 }
 
 // ------------------------------------
-// Action: requestVerifyEmail
+// Action: requestVerification
 // ------------------------------------
-export const requestVerifyEmail = () => {
+export const requestVerification = () => {
   return {
-    type: REQUEST_VERIFY_EMAIL
+    type: REQUEST_VERIFICATION
   };
 }
 
@@ -294,38 +283,117 @@ export const processVerifyEmail = (questionId, email) => {
 
   const fetchSuccess = ({value: {result}}) => {
     return (dispatch, getState) => {
-      dispatch(receiveVerifyEmail(questionId, result));
-      dispatch(doneVerifyingEmail()); // Hide loading spinner
+      dispatch(receiveVerification({
+        id: questionId,
+        type: 'EmondoEmailFieldService',
+        status: result
+      }));
+      dispatch(doneVerification()); // Hide loading spinner
     }
   };
   
   const fetchFail = (data) => {
-    console.log(data)
+    dispatch(receiveVerification({
+      id: questionId,
+      type: 'EmondoEmailFieldService',
+      status: false
+    }));
+    dispatch(doneVerification()); // Hide loading spinner
   };
 
   return bind(fetch(`${API_URL}/verifications/api/email/verify/`, fetchParams), fetchSuccess, fetchFail);
-  //return bind(fetch(`http://localhost/verify.php`, fetchParams), fetchSuccess, fetchFail)
+}
+
+// const shouldVerifyEmail = (state, id) => {
+//   const { formInteractive: { form: { questions } } } = state;
+//   const idx = findIndexById(questions, id);
+
+//   if (_.indexOf(questions[idx].verifications, 'EmondoEmailFieldService') != -1)
+//     return true;
+//   else
+//     return false;
+// }
+
+const shouldVerify = (formInteractive) => {
+  const { form: { questions }, currentQuestionId } = formInteractive;
+  const idx = findIndexById(questions, currentQuestionId);
+  if (typeof questions[idx].verifications !== 'undefined' && questions[idx].verifications.length > 0)
+    return true;
+  else
+    return false;
 }
 
 // ------------------------------------
-// Action: receiveVerifyEmail
+// Action: nextQuestionAfterVerification
 // ------------------------------------
-const receiveVerifyEmail = (questionId, status) => {
+export const nextQuestionAfterVerification = () => {
+
+  return (dispatch, getState) => {
+    const formInteractive = getState().formInteractive;
+    const { form: { questions }, currentQuestionId, answers } = formInteractive;
+    const idx = findIndexById(questions, currentQuestionId);
+
+    dispatch(requestVerification());
+    for (var verification of questions[idx].verifications) {
+      if (verification === 'EmondoEmailFieldService') {
+        const answerIndex = findIndexById(answers, currentQuestionId);
+        dispatch(verifyEmail(currentQuestionId, answers[answerIndex].value));
+      }
+    }
+  }
+}
+
+const doneVerification = () => {
   return {
-    type: RECEIVE_VERIFY_EMAIL,
-    verification: {
-      id: questionId,
-      type: 'EmondoEmailFieldService',
-      status
+    type: DONE_VERIFICATION
+  };
+}
+
+// ------------------------------------
+// Action: receiveVerification
+// ------------------------------------
+export const receiveVerification = (verification) => {
+  return (dispatch, getState) => {
+    dispatch(updateVerificationStatus(verification));
+    const formInteractive = getState().formInteractive;
+    const { verificationStatus, currentQuestionId, form: { questions } } = formInteractive;
+    const verifiedStatuses = _.filter(verificationStatus, {id: currentQuestionId, status: true});
+    const idx = findIndexById(questions, currentQuestionId);
+    // If all verified as true go to next question.
+    console.log(verifiedStatuses);
+    console.log(questions[idx].verifications);
+    if (verifiedStatuses.length == questions[idx].verifications.length) {
+      dispatch(nextQuestion());
     }
   };
 }
 
-const doneVerifyingEmail = () => {
+// ------------------------------------
+// Action: updateVerificationStatus
+// ------------------------------------
+export const updateVerificationStatus = (verification) => {
   return {
-    type: DONE_VERIFYING_EMAIL
+    type: RECEIVE_VERIFICATION,
+    verification: verification
   };
 }
+
+// ------------------------------------
+// Action: handleEnter
+// ------------------------------------
+export const handleEnter = () => {
+  return (dispatch, getState) => {
+    const formInteractive = getState().formInteractive;
+    // check if verification is required.
+    if ( shouldVerify(formInteractive) ) {
+      dispatch(nextQuestionAfterVerification());
+      //dispatch(verifyEmail(currentQuestionId, answers[currentQuestionId].value));
+    } else {
+      dispatch(nextQuestion())
+    }
+  };
+}
+
 // ------------------------------------
 // Reducer
 // ------------------------------------
@@ -362,15 +430,15 @@ const formInteractive = (state = INIT_FORM_STATE, action) => {
         // isSubmitting: true,
         answers: mergeItemIntoArray(state.answers, action.answer),
       });
-    case REQUEST_VERIFY_EMAIL:
+    case REQUEST_VERIFICATION:
       return Object.assign({}, state, {
         isVerifying: true,
       });
-    case DONE_VERIFYING_EMAIL:
+    case DONE_VERIFICATION:
       return Object.assign({}, state, {
         isVerifying: false,
       });
-    case RECEIVE_VERIFY_EMAIL:
+    case RECEIVE_VERIFICATION:
       return Object.assign({}, state, {
         verificationStatus: mergeItemIntoArray(state.verificationStatus, action.verification)
       });

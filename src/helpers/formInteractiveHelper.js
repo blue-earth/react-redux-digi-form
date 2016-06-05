@@ -205,6 +205,8 @@ const valueMeetsCondition = (value, condition) => {
       const v3 = new Date(value);
       const v4 = new Date(condition.value);
       return v3.toDateString() == v4.toDateString() || v3 > v4;
+    case 'one_of':
+      return typeof condition.value === 'object' && condition.value.indexOf(value) != -1;
     default:
       return false;
   }

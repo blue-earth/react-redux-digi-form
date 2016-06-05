@@ -77,7 +77,12 @@ class QuestionInteractive extends Component {
     /*
      * nextQuestion: Redux action to move to next question when the current answer is qualified.
      */
-    nextQuestion: PropTypes.func.isRequired
+    nextQuestion: PropTypes.func.isRequired,
+
+    /*
+     * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
+     */
+    handleEnter: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -128,10 +133,9 @@ class QuestionInteractive extends Component {
   handleEnter() {
     // We only do validation on enter, onChange submits the answer if valid.
     const { savedValue } = this.state;
-    const { nextQuestion, isVerifying } = this.props;
+    const { handleEnter, isVerifying } = this.props;
     const isValid = this.valueIsValid(savedValue);
-    const isVerified = this.valueIsVerified();
-    if (isValid && isVerified) nextQuestion();
+    if (isValid) handleEnter();
     this.setState({
       inputState: 'enter'
     });

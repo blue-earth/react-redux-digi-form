@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion,
+import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion, handleEnter,
   storeAnswer, fetchFormIfNeeded } from 'redux/modules/formInteractive';
 
 /*  This is a container component. Notice it does not contain any JSX,
@@ -18,7 +18,8 @@ const mapActionCreators = {
   nextQuestion,
   fetchFormIfNeeded,
   storeAnswer,
-  goToQuestion
+  goToQuestion,
+  handleEnter
 };
 
 const mapStateToProps = (state) => {

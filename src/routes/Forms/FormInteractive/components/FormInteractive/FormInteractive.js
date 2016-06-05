@@ -102,7 +102,12 @@ class FormInteractive extends Component {
     /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
-    storeAnswer: PropTypes.func.isRequired
+    storeAnswer: PropTypes.func.isRequired,
+
+    /*
+     * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
+     */
+    handleEnter: PropTypes.func.isRequired
   };
 
   componentWillMount() {

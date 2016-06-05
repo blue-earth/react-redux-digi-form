@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Collapse } from 'react-bootstrap';
 import { MdCheck, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib/md';
 import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive';
 import FormRow from '../FormRow/FormRow';
@@ -93,7 +93,12 @@ class FormSection extends Component {
     /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
-    storeAnswer: PropTypes.func.isRequired
+    storeAnswer: PropTypes.func.isRequired,
+
+    /*
+     * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
+     */
+    handleEnter: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -112,7 +117,7 @@ class FormSection extends Component {
 
   get renderAllQuestions() {
     const { questionGroup: {questions}, currentQuestionId, form, verificationStatus,
-      answers, prefills, storeAnswer, nextQuestion, isVerifying } = this.props;
+      answers, prefills, storeAnswer, nextQuestion, handleEnter, isVerifying } = this.props;
     const allQuestions = form.questions;
     const currentQuestionIndex = findIndexById(allQuestions, currentQuestionId);
     const context = getContextFromAnswer(answers);
@@ -134,6 +139,7 @@ class FormSection extends Component {
             verificationStatus={verificationStatus}
             storeAnswer={storeAnswer}
             nextQuestion={nextQuestion}
+            handleEnter={handleEnter}
             context={context}
             value={value}
             isVerifying={isVerifying}
@@ -150,7 +156,7 @@ class FormSection extends Component {
   }
 
   shouldShowActiveTitle() {
-    const { form, currentQuestionId, questionGroup } = this.props;
+    const { form, currentQuestionId, questionGroup, goToQuestion } = this.props;
     const allQuestions = form.questions;
     const groupQuestions = questionGroup.questions;
     const currentQuestionIndex = findIndexById(allQuestions, currentQuestionId);
@@ -158,8 +164,8 @@ class FormSection extends Component {
     return (currentQuestionIndex == firstGroupIdx);
   }
 
-  get renderActiveSection() {
-    const { step, totalSteps, questionGroup, prevQuestion, nextQuestion,
+  render() {
+    const { step, status, totalSteps, questionGroup, prevQuestion, nextQuestion,
       currentQuestionId, form } = this.props;
 
     const slideAnimation = new SlideAnimation;
@@ -169,95 +175,86 @@ class FormSection extends Component {
     }
 
     return (
-      <section className={`${styles.formSection} ${styles.active}`}>
-        {step > 1 && <hr className={styles.hrLine} />}
-        <FormRow>
-          <div className={styles.step}>
-            { `${step} of ${totalSteps}` }
+      <section className={`${styles.formSection} ${styles[status]}`}>
+        
+        <Collapse in={status === 'active'} timeout={5000}>
+          <div>
+            {step > 1 && <hr className={styles.hrLine} />}
+            <FormRow>
+              <div className={styles.step}>
+                { `${step} of ${totalSteps}` }
+              </div>
+              <div className={styles.formSectionInner}>
+                <h3 className={styles.formSectionTitle} key={"formSectionTitle"}>
+                { this.shouldShowActiveTitle() && questionGroup.title}
+                </h3>
+                {this.renderAllQuestions}
+              </div>
+            </FormRow>
           </div>
+        </Collapse>
 
-          <div className={styles.formSectionInner}>
-            <Animate exclusive={false} animation={anim} component="div">
-              <h3 className={styles.formSectionTitle} key={"formSectionTitle"}>
-              { this.shouldShowActiveTitle() && questionGroup.title}
-              </h3>
-              {this.renderAllQuestions}
-            </Animate>
+        <Collapse in={status === 'pending'} timeout={5000}>
+          <div>
+            <FormRow>
+              <div className={styles.step}>
+                { step }
+              </div>
+              <div className={styles.formSectionInner}>
+                <h3 className={styles.formSectionTitle}>{questionGroup.title}</h3>
+              </div>
+            </FormRow>
           </div>
+        </Collapse>
 
-          <ul className={styles.navButtonsWrapper}>
-            <li>
-              <Button className={styles.navButton} onClick={() => prevQuestion()}
-                disabled={shouldDisablePrevButton(form, currentQuestionId)}>
-                <MdKeyboardArrowUp size="24" />
-              </Button>
-            </li>
-            <li>
-              <Button className={styles.navButton} onClick={() => nextQuestion()}
-                disabled={shouldDisableNextButton(form, currentQuestionId)}>
-                <MdKeyboardArrowDown size="24" />
-              </Button>
-            </li>
-          </ul>
-        </FormRow>
-        <hr className={styles.hrLine} />
-        <FormRow>
-          <LearnMoreSection />
-        </FormRow>
-        { step < totalSteps &&
-          <FormRow>
-            <h2 className={styles.nextSectionTitle}>Next Sections</h2>
-          </FormRow>
+        <Collapse in={status === 'completed'} timeout={5000}>
+          <div>
+            <FormRow>
+              <div className={styles.step}>
+                <a href="javascript:;"><MdCheck className={styles.greenIcon} /></a>
+              </div>
+              <div className={styles.formSectionInner}>
+                <h3 className={styles.formSectionTitle}>
+                  {questionGroup.title}
+                  <a href="javascript:;" onClick={() => goToQuestion(firstQuestionId)} 
+                    className={styles.formSectionEdit}>Edit</a>
+                </h3>
+              </div>
+            </FormRow>
+          </div>
+        </Collapse>
+
+        {status === 'active' &&
+          <div>
+            <FormRow>
+              <ul className={styles.navButtonsWrapper}>
+                <li>
+                  <Button className={styles.navButton} onClick={() => prevQuestion()}
+                    disabled={shouldDisablePrevButton(form, currentQuestionId)}>
+                    <MdKeyboardArrowUp size="24" />
+                  </Button>
+                </li>
+                <li>
+                  <Button className={styles.navButton} onClick={() => nextQuestion()}
+                    disabled={shouldDisableNextButton(form, currentQuestionId)}>
+                    <MdKeyboardArrowDown size="24" />
+                  </Button>
+                </li>
+              </ul>
+            </FormRow>
+            <hr className={styles.hrLine} />
+            <FormRow>
+              <LearnMoreSection />
+            </FormRow>
+            { step < totalSteps &&
+              <FormRow>
+                <h2 className={styles.nextSectionTitle}>Next Sections</h2>
+              </FormRow>
+            }
+          </div>
         }
       </section>
     )
-  }
-
-  get renderPendingSection() {
-    const { step, totalSteps, questionGroup } = this.props;
-    return (
-      <section className={`${styles.formSection} ${styles.pending}`}>
-        <FormRow>
-          <div className={styles.step}>
-            { step }
-          </div>
-          <div className={styles.formSectionInner}>
-            <h3 className={styles.formSectionTitle}>{questionGroup.title}</h3>
-          </div>
-        </FormRow>
-      </section>
-    )
-  }
-
-  get renderCompletedSection() {
-    const { step, totalSteps, questionGroup, goToQuestion } = this.props;
-    const firstQuestionId = getFirstQuestionOfGroup(questionGroup);
-    return (
-      <section className={`${styles.formSection} ${styles.completed}`}>
-        <FormRow>
-          <div className={styles.step}>
-            <a href="javascript:;"><MdCheck className={styles.greenIcon} /></a>
-          </div>
-          <div className={styles.formSectionInner}>
-            <h3 className={styles.formSectionTitle}>
-              {questionGroup.title}
-              <a href="javascript:;" onClick={() => goToQuestion(firstQuestionId)} 
-                className={styles.formSectionEdit}>Edit</a>
-            </h3>
-          </div>
-        </FormRow>
-      </section>
-    )
-  }
-
-  render() {
-    const { status } = this.props;
-    if ( status === 'active' )
-      return this.renderActiveSection;
-    else if ( status === 'pending' )
-      return this.renderPendingSection;
-    else
-      return this.renderCompletedSection;
   }
 
 }
