@@ -125,13 +125,13 @@ class FormSection extends Component {
     if (questions) {
       return questions.map((question, i) => {
         const idx = findIndexById(allQuestions, question.id);
-        var value = '';
         const answer = _.find(answers, {id: question.id});
+        var optionals = {};
         if (typeof answer === 'object') {
-          value = answer.value;
+          optionals['value'] = answer.value;
         } else {
           const prefill = _.find(prefills, {id: question.id});
-          if (typeof prefill === 'object') value = prefill.value;
+          if (typeof prefill === 'object') optionals['value'] = prefill.value;
         }
         return (
           <QuestionInteractive key={question.id}
@@ -141,12 +141,12 @@ class FormSection extends Component {
             nextQuestion={nextQuestion}
             handleEnter={handleEnter}
             context={context}
-            value={value}
             isVerifying={isVerifying}
             status={currentQuestionIndex == idx 
               ? 'current' : currentQuestionIndex - idx == 1 
               ? 'next' : idx - currentQuestionIndex == 1
               ? 'prev' : 'hidden'} 
+            {...optionals}
           />
         );
       });
@@ -166,14 +166,15 @@ class FormSection extends Component {
 
   render() {
     const { step, status, totalSteps, questionGroup, prevQuestion, nextQuestion,
-      currentQuestionId, form } = this.props;
+      goToQuestion, currentQuestionId, form } = this.props;
 
     const slideAnimation = new SlideAnimation;
     const anim = {
       enter: slideAnimation.enter,
       leave: slideAnimation.leave,
     }
-
+    const firstQuestionId = getFirstQuestionOfGroup(questionGroup);
+    
     return (
       <section className={`${styles.formSection} ${styles[status]}`}>
         

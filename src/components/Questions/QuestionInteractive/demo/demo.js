@@ -24,28 +24,28 @@ var AllQuestionTypes = React.createClass({
 var firstNameData = {
     questionInstruction: 'What is your First Name?',
     questionDescription: 'The first name on your passport',
-    type: 'ShortText',
+    type: 'ShortTextField',
     placeholderText: 'Please enter First Name'
 };
 
 var companyABNData = {
     questionInstruction: 'What is the companies ABN?',
     questionDescription: 'Don\'t know, <a href="#">search on the ABR</a> or check your Trust Deed',
-    type: 'ShortText',
+    type: 'ShortTextField',
     placeholderText: 'Please enter companies ABN'
 };
 
 var emailData = {
     questionInstruction: 'What is your email address?',
     questionDescription: '',
-    type: 'Email',
+    type: 'EmailField',
     placeholderText: ''
 };
 
 var longTextData = {
     questionInstruction: 'Overview',
     questionDescription: 'This is the overview',
-    type: 'LongText',
+    type: 'LongTextField',
     placeholderText: ''
 }
 

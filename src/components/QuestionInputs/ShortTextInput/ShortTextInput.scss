@@ -4,7 +4,7 @@
 .textInput {
   padding: 4px 15px;
   border: 1px solid $text-border-color;
-  border-radius: 4px;
+  @include border-radius($input-border-radius);
   font-size: 20px;
   height: 64px;
   background: $text-bg-color;

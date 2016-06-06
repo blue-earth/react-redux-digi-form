@@ -9,7 +9,6 @@ class ShortTextInput extends Component {
 
   static propTypes = {
     placeholderText: PropTypes.string,
-    initialValue: PropTypes.string,
     fullWidth: PropTypes.bool,
     autoFocus: PropTypes.bool,
     type: PropTypes.string,
@@ -26,7 +25,6 @@ class ShortTextInput extends Component {
 
   static defaultProps = {
     placeholderText: '',
-    initialValue: '',
     fullWidth: false,
     type: 'text',
   };

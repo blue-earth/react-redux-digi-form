@@ -1,5 +1,5 @@
 export const validateIsRequired = (value) => {
-  return (value !== '' && value !== null) 
+  return (typeof value !== 'undefined' && value !== '' && value !== null) 
 }
 
 export const validateIsEmail = (value) => {
@@ -8,7 +8,7 @@ export const validateIsEmail = (value) => {
 }
 
 export const validateMinLength = (value, length) => {
-  return !(typeof value !== 'undefined' && value.length < length )
+  return (typeof value !== 'undefined' && value.length >= length )
 }
 
 export const validateMaxLength = (value, length) => {

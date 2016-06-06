@@ -131,7 +131,7 @@ class QuestionInteractive extends Component {
   }
 
   handleEnter() {
-    // We only do validation on enter, onChange submits the answer if valid.
+    // We only do validation and verification on enter, onChange submits the answer if valid.
     const { savedValue } = this.state;
     const { handleEnter, isVerifying } = this.props;
     const isValid = this.valueIsValid(savedValue);
@@ -144,6 +144,8 @@ class QuestionInteractive extends Component {
   valueIsValid(value) {
     const { validations } = this.props;
     var isValid = true;
+    console.log(validations)
+    console.log(value)
     for (var i = 0; i < validations.length; i ++) {
       isValid = validateField( validations[i], value );
       if (!isValid) break;
