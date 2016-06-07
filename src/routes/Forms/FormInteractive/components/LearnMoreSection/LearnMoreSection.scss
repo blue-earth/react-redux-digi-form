@@ -1,3 +1,6 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
 .learnMoreSection {
   width: 230px;
   padding: 10px;
@@ -6,4 +9,5 @@
   right: 0;
   z-index: 1;
   text-align: center;
+  color: $text-color;
 }

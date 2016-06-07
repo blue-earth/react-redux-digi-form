@@ -10,7 +10,12 @@ class FormEnterButton extends Component {
 
   static propTypes = {
     onClick: PropTypes.func,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    buttonLabel: PropTypes.string
+  };
+
+  static defaultProps = {
+    buttonLabel: ''
   };
 
   static contextTypes = {
@@ -22,9 +27,27 @@ class FormEnterButton extends Component {
     if (typeof onClick === 'function') onClick()
   }
 
+  renderDefaultLabel() {
+    return (
+      <div className={styles.btnDefaultInner}>
+        <div>press</div>
+        <div>ENTER</div>
+      </div>
+    );
+  }
+
+  renderButtonLabel() {
+    const { buttonLabel } = this.props
+    return (
+      <div className={styles.btnInner}>
+        { buttonLabel }
+      </div>
+    );
+  }
+  
   render() {
 
-    const props = this.props
+    const { buttonLabel, isDisabled } = this.props
     var { primaryColor } = this.context;
     var optionals = {};
 
@@ -35,7 +58,7 @@ class FormEnterButton extends Component {
       }
     }
 
-    if (props.isDisabled) {
+    if (isDisabled) {
       optionals['disabled'] = true
     }
 
@@ -43,10 +66,7 @@ class FormEnterButton extends Component {
       <Button type="button" onClick={this.handleClick.bind(this)}
         className={styles.formEnterButton}
         {...optionals}>
-        <div className={styles.btnInner}>
-          <div>press</div>
-          <div>ENTER</div>
-        </div>
+        { buttonLabel != '' ? this.renderButtonLabel() : this.renderDefaultLabel() }
       </Button>
     )
   }

@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js';
-import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.js';
-import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput.js';
-import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js';
-import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js';
+import QuestionInstruction from '../QuestionInstruction/QuestionInstruction';
+import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput';
+import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
+import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
+import Statement from '../../QuestionInputs/Statement/Statement';
+import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton';
 import Validator from '../../Validator/Validator';
 import Verifier from '../../Verifier/Verifier';
 import validateField from 'helpers/validationHelper';
@@ -144,8 +145,6 @@ class QuestionInteractive extends Component {
   valueIsValid(value) {
     const { validations } = this.props;
     var isValid = true;
-    console.log(validations)
-    console.log(value)
     for (var i = 0; i < validations.length; i ++) {
       isValid = validateField( validations[i], value );
       if (!isValid) break;
@@ -183,35 +182,55 @@ class QuestionInteractive extends Component {
 
   renderInteractiveInput() {
     var ChildComponent = '';
-    const { id, type, validations, verificationStatus, isVerifying } = this.props;
+    const props = this.props;
+    const { id, type, validations, verificationStatus, isVerifying, buttonLabel } = props;
     const { inputState, savedValue } = this.state;
     let that = this;
+    var inputPosClass = styles.leftColumn;
+    var buttonPosClass = styles.rightColumn;
+
+    var extraProps = {
+      value: savedValue,
+      isDisabled: isVerifying,
+      autoFocus: inputState == 'focus' || inputState == 'init',
+      onEnterKey: this.handleEnter.bind(this),
+      onChange: this.handleChange.bind(this),
+      onFocus: this.handleFocus.bind(this),
+      onBlur: this.handleBlur.bind(this)
+    };
 
     switch (type) {
       case 'ShortTextField':
       case 'EmailField':
+        ChildComponent = ShortTextInput;
+        break;
       case 'NumberField':
         ChildComponent = ShortTextInput;
+        extraProps['fullWidth'] = false;
+        inputPosClass = styles.inlineLeft;
+        buttonPosClass = styles.inlineRight;
         break;
       case 'MultipleChoice':
         ChildComponent = MultipleChoice;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = props.allowMultiple ? styles.bottomColumn : styles.noneColumn;
         break;
       case 'LongTextField':
         ChildComponent = LongTextInput;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.bottomColumn;
+        break;
+      case 'StatementField':
+        ChildComponent = Statement;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.bottomColumn;
         break;
       default:
         return false;
     }
 
     var ChildComponentTemplate = () => {
-      return <ChildComponent {...this.props} 
-        value={savedValue}
-        isDisabled={isVerifying}
-        autoFocus={inputState == 'focus' || inputState == 'init'}
-        onEnterKey={this.handleEnter.bind(this)}
-        onChange={this.handleChange.bind(this)}
-        onFocus={this.handleFocus.bind(this)}
-        onBlur={this.handleBlur.bind(this)} />
+      return <ChildComponent {...this.props} {...extraProps} />
     }
     const slideAnimation = new SlideAnimation(200);
     const anim = {
@@ -222,37 +241,52 @@ class QuestionInteractive extends Component {
     const filteredValidations = _.filter(validations, function(validation) { 
       return !validateField( validation, savedValue );
     } )
+
+    var ValidationsTemplate = () => {
+      return (
+        <Animate exclusive={true} animation={anim} component="div">
+          { (inputState == 'enter')
+            ? filteredValidations.map((validation, index) => {
+                return (
+                  <Validator {...validation} key={validation.type} validateFor={savedValue} />
+                )
+              })
+            : <div key="null_key"></div>
+          }
+        </Animate>
+      );
+    }
+
+    var VerificationsTemplate = () => {
+      return (
+        <Animate exclusive={true} animation={anim} component="div">
+          {
+            _.filter(verificationStatus, {id: id, status: false}).map((verification, index) => {
+              return (
+                <Verifier {...verification} key={verification.type} />
+              )
+            })
+          }
+        </Animate>
+      );
+    }
+    
     return (
       <div className={styles.interactiveContainer}>
         <div className="clearfix">
           <div className={styles.leftColumn}>
-            <Animate exclusive={true} animation={anim} component="div">
-              { (inputState == 'enter')
-                ? filteredValidations.map((validation, index) => {
-                    return (
-                      <Validator {...validation} key={validation.type} validateFor={savedValue} />
-                    )
-                  })
-                : <div key="null_key"></div>
-              }
-            </Animate>
-            <Animate exclusive={true} animation={anim} component="div">
-              {
-                _.filter(verificationStatus, {id: id, status: false}).map((verification, index) => {
-                  return (
-                    <Verifier {...verification} key={verification.type} />
-                  )
-                })
-              }
-            </Animate>
+            <ValidationsTemplate />
+            <VerificationsTemplate />
           </div>
         </div>
-        <div className={styles.leftColumn}>
+        <div className={inputPosClass}>
           <ChildComponentTemplate />
         </div>
-        <div className={styles.rightColumn}>
+        <div className={buttonPosClass}>
           <FormEnterButton 
-            onClick={this.handleEnter.bind(this)} isDisabled={isVerifying} />
+            onClick={this.handleEnter.bind(this)}
+            buttonLabel={buttonLabel}
+            isDisabled={isVerifying} />
         </div>
       </div>
     )

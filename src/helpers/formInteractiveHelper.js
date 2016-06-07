@@ -126,8 +126,10 @@ export const getOutcomeWithQuestionId = (state, questionId) => {
   const { form: { logics }, answers } = state;
   for (let logic of logics) {
     const itemFound = _.find(logic.conditions, { source_field: questionId });
+
 console.log('----item found-----');
 console.log(itemFound);
+
     if (typeof itemFound === 'undefined') continue;
 
     var result = false;

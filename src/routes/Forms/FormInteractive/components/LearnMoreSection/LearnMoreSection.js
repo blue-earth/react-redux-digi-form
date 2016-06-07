@@ -29,7 +29,7 @@ class LearnMoreSection extends Component {
     return (
       <section className={styles.learnMoreSection}>
         <div>The World's most secure application platform</div>
-        <div><FaLock size={24}/></div>
+        <div><FaLock size={24} color="#000" /></div>
         <div><Link to={link} style={linkStyle}>Learn More</Link></div>
       </section>
     )

@@ -9,7 +9,13 @@
   height: 64px;
   background: $text-bg-color;
   display: block;
-  width: 100%;
+  width: 200px;
+  &.fullWidth {
+    width: 100%;
+  }
+  &[disabled] {
+    opacity: .5;
+  }
 }
 
 .textInput:hover, .textInput:active, .textInput:focus {

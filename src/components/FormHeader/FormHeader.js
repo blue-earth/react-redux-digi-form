@@ -1,14 +1,30 @@
-import React from 'react'
-import { IndexLink, Link } from 'react-router'
-import classes from './FormHeader.scss'
+import React, { Component, PropTypes } from 'react';
+import { IndexLink, Link } from 'react-router';
+import classes from './FormHeader.scss';
 
-export const FormHeader = () => (
-  <div className={classes.header}>
-    <h1 className="hide">Emondo</h1>
-    <Link to='#' className={classes.saveLink}>
-      Save & continue later
-    </Link>
-  </div>
-)
+class FormHeader extends Component {
 
-export default FormHeader
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
+
+  render() {
+    var optionals = {};
+    if (this.context.primaryColor) {
+      optionals['style'] = {
+        color: this.context.primaryColor
+      };
+    }
+
+    return (
+      <div className={classes.header}>
+        <h1 className="hide">Emondo</h1>
+        <Link to='#' className={classes.saveLink} {...optionals}>
+          Save & continue later
+        </Link>
+      </div>
+    );
+  }
+}
+
+export default FormHeader;

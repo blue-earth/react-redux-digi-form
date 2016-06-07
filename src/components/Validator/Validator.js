@@ -58,6 +58,20 @@ class Validator extends Component {
     );
   }
 
+  renderMinimum() {
+    const { value } = this.props
+    return (
+      <span>Value must not be less than {value}.</span>
+    );
+  }
+
+  renderMaximum() {
+    const { value } = this.props
+    return (
+      <span>Value must not be greater than {value}.</span>
+    );
+  }
+
   render() {
     var { type, value, validateFor } = this.props
     var result = validateField({type, value}, validateFor)
@@ -68,17 +82,23 @@ class Validator extends Component {
     if (result === false) {
       switch (type) {
         case 'isRequired':
-          output = this.renderIsRequired()
-          break
+          output = this.renderIsRequired();
+          break;
         case 'minLength':
-          output = this.renderMinLength()
-          break
+          output = this.renderMinLength();
+          break;
         case 'maxLength':
-          output = this.renderMaxLength()
-          break
+          output = this.renderMaxLength();
+          break;
         case 'isEmail':
-          output = this.renderIsEmail()
-          break
+          output = this.renderIsEmail();
+          break;
+        case 'minimum':
+          output = this.renderMinimum();
+          break;
+        case 'maximum':
+          output = this.renderMaximum();
+          break;
       }
     
       return (

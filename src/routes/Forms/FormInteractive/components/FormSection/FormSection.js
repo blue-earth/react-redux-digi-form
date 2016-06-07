@@ -9,7 +9,6 @@ import { getContextFromAnswer, getFirstQuestionOfGroup, SlideAnimation,
 import { findIndexById } from 'helpers/pureFunctions';
 import styles from './FormSection.scss';
 import _ from 'lodash';
-import Animate from 'rc-animate';
 
 class FormSection extends Component {
 
@@ -164,17 +163,44 @@ class FormSection extends Component {
     return (currentQuestionIndex == firstGroupIdx);
   }
 
-  render() {
-    const { step, status, totalSteps, questionGroup, prevQuestion, nextQuestion,
-      goToQuestion, currentQuestionId, form } = this.props;
+  renderNavButtons() {
+    const { form, currentQuestionId, questionGroup, nextQuestion, prevQuestion } = this.props;
+    const groupQuestions = questionGroup.questions;
+    const questionNumber = findIndexById(groupQuestions, currentQuestionId) + 1;
 
-    const slideAnimation = new SlideAnimation;
-    const anim = {
-      enter: slideAnimation.enter,
-      leave: slideAnimation.leave,
-    }
+    return (
+      <div>
+        <FormRow>
+          <ul className={styles.navButtonsWrapper}>
+            <li className={styles.activeQuestionNumber}>
+              { questionNumber } / { groupQuestions.length }
+            </li>
+            <li>
+              <Button className={styles.navButton} onClick={() => prevQuestion()}
+                disabled={shouldDisablePrevButton(form, currentQuestionId)}>
+                <MdKeyboardArrowUp size="24" />
+              </Button>
+            </li>
+            <li>
+              <Button className={styles.navButton} onClick={() => nextQuestion()}
+                disabled={shouldDisableNextButton(form, currentQuestionId)}>
+                <MdKeyboardArrowDown size="24" />
+              </Button>
+            </li>
+          </ul>
+        </FormRow>
+      </div>
+    );
+  }
+
+  render() {
+    const { step, status, totalSteps, questionGroup, goToQuestion } = this.props;
     const firstQuestionId = getFirstQuestionOfGroup(questionGroup);
     
+    const linkColor = {
+      color: this.context.primaryColor
+    };
+
     return (
       <section className={`${styles.formSection} ${styles[status]}`}>
         
@@ -218,31 +244,16 @@ class FormSection extends Component {
                 <h3 className={styles.formSectionTitle}>
                   {questionGroup.title}
                   <a href="javascript:;" onClick={() => goToQuestion(firstQuestionId)} 
-                    className={styles.formSectionEdit}>Edit</a>
+                    className={styles.formSectionEdit} style={linkColor}>Edit</a>
                 </h3>
               </div>
             </FormRow>
           </div>
         </Collapse>
 
-        {status === 'active' &&
+        {status === 'active' && this.renderNavButtons()}
+        {status === 'active' && 
           <div>
-            <FormRow>
-              <ul className={styles.navButtonsWrapper}>
-                <li>
-                  <Button className={styles.navButton} onClick={() => prevQuestion()}
-                    disabled={shouldDisablePrevButton(form, currentQuestionId)}>
-                    <MdKeyboardArrowUp size="24" />
-                  </Button>
-                </li>
-                <li>
-                  <Button className={styles.navButton} onClick={() => nextQuestion()}
-                    disabled={shouldDisableNextButton(form, currentQuestionId)}>
-                    <MdKeyboardArrowDown size="24" />
-                  </Button>
-                </li>
-              </ul>
-            </FormRow>
             <hr className={styles.hrLine} />
             <FormRow>
               <LearnMoreSection />

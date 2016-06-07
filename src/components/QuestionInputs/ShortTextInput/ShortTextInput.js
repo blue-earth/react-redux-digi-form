@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './ShortTextInput.scss';
+import classNames from 'classnames';
 
 class ShortTextInput extends Component {
 
@@ -25,7 +26,7 @@ class ShortTextInput extends Component {
 
   static defaultProps = {
     placeholderText: '',
-    fullWidth: false,
+    fullWidth: true,
     type: 'text',
   };
 
@@ -116,9 +117,14 @@ class ShortTextInput extends Component {
       optionals['disabled'] = 'disabled'
     };
 
+    const inputClasses = classNames({
+      [styles.textInput]: true,
+      [styles.fullWidth]: props.fullWidth
+    });
+    
     return (
       <input
-        className={styles.textInput}
+        className={inputClasses}
         type={this.inputType(type)}
         ref="input"
         autoFocus={autoFocus}

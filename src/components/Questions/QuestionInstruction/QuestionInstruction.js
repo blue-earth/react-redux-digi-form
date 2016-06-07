@@ -10,7 +10,7 @@ class QuestionDisplay extends Component {
     instruction: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object
-    ]).isRequired,
+    ]),
     description: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object
@@ -19,7 +19,7 @@ class QuestionDisplay extends Component {
   };
 
   static defaultProps = {
-    instruction: 'No question text line',
+    instruction: '',
     description: null,
     attachment: null
   };
@@ -43,8 +43,8 @@ class QuestionDisplay extends Component {
     if (this.props.description) {
       var ItemTemplate = () => {
         return (
-          <div className={styles.descriptionTextWrapper}>
-            {this.props.description}
+          <div className={styles.descriptionTextWrapper}
+            dangerouslySetInnerHTML={{__html: this.props.description}}>
           </div>
         )
       };

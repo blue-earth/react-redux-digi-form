@@ -15,8 +15,9 @@ class MultipleChoiceItem extends Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
+    disabled: PropTypes.bool,
     active: PropTypes.bool,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -35,15 +36,16 @@ class MultipleChoiceItem extends Component {
   }
 
   render() {
-    const { label, text, onClick, active } = this.props;
+    const { label, text, onClick, active, disabled } = this.props;
     const { primaryColor } = this.context;
     
     const choiceItemClasses = classNames({
       [styles.choiceItem]: true,
-      [styles.active]: active
+      [styles.active]: active,
+      [styles.disabled]: disabled
     });
+    
     var optionals = {};
-    console.log(active);
     if (active) {
       optionals['style'] = {
         borderColor: primaryColor
