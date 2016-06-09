@@ -3,7 +3,10 @@ import QuestionInstruction from '../QuestionInstruction/QuestionInstruction';
 import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput';
 import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
+import YesNoChoice from '../../QuestionInputs/YesNoChoice/YesNoChoice';
 import Statement from '../../QuestionInputs/Statement/Statement';
+import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
+import DropdownInput from '../../QuestionInputs/DropdownInput/DropdownInput';
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton';
 import Validator from '../../Validator/Validator';
 import Verifier from '../../Verifier/Verifier';
@@ -98,9 +101,9 @@ class QuestionInteractive extends Component {
   }
 
   componentWillReceiveProps(props) {
-
     this.setState({
-      savedValue: props.value
+      savedValue: props.value,
+      inputState: props.status !== this.props.status ? 'init' : this.state.inputState
     });
   }
 
@@ -147,6 +150,7 @@ class QuestionInteractive extends Component {
     var isValid = true;
     for (var i = 0; i < validations.length; i ++) {
       isValid = validateField( validations[i], value );
+      console.log(validations[i])
       if (!isValid) break;
     }
 
@@ -192,7 +196,7 @@ class QuestionInteractive extends Component {
     var extraProps = {
       value: savedValue,
       isDisabled: isVerifying,
-      autoFocus: inputState == 'focus' || inputState == 'init',
+      autoFocus: inputState === 'init' || inputState === 'focus' || inputState === 'enter',
       onEnterKey: this.handleEnter.bind(this),
       onChange: this.handleChange.bind(this),
       onFocus: this.handleFocus.bind(this),
@@ -215,6 +219,11 @@ class QuestionInteractive extends Component {
         inputPosClass = styles.topColumn;
         buttonPosClass = props.allowMultiple ? styles.bottomColumn : styles.noneColumn;
         break;
+      case 'YesNoChoiceField':
+        ChildComponent = YesNoChoice;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.noneColumn;
+        break;
       case 'LongTextField':
         ChildComponent = LongTextInput;
         inputPosClass = styles.topColumn;
@@ -224,6 +233,14 @@ class QuestionInteractive extends Component {
         ChildComponent = Statement;
         inputPosClass = styles.topColumn;
         buttonPosClass = styles.bottomColumn;
+        break;
+      case 'PhoneNumberField':
+        ChildComponent = PhoneNumberInput;
+        break;
+      case 'DropdownField':
+        ChildComponent = DropdownInput;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.noneColumn;
         break;
       default:
         return false;

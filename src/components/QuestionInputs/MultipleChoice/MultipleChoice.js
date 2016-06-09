@@ -3,6 +3,8 @@ import styles from './MultipleChoice.scss';
 import MultipleChoiceItem from './MultipleChoiceItem.js';
 import _ from 'lodash';
 
+const textOther = 'Other';
+
 class MultipleChoice extends Component {
 
   constructor(props) {
@@ -11,7 +13,6 @@ class MultipleChoice extends Component {
 
   static propTypes = {
     isDisabled: PropTypes.bool,
-    fullWidth: PropTypes.bool,
     allowMultiple: PropTypes.bool,
     maxAnswers: PropTypes.number,
     includeOther: PropTypes.bool,
@@ -50,7 +51,7 @@ class MultipleChoice extends Component {
   handleClick = (val) => {
     const { dispatch, allowMultiple, maxAnswers, 
       onChange, onEnterKey, value } = this.props;
-      
+    if (typeof onChange !== 'function') return;
     if ( allowMultiple ) {
       var newValue = _.xorWith(value, [val], _.isEqual);
       if ( this.canAcceptChange(newValue) ) {
@@ -58,7 +59,9 @@ class MultipleChoice extends Component {
       }
     } else {
       onChange(val);
-      setTimeout(onEnterKey, 50);
+      if (typeof onEnterKey === 'function') {
+        setTimeout(onEnterKey, 50);
+      }
     }
   }
 
@@ -93,7 +96,8 @@ class MultipleChoice extends Component {
 
     var choicesList = choices.map((item) => {
       const active = that.isActiveItem(item);
-      console.log(!active && (allowMultiple && !isMultiSelectable))
+      if (item.label > lastLabel) lastLabel = item.label;
+
       return <MultipleChoiceItem
         key={item.label}
         label={item.label}
@@ -103,6 +107,22 @@ class MultipleChoice extends Component {
         onClick={that.handleClick}
       />
     });
+
+    if (includeOther) {
+      var lastLabel = 'A';
+      lastLabel = String.fromCharCode(lastLabel.charCodeAt(0) + choices.length);
+      const active = that.isActiveItem({label: lastLabel, text: textOther})
+      choicesList.push(
+        <MultipleChoiceItem
+          key={lastLabel}
+          label={lastLabel}
+          text={textOther}
+          active={active}
+          disabled={!active && (allowMultiple && !isMultiSelectable)}
+          onClick={that.handleClick}
+        />
+      )
+    }
 
     return (
       <div className={styles.choicesContainer} {...optionals}>

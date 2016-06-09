@@ -1,18 +1,15 @@
 @import '../../../styles/mixins';
 @import '../../../styles/variables';
 
-.textInput {
-  padding: 4px 15px;
+.dropdownInput {
+  padding: 15px;
   border: 1px solid $text-border-color;
   @include border-radius($input-border-radius);
-  font-size: 20px;
-  height: 64px;
   background: $text-bg-color;
+  font-size: 20px;
   display: block;
-  width: 200px;
-  &.fullWidth {
-    width: 100%;
-  }
+  width: 100%;
+  height: 64px;
   &[disabled] {
     opacity: .5;
   }
