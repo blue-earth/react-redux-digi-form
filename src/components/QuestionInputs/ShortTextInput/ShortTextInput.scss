@@ -10,6 +10,9 @@
   background: $text-bg-color;
   display: block;
   width: 200px;
+  color: $text-dark-color;
+  -webkit-text-fill-color: $text-dark-color;
+  @include transition(all .15s);
   &.fullWidth {
     width: 100%;
   }

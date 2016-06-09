@@ -7,6 +7,7 @@ import YesNoChoice from '../../QuestionInputs/YesNoChoice/YesNoChoice';
 import Statement from '../../QuestionInputs/Statement/Statement';
 import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
 import DropdownInput from '../../QuestionInputs/DropdownInput/DropdownInput';
+import DateInput from '../../QuestionInputs/DateInput/DateInput';
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton';
 import Validator from '../../Validator/Validator';
 import Verifier from '../../Verifier/Verifier';
@@ -107,13 +108,13 @@ class QuestionInteractive extends Component {
     });
   }
 
-  handleFocus(value) {
+  handleFocus() {
     this.setState({
       inputState: 'focus',
     });
   }
   
-  handleBlur(value) {
+  handleBlur() {
     this.setState({
       inputState: 'blur'
     });
@@ -150,7 +151,6 @@ class QuestionInteractive extends Component {
     var isValid = true;
     for (var i = 0; i < validations.length; i ++) {
       isValid = validateField( validations[i], value );
-      console.log(validations[i])
       if (!isValid) break;
     }
 
@@ -239,8 +239,12 @@ class QuestionInteractive extends Component {
         break;
       case 'DropdownField':
         ChildComponent = DropdownInput;
-        inputPosClass = styles.topColumn;
         buttonPosClass = styles.noneColumn;
+        break;
+      case 'DateField':
+        ChildComponent = DateInput;
+        inputPosClass = styles.inlineLeft;
+        buttonPosClass = styles.inlineRight;
         break;
       default:
         return false;

@@ -12,7 +12,7 @@ export const transformQuestions = (questions) => {
       new_q[camelProp] = q[underscore_prop];
     }
 
-    // Patching isEmail validation for email field
+    // Patching isEmail validation for EmailField
     if (new_q.type == 'EmailField') {
       new_q.validations = _.unionBy(new_q.validations, [{
         type: 'isEmail'

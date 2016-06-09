@@ -10,6 +10,8 @@
   display: block;
   width: 100%;
   height: 64px;
+  cursor: pointer;
+  -webkit-text-fill-color: $text-dark-color;
   &[disabled] {
     opacity: .5;
   }

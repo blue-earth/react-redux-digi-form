@@ -48,7 +48,7 @@ class LongTextInput extends Component {
     });
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     const { onChange } = this.props;
     let value = event.target.value;
 
@@ -59,33 +59,20 @@ class LongTextInput extends Component {
     if (typeof onChange === 'function') onChange(value);
   }
 
-  handleFocus(event) {
+  handleFocus = (event) => {
     const { onFocus } = this.props;
-    let value = event.target.value;
-
-    this.setState({
-      savedValue: value
-    });
-
-    if (typeof onFocus === 'function') onFocus(value);
+    if (typeof onFocus === 'function') onFocus();
   }
 
-  handleBlur(event) {
+  handleBlur = (event) => {
     const { onBlur } = this.props;
-    let value = event.target.value;
-
-    this.setState({
-      savedValue: value
-    });
-
-    if (typeof onBlur === 'function') onBlur(value);
+    if (typeof onBlur === 'function') onBlur();
   }
 
-  handleKeyDown(event) {
+  handleKeyDown = (event) => {
     const { onEnterKey } = this.props;
     if (event.keyCode === 13 && typeof onEnterKey === 'function') {
       onEnterKey();
-      //this.refs.input.blur()
     }
   }
 
@@ -113,10 +100,10 @@ class LongTextInput extends Component {
         rows={props.rows}
         cols={props.cols}
         value={this.state.savedValue}
-        onChange={this.handleChange.bind(this)}
-        onBlur={this.handleBlur.bind(this)}
-        onFocus={this.handleFocus.bind(this)}
-        // onKeyDown={this.handleKeyDown.bind(this)}
+        onChange={this.handleChange}
+        onBlur={this.handleBlur}
+        onFocus={this.handleFocus}
+        // onKeyDown={this.handleKeyDown}
         {...optionals}
       />
     )

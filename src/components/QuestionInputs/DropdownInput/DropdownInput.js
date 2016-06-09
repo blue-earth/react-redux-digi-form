@@ -52,15 +52,15 @@ class DropdownInput extends Component {
       };
     }
 
-    var choicesList = choices.map((item) => {
-      const selected = (item == value);
-      return <option value={item} selected={selected}>{item}</option>;
+    var choicesList = choices.map((item, index) => {
+      return <option value={item} key={index}>{item}</option>;
     });
     choicesList.unshift(<option value=""></option>);
 
     return (
       <select className={styles.dropdownInput}
         onChange={this.handleChange}
+        value={value}
         {...optionals}>
         {choicesList}
       </select>

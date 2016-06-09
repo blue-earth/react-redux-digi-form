@@ -8,6 +8,8 @@
     font-size: 20px;
     height: 64px;
     background: $text-bg-color;
+    color: $text-dark-color;
+    -webkit-text-fill-color: $text-dark-color;
     display: block;
     width: 100%;
     padding-left: 55px;

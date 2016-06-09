@@ -39,7 +39,7 @@ class PhoneNumberInput extends Component {
     const { autoFocus } = this.props;
     var telInput = findDOMNode(this.refs.intlTelInput.refs.telInput);
     const that = this;
-    telInput.addEventListener('keydown', (event) => that.handleKeydown(event));
+    telInput.addEventListener('keydown', (event) => that.handleKeyDown(event));
     telInput.addEventListener('focus', (event) => that.handleFocus(event));
     telInput.addEventListener('blur', (event) => that.handleBlur(event));
     telInput.style = 'color:' + this.context.primaryColor;
@@ -56,7 +56,7 @@ class PhoneNumberInput extends Component {
     }
   }
 
-  handleKeydown = (event) => {
+  handleKeyDown = (event) => {
     const { onEnterKey } = this.props;
     if (typeof onEnterKey === 'function' && event.keyCode == 13)
       onEnterKey();
@@ -65,19 +65,20 @@ class PhoneNumberInput extends Component {
   handleFocus = (event) => {
     const { onFocus } = this.props;
     if (typeof onFocus === 'function')
-      onFocus(event.target.value);
+      onFocus();
   }
 
   handleBlur = (event) => {
-    if (typeof this.refs.intlTelInput !== 'undefined') {
-      var flagDropDown = findDOMNode(this.refs.intlTelInput.refs.flagDropDown);
-      var selectedFlag = flagDropDown.querySelector('.selected-flag');
-      // clicking on dropdown shouldn't fire blur
-      if (event.relatedTarget == selectedFlag) return;
+    if (typeof onBlur === 'function') {
+      if (typeof this.refs.intlTelInput !== 'undefined') {
+        var flagDropDown = findDOMNode(this.refs.intlTelInput.refs.flagDropDown);
+        var selectedFlag = flagDropDown.querySelector('.selected-flag');
+        // clicking on dropdown shouldn't fire blur
+        if (event.relatedTarget == selectedFlag) return;
+      }
+      const { onBlur } = this.props;
+      onBlur();
     }
-    const { onBlur } = this.props;
-    if (typeof onBlur === 'function')
-      onBlur(event.target.value);
   }
 
   render() {
