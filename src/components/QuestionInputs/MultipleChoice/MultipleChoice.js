@@ -13,6 +13,7 @@ class MultipleChoice extends Component {
 
   static propTypes = {
     isDisabled: PropTypes.bool,
+    isReadOnly: PropTypes.bool,
     allowMultiple: PropTypes.bool,
     maxAnswers: PropTypes.number,
     includeOther: PropTypes.bool,
@@ -27,6 +28,7 @@ class MultipleChoice extends Component {
 
   static defaultProps = {
     isDisabled: false,
+    isReadOnly: false,
     allowMultiple: false,
     maxAnswers: 0,
     includeOther: false,
@@ -85,42 +87,31 @@ class MultipleChoice extends Component {
   }
 
   render() {
-    const { isDisabled, value, choices, allowMultiple, includeOther } = this.props;
+    const { isDisabled, isReadOnly, value, choices, allowMultiple, includeOther } = this.props;
     const that = this;
     const isMultiSelectable = that.isMultiSelectable(value);
-
     var optionals = {};
-    if (isDisabled) {
-      optionals['disabled'] = 'disabled'
-    }
-
-    var choicesList = choices.map((item) => {
+    var ChoiceItemTemplate = (item) => {
       const active = that.isActiveItem(item);
-      if (item.label > lastLabel) lastLabel = item.label;
-
+      const disabled = isDisabled || isReadOnly || !active && (allowMultiple && !isMultiSelectable)
       return <MultipleChoiceItem
-        key={item.label}
+        key={`${item.label}-${item.text}`}
         label={item.label}
         text={item.text}
         active={active}
-        disabled={!active && (allowMultiple && !isMultiSelectable)}
+        disabled={disabled}
         onClick={that.handleClick}
       />
+    }
+    var choicesList = choices.map((item) => {
+      return ChoiceItemTemplate(item);
     });
 
     if (includeOther) {
       var lastLabel = 'A';
       lastLabel = String.fromCharCode(lastLabel.charCodeAt(0) + choices.length);
-      const active = that.isActiveItem({label: lastLabel, text: textOther})
       choicesList.push(
-        <MultipleChoiceItem
-          key={lastLabel}
-          label={lastLabel}
-          text={textOther}
-          active={active}
-          disabled={!active && (allowMultiple && !isMultiSelectable)}
-          onClick={that.handleClick}
-        />
+        ChoiceItemTemplate({label: lastLabel, text: textOther})
       )
     }
 

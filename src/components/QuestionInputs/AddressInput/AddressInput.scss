@@ -1,0 +1,30 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.addressWrapper {
+  padding: 0 5px;
+}
+.addressRow {
+  margin: 0 -5px 10px -5px;
+}
+.addressCol {
+  padding: 0 5px;
+}
+.addressInput {
+  padding: 15px;
+  border: 1px solid $text-border-color;
+  @include border-radius($input-border-radius);
+  background: $text-bg-color;
+  font-size: 20px;
+  display: block;
+  width: 100%;
+  height: 64px;
+  -webkit-text-fill-color: $text-dark-color;
+  &[disabled] {
+    opacity: .5;
+  }
+  &:hover, &:focus {
+    border: 1px solid $text-hover-border-color;
+    outline: none;
+  }
+}

@@ -51,11 +51,13 @@ class MultipleChoiceItem extends Component {
         borderColor: primaryColor
       };
     }
+    if (!disabled) {
+      optionals['onClick'] = this.handleClick
+      optionals['onKeyDown'] = this.handleKeyDown
+    }
 
     return (
-      <div className={choiceItemClasses} tabIndex={0} 
-        onClick={this.handleClick} onKeyDown={this.handleKeyDown}
-        {...optionals}>
+      <div className={choiceItemClasses} tabIndex={0} {...optionals}>
         <label className={styles.label}>{label}</label>
         <span className={styles.text}>{text}</span>
       </div>

@@ -12,6 +12,8 @@ class PhoneNumberInput extends Component {
   };
 
   static propTypes = {
+    isDisabled: PropTypes.bool,
+    isReadOnly: PropTypes.bool,
     autoFocus: PropTypes.bool,
     value: PropTypes.string,
     onChange: PropTypes.func,
@@ -22,7 +24,9 @@ class PhoneNumberInput extends Component {
 
   static defaultProps = {
     placeholderText: '',
-    value: ''
+    value: '',
+    isDisabled: true,
+    isReadOnly: true
   };
 
   constructor(props) {
@@ -36,14 +40,35 @@ class PhoneNumberInput extends Component {
 
   componentDidMount() {
     // finds the input dom node to bind event handler.
-    const { autoFocus } = this.props;
-    var telInput = findDOMNode(this.refs.intlTelInput.refs.telInput);
+    const { autoFocus, isDisabled, isReadOnly, value } = this.props;
+    var intlTelInput = this.refs.intlTelInput;
+    var input = findDOMNode(intlTelInput.refs.telInput);
     const that = this;
-    telInput.addEventListener('keydown', (event) => that.handleKeyDown(event));
-    telInput.addEventListener('focus', (event) => that.handleFocus(event));
-    telInput.addEventListener('blur', (event) => that.handleBlur(event));
-    telInput.style = 'color:' + this.context.primaryColor;
-    if ( autoFocus ) setTimeout(() => telInput.focus(), 1);
+    console.log(intlTelInput);
+    
+    if (isDisabled) {
+      intlTelInput.setState( {
+        telInput: _.merge(intlTelInput.state.telInput, {
+            isDisabled: true,
+            value: value
+          })
+      } );
+    }
+    if (isReadOnly) {
+      intlTelInput.setState( {
+        telInput: _.merge(intlTelInput.state.telInput, {
+            readonly: true,
+            value: value
+          })
+      } );
+    }
+
+
+    input.addEventListener('keydown', (event) => that.handleKeyDown(event));
+    input.addEventListener('focus', (event) => that.handleFocus(event));
+    input.addEventListener('blur', (event) => that.handleBlur(event));
+    input.style = 'color:' + this.context.primaryColor;
+    if ( autoFocus ) setTimeout(() => input.focus(), 1);
   }
 
   changeHandler = (isValid, newValue, countryData, newNumber) => {
@@ -82,7 +107,8 @@ class PhoneNumberInput extends Component {
   }
 
   render() {
-    const { value } = this.props;
+    const { value, isReadOnly, isDisabled } = this.props;
+
     return (
       <IntlTelInput preferredCountries={[]}
         onlyCountries={['au', 'sg']}

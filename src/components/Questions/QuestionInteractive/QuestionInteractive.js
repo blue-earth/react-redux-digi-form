@@ -8,6 +8,7 @@ import Statement from '../../QuestionInputs/Statement/Statement';
 import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
 import DropdownInput from '../../QuestionInputs/DropdownInput/DropdownInput';
 import DateInput from '../../QuestionInputs/DateInput/DateInput';
+import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton';
 import Validator from '../../Validator/Validator';
 import Verifier from '../../Verifier/Verifier';
@@ -98,6 +99,7 @@ class QuestionInteractive extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     const { inputState } = nextState;
+    if (nextProps.status === this.props.status && nextProps.value === this.props.value) return false;
     return inputState != 'focus' || (nextProps.isVerifying != this.props.isVerifying);
   }
 
@@ -246,6 +248,9 @@ class QuestionInteractive extends Component {
         inputPosClass = styles.inlineLeft;
         buttonPosClass = styles.inlineRight;
         break;
+      case 'AddressField':
+        ChildComponent = AddressInput;
+        break;
       default:
         return false;
     }
@@ -345,6 +350,7 @@ class QuestionInteractive extends Component {
   }
 
   render() {
+  console.log('render-qi')
     const { status } = this.props
     if ( status === 'current' )
       return this.renderActiveQuestion();

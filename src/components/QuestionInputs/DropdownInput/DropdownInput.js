@@ -13,6 +13,7 @@ class DropdownInput extends Component {
 
   static propTypes = {
     isDisabled: PropTypes.bool,
+    isReadOnly: PropTypes.bool,
     choices: PropTypes.array.isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func,
@@ -21,6 +22,7 @@ class DropdownInput extends Component {
 
   static defaultProps = {
     isDisabled: false,
+    isReadOnly: false,
     choices: [],
     value: '',
     onChange: () => {},
@@ -38,12 +40,12 @@ class DropdownInput extends Component {
   }
 
   render() {
-    const { isDisabled, value, choices } = this.props;
+    const { isDisabled, isReadOnly, value, choices } = this.props;
     const { primaryColor } = this.context;
     var optionals = {};
     
-    if (isDisabled) {
-      optionals['disabled'] = 'disabled'
+    if (isDisabled || isReadOnly) {
+      optionals['disabled'] = 'disabled';
     }
 
     if ( typeof primaryColor !== 'undefined' ) {

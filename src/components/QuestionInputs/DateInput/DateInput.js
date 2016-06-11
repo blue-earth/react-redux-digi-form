@@ -20,6 +20,7 @@ class DateInput extends Component {
 
   static propTypes = {
     isDisabled: PropTypes.bool,
+    isReadOnly: PropTypes.bool,
     choices: PropTypes.array.isRequired,
     value: PropTypes.object,
     dateFormat: PropTypes.string,
@@ -31,6 +32,7 @@ class DateInput extends Component {
 
   static defaultProps = {
     isDisabled: false,
+    isReadOnly: false,
     choices: [],
     value: null,
     dateFormat: 'YYYY/MM/DD',
@@ -39,11 +41,14 @@ class DateInput extends Component {
   };
 
   componentDidMount() {
-    var dateInput = findDOMNode(this.refs.dateInput.refs.input);
-    const that = this;
-    dateInput.addEventListener('keydown', (event) => that.handleKeyDown(event));
-    if (this.context.primaryColor)
-      dateInput.style = 'color:' + this.context.primaryColor;
+    const { isReadOnly } = this.props;
+    if (!isReadOnly) {
+      var dateInput = findDOMNode(this.refs.dateInput.refs.input);
+      const that = this;
+      dateInput.addEventListener('keydown', (event) => that.handleKeyDown(event));
+      if (this.context.primaryColor)
+        dateInput.style = 'color:' + this.context.primaryColor;
+    }
   }
 
   handleChange = (date) => {
@@ -87,32 +92,46 @@ class DateInput extends Component {
   }
 
   render() {
-    const { isDisabled, value, dateFormat, autoFocus } = this.props;
+    const { isDisabled, isReadOnly, value, dateFormat, autoFocus } = this.props;
     const { savedDate } = this.state;
     const { primaryColor } = this.context;
     var optionals = {};
 
     if ( typeof savedDate === 'object' && savedDate !== null ) {
-      optionals['selected'] = moment(savedDate);
+      if (isReadOnly) {
+        optionals['value'] = moment(savedDate).format(dateFormat);
+      } else {
+        optionals['selected'] = moment(savedDate);
+      }
     }
-    
     if (isDisabled) {
       optionals['disabled'] = true;
     }
 
-    return (
-      <DatePicker className={styles.dateInput}
-        dateFormat={dateFormat}
-        placeholderText={dateFormat}
-        autoFocus={autoFocus}
-        onChange={this.handleChange}
-        onFocus={this.handleFocus}
-        onBlur={this.handleBlur}
-        showYearDropdown
-        ref="dateInput"
-        {...optionals}
-      />
-    );
+    if (isReadOnly) {
+      optionals['readOnly'] = true;
+      // If readonly, render native input tag instead.
+      return (
+        <input type="text" className={styles.dateInput}
+          placeholderText={dateFormat}
+          {...optionals}
+        />
+      );
+    } else {
+      return (
+        <DatePicker className={styles.dateInput}
+          dateFormat={dateFormat}
+          placeholderText={dateFormat}
+          autoFocus={autoFocus}
+          onChange={this.handleChange}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+          showYearDropdown
+          ref="dateInput"
+          {...optionals}
+        />
+      );
+    }
   }
 }
 

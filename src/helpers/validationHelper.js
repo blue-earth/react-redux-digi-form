@@ -1,5 +1,5 @@
 export const validateIsRequired = (value) => {
-  return (typeof value !== 'undefined' && value !== '' && value !== null) 
+  return (typeof value !== 'undefined' && value !== '' && value !== null)
 }
 
 export const validateIsEmail = (value) => {

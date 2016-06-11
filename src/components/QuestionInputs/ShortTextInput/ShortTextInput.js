@@ -17,6 +17,7 @@ class ShortTextInput extends Component {
       PropTypes.string,
       PropTypes.number
     ]),
+    isReadOnly: PropTypes.bool,
     isDisabled: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
@@ -28,6 +29,8 @@ class ShortTextInput extends Component {
     placeholderText: '',
     fullWidth: true,
     type: 'text',
+    isDisabled: false,
+    isReadOnly: false,
   };
 
   constructor(props) {
@@ -88,8 +91,10 @@ class ShortTextInput extends Component {
   }
 
   render() {
+    console.log('render-sti')
     var props = this.props;
-    var { type, value, autoFocus } = this.props;
+    var { type, value, autoFocus, fullWidth, placeholderText, 
+      isDisabled, isReadOnly } = this.props;
     var { primaryColor } = this.context;
     var optionals = {};
 
@@ -98,16 +103,19 @@ class ShortTextInput extends Component {
         color: primaryColor
       };
     }
-    if (props.placeholderText) {
-      optionals['placeholder'] = props.placeholderText
-    };
-    if (props.isDisabled) {
+    if (placeholderText) {
+      optionals['placeholder'] = placeholderText
+    }
+    if (isDisabled) {
       optionals['disabled'] = 'disabled'
-    };
+    }
+    if (isReadOnly) {
+      optionals['readOnly'] = true
+    }
 
     const inputClasses = classNames({
       [styles.textInput]: true,
-      [styles.fullWidth]: props.fullWidth
+      [styles.fullWidth]: fullWidth
     });
     
     return (

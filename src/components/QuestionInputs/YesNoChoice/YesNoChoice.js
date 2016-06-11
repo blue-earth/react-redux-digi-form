@@ -10,6 +10,7 @@ class YesNoChoice extends Component {
 
   static propTypes = {
     isDisabled: PropTypes.bool,
+    isReadOnly: PropTypes.bool,
     value: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.array
@@ -20,6 +21,7 @@ class YesNoChoice extends Component {
 
   static defaultProps = {
     isDisabled: false,
+    isReadOnly: false,
     value: {
       text: '',
       label: ''
@@ -29,7 +31,7 @@ class YesNoChoice extends Component {
   };
 
   render() {
-    const { isDisabled, value, onChange, onEnterKey } = this.props;
+    const { isDisabled, isReadOnly, value, onChange, onEnterKey } = this.props;
     const choices = [
       {
         text: 'Yes',
@@ -44,7 +46,7 @@ class YesNoChoice extends Component {
     return (
       <MultipleChoice
         value={value}
-        disabled={isDisabled}
+        disabled={isDisabled || isReadOnly}
         onChange={onChange}
         onEnterKey={onEnterKey}
         choices={choices}
