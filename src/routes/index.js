@@ -4,6 +4,7 @@ import { Route, IndexRoute } from 'react-router'
 import CoreLayout from '../layouts/CoreLayout/CoreLayout'
 import Home from './Home'
 import FormRoute from './Forms'
+import LoginRoute from './Login'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -13,7 +14,8 @@ export default (store) => ({
   component: CoreLayout,
   indexRoute: Home,
   childRoutes: [
-    FormRoute(store)
+    FormRoute(store),
+    LoginRoute(store)
   ]
 })
 

@@ -16,6 +16,12 @@ class Verifier extends Component {
     );
   }
 
+  renderEmondoAuthenticationService() {
+    return (
+      <span>Incorrect password. Passwords are case sensitive.</span>
+    );
+  }
+
   render() {
     var { type, status, verification } = this.props;
     var output = false;
@@ -27,6 +33,9 @@ class Verifier extends Component {
       switch (type) {
         case 'EmondoEmailFieldService':
           output = this.renderEmondoEmailFieldService();
+          break;
+        case 'EmondoAuthenticationService':
+          output = this.renderEmondoAuthenticationService();
           break;
         default:
           return false;
