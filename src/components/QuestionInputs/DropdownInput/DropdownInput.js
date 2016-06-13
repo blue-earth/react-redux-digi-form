@@ -57,7 +57,7 @@ class DropdownInput extends Component {
     var choicesList = choices.map((item, index) => {
       return <option value={item} key={index}>{item}</option>;
     });
-    choicesList.unshift(<option value=""></option>);
+    choicesList.unshift(<option value="" key="empty_field"></option>);
 
     return (
       <select className={styles.dropdownInput}

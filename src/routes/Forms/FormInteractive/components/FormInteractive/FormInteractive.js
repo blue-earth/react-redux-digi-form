@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import FormHeader from 'components/FormHeader';
 import { Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap'; // Temp
 import FormSection from '../FormSection/FormSection';
 import FormRow from '../FormRow/FormRow';
-import { fetchFormIfNeeded, storeAnswer } from 'redux/modules/formInteractive';
 import { groupFormQuestions, SlideAnimation }
   from 'helpers/formInteractiveHelper.js';
+import { FORM_AUTOSAVE, FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
 import styles from './FormInteractive.scss';
 import Animate from 'rc-animate';
@@ -107,13 +108,34 @@ class FormInteractive extends Component {
     /*
      * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
      */
-    handleEnter: PropTypes.func.isRequired
+    handleEnter: PropTypes.func.isRequired,
+
+    /*
+     * submitAnswer: Redux action to send submit request to server. Here it will be submitted by user's action.
+     */
+    submitAnswer: PropTypes.func.isRequired,
+
+    // Temporary for modal show up.
+    lastFormSubmitURL: PropTypes.string
   };
 
   componentWillMount() {
-    const { fetchFormIfNeeded } = this.props;
-    let id = this.props.params.id;
-    fetchFormIfNeeded(id);
+    const { fetchFormIfNeeded, params: { id, sessionId } } = this.props;
+    fetchFormIfNeeded(id, sessionId);
+  }
+
+  componentWillReceiveProps(props) {
+    // set show/hide temp modal
+    if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION) {
+      this.setState({showTempModal: true});
+    }
+  }
+
+  componentDidMount() {
+    const { submitAnswer } = this.props;
+    setInterval(function() {
+      submitAnswer(FORM_AUTOSAVE);
+    }, 5000);
   }
 
   sectionStatus(allQuestions, currentQuestionId, questionGroup) {
@@ -162,12 +184,37 @@ class FormInteractive extends Component {
     )
   }
 
+  handleHideTempModal = () => {
+    this.setState({'showTempModal': false});
+  }
+  // Temp Modal for submit response.
+  renderTempResponseModal() {
+    const { sessionId, id, lastFormSubmitStatus } = this.props;
+    const { showTempModal } = this.state;
+
+    return (
+      <Modal show={showTempModal} bsSize="large"
+        onHide={this.handleHideTempModal}>
+        <Modal.Body>
+          <p>{lastFormSubmitStatus.requestURL}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.handleHideTempModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
   render() {
+    const { submitAnswer } = this.props;
     return (
       <div>
-        <FormHeader />
+        <FormHeader submitAnswer={submitAnswer} />
         <div className={styles.flowLine}></div>
         { this.renderFormSteps }
+        { this.renderTempResponseModal() }
       </div>
     )
   }

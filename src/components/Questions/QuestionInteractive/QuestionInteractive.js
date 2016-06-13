@@ -99,7 +99,13 @@ class QuestionInteractive extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     const { inputState } = nextState;
-    if (nextProps.status === this.props.status && nextProps.value === this.props.value) return false;
+
+    // If it's inactive question with the status unchanged, no need to update.
+    if (nextProps.status === this.props.status && nextProps.value === this.props.value &&
+      nextState.inputState === 'init') {
+      return false;
+    }
+    // For current question, if the status is not focus or no verifying status reverted, it should update.
     return inputState != 'focus' || (nextProps.isVerifying != this.props.isVerifying);
   }
 
@@ -350,7 +356,6 @@ class QuestionInteractive extends Component {
   }
 
   render() {
-  console.log('render-qi')
     const { status } = this.props
     if ( status === 'current' )
       return this.renderActiveQuestion();

@@ -91,7 +91,6 @@ class ShortTextInput extends Component {
   }
 
   render() {
-    console.log('render-sti')
     var props = this.props;
     var { type, value, autoFocus, fullWidth, placeholderText, 
       isDisabled, isReadOnly } = this.props;

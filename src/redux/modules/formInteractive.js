@@ -5,7 +5,7 @@ import { getOutcomeWithQuestionId } from 'helpers/formInteractiveHelper';
 import _ from 'lodash';
 
 // ------------------------------------
-// Constants
+// Action type Constants
 // ------------------------------------
 export const RECEIVE_FORM = 'RECEIVE_FORM';
 export const REQUEST_FORM = 'REQUEST_FORM';
@@ -17,17 +17,29 @@ export const VERIFY_EMAIL = 'VERIFY_EMAIL';
 export const REQUEST_VERIFICATION = 'REQUEST_VERIFICATION';
 export const DONE_VERIFICATION = 'DONE_VERIFICATION';
 export const RECEIVE_VERIFICATION = 'RECEIVE_VERIFICATION';
+export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
+export const DONE_SUBMIT = 'DONE_SUBMIT';
+export const UPDATE_SESSION_ID = 'UPDATE_SESSION_ID';
+
+// ------------------------------------
+// Form submit request action Constants
+// ------------------------------------
+export const FORM_USER_SUBMISSION = 'FORM_USER_SUBMISSION';
+export const FORM_AUTOSAVE = 'FORM_AUTOSAVE';
 
 export const INIT_FORM_STATE = {
   id: 0,
-  isFetching: false,
-  isSubmitting: false,
-  isVerifying: false,
-  lastUpdated: Date.now(),
+  // sessionId,
+  isFetching: false, // indicates the form request is being processed.
+  isSubmitting: false, // indicates the form submission is being processed.
+  isVerifying: false, // indicates the verifying request is being processed.
+  isModified: false, // indicates the form answer modified after submission.
+  lastUpdated: Date.now(), // last form-questions received time.
+  lastFormSubmitStatus: {}, // holds the status of last form submit response.
   form: {
     questions: [],
     logics:[]
-  },
+  }, // holds the received form data.
   title: 'Title',
   slug: 'slug',
   currentQuestionId: 0,
@@ -44,8 +56,8 @@ export const INIT_FORM_STATE = {
 // ------------------------------------
 // Action: fetchForm
 // ------------------------------------
-export const fetchForm = (id) => {
-
+export const fetchForm = (id, sessionId) => {
+console.log(sessionId)
   const fetchParams = {
     headers: {
       Accept: 'application/json',
@@ -59,6 +71,8 @@ export const fetchForm = (id) => {
     return (dispatch, getState) => {
       dispatch(receiveForm(value));
       dispatch(doneFetchingForm()); // Hide loading spinner
+      if (sessionId)
+        dispatch(updateSessionId(sessionId)); // Temporary, Should be updated.
     }
   };
   
@@ -92,6 +106,7 @@ export const receiveForm = (data) => {
     title: data.title,
     slug: data.slug,
     receivedAt: Date.now(),
+    sessionId: data.session_id,
     currentQuestionId: validateQuestionId(data.form_data)
   };
 }
@@ -117,11 +132,11 @@ const shouldFetchForm = (state, id) => {
 // ------------------------------------
 // Action: fetchFormIfNeeded
 // ------------------------------------
-export const fetchFormIfNeeded = (id) => {
+export const fetchFormIfNeeded = (id, sessionId) => {
   return (dispatch, getState) => {
     if (shouldFetchForm(getState(), id)) {
       dispatch(requestForm());
-      dispatch(fetchForm(id));
+      dispatch(fetchForm(id, sessionId));
     }
   }
 }
@@ -395,9 +410,109 @@ export const handleEnter = () => {
 }
 
 // ------------------------------------
+// Action: submitAnswer
+// ------------------------------------
+export const submitAnswer = (requestAction) => {
+  return (dispatch, getState) => {
+      const formInteractive = getState().formInteractive;
+      if (requestAction === FORM_USER_SUBMISSION) {
+        dispatch(requestSubmitAnswer());
+        dispatch(processSubmitAnswer(requestAction, formInteractive));
+      }
+      if (requestAction === FORM_AUTOSAVE && formInteractive.isModified) {
+        dispatch(processSubmitAnswer(requestAction, formInteractive));
+      }
+  };
+}
+
+// ------------------------------------
+// Action: requestSubmitAnswer
+// ------------------------------------
+export const requestSubmitAnswer = () => {
+  return {
+    type: REQUEST_SUBMIT
+  }
+}
+
+// ------------------------------------
+// Action: processSubmitAnswer
+// ------------------------------------
+export const processSubmitAnswer = (requestAction, formInteractive) => {
+
+  const { id, answers, sessionId } = formInteractive;
+  var answerRequest = {
+    request_action: requestAction,
+    answers: answers,
+    form_id: id,
+    session_id: sessionId
+  };
+
+  var requestURL = `${API_URL}/form_document/api/form_response/`;
+  if (sessionId)
+    requestURL += `${sessionId}/?form_id=${id}`;
+  else
+    requestURL += `?form_id=${id}`;
+
+  const fetchParams = {
+    method: 'POST',
+    headers: {
+      // Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(answerRequest)
+  };
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      const { result, form_id, session_id, request_action } = value;
+      if (result) {
+        dispatch(updateSessionId(session_id));
+      }
+      dispatch(doneSubmitAnswer({
+        result,
+        requestURL,
+        requestAction: request_action
+      })); // Hide submitting spinner
+    }
+  };
+  
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(doneSubmitAnswer({
+        result: false,
+        requestURL,
+        requestAction,
+      })); // Hide submitting spinner
+    }
+  };
+
+  return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
+}
+
+// ------------------------------------
+// Action: doneSubmitAnswer
+// ------------------------------------
+export const doneSubmitAnswer = (status) => {
+  return {
+    type: DONE_SUBMIT,
+    status
+  }
+}
+
+// ------------------------------------
+// Action: updateFormSession
+// ------------------------------------
+export const updateSessionId = (sessionId) => {
+  return {
+    type: 'UPDATE_SESSION_ID',
+    sessionId
+  }
+}
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
-const formInteractive = (state = INIT_FORM_STATE, action) => {
+const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
   switch (action.type) {
     case RECEIVE_FORM:
       return Object.assign({}, state, {
@@ -407,6 +522,7 @@ const formInteractive = (state = INIT_FORM_STATE, action) => {
         form: action.form,
         lastUpdated: action.receivedAt,
         currentQuestionId: action.currentQuestionId,
+        sessionId: action.sessionId
         // primaryColor: action.primaryColor
       });
     case REQUEST_FORM:
@@ -427,8 +543,8 @@ const formInteractive = (state = INIT_FORM_STATE, action) => {
       });
     case STORE_ANSWER:
       return Object.assign({}, state, {
-        // isSubmitting: true,
         answers: mergeItemIntoArray(state.answers, action.answer),
+        isModified: true
       });
     case REQUEST_VERIFICATION:
       return Object.assign({}, state, {
@@ -442,9 +558,23 @@ const formInteractive = (state = INIT_FORM_STATE, action) => {
       return Object.assign({}, state, {
         verificationStatus: mergeItemIntoArray(state.verificationStatus, action.verification)
       });
+    case UPDATE_SESSION_ID:
+      return Object.assign({}, state, {
+        sessionId: action.sessionId,
+      });
+    case REQUEST_SUBMIT:
+      return Object.assign({}, state, {
+        isSubmitting: true,
+      });
+    case DONE_SUBMIT:
+      return Object.assign({}, state, {
+        isSubmitting: false,
+        isModified: action.result ? false : state.isModified,
+        lastFormSubmitStatus: action.status,
+      });
     default:
       return state;
   };
 }
 
-export default formInteractive;
+export default formInteractiveReducer;

@@ -25,8 +25,8 @@ class PhoneNumberInput extends Component {
   static defaultProps = {
     placeholderText: '',
     value: '',
-    isDisabled: true,
-    isReadOnly: true
+    isDisabled: false,
+    isReadOnly: false
   };
 
   constructor(props) {
@@ -34,7 +34,6 @@ class PhoneNumberInput extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(nextProps.value, this.props.value)
     return nextProps.value != this.props.value;
   }
 
@@ -44,7 +43,6 @@ class PhoneNumberInput extends Component {
     var intlTelInput = this.refs.intlTelInput;
     var input = findDOMNode(intlTelInput.refs.telInput);
     const that = this;
-    console.log(intlTelInput);
     
     if (isDisabled) {
       intlTelInput.setState( {
@@ -63,7 +61,6 @@ class PhoneNumberInput extends Component {
       } );
     }
 
-
     input.addEventListener('keydown', (event) => that.handleKeyDown(event));
     input.addEventListener('focus', (event) => that.handleFocus(event));
     input.addEventListener('blur', (event) => that.handleBlur(event));
@@ -73,10 +70,8 @@ class PhoneNumberInput extends Component {
 
   changeHandler = (isValid, newValue, countryData, newNumber) => {
     const { onChange, value } = this.props;
-    console.log(isValid, newValue, countryData, newNumber);
     if (newNumber == '') newNumber = '+' + countryData.dialCode;
     if (value !== newNumber && typeof onChange === 'function') {
-      console.log(newNumber);
       onChange(newNumber);
     }
   }

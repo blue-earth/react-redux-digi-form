@@ -7,9 +7,9 @@ export default (store) => ({
   path: 'forms',
   getChildRoutes(location, cb) {
     require.ensure([], (require) => {
-      cb(null, [
+      cb(null, 
         require('./FormInteractive')
-      ])
+      )
     })
   },
 
