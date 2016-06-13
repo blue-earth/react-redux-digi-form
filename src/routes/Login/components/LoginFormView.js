@@ -7,26 +7,20 @@ import validateField from 'helpers/validationHelper';
 import { Button } from 'react-bootstrap';
 import { LOGGED_IN, NOT_LOGGED_IN } from 'redux/modules/auth';
 import { FaGooglePlusSquare,FaFacebookSquare,FaLinkedinSquare} from 'react-icons/lib/fa';
-// import FormSection from '../FormSection/FormSection';
-// import FormRow from '../FormRow/FormRow';
-// import { fetchFormIfNeeded, storeAnswer } from 'redux/modules/formInteractive';
-// import { groupFormQuestions, SlideAnimation }
-//   from 'helpers/formInteractiveHelper.js';
-// import { findIndexById } from 'helpers/pureFunctions';
-import Header from 'components/Header'
+import Header from 'components/Header';
 import styles from './LoginFormView.scss';
-// import Animate from 'rc-animate';
 
 class LoginForm extends Component {
 
   static propTypes = {
     submitLoginForm: PropTypes.func.isRequired,
     authStatus: PropTypes.string.isRequired
-  }
+  };
 
   static contextTypes = {
     router: React.PropTypes.object
   };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -34,12 +28,16 @@ class LoginForm extends Component {
       password: '',
       emailInputStatus: 'init',
       passwordInputStatus: 'init'
-    }
-  };
+    };
+  }
+
   componentWillReceiveProps(props) {
     const { authStatus } = props;
     if ( authStatus === LOGGED_IN ) {
-      this.context.router.push('/forms')
+      this.context.router.push('/forms');
+    }
+    if (props.authStatus === NOT_LOGGED_IN && this.props.authStatus !== props.authStatus) {
+      this.setState({ password: '' });
     }
   }
 
@@ -67,16 +65,18 @@ class LoginForm extends Component {
       this.setState({
         emailInputStatus: 'validated',
         passwordInputStatus: 'validated'
-      })
-      submitLoginForm(email, password)
+      });
+      submitLoginForm(email, password);
     } else {
       this.setState({
         emailInputStatus: isEmailValid ? emailInputStatus : 'failed',
         passwordInputStatus: isPasswordValid ? passwordInputStatus : 'failed'
-      })
+      });
     }
   }
+
   render() {
+
     const { email, password, emailInputStatus, passwordInputStatus } = this.state;
     const { authStatus } = this.props;
     const showVerificationStatus = emailInputStatus === 'validated' && 
@@ -92,7 +92,8 @@ class LoginForm extends Component {
           }
           <ShortTextInput type="EmailField" placeholderText="Email" value={email} onChange={this.handleEmailChange} />
           <div className={styles.splitter}></div>
-          <PasswordInput type="password" placeholderText="Password" value={password} onChange={this.handlePasswordChange} />
+          <PasswordInput type="password" placeholderText="Password" value={password}
+            onChange={this.handlePasswordChange} onEnterKey={this.handleClick} />
           {passwordInputStatus === 'failed' &&
             <Validator type="isRequired" validateFor={password} />
           }
@@ -112,7 +113,9 @@ class LoginForm extends Component {
           <h5>or <l>join for free</l></h5>
         </div>
       </div>
+
     )
+    
   }
   
 }

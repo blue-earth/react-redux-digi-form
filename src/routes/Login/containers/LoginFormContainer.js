@@ -15,11 +15,11 @@ import LoginFormView from '../components/LoginFormView';
 
 const mapActionCreators = {
   submitLoginForm
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(mapActionCreators, dispatch);
-}
+};
 
 const mapStateToProps = (state) => {
   const { auth } = state;
@@ -45,4 +45,4 @@ const mapStateToProps = (state) => {
     Selectors are composable. They can be used as input to other selectors.
     https://github.com/reactjs/reselect    */
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginFormView)
+export default connect(mapStateToProps, mapDispatchToProps)(LoginFormView);

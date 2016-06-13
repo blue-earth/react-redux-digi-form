@@ -17,19 +17,20 @@ class PasswordInput extends Component {
       PropTypes.string,
       PropTypes.number
     ]),
-    mask: PropTypes.string,
+    displayMode: PropTypes.string,
     isDisabled: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    onEnterKey: PropTypes.func,
+    onEnterKey: PropTypes.func
   };
 
   static defaultProps = {
     placeholderText: '',
     fullWidth: true,
     type: 'password',
-    mask: "Show",
+    displayMode: 'marked',
+    value: ''
   };
 
   constructor(props) {
@@ -37,57 +38,58 @@ class PasswordInput extends Component {
     this.state = {
       type: typeof props.type !== 'undefined' ? props.type : '',
       savedValue: typeof props.value !== 'undefined' ? props.value : '',
-      mask: typeof props.mask !== 'undefined' ? props.mask : ''
+      displayMode: typeof props.displayMode !== 'undefined' ? props.displayMode : ''
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.savedValue != this.state.savedValue || nextState.mask != this.state.mask;
+    return nextState.savedValue != this.state.savedValue || nextState.displayMode != this.state.displayMode;
   }
 
   componentWillReceiveProps(props) {
     this.setState({
       savedValue: props.value
-    });
+    })
   }
 
   handleChange = (event) => {
     const { onChange } = this.props;
     let value = event.target.value;
-
     this.setState({
       savedValue: value
     });
-
-    if (typeof onChange === 'function') onChange(value);
+    if (typeof onChange === 'function') 
+      onChange(value);
   }
 
   handleFocus = (event) => {
     const { onFocus } = this.props;
-    if (typeof onFocus === 'function') onFocus();
+    if (typeof onFocus === 'function') 
+      onFocus();
   }
 
   handleBlur = (event) => {
     const { onBlur } = this.props;
-    if (typeof onBlur === 'function') onBlur();
+    if (typeof onBlur === 'function') 
+      onBlur();
   }
 
   handleKeyDown = (event) => {
     const { onEnterKey } = this.props;
-    if (event.keyCode === 13 && typeof onEnterKey === 'function') {
+    if (event.keyCode === 13 && typeof onEnterKey === 'function') 
       onEnterKey();
-      //this.refs.input.blur()
-    }
   }
 
   toggleMask = (event) => {
-    if(this.state.mask == "Show")
-      this.setState({mask: "Hide",type:"text"});
+    if(this.state.displayMode == 'cleartext')
+      this.setState({ displayMode: 'marked', type: 'password' });
     else 
-      this.setState({mask: "Show",type:"password"});
+      this.setState({ displayMode: 'cleartext', type: 'text' });
   }
   
   render() {
+
+    var toggleMaskIndicator ={'cleartext':'Hide','marked':'Show'};
     var props = this.props;
     var { type, value, autoFocus } = this.props;
     var { primaryColor } = this.context;
@@ -99,30 +101,24 @@ class PasswordInput extends Component {
       };
     }
     if (props.placeholderText) {
-      optionals['placeholder'] = props.placeholderText
-    };
-    if (props.isDisabled) {
-      optionals['disabled'] = 'disabled'
-    };
-    if (props.mask == "on") {
-      optionals['mask'] = 'on'
+      optionals['placeholder'] = props.placeholderText;
     }
-    else
-    {
-      optionals['mask'] = 'off'
-    };
+    if (props.isDisabled) {
+      optionals['disabled'] = 'disabled';
+    }
+    
 
     const inputClasses = classNames({
       [styles.textInput]: true,
       [styles.fullWidth]: props.fullWidth
-    });
+    })
     
     return (
+
       <div className={styles.passInputWrapper}>
         <input
           className={inputClasses}
           type={this.state.type}
-          ref="input"
           autoFocus={autoFocus}
           value={this.state.savedValue}
           onChange={this.handleChange}
@@ -131,9 +127,11 @@ class PasswordInput extends Component {
           onKeyDown={this.handleKeyDown}
           {...optionals}
         />
-        <div className={styles.maskIndicator} onClick={this.toggleMask}>{ this.state.mask }</div>
+        <div className={styles.maskIndicator} onClick={this.toggleMask}>{toggleMaskIndicator[this.state.displayMode]}</div>
       </div>
+
     )
+    
   }
 }
 
