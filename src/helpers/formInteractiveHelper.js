@@ -136,13 +136,12 @@ console.log(itemFound);
     for (let condition of logic.conditions) {
       const answer = _.find(answers, {id: condition.source_field});
       // If the question not answered, no need to compare with this condition.
-console.log('----answer value-----');
-console.log(answer.value);
-
       if (typeof answer === 'undefined') {
         result = false;
         break;
       }
+console.log('----answer value-----');
+console.log(answer.value);
       // Performs logical OR, AND operation with condition.
       const conditionLogic = condition.condition_logic;
       const valueMeets = valueMeetsCondition(answer.value, condition);
