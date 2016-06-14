@@ -443,14 +443,18 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
     session_id: sessionId
   };
 
+  var method;
   var requestURL = `${API_URL}/form_document/api/form_response/`;
-  if (sessionId)
+  if (sessionId) {
     requestURL += `${sessionId}/?form_id=${id}`;
-  else
+    method = 'PUT';
+  } else {
     requestURL += `?form_id=${id}`;
+    method = 'POST'
+  }
 
   const fetchParams = {
-    method: 'POST',
+    method,
     headers: {
       // Accept: 'application/json',
       'Content-Type': 'application/json'
@@ -463,7 +467,7 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
       const { form_id, response_id } = value;
       dispatch(updateSessionId(response_id));
       dispatch(doneSubmitAnswer({
-        result,
+        result: true,
         requestURL,
         requestAction
       })); // Hide submitting spinner

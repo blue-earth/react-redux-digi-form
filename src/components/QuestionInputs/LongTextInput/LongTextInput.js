@@ -103,6 +103,7 @@ class LongTextInput extends Component {
         onChange={this.handleChange}
         onBlur={this.handleBlur}
         onFocus={this.handleFocus}
+        autoFocus={autoFocus}
         // onKeyDown={this.handleKeyDown}
         {...optionals}
       />
