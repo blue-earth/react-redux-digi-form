@@ -4,6 +4,9 @@
 .choicesContainer {
   width: 100%;
   overflow: hidden;
+  &:focus {
+    outline: none;
+  }
 }
 .choicesRow {
   margin: 0 -5px;

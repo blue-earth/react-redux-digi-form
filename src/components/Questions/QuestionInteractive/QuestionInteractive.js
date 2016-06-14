@@ -105,8 +105,11 @@ class QuestionInteractive extends Component {
       nextState.inputState === 'init') {
       return false;
     }
+    if (nextProps.type === 'AddressField' && inputState === 'blur') {
+      return false;
+    }
     // For current question, if the status is not focus or no verifying status reverted, it should update.
-    return inputState != 'focus' || (nextProps.isVerifying != this.props.isVerifying);
+    return inputState !== 'focus' || (nextProps.isVerifying != this.props.isVerifying);
   }
 
   componentWillReceiveProps(props) {

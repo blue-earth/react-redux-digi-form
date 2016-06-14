@@ -31,22 +31,24 @@ class YesNoChoice extends Component {
   };
 
   render() {
-    const { isDisabled, isReadOnly, value, onChange, onEnterKey } = this.props;
+    const { isDisabled, isReadOnly, value, onChange, onEnterKey, autoFocus } = this.props;
     const choices = [
       {
         text: 'Yes',
-        label: 'A'
+        label: 'Y'
       },
       {
         text: 'No',
-        label: 'B'
+        label: 'N'
       }
     ];
 
     return (
       <MultipleChoice
         value={value}
-        disabled={isDisabled || isReadOnly}
+        isDisabled={isDisabled}
+        isReadOnly={isReadOnly}
+        autoFocus={autoFocus}
         onChange={onChange}
         onEnterKey={onEnterKey}
         choices={choices}

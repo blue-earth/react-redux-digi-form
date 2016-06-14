@@ -17,7 +17,7 @@ class MultipleChoiceItem extends Component {
     text: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
     active: PropTypes.bool,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -30,7 +30,8 @@ class MultipleChoiceItem extends Component {
   }
 
   handleKeyDown = (event) => {
-    if (event.keyCode == 32 || event.keyCode == 13) {
+    const { label, onEnterKey } = this.props;
+    if (event.keyCode === 32) {
       this.handleClick();
     }
   }

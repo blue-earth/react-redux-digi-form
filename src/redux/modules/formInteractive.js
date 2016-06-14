@@ -57,7 +57,6 @@ export const INIT_FORM_STATE = {
 // Action: fetchForm
 // ------------------------------------
 export const fetchForm = (id, sessionId) => {
-console.log(sessionId)
   const fetchParams = {
     headers: {
       Accept: 'application/json',
@@ -77,7 +76,6 @@ console.log(sessionId)
   };
   
   const fetchFail = (data) => {
-    console.log(data);
     return (dispatch, getState) => {
       dispatch(doneFetchingForm()); // Hide loading spinner
     }
@@ -375,8 +373,6 @@ export const receiveVerification = (verification) => {
     const verifiedStatuses = _.filter(verificationStatus, {id: currentQuestionId, status: true});
     const idx = findIndexById(questions, currentQuestionId);
     // If all verified as true go to next question.
-    console.log(verifiedStatuses);
-    console.log(questions[idx].verifications);
     if (verifiedStatuses.length == questions[idx].verifications.length) {
       dispatch(nextQuestion());
     }
@@ -464,14 +460,12 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      const { result, form_id, session_id, request_action } = value;
-      if (result) {
-        dispatch(updateSessionId(session_id));
-      }
+      const { form_id, response_id } = value;
+      dispatch(updateSessionId(response_id));
       dispatch(doneSubmitAnswer({
         result,
         requestURL,
-        requestAction: request_action
+        requestAction
       })); // Hide submitting spinner
     }
   };

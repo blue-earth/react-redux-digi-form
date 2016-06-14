@@ -22,6 +22,8 @@ class MultipleChoice extends Component {
       PropTypes.object,
       PropTypes.array
     ]),
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
     onChange: PropTypes.func,
     onEnterKey: PropTypes.func,
   };
@@ -50,6 +52,17 @@ class MultipleChoice extends Component {
     onEnterKey: () => {}
   };
 
+  
+  componentDidMount() {
+    const { autoFocus } = this.props;
+    const { choiceContainer } = this.refs;
+    if ( autoFocus ) {
+      setTimeout(function() {
+        choiceContainer.focus()
+      }, 50);
+    }
+  }
+
   handleClick = (val) => {
     const { dispatch, allowMultiple, maxAnswers, 
       onChange, onEnterKey, value } = this.props;
@@ -61,10 +74,19 @@ class MultipleChoice extends Component {
       }
     } else {
       onChange(val);
-      if (typeof onEnterKey === 'function') {
-        setTimeout(onEnterKey, 50);
-      }
+      setTimeout(onEnterKey, 50);
     }
+  }
+
+  get allChoices() {
+    const { choices, includeOther } = this.props;
+    var _allChoices = choices.slice(0);
+    if (includeOther) {
+      var lastLabel = 'A';
+      lastLabel = String.fromCharCode(lastLabel.charCodeAt(0) + choices.length);
+      _allChoices.push({label: lastLabel, text: textOther});
+    }
+    return _allChoices;
   }
 
   canAcceptChange(value) {
@@ -86,8 +108,22 @@ class MultipleChoice extends Component {
     return typeof _.find(values, {label: item.label}) !== 'undefined';
   }
 
+  handleKeyDown = (event) => {
+    const { onEnterKey } = this.props;
+    const allChoices = this.allChoices;
+    if (event.keyCode === 13) {
+      onEnterKey()
+    }
+    console.log(String.fromCharCode(event.keyCode));
+    const foundIndex = _.findIndex(allChoices, { label: String.fromCharCode(event.keyCode) });
+    if (foundIndex > -1) {
+      this.handleClick(allChoices[foundIndex]);
+    }
+  }
+
   render() {
-    const { isDisabled, isReadOnly, value, choices, allowMultiple, includeOther } = this.props;
+    const { isDisabled, isReadOnly, value, choices, autoFocus,
+      allowMultiple, includeOther } = this.props;
     const that = this;
     const isMultiSelectable = that.isMultiSelectable(value);
     var optionals = {};
@@ -103,20 +139,17 @@ class MultipleChoice extends Component {
         onClick={that.handleClick}
       />
     }
-    var choicesList = choices.map((item) => {
+    console.log(this.allChoices)
+    var choicesList = this.allChoices.map((item) => {
       return ChoiceItemTemplate(item);
     });
 
-    if (includeOther) {
-      var lastLabel = 'A';
-      lastLabel = String.fromCharCode(lastLabel.charCodeAt(0) + choices.length);
-      choicesList.push(
-        ChoiceItemTemplate({label: lastLabel, text: textOther})
-      )
-    }
-
     return (
-      <div className={styles.choicesContainer} {...optionals}>
+      <div className={styles.choicesContainer}
+        tabIndex={0} onKeyDown={this.handleKeyDown}
+        autoFocus={autoFocus}
+        ref="choiceContainer"
+        {...optionals}>
         <div className={styles.choicesRow}>
           {choicesList}
         </div>
