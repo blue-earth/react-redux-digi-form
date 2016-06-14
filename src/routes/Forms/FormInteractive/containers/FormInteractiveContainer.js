@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion, handleEnter,
-  storeAnswer, submitAnswer, fetchFormIfNeeded } from 'redux/modules/formInteractive';
+  storeAnswer, submitAnswer, fetchAnswers, fetchFormIfNeeded } 
+  from 'redux/modules/formInteractive';
 
 import FormInteractive from '../components/FormInteractive/FormInteractive';
 
@@ -10,6 +11,7 @@ const mapActionCreators = {
   nextQuestion,
   fetchFormIfNeeded,
   storeAnswer,
+  fetchAnswers,
   submitAnswer,
   goToQuestion,
   handleEnter
@@ -24,7 +26,7 @@ const mapStateToProps = (state) => {
   const {
     id,
     sessionId,
-    isFetching,
+    isFetchingForm,
     isVerifying,
     currentQuestionId,
     form,
@@ -37,7 +39,7 @@ const mapStateToProps = (state) => {
   return {
     id: parseInt(id),
     sessionId,
-    isFetching,
+    isFetchingForm,
     isVerifying,
     currentQuestionId,
     form,

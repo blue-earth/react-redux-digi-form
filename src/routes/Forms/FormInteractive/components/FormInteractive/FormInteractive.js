@@ -56,9 +56,9 @@ class FormInteractive extends Component {
     prefills: PropTypes.array.isRequired,
 
     /*
-     * isFetching: Redux state that indicates whether the requested form is being fetched from backend
+     * isFetchingForm: Redux state that indicates whether the requested form is being fetched from backend
      */
-    isFetching: PropTypes.bool.isRequired,
+    isFetchingForm: PropTypes.bool.isRequired,
 
     /*
      * isVerifying: Redux state that indicates the status whether verification is in prgress with backend
@@ -115,19 +115,29 @@ class FormInteractive extends Component {
      */
     submitAnswer: PropTypes.func.isRequired,
 
+    /*
+     * fetchAnswers: Redux action to receive answers with session id.
+     */
+    fetchAnswers: PropTypes.func.isRequired,
+
     // Temporary for modal show up.
     lastFormSubmitURL: PropTypes.string
   };
 
   componentWillMount() {
-    const { fetchFormIfNeeded, params: { id, sessionId } } = this.props;
-    fetchFormIfNeeded(id, sessionId);
+    const { fetchFormIfNeeded, fetchAnswers, 
+      params: { id, sessionId } } = this.props;
+    fetchFormIfNeeded(id);
+    if (sessionId) {
+      fetchAnswers(sessionId);
+    }
   }
 
   componentWillReceiveProps(props) {
     // set show/hide temp modal
-    if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION) {
-      this.setState({showTempModal: true});
+    if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
+      && props.lastFormSubmitStatus.result) {
+      this.setState({ showTempModal: true });
     }
   }
 
@@ -135,7 +145,7 @@ class FormInteractive extends Component {
     const { submitAnswer } = this.props;
     setInterval(function() {
       submitAnswer(FORM_AUTOSAVE);
-    }, 5000);
+    }, 30000);
   }
 
   sectionStatus(allQuestions, currentQuestionId, questionGroup) {
@@ -195,8 +205,12 @@ class FormInteractive extends Component {
     return (
       <Modal show={showTempModal} bsSize="large"
         onHide={this.handleHideTempModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Form Saved.</Modal.Title>
+        </Modal.Header>
         <Modal.Body>
-          <p>{lastFormSubmitStatus.requestURL}</p>
+          <p>Here's the URL to restore your session.</p>
+          <div className="form-control">{lastFormSubmitStatus.sessionURL}</div>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.handleHideTempModal}>

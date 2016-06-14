@@ -10,14 +10,23 @@ import _ from 'lodash';
 export const RECEIVE_FORM = 'RECEIVE_FORM';
 export const REQUEST_FORM = 'REQUEST_FORM';
 export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
+
+export const RECEIVE_ANSWERS = 'RECEIVE_ANSWERS';
+export const REQUEST_ANSWERS = 'REQUEST_ANSWERS';
+export const DONE_FETCHING_ANSWERS = 'DONE_FETCHING_ANSWERS';
+
 export const GOTO_QUESTION = 'GOTO_QUESTION';
 export const STORE_ANSWER = 'STORE_ANSWER';
+
 export const ANSWER_PREFILL = 'ANSWER_PREFILL';
 export const VERIFY_EMAIL = 'VERIFY_EMAIL';
+
 export const REQUEST_VERIFICATION = 'REQUEST_VERIFICATION';
 export const DONE_VERIFICATION = 'DONE_VERIFICATION';
+
 export const RECEIVE_VERIFICATION = 'RECEIVE_VERIFICATION';
 export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
+
 export const DONE_SUBMIT = 'DONE_SUBMIT';
 export const UPDATE_SESSION_ID = 'UPDATE_SESSION_ID';
 
@@ -30,8 +39,9 @@ export const FORM_AUTOSAVE = 'FORM_AUTOSAVE';
 export const INIT_FORM_STATE = {
   id: 0,
   // sessionId,
-  isFetching: false, // indicates the form request is being processed.
-  isSubmitting: false, // indicates the form submission is being processed.
+  isFetchingForm: false, // indicates the form request is being processed.
+  isFetchingAnswers: false, // indicates the form answers are being fetched.
+  isSubmitting: false, // indicates the form answers submission is being processed.
   isVerifying: false, // indicates the verifying request is being processed.
   isModified: false, // indicates the form answer modified after submission.
   lastUpdated: Date.now(), // last form-questions received time.
@@ -56,7 +66,8 @@ export const INIT_FORM_STATE = {
 // ------------------------------------
 // Action: fetchForm
 // ------------------------------------
-export const fetchForm = (id, sessionId) => {
+export const fetchForm = (id) => {
+  const apiURL = `${API_URL}/form_document/api/form/${id}/`
   const fetchParams = {
     headers: {
       Accept: 'application/json',
@@ -70,8 +81,6 @@ export const fetchForm = (id, sessionId) => {
     return (dispatch, getState) => {
       dispatch(receiveForm(value));
       dispatch(doneFetchingForm()); // Hide loading spinner
-      if (sessionId)
-        dispatch(updateSessionId(sessionId)); // Temporary, Should be updated.
     }
   };
   
@@ -81,7 +90,7 @@ export const fetchForm = (id, sessionId) => {
     }
   };
 
-  return bind(fetch(`${API_URL}/form_document/api/form/${id}`, fetchParams), fetchSuccess, fetchFail);
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 }
 
 // ------------------------------------
@@ -104,7 +113,6 @@ export const receiveForm = (data) => {
     title: data.title,
     slug: data.slug,
     receivedAt: Date.now(),
-    sessionId: data.session_id,
     currentQuestionId: validateQuestionId(data.form_data)
   };
 }
@@ -120,7 +128,7 @@ export const doneFetchingForm = () => {
 
 const shouldFetchForm = (state, id) => {
   const formInteractive = state.formInteractive;
-  if (id !== formInteractive.id && !formInteractive.isFetching) {
+  if (id !== formInteractive.id && !formInteractive.isFetchingForm) {
     return true;
   } else {
     return false;
@@ -130,13 +138,80 @@ const shouldFetchForm = (state, id) => {
 // ------------------------------------
 // Action: fetchFormIfNeeded
 // ------------------------------------
-export const fetchFormIfNeeded = (id, sessionId) => {
+export const fetchFormIfNeeded = (id) => {
   return (dispatch, getState) => {
     if (shouldFetchForm(getState(), id)) {
       dispatch(requestForm());
-      dispatch(fetchForm(id, sessionId));
+      dispatch(fetchForm(id));
+    } else {
+      dispatch(fetchSession());
     }
   }
+}
+
+// ------------------------------------
+// Action: fetchAnswers
+// ------------------------------------
+export const fetchAnswers = (sessionId) => {
+  return (dispatch, getState) => {
+    dispatch(requestAnswers());
+    dispatch(processFetchAnswers(sessionId));
+  }
+}
+// ------------------------------------
+// Action: requestAnswers
+// ------------------------------------
+export const requestAnswers = () => {
+  return {
+    type: REQUEST_ANSWERS
+  };
+}
+
+// ------------------------------------
+// Action: receiveForm
+// ------------------------------------
+export const receiveAnswers = (data) => {
+  return {
+    type: RECEIVE_ANSWERS,
+    sessionId: data.response_id,
+    answers: data.answers
+  };
+}
+// ------------------------------------
+// Action: doneFetchingAnswers
+// ------------------------------------
+export const doneFetchingAnswers = () => {
+  return {
+    type: DONE_FETCHING_ANSWERS
+  };
+}
+
+export const processFetchAnswers = (sessionId) => {
+
+  const apiURL = `${API_URL}/form_document/api/form_response/${sessionId}/`
+  const fetchParams = {
+    headers: {
+      Accept: 'application/json',
+      // 'Content-Type': 'application/json'
+    },
+    redirect: 'follow',
+    method: 'GET'
+  };
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(receiveAnswers(value));
+      dispatch(doneFetchingAnswers()); // Hide loading spinner
+    }
+  };
+  
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(doneFetchingAnswers()); // Hide loading spinner
+    }
+  };
+
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 }
 
 const validateQuestionId = (form) => {
@@ -283,6 +358,7 @@ export const requestVerification = () => {
 // ------------------------------------
 export const processVerifyEmail = (questionId, email) => {
 
+  const apiURL = `${API_URL}/verifications/api/email/verify/`;
   const fetchParams = {
     method: 'POST',
     headers: {
@@ -314,7 +390,7 @@ export const processVerifyEmail = (questionId, email) => {
     dispatch(doneVerification()); // Hide loading spinner
   };
 
-  return bind(fetch(`${API_URL}/verifications/api/email/verify/`, fetchParams), fetchSuccess, fetchFail);
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 }
 
 // const shouldVerifyEmail = (state, id) => {
@@ -443,14 +519,11 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
     session_id: sessionId
   };
 
-  var method;
+  var method = 'POST';
   var requestURL = `${API_URL}/form_document/api/form_response/`;
   if (sessionId) {
-    requestURL += `${sessionId}/?form_id=${id}`;
+    requestURL += `${sessionId}/`;
     method = 'PUT';
-  } else {
-    requestURL += `?form_id=${id}`;
-    method = 'POST'
   }
 
   const fetchParams = {
@@ -462,13 +535,15 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
     body: JSON.stringify(answerRequest)
   };
 
+  // Temporary, should be fixed later with correct domain name.
+  const FRONTEND_ROOT = process.env.NODE_ENV === __PROD__ ? 'http://new.emondo.com.au' : 'http://localhost:3000'
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
       const { form_id, response_id } = value;
       dispatch(updateSessionId(response_id));
       dispatch(doneSubmitAnswer({
         result: true,
-        requestURL,
+        sessionURL: `${FRONTEND_ROOT}/forms/${form_id}/${response_id}`,
         requestAction
       })); // Hide submitting spinner
     }
@@ -478,7 +553,6 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitAnswer({
         result: false,
-        requestURL,
         requestAction,
       })); // Hide submitting spinner
     }
@@ -525,11 +599,24 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
       });
     case REQUEST_FORM:
       return Object.assign({}, state, {
-        isFetching: true,
+        isFetchingForm: true,
       });
     case DONE_FETCHING_FORM:
       return Object.assign({}, state, {
-        isFetching: false,
+        isFetchingForm: false,
+      });
+    case RECEIVE_ANSWERS:
+      return Object.assign({}, state, {
+        sessionId: action.sessionId,
+        answers: action.answers
+      });
+    case REQUEST_ANSWERS:
+      return Object.assign({}, state, {
+        isFetchingAnswers: true,
+      });
+    case DONE_FETCHING_ANSWERS:
+      return Object.assign({}, state, {
+        isFetchingAnswers: false,
       });
     case GOTO_QUESTION:
       return Object.assign({}, state, {
