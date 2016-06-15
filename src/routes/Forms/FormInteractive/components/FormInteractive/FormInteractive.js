@@ -15,7 +15,7 @@ class FormInteractive extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {showTempModal: false};
+    this.state = {primaryColor: props.primaryColor};
   };
 
   static childContextTypes = {
@@ -23,7 +23,7 @@ class FormInteractive extends Component {
   };
 
   getChildContext() {
-    return { primaryColor: this.props.primaryColor };
+    return { primaryColor: this.state.primaryColor };
   };
 
   static childContextTypes = {

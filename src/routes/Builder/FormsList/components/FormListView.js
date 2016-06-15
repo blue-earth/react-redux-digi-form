@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Table, DropdownButton, MenuItem, Pagination } from 'react-bootstrap'
-import Header from 'components/Header'
+import Header from 'components/Headers/Header'
 import styles from './FormListView.scss'
 
 class FormListView extends Component {

@@ -1,0 +1,41 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.headerButton {
+  border: 1px solid $headerbutton-border-color;
+  background: $headerbutton-bg-color;
+  border-radius: 2px;
+  cursor: pointer;
+  height: 40px;
+  padding: 0px 13px;
+  transition: all .15s;
+  margin: 13px 6px;
+  color: white;
+  &:hover, &:focus {
+    opacity: 1;
+    background-color: #297db5;
+    border: 1px solid #68addb;
+  }
+  &[disabled] {
+    opacity: .5;
+  }
+  &:active:focus, &:focus {
+    outline: none;
+  }
+}
+
+.btnDefaultInner {
+  padding-left: 3px;
+  text-align: left;
+  font-size: 16px;
+  width: 75px;
+}
+
+.btnInner {
+  width: 100%;
+  line-height: 20px;
+  font-size: 18px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  padding: 0 0px;
+}

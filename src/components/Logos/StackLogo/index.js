@@ -27,9 +27,9 @@ class StackLogo extends React.Component {
         };
         var logoPath;
         if (this.props.logoStyle === 'white') {
-            logoPath = require('file!./Emondo-Logo-White.svg');
+            logoPath = require('./Emondo-Logo-White.svg');
         } else {
-            logoPath = require('file!./Emondo-Logo-Horizontal.svg');
+            logoPath = require('./Emondo-Logo-Horizontal.svg');
         }
         return (
             <a role="button"  href={"javascript:;"} href={this.props.link}>

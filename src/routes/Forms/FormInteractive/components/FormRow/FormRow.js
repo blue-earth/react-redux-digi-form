@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import FormHeader from 'components/FormHeader'
+import FormHeader from 'components/Headers/FormHeader'
 import FormSection from '../FormSection/FormSection'
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection'
 import styles from './FormRow.scss'
