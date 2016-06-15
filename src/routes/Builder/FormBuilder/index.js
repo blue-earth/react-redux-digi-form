@@ -4,13 +4,13 @@ const getComponent = (nextState, cb) => {
   require.ensure([], (require) => {
     /*  Webpack - use require callback to define
      dependencies for bundling   */
-    const FormInteractive = require('./containers/FormInteractiveContainer').default;
+    const FormBuilder = require('./containers/FormBuilderContainer').default;
 
     /*  Return getComponent   */
-    cb(null, FormInteractive);
+    cb(null, FormBuilder);
 
     /* Webpack named bundle   */
-  }, 'formInteractive')
+  }, 'formBuilder')
 }
 
 module.exports = [
@@ -19,7 +19,7 @@ module.exports = [
     getComponent
   },
   {
-    path: ':id/:sessionId',
+    path: 'new',
     getComponent
   }
 ];

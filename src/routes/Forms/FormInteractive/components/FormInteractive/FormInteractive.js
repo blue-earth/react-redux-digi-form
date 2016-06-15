@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import FormHeader from 'components/FormHeader';
+import FormHeader from 'components/Headers/FormHeader';
 import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap'; // Temp
 import FormSection from '../FormSection/FormSection';
@@ -15,7 +15,7 @@ class FormInteractive extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {primaryColor: props.primaryColor};
+    this.state = {showTempModal: false};
   };
 
   static childContextTypes = {
@@ -23,7 +23,7 @@ class FormInteractive extends Component {
   };
 
   getChildContext() {
-    return { primaryColor: this.state.primaryColor };
+    return { primaryColor: this.props.primaryColor };
   };
 
   static childContextTypes = {
