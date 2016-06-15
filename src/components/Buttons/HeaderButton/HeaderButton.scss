@@ -13,14 +13,18 @@
   color: white;
   &:hover, &:focus {
     opacity: 1;
-    background-color: #fff;
+    background-color: #3c8abf;
     border: 1px solid #68addb;
+    color: white;
   }
   &[disabled] {
     opacity: .5;
   }
   &:active:focus, &:focus {
     outline: none;
+    background-color: #3c8abf;
+    border: 1px solid #68addb;
+    color: white;
   }
 }
 
