@@ -3,6 +3,7 @@ import FormHeader from 'components/Headers/FormHeader';
 import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap'; // Temp
 import FormSection from '../FormSection/FormSection';
+import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
 import FormRow from '../FormRow/FormRow';
 import { groupFormQuestions, SlideAnimation }
   from 'helpers/formInteractiveHelper.js';
@@ -194,6 +195,19 @@ class FormInteractive extends Component {
     )
   }
 
+  get renderFormCompletionSection() {
+    const { form: { questions }, currentQuestionId } = this.props;
+    const props = this.props;
+    return (
+      <div className={styles.stepsWrapper}>
+        <FormCompletionSection  
+                  {...props} />
+        <FormRow>
+        </FormRow>
+      </div>
+    )
+  }
+
   handleHideTempModal = () => {
     this.setState({'showTempModal': false});
   }
@@ -222,13 +236,14 @@ class FormInteractive extends Component {
   }
 
   render() {
-    const { submitAnswer } = this.props;
+    const { submitAnswer, params: { status } } = this.props;
     return (
       <div>
         <FormHeader submitAnswer={submitAnswer} />
         <div className={styles.flowLine}></div>
-        { this.renderFormSteps }
-        { this.renderTempResponseModal() }
+        { status !== 'completion' && this.renderFormSteps }
+        { status !== 'completion' && this.renderTempResponseModal() }
+        { status === 'completion' && this.renderFormCompletionSection }
       </div>
     )
   }

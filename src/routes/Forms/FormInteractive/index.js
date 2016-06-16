@@ -21,5 +21,9 @@ module.exports = [
   {
     path: ':id/:sessionId',
     getComponent
+  },
+  {
+    path: ':id/:sessionId/:status',
+    getComponent
   }
 ];
