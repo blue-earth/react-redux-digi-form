@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Button, Collapse } from 'react-bootstrap';
+import { Link } from 'react-router';
 import { FaGooglePlusSquare,FaFacebookSquare,FaLinkedinSquare} from 'react-icons/lib/fa';
 import { MdLock} from 'react-icons/lib/md';
 import { GoCheck} from 'react-icons/lib/go';
@@ -15,9 +16,11 @@ import _ from 'lodash';
 
 class FormCompletionSection extends Component {
 
+
   static contextTypes = {
     primaryColor: React.PropTypes.string
   };
+  
 
   static propTypes = {
 
@@ -80,14 +83,21 @@ class FormCompletionSection extends Component {
     /*
      * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
      */
-    handleEnter: PropTypes.func.isRequired
+    handleEnter: PropTypes.func.isRequired,
+
+    /*
+     * links: Manage url of the links
+     */
+    link: PropTypes.string
   };
+
 
   constructor(props) {
     super(props);
   };
 
   static defaultProps = {
+    link: '#',
     questionGroup: {
       title: 'Basic Details',
       questions: []
@@ -100,6 +110,10 @@ class FormCompletionSection extends Component {
     var imgTreePath = require('./tree.png');
     var imgWaterPath = require('./water.png');
     var imgCoPath = require('./co2.png');
+    const { link } = this.props;
+    var linkStyle = {
+      color: this.context.primaryColor
+    }
 
     return (
       <section className={styles.formSection}> 
@@ -158,8 +172,8 @@ class FormCompletionSection extends Component {
         <div>
             <FormRow>
               <div className={styles.formLinkArea}>
-                <a>Legal and Imporatant Information</a>
-                <a>Contact us</a>
+                <Link to={link} style={linkStyle}>Legal and Imporatant Information</Link>
+                <Link to={link} style={linkStyle}>Contact us</Link>
               </div>
               <LearnMoreSection />
             </FormRow>
