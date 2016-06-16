@@ -186,9 +186,9 @@ const valueMeetsCondition = (value, condition) => {
     case 'greater_than_equal_to':
       return value >= condition.value;
     case 'is':
-      return typeof value === 'boolean' && value == condition.value;
+      return typeof value === 'object' ? _.isEqual(value, condition.value) : (value == condition.value);
     case 'not':
-      return typeof value === 'boolean' && value != condition.value;
+      return typeof value === 'object' ? !_.isEqual(value, condition.value) : (value != condition.value);
     // Date
     case 'on':
       return new Date(value).toDateString() == new Date(condition.value).toDateString();

@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import classes from './BuildHeader.scss';
+import classes from './BuilderHeader.scss';
 import StackLogo from 'components/Logos/StackLogo';
 import HeaderButton from 'components/Buttons/HeaderButton/HeaderButton';
 
-class BuildHeader extends Component {
+class BuilderHeader extends Component {
 
   static contextTypes = {
     primaryColor: React.PropTypes.string
@@ -31,4 +31,4 @@ class BuildHeader extends Component {
   }
 }
 
-export default BuildHeader;
+export default BuilderHeader;

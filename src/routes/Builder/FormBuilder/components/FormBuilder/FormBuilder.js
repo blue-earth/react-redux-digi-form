@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import BuildHeader from 'components/Headers/BuildHeader';
+import BuilderHeader from 'components/Headers/BuilderHeader';
 import styles from './FormBuilder.scss'
 
 class FormBuilder extends Component {
@@ -42,7 +42,7 @@ class FormBuilder extends Component {
   render() {
     return (
       <div>
-        <BuildHeader />
+        <BuilderHeader />
         <div className={styles.container}>
           Form Builder Content
         </div>
