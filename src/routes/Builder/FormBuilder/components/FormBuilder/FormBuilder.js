@@ -1,5 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import BuilderHeader from 'components/Headers/BuilderHeader';
+import ElementsListView from '../ElementsListView/ElementsListView';
+import PageView from '../PageView/PageView';
+import QuestionEditView from '../QuestionEditView/QuestionEditView';
 import styles from './FormBuilder.scss'
 
 class FormBuilder extends Component {
@@ -40,11 +43,20 @@ class FormBuilder extends Component {
   }
 
   render() {
+    const { params } = this.props;
     return (
-      <div>
+      <div className={styles.formBuilderContainer}>
         <BuilderHeader />
-        <div className={styles.container}>
-          Form Builder Content
+        <div className={styles.formBuilderContent}>
+          <div className={styles.leftPanel}>
+            {params.id
+              ? <ElementsListView />
+              : <QuestionEditView />
+            }
+          </div>
+          <div className={styles.rightPanel}>
+            <PageView />
+          </div>
         </div>
       </div>
     )

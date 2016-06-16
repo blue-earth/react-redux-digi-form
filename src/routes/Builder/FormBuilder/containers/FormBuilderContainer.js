@@ -17,13 +17,15 @@ const mapStateToProps = (state) => {
     id,
     isFetching,
     isSubmitting,
-    form
+    form,
+    currentElement
   } = formBuilder || INIT_FORM_STATE;
   return {
     id: parseInt(id),
     isFetching,
     isSubmitting,
-    form
+    form,
+    currentElement
   };
 };
 

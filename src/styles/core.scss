@@ -21,4 +21,7 @@
   *:after {
     box-sizing: inherit;
   }
+  [data-reactroot] > div {
+    height: 100%;
+  }
 }

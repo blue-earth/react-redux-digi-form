@@ -8,7 +8,8 @@ export const INIT_BUILDER_STATE = {
   id: 0,
   isFetching: false, // indicates the form is being loaded.
   isSubmitting: false, // indicates the form submission is being processed.
-  form: {}
+  form: {},
+  currentElement: {}
 };
 
 // ------------------------------------
