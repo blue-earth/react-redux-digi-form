@@ -15,7 +15,7 @@ const getComponent = (nextState, cb) => {
 
 module.exports = [
   {
-    path: ':id',
+    path: ':id/edit',
     getComponent
   },
   {

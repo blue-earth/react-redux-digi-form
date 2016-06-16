@@ -654,7 +654,7 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
     case DONE_SUBMIT:
       return Object.assign({}, state, {
         isSubmitting: false,
-        isModified: action.result ? false : state.isModified,
+        isModified: action.status.result ? false : state.isModified,
         lastFormSubmitStatus: action.status,
       });
     default:

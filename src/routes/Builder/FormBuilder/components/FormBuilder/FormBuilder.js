@@ -50,8 +50,8 @@ class FormBuilder extends Component {
         <div className={styles.formBuilderContent}>
           <div className={styles.leftPanel}>
             {params.id
-              ? <ElementsListView />
-              : <QuestionEditView />
+              ? <QuestionEditView />
+              : <ElementsListView />
             }
           </div>
           <div className={styles.rightPanel}>
