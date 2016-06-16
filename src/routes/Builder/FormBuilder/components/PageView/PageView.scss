@@ -1,2 +1,29 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+$page-border-color: #797979;
+$element-border-color: #FF6600;
 .pageView {
+  position: relative;
+}
+.page {
+  margin: 5px;
+  border: 1px solid $page-border-color;
+}
+.pageImage {
+  width: 100%;
+  height: auto;
+  @include user-drag(none);
+}
+.board {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.element {
+  border: 1px solid $element-border-color;
+  background-color: white;
+  overflow: hidden;
 }

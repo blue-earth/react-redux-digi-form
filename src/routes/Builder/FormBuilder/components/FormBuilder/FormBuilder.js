@@ -16,7 +16,7 @@ class FormBuilder extends Component {
     /*
      * form: form_data of response, consists of questions and logics.
      */
-    form: PropTypes.object.isRequired,
+    formData: PropTypes.object.isRequired,
 
     /*
      * isFetching: Redux state that indicates whether the requested form is being fetched from backend
@@ -28,6 +28,15 @@ class FormBuilder extends Component {
      */
     isSubmitting: PropTypes.bool.isRequired,
 
+    /*
+     * activeInputName: Redux state to indicate the active input element name.
+     */
+    activeInputName: PropTypes.string.isRequired,
+    
+    /*
+     * setActiveInputName: used to set active input element selected, and enables to draw on the right
+     */
+    setActiveInputName: PropTypes.func.isRequired
   };
 
   componentWillMount() {
@@ -41,6 +50,11 @@ class FormBuilder extends Component {
   componentDidMount() {
 
   }
+  
+  resetActiveInputName = () => {
+    const { setActiveInputName } = this.props;
+    setActiveInputName('');
+  }
 
   render() {
     const { params } = this.props;
@@ -48,14 +62,14 @@ class FormBuilder extends Component {
       <div className={styles.formBuilderContainer}>
         <BuilderHeader />
         <div className={styles.formBuilderContent}>
-          <div className={styles.leftPanel}>
+          <div className={styles.leftPanel} onClick={this.resetActiveInputName}>
             {params.id
               ? <QuestionEditView />
-              : <ElementsListView />
+              : <ElementsListView {...this.props} />
             }
           </div>
           <div className={styles.rightPanel}>
-            <PageView />
+            <PageView {...this.props} />
           </div>
         </div>
       </div>
