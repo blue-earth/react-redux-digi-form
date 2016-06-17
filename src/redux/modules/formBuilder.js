@@ -1,15 +1,19 @@
+import { mergeItemIntoArray } from 'helpers/pureFunctions';
+
 export const RECEIVE_FORM = 'RECEIVE_FORM';
 export const REQUEST_FORM = 'REQUEST_FORM';
 export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
 export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
 export const DONE_SUBMIT = 'DONE_SUBMIT';
 export const SET_ACTIVE_INPUT_NAME = 'SET_ACTIVE_INPUT_NAME';
+export const ADD_ELEMENT = 'ADD_ELEMENT';
 
 export const INIT_BUILDER_STATE = {
   id: 0,
   isFetching: false, // indicates the form is being loaded.
   isSubmitting: false, // indicates the form submission is being processed.
-  formData: {},
+  questions: [],
+  logics: [],
   documents: [
     'http://localhost:3000/doc_example.jpg', // for temp purpose, should fetch from backend.
     'http://localhost:3000/doc_example.jpg' // for temp purpose, should fetch from backend.
@@ -18,6 +22,7 @@ export const INIT_BUILDER_STATE = {
   documentMapping: [],
   activeInputName: '',
   currentQuestion: {},
+  lastQuestionId: 0
 };
 
 // ------------------------------------
@@ -30,6 +35,27 @@ export const setActiveInputName = (inputName) => {
   };
 }
 
+// ------------------------------------
+// Action: addElement
+// ------------------------------------
+export const addElement = (element) => {
+  return {
+    type: ADD_ELEMENT,
+    element
+  };
+}
+
+const _addElement = (state, action) => {
+  var { question, mappingInfo } = action.element;
+  const newQuestionId = state.lastQuestionId + 1;
+  question.id = newQuestionId;
+  mappingInfo.id = newQuestionId;
+  return {
+    questions: mergeItemIntoArray(state.questions, question),
+    documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo),
+    lastQuestionId: newQuestionId
+  };
+}
 // ------------------------------------
 // Reducer
 // ------------------------------------
@@ -59,6 +85,8 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
       return Object.assign({}, state, {
         activeInputName: action.inputName
       });
+    case ADD_ELEMENT:
+      return Object.assign({}, state, _addElement(state, action));
     default:
       return state;
   };

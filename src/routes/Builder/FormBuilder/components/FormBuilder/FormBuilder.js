@@ -14,9 +14,19 @@ class FormBuilder extends Component {
     id: PropTypes.number.isRequired,
 
     /*
-     * form: form_data of response, consists of questions and logics.
+     * questions: Redux state to store the array of questions.
      */
-    formData: PropTypes.object.isRequired,
+    questions: PropTypes.array.isRequired,
+
+    /*
+     * logics: Redux state to store the array of logics.
+     */
+    logics: PropTypes.array.isRequired,
+    
+    /*
+     * documentMapping: Redux state to hold the bounding box of the question item in document
+     */
+    documentMapping: PropTypes.array.isRequired,
 
     /*
      * isFetching: Redux state that indicates whether the requested form is being fetched from backend
@@ -36,7 +46,12 @@ class FormBuilder extends Component {
     /*
      * setActiveInputName: used to set active input element selected, and enables to draw on the right
      */
-    setActiveInputName: PropTypes.func.isRequired
+    setActiveInputName: PropTypes.func.isRequired,
+
+    /*
+     * addElement: used to set active input element selected, and enables to draw on the right
+     */
+    addElement: PropTypes.func.isRequired
   };
 
   componentWillMount() {

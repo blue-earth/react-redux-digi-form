@@ -27,6 +27,7 @@
   box-shadow: $value;
 }
 @mixin user-select($value) {
+  -webkit-touch-callout: $value; /* iOS Safari */
   -webkit-user-select: $value;
   -moz-user-select: $value;
   -ms-user-select: $value;

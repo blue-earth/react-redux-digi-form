@@ -16,15 +16,11 @@ class FormInteractive extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {primaryColor: props.primaryColor};
+    this.state = {showTempModal: false};
   };
 
   static childContextTypes = {
     primaryColor: PropTypes.string
-  };
-
-  getChildContext() {
-    return { primaryColor: this.state.primaryColor };
   };
 
   static childContextTypes = {

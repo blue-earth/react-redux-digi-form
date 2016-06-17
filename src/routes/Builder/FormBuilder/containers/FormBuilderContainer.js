@@ -1,11 +1,13 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { INIT_BUILDER_STATE, setActiveInputName } from 'redux/modules/formBuilder';
+import { INIT_BUILDER_STATE, setActiveInputName, addElement }
+  from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
 
 const mapActionCreators = {
-  setActiveInputName
+  setActiveInputName,
+  addElement
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -18,8 +20,10 @@ const mapStateToProps = (state) => {
     id,
     isFetching,
     isSubmitting,
-    formData,
+    questions,
+    logics,
     documents,
+    documentMapping,
     activeInputName,
     currentQuestion
   } = formBuilder || INIT_FORM_STATE;
@@ -27,8 +31,10 @@ const mapStateToProps = (state) => {
     id: parseInt(id),
     isFetching,
     isSubmitting,
-    formData,
+    questions,
+    logics,
     documents,
+    documentMapping,
     activeInputName,
     currentQuestion
   };

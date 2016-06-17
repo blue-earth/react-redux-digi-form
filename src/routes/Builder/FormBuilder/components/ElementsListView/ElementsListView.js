@@ -6,6 +6,7 @@ import questionInputs, { questionInputGroups } from 'schemas/questionInputs';
 import styles from './ElementsListView.scss';
 
 class ElementsListView extends Component {
+
   static propTypes = {
     /*
      * activeInputName: Redux state to indicate the active input element name.
