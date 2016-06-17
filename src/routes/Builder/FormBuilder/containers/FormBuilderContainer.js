@@ -1,13 +1,14 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { INIT_BUILDER_STATE, setActiveInputName, addElement }
+import { INIT_BUILDER_STATE, setActiveInputName, addElement, updateMappingInfo }
   from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
 
 const mapActionCreators = {
   setActiveInputName,
-  addElement
+  addElement,
+  updateMappingInfo
 };
 
 const mapDispatchToProps = (dispatch) => {

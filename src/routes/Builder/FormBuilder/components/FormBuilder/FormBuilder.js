@@ -24,6 +24,11 @@ class FormBuilder extends Component {
     logics: PropTypes.array.isRequired,
     
     /*
+     * documents: Redux state to store the array of documents with image url.
+     */
+    documents: PropTypes.array,
+
+    /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
      */
     documentMapping: PropTypes.array.isRequired,
@@ -44,14 +49,19 @@ class FormBuilder extends Component {
     activeInputName: PropTypes.string.isRequired,
     
     /*
-     * setActiveInputName: used to set active input element selected, and enables to draw on the right
+     * setActiveInputName: Action to set active input element selected, and enables to draw on the right
      */
     setActiveInputName: PropTypes.func.isRequired,
 
     /*
-     * addElement: used to set active input element selected, and enables to draw on the right
+     * addElement: Action to set active input element selected, and enables to draw on the right
      */
-    addElement: PropTypes.func.isRequired
+    addElement: PropTypes.func.isRequired,
+
+    /*
+     * updateMappingInfo: Action to update the document mapping info.
+     */
+    updateMappingInfo: PropTypes.func.isRequired
   };
 
   componentWillMount() {

@@ -7,6 +7,7 @@ export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
 export const DONE_SUBMIT = 'DONE_SUBMIT';
 export const SET_ACTIVE_INPUT_NAME = 'SET_ACTIVE_INPUT_NAME';
 export const ADD_ELEMENT = 'ADD_ELEMENT';
+export const UPDATE_MAPPING_INFO = 'UPDATE_MAPPING_INFO';
 
 export const INIT_BUILDER_STATE = {
   id: 0,
@@ -56,6 +57,17 @@ const _addElement = (state, action) => {
     lastQuestionId: newQuestionId
   };
 }
+
+// ------------------------------------
+// Action: addElement
+// ------------------------------------
+export const updateMappingInfo = (mappingInfo) => {
+  return {
+    type: UPDATE_MAPPING_INFO,
+    mappingInfo
+  };
+}
+
 // ------------------------------------
 // Reducer
 // ------------------------------------
@@ -87,6 +99,10 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
       });
     case ADD_ELEMENT:
       return Object.assign({}, state, _addElement(state, action));
+    case UPDATE_MAPPING_INFO:
+      return Object.assign({}, state, {
+        documentMapping: mergeItemIntoArray(state.documentMapping, action.mappingInfo)
+      });
     default:
       return state;
   };

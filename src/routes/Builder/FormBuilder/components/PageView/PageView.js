@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import BuilderHeader from 'components/Headers/BuilderHeader';
-import styles from './PageView.scss'
-import ResizableAndMovable from 'react-resizable-and-movable';
+import styles from './PageView.scss';
+import { findIndexById } from 'helpers/pureFunctions';
+import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 
 class PageView extends Component {
 
@@ -29,7 +30,12 @@ class PageView extends Component {
     /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
      */
-    documentMapping: PropTypes.array.isRequired
+    documentMapping: PropTypes.array.isRequired,
+
+    /*
+     * updateMappingInfo: Action to update the document mapping info.
+     */
+    updateMappingInfo: PropTypes.func.isRequired
   };
 
   componentWillMount() {
@@ -103,7 +109,10 @@ class PageView extends Component {
     });
     const { addElement, activeInputName } = this.props;
 
-    if (startX === endX && startY === endY) return; // no need to add zero sized box.
+    if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
+      return; // no need to add too small-sized box.
+    }
+
     addElement({
       question: {
         type: activeInputName
@@ -124,8 +133,40 @@ class PageView extends Component {
     event.stopPropagation();
   }
 
+  handleResizeStop = (direction, styleSize, clientSize, delta, metaData) => {
+    const { updateMappingInfo, documentMapping } = this.props;
+    const { id, subId } = metaData;
+    const index = findIndexById(documentMapping, id);
+    const boundingBox = documentMapping[index].bounding_box[0];
+    updateMappingInfo({
+      id,
+      bounding_box: [{
+        left: boundingBox.left,
+        top: boundingBox.top,
+        width: styleSize.width,
+        height: styleSize.height
+      }]
+    });
+  }
+
+  handleDragStop = (event, ui, metaData) => {
+    const { updateMappingInfo, documentMapping } = this.props;
+    const { id, subId } = metaData;
+    const index = findIndexById(documentMapping, id);
+    const boundingBox = documentMapping[index].bounding_box[0];
+    updateMappingInfo({
+      id,
+      bounding_box: [{
+        left: ui.position.left,
+        top: ui.position.top,
+        width: boundingBox.width,
+        height: boundingBox.height
+      }]
+    });
+  }
+
   renderDocuments() {
-    const { documents } = this.props;
+    const { questions, documents } = this.props;
     return documents.map((document, index) => {
       return (
         <div className={styles.page} key={index}>
@@ -136,7 +177,7 @@ class PageView extends Component {
   }
 
   render() {
-    const { activeInputName, documentMapping } = this.props;
+    const { activeInputName, documentMapping, questions } = this.props;
     const { isDrawing, startX, startY, endX, endY } = this.state;
     var boardOptionals = {};
     if (activeInputName) {
@@ -147,19 +188,28 @@ class PageView extends Component {
     var documentMappingComponents = () => {
       return documentMapping.map((mappingInfo, index) => {
         const boundingBox = mappingInfo.bounding_box[0];
-        console.log(boundingBox)
+        var index = findIndexById(questions, mappingInfo.id);
+        const { type } = questions[index];
         return (
-          <ResizableAndMovable
+          <ResizableAndMovablePlus
             className={styles.element}
             x={boundingBox.left}
             y={boundingBox.top}
             width={boundingBox.width}
             height={boundingBox.height}
             onDragStart={this.handleDragStart}
+            onDragStop={this.handleDragStop}
+            onResizeStop={this.handleResizeStop}
             key={`${index}-${0}`}
+            minWidth={5}
+            minHeight={5}
+            metaData={{
+              id: mappingInfo.id,
+              subId: 0
+            }}
           >
-            <div className={styles.elementName}>Example</div>
-          </ResizableAndMovable>
+            <div className={styles.elementName}>{type}</div>
+          </ResizableAndMovablePlus>
         );
       });
     }
