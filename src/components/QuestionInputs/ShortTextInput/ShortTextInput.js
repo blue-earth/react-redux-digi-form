@@ -28,6 +28,7 @@ class ShortTextInput extends Component {
   static defaultProps = {
     placeholderText: '',
     fullWidth: true,
+    value:'',
     type: 'text',
     isDisabled: false,
     isReadOnly: false,

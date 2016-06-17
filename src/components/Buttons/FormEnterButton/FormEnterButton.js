@@ -11,11 +11,13 @@ class FormEnterButton extends Component {
   static propTypes = {
     onClick: PropTypes.func,
     isDisabled: PropTypes.bool,
-    buttonLabel: PropTypes.string
+    buttonLabel: PropTypes.string,
+    autoFocus: PropTypes.bool
   };
 
   static defaultProps = {
-    buttonLabel: ''
+    buttonLabel: '',
+    autoFocus: false
   };
 
   static contextTypes = {
@@ -47,15 +49,20 @@ class FormEnterButton extends Component {
   
   render() {
 
-    const { buttonLabel, isDisabled } = this.props
+    const { buttonLabel, isDisabled, autoFocus } = this.props
     var { primaryColor } = this.context;
     var optionals = {};
 
+    if (autoFocus) {
+      optionals['autoFocus'] = {
+        autoFocus: true
+      };
+    }
     if ( typeof primaryColor !== 'undefined' ) {
       optionals['style'] = {
         color: primaryColor,
         borderColor: primaryColor
-      }
+      };
     }
 
     if (isDisabled) {

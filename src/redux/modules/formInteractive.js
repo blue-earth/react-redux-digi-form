@@ -30,6 +30,8 @@ export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
 export const DONE_SUBMIT = 'DONE_SUBMIT';
 export const UPDATE_SESSION_ID = 'UPDATE_SESSION_ID';
 
+export const SHOW_FINAL_SUBMIT = 'SHOW_FINAL_SUBMIT';
+
 // ------------------------------------
 // Form submit request action Constants
 // ------------------------------------
@@ -56,7 +58,8 @@ export const INIT_FORM_STATE = {
   answers: [],
   prefills: [],
   verificationStatus:[],
-  primaryColor: '#DD4814'
+  primaryColor: '#DD4814',
+  shouldShowFinalSubmit: false
 };
 
 // ------------------------------------
@@ -240,6 +243,10 @@ export const nextQuestion = () => {
     const formInteractive = getState().formInteractive;
     const { form: { questions }, currentQuestionId } = formInteractive;
     var nextId = getNextQuestionId(questions, currentQuestionId);
+    if ( nextId === currentQuestionId) { //detect the last question
+      return dispatch(showFinalSubmit());
+    }
+
     const outcome = getOutcomeWithQuestionId(formInteractive, currentQuestionId);
     if ( outcome !== false ) {
       for (var item of outcome) {
@@ -268,6 +275,15 @@ const getNextQuestionId = (questions, questionId) => {
   }
   if (questions[nextIdx].type == 'Group') nextIdx = curIdx;
   return questions[nextIdx].id;
+}
+
+// ------------------------------------
+// Action: showFinalSubmit
+// ------------------------------------
+export const showFinalSubmit = () => {
+  return {
+    type: SHOW_FINAL_SUBMIT
+  };
 }
 
 // ------------------------------------
@@ -621,6 +637,7 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
     case GOTO_QUESTION:
       return Object.assign({}, state, {
         currentQuestionId: action.id,
+        shouldShowFinalSubmit: false
       });
     case ANSWER_PREFILL:
       return Object.assign({}, state, {
@@ -656,6 +673,10 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
         isSubmitting: false,
         isModified: action.status.result ? false : state.isModified,
         lastFormSubmitStatus: action.status,
+      });
+    case SHOW_FINAL_SUBMIT:
+      return Object.assign({}, state, {
+        shouldShowFinalSubmit: true
       });
     default:
       return state;

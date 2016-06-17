@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import FormHeader from 'components/Headers/FormHeader';
+import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap'; // Temp
 import FormSection from '../FormSection/FormSection';
@@ -17,6 +18,10 @@ class FormInteractive extends Component {
   constructor(props) {
     super(props);
     this.state = {showTempModal: false};
+  };
+
+  static contextTypes = {
+    router: React.PropTypes.object
   };
 
   static childContextTypes = {
@@ -117,6 +122,11 @@ class FormInteractive extends Component {
      */
     fetchAnswers: PropTypes.func.isRequired,
 
+    /*
+     * shouldShowFinalSubmit: Redux statue to check if it's final stage.
+     */
+    shouldShowFinalSubmit: PropTypes.bool.isRequired,
+
     // Temporary for modal show up.
     lastFormSubmitURL: PropTypes.string
   };
@@ -134,7 +144,11 @@ class FormInteractive extends Component {
     // set show/hide temp modal
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
       && props.lastFormSubmitStatus.result) {
-      this.setState({ showTempModal: true });
+      if (props.shouldShowFinalSubmit){
+        this.context.router.push('/forms' + '/' + props.id + '/' + props.sessionId + '/completion');
+      } else {
+        this.setState({ showTempModal: true });
+      }
     }
   }
 
@@ -146,10 +160,13 @@ class FormInteractive extends Component {
   }
 
   sectionStatus(allQuestions, currentQuestionId, questionGroup) {
+    const { shouldShowFinalSubmit } = this.props;
     const gq = questionGroup.questions;
     const curQueIdx = findIndexById(allQuestions, currentQuestionId);
     const firstGroupIdx = findIndexById(allQuestions, gq[0].id);
     const lastGroupIdx = findIndexById(allQuestions, gq[gq.length - 1].id);
+ 
+    if (shouldShowFinalSubmit) return 'completed'; // check if it's the final step.
 
     if (curQueIdx < firstGroupIdx) return 'pending';
     else if (curQueIdx <= lastGroupIdx) return 'active';
@@ -157,9 +174,9 @@ class FormInteractive extends Component {
   }
 
   get renderFormSteps() {
-    const { form: { questions }, currentQuestionId } = this.props;
+    const { form: { questions }, currentQuestionId, shouldShowFinalSubmit } = this.props;
     const props = this.props;
-    const sectionStatus = this.sectionStatus;
+    const that = this;
     const questionGroups = groupFormQuestions(questions);
 
     var slideAnimation = new SlideAnimation(1000);
@@ -176,13 +193,19 @@ class FormInteractive extends Component {
               return (
                 <FormSection key={index} questionGroup={group}
                   step={index+1} totalSteps={questionGroups.length}
-                  status={sectionStatus(questions, currentQuestionId, group)}  
+                  status={that.sectionStatus(questions, currentQuestionId, group)}  
                   {...props} />
               );
             })
           }
         </Animate>
         <FormRow>
+          {shouldShowFinalSubmit && 
+            <div className={styles.submitButtonsArea}>
+              <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit}/>
+              {' '}
+              <SubmitButton onClick={this.handleFinalSubmit}/>
+            </div>}
           <div className={styles.helpButtonWrapper}>
             <Button bsStyle="danger" block>Help</Button>
           </div>
@@ -206,6 +229,10 @@ class FormInteractive extends Component {
 
   handleHideTempModal = () => {
     this.setState({'showTempModal': false});
+  }
+  handleFinalSubmit = () => {
+    const { submitAnswer } = this.props;
+    submitAnswer(FORM_USER_SUBMISSION);
   }
   // Temp Modal for submit response.
   renderTempResponseModal() {
