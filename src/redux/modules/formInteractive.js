@@ -37,6 +37,7 @@ export const SHOW_FINAL_SUBMIT = 'SHOW_FINAL_SUBMIT';
 // ------------------------------------
 export const FORM_USER_SUBMISSION = 'FORM_USER_SUBMISSION';
 export const FORM_AUTOSAVE = 'FORM_AUTOSAVE';
+export const FORM_ACCESS = 'FORM_ACCESS';
 
 export const INIT_FORM_STATE = {
   id: 0,
@@ -59,7 +60,8 @@ export const INIT_FORM_STATE = {
   prefills: [],
   verificationStatus:[],
   primaryColor: '#DD4814',
-  shouldShowFinalSubmit: false
+  shouldShowFinalSubmit: false,
+  formAccess: false
 };
 
 // ------------------------------------
@@ -275,6 +277,15 @@ const getNextQuestionId = (questions, questionId) => {
   }
   if (questions[nextIdx].type == 'Group') nextIdx = curIdx;
   return questions[nextIdx].id;
+}
+
+// ------------------------------------
+// Action: showFinalSubmit
+// ------------------------------------
+export const handleFormAccess = () => {
+  return {
+    type: FORM_ACCESS
+  };
 }
 
 // ------------------------------------
@@ -503,6 +514,10 @@ export const handleEnter = () => {
 export const submitAnswer = (requestAction) => {
   return (dispatch, getState) => {
       const formInteractive = getState().formInteractive;
+      if (requestAction === FORM_ACCESS) {
+        dispatch(handleFormAccess());
+      }
+
       if (requestAction === FORM_USER_SUBMISSION) {
         dispatch(requestSubmitAnswer());
         dispatch(processSubmitAnswer(requestAction, formInteractive));
@@ -678,6 +693,10 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
       return Object.assign({}, state, {
         shouldShowFinalSubmit: true
       });
+    case FORM_ACCESS:
+      return Object.assign({}, state, {
+        formAccess: true
+      });  
     default:
       return state;
   };

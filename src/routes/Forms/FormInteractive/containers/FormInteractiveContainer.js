@@ -35,7 +35,8 @@ const mapStateToProps = (state) => {
     verificationStatus,
     primaryColor,
     lastFormSubmitStatus,
-    shouldShowFinalSubmit
+    shouldShowFinalSubmit,
+    formAccess
   } = formInteractive || INIT_FORM_STATE;
   return {
     id: parseInt(id),
@@ -49,7 +50,8 @@ const mapStateToProps = (state) => {
     primaryColor,
     verificationStatus,
     lastFormSubmitStatus,
-    shouldShowFinalSubmit
+    shouldShowFinalSubmit,
+    formAccess
   };
 };
 

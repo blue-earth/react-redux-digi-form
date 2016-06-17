@@ -27,3 +27,25 @@
   float: right;
   margin-top: 10px;
 }
+.modalWrapper{
+  width: 357px;
+  top: calc(50% - 106px);
+  .accessModalWrapper{
+    position: relative;
+    padding: 20px;
+    font-size: 23px;
+    font-weight: 500;
+    .modalDigitInput{
+      padding: 10px 0 10px 0;
+      width: 150px;
+    }
+    .modalSubmitButton{
+      position: absolute;
+      top: 94px;
+      left: 190px;
+    }
+    .resendLink{
+      font-size: 16px;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import FormHeader from 'components/Headers/FormHeader';
 import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
+import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
 import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap'; // Temp
 import FormSection from '../FormSection/FormSection';
@@ -8,7 +9,7 @@ import FormCompletionSection from '../FormCompletionSection/FormCompletionSectio
 import FormRow from '../FormRow/FormRow';
 import { groupFormQuestions, SlideAnimation }
   from 'helpers/formInteractiveHelper.js';
-import { FORM_AUTOSAVE, FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
+import { FORM_AUTOSAVE, FORM_USER_SUBMISSION, FORM_ACCESS } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
 import styles from './FormInteractive.scss';
 import Animate from 'rc-animate';
@@ -17,11 +18,15 @@ class FormInteractive extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {showTempModal: false};
+    this.state = {
+      showTempModal: false,
+      showAccessModal: true
+    };
   };
 
   static contextTypes = {
-    router: React.PropTypes.object
+    router: React.PropTypes.object,
+    primaryColor: React.PropTypes.string
   };
 
   static childContextTypes = {
@@ -127,6 +132,11 @@ class FormInteractive extends Component {
      */
     shouldShowFinalSubmit: PropTypes.bool.isRequired,
 
+    /*
+     * formAccess: Redux statue to check if it's accessible to form UI.
+     */
+    formAccess: PropTypes.bool.isRequired,
+
     // Temporary for modal show up.
     lastFormSubmitURL: PropTypes.string
   };
@@ -149,6 +159,9 @@ class FormInteractive extends Component {
       } else {
         this.setState({ showTempModal: true });
       }
+    } else if (props.lastFormSubmitStatus.requestAction === FORM_ACCESS
+      && props.formAccess) {
+      this.setState({ showAccessModal: false });
     }
   }
 
@@ -230,6 +243,10 @@ class FormInteractive extends Component {
   handleHideTempModal = () => {
     this.setState({'showTempModal': false});
   }
+  handleFormAccess = () => {
+    const { submitAnswer } = this.props;
+    submitAnswer(FORM_ACCESS);
+  }
   handleFinalSubmit = () => {
     const { submitAnswer } = this.props;
     submitAnswer(FORM_USER_SUBMISSION);
@@ -258,8 +275,38 @@ class FormInteractive extends Component {
     );
   }
 
+  // Access Modal for Access form UI.
+  renderAccessResponseModal() {
+    
+    const { showAccessModal } = this.state;
+    var optionals = {};
+    if (this.context.primaryColor) {
+      optionals['style'] = {
+        color: this.context.primaryColor
+      };
+    }
+
+    return (
+      <Modal show={showAccessModal} dialogClassName={styles.modalWrapper}>
+        <div className={styles.accessModalWrapper}>
+          Enter the 4 digit access code <br/>to continue
+          <div className={styles.modalDigitInput}>
+            <ShortTextInput/>
+          </div>
+          <div className={styles.modalSubmitButton}>
+            <SubmitButton onClick={this.handleFormAccess}/>
+          </div>
+          <a href="javascript:;" className={styles.resendLink}
+            {...optionals}>
+            Resend access code
+          </a>
+        </div>
+      </Modal>
+    );
+  }
+
   render() {
-    const { submitAnswer, params: { status } } = this.props;
+    const { submitAnswer, params: { status }, formAccess} = this.props;
     return (
       <div>
         <FormHeader submitAnswer={submitAnswer} />
@@ -267,6 +314,7 @@ class FormInteractive extends Component {
         { status !== 'completion' && this.renderFormSteps }
         { status !== 'completion' && this.renderTempResponseModal() }
         { status === 'completion' && this.renderFormCompletionSection }
+        { !formAccess && this.renderAccessResponseModal() }
       </div>
     )
   }
