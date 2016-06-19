@@ -142,8 +142,10 @@ class FormInteractive extends Component {
      */
     formAccessCode: PropTypes.string.isRequired,
 
-    // Temporary for modal show up.
-    lastFormSubmitURL: PropTypes.string
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func.isRequired
   };
 
   componentWillMount() {

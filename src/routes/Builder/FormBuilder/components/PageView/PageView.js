@@ -134,15 +134,24 @@ class PageView extends Component {
   }
 
   handleResizeStop = (direction, styleSize, clientSize, delta, metaData) => {
+  console.log(direction)
     const { updateMappingInfo, documentMapping } = this.props;
     const { id, subId } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
+    var newLeft = boundingBox.left;
+    var newTop = boundingBox.top;
+    if (direction === 'left' || direction === 'topLeft' || direction === 'bottomLeft') {
+      newLeft -= delta.width;
+    }
+    if (direction === 'top' || direction === 'topLeft' || direction === 'topRight') {
+      newTop -= delta.height;
+    }
     updateMappingInfo({
       id,
       bounding_box: [{
-        left: boundingBox.left,
-        top: boundingBox.top,
+        left: newLeft,
+        top: newTop,
         width: styleSize.width,
         height: styleSize.height
       }]

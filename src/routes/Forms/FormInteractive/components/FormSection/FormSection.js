@@ -97,7 +97,12 @@ class FormSection extends Component {
     /*
      * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
      */
-    handleEnter: PropTypes.func.isRequired
+    handleEnter: PropTypes.func.isRequired,
+
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -116,7 +121,7 @@ class FormSection extends Component {
 
   get renderAllQuestions() {
     const { questionGroup: {questions}, currentQuestionId, form, verificationStatus,
-      answers, prefills, storeAnswer, nextQuestion, handleEnter, isVerifying } = this.props;
+      answers, prefills, storeAnswer, nextQuestion, handleEnter, isVerifying, show } = this.props;
     const allQuestions = form.questions;
     const currentQuestionIndex = findIndexById(allQuestions, currentQuestionId);
     const context = getContextFromAnswer(answers);
@@ -141,6 +146,7 @@ class FormSection extends Component {
             handleEnter={handleEnter}
             context={context}
             isVerifying={isVerifying}
+            show={show}
             status={currentQuestionIndex == idx 
               ? 'current' : currentQuestionIndex - idx == 1 
               ? 'next' : idx - currentQuestionIndex == 1

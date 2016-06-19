@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { show } from 'redux-modal'
 import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion, handleEnter,
   storeAnswer, submitAnswer, fetchAnswers, fetchFormIfNeeded, updateAccessCode } 
   from 'redux/modules/formInteractive';
@@ -16,6 +17,7 @@ const mapActionCreators = {
   goToQuestion,
   handleEnter,
   updateAccessCode
+  show
 };
 
 const mapDispatchToProps = (dispatch) => {

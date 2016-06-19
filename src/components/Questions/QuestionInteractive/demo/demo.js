@@ -70,13 +70,20 @@ var statementData = {
     "group": 21
 };
 
+var signatureData = {
+    type: "SignatureField",
+    questionInstruction: "Signature Field",
+    questionDescription: 'SignatureField description',
+};
+
 var allQuestionsData = [
+    signatureData,
     firstNameData,
     companyABNData,
     emailData,
     longTextData,
     mcQuestionData1,
-    statementData
+    statementData,
 ]
 
 ReactDOM.render(<AllQuestionTypes testingData={allQuestionsData} />, document.getElementById('root'));

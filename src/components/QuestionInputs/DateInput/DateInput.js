@@ -68,7 +68,6 @@ class DateInput extends Component {
 
     if (typeof onChange === 'function') {
       onChange(jsonDate);
-      console.log(jsonDate);
     }
   }
 
@@ -84,8 +83,6 @@ class DateInput extends Component {
 
   handleKeyDown = (event) => {
     const { onEnterKey, onChange, dateFormat } = this.props;
-    console.log(event.target.value)
-    console.log(moment(event.target.value, dateFormat, true).isValid())
     if (event.keyCode === 13 && typeof onEnterKey === 'function') {
       onEnterKey();
     }

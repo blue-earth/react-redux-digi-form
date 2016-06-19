@@ -9,6 +9,7 @@ import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberI
 import DropdownInput from '../../QuestionInputs/DropdownInput/DropdownInput';
 import DateInput from '../../QuestionInputs/DateInput/DateInput';
 import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
+import Signature from '../../QuestionInputs/Signature/Signature';
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton';
 import Validator from '../../Validator/Validator';
 import Verifier from '../../Verifier/Verifier';
@@ -73,28 +74,37 @@ class QuestionInteractive extends Component {
     /*
      * isVerifying: Redux state that holds the status whether verification is in prgress
      */
-    isVerifying: PropTypes.bool.isRequired,
+    isVerifying: PropTypes.bool,
 
     /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
-    storeAnswer: PropTypes.func.isRequired,
+    storeAnswer: PropTypes.func,
 
     /*
      * nextQuestion: Redux action to move to next question when the current answer is qualified.
      */
-    nextQuestion: PropTypes.func.isRequired,
+    nextQuestion: PropTypes.func,
 
     /*
      * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
      */
-    handleEnter: PropTypes.func.isRequired
+    handleEnter: PropTypes.func,
+
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func
   };
 
   static defaultProps = {
     validations: [],
     status: 'current',
-    context: {}
+    context: {},
+    isVerifying: false,
+    storeAnswer: () => {},
+    nextQuestion: () => {},
+    handleEnter: () => {}
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -259,6 +269,10 @@ class QuestionInteractive extends Component {
         break;
       case 'AddressField':
         ChildComponent = AddressInput;
+        break;
+      case 'SignatureField':
+        ChildComponent = Signature;
+        buttonPosClass = styles.noneColumn;
         break;
       default:
         return false;

@@ -86,7 +86,7 @@ export const fetchForm = (id) => {
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(receiveForm(value));
+      dispatch(receiveForm(id, value));
       dispatch(doneFetchingForm()); // Hide loading spinner
     }
   };
@@ -112,10 +112,10 @@ export const requestForm = () => {
 // ------------------------------------
 // Action: receiveForm
 // ------------------------------------
-export const receiveForm = (data) => {
+export const receiveForm = (id, data) => {
   return {
     type: RECEIVE_FORM,
-    id: data.id,
+    id: id,
     form: data.form_data,
     title: data.title,
     slug: data.slug,
