@@ -38,6 +38,7 @@ export const SHOW_FINAL_SUBMIT = 'SHOW_FINAL_SUBMIT';
 export const FORM_USER_SUBMISSION = 'FORM_USER_SUBMISSION';
 export const FORM_AUTOSAVE = 'FORM_AUTOSAVE';
 export const FORM_ACCESS = 'FORM_ACCESS';
+export const UPDATE_ACCESS_CODE = 'UPDATE_ACCESS_CODE';
 
 export const INIT_FORM_STATE = {
   id: 0,
@@ -61,7 +62,8 @@ export const INIT_FORM_STATE = {
   verificationStatus:[],
   primaryColor: '#DD4814',
   shouldShowFinalSubmit: false,
-  formAccess: false
+  formAccess: false,
+  formAccessCode: ''
 };
 
 // ------------------------------------
@@ -280,9 +282,20 @@ const getNextQuestionId = (questions, questionId) => {
 }
 
 // ------------------------------------
-// Action: showFinalSubmit
+// Action: updateAccessCode
+// ------------------------------------
+export const updateAccessCode = (accessCode) => {
+  return {
+    type: UPDATE_ACCESS_CODE,
+    accessCode
+  };
+}
+
+// ------------------------------------
+// Action: handleFormAccess
 // ------------------------------------
 export const handleFormAccess = () => {
+
   return {
     type: FORM_ACCESS
   };
@@ -695,8 +708,12 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
       });
     case FORM_ACCESS:
       return Object.assign({}, state, {
-        formAccess: true
-      });  
+        formAccess: state.formAccessCode == '0000' ? true : false
+      });
+    case UPDATE_ACCESS_CODE:
+      return Object.assign({}, state, {
+        formAccessCode: action.accessCode
+      });
     default:
       return state;
   };

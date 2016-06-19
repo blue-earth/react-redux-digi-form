@@ -137,6 +137,11 @@ class FormInteractive extends Component {
      */
     formAccess: PropTypes.bool.isRequired,
 
+    /*
+     * formAccessCode: Redux Code to access form UI.
+     */
+    formAccessCode: PropTypes.string.isRequired,
+
     // Temporary for modal show up.
     lastFormSubmitURL: PropTypes.string
   };
@@ -245,6 +250,7 @@ class FormInteractive extends Component {
   }
   handleFormAccess = () => {
     const { submitAnswer } = this.props;
+
     submitAnswer(FORM_ACCESS);
   }
   handleFinalSubmit = () => {
@@ -279,6 +285,7 @@ class FormInteractive extends Component {
   renderAccessResponseModal() {
     
     const { showAccessModal } = this.state;
+    const { formAccessCode, updateAccessCode } = this.props;
     var optionals = {};
     if (this.context.primaryColor) {
       optionals['style'] = {
@@ -291,7 +298,9 @@ class FormInteractive extends Component {
         <div className={styles.accessModalWrapper}>
           Enter the 4 digit access code <br/>to continue
           <div className={styles.modalDigitInput}>
-            <ShortTextInput/>
+            <ShortTextInput type="NumberField" value={formAccessCode} 
+              onChange={updateAccessCode}
+              minimum={1000} maximum={9999} autoFocus onEnterKey={this.handleFormAccess}/>
           </div>
           <div className={styles.modalSubmitButton}>
             <SubmitButton onClick={this.handleFormAccess}/>

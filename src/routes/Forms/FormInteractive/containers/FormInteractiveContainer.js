@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion, handleEnter,
-  storeAnswer, submitAnswer, fetchAnswers, fetchFormIfNeeded  } 
+  storeAnswer, submitAnswer, fetchAnswers, fetchFormIfNeeded, updateAccessCode } 
   from 'redux/modules/formInteractive';
 
 import FormInteractive from '../components/FormInteractive/FormInteractive';
@@ -14,7 +14,8 @@ const mapActionCreators = {
   fetchAnswers,
   submitAnswer,
   goToQuestion,
-  handleEnter
+  handleEnter,
+  updateAccessCode
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -36,7 +37,8 @@ const mapStateToProps = (state) => {
     primaryColor,
     lastFormSubmitStatus,
     shouldShowFinalSubmit,
-    formAccess
+    formAccess,
+    formAccessCode
   } = formInteractive || INIT_FORM_STATE;
   return {
     id: parseInt(id),
@@ -51,7 +53,8 @@ const mapStateToProps = (state) => {
     verificationStatus,
     lastFormSubmitStatus,
     shouldShowFinalSubmit,
-    formAccess
+    formAccess,
+    formAccessCode
   };
 };
 
