@@ -19,7 +19,7 @@ class SignatureModal extends Component {
        * typeValue: type value.
        */
       typeValue: '',
-      activeTabKey: 'type'
+      activeTabKey: 'draw'
     };
   };
 
@@ -81,6 +81,11 @@ class SignatureModal extends Component {
         <Modal.Body>
           <Tabs activeKey={activeTabKey} id="SignatureTabs"
             onSelect={this.handleTabSelect}>
+            <Tab eventKey="draw" title="Draw">
+              <div className={styles.signaturePadWrapper}>
+                <SignaturePad clearButton="true" ref="signature" />
+              </div>
+            </Tab>
             <Tab eventKey="type" title="Type">
               <div className={styles.typeWrapper}>
                 <FormGroup controlId="formTypeFullname">
@@ -93,15 +98,13 @@ class SignatureModal extends Component {
                     onChange={this.handleTypeChange}
                   />
                 </FormGroup>
-                <div className={styles.typeSignatureWrapper}>
-                  <canvas ref="typeSignaturePad" height="150" width="566">
-                  </canvas>
-                </div>
-              </div>
-            </Tab>
-            <Tab eventKey="draw" title="Draw">
-              <div className={styles.signaturePadWrapper}>
-                <SignaturePad clearButton="true" ref="signature" />
+                <FormGroup controlId="formTypeFullname">
+                  <ControlLabel>Preview</ControlLabel>
+                  <div className={styles.typeSignatureWrapper}>
+                    <canvas ref="typeSignaturePad" height="150" width="566">
+                    </canvas>
+                  </div>
+                </FormGroup>
               </div>
             </Tab>
           </Tabs>

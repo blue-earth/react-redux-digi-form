@@ -133,7 +133,7 @@ const questionInputs = [
       'is',
       'not'
     ],
-    group: 'signature'
+    group: 'standard'
   },
   {
     name: 'StatementField',
@@ -179,6 +179,16 @@ const questionInputs = [
     ],
     logicOperations: [],
     group: 'advanced'
+  },
+  {
+    name: 'SignatureField',
+    componentName: 'Signature',
+    displayText: 'Signature',
+    validations: [
+      'is_required'
+    ],
+    logicOperations: [],
+    group: 'signature'
   }
 ];
 
