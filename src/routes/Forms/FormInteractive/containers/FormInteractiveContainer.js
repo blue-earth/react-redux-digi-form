@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { show } from 'redux-modal'
 import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion, handleEnter,
-  storeAnswer, submitAnswer, fetchAnswers, fetchFormIfNeeded, updateAccessCode } 
+  storeAnswer, submitAnswer, fetchAnswers, fetchForm, fetchFormIfNeeded, updateAccessCode, handleFormAccess } 
   from 'redux/modules/formInteractive';
 
 import FormInteractive from '../components/FormInteractive/FormInteractive';
@@ -10,11 +10,13 @@ import FormInteractive from '../components/FormInteractive/FormInteractive';
 const mapActionCreators = {
   prevQuestion,
   nextQuestion,
+  fetchForm,
   fetchFormIfNeeded,
   storeAnswer,
   fetchAnswers,
   submitAnswer,
   goToQuestion,
+  handleFormAccess,
   handleEnter,
   updateAccessCode,
   show

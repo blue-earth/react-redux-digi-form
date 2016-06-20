@@ -1,4 +1,7 @@
 import React, { Component, PropTypes } from 'react';
+import Validator from 'components/Validator/Validator';
+import Verifier from 'components/Verifier/Verifier';
+import validateField from 'helpers/validationHelper';
 import FormHeader from 'components/Headers/FormHeader';
 import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
@@ -9,7 +12,7 @@ import FormCompletionSection from '../FormCompletionSection/FormCompletionSectio
 import FormRow from '../FormRow/FormRow';
 import { groupFormQuestions, SlideAnimation }
   from 'helpers/formInteractiveHelper.js';
-import { FORM_AUTOSAVE, FORM_USER_SUBMISSION, FORM_ACCESS } from 'redux/modules/formInteractive';
+import { FORM_AUTOSAVE, FORM_USER_SUBMISSION, FORM_ACCESS, UPDATE_ACCESS_CODE } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
 import styles from './FormInteractive.scss';
 import Animate from 'rc-animate';
@@ -20,7 +23,10 @@ class FormInteractive extends Component {
     super(props);
     this.state = {
       showTempModal: false,
-      showAccessModal: true
+      showAccessModal: true,
+      accessCodeInputStatus: 'changing',
+      formAccessCode: '',
+      accessCodeSubmitStatus: 'pending'
     };
   };
 
@@ -108,6 +114,11 @@ class FormInteractive extends Component {
     fetchFormIfNeeded: PropTypes.func.isRequired,
 
     /*
+     * fetchForm: Redux action to fetch form from backend with ID and AccessCode
+     */
+    fetchForm: PropTypes.func.isRequired,
+
+    /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
     storeAnswer: PropTypes.func.isRequired,
@@ -135,7 +146,7 @@ class FormInteractive extends Component {
     /*
      * formAccess: Redux statue to check if it's accessible to form UI.
      */
-    formAccess: PropTypes.bool.isRequired,
+    formAccess: PropTypes.string.isRequired,
 
     /*
      * formAccessCode: Redux Code to access form UI.
@@ -158,6 +169,7 @@ class FormInteractive extends Component {
   }
 
   componentWillReceiveProps(props) {
+
     // set show/hide temp modal
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
       && props.lastFormSubmitStatus.result) {
@@ -166,10 +178,8 @@ class FormInteractive extends Component {
       } else {
         this.setState({ showTempModal: true });
       }
-    } else if (props.lastFormSubmitStatus.requestAction === FORM_ACCESS
-      && props.formAccess) {
-      this.setState({ showAccessModal: false });
-    }
+    } 
+    
   }
 
   componentDidMount() {
@@ -250,15 +260,39 @@ class FormInteractive extends Component {
   handleHideTempModal = () => {
     this.setState({'showTempModal': false});
   }
-  handleFormAccess = () => {
-    const { submitAnswer } = this.props;
 
-    submitAnswer(FORM_ACCESS);
+  handleAccessCodeInput = (value) => {
+    this.setState({ 
+      formAccessCode: value,
+      accessCodeInputStatus: 'changing',
+      accessCodeSubmitStatus: 'pending' 
+    });
   }
+
+  handleFormAccess = () => {
+    const { formAccessCode } = this.state;
+    const { id, fetchForm } = this.props;
+    var isAccessCodeValid = validateField({type:'minimum',value:1000}, formAccessCode) && 
+    validateField({type:'maximum',value:9999}, formAccessCode);
+    if (isAccessCodeValid) {
+      this.setState({ 
+        accessCodeInputStatus: 'validated',
+        accessCodeSubmitStatus: 'sent' 
+      });
+      fetchForm(id,formAccessCode);
+      this.setState({ 
+        accessCodeSubmitStatus: 'received'
+      });
+    } else {
+      this.setState({ accessCodeInputStatus: 'unvalidated' });
+    }
+  }
+
   handleFinalSubmit = () => {
     const { submitAnswer } = this.props;
     submitAnswer(FORM_USER_SUBMISSION);
   }
+
   // Temp Modal for submit response.
   renderTempResponseModal() {
     const { sessionId, id, lastFormSubmitStatus } = this.props;
@@ -284,10 +318,13 @@ class FormInteractive extends Component {
   }
 
   // Access Modal for Access form UI.
-  renderAccessResponseModal() {
+  renderAccessResponseModal(formAccess) {
     
-    const { showAccessModal } = this.state;
-    const { formAccessCode, updateAccessCode } = this.props;
+    const { showAccessModal, accessCodeInputStatus, formAccessCode, accessCodeSubmitStatus } = this.state;
+    const { fetchForm } = this.props;
+    const showVerificationStatus = accessCodeInputStatus === 'validated' && 
+      showAccessModal == true;
+
     var optionals = {};
     if (this.context.primaryColor) {
       optionals['style'] = {
@@ -301,12 +338,22 @@ class FormInteractive extends Component {
           Enter the 4 digit access code <br/>to continue
           <div className={styles.modalDigitInput}>
             <ShortTextInput type="NumberField" value={formAccessCode} 
-              onChange={updateAccessCode}
+              onChange={this.handleAccessCodeInput}
               minimum={1000} maximum={9999} autoFocus onEnterKey={this.handleFormAccess}/>
           </div>
           <div className={styles.modalSubmitButton}>
             <SubmitButton onClick={this.handleFormAccess}/>
           </div>
+          {accessCodeInputStatus === 'unvalidated' &&
+            <Validator type="minimum" value={1000} validateFor={formAccessCode} />
+          }
+          {accessCodeInputStatus === 'unvalidated' &&
+            <Validator type="maximum" value={9999} validateFor={formAccessCode} />
+          }
+          { console.log(formAccess)}
+          {showVerificationStatus && accessCodeSubmitStatus == 'received' &&
+            <Verifier type="AccessCodeService" status={formAccess === 'fail'}/>
+          }
           <a href="javascript:;" className={styles.resendLink}
             {...optionals}>
             Resend access code
@@ -325,7 +372,7 @@ class FormInteractive extends Component {
         { status !== 'completion' && form && this.renderFormSteps }
         { status !== 'completion' && this.renderTempResponseModal() }
         { status === 'completion' && this.renderFormCompletionSection }
-        { !formAccess && this.renderAccessResponseModal() }
+        { formAccess != 'success' && this.renderAccessResponseModal(formAccess) }
       </div>
     )
   }

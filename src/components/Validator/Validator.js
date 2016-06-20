@@ -61,14 +61,16 @@ class Validator extends Component {
   renderMinimum() {
     const { value } = this.props
     return (
-      <span>Value must not be less than {value}.</span>
+      // <span>Value must not be less than {value}.</span>
+      <span>Access Code must be 4 digits.</span>
     );
   }
 
   renderMaximum() {
     const { value } = this.props
     return (
-      <span>Value must not be greater than {value}.</span>
+      // <span>Value must not be greater than {value}.</span>
+      <span>Access Code must be 4 digits.</span>
     );
   }
 

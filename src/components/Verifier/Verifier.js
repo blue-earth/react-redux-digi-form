@@ -16,6 +16,12 @@ class Verifier extends Component {
     );
   }
 
+  renderAccessCodeService() {
+    return (
+      <span>This Access Code is wrong.</span>
+    );
+  }
+
   render() {
     var { type, status, verification } = this.props;
     var output = false;
@@ -27,6 +33,9 @@ class Verifier extends Component {
       switch (type) {
         case 'EmondoEmailFieldService':
           output = this.renderEmondoEmailFieldService();
+          break;
+        case 'AccessCodeService':
+          output = this.renderAccessCodeService();
           break;
         default:
           return false;

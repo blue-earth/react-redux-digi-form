@@ -62,7 +62,8 @@ export const INIT_FORM_STATE = {
   verificationStatus:[],
   primaryColor: '#DD4814',
   shouldShowFinalSubmit: false,
-  formAccess: false,
+  formAccess: 'init',
+  isAccessCodeProtected: false,
   formAccessCode: ''
 };
 
@@ -73,12 +74,14 @@ export const INIT_FORM_STATE = {
 // ------------------------------------
 // Action: fetchForm
 // ------------------------------------
-export const fetchForm = (id) => {
-  const apiURL = `${API_URL}/form_document/api/form/${id}/`
+export const fetchForm = (id, accessCode) => {
+  var apiURL = `${API_URL}/form_document/api/form/${id}/`;
+  if (accessCode.length > 0) 
+    apiURL += `?access_code=${accessCode}`;
   const fetchParams = {
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/json'
     },
     redirect: 'follow',
     method: 'GET'
@@ -88,6 +91,7 @@ export const fetchForm = (id) => {
     return (dispatch, getState) => {
       dispatch(receiveForm(id, value));
       dispatch(doneFetchingForm()); // Hide loading spinner
+      dispatch(handleFormAccess()); //display form access modal 
     }
   };
   
@@ -120,7 +124,8 @@ export const receiveForm = (id, data) => {
     title: data.title,
     slug: data.slug,
     receivedAt: Date.now(),
-    currentQuestionId: validateQuestionId(data.form_data)
+    currentQuestionId: validateQuestionId(data.form_data),
+    isAccessCodeProtected: data.is_access_code_protected
   };
 }
 
@@ -149,7 +154,7 @@ export const fetchFormIfNeeded = (id) => {
   return (dispatch, getState) => {
     if (shouldFetchForm(getState(), id)) {
       dispatch(requestForm());
-      dispatch(fetchForm(id));
+      dispatch(fetchForm(id,''));
     } else {
       dispatch(fetchSession());
     }
@@ -199,7 +204,7 @@ export const processFetchAnswers = (sessionId) => {
   const fetchParams = {
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/json'
     },
     redirect: 'follow',
     method: 'GET'
@@ -296,7 +301,6 @@ export const updateAccessCode = (accessCode) => {
 // Action: handleFormAccess
 // ------------------------------------
 export const handleFormAccess = () => {
-
   return {
     type: FORM_ACCESS
   };
@@ -403,7 +407,7 @@ export const processVerifyEmail = (questionId, email) => {
   const fetchParams = {
     method: 'POST',
     headers: {
-      Accept: 'application/json',
+      // Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -574,7 +578,7 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
   const fetchParams = {
     method,
     headers: {
-      Accept: 'application/json',
+      // Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(answerRequest)
@@ -639,6 +643,7 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
         form: action.form,
         lastUpdated: action.receivedAt,
         currentQuestionId: action.currentQuestionId,
+        isAccessCodeProtected: action.isAccessCodeProtected,
         sessionId: action.sessionId
         // primaryColor: action.primaryColor
       });
@@ -709,7 +714,7 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
       });
     case FORM_ACCESS:
       return Object.assign({}, state, {
-        formAccess: state.formAccessCode == '0000' ? true : false
+        formAccess: !state.form ? 'fail' : 'success'
       });
     case UPDATE_ACCESS_CODE:
       return Object.assign({}, state, {
