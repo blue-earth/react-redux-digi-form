@@ -24,7 +24,7 @@ class SignatureModal extends Component {
   };
 
   componentDidMount() {
-    window.addEventListener('resize', this.handleTypeCanvasResize.bind(this));
+    window.addEventListener('resize', this.handleTypeCanvasResize);
   }
 
   handleAccept = () => {
@@ -65,7 +65,7 @@ class SignatureModal extends Component {
     ctx.fillText(value, 20, canvas.height / 2);
   }
 
-  handleTabSelect(activeTabKey) {
+  handleTabSelect = (activeTabKey) => {
     this.setState({ activeTabKey });
   }
 
@@ -87,6 +87,7 @@ class SignatureModal extends Component {
                   <ControlLabel>Full Name</ControlLabel>
                   <ShortTextInput
                     type="text"
+                    autoFocus
                     value={typeValue}
                     placeholder="Enter full name"
                     onChange={this.handleTypeChange}

@@ -16,7 +16,7 @@ const mapActionCreators = {
   submitAnswer,
   goToQuestion,
   handleEnter,
-  updateAccessCode
+  updateAccessCode,
   show
 };
 
