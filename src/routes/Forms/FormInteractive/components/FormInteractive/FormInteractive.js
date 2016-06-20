@@ -50,7 +50,7 @@ class FormInteractive extends Component {
     /*
      * form: form_data of response, consists of questions and logics.
      */
-    form: PropTypes.object.isRequired,
+    form: PropTypes.object,
 
     /*
      * answers: Redux state that stores the array of answered values
@@ -317,12 +317,12 @@ class FormInteractive extends Component {
   }
 
   render() {
-    const { submitAnswer, params: { status }, formAccess} = this.props;
+    const { submitAnswer, params: { status }, formAccess, form } = this.props;
     return (
       <div>
         <FormHeader submitAnswer={submitAnswer} />
         <div className={styles.flowLine}></div>
-        { status !== 'completion' && this.renderFormSteps }
+        { status !== 'completion' && form && this.renderFormSteps }
         { status !== 'completion' && this.renderTempResponseModal() }
         { status === 'completion' && this.renderFormCompletionSection }
         { !formAccess && this.renderAccessResponseModal() }
