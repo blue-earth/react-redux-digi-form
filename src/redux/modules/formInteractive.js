@@ -222,6 +222,7 @@ export const processFetchAnswers = (sessionId) => {
 }
 
 const validateQuestionId = (form) => {
+  if (!form) return 0;
   const questions = form.questions;
   for ( var i = 0; i < questions.length; i ++ ) {
     if (questions[i].type !== 'Group') return questions[i].id;
