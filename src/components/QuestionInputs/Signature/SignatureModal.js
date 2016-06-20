@@ -94,7 +94,7 @@ class SignatureModal extends Component {
                   />
                 </FormGroup>
                 <div className={styles.typeSignatureWrapper}>
-                  <canvas ref="typeSignaturePad" height="100" width="566">
+                  <canvas ref="typeSignaturePad" height="150" width="566">
                   </canvas>
                 </div>
               </div>

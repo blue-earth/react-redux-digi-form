@@ -78,7 +78,7 @@ export const fetchForm = (id) => {
   const fetchParams = {
     headers: {
       Accept: 'application/json',
-      // 'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     },
     redirect: 'follow',
     method: 'GET'
@@ -199,7 +199,7 @@ export const processFetchAnswers = (sessionId) => {
   const fetchParams = {
     headers: {
       Accept: 'application/json',
-      // 'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     },
     redirect: 'follow',
     method: 'GET'
@@ -402,7 +402,7 @@ export const processVerifyEmail = (questionId, email) => {
   const fetchParams = {
     method: 'POST',
     headers: {
-      // Accept: 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -573,7 +573,7 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
   const fetchParams = {
     method,
     headers: {
-      // Accept: 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(answerRequest)
