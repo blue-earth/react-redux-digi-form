@@ -26,6 +26,7 @@ class FormInteractive extends Component {
       showAccessModal: true,
       accessCodeInputStatus: 'changing',
       formAccessCode: '',
+      redirectStatus: 'off'
     };
   };
 
@@ -172,13 +173,23 @@ class FormInteractive extends Component {
     // set show/hide temp modal
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
       && props.lastFormSubmitStatus.result) {
-      if (props.shouldShowFinalSubmit){
-        this.context.router.push('/forms' + '/' + props.id + '/' + props.sessionId + '/completion');
-      } else {
+      if (!props.shouldShowFinalSubmit){
         this.setState({ showTempModal: true });
       }
     } 
     
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.redirectStatus === 'off') {
+      if (this.props.shouldShowFinalSubmit) {
+        if (this.props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
+        && this.props.lastFormSubmitStatus.result) {
+          this.context.router.push('/forms' + '/' + this.props.id + '/' + this.props.sessionId + '/completion');
+          this.setState({ redirectStatus: 'on' });
+        }
+      } 
+    }
   }
 
   componentDidMount() {
