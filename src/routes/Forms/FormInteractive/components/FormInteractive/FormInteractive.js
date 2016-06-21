@@ -269,7 +269,7 @@ class FormInteractive extends Component {
   }
 
   handleFormAccess = () => {
-    const { id, fetchFormIfNeeded, formAccessCode, sessionId } = this.props;
+    const { id, fetchFormIfNeeded, formAccessCode, sessionId, fetchAnswers } = this.props;
     var isAccessCodeValid = validateField({type:'minimum',value:1000}, formAccessCode) && 
     validateField({type:'maximum',value:9999}, formAccessCode);
     if (isAccessCodeValid) {
