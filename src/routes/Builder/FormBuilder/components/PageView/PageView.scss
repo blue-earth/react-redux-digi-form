@@ -32,6 +32,15 @@ $element-border-color: #FF6600;
   border: 1px solid $element-border-color;
   background-color: rgba(255, 255, 255, .85);
   overflow: hidden;
+  &.active {
+    z-index: 999;
+    background-color: rgba(255, 255, 255, 1);
+  }
+}
+.elementName {
+  font-size: 12px;
+  @include vhcenter;
+  padding: 2px;
 }
 .newElementDraw {
   border: 1px dashed $element-border-color;

@@ -5,9 +5,12 @@ export const REQUEST_FORM = 'REQUEST_FORM';
 export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
 export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
 export const DONE_SUBMIT = 'DONE_SUBMIT';
+
 export const SET_ACTIVE_INPUT_NAME = 'SET_ACTIVE_INPUT_NAME';
 export const ADD_ELEMENT = 'ADD_ELEMENT';
 export const UPDATE_MAPPING_INFO = 'UPDATE_MAPPING_INFO';
+
+export const SET_CURRENT_QUESTION_ID = 'SET_CURRENT_QUESTION_ID';
 
 export const INIT_BUILDER_STATE = {
   id: 0,
@@ -22,7 +25,7 @@ export const INIT_BUILDER_STATE = {
   formConfig: {},
   documentMapping: [],
   activeInputName: '',
-  currentQuestion: {},
+  currentQuestionId: 0,
   lastQuestionId: 0
 };
 
@@ -69,6 +72,16 @@ export const updateMappingInfo = (mappingInfo) => {
 }
 
 // ------------------------------------
+// Action: setCurrentQuestionId
+// ------------------------------------
+export const setCurrentQuestionId = (id) => {
+  return {
+    type: SET_CURRENT_QUESTION_ID,
+    id
+  };
+}
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
@@ -102,6 +115,10 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
     case UPDATE_MAPPING_INFO:
       return Object.assign({}, state, {
         documentMapping: mergeItemIntoArray(state.documentMapping, action.mappingInfo)
+      });
+    case SET_CURRENT_QUESTION_ID:
+      return Object.assign({}, state, {
+        currentQuestionId: action.id
       });
     default:
       return state;

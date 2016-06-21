@@ -3,6 +3,7 @@ import BuilderHeader from 'components/Headers/BuilderHeader';
 import styles from './PageView.scss';
 import { findIndexById } from 'helpers/pureFunctions';
 import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
+import classNames from 'classnames';
 
 class PageView extends Component {
 
@@ -134,7 +135,6 @@ class PageView extends Component {
   }
 
   handleResizeStop = (direction, styleSize, clientSize, delta, metaData) => {
-  console.log(direction)
     const { updateMappingInfo, documentMapping } = this.props;
     const { id, subId } = metaData;
     const index = findIndexById(documentMapping, id);
@@ -147,15 +147,18 @@ class PageView extends Component {
     if (direction === 'top' || direction === 'topLeft' || direction === 'topRight') {
       newTop -= delta.height;
     }
-    updateMappingInfo({
-      id,
-      bounding_box: [{
-        left: newLeft,
-        top: newTop,
-        width: styleSize.width,
-        height: styleSize.height
-      }]
-    });
+    const newBoundingBox = {
+      left: newLeft,
+      top: newTop,
+      width: styleSize.width,
+      height: styleSize.height
+    };
+    if (!_.isEqual(boundingBox, newBoundingBox)) {
+      updateMappingInfo({
+        id,
+        bounding_box: [newBoundingBox]
+      });
+    }
   }
 
   handleDragStop = (event, ui, metaData) => {
@@ -163,15 +166,23 @@ class PageView extends Component {
     const { id, subId } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
-    updateMappingInfo({
-      id,
-      bounding_box: [{
-        left: ui.position.left,
-        top: ui.position.top,
-        width: boundingBox.width,
-        height: boundingBox.height
-      }]
-    });
+    const newBoundingBox = {
+      left: ui.position.left,
+      top: ui.position.top,
+      width: boundingBox.width,
+      height: boundingBox.height
+    };
+    if (!_.isEqual(boundingBox, newBoundingBox)) {
+      updateMappingInfo({
+        id,
+        bounding_box: [newBoundingBox]
+      });
+    }
+  }
+
+  handleElementClick = (metaData) => {
+    const { setCurrentQuestionId } = this.props;
+    setCurrentQuestionId(metaData.id);
   }
 
   renderDocuments() {
@@ -186,7 +197,7 @@ class PageView extends Component {
   }
 
   render() {
-    const { activeInputName, documentMapping, questions } = this.props;
+    const { activeInputName, documentMapping, questions, currentQuestionId } = this.props;
     const { isDrawing, startX, startY, endX, endY } = this.state;
     var boardOptionals = {};
     if (activeInputName) {
@@ -195,21 +206,29 @@ class PageView extends Component {
       }
     }
     var documentMappingComponents = () => {
-      return documentMapping.map((mappingInfo, index) => {
+      return documentMapping.map((mappingInfo) => {
         const boundingBox = mappingInfo.bounding_box[0];
         var index = findIndexById(questions, mappingInfo.id);
         const { type } = questions[index];
+        const isActive = mappingInfo.id === currentQuestionId;
+        const zIndex = isActive ? 101 : 100;
+        const elementClass = classNames({
+          [styles.element]: true,
+          [styles.active]: isActive
+        });
         return (
           <ResizableAndMovablePlus
-            className={styles.element}
+            className={elementClass}
             x={boundingBox.left}
             y={boundingBox.top}
+            zIndex={zIndex}
             width={boundingBox.width}
             height={boundingBox.height}
             onDragStart={this.handleDragStart}
             onDragStop={this.handleDragStop}
             onResizeStop={this.handleResizeStop}
-            key={`${index}-${0}`}
+            onClick={this.handleElementClick}
+            key={`${mappingInfo.id}-${0}`}
             minWidth={5}
             minHeight={5}
             metaData={{

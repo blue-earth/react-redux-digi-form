@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { INIT_BUILDER_STATE, setActiveInputName, addElement, updateMappingInfo }
+import { INIT_BUILDER_STATE, setActiveInputName, addElement, updateMappingInfo,
+  setCurrentQuestionId }
   from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
@@ -8,7 +9,8 @@ import FormBuilder from '../components/FormBuilder';
 const mapActionCreators = {
   setActiveInputName,
   addElement,
-  updateMappingInfo
+  updateMappingInfo,
+  setCurrentQuestionId
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -26,7 +28,7 @@ const mapStateToProps = (state) => {
     documents,
     documentMapping,
     activeInputName,
-    currentQuestion
+    currentQuestionId
   } = formBuilder || INIT_FORM_STATE;
   return {
     id: parseInt(id),
@@ -37,7 +39,7 @@ const mapStateToProps = (state) => {
     documents,
     documentMapping,
     activeInputName,
-    currentQuestion
+    currentQuestionId
   };
 };
 

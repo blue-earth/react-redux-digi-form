@@ -28,12 +28,19 @@ class ResizableAndMovablePlus extends Component {
     onDragStop(event, ui, metaData)
   }
 
+  handleClick = () => {
+    const { onClick, metaData } = this.props;
+    onClick(metaData);
+  }
+
   render() {
     return (
       <ResizableAndMovable
         {...this.props}
         onResizeStop={this.handleResizeStop}
         onDragStop={this.handleDragStop}
+        onClick={this.handleClick}
+        canUpdateSizeByParent={false}
       >
         {this.props.children}
       </ResizableAndMovable>
