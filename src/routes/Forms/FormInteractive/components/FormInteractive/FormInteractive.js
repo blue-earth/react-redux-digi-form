@@ -24,9 +24,7 @@ class FormInteractive extends Component {
     this.state = {
       showTempModal: false,
       showAccessModal: true,
-      accessCodeInputStatus: 'changing',
-      formAccessCode: '',
-      redirectStatus: 'off'
+      accessCodeInputStatus: 'changing'
     };
   };
 
@@ -175,7 +173,6 @@ class FormInteractive extends Component {
 
   componentWillReceiveProps(props) {
     const { resetFormSubmitStatus } = this.props;
-    // set show/hide temp modal
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
       && props.lastFormSubmitStatus.result) {
       if (props.shouldShowFinalSubmit) {
@@ -272,7 +269,7 @@ class FormInteractive extends Component {
   }
 
   handleFormAccess = () => {
-    const { id, fetchFormIfNeeded, formAccessCode } = this.props;
+    const { id, fetchFormIfNeeded, formAccessCode, sessionId } = this.props;
     var isAccessCodeValid = validateField({type:'minimum',value:1000}, formAccessCode) && 
     validateField({type:'maximum',value:9999}, formAccessCode);
     if (isAccessCodeValid) {
@@ -280,6 +277,9 @@ class FormInteractive extends Component {
         accessCodeInputStatus: 'validated'
       });
       fetchFormIfNeeded(id);
+      if (sessionId) {
+        fetchAnswers(sessionId);
+      }
     } else {
       this.setState({ accessCodeInputStatus: 'unvalidated' });
     }
