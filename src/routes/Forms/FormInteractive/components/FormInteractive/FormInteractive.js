@@ -10,7 +10,7 @@ import { Modal } from 'react-bootstrap'; // Temp
 import FormSection from '../FormSection/FormSection';
 import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
 import FormRow from '../FormRow/FormRow';
-import { groupFormQuestions, SlideAnimation }
+import { groupFormQuestions, SlideAnimation, getSessionURL }
   from 'helpers/formInteractiveHelper.js';
 import { FORM_AUTOSAVE, FORM_USER_SUBMISSION, FORM_ACCESS, UPDATE_ACCESS_CODE } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
@@ -114,11 +114,6 @@ class FormInteractive extends Component {
     fetchFormIfNeeded: PropTypes.func.isRequired,
 
     /*
-     * fetchForm: Redux action to fetch form from backend with ID and AccessCode
-     */
-    fetchForm: PropTypes.func.isRequired,
-
-    /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
     storeAnswer: PropTypes.func.isRequired,
@@ -138,6 +133,16 @@ class FormInteractive extends Component {
      */
     fetchAnswers: PropTypes.func.isRequired,
 
+    /*
+     * resetFormSubmitStatus: Redux action to reset lastFormSubmitStatus.
+     */
+    resetFormSubmitStatus: PropTypes.func.isRequired,
+    
+    /*
+     * resetFormSubmitStatus: Redux action to reset lastFormSubmitStatus.
+     */
+    lastFormSubmitStatus: PropTypes.object.isRequired,
+    
     /*
      * shouldShowFinalSubmit: Redux statue to check if it's final stage.
      */
@@ -169,26 +174,16 @@ class FormInteractive extends Component {
   }
 
   componentWillReceiveProps(props) {
-
+    const { resetFormSubmitStatus } = this.props;
     // set show/hide temp modal
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
       && props.lastFormSubmitStatus.result) {
-      if (!props.shouldShowFinalSubmit){
+      if (props.shouldShowFinalSubmit) {
+        this.context.router.push(`/forms/${this.props.id}/${this.props.sessionId}/completion`);
+      } else {
         this.setState({ showTempModal: true });
       }
-    } 
-    
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.redirectStatus === 'off') {
-      if (this.props.shouldShowFinalSubmit) {
-        if (this.props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
-        && this.props.lastFormSubmitStatus.result) {
-          this.context.router.push('/forms' + '/' + this.props.id + '/' + this.props.sessionId + '/completion');
-          this.setState({ redirectStatus: 'on' });
-        }
-      } 
+      resetFormSubmitStatus();
     }
   }
 
@@ -308,7 +303,7 @@ class FormInteractive extends Component {
         </Modal.Header>
         <Modal.Body>
           <p>Here's the URL to restore your session.</p>
-          <div className="form-control">{lastFormSubmitStatus.sessionURL}</div>
+          <div className="form-control">{getSessionURL(id, sessionId)}</div>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.handleHideTempModal}>
@@ -333,6 +328,7 @@ class FormInteractive extends Component {
         color: this.context.primaryColor
       };
     }
+    const accessCodeErrorText = "Access Code must be 4 digits.";
 
     return (
       <Modal show={showAccessModal} dialogClassName={styles.modalWrapper}>
@@ -347,10 +343,12 @@ class FormInteractive extends Component {
             <SubmitButton onClick={this.handleFormAccess}/>
           </div>
           {accessCodeInputStatus === 'unvalidated' &&
-            <Validator type="minimum" value={1000} validateFor={formAccessCode} />
+            <Validator type="minimum" value={1000} validateFor={formAccessCode}
+              displayText={accessCodeErrorText} />
           }
           {accessCodeInputStatus === 'unvalidated' &&
-            <Validator type="maximum" value={9999} validateFor={formAccessCode} />
+            <Validator type="maximum" value={9999} validateFor={formAccessCode}
+              displayText={accessCodeErrorText} />
           }
           {showVerificationStatus && formAccessStatus === 'fail' &&
             <Verifier type="AccessCodeService" status={formAccessStatus !== 'fail'}/>

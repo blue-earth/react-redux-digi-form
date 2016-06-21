@@ -1,7 +1,8 @@
-import React, { Component, PropTypes } from 'react'
-import { FaLock } from 'react-icons/lib/fa'
-import { Link } from 'react-router'
-import styles from './LearnMoreSection.scss'
+import React, { Component, PropTypes } from 'react';
+import { FaLock } from 'react-icons/lib/fa';
+import { Link } from 'react-router';
+import styles from './LearnMoreSection.scss';
+import classNames from 'classnames';
 
 class LearnMoreSection extends Component {
   static propTypes = {
@@ -9,11 +10,13 @@ class LearnMoreSection extends Component {
   }
   
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColor: PropTypes.string,
+    isLastSection: PropTypes.bool
   };
 
   static defaultProps = {
-    link: '#'
+    link: '#',
+    isLastSection: false
   }
 
   constructor(props) {
@@ -21,13 +24,16 @@ class LearnMoreSection extends Component {
   }
 
   render() {
-    const { link } = this.props
+    const { link, isLastSection } = this.props
     var linkStyle = {
       color: this.context.primaryColor
     }
-
+    const sectionClass = classNames({
+      [styles.learnMoreSection]: true,
+      [styles.lastSection]: isLastSection
+    });
     return (
-      <section className={styles.learnMoreSection}>
+      <section className={sectionClass}>
         <div>The World's most secure application platform</div>
         <div><FaLock size={24} color="#000" /></div>
         <div><Link to={link} style={linkStyle}>Learn More</Link></div>

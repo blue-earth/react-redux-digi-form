@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes, Collapse } from 'react';
 import validateField from 'helpers/validationHelper';
+import Hogan from 'hogan.js';
 import styles from './Validator.scss';
 
 class Validator extends Component {
@@ -29,83 +30,51 @@ class Validator extends Component {
       PropTypes.string,
       PropTypes.number,
       PropTypes.object
-    ])
+    ]),
+
+    /*
+     * displayText: Custom notification text on error.
+     */
+    displayText: PropTypes.string
   };
 
-  renderIsRequired() {
-    return (
-      <span>This field is required</span>
-    );
-  }
+  static defaultProps = {
+    displayText: ''
+  };
 
-  renderIsEmail() {
-    return (
-      <span>Please enter a valid email.</span>
-    );
-  }
-
-  renderMinLength() {
-    const { value } = this.props
-    return (
-      <span>Minimum of {value} charaters are required.</span>
-    );
-  }
-
-  renderMaxLength() {
-    const { value } = this.props
-    return (
-      <span>Maximum of {value} charaters are required.</span>
-    );
-  }
-
-  renderMinimum() {
-    const { value } = this.props
-    return (
-      // <span>Value must not be less than {value}.</span>
-      <span>Access Code must be 4 digits.</span>
-    );
-  }
-
-  renderMaximum() {
-    const { value } = this.props
-    return (
-      // <span>Value must not be greater than {value}.</span>
-      <span>Access Code must be 4 digits.</span>
-    );
+  static defaultMessages = {
+    'isRequired': 'This field is required.',
+    'isEmail': 'Please enter a valid email.',
+    'minLength': 'Minimum of {{value}} charaters are required.',
+    'maxLength': 'Maximum of {{value}} charaters are required.',
+    'minimum': 'Value must not be less than {{value}}.',
+    'maximum': 'Value must not be greater than {{value}}.'
   }
 
   render() {
-    var { type, value, validateFor } = this.props
-    var result = validateField({type, value}, validateFor)
-    var output = false
+    var { type, value, validateFor, displayText } = this.props;
+    var result = validateField({type, value}, validateFor);
+    var output = false;
+    var template = false;
     var validatorStyle = {
       backgroundColor: this.context.primaryColor
     };
+
     if (result === false) {
-      switch (type) {
-        case 'isRequired':
-          output = this.renderIsRequired();
-          break;
-        case 'minLength':
-          output = this.renderMinLength();
-          break;
-        case 'maxLength':
-          output = this.renderMaxLength();
-          break;
-        case 'isEmail':
-          output = this.renderIsEmail();
-          break;
-        case 'minimum':
-          output = this.renderMinimum();
-          break;
-        case 'maximum':
-          output = this.renderMaximum();
-          break;
+      if (displayText){
+        template = displayText;
+      } else {
+        template = Validator.defaultMessages[type];
+      }
+
+      if (template) {
+        var t = Hogan.compile(template);
+        output = t.render(this.props);
       }
     
       return (
         <div className={styles.errorField} style={validatorStyle}>
-          {output}
+          <span>{output}</span>
         </div>
       )
     } else {

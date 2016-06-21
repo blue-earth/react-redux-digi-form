@@ -210,7 +210,7 @@ class FormSection extends Component {
     return (
       <section className={`${styles.formSection} ${styles[status]}`}>
         
-        <Collapse in={status === 'active'} timeout={5000}>
+        <Collapse in={status === 'active'} timeout={1000}>
           <div>
             {step > 1 && <hr className={styles.hrLine} />}
             <FormRow>
@@ -218,7 +218,7 @@ class FormSection extends Component {
                 { `${step} of ${totalSteps}` }
               </div>
               <div className={styles.formSectionInner}>
-                <h3 className={styles.formSectionTitle} key={"formSectionTitle"}>
+                <h3 className={styles.formSectionTitle}>
                 { this.shouldShowActiveTitle() && questionGroup.title}
                 </h3>
                 {this.renderAllQuestions}
@@ -227,7 +227,7 @@ class FormSection extends Component {
           </div>
         </Collapse>
 
-        <Collapse in={status === 'pending'} timeout={5000}>
+        <Collapse in={status === 'pending'} timeout={1000}>
           <div>
             <FormRow>
               <div className={styles.step}>
@@ -240,7 +240,7 @@ class FormSection extends Component {
           </div>
         </Collapse>
 
-        <Collapse in={status === 'completed'} timeout={5000}>
+        <Collapse in={status === 'completed'} timeout={1000}>
           <div>
             <FormRow>
               <div className={styles.step}>
@@ -262,7 +262,7 @@ class FormSection extends Component {
           <div>
             <hr className={styles.hrLine} />
             <FormRow>
-              <LearnMoreSection />
+              <LearnMoreSection isLastSection={step === totalSteps} />
             </FormRow>
             { step < totalSteps &&
               <FormRow>

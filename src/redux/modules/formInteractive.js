@@ -32,6 +32,8 @@ export const UPDATE_SESSION_ID = 'UPDATE_SESSION_ID';
 
 export const SHOW_FINAL_SUBMIT = 'SHOW_FINAL_SUBMIT';
 
+export const RESET_FORM_SUBMIT_STATUS = 'RESET_FORM_SUBMIT_STATUS';
+
 // ------------------------------------
 // Form submit request action Constants
 // ------------------------------------
@@ -572,14 +574,12 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
   };
 
   // Temporary, should be fixed later with correct domain name.
-  const FRONTEND_ROOT = process.env.NODE_ENV === __PROD__ ? 'http://new.emondo.com.au' : 'http://localhost:3000'
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
       const { form_id, response_id } = value;
       dispatch(updateSessionId(response_id));
       dispatch(doneSubmitAnswer({
         result: true,
-        sessionURL: `${FRONTEND_ROOT}/forms/${form_id}/${response_id}`,
         requestAction
       })); // Hide submitting spinner
     }
@@ -612,8 +612,17 @@ export const doneSubmitAnswer = (status) => {
 // ------------------------------------
 export const updateSessionId = (sessionId) => {
   return {
-    type: 'UPDATE_SESSION_ID',
+    type: UPDATE_SESSION_ID,
     sessionId
+  }
+}
+
+// ------------------------------------
+// Action: resetFormSubmitStatus
+// ------------------------------------
+export const resetFormSubmitStatus = (sessionId) => {
+  return {
+    type: RESET_FORM_SUBMIT_STATUS
   }
 }
 
@@ -704,6 +713,10 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
     case UPDATE_ACCESS_CODE:
       return Object.assign({}, state, {
         formAccessCode: action.accessCode
+      });
+    case RESET_FORM_SUBMIT_STATUS:
+      return Object.assign({}, state, {
+        lastFormSubmitStatus: {}
       });
     default:
       return state;

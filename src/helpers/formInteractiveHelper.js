@@ -58,6 +58,10 @@ export const getFirstQuestionOfGroup = (questionGroup) => {
   }
 }
 
+export const getSessionURL = (formId, sessionId) => {
+  return FRONTEND_ROOT + `/forms/${formId}/${sessionId}`;
+}
+
 export function SlideAnimation(duration) {
   this.duration = typeof duration !== 'undefined' ? duration : 500;
   this.enter = (node, done) => {
