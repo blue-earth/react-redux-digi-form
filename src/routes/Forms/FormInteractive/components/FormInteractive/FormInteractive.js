@@ -26,7 +26,6 @@ class FormInteractive extends Component {
       showAccessModal: true,
       accessCodeInputStatus: 'changing',
       formAccessCode: '',
-      accessCodeSubmitStatus: 'pending'
     };
   };
 
@@ -144,9 +143,9 @@ class FormInteractive extends Component {
     shouldShowFinalSubmit: PropTypes.bool.isRequired,
 
     /*
-     * formAccess: Redux statue to check if it's accessible to form UI.
+     * formAccessStatus: Redux statue to check if it's accessible to form UI.
      */
-    formAccess: PropTypes.string.isRequired,
+    formAccessStatus: PropTypes.string.isRequired,
 
     /*
      * formAccessCode: Redux Code to access form UI.
@@ -262,27 +261,19 @@ class FormInteractive extends Component {
   }
 
   handleAccessCodeInput = (value) => {
-    this.setState({ 
-      formAccessCode: value,
-      accessCodeInputStatus: 'changing',
-      accessCodeSubmitStatus: 'pending' 
-    });
+    const { updateAccessCode } = this.props;
+    updateAccessCode(value);
   }
 
   handleFormAccess = () => {
-    const { formAccessCode } = this.state;
-    const { id, fetchForm } = this.props;
+    const { id, fetchFormIfNeeded, formAccessCode } = this.props;
     var isAccessCodeValid = validateField({type:'minimum',value:1000}, formAccessCode) && 
     validateField({type:'maximum',value:9999}, formAccessCode);
     if (isAccessCodeValid) {
       this.setState({ 
-        accessCodeInputStatus: 'validated',
-        accessCodeSubmitStatus: 'sent' 
+        accessCodeInputStatus: 'validated'
       });
-      fetchForm(id,formAccessCode);
-      this.setState({ 
-        accessCodeSubmitStatus: 'received'
-      });
+      fetchFormIfNeeded(id);
     } else {
       this.setState({ accessCodeInputStatus: 'unvalidated' });
     }
@@ -318,10 +309,10 @@ class FormInteractive extends Component {
   }
 
   // Access Modal for Access form UI.
-  renderAccessResponseModal(formAccess) {
+  renderAccessResponseModal(formAccessStatus) {
     
-    const { showAccessModal, accessCodeInputStatus, formAccessCode, accessCodeSubmitStatus } = this.state;
-    const { fetchForm } = this.props;
+    const { showAccessModal, accessCodeInputStatus, accessCodeSubmitStatus } = this.state;
+    const { fetchForm, formAccessCode } = this.props;
     const showVerificationStatus = accessCodeInputStatus === 'validated' && 
       showAccessModal == true;
 
@@ -350,9 +341,8 @@ class FormInteractive extends Component {
           {accessCodeInputStatus === 'unvalidated' &&
             <Validator type="maximum" value={9999} validateFor={formAccessCode} />
           }
-          { console.log(formAccess)}
-          {showVerificationStatus && accessCodeSubmitStatus == 'received' &&
-            <Verifier type="AccessCodeService" status={formAccess === 'fail'}/>
+          {showVerificationStatus && formAccessStatus === 'fail' &&
+            <Verifier type="AccessCodeService" status={formAccessStatus !== 'fail'}/>
           }
           <a href="javascript:;" className={styles.resendLink}
             {...optionals}>
@@ -364,7 +354,7 @@ class FormInteractive extends Component {
   }
 
   render() {
-    const { submitAnswer, params: { status }, formAccess, form } = this.props;
+    const { submitAnswer, params: { status }, formAccessStatus, form } = this.props;
     return (
       <div>
         <FormHeader submitAnswer={submitAnswer} />
@@ -372,7 +362,7 @@ class FormInteractive extends Component {
         { status !== 'completion' && form && this.renderFormSteps }
         { status !== 'completion' && this.renderTempResponseModal() }
         { status === 'completion' && this.renderFormCompletionSection }
-        { formAccess != 'success' && this.renderAccessResponseModal(formAccess) }
+        { formAccessStatus != 'success' && this.renderAccessResponseModal(formAccessStatus) }
       </div>
     )
   }

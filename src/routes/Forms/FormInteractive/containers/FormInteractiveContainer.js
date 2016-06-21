@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { show } from 'redux-modal'
 import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion, handleEnter,
-  storeAnswer, submitAnswer, fetchAnswers, fetchForm, fetchFormIfNeeded, updateAccessCode, handleFormAccess } 
+  storeAnswer, submitAnswer, fetchAnswers, fetchForm, fetchFormIfNeeded, updateAccessCode } 
   from 'redux/modules/formInteractive';
 
 import FormInteractive from '../components/FormInteractive/FormInteractive';
@@ -16,7 +16,6 @@ const mapActionCreators = {
   fetchAnswers,
   submitAnswer,
   goToQuestion,
-  handleFormAccess,
   handleEnter,
   updateAccessCode,
   show
@@ -41,7 +40,7 @@ const mapStateToProps = (state) => {
     primaryColor,
     lastFormSubmitStatus,
     shouldShowFinalSubmit,
-    formAccess,
+    formAccessStatus,
     formAccessCode
   } = formInteractive || INIT_FORM_STATE;
   return {
@@ -57,7 +56,7 @@ const mapStateToProps = (state) => {
     verificationStatus,
     lastFormSubmitStatus,
     shouldShowFinalSubmit,
-    formAccess,
+    formAccessStatus,
     formAccessCode
   };
 };

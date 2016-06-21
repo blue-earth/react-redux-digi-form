@@ -37,7 +37,6 @@ export const SHOW_FINAL_SUBMIT = 'SHOW_FINAL_SUBMIT';
 // ------------------------------------
 export const FORM_USER_SUBMISSION = 'FORM_USER_SUBMISSION';
 export const FORM_AUTOSAVE = 'FORM_AUTOSAVE';
-export const FORM_ACCESS = 'FORM_ACCESS';
 export const UPDATE_ACCESS_CODE = 'UPDATE_ACCESS_CODE';
 
 export const INIT_FORM_STATE = {
@@ -61,8 +60,8 @@ export const INIT_FORM_STATE = {
   prefills: [],
   verificationStatus:[],
   primaryColor: '#DD4814',
-  shouldShowFinalSubmit: false,
-  formAccess: 'init',
+  shouldShowFinalSubmit: false, // indicates whether to show final form submit section.
+  formAccessStatus: 'init', // can be 'init', 'waiting', 'failed', 'success'
   isAccessCodeProtected: false,
   formAccessCode: ''
 };
@@ -81,7 +80,7 @@ export const fetchForm = (id, accessCode) => {
   const fetchParams = {
     headers: {
       Accept: 'application/json',
-      // 'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     },
     redirect: 'follow',
     method: 'GET'
@@ -91,7 +90,6 @@ export const fetchForm = (id, accessCode) => {
     return (dispatch, getState) => {
       dispatch(receiveForm(id, value));
       dispatch(doneFetchingForm()); // Hide loading spinner
-      dispatch(handleFormAccess()); //display form access modal 
     }
   };
   
@@ -140,7 +138,8 @@ export const doneFetchingForm = () => {
 
 const shouldFetchForm = (state, id) => {
   const formInteractive = state.formInteractive;
-  if (id !== formInteractive.id && !formInteractive.isFetchingForm) {
+  if ((id !== formInteractive.id || !formInteractive.form)
+    && !formInteractive.isFetchingForm) {
     return true;
   } else {
     return false;
@@ -153,8 +152,9 @@ const shouldFetchForm = (state, id) => {
 export const fetchFormIfNeeded = (id) => {
   return (dispatch, getState) => {
     if (shouldFetchForm(getState(), id)) {
+      const formInteractive = getState().formInteractive;
       dispatch(requestForm());
-      dispatch(fetchForm(id,''));
+      dispatch(fetchForm(id, formInteractive.formAccessCode));
     } else {
       dispatch(fetchSession());
     }
@@ -204,7 +204,7 @@ export const processFetchAnswers = (sessionId) => {
   const fetchParams = {
     headers: {
       Accept: 'application/json',
-      // 'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
     },
     redirect: 'follow',
     method: 'GET'
@@ -294,15 +294,6 @@ export const updateAccessCode = (accessCode) => {
   return {
     type: UPDATE_ACCESS_CODE,
     accessCode
-  };
-}
-
-// ------------------------------------
-// Action: handleFormAccess
-// ------------------------------------
-export const handleFormAccess = () => {
-  return {
-    type: FORM_ACCESS
   };
 }
 
@@ -407,7 +398,7 @@ export const processVerifyEmail = (questionId, email) => {
   const fetchParams = {
     method: 'POST',
     headers: {
-      // Accept: 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -532,10 +523,6 @@ export const handleEnter = () => {
 export const submitAnswer = (requestAction) => {
   return (dispatch, getState) => {
       const formInteractive = getState().formInteractive;
-      if (requestAction === FORM_ACCESS) {
-        dispatch(handleFormAccess());
-      }
-
       if (requestAction === FORM_USER_SUBMISSION) {
         dispatch(requestSubmitAnswer());
         dispatch(processSubmitAnswer(requestAction, formInteractive));
@@ -578,7 +565,7 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
   const fetchParams = {
     method,
     headers: {
-      // Accept: 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(answerRequest)
@@ -644,12 +631,14 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
         lastUpdated: action.receivedAt,
         currentQuestionId: action.currentQuestionId,
         isAccessCodeProtected: action.isAccessCodeProtected,
-        sessionId: action.sessionId
+        sessionId: action.sessionId,
+        formAccessStatus: !action.form ? (state.formAccessStatus === 'init' ? 'required' : 'fail') : 'success'
         // primaryColor: action.primaryColor
       });
     case REQUEST_FORM:
       return Object.assign({}, state, {
         isFetchingForm: true,
+        formAccessStatus: 'waiting',
       });
     case DONE_FETCHING_FORM:
       return Object.assign({}, state, {
@@ -711,10 +700,6 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
     case SHOW_FINAL_SUBMIT:
       return Object.assign({}, state, {
         shouldShowFinalSubmit: true
-      });
-    case FORM_ACCESS:
-      return Object.assign({}, state, {
-        formAccess: !state.form ? 'fail' : 'success'
       });
     case UPDATE_ACCESS_CODE:
       return Object.assign({}, state, {
