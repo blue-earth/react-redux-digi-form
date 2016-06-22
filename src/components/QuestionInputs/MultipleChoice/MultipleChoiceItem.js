@@ -24,6 +24,10 @@ class MultipleChoiceItem extends Component {
     active: false
   };
 
+  componentDidMount() {
+    const { text, label } = this.props;
+  }
+
   handleClick = () => {
     const { onClick, label, text } = this.props;
     onClick({ label, text });
@@ -58,7 +62,7 @@ class MultipleChoiceItem extends Component {
     }
 
     return (
-      <div className={choiceItemClasses} tabIndex={0} {...optionals}>
+      <div ref="divForMultipleChoiceItem" className={choiceItemClasses} tabIndex={0} {...optionals}>
         <label className={styles.label}>{label}</label>
         <span className={styles.text}>{text}</span>
       </div>
