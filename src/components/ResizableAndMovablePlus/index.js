@@ -23,6 +23,11 @@ class ResizableAndMovablePlus extends Component {
     onResizeStop(direction, styleSize, clientSize, delta, metaData);
   }
 
+  handleDragStart = (event, ui) => {
+    const { onDragStart, metaData } = this.props;
+    onDragStart(event, ui, metaData)
+  }
+
   handleDragStop = (event, ui) => {
     const { onDragStop, metaData } = this.props;
     onDragStop(event, ui, metaData)
@@ -38,9 +43,10 @@ class ResizableAndMovablePlus extends Component {
       <ResizableAndMovable
         {...this.props}
         onResizeStop={this.handleResizeStop}
+        onDragStart={this.handleDragStart}
         onDragStop={this.handleDragStop}
         onClick={this.handleClick}
-        canUpdateSizeByParent={false}
+        canUpdateSizeByParent
       >
         {this.props.children}
       </ResizableAndMovable>

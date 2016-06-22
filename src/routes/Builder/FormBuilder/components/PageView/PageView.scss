@@ -4,17 +4,40 @@
 $page-border-color: #797979;
 $element-border-color: #FF6600;
 .pageView {
+  padding-right: 50px;
+  height: 100%;
+  position: relative;
+}
+
+.clientArea {
   position: relative;
   overflow: auto;
   height: 100%;
+  padding: 5px;
   &:before {
     content: '';
     display: table;
   }
 }
+.spacer {
+  &:before {
+    display: table;
+    content: '';
+  }
+}
+.pagesWrapper {
+  margin: 0 auto;
+  position: relative;
+}
 .page {
-  margin: 5px;
+  margin: 5px 0;
   border: 1px solid $page-border-color;
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 .pageImage {
   width: 100%;
@@ -23,10 +46,10 @@ $element-border-color: #FF6600;
 }
 .board {
   position: absolute;
-  top: 5px;
-  bottom: 5px;
-  left: 5px;
-  right: 5px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 .element {
   border: 1px solid $element-border-color;
@@ -46,4 +69,16 @@ $element-border-color: #FF6600;
   border: 1px dashed $element-border-color;
   position: absolute;
   background-color: rgba(255, 255, 255, .7);
+}
+
+.toolBox {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50px;
+  height: 100%;
+  padding: 0 5px;
+}
+.toolButton {
+  margin-bottom: 5px;
 }

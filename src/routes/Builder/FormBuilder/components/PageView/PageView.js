@@ -3,7 +3,10 @@ import BuilderHeader from 'components/Headers/BuilderHeader';
 import styles from './PageView.scss';
 import { findIndexById } from 'helpers/pureFunctions';
 import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
+import { Button } from 'react-bootstrap';
+import { MdZoomIn, MdZoomOut, MdSettingsOverscan, MdZoomOutMap } from 'react-icons/lib/md';
 import classNames from 'classnames';
+import _ from 'lodash';
 
 class PageView extends Component {
 
@@ -36,19 +39,33 @@ class PageView extends Component {
     /*
      * updateMappingInfo: Action to update the document mapping info.
      */
-    updateMappingInfo: PropTypes.func.isRequired
+    updateMappingInfo: PropTypes.func.isRequired,
+
+    /*
+     * pageZoom: Redux state to keep the page zoom ratio.
+     */
+    pageZoom: PropTypes.number.isRequired,
+
+    /*
+     * setPageZoom: Redux action to set page zoom ratio.
+     */
+    setPageZoom: PropTypes.func.isRequired,
+
+    /*
+     * pageWidth: Redux state to keep the page zoom ratio.
+     */
+    pageWidth: PropTypes.number.isRequired
   };
 
   componentWillMount() {
 
   }
 
-  componentWillReceiveProps(props) {
-
-  }
-
   componentDidMount() {
-
+    // if (this.refs.pageImage1) {
+    //   var pageImage1 = this.refs.pageImage1;
+    //   console.log(pageImage1.naturalWidth);
+    // }
   }
 
   getMousePos(event) {
@@ -108,7 +125,7 @@ class PageView extends Component {
       endX,
       endY 
     });
-    const { addElement, activeInputName } = this.props;
+    const { addElement, activeInputName, pageZoom } = this.props;
 
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
@@ -121,37 +138,39 @@ class PageView extends Component {
       mappingInfo: {
         type: 'Standard',
         bounding_box: [{
-          left: Math.min(startX, endX),
-          top: Math.min(startY, endY),
-          width: Math.abs(endX - startX),
-          height: Math.abs(endY - startY)
+          left: Math.min(startX, endX) / pageZoom,
+          top: Math.min(startY, endY) / pageZoom,
+          width: Math.abs(endX - startX) / pageZoom,
+          height: Math.abs(endY - startY) / pageZoom
         }]
       }
     });
   }
 
-  handleDragStart = (event, ui) => {
+  handleDragStart = (event, ui, metaData) => {
     event.stopPropagation();
+    const { setCurrentQuestionId } = this.props;
+    setCurrentQuestionId(metaData.id);
   }
 
   handleResizeStop = (direction, styleSize, clientSize, delta, metaData) => {
-    const { updateMappingInfo, documentMapping } = this.props;
+    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
     const { id, subId } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
     var newLeft = boundingBox.left;
     var newTop = boundingBox.top;
     if (direction === 'left' || direction === 'topLeft' || direction === 'bottomLeft') {
-      newLeft -= delta.width;
+      newLeft -= delta.width / pageZoom;
     }
     if (direction === 'top' || direction === 'topLeft' || direction === 'topRight') {
-      newTop -= delta.height;
+      newTop -= delta.height / pageZoom;
     }
     const newBoundingBox = {
       left: newLeft,
       top: newTop,
-      width: styleSize.width,
-      height: styleSize.height
+      width: styleSize.width / pageZoom,
+      height: styleSize.height / pageZoom
     };
     if (!_.isEqual(boundingBox, newBoundingBox)) {
       updateMappingInfo({
@@ -162,13 +181,13 @@ class PageView extends Component {
   }
 
   handleDragStop = (event, ui, metaData) => {
-    const { updateMappingInfo, documentMapping } = this.props;
+    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
     const { id, subId } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
     const newBoundingBox = {
-      left: ui.position.left,
-      top: ui.position.top,
+      left: ui.position.left / pageZoom,
+      top: ui.position.top / pageZoom,
       width: boundingBox.width,
       height: boundingBox.height
     };
@@ -181,29 +200,74 @@ class PageView extends Component {
   }
 
   handleElementClick = (metaData) => {
-    const { setCurrentQuestionId } = this.props;
-    setCurrentQuestionId(metaData.id);
+    // const { setCurrentQuestionId } = this.props;
+    // setCurrentQuestionId(metaData.id);
+  }
+
+  handleClickZoomIn = () => {
+    const { pageZoom, setPageZoom } = this.props;
+    setPageZoom(Math.min(pageZoom + 0.25, 4));
+  }
+
+  handleClickZoomOut = () => {
+    const { pageZoom, setPageZoom } = this.props;
+    setPageZoom(Math.max(pageZoom - 0.25, 0.25));
+  }
+  
+  handleClickFitWidth = () => {
+    const { setPageZoom, pageWidth } = this.props;
+    const newPageZoom = this.refs.spacer.offsetWidth / pageWidth;
+    setPageZoom(newPageZoom);
+  }
+
+  handleClickOriginalSize = () => {
+    const { setPageZoom } = this.props;
+    setPageZoom(1);
   }
 
   renderDocuments() {
-    const { questions, documents } = this.props;
+    const { questions, documents, pageZoom, pageWidth } = this.props;
     return documents.map((document, index) => {
       return (
         <div className={styles.page} key={index}>
-          <img className={styles.pageImage} src={document} alt="" />
+          <img src={document} alt={`Page Image ${index + 1}`} 
+            className={styles.pageImage} ref={`pageImage${index + 1}`} />
         </div>
       );
-    });
+    })
+  }
+
+  renderToolBox() {
+    return (
+      <div className={styles.toolBox}>
+        <div className={styles.toolButton}>
+          <Button><MdZoomIn size={24} onClick={this.handleClickZoomIn} /></Button>
+        </div>
+        <div className={styles.toolButton}>
+          <Button><MdZoomOut size={24} onClick={this.handleClickZoomOut} /></Button>
+        </div>
+        <div className={styles.toolButton}>
+          <Button><MdSettingsOverscan size={24} onClick={this.handleClickFitWidth} /></Button>
+        </div>
+        <div className={styles.toolButton}>
+          <Button><MdZoomOutMap size={24} onClick={this.handleClickOriginalSize}/></Button>
+        </div>
+      </div>
+    )
   }
 
   render() {
-    const { activeInputName, documentMapping, questions, currentQuestionId } = this.props;
+    const { activeInputName, documentMapping, questions, currentQuestionId,
+      pageZoom, pageWidth } = this.props;
     const { isDrawing, startX, startY, endX, endY } = this.state;
     var boardOptionals = {};
+    const zoomedWidth = pageWidth * pageZoom;
+    const pageStyle = {width: zoomedWidth};
+    boardOptionals['style'] = pageStyle;
     if (activeInputName) {
-      boardOptionals['style'] = {
+      boardOptionals['style'] = _.merge(boardOptionals['style'], {
         cursor: 'crosshair'
-      }
+      });
     }
     var documentMappingComponents = () => {
       return documentMapping.map((mappingInfo) => {
@@ -219,11 +283,11 @@ class PageView extends Component {
         return (
           <ResizableAndMovablePlus
             className={elementClass}
-            x={boundingBox.left}
-            y={boundingBox.top}
+            x={boundingBox.left * pageZoom}
+            y={boundingBox.top * pageZoom}
             zIndex={zIndex}
-            width={boundingBox.width}
-            height={boundingBox.height}
+            width={boundingBox.width * pageZoom}
+            height={boundingBox.height * pageZoom}
             onDragStart={this.handleDragStart}
             onDragStop={this.handleDragStop}
             onResizeStop={this.handleResizeStop}
@@ -243,26 +307,32 @@ class PageView extends Component {
     }
     return (
       <div className={styles.pageView}>
-        {this.renderDocuments()}
-        <div className={styles.board}
-          onMouseDown={this.handleBoardMouseDown}
-          onMouseMove={this.handleBoardMouseMove}
-          onMouseUp={this.handleBoardMouseUp}
-          ref="board"
-          {...boardOptionals}>
+        <div className={styles.clientArea}>
+          <div className={styles.spacer} ref="spacer"></div>
+          <div className={styles.pagesWrapper} ref="pagesWrapper" style={pageStyle}>
+            {this.renderDocuments()}
+            <div className={styles.board}
+              onMouseDown={this.handleBoardMouseDown}
+              onMouseMove={this.handleBoardMouseMove}
+              onMouseUp={this.handleBoardMouseUp}
+              ref="board"
+              {...boardOptionals}>
 
-          {documentMappingComponents()}
+              {documentMappingComponents()}
 
-          {isDrawing &&
-            <div className={styles.newElementDraw}
-            style={{
-              left: Math.min(startX, endX),
-              top: Math.min(startY, endY),
-              width: Math.abs(endX - startX),
-              height: Math.abs(endY - startY)
-            }}></div>
-          }
+              {isDrawing &&
+                <div className={styles.newElementDraw}
+                style={{
+                  left: Math.min(startX, endX),
+                  top: Math.min(startY, endY),
+                  width: Math.abs(endX - startX),
+                  height: Math.abs(endY - startY)
+                }}></div>
+              }
+            </div>
+          </div>
         </div>
+        {this.renderToolBox()}
       </div>
     )
   }
