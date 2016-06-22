@@ -54,13 +54,37 @@ class MultipleChoice extends Component {
 
   
   componentDidMount() {
-    const { autoFocus } = this.props;
+    const { autoFocus, choices } = this.props;
     const { choiceContainer } = this.refs;
     if ( autoFocus ) {
       setTimeout(function() {
         choiceContainer.focus()
       }, 50);
     }
+    // window.addEventListener('resize', this.alignmentResizeHandle);
+    this.alignmentHandle();
+  }
+
+  // alignmentResizeHandle = () => {
+  //   var width = 0;
+  //   console.log(this.refs.choiceContainer.offsetWidth);
+    
+  // }
+
+  alignmentHandle = () => {
+    var width = 0;
+    console.log(this.refs.choiceContainer.offsetWidth);
+    for (var index in this.allChoices)
+      if (width < this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.offsetWidth)
+        width = this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.offsetWidth;
+    if (width > this.refs.choiceContainer.offsetWidth * 46 / 100)
+      width = '97%';
+    else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100)
+      width = '46%';
+    else 
+      width = `${width+1}px`;
+    for (var index in this.allChoices) 
+      this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.style.width = width;
   }
 
   handleClick = (val) => {
@@ -127,7 +151,7 @@ class MultipleChoice extends Component {
     const that = this;
     const isMultiSelectable = that.isMultiSelectable(value);
     var optionals = {};
-    var ChoiceItemTemplate = (item) => {
+    var ChoiceItemTemplate = (item, index) => {
       const active = that.isActiveItem(item);
       const disabled = isDisabled || isReadOnly || !active && (allowMultiple && !isMultiSelectable)
       return <MultipleChoiceItem
@@ -137,11 +161,11 @@ class MultipleChoice extends Component {
         active={active}
         disabled={disabled}
         onClick={that.handleClick}
+        ref={`ChoiceItem${index}`}
       />
     }
-    console.log(this.allChoices)
-    var choicesList = this.allChoices.map((item) => {
-      return ChoiceItemTemplate(item);
+    var choicesList = this.allChoices.map((item, index) => {
+      return ChoiceItemTemplate(item, index);
     });
 
     return (
