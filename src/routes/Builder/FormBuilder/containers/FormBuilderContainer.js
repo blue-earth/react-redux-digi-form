@@ -1,16 +1,26 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { INIT_BUILDER_STATE, setActiveInputName, addElement, updateMappingInfo,
-  setCurrentQuestionId }
-  from 'redux/modules/formBuilder';
+import {
+  INIT_BUILDER_STATE,
+  fetchForm,
+  setActiveInputName,
+  addElement,
+  updateMappingInfo,
+  setCurrentQuestionId,
+  setPageZoom,
+  refreshPageWidth // Will be called in formBuilder.js if pdf uploading is implemented.
+} from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
 
 const mapActionCreators = {
+  fetchForm,
   setActiveInputName,
   addElement,
   updateMappingInfo,
-  setCurrentQuestionId
+  setCurrentQuestionId,
+  setPageZoom,
+  refreshPageWidth
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -28,7 +38,9 @@ const mapStateToProps = (state) => {
     documents,
     documentMapping,
     activeInputName,
-    currentQuestionId
+    currentQuestionId,
+    pageZoom,
+    pageWidth
   } = formBuilder || INIT_FORM_STATE;
   return {
     id: parseInt(id),
@@ -39,7 +51,9 @@ const mapStateToProps = (state) => {
     documents,
     documentMapping,
     activeInputName,
-    currentQuestionId
+    currentQuestionId,
+    pageZoom,
+    pageWidth
   };
 };
 

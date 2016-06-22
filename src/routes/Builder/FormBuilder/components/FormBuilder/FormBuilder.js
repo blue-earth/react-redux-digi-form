@@ -61,11 +61,27 @@ class FormBuilder extends Component {
     /*
      * updateMappingInfo: Action to update the document mapping info.
      */
-    updateMappingInfo: PropTypes.func.isRequired
+    updateMappingInfo: PropTypes.func.isRequired,
+
+    /*
+     * pageZoom: Redux state to keep the page zoom ratio.
+     */
+    pageZoom: PropTypes.number.isRequired,
+
+    /*
+     * setPageZoom: Redux action to set page zoom ratio.
+     */
+    setPageZoom: PropTypes.func.isRequired,
+
+    /*
+     * pageWidth: Redux state to keep the page zoom ratio.
+     */
+    pageWidth: PropTypes.number.isRequired
   };
 
   componentWillMount() {
-
+    const { fetchForm, params: { id } } = this.props;
+    if (id) fetchForm(id);
   }
 
   componentWillReceiveProps(props) {
@@ -73,7 +89,9 @@ class FormBuilder extends Component {
   }
 
   componentDidMount() {
-
+    // Temporary refresh, should be called after getting response from uploading pdf.
+    const { refreshPageWidth, pageWidth } = this.props;
+    if (!pageWidth) refreshPageWidth();
   }
   
   resetActiveInputName = () => {
