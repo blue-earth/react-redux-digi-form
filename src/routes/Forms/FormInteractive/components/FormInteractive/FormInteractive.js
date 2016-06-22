@@ -266,12 +266,15 @@ class FormInteractive extends Component {
   handleAccessCodeInput = (value) => {
     const { updateAccessCode } = this.props;
     updateAccessCode(value);
+    this.setState({ 
+      accessCodeInputStatus: 'changing'
+    });
   }
 
   handleFormAccess = () => {
     const { id, fetchFormIfNeeded, formAccessCode, sessionId, fetchAnswers } = this.props;
-    var isAccessCodeValid = validateField({type:'minimum',value:1000}, formAccessCode) && 
-    validateField({type:'maximum',value:9999}, formAccessCode);
+    var isAccessCodeValid = validateField({type:'minLength',value:4}, formAccessCode) && 
+    validateField({type:'maxLength',value:4}, formAccessCode);
     if (isAccessCodeValid) {
       this.setState({ 
         accessCodeInputStatus: 'validated'
@@ -281,7 +284,11 @@ class FormInteractive extends Component {
         fetchAnswers(sessionId);
       }
     } else {
-      this.setState({ accessCodeInputStatus: 'unvalidated' });
+      if (!validateField({type:'minLength',value:4}, formAccessCode)) {
+        this.setState({ accessCodeInputStatus: 'minLengthUnvalidated' });
+      } else {
+        this.setState({ accessCodeInputStatus: 'maxLengthUnvalidated' });
+      }
     }
   }
 
@@ -329,7 +336,6 @@ class FormInteractive extends Component {
       };
     }
     const accessCodeErrorText = "Access Code must be 4 digits.";
-
     return (
       <Modal show={showAccessModal} dialogClassName={styles.modalWrapper}>
         <div className={styles.accessModalWrapper}>
@@ -337,22 +343,24 @@ class FormInteractive extends Component {
           <div className={styles.modalDigitInput}>
             <ShortTextInput type="NumberField" value={formAccessCode} 
               onChange={this.handleAccessCodeInput}
-              minimum={1000} maximum={9999} autoFocus onEnterKey={this.handleFormAccess}/>
+              autoFocus onEnterKey={this.handleFormAccess}/>
           </div>
           <div className={styles.modalSubmitButton}>
             <SubmitButton onClick={this.handleFormAccess}/>
           </div>
-          {accessCodeInputStatus === 'unvalidated' &&
-            <Validator type="minimum" value={1000} validateFor={formAccessCode}
-              displayText={accessCodeErrorText} />
-          }
-          {accessCodeInputStatus === 'unvalidated' &&
-            <Validator type="maximum" value={9999} validateFor={formAccessCode}
-              displayText={accessCodeErrorText} />
-          }
-          {showVerificationStatus && formAccessStatus === 'fail' &&
-            <Verifier type="AccessCodeService" status={formAccessStatus !== 'fail'}/>
-          }
+          <div className={styles.modalValidator}>
+            {accessCodeInputStatus === 'minLengthUnvalidated' &&
+              <Validator type="minLength" value={4} validateFor={formAccessCode}
+                displayText={accessCodeErrorText} />
+            }
+            {accessCodeInputStatus === 'maxLengthUnvalidated' &&
+              <Validator type="maxLength" value={4} validateFor={formAccessCode}
+                displayText={accessCodeErrorText} />
+            }
+            {showVerificationStatus && formAccessStatus === 'fail' &&
+              <Verifier type="AccessCodeService" status={formAccessStatus !== 'fail'}/>
+            }
+          </div>
           <a href="javascript:;" className={styles.resendLink}
             {...optionals}>
             Resend access code

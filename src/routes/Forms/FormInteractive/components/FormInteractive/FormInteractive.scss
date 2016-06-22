@@ -16,7 +16,7 @@
     margin-left: -($lg-min-width / 2 - $lg-container-width / 6 - 15);
   }
 }
-.submitButtonsArea{
+.submitButtonsArea {
   padding-top:30px;
 }
 .stepsWrapper {
@@ -27,10 +27,10 @@
   float: right;
   margin-top: 10px;
 }
-.modalWrapper{
+.modalWrapper {
   width: 357px;
   top: calc(50% - 106px);
-  .accessModalWrapper{
+  .accessModalWrapper {
     position: relative;
     padding: 20px;
     font-size: 23px;
@@ -39,12 +39,16 @@
       padding: 10px 0 10px 0;
       width: 150px;
     }
-    .modalSubmitButton{
+    .modalSubmitButton {
       position: absolute;
       top: 94px;
       left: 190px;
     }
-    .resendLink{
+    .modalValidator {
+      font-size: 17px;
+      width: 260px;
+    }
+    .resendLink {
       font-size: 16px;
     }
   }
