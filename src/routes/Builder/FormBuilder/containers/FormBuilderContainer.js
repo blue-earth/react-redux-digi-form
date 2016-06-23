@@ -7,8 +7,7 @@ import {
   addElement,
   updateMappingInfo,
   setCurrentQuestionId,
-  setPageZoom,
-  refreshPageWidth // Will be called in formBuilder.js if pdf uploading is implemented.
+  setPageZoom
 } from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
@@ -19,8 +18,7 @@ const mapActionCreators = {
   addElement,
   updateMappingInfo,
   setCurrentQuestionId,
-  setPageZoom,
-  refreshPageWidth
+  setPageZoom
 };
 
 const mapDispatchToProps = (dispatch) => {

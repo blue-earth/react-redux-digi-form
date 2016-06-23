@@ -72,11 +72,6 @@ class FormBuilder extends Component {
      * setPageZoom: Redux action to set page zoom ratio.
      */
     setPageZoom: PropTypes.func.isRequired,
-
-    /*
-     * pageWidth: Redux state to keep the page zoom ratio.
-     */
-    pageWidth: PropTypes.number.isRequired
   };
 
   componentWillMount() {
@@ -89,9 +84,6 @@ class FormBuilder extends Component {
   }
 
   componentDidMount() {
-    // Temporary refresh, should be called after getting response from uploading pdf.
-    const { refreshPageWidth, pageWidth } = this.props;
-    if (!pageWidth) refreshPageWidth();
   }
   
   resetActiveInputName = () => {

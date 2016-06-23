@@ -2,7 +2,6 @@
 @import '../../../../../styles/variables';
 
 $page-border-color: #797979;
-$element-border-color: #FF6600;
 .pageView {
   padding-right: 50px;
   height: 100%;
@@ -32,6 +31,7 @@ $element-border-color: #FF6600;
 .page {
   margin: 5px 0;
   border: 1px solid $page-border-color;
+  position: relative;
   &:first-child {
     margin-top: 0;
   }
@@ -43,32 +43,6 @@ $element-border-color: #FF6600;
   width: 100%;
   height: auto;
   @include user-drag(none);
-}
-.board {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-.element {
-  border: 1px solid $element-border-color;
-  background-color: rgba(255, 255, 255, .85);
-  overflow: hidden;
-  &.active {
-    z-index: 999;
-    background-color: rgba(255, 255, 255, 1);
-  }
-}
-.elementName {
-  font-size: 12px;
-  @include vhcenter;
-  padding: 2px;
-}
-.newElementDraw {
-  border: 1px dashed $element-border-color;
-  position: absolute;
-  background-color: rgba(255, 255, 255, .7);
 }
 
 .toolBox {

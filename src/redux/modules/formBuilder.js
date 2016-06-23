@@ -25,8 +25,16 @@ export const INIT_BUILDER_STATE = {
   questions: [],
   logics: [],
   documents: [
-    'http://localhost:3000/doc_example.jpg', // for temp purpose, should fetch from backend.
-    'http://localhost:3000/doc_example.jpg' // for temp purpose, should fetch from backend.
+    {
+      url: 'http://localhost:3000/doc_example1.jpg', // for temp purpose, should fetch from backend.
+      width: 1020,
+      height: 1441
+    },
+    {
+      url: 'http://localhost:3000/doc_example2.jpg', // for temp purpose, should fetch from backend.
+      width: 620,
+      height: 877
+    }
   ],
   formConfig: {},
   documentMapping: [],
@@ -143,7 +151,8 @@ const _addElement = (state, action) => {
   return {
     questions: mergeItemIntoArray(state.questions, question),
     documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo),
-    lastQuestionId: newQuestionId
+    lastQuestionId: newQuestionId,
+    currentQuestionId: newQuestionId
   };
 }
 
