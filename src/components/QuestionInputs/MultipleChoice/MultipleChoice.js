@@ -9,6 +9,9 @@ class MultipleChoice extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      width: 0
+    };
   }
 
   static propTypes = {
@@ -61,29 +64,56 @@ class MultipleChoice extends Component {
         choiceContainer.focus()
       }, 50);
     }
-    // window.addEventListener('resize', this.alignmentResizeHandle);
-    this.alignmentHandle();
+    window.addEventListener('resize', this.alignmentResizeHandle);
+    setTimeout(this.alignmentHandle);
   }
-
-  // alignmentResizeHandle = () => {
-  //   var width = 0;
-  //   console.log(this.refs.choiceContainer.offsetWidth);
-    
-  // }
+  
+  alignmentResizeHandle = () => {
+    const { width } = this.state;
+    var realWidth = 0;
+    var calcWidth = width;
+    if (Object.keys(this.refs).length != 0) {
+      if (width > this.refs.choiceContainer.offsetWidth * 46 / 100) {
+        realWidth = '97%';
+        calcWidth = this.refs.choiceContainer.offsetWidth * 97 / 100;
+      }
+      else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100) {
+        realWidth = '46%';
+        calcWidth = this.refs.choiceContainer.offsetWidth * 46 / 100;
+      }
+      else {
+        realWidth = `${width}px`;
+      }
+      this.setState({
+        width: calcWidth
+      });
+      for (var index in this.allChoices)
+        this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.style.width = realWidth;
+    }
+  }
 
   alignmentHandle = () => {
     var width = 0;
-    console.log(this.refs.choiceContainer.offsetWidth);
+    var calcWidth = 0;
     for (var index in this.allChoices)
       if (width < this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.offsetWidth)
         width = this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.offsetWidth;
-    if (width > this.refs.choiceContainer.offsetWidth * 46 / 100)
+    if (width > this.refs.choiceContainer.offsetWidth * 46 / 100) {
       width = '97%';
-    else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100)
+      calcWidth = this.refs.choiceContainer.offsetWidth * 97 / 100;
+    }
+    else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100) {
       width = '46%';
-    else 
+      calcWidth = this.refs.choiceContainer.offsetWidth * 46 / 100;
+    }
+    else {
+      calcWidth = width + 1;
       width = `${width+1}px`;
-    for (var index in this.allChoices) 
+    }
+    this.setState({
+      width: calcWidth
+    });
+    for (var index in this.allChoices)
       this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.style.width = width;
   }
 
