@@ -71,22 +71,13 @@ class MultipleChoice extends Component {
   alignmentResizeHandle = () => {
     const { width } = this.state;
     var realWidth = 0;
-    var calcWidth = width;
     if (Object.keys(this.refs).length != 0) {
-      if (width > this.refs.choiceContainer.offsetWidth * 46 / 100) {
+      if (width > this.refs.choiceContainer.offsetWidth * 46 / 100) 
         realWidth = '97%';
-        calcWidth = this.refs.choiceContainer.offsetWidth * 97 / 100;
-      }
-      else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100) {
+      else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100) 
         realWidth = '46%';
-        calcWidth = this.refs.choiceContainer.offsetWidth * 46 / 100;
-      }
-      else {
+      else 
         realWidth = `${width}px`;
-      }
-      this.setState({
-        width: calcWidth
-      });
       for (var index in this.allChoices)
         this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.style.width = realWidth;
     }
