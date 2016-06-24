@@ -158,7 +158,7 @@ export const fetchFormIfNeeded = (id) => {
       dispatch(requestForm());
       dispatch(fetchForm(id, formInteractive.formAccessCode));
     } else {
-      dispatch(fetchSession());
+      // dispatch(fetchAnswers());
     }
   }
 }

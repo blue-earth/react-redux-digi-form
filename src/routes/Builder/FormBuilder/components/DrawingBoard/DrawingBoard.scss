@@ -16,15 +16,21 @@ $element-border-color: #FF6600;
   @include box-shadow-custom(0 0 5px rgba(0, 0, 0, .3));
   background-color: rgba(255, 255, 255, .85);
   overflow: hidden;
+  @include transition(background .05s linear);
+  &:hover, &:focus {
+  	background-color: rgba(255, 255, 255, .95);
+  }
   &.active {
     z-index: 999;
     background-color: rgba(255, 255, 255, 1);
+    @include box-shadow-custom(0 0 5px rgba(0, 0, 0, .5));
   }
 }
 .elementName {
   font-size: 12px;
   @include vhcenter;
   padding: 2px;
+  @include user-select(none);
 }
 .newElementDraw {
   border: 1px dashed $element-border-color;

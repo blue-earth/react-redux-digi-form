@@ -12,11 +12,15 @@ $page-border-color: #797979;
   position: relative;
   overflow: auto;
   height: 100%;
-  padding: 5px;
   &:before {
     content: '';
     display: table;
   }
+}
+.clientAreaInner {
+  padding: 5px;
+  position: relative;
+  display: inline-block;
 }
 .spacer {
   &:before {
@@ -32,6 +36,7 @@ $page-border-color: #797979;
   margin: 5px 0;
   border: 1px solid $page-border-color;
   position: relative;
+  @include box-shadow-custom(1px 1px 3px 0px rgba(0,0,0,0.6));
   &:first-child {
     margin-top: 0;
   }

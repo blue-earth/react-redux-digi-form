@@ -139,9 +139,11 @@ class PageView extends Component {
     return (
       <div className={styles.pageView}>
         <div className={styles.clientArea} data-id="clientArea">
-          <div className={styles.spacer} ref="spacer"></div>
-          <div className={styles.pagesWrapper} ref="pagesWrapper" style={pageStyle}>
-            {this.renderDocuments()}
+          <div className={styles.clientAreaInner}>
+            <div className={styles.spacer} ref="spacer"></div>
+            <div className={styles.pagesWrapper} ref="pagesWrapper" style={pageStyle}>
+              {this.renderDocuments()}
+            </div>
           </div>
         </div>
         {this.renderToolBox()}

@@ -258,8 +258,9 @@ class DrawingBoard extends Component {
             onResizeStop={this.handleResizeStop}
             onClick={this.handleElementClick}
             key={`${mappingInfo.id}-${0}`}
-            minWidth={5}
-            minHeight={5}
+            minWidth={10}
+            minHeight={10}
+            tabIndex={0}
             metaData={{
               id: mappingInfo.id,
               subId: 0
