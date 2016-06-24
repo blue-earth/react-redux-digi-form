@@ -1,5 +1,16 @@
 @font-face {
   font-family: MayQueen;
   font-style: normal;
-  src: url(mayqueen.ttf) format("truetype");
+  src: url(signature-fonts/mayqueen.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: ArtySignature;
+  font-style: normal;
+  src: url(signature-fonts/arty-signature.otf) format("opentype");
+}
+@font-face {
+  font-family: MonsieurLaDoulaise;
+  font-style: normal;
+  src: url(signature-fonts/MonsieurLaDoulaise-Regular.ttf) format("opentype");
 }

@@ -16,10 +16,24 @@
   background-color: #fff;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.08) inset, 0 1px 4px rgba(0, 0, 0, 0.27);
   font-size: 30px;
-  font-family: MayQueen;
 }
 
 :global {
+  .signature-font-preload {
+    visibility: hidden;
+    font-size: 0;
+    line-height: 0;
+  }
+  .preload-MayQueen {
+    font-family: MayQueen;
+  }
+  .preload-ArtySignature {
+    font-family: ArtySignature;
+  }
+  .preload-MonsieurLaDoulaise {
+    font-family: MonsieurLaDoulaise;
+  }
+
   .m-signature-pad {
     position: relative;
     font-size: 10px;

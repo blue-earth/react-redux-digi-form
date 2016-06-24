@@ -18,6 +18,7 @@ class DropdownInput extends Component {
     value: PropTypes.string,
     onChange: PropTypes.func,
     onEnterKey: PropTypes.func,
+    includeBlank: PropTypes.bool
   };
 
   static defaultProps = {
@@ -25,6 +26,7 @@ class DropdownInput extends Component {
     isReadOnly: false,
     choices: [],
     value: '',
+    includeBlank: true,
     onChange: () => {},
     onEnterKey: () => {}
   };
@@ -40,7 +42,7 @@ class DropdownInput extends Component {
   }
 
   render() {
-    const { isDisabled, isReadOnly, value, choices } = this.props;
+    const { isDisabled, isReadOnly, value, choices, includeBlank } = this.props;
     const { primaryColor } = this.context;
     var optionals = {};
     
@@ -57,7 +59,9 @@ class DropdownInput extends Component {
     var choicesList = choices.map((item, index) => {
       return <option value={item} key={index}>{item}</option>;
     });
-    choicesList.unshift(<option value="" key="empty_field"></option>);
+
+    if (includeBlank)
+      choicesList.unshift(<option value="" key="empty_field"></option>);
 
     return (
       <select className={styles.dropdownInput}

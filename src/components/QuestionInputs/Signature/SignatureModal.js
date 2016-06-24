@@ -1,9 +1,16 @@
 import React, { Component, PropTypes } from 'react'
-import { Modal, Button, Tabs, Tab, FormGroup, ControlLabel } from 'react-bootstrap';
+import { Modal, Button, Tabs, Tab, FormGroup, ControlLabel, Row, Col } from 'react-bootstrap';
 import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
+import DropdownInput from 'components/QuestionInputs/DropdownInput/DropdownInput';
 import SignaturePad from 'react-signature-pad';
 import { connectModal } from 'redux-modal';
 import styles from './Signature.scss';
+
+const signatureFonts = [
+  'MayQueen',
+  'ArtySignature',
+  'MonsieurLaDoulaise'
+];
 
 class SignatureModal extends Component {
   static propTypes = {
@@ -15,11 +22,12 @@ class SignatureModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      activeTabKey: 'draw',
       /*
        * typeValue: type value.
        */
       typeValue: '',
-      activeTabKey: 'draw'
+      typeFont: signatureFonts[0],
     };
   };
 
@@ -56,13 +64,23 @@ class SignatureModal extends Component {
   handleTypeChange = (value) => {
     this.setState({
       typeValue: value
-    });
+    }, this.updateCanvas);
+  }
+
+  handleFontChange = (value) => {
+    this.setState({
+      typeFont: value
+    }, this.updateCanvas);
+  }
+
+  updateCanvas = () => {
+    const { typeValue, typeFont } = this.state;
     var canvas = this.refs.typeSignaturePad;
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "100px MayQueen";
+    ctx.font = "100px " + typeFont;
     ctx.textBaseline = 'middle';
-    ctx.fillText(value, 20, canvas.height / 2);
+    ctx.fillText(typeValue, 20, canvas.height / 2);
   }
 
   handleTabSelect = (activeTabKey) => {
@@ -71,7 +89,10 @@ class SignatureModal extends Component {
 
   render() {
     const { handleHide, show } = this.props;
-    const { typeValue, activeTabKey } = this.state;
+    const { typeValue, typeFont, activeTabKey } = this.state;
+    var preloadFonts = signatureFonts.map((fontName, index) => {
+      return <div className={`signature-font-preload preload-${fontName}`} key={index}>font</div>
+    })
     return (
       <Modal show={show} onHide={handleHide}
         aria-labelledby="ModalHeader">
@@ -88,16 +109,32 @@ class SignatureModal extends Component {
             </Tab>
             <Tab eventKey="type" title="Type">
               <div className={styles.typeWrapper}>
-                <FormGroup controlId="formTypeFullname">
-                  <ControlLabel>Full Name</ControlLabel>
-                  <ShortTextInput
-                    type="text"
-                    autoFocus
-                    value={typeValue}
-                    placeholder="Enter full name"
-                    onChange={this.handleTypeChange}
-                  />
-                </FormGroup>
+                {preloadFonts}
+                <Row>
+                  <Col xs={8}>
+                    <FormGroup controlId="formTypeFullname">
+                      <ControlLabel>Signature</ControlLabel>
+                      <ShortTextInput
+                        type="text"
+                        autoFocus
+                        value={typeValue}
+                        placeholder="Enter full name"
+                        onChange={this.handleTypeChange}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col xs={4}>
+                    <FormGroup controlId="formFontName">
+                      <ControlLabel>Style</ControlLabel>
+                      <DropdownInput
+                        value={typeFont}
+                        choices={signatureFonts}
+                        onChange={this.handleFontChange}
+                        includeBlank={false}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
                 <FormGroup controlId="formTypeFullname">
                   <ControlLabel>Preview</ControlLabel>
                   <div className={styles.typeSignatureWrapper}>
