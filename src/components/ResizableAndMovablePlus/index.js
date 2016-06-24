@@ -14,10 +14,19 @@ class ResizableAndMovablePlus extends Component {
   };
 
   static defaultProps = {
+    onResizeStart: () => {},
     onResizeStop: () => {},
-    onDragStop: () => {}
+    onDragStart: () => {},
+    onDragStop: () => {},
+    onClick: () => {},
+    onDoubleClick: () => {}
   };
 
+  handleResizeStart = (direction, styleSize, clientSize, event) => {
+    const { onResizeStart, metaData } = this.props;
+    onResizeStart(direction, styleSize, clientSize, event, metaData);
+  }
+  
   handleResizeStop = (direction, styleSize, clientSize, delta) => {
     const { onResizeStop, metaData } = this.props;
     onResizeStop(direction, styleSize, clientSize, delta, metaData);
@@ -38,14 +47,21 @@ class ResizableAndMovablePlus extends Component {
     onClick(metaData);
   }
 
+  handleDoubleClick = () => {
+    const { onDoubleClick, metaData } = this.props;
+    onDoubleClick(metaData);
+  }
+
   render() {
     return (
       <ResizableAndMovable
         {...this.props}
+        onResizeStart={this.handleResizeStart}
         onResizeStop={this.handleResizeStop}
         onDragStart={this.handleDragStart}
         onDragStop={this.handleDragStop}
         onClick={this.handleClick}
+        onDoubleClick={this.handleDoubleClick}
         canUpdateSizeByParent
       >
         {this.props.children}

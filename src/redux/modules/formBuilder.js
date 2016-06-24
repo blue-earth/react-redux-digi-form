@@ -15,6 +15,8 @@ export const UPDATE_MAPPING_INFO = 'UPDATE_MAPPING_INFO';
 
 export const SET_CURRENT_QUESTION_ID = 'SET_CURRENT_QUESTION_ID';
 
+export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
+
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 export const SET_PAGE_WIDTH = 'SET_PAGE_WIDTH';
 
@@ -39,11 +41,11 @@ export const INIT_BUILDER_STATE = {
   formConfig: {},
   documentMapping: [],
   activeInputName: '',
-  currentQuestionId: 0,
-  lastQuestionId: 0,
-  formAccessCode: '1234',
-  pageZoom: 1,
-  pageWidth: 0
+  currentQuestionId: 0, // indicates the question connected with selected element.
+  lastQuestionId: 0, // indicates lastly added question id
+  formAccessCode: '1234', // form access code
+  pageZoom: 1, // zoom ratio of PageView
+  questionEditMode: false
 };
 
 // ------------------------------------
@@ -185,25 +187,13 @@ export const setPageZoom = (pageZoom) => {
     pageZoom
   };
 }
-// ------------------------------------
-// Action: refreshPageWidth
-// ------------------------------------
-export const refreshPageWidth = (id) => {
-  return (dispatch, getState) => {
-    const formBuilder = getState().formBuilder;
-    if (formBuilder.documents.length > 0) {
-      getImageDimension(formBuilder.documents[0], (size) => {
-        dispatch(setPageWidth(size.width));
-      })
-    }
-  }
-}
 
-export const setPageWidth = (pageWidth) => {
+export const setQuestionEditMode = ({id, mode}) => {
   return {
-    type: SET_PAGE_WIDTH,
-    pageWidth
-  };
+    type: SET_QUESTION_EDIT_MODE,
+    id,
+    mode
+  }
 }
 
 // ------------------------------------
@@ -258,6 +248,11 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
     case SET_PAGE_WIDTH:
       return Object.assign({}, state, {
         pageWidth: action.pageWidth
+      });
+    case SET_QUESTION_EDIT_MODE:
+      return Object.assign({}, state, {
+        currentQuestionId: action.id,
+        questionEditMode: action.mode
       });
     default:
       return state;

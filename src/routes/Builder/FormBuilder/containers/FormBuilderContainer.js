@@ -7,7 +7,8 @@ import {
   addElement,
   updateMappingInfo,
   setCurrentQuestionId,
-  setPageZoom
+  setPageZoom,
+  setQuestionEditMode
 } from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
@@ -18,7 +19,8 @@ const mapActionCreators = {
   addElement,
   updateMappingInfo,
   setCurrentQuestionId,
-  setPageZoom
+  setPageZoom,
+  setQuestionEditMode
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -38,7 +40,8 @@ const mapStateToProps = (state) => {
     activeInputName,
     currentQuestionId,
     pageZoom,
-    pageWidth
+    pageWidth,
+    questionEditMode
   } = formBuilder || INIT_FORM_STATE;
   return {
     id: parseInt(id),
@@ -51,7 +54,8 @@ const mapStateToProps = (state) => {
     activeInputName,
     currentQuestionId,
     pageZoom,
-    pageWidth
+    pageWidth,
+    questionEditMode
   };
 };
 

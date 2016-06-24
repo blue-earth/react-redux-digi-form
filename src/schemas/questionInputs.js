@@ -5,7 +5,7 @@ export const questionInputGroups = [
   },
   {
     name: 'advanced',
-    displayText: 'Standard'
+    displayText: 'Advanced'
   },
   {
     name: 'signature',

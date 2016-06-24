@@ -72,6 +72,16 @@ class FormBuilder extends Component {
      * setPageZoom: Redux action to set page zoom ratio.
      */
     setPageZoom: PropTypes.func.isRequired,
+
+    /*
+     * questionEditMode: Redux state to indicate question edit mode
+     */
+    questionEditMode: PropTypes.bool.isRequired,
+
+    /*
+     * setQuestionEditMode: Redux action to set question edit mode
+     */
+    setQuestionEditMode: PropTypes.func.isRequired
   };
 
   componentWillMount() {
@@ -87,19 +97,19 @@ class FormBuilder extends Component {
   }
   
   resetActiveInputName = () => {
-    const { setActiveInputName } = this.props;
+    const { setActiveInputName, currentQuestionId } = this.props;
     setActiveInputName('');
   }
 
   render() {
-    const { params } = this.props;
+    const { params, questionEditMode, currentQuestionId } = this.props;
     return (
       <div className={styles.formBuilderContainer}>
         <BuilderHeader />
         <div className={styles.formBuilderContent}>
           <div className={styles.leftPanel} onClick={this.resetActiveInputName}>
-            {params.id
-              ? <QuestionEditView />
+            {questionEditMode && currentQuestionId
+              ? <QuestionEditView {...this.props} />
               : <ElementsListView {...this.props} />
             }
           </div>

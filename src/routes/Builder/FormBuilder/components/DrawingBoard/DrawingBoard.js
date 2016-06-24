@@ -54,8 +54,17 @@ class DrawingBoard extends Component {
     /*
      * containerId: Pages wrapper id, specified in data-id.
      */
-    containerId: PropTypes.string.isRequired
+    containerId: PropTypes.string.isRequired,
 
+    /*
+     * questionEditMode: Redux state to indicate question edit mode
+     */
+    questionEditMode: PropTypes.bool.isRequired,
+
+    /*
+     * setQuestionEditMode: Redux action to set question edit mode
+     */
+    setQuestionEditMode: PropTypes.func.isRequired
   };
 
   getMousePos(event) {
@@ -151,10 +160,9 @@ class DrawingBoard extends Component {
     });
   }
 
-  handleDragStart = (event, ui, metaData) => {
-    event.stopPropagation();
-    const { setCurrentQuestionId } = this.props;
-    setCurrentQuestionId(metaData.id);
+  handleResizeStart = (direction, styleSize, clientSize, event, metaData) => {
+    const { currentQuestionId, setCurrentQuestionId } = this.props;
+    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
   }
 
   handleResizeStop = (direction, styleSize, clientSize, delta, metaData) => {
@@ -184,6 +192,12 @@ class DrawingBoard extends Component {
     }
   }
 
+  handleDragStart = (event, ui, metaData) => {
+    const { currentQuestionId, setCurrentQuestionId } = this.props;
+    event.stopPropagation();
+    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
+  }
+
   handleDragStop = (event, ui, metaData) => {
     const { updateMappingInfo, documentMapping, pageZoom } = this.props;
     const { id, subId } = metaData;
@@ -206,6 +220,14 @@ class DrawingBoard extends Component {
   handleElementClick = (metaData) => {
     // const { setCurrentQuestionId } = this.props;
     // setCurrentQuestionId(metaData.id);
+  }
+
+  handleElementDoubleClick = (metaData) => {
+    const { setQuestionEditMode } = this.props;
+    setQuestionEditMode({
+      id: metaData.id,
+      mode: true
+    });
   }
 
   renderDocuments() {
@@ -253,10 +275,12 @@ class DrawingBoard extends Component {
             zIndex={zIndex}
             width={boundingBox.width * pageZoom}
             height={boundingBox.height * pageZoom}
+            onResizeStart={this.handleResizeStart}
+            onResizeStop={this.handleResizeStop}
             onDragStart={this.handleDragStart}
             onDragStop={this.handleDragStop}
-            onResizeStop={this.handleResizeStop}
             onClick={this.handleElementClick}
+            onDoubleClick={this.handleElementDoubleClick}
             key={`${mappingInfo.id}-${0}`}
             minWidth={10}
             minHeight={10}
