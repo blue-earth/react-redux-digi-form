@@ -37,6 +37,16 @@ class DrawingBoard extends Component {
     documentMapping: PropTypes.array.isRequired,
 
     /*
+     * currentQuestionId: Redux state that keeps the current active question ID.
+     */
+    currentQuestionId: PropTypes.number.isRequired,
+
+    /*
+     * setCurrentQuestionId: Redux action to set the current active question ID.
+     */
+    setCurrentQuestionId: PropTypes.func.isRequired,
+
+    /*
      * updateMappingInfo: Action to update the document mapping info.
      */
     updateMappingInfo: PropTypes.func.isRequired,
@@ -218,8 +228,6 @@ class DrawingBoard extends Component {
   }
 
   handleElementClick = (metaData) => {
-    // const { setCurrentQuestionId } = this.props;
-    // setCurrentQuestionId(metaData.id);
   }
 
   handleElementDoubleClick = (metaData) => {
@@ -230,8 +238,15 @@ class DrawingBoard extends Component {
     });
   }
 
+  handleKeyDown = (event) => {
+    const { deleteElement, currentQuestionId } = this.props;
+    if (event.keyCode === 46) {
+      deleteElement(currentQuestionId);
+    }
+  }
+
   renderDocuments() {
-    const { questions, documents, pageZoom } = this.props;
+    const { documents, pageZoom } = this.props;
     return documents.map((document, index) => {
       const zoomedWidth = document.width * pageZoom;
       const pageStyle = {width: zoomedWidth};
@@ -300,6 +315,8 @@ class DrawingBoard extends Component {
         onMouseDown={this.handleBoardMouseDown}
         onMouseMove={this.handleBoardMouseMove}
         onMouseUp={this.handleBoardMouseUp}
+        onKeyDown={this.handleKeyDown}
+        tabIndex={0}
         ref="board"
         {...boardOptionals}>
 

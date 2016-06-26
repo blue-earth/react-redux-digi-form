@@ -54,6 +54,16 @@ class FormBuilder extends Component {
     setActiveInputName: PropTypes.func.isRequired,
 
     /*
+     * currentQuestionId: Redux state that keeps the current active question ID.
+     */
+    currentQuestionId: PropTypes.number.isRequired,
+
+    /*
+     * setCurrentQuestionId: Redux action to set the current active question ID.
+     */
+    setCurrentQuestionId: PropTypes.func.isRequired,
+
+    /*
      * addElement: Action to set active input element selected, and enables to draw on the right
      */
     addElement: PropTypes.func.isRequired,

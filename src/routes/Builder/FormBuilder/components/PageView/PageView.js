@@ -60,6 +60,16 @@ class PageView extends Component {
     /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
+    setQuestionEditMode: PropTypes.func.isRequired,
+
+    /*
+     * questionEditMode: Redux state to indicate question edit mode
+     */
+    questionEditMode: PropTypes.bool.isRequired,
+
+    /*
+     * setQuestionEditMode: Redux action to set question edit mode
+     */
     setQuestionEditMode: PropTypes.func.isRequired
   };
 
@@ -68,15 +78,9 @@ class PageView extends Component {
   }
 
   componentDidMount() {
-    // if (this.refs.pageImage1) {
-    //   var pageImage1 = this.refs.pageImage1;
-    //   console.log(pageImage1.naturalWidth);
-    // }
   }
 
   handleElementClick = (metaData) => {
-    // const { setCurrentQuestionId } = this.props;
-    // setCurrentQuestionId(metaData.id);
   }
 
   handleClickZoomIn = () => {
@@ -121,16 +125,16 @@ class PageView extends Component {
     return (
       <div className={styles.toolBox}>
         <div className={styles.toolButton}>
-          <Button><MdZoomIn size={24} onClick={this.handleClickZoomIn} /></Button>
+          <Button onClick={this.handleClickZoomIn}><MdZoomIn size={24} /></Button>
         </div>
         <div className={styles.toolButton}>
-          <Button><MdZoomOut size={24} onClick={this.handleClickZoomOut} /></Button>
+          <Button onClick={this.handleClickZoomOut}><MdZoomOut size={24} /></Button>
         </div>
         <div className={styles.toolButton}>
-          <Button><MdSettingsOverscan size={24} onClick={this.handleClickFitWidth} /></Button>
+          <Button onClick={this.handleClickFitWidth}><MdSettingsOverscan size={24} /></Button>
         </div>
         <div className={styles.toolButton}>
-          <Button><MdZoomOutMap size={24} onClick={this.handleClickOriginalSize}/></Button>
+          <Button onClick={this.handleClickOriginalSize}><MdZoomOutMap size={24} /></Button>
         </div>
       </div>
     )
@@ -148,8 +152,8 @@ class PageView extends Component {
     return (
       <div className={styles.pageView}>
         <div className={styles.clientArea} data-id="clientArea">
+          <div className={styles.spacer} ref="spacer"></div>
           <div className={styles.clientAreaInner}>
-            <div className={styles.spacer} ref="spacer"></div>
             <div className={styles.pagesWrapper} ref="pagesWrapper" style={pageStyle}>
               {this.renderDocuments()}
             </div>

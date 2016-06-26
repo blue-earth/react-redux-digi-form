@@ -11,6 +11,7 @@ export const DONE_SUBMIT = 'DONE_SUBMIT';
 
 export const SET_ACTIVE_INPUT_NAME = 'SET_ACTIVE_INPUT_NAME';
 export const ADD_ELEMENT = 'ADD_ELEMENT';
+export const DELETE_ELEMENT = 'DELETE_ELEMENT';
 export const UPDATE_MAPPING_INFO = 'UPDATE_MAPPING_INFO';
 
 export const SET_CURRENT_QUESTION_ID = 'SET_CURRENT_QUESTION_ID';
@@ -159,7 +160,17 @@ const _addElement = (state, action) => {
 }
 
 // ------------------------------------
-// Action: addElement
+// Action: deleteElement
+// ------------------------------------
+export const deleteElement = (id) => {
+  return {
+    type: DELETE_ELEMENT,
+    id
+  };
+}
+
+// ------------------------------------
+// Action: updateMappingInfo
 // ------------------------------------
 export const updateMappingInfo = (mappingInfo) => {
   return {
@@ -209,7 +220,7 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
         documents: action.documents,
         formConfig: action.formConfig,
         title: action.title,
-        slug: action.slug,
+        slug: action.slug
       });
     case REQUEST_FORM:
       return Object.assign({}, state, {
@@ -233,6 +244,14 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
       });
     case ADD_ELEMENT:
       return Object.assign({}, state, _addElement(state, action));
+    case DELETE_ELEMENT:
+      console.log(_.pullAllBy(state.questions, [{id: action.id}], 'id'))
+      return Object.assign({}, state, {
+        questions: _.pullAllBy(state.questions, [{id: action.id}], 'id'),
+        documentMapping: _.pullAllBy(state.documentMapping, [{id: action.id}], 'id'),
+        currentQuestionId: 0,
+        questionEditMode: false
+      });
     case UPDATE_MAPPING_INFO:
       return Object.assign({}, state, {
         documentMapping: mergeItemIntoArray(state.documentMapping, action.mappingInfo)
