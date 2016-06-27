@@ -37,7 +37,27 @@ class QuestionInteractive extends Component {
       /*
        * inputState: one of 'init', 'focus', 'blur', 'enter'
        */
-      inputState: 'init'
+      inputState: 'init',
+
+      /*
+       * ChildComponent: stores the Child Input component class throughout the component life cycle.
+       */
+      ChildComponent: null,
+
+      /*
+       * buttonPosClass: CSS styles for Enter button position
+       */
+      buttonPosClass: '',
+
+      /*
+       * inputPosClass: CSS styles for Input component position
+       */
+      inputPosClass: '',
+
+      /*
+       * extraProps: Component specific extra props.
+       */
+      extraProps: null
     };
   };
 
@@ -106,6 +126,79 @@ class QuestionInteractive extends Component {
     nextQuestion: () => {},
     handleEnter: () => {}
   };
+
+  componentWillMount() {
+    this._determineChildComponent()
+  }
+
+  _determineChildComponent() {
+    var ChildComponent = null;
+    const { type, allowMultiple } = this.props;
+    const { inputState, savedValue } = this.state;
+    var inputPosClass = styles.leftColumn;
+    var buttonPosClass = styles.rightColumn;
+    var extraProps = {};
+
+    switch (type) {
+      case 'ShortTextField':
+      case 'EmailField':
+        ChildComponent = ShortTextInput;
+        break;
+      case 'NumberField':
+        ChildComponent = ShortTextInput;
+        extraProps['fullWidth'] = false;
+        inputPosClass = styles.inlineLeft;
+        buttonPosClass = styles.inlineRight;
+        break;
+      case 'MultipleChoice':
+        ChildComponent = MultipleChoice;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = allowMultiple ? styles.bottomColumn : styles.noneColumn;
+        break;
+      case 'YesNoChoiceField':
+        ChildComponent = YesNoChoice;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.noneColumn;
+        break;
+      case 'LongTextField':
+        ChildComponent = LongTextInput;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.bottomColumn;
+        break;
+      case 'StatementField':
+        ChildComponent = Statement;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.bottomColumn;
+        break;
+      case 'PhoneNumberField':
+        ChildComponent = PhoneNumberInput;
+        break;
+      case 'DropdownField':
+        ChildComponent = DropdownInput;
+        buttonPosClass = styles.noneColumn;
+        break;
+      case 'DateField':
+        ChildComponent = DateInput;
+        inputPosClass = styles.inlineLeft;
+        buttonPosClass = styles.inlineRight;
+        break;
+      case 'AddressField':
+        ChildComponent = AddressInput;
+        break;
+      case 'SignatureField':
+        ChildComponent = Signature;
+        buttonPosClass = styles.noneColumn;
+        break;
+      default:
+        return false;
+    }
+    this.setState({
+      ChildComponent,
+      buttonPosClass,
+      inputPosClass,
+      extraProps
+    })
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     const { inputState } = nextState;
@@ -206,15 +299,13 @@ class QuestionInteractive extends Component {
   }
 
   renderInteractiveInput() {
-    var ChildComponent = '';
-    const props = this.props;
-    const { id, type, validations, verificationStatus, isVerifying, buttonLabel } = props;
-    const { inputState, savedValue } = this.state;
+    const { id, type, validations, verificationStatus, isVerifying, buttonLabel } = this.props;
+    const { ChildComponent, inputPosClass, buttonPosClass, inputState, savedValue } = this.state;
     let that = this;
-    var inputPosClass = styles.leftColumn;
-    var buttonPosClass = styles.rightColumn;
 
-    var extraProps = {
+    if (ChildComponent === null) return false;
+
+    var extraProps = _.merge({
       value: savedValue,
       isDisabled: isVerifying,
       autoFocus: inputState === 'init' || inputState === 'focus' || inputState === 'enter',
@@ -222,65 +313,8 @@ class QuestionInteractive extends Component {
       onChange: this.handleChange.bind(this),
       onFocus: this.handleFocus.bind(this),
       onBlur: this.handleBlur.bind(this)
-    };
+    }, this.state.extraProps);
 
-    switch (type) {
-      case 'ShortTextField':
-      case 'EmailField':
-        ChildComponent = ShortTextInput;
-        break;
-      case 'NumberField':
-        ChildComponent = ShortTextInput;
-        extraProps['fullWidth'] = false;
-        inputPosClass = styles.inlineLeft;
-        buttonPosClass = styles.inlineRight;
-        break;
-      case 'MultipleChoice':
-        ChildComponent = MultipleChoice;
-        inputPosClass = styles.topColumn;
-        buttonPosClass = props.allowMultiple ? styles.bottomColumn : styles.noneColumn;
-        break;
-      case 'YesNoChoiceField':
-        ChildComponent = YesNoChoice;
-        inputPosClass = styles.topColumn;
-        buttonPosClass = styles.noneColumn;
-        break;
-      case 'LongTextField':
-        ChildComponent = LongTextInput;
-        inputPosClass = styles.topColumn;
-        buttonPosClass = styles.bottomColumn;
-        break;
-      case 'StatementField':
-        ChildComponent = Statement;
-        inputPosClass = styles.topColumn;
-        buttonPosClass = styles.bottomColumn;
-        break;
-      case 'PhoneNumberField':
-        ChildComponent = PhoneNumberInput;
-        break;
-      case 'DropdownField':
-        ChildComponent = DropdownInput;
-        buttonPosClass = styles.noneColumn;
-        break;
-      case 'DateField':
-        ChildComponent = DateInput;
-        inputPosClass = styles.inlineLeft;
-        buttonPosClass = styles.inlineRight;
-        break;
-      case 'AddressField':
-        ChildComponent = AddressInput;
-        break;
-      case 'SignatureField':
-        ChildComponent = Signature;
-        buttonPosClass = styles.noneColumn;
-        break;
-      default:
-        return false;
-    }
-
-    var ChildComponentTemplate = () => {
-      return <ChildComponent {...this.props} {...extraProps} />
-    }
     const slideAnimation = new SlideAnimation(200);
     const anim = {
       enter: slideAnimation.enter,
@@ -290,46 +324,34 @@ class QuestionInteractive extends Component {
     const filteredValidations = _.filter(validations, function(validation) { 
       return !validateField( validation, savedValue );
     } )
-
-    var ValidationsTemplate = () => {
-      return (
-        <Animate exclusive={true} animation={anim} component="div">
-          { (inputState == 'enter')
-            ? filteredValidations.map((validation, index) => {
-                return (
-                  <Validator {...validation} key={validation.type} validateFor={savedValue} />
-                )
-              })
-            : <div key="null_key"></div>
-          }
-        </Animate>
-      );
-    }
-
-    var VerificationsTemplate = () => {
-      return (
-        <Animate exclusive={true} animation={anim} component="div">
-          {
-            _.filter(verificationStatus, {id: id, status: false}).map((verification, index) => {
-              return (
-                <Verifier {...verification} key={verification.type} />
-              )
-            })
-          }
-        </Animate>
-      );
-    }
     
     return (
       <div className={styles.interactiveContainer}>
         <div className="clearfix">
           <div className={styles.leftColumn}>
-            <ValidationsTemplate />
-            <VerificationsTemplate />
+            <Animate exclusive={true} animation={anim} component="div">
+              { (inputState == 'enter')
+                ? filteredValidations.map((validation, index) => {
+                    return (
+                      <Validator {...validation} key={validation.type} validateFor={savedValue} />
+                    )
+                  })
+                : <div key="null_key"></div>
+              }
+            </Animate>
+            <Animate exclusive={true} animation={anim} component="div">
+              {
+                _.filter(verificationStatus, {id: id, status: false}).map((verification, index) => {
+                  return (
+                    <Verifier {...verification} key={verification.type} />
+                  )
+                })
+              }
+            </Animate>
           </div>
         </div>
         <div className={inputPosClass}>
-          <ChildComponentTemplate />
+          <ChildComponent {...this.props} {...extraProps} />
         </div>
         <div className={buttonPosClass}>
           <FormEnterButton 

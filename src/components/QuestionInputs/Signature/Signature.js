@@ -45,7 +45,6 @@ class Signature extends Component {
   focusSignatureImage() {
     const { autoFocus } = this.props;
     const signatureImage = this.refs.signatureImage;
-    console.log(signatureImage, autoFocus)
     if (autoFocus && signatureImage) {
       setTimeout(function () {
         signatureImage.focus();
