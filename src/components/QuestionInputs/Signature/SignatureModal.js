@@ -87,6 +87,10 @@ class SignatureModal extends Component {
     this.setState({ activeTabKey });
   }
 
+  handleKeyDown = (event) => {
+    if (event.keyCode === 13) this.handleAccept();
+  }
+
   render() {
     const { handleHide, show } = this.props;
     const { typeValue, typeFont, activeTabKey } = this.state;
@@ -103,7 +107,8 @@ class SignatureModal extends Component {
           <Tabs activeKey={activeTabKey} id="SignatureTabs"
             onSelect={this.handleTabSelect}>
             <Tab eventKey="draw" title="Draw">
-              <div className={styles.signaturePadWrapper}>
+              <div className={styles.signaturePadWrapper}
+                 onKeyDown={this.handleKeyDown} tabIndex={0}>
                 <SignaturePad clearButton="true" ref="signature" />
               </div>
             </Tab>
@@ -120,6 +125,7 @@ class SignatureModal extends Component {
                         value={typeValue}
                         placeholder="Enter full name"
                         onChange={this.handleTypeChange}
+                        onEnterKey={this.handleAccept}
                       />
                     </FormGroup>
                   </Col>

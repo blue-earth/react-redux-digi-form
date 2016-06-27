@@ -4,6 +4,14 @@
 .signaturePadWrapper {
   @include user-select(none);
   padding: 20px 0;
+  &:focus {
+    outline: none;
+  }
+}
+.signatureImage {
+  &:focus {
+    outline: none;
+  }
 }
 .typeWrapper {
   padding: 20px 0;

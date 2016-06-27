@@ -17,11 +17,13 @@ class Signature extends Component {
   static propTypes = {
     isDisabled: PropTypes.bool,
     isReadOnly: PropTypes.bool,
+    autoFocus: PropTypes.bool,
     value: PropTypes.string,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    show: PropTypes.func
+    show: PropTypes.func,
+    onEnterKey: PropTypes.func
   };
 
   static defaultProps = {
@@ -33,7 +35,22 @@ class Signature extends Component {
   };
 
   componentDidMount() {
+    this.focusSignatureImage();
+  }
 
+  componentDidUpdate() {
+    this.focusSignatureImage();
+  }
+
+  focusSignatureImage() {
+    const { autoFocus } = this.props;
+    const signatureImage = this.refs.signatureImage;
+    console.log(signatureImage, autoFocus)
+    if (autoFocus && signatureImage) {
+      setTimeout(function () {
+        signatureImage.focus();
+      }, 50);
+    }
   }
 
   handleChange = (value) => {
@@ -51,16 +68,27 @@ class Signature extends Component {
     if (typeof onBlur === 'function') onBlur();
   }
 
+  handleKeyDown = (event) => {
+    const { onEnterKey } = this.props;
+    if (event.keyCode === 13) {
+      onEnterKey();
+    }
+  }
+
   render() {
-    const { show, value, isReadOnly, isDisabled } = this.props;
+    const { show, value, isReadOnly, isDisabled, autoFocus } = this.props;
     return (
       <div className={styles.signature}>
         {value &&
-          <img src={value} alt="signature" />
+          <img src={value} alt="signature"
+            className={styles.signatureImage}
+            ref="signatureImage"
+            tabIndex={0} onKeyDown={this.handleKeyDown} />
         }
         {!isReadOnly &&
           <FormEnterButton buttonLabel="Sign"
             isDisabled={isDisabled}
+            autoFocus={!value && autoFocus}
             onClick={function () {show('signatureModal')}} />
         }
         <SignatureModal onSave={this.handleChange} value={value} />
