@@ -140,6 +140,7 @@ export const doneFetchingForm = () => {
 
 const shouldFetchForm = (state, id) => {
   const formInteractive = state.formInteractive;
+  // todo: Add documentation on how following conditions are triggered?
   if ((id !== formInteractive.id || !formInteractive.form)
     && !formInteractive.isFetchingForm) {
     return true;
@@ -203,12 +204,13 @@ export const doneFetchingAnswers = () => {
 export const processFetchAnswers = (sessionId) => {
 
   const apiURL = `${API_URL}/form_document/api/form_response/${sessionId}/`
+  // todo: DRY the common header setup
   const fetchParams = {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    redirect: 'follow',
+    redirect: 'follow',   //todo: Comment on this parameter, why this parameter is necessary
     method: 'GET'
   };
 
@@ -621,6 +623,7 @@ export const updateSessionId = (sessionId) => {
 // Action: resetFormSubmitStatus
 // ------------------------------------
 export const resetFormSubmitStatus = (sessionId) => {
+  // todo: Unused parameter?
   return {
     type: RESET_FORM_SUBMIT_STATUS
   }

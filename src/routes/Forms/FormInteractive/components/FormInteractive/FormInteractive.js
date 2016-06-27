@@ -21,10 +21,13 @@ class FormInteractive extends Component {
 
   constructor(props) {
     super(props);
+    // todo: Add comments to below three states
+    // When they are true/false, what are possible values?
     this.state = {
-      showTempModal: false,
-      showAccessModal: true,
-      accessCodeInputStatus: 'changing'
+      showTempModal: false,   // todo: Change to a more descriptive name
+      showAccessModal: true,  // good example of a descriptive name
+      accessCodeInputStatus: 'changing'   // prefer to use a boolean here, and name the variable to
+                                          // isEnteringStatusCode, is this property needed
     };
   };
 
@@ -169,6 +172,9 @@ class FormInteractive extends Component {
 
   componentWillReceiveProps(props) {
     const { resetFormSubmitStatus } = this.props;
+    // todo: Comment on ``lastFormSubmitStatus``, what are an example of this object
+    // how each property is used etc..
+    // comment can be made on formInteractive.js file
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
       && props.lastFormSubmitStatus.result) {
       if (props.shouldShowFinalSubmit) {
@@ -180,11 +186,13 @@ class FormInteractive extends Component {
     }
   }
 
+  // todo: Can you restructure the code a bit?
+  // See https://github.com/airbnb/javascript/tree/master/react#ordering
   componentDidMount() {
     const { submitAnswer } = this.props;
     setInterval(function() {
       submitAnswer(FORM_AUTOSAVE);
-    }, 30000);
+    }, 30000);  // todo: Will optimise this later
   }
 
   sectionStatus(allQuestions, currentQuestionId, questionGroup) {
