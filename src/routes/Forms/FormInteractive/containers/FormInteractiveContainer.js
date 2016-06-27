@@ -45,7 +45,7 @@ const mapStateToProps = (state) => {
     formAccessCode
   } = formInteractive || INIT_FORM_STATE;
   return {
-    id: parseInt(id),
+    id: parseInt(id, 10),
     sessionId,
     isFetchingForm,
     isVerifying,
