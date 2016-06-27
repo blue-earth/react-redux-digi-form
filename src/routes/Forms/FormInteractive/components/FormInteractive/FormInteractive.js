@@ -239,8 +239,6 @@ class FormInteractive extends Component {
           {shouldShowFinalSubmit && 
             <div className={styles.submitButtonsArea}>
               <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit}/>
-              {' '}
-              <SubmitButton onClick={this.handleFinalSubmit}/>
             </div>}
           <div className={styles.helpButtonWrapper}>
             <Button bsStyle="danger" block>Help</Button>

@@ -55,7 +55,6 @@ class MultipleChoice extends Component {
     onEnterKey: () => {}
   };
 
-  
   componentDidMount() {
     const { autoFocus, choices } = this.props;
     const { choiceContainer } = this.refs;
@@ -65,13 +64,9 @@ class MultipleChoice extends Component {
       }, 50);
     }
     window.addEventListener('resize', this.alignmentResizeHandle);
-    // setTimeout(this.alignmentHandle, 1);
-    console.log(this.props.value);
-    
-      setTimeout(this.alignmentHandle);
-    
+    setTimeout(this.alignmentHandle, 0.5);   
   }
-  
+
   alignmentResizeHandle = () => {
     const { width } = this.state;
     var realWidth = 0;
