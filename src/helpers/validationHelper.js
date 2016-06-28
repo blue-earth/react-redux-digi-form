@@ -1,5 +1,6 @@
 export const validateIsRequired = (value) => {
-  return (value !== '' && value !== null) 
+  return !(typeof value === 'undefined' || value === '' || value === null
+    || (value.constructor === Array && value.length === 0) )
 }
 
 export const validateIsEmail = (value) => {
@@ -8,21 +9,33 @@ export const validateIsEmail = (value) => {
 }
 
 export const validateMinLength = (value, length) => {
-  return !(typeof value !== 'undefined' && value.length < length )
+  return (typeof value !== 'undefined' && value.length >= length )
 }
 
 export const validateMaxLength = (value, length) => {
   return !(typeof value !== 'undefined' && value.length > length )
 }
 
+export const validateMinValue = (value, minValue) => {
+  return value >= minValue;
+}
+
+export const validateMaxValue = (value, maxValue) => {
+  return value <= maxValue;
+}
+
 const validateField = (validation, value) => {
   switch (validation.type) {
     case 'isRequired':
-      return validateIsRequired(value)
+      return validateIsRequired(value);
     case 'minLength':
-      return validateMinLength(value, validation.value)
+      return validateMinLength(value, validation.value);
     case 'maxLength':
-      return validateMaxLength(value, validation.value)
+      return validateMaxLength(value, validation.value);
+    case 'minimum':
+      return validateMinValue(value, validation.value);
+    case 'maximum':
+      return validateMaxValue(value, validation.value);
     case 'isEmail':
       return validateIsEmail(value)
   }

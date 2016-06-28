@@ -1,9 +1,16 @@
 import React, { Component, PropTypes } from 'react';
-import QuestionInstruction from '../QuestionInstruction/QuestionInstruction.js';
-import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput.js';
-import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput.js';
-import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice.js';
-import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton.js';
+import QuestionInstruction from '../QuestionInstruction/QuestionInstruction';
+import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput';
+import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
+import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
+import YesNoChoice from '../../QuestionInputs/YesNoChoice/YesNoChoice';
+import Statement from '../../QuestionInputs/Statement/Statement';
+import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
+import DropdownInput from '../../QuestionInputs/DropdownInput/DropdownInput';
+import DateInput from '../../QuestionInputs/DateInput/DateInput';
+import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
+import Signature from '../../QuestionInputs/Signature/Signature';
+import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton';
 import Validator from '../../Validator/Validator';
 import Verifier from '../../Verifier/Verifier';
 import validateField from 'helpers/validationHelper';
@@ -30,12 +37,35 @@ class QuestionInteractive extends Component {
       /*
        * inputState: one of 'init', 'focus', 'blur', 'enter'
        */
-      inputState: 'init'
+      inputState: 'init',
+
+      /*
+       * ChildComponent: stores the Child Input component class throughout the component life cycle.
+       */
+      ChildComponent: null,
+
+      /*
+       * buttonPosClass: CSS styles for Enter button position
+       */
+      buttonPosClass: '',
+
+      /*
+       * inputPosClass: CSS styles for Input component position
+       */
+      inputPosClass: '',
+
+      /*
+       * extraProps: Component specific extra props.
+       */
+      extraProps: null
     };
   };
 
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
+  
   static propTypes = {
-    primaryColor: PropTypes.string,
 
     /*
      * validations: Validations required for the question, it is a part of form response.
@@ -64,45 +94,144 @@ class QuestionInteractive extends Component {
     /*
      * isVerifying: Redux state that holds the status whether verification is in prgress
      */
-    isVerifying: PropTypes.bool.isRequired,
+    isVerifying: PropTypes.bool,
 
     /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
-    storeAnswer: PropTypes.func.isRequired,
+    storeAnswer: PropTypes.func,
 
     /*
      * nextQuestion: Redux action to move to next question when the current answer is qualified.
      */
-    nextQuestion: PropTypes.func.isRequired
+    nextQuestion: PropTypes.func,
+
+    /*
+     * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
+     */
+    handleEnter: PropTypes.func,
+
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func
   };
 
   static defaultProps = {
-    primaryColor: '#4dcceb',
     validations: [],
     status: 'current',
-    context: {}
+    context: {},
+    isVerifying: false,
+    storeAnswer: () => {},
+    nextQuestion: () => {},
+    handleEnter: () => {}
   };
+
+  componentWillMount() {
+    this._determineChildComponent()
+  }
+
+  _determineChildComponent() {
+    var ChildComponent = null;
+    const { type, allowMultiple } = this.props;
+    const { inputState, savedValue } = this.state;
+    var inputPosClass = styles.leftColumn;
+    var buttonPosClass = styles.rightColumn;
+    var extraProps = {};
+
+    switch (type) {
+      case 'ShortTextField':
+      case 'EmailField':
+        ChildComponent = ShortTextInput;
+        break;
+      case 'NumberField':
+        ChildComponent = ShortTextInput;
+        extraProps['fullWidth'] = false;
+        inputPosClass = styles.inlineLeft;
+        buttonPosClass = styles.inlineRight;
+        break;
+      case 'MultipleChoice':
+        ChildComponent = MultipleChoice;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = allowMultiple ? styles.bottomColumn : styles.noneColumn;
+        break;
+      case 'YesNoChoiceField':
+        ChildComponent = YesNoChoice;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.noneColumn;
+        break;
+      case 'LongTextField':
+        ChildComponent = LongTextInput;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.bottomColumn;
+        break;
+      case 'StatementField':
+        ChildComponent = Statement;
+        inputPosClass = styles.topColumn;
+        buttonPosClass = styles.bottomColumn;
+        break;
+      case 'PhoneNumberField':
+        ChildComponent = PhoneNumberInput;
+        break;
+      case 'DropdownField':
+        ChildComponent = DropdownInput;
+        buttonPosClass = styles.noneColumn;
+        break;
+      case 'DateField':
+        ChildComponent = DateInput;
+        inputPosClass = styles.inlineLeft;
+        buttonPosClass = styles.inlineRight;
+        break;
+      case 'AddressField':
+        ChildComponent = AddressInput;
+        break;
+      case 'SignatureField':
+        ChildComponent = Signature;
+        buttonPosClass = styles.noneColumn;
+        break;
+      default:
+        return false;
+    }
+    this.setState({
+      ChildComponent,
+      buttonPosClass,
+      inputPosClass,
+      extraProps
+    })
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     const { inputState } = nextState;
-    return inputState != 'focus' || (nextProps.isVerifying != this.props.isVerifying);
+
+    // If verification status is changed, it should update to enable/disable input components.
+    if (nextProps.isVerifying !== this.props.isVerifying) return true;
+
+    // If it's inactive question with the status unchanged, no need to update.
+    if (nextProps.status === this.props.status && nextProps.value === this.props.value &&
+      nextState.inputState === 'init') {
+      return false;
+    }
+    if (nextProps.type === 'AddressField' && inputState === 'blur') {
+      return false;
+    }
+    // For current question, if the status is not focus, it should update.
+    return inputState !== 'focus';
   }
 
   componentWillReceiveProps(props) {
-
     this.setState({
-      savedValue: props.value
+      savedValue: props.value,
+      inputState: props.status !== this.props.status ? 'init' : this.state.inputState
     });
   }
 
-  handleFocus(value) {
+  handleFocus() {
     this.setState({
       inputState: 'focus',
     });
   }
   
-  handleBlur(value) {
+  handleBlur() {
     this.setState({
       inputState: 'blur'
     });
@@ -124,12 +253,11 @@ class QuestionInteractive extends Component {
   }
 
   handleEnter() {
-    // We only do validation on enter, onChange submits the answer if valid.
+    // We only do validation and verification on enter, onChange submits the answer if valid.
     const { savedValue } = this.state;
-    const { nextQuestion, isVerifying } = this.props;
+    const { handleEnter, isVerifying } = this.props;
     const isValid = this.valueIsValid(savedValue);
-    const isVerified = this.valueIsVerified();
-    if (isValid && isVerified) nextQuestion();
+    if (isValid) handleEnter();
     this.setState({
       inputState: 'enter'
     });
@@ -174,37 +302,22 @@ class QuestionInteractive extends Component {
   }
 
   renderInteractiveInput() {
-    var ChildComponent = '';
-    const { id, type, primaryColor, validations, verificationStatus, isVerifying } = this.props;
-    const { inputState, savedValue } = this.state;
+    const { id, type, validations, verificationStatus, isVerifying, buttonLabel } = this.props;
+    const { ChildComponent, inputPosClass, buttonPosClass, inputState, savedValue } = this.state;
     let that = this;
 
-    switch (type) {
-      case 'ShortTextField':
-      case 'EmailField':
-      case 'NumberField':
-        ChildComponent = ShortTextInput;
-        break;
-      case 'MultipleChoice':
-        ChildComponent = MultipleChoice;
-        break;
-      case 'LongTextField':
-        ChildComponent = LongTextInput;
-        break;
-      default:
-        return false;
-    }
+    if (ChildComponent === null) return false;
 
-    var ChildComponentTemplate = () => {
-      return <ChildComponent {...this.props} 
-        value={savedValue}
-        isDisabled={isVerifying}
-        autoFocus={inputState == 'focus' || inputState == 'init'}
-        onEnterKey={this.handleEnter.bind(this)}
-        onChange={this.handleChange.bind(this)}
-        onFocus={this.handleFocus.bind(this)}
-        onBlur={this.handleBlur.bind(this)} />
-    }
+    var extraProps = _.merge({
+      value: savedValue,
+      isDisabled: isVerifying,
+      autoFocus: inputState === 'init' || inputState === 'focus' || inputState === 'enter',
+      onEnterKey: this.handleEnter.bind(this),
+      onChange: this.handleChange.bind(this),
+      onFocus: this.handleFocus.bind(this),
+      onBlur: this.handleBlur.bind(this)
+    }, this.state.extraProps);
+
     const slideAnimation = new SlideAnimation(200);
     const anim = {
       enter: slideAnimation.enter,
@@ -214,6 +327,7 @@ class QuestionInteractive extends Component {
     const filteredValidations = _.filter(validations, function(validation) { 
       return !validateField( validation, savedValue );
     } )
+    
     return (
       <div className={styles.interactiveContainer}>
         <div className="clearfix">
@@ -222,8 +336,7 @@ class QuestionInteractive extends Component {
               { (inputState == 'enter')
                 ? filteredValidations.map((validation, index) => {
                     return (
-                      <Validator {...validation} key={validation.type} validateFor={savedValue} 
-                        primaryColor={primaryColor} />
+                      <Validator {...validation} key={validation.type} validateFor={savedValue} />
                     )
                   })
                 : <div key="null_key"></div>
@@ -233,20 +346,21 @@ class QuestionInteractive extends Component {
               {
                 _.filter(verificationStatus, {id: id, status: false}).map((verification, index) => {
                   return (
-                    <Verifier {...verification} key={verification.type} 
-                      primaryColor={primaryColor} />
+                    <Verifier {...verification} key={verification.type} />
                   )
                 })
               }
             </Animate>
           </div>
         </div>
-        <div className={styles.leftColumn}>
-          <ChildComponentTemplate />
+        <div className={inputPosClass}>
+          <ChildComponent {...this.props} {...extraProps} />
         </div>
-        <div className={styles.rightColumn}>
-          <FormEnterButton primaryColor={primaryColor} 
-            onClick={this.handleEnter.bind(this)} isDisabled={isVerifying} />
+        <div className={buttonPosClass}>
+          <FormEnterButton 
+            onClick={this.handleEnter.bind(this)}
+            buttonLabel={buttonLabel}
+            isDisabled={isVerifying} />
         </div>
       </div>
     )

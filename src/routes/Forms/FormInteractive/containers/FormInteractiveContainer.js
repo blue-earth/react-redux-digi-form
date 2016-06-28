@@ -1,48 +1,65 @@
 import { connect } from 'react-redux';
-import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion,
-  storeAnswer, fetchFormIfNeeded } from 'redux/modules/formInteractive';
-
-/*  This is a container component. Notice it does not contain any JSX,
-    nor does it import React. This component is **only** responsible for
-    wiring in the actions and state necessary to render a presentational
-    component - in this case, the counter:   */
+import { bindActionCreators } from 'redux';
+import { show } from 'redux-modal'
+import { INIT_FORM_STATE, prevQuestion, nextQuestion, goToQuestion, handleEnter,
+  storeAnswer, submitAnswer, fetchAnswers, fetchFormIfNeeded, updateAccessCode,
+  resetFormSubmitStatus } 
+  from 'redux/modules/formInteractive';
 
 import FormInteractive from '../components/FormInteractive/FormInteractive';
-
-/*  Object of action creators (can also be function that returns object).
-    Keys will be passed as props to presentational components. Here we are
-    implementing our wrapper around increment; the component doesn't care   */
 
 const mapActionCreators = {
   prevQuestion,
   nextQuestion,
   fetchFormIfNeeded,
   storeAnswer,
-  goToQuestion
+  fetchAnswers,
+  submitAnswer,
+  goToQuestion,
+  handleEnter,
+  updateAccessCode,
+  resetFormSubmitStatus,
+  show
 };
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(mapActionCreators, dispatch);
+}
 
 const mapStateToProps = (state) => {
   const { formInteractive } = state;
   const {
     id,
-    isFetching,
+    sessionId,
+    isFetchingForm,
     isVerifying,
     currentQuestionId,
     form,
     answers,
+    prefills,
     verificationStatus,
-    primaryColor
+    primaryColor,
+    lastFormSubmitStatus,
+    shouldShowFinalSubmit,
+    formAccessStatus,
+    formAccessCode
   } = formInteractive || INIT_FORM_STATE;
   return {
-    id : parseInt(id),
-    isFetching,
+    id: parseInt(id, 10),
+    sessionId,
+    isFetchingForm,
     isVerifying,
     currentQuestionId,
     form,
     answers,
+    prefills,
     primaryColor,
-    verificationStatus
+    verificationStatus,
+    lastFormSubmitStatus,
+    shouldShowFinalSubmit,
+    formAccessStatus,
+    formAccessCode
   };
 };
 
-export default connect(mapStateToProps, mapActionCreators)(FormInteractive);
+export default connect(mapStateToProps, mapDispatchToProps)(FormInteractive);

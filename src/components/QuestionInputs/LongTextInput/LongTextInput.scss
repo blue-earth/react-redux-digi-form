@@ -4,10 +4,13 @@
 .textInput {
   padding: 4px 15px;
   border: 1px solid $text-border-color;
-  border-radius: 4px;
+  @include border-radius($input-border-radius);
   font-size: 20px;
-  width: 389px;
   background: $text-bg-color;
+  max-width: 100%;
+  min-width: 100%;
+  color: $text-dark-color;
+  -webkit-text-fill-color: $text-dark-color;
 }
 
 .textInput:hover, .textInput:active, .textInput:focus {

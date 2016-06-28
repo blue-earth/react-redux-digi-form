@@ -1,0 +1,14 @@
+@import '../../../styles/variables';
+
+.header {
+	height: 65px;
+	background-color: $builderheader-bg-color;
+	z-index: 400;
+	position: relative;
+}
+
+.logo {
+	position: absolute;
+    margin-top: 10px;
+    left: calc(50% - 70px);
+}

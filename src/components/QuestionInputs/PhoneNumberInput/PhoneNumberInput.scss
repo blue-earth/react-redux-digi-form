@@ -1,0 +1,34 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+:global {
+  .phoneNumberInput {
+    padding: 4px 15px;
+    border: 1px solid $text-border-color;
+    @include border-radius($input-border-radius);
+    font-size: 20px;
+    height: 64px;
+    background: $text-bg-color;
+    color: $text-dark-color;
+    -webkit-text-fill-color: $text-dark-color;
+    display: block;
+    width: 100%;
+    padding-left: 55px;
+    &[disabled] {
+      opacity: .5;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+  .phoneNumberInputWrapper {
+    &.intl-tel-input {
+      display: block;
+    }
+    .selected-flag {
+      width: 45px;
+      &:focus, &:active:focus {
+        outline: none;
+      }
+    }
+  }
+}

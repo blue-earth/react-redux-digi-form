@@ -9,13 +9,19 @@ class FormEnterButton extends Component {
   }
 
   static propTypes = {
-    primaryColor: PropTypes.string,
     onClick: PropTypes.func,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    buttonLabel: PropTypes.string,
+    autoFocus: PropTypes.bool
   };
 
   static defaultProps = {
-    primaryColor: '#4dcceb'
+    buttonLabel: '',
+    autoFocus: false
+  };
+
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
   };
 
   handleClick() {
@@ -23,34 +29,54 @@ class FormEnterButton extends Component {
     if (typeof onClick === 'function') onClick()
   }
 
+  renderDefaultLabel() {
+    return (
+      <div className={styles.btnDefaultInner}>
+        <div>press</div>
+        <div>ENTER</div>
+      </div>
+    );
+  }
+
+  renderButtonLabel() {
+    const { buttonLabel } = this.props
+    return (
+      <div className={styles.btnInner}>
+        { buttonLabel }
+      </div>
+    );
+  }
+  
   render() {
 
-    const props = this.props
+    const { buttonLabel, isDisabled, autoFocus } = this.props
+    var { primaryColor } = this.context;
+    var optionals = {};
 
-    var buttonStyle = {
-      color: props.primaryColor,
-      borderColor: props.primaryColor
+    if (autoFocus) {
+      optionals['autoFocus'] = {
+        autoFocus: true
+      };
+    }
+    if ( typeof primaryColor !== 'undefined' ) {
+      optionals['style'] = {
+        color: primaryColor,
+        borderColor: primaryColor
+      };
     }
 
-    var optionals = {}
-    if (props.isDisabled) {
+    if (isDisabled) {
       optionals['disabled'] = true
     }
 
     return (
       <Button type="button" onClick={this.handleClick.bind(this)}
-        className={styles.formEnterButton} style={buttonStyle}
+        className={styles.formEnterButton}
         {...optionals}>
-        <div className={styles.btnInner}>
-          <div>press</div>
-          <div>ENTER</div>
-        </div>
+        { buttonLabel != '' ? this.renderButtonLabel() : this.renderDefaultLabel() }
       </Button>
     )
   }
 }
 
 export default FormEnterButton
-
-
-

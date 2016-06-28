@@ -1,10 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import styles from './ShortTextInput.scss';
+import classNames from 'classnames';
 
 class ShortTextInput extends Component {
+
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
+
   static propTypes = {
     placeholderText: PropTypes.string,
-    initialValue: PropTypes.string,
     fullWidth: PropTypes.bool,
     autoFocus: PropTypes.bool,
     type: PropTypes.string,
@@ -12,7 +17,7 @@ class ShortTextInput extends Component {
       PropTypes.string,
       PropTypes.number
     ]),
-    primaryColor: PropTypes.string,
+    isReadOnly: PropTypes.bool,
     isDisabled: PropTypes.bool,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
@@ -21,11 +26,12 @@ class ShortTextInput extends Component {
   };
 
   static defaultProps = {
-    primaryColor: '#4dcceb',
     placeholderText: '',
-    initialValue: '',
-    fullWidth: false,
+    fullWidth: true,
+    value:'',
     type: 'text',
+    isDisabled: false,
+    isReadOnly: false,
   };
 
   constructor(props) {
@@ -36,7 +42,8 @@ class ShortTextInput extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.savedValue != this.state.savedValue;
+    return nextState.savedValue !== this.state.savedValue
+      || nextProps.isDisabled !== this.props.isDisabled;
   }
 
   componentWillReceiveProps(props) {
@@ -45,7 +52,7 @@ class ShortTextInput extends Component {
     });
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     const { onChange } = this.props;
     let value = event.target.value;
 
@@ -56,29 +63,17 @@ class ShortTextInput extends Component {
     if (typeof onChange === 'function') onChange(value);
   }
 
-  handleFocus(event) {
+  handleFocus = (event) => {
     const { onFocus } = this.props;
-    let value = event.target.value;
-
-    this.setState({
-      savedValue: value
-    });
-
-    if (typeof onFocus === 'function') onFocus(value);
+    if (typeof onFocus === 'function') onFocus();
   }
 
-  handleBlur(event) {
+  handleBlur = (event) => {
     const { onBlur } = this.props;
-    let value = event.target.value;
-
-    this.setState({
-      savedValue: value
-    });
-
-    if (typeof onBlur === 'function') onBlur(value);
+    if (typeof onBlur === 'function') onBlur();
   }
 
-  handleKeyDown(event) {
+  handleKeyDown = (event) => {
     const { onEnterKey } = this.props;
     if (event.keyCode === 13 && typeof onEnterKey === 'function') {
       onEnterKey();
@@ -99,32 +94,42 @@ class ShortTextInput extends Component {
 
   render() {
     var props = this.props;
-    var { type, primaryColor, value, autoFocus } = this.props;
-
-    var inputStyle = {
-      color: primaryColor
-    };
-
+    var { type, value, autoFocus, fullWidth, placeholderText, 
+      isDisabled, isReadOnly } = this.props;
+    var { primaryColor } = this.context;
     var optionals = {};
-    if (props.placeholderText) {
-      optionals['placeholder'] = props.placeholderText
-    };
-    if (props.isDisabled) {
+
+    if ( typeof primaryColor !== 'undefined' ) {
+      optionals['style'] = {
+        color: primaryColor
+      };
+    }
+    if (placeholderText) {
+      optionals['placeholder'] = placeholderText
+    }
+    if (isDisabled) {
       optionals['disabled'] = 'disabled'
-    };
+    }
+    if (isReadOnly) {
+      optionals['readOnly'] = true
+    }
+
+    const inputClasses = classNames({
+      [styles.textInput]: true,
+      [styles.fullWidth]: fullWidth
+    });
 
     return (
       <input
-        className={styles.textInput}
+        className={inputClasses}
         type={this.inputType(type)}
-        style={inputStyle}
         ref="input"
         autoFocus={autoFocus}
         value={this.state.savedValue}
-        onChange={this.handleChange.bind(this)}
-        onBlur={this.handleBlur.bind(this)}
-        onFocus={this.handleFocus.bind(this)}
-        onKeyDown={this.handleKeyDown.bind(this)}
+        onChange={this.handleChange}
+        onBlur={this.handleBlur}
+        onFocus={this.handleFocus}
+        onKeyDown={this.handleKeyDown}
         {...optionals}
       />
     )

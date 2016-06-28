@@ -1,9 +1,16 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
 .learnMoreSection {
   width: 230px;
-  padding: 10px;
+  padding: 10px 0;
   float: right;
   position: absolute;
-  right: 0;
+  right: 5px;
   z-index: 1;
   text-align: center;
+  color: $text-color;
+}
+.lastSection {
+  position: relative;
 }

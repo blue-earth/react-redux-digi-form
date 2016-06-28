@@ -19,7 +19,9 @@ export default {
     },
     globals: {
       ...config.globals,
-      API_URL: JSON.stringify('http://localhost:8000')
+      API_URL: JSON.stringify('http://localhost:8000'),
+      //FRONTEND_ROOT: JSON.stringify(`http://${config.server_host}:${config.server_port}`)
+      FRONTEND_ROOT: JSON.stringify(`http://localhost:${config.server_port}`)
     }
   }),
 
@@ -38,7 +40,8 @@ export default {
     },
     globals: {
       ...config.globals,
-      API_URL: JSON.stringify('https://api.emondo.com.au')
+      API_URL: JSON.stringify('https://api.emondo.com.au'),
+      FRONTEND_ROOT: JSON.stringify('http://new.emondo.com.au')
     }
   })
 }
