@@ -29,6 +29,7 @@ class MultipleChoice extends Component {
     onBlur: PropTypes.func,
     onChange: PropTypes.func,
     onEnterKey: PropTypes.func,
+    autoFocus: PropTypes.bool
   };
 
   static defaultProps = {
@@ -56,70 +57,71 @@ class MultipleChoice extends Component {
   };
 
   componentDidMount() {
-    const { autoFocus, choices } = this.props;
+    const { autoFocus } = this.props;
     const { choiceContainer } = this.refs;
-    if ( autoFocus ) {
-      setTimeout(function() {
-        choiceContainer.focus()
+    if (autoFocus) {
+      setTimeout(function () {
+        choiceContainer.focus();
       }, 50);
     }
     window.addEventListener('resize', this.alignmentResizeHandle);
-    setTimeout(this.alignmentHandle);   
+    setTimeout(this.alignmentHandle);
   }
 
   alignmentResizeHandle = () => {
     const { width } = this.state;
     var realWidth = 0;
-    if (Object.keys(this.refs).length != 0) {
-      if (width > this.refs.choiceContainer.offsetWidth * 46 / 100) 
+    if (Object.keys(this.refs).length !== 0) {
+      if (width > this.refs.choiceContainer.offsetWidth * 46 / 100) {
         realWidth = '97%';
-      else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100) 
+      } else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100) {
         realWidth = '46%';
-      else 
+      } else {
         realWidth = `${width}px`;
-      for (var index in this.allChoices)
+      }
+      for (var index in this.allChoices) {
         this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.style.width = realWidth;
+      }
     }
   }
 
   alignmentHandle = () => {
     var width = 0;
     var calcWidth = 0;
-    if (Object.keys(this.refs).length != 0) {
-      for (var index in this.allChoices)
-        if (width < this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.offsetWidth)
+    if (Object.keys(this.refs).length !== 0) {
+      for (var index in this.allChoices) {
+        if (width < this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.offsetWidth) {
           width = this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.offsetWidth;
+        }
+      }
       if (width > this.refs.choiceContainer.offsetWidth * 46 / 100) {
         width = '97%';
         calcWidth = this.refs.choiceContainer.offsetWidth * 97 / 100;
-      }
-      else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100) {
+      } else if (width < this.refs.choiceContainer.offsetWidth * 30 / 100) {
         width = '46%';
         calcWidth = this.refs.choiceContainer.offsetWidth * 46 / 100;
-      }
-      else {
+      } else {
         calcWidth = width + 1;
         width = `${width+1}px`;
       }
       this.setState({
         width: calcWidth
       });
-      for (var index in this.allChoices)
-        this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.style.width = width;     
+      for (index in this.allChoices) {
+        this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.style.width = width;
+      }
     }
   }
 
   handleClick = (val) => {
-    console.log(val)
-    const { dispatch, allowMultiple, maxAnswers, 
+    const { allowMultiple,
       onChange, onEnterKey, value } = this.props;
     if (typeof onChange !== 'function') return;
-    if ( allowMultiple ) {
+    if (allowMultiple) {
       var newValue = _.xorWith(value, [val], _.isEqual);
-      //if ( this.canAcceptChange(newValue) ) {
-      console.log('new-value', newValue)
-        onChange(newValue);
-      //}
+      // if ( this.canAcceptChange(newValue) ) {
+      onChange(newValue);
+      // }
     } else {
       onChange(val);
       setTimeout(onEnterKey, 50);
@@ -139,13 +141,13 @@ class MultipleChoice extends Component {
 
   canAcceptChange(value) {
     const { maxAnswers } = this.props;
-    if ( maxAnswers > 0 && value.length > maxAnswers ) return false;
+    if (maxAnswers > 0 && value.length > maxAnswers) return false;
     return true;
   }
 
   isMultiSelectable(value) {
     const { maxAnswers } = this.props;
-    if ( maxAnswers > 0 && value.length >= maxAnswers ) return false;
+    if (maxAnswers > 0 && value.length >= maxAnswers) return false;
     return true;
   }
 
@@ -160,7 +162,7 @@ class MultipleChoice extends Component {
     const { onEnterKey } = this.props;
     const allChoices = this.allChoices;
     if (event.keyCode === 13) {
-      onEnterKey()
+      onEnterKey();
     }
     console.log(String.fromCharCode(event.keyCode));
     const foundIndex = _.findIndex(allChoices, { label: String.fromCharCode(event.keyCode) });
@@ -170,15 +172,13 @@ class MultipleChoice extends Component {
   }
 
   render() {
-    const { isDisabled, isReadOnly, value, choices, autoFocus,
-      allowMultiple, includeOther } = this.props;
+    const { isDisabled, isReadOnly/*, value*/, autoFocus } = this.props;
     const that = this;
-    const isMultiSelectable = that.isMultiSelectable(value);
+    // const isMultiSelectable = that.isMultiSelectable(value);
     var optionals = {};
-    console.log('render', value);
     var ChoiceItemTemplate = (item, index) => {
       const active = that.isActiveItem(item);
-      const disabled = isDisabled || isReadOnly// || !active && (allowMultiple && !isMultiSelectable)
+      const disabled = isDisabled || isReadOnly;// || !active && (allowMultiple && !isMultiSelectable)
       return <MultipleChoiceItem
         key={`${item.label}-${item.text}`}
         label={item.label}
@@ -187,8 +187,8 @@ class MultipleChoice extends Component {
         disabled={disabled}
         onClick={that.handleClick}
         ref={`ChoiceItem${index}`}
-      />
-    }
+      />;
+    };
     var choicesList = this.allChoices.map((item, index) => {
       return ChoiceItemTemplate(item, index);
     });

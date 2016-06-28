@@ -17,6 +17,7 @@
     "__DEBUG_NEW_WINDOW__" : false,
     "__BASENAME__" : false,
     "API_URL": false,
+    "FRONTEND_ROOT": false,
   },
   "rules": {
     "import/default": 0,

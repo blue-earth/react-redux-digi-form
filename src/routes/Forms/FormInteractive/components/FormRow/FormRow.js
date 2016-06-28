@@ -1,14 +1,8 @@
-import React, { Component, PropTypes } from 'react'
-import { Col, Row } from 'react-bootstrap'
-import FormHeader from 'components/Headers/FormHeader'
-import FormSection from '../FormSection/FormSection'
-import LearnMoreSection from '../LearnMoreSection/LearnMoreSection'
-import styles from './FormRow.scss'
+import React, { Component, PropTypes } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import styles from './FormRow.scss';
 
 class FormRow extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   static propTypes = {
     children: PropTypes.oneOfType([
@@ -28,8 +22,8 @@ class FormRow extends Component {
           </Col>
         </Row>
       </div>
-    )
+    );
   }
 }
 
-export default FormRow
+export default FormRow;

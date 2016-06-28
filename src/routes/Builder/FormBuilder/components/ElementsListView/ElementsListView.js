@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import BuilderHeader from 'components/Headers/BuilderHeader';
 import { Accordion, Panel, Row, Col, Button } from 'react-bootstrap';
 import _ from 'lodash';
 import questionInputs, { questionInputGroups } from 'schemas/questionInputs';
@@ -47,7 +46,7 @@ class ElementsListView extends Component {
             return (
               <Col sm={4} className={styles.panelCol} key={index}>
                 <Button block active={activeInputName === element.name}
-                  onClick={function (e) {that.handleElementClick(e, element.name);}}>
+                  onClick={function (e) { that.handleElementClick(e, element.name); }}>
                   {element.displayText}
                 </Button>
               </Col>
@@ -74,7 +73,7 @@ class ElementsListView extends Component {
           {accordionItems}
         </Accordion>
       </div>
-    )
+    );
   }
 }
 

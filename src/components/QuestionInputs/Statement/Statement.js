@@ -4,7 +4,7 @@ import styles from './Statement.scss';
 class Statement extends Component {
 
   static propTypes = {
-    instruction: PropTypes.string,
+    instruction: PropTypes.string
   };
 
   static defaultProps = {

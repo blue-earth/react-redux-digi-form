@@ -1,12 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import BuilderHeader from 'components/Headers/BuilderHeader';
 import styles from './PageView.scss';
-import { findIndexById } from 'helpers/pureFunctions';
-import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 import { Button } from 'react-bootstrap';
 import { MdZoomIn, MdZoomOut, MdSettingsOverscan, MdZoomOutMap } from 'react-icons/lib/md';
 import DrawingBoard from '../DrawingBoard/DrawingBoard';
-import classNames from 'classnames';
 import _ from 'lodash';
 
 class PageView extends Component {
@@ -60,16 +56,6 @@ class PageView extends Component {
     /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
-    setQuestionEditMode: PropTypes.func.isRequired,
-
-    /*
-     * questionEditMode: Redux state to indicate question edit mode
-     */
-    questionEditMode: PropTypes.bool.isRequired,
-
-    /*
-     * setQuestionEditMode: Redux action to set question edit mode
-     */
     setQuestionEditMode: PropTypes.func.isRequired
   };
 
@@ -92,10 +78,10 @@ class PageView extends Component {
     const { pageZoom, setPageZoom } = this.props;
     setPageZoom(Math.max(pageZoom - 0.25, 0.25));
   }
-  
+
   handleClickFitWidth = () => {
     const { setPageZoom, documents } = this.props;
-    const maxPageWidth = _.maxBy(documents, function(o) { return o.width; }).width;
+    const maxPageWidth = _.maxBy(documents, function (o) { return o.width; }).width;
     const newPageZoom = this.refs.spacer.offsetWidth / maxPageWidth;
     setPageZoom(newPageZoom);
   }
@@ -106,19 +92,19 @@ class PageView extends Component {
   }
 
   renderDocuments() {
-    const { questions, documents, pageZoom } = this.props;
+    const { documents, pageZoom } = this.props;
     return documents.map((document, index) => {
       const zoomedWidth = document.width * pageZoom;
       const pageStyle = {width: zoomedWidth};
       return (
         <div className={styles.page} key={index}
           style={pageStyle}>
-          <img src={document.url} alt={`Page Image ${index + 1}`} 
+          <img src={document.url} alt={`Page Image ${index + 1}`}
             className={styles.pageImage} ref={`pageImage${index + 1}`} />
           <DrawingBoard {...this.props} pageNumber={index + 1} containerId="clientArea" />
         </div>
       );
-    })
+    });
   }
 
   renderToolBox() {
@@ -137,15 +123,12 @@ class PageView extends Component {
           <Button onClick={this.handleClickOriginalSize}><MdZoomOutMap size={24} /></Button>
         </div>
       </div>
-    )
+    );
   }
 
   render() {
-    const { activeInputName, documentMapping, questions, currentQuestionId,
-      pageZoom, documents } = this.props;
-    const { isDrawing, startX, startY, endX, endY } = this.state;
-    var boardOptionals = {};
-    const maxPageWidth = _.maxBy(documents, function(o) { return o.width; }).width;
+    const { pageZoom, documents } = this.props;
+    const maxPageWidth = _.maxBy(documents, function (o) { return o.width; }).width;
     const zoomedWidth = maxPageWidth * pageZoom;
     const pageStyle = {width: zoomedWidth};
 
@@ -161,7 +144,7 @@ class PageView extends Component {
         </div>
         {this.renderToolBox()}
       </div>
-    )
+    );
   }
 }
 

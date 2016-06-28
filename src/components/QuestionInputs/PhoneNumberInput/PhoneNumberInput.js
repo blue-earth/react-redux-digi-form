@@ -3,7 +3,8 @@ import IntlTelInput from 'react-intl-tel-input';
 import { findDOMNode } from 'react-dom';
 import '../../../../node_modules/react-intl-tel-input/dist/libphonenumber.js';
 import '../../../../node_modules/react-intl-tel-input/dist/main.css';
-import styles from './PhoneNumberInput.scss';
+import './PhoneNumberInput.scss';
+import _ from 'lodash';
 
 class PhoneNumberInput extends Component {
 
@@ -19,7 +20,7 @@ class PhoneNumberInput extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    onEnterKey: PropTypes.func,
+    onEnterKey: PropTypes.func
   };
 
   static defaultProps = {
@@ -29,12 +30,8 @@ class PhoneNumberInput extends Component {
     isReadOnly: false
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.value != this.props.value;
+    return nextProps.value !== this.props.value;
   }
 
   componentDidMount() {
@@ -43,34 +40,34 @@ class PhoneNumberInput extends Component {
     var intlTelInput = this.refs.intlTelInput;
     var input = findDOMNode(intlTelInput.refs.telInput);
     const that = this;
-    
+
     if (isDisabled) {
-      intlTelInput.setState( {
+      intlTelInput.setState({
         telInput: _.merge(intlTelInput.state.telInput, {
-            isDisabled: true,
-            value: value
-          })
-      } );
+          isDisabled: true,
+          value: value
+        })
+      });
     }
     if (isReadOnly) {
-      intlTelInput.setState( {
+      intlTelInput.setState({
         telInput: _.merge(intlTelInput.state.telInput, {
-            readonly: true,
-            value: value
-          })
-      } );
+          readonly: true,
+          value: value
+        })
+      });
     }
 
     input.addEventListener('keydown', (event) => that.handleKeyDown(event));
     input.addEventListener('focus', (event) => that.handleFocus(event));
     input.addEventListener('blur', (event) => that.handleBlur(event));
     input.style = 'color:' + this.context.primaryColor;
-    if ( autoFocus ) setTimeout(() => input.focus(), 1);
+    if (autoFocus) setTimeout(() => input.focus(), 1);
   }
 
   changeHandler = (isValid, newValue, countryData, newNumber) => {
     const { onChange, value } = this.props;
-    if (newNumber == '') newNumber = '+' + countryData.dialCode;
+    if (newNumber === '') newNumber = '+' + countryData.dialCode;
     if (value !== newNumber && typeof onChange === 'function') {
       onChange(newNumber);
     }
@@ -78,14 +75,16 @@ class PhoneNumberInput extends Component {
 
   handleKeyDown = (event) => {
     const { onEnterKey } = this.props;
-    if (typeof onEnterKey === 'function' && event.keyCode == 13)
+    if (typeof onEnterKey === 'function' && event.keyCode === 13) {
       onEnterKey();
+    }
   }
 
   handleFocus = (event) => {
     const { onFocus } = this.props;
-    if (typeof onFocus === 'function')
+    if (typeof onFocus === 'function') {
       onFocus();
+    }
   }
 
   handleBlur = (event) => {
@@ -94,7 +93,7 @@ class PhoneNumberInput extends Component {
         var flagDropDown = findDOMNode(this.refs.intlTelInput.refs.flagDropDown);
         var selectedFlag = flagDropDown.querySelector('.selected-flag');
         // clicking on dropdown shouldn't fire blur
-        if (event.relatedTarget == selectedFlag) return;
+        if (event.relatedTarget === selectedFlag) return;
       }
       const { onBlur } = this.props;
       onBlur();
@@ -102,7 +101,7 @@ class PhoneNumberInput extends Component {
   }
 
   render() {
-    const { value, isReadOnly, isDisabled } = this.props;
+    const { value } = this.props;
 
     return (
       <IntlTelInput preferredCountries={[]}
@@ -115,7 +114,7 @@ class PhoneNumberInput extends Component {
         onPhoneNumberChange={this.changeHandler}
         utilsScript={'libphonenumber.js'}
         />
-    )
+    );
   }
 }
 

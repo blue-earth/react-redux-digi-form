@@ -5,14 +5,13 @@ import validateField from 'helpers/validationHelper';
 import FormHeader from 'components/Headers/FormHeader';
 import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
-import { Button } from 'react-bootstrap';
-import { Modal } from 'react-bootstrap'; // Temp
+import { Button, Modal } from 'react-bootstrap';
 import FormSection from '../FormSection/FormSection';
 import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
 import FormRow from '../FormRow/FormRow';
 import { groupFormQuestions, SlideAnimation, getSessionURL }
   from 'helpers/formInteractiveHelper.js';
-import { FORM_AUTOSAVE, FORM_USER_SUBMISSION, FORM_ACCESS, UPDATE_ACCESS_CODE } from 'redux/modules/formInteractive';
+import { FORM_AUTOSAVE, FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
 import styles from './FormInteractive.scss';
 import Animate from 'rc-animate';
@@ -79,7 +78,7 @@ class FormInteractive extends Component {
      * currentQuestionId: Redux state that keeps the current active question ID.
      */
     currentQuestionId: PropTypes.number.isRequired,
-    
+
     /*
      * Form primary color
      */
@@ -134,12 +133,12 @@ class FormInteractive extends Component {
      * resetFormSubmitStatus: Redux action to reset lastFormSubmitStatus.
      */
     resetFormSubmitStatus: PropTypes.func.isRequired,
-    
+
     /*
      * resetFormSubmitStatus: Redux action to reset lastFormSubmitStatus.
      */
     lastFormSubmitStatus: PropTypes.object.isRequired,
-    
+
     /*
      * shouldShowFinalSubmit: Redux statue to check if it's final stage.
      */
@@ -158,11 +157,17 @@ class FormInteractive extends Component {
     /*
      * show: Redux modal show
      */
-    show: PropTypes.func.isRequired
+    show: PropTypes.func.isRequired,
+
+    params: PropTypes.object,
+
+    sessionId: PropTypes.number,
+
+    updateAccessCode: PropTypes.func
   };
 
   componentWillMount() {
-    const { fetchFormIfNeeded, fetchAnswers, 
+    const { fetchFormIfNeeded, fetchAnswers,
       params: { id, sessionId } } = this.props;
     fetchFormIfNeeded(id);
     if (sessionId) {
@@ -175,8 +180,8 @@ class FormInteractive extends Component {
     // todo: Comment on ``lastFormSubmitStatus``, what are an example of this object
     // how each property is used etc..
     // comment can be made on formInteractive.js file
-    if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION
-      && props.lastFormSubmitStatus.result) {
+    if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION &&
+    props.lastFormSubmitStatus.result) {
       if (props.shouldShowFinalSubmit) {
         this.context.router.push(`/forms/${this.props.id}/${this.props.sessionId}/completion`);
       } else {
@@ -190,7 +195,7 @@ class FormInteractive extends Component {
   // See https://github.com/airbnb/javascript/tree/master/react#ordering
   componentDidMount() {
     const { submitAnswer } = this.props;
-    setInterval(function() {
+    setInterval(function () {
       submitAnswer(FORM_AUTOSAVE);
     }, 30000);  // todo: Will optimise this later
   }
@@ -201,7 +206,7 @@ class FormInteractive extends Component {
     const curQueIdx = findIndexById(allQuestions, currentQuestionId);
     const firstGroupIdx = findIndexById(allQuestions, gq[0].id);
     const lastGroupIdx = findIndexById(allQuestions, gq[gq.length - 1].id);
- 
+
     if (shouldShowFinalSubmit) return 'completed'; // check if it's the final step.
 
     if (curQueIdx < firstGroupIdx) return 'pending';
@@ -218,47 +223,45 @@ class FormInteractive extends Component {
     var slideAnimation = new SlideAnimation(1000);
     const anim = {
       enter: slideAnimation.enter,
-      leave: slideAnimation.leave,
+      leave: slideAnimation.leave
     };
 
     return (
       <div className={styles.stepsWrapper}>
-        <Animate exclusive={true} animation={anim}>
+        <Animate exclusive animation={anim}>
           {
-            questionGroups.map(function(group, index) {
+            questionGroups.map(function (group, index) {
               return (
                 <FormSection key={index} questionGroup={group}
                   step={index+1} totalSteps={questionGroups.length}
-                  status={that.sectionStatus(questions, currentQuestionId, group)}  
+                  status={that.sectionStatus(questions, currentQuestionId, group)}
                   {...props} />
               );
             })
           }
         </Animate>
         <FormRow>
-          {shouldShowFinalSubmit && 
+          {shouldShowFinalSubmit &&
             <div className={styles.submitButtonsArea}>
-              <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit}/>
+              <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
             </div>}
           <div className={styles.helpButtonWrapper}>
             <Button bsStyle="danger" block>Help</Button>
           </div>
         </FormRow>
       </div>
-    )
+    );
   }
 
   get renderFormCompletionSection() {
-    const { form: { questions }, currentQuestionId } = this.props;
     const props = this.props;
     return (
       <div className={styles.stepsWrapper}>
-        <FormCompletionSection  
-                  {...props} />
-        <FormRow>
-        </FormRow>
+        <FormCompletionSection
+          {...props} />
+        <FormRow />
       </div>
-    )
+    );
   }
 
   handleHideTempModal = () => {
@@ -268,17 +271,17 @@ class FormInteractive extends Component {
   handleAccessCodeInput = (value) => {
     const { updateAccessCode } = this.props;
     updateAccessCode(value);
-    this.setState({ 
+    this.setState({
       accessCodeInputStatus: 'changing'
     });
   }
 
   handleFormAccess = () => {
     const { id, fetchFormIfNeeded, formAccessCode, sessionId, fetchAnswers } = this.props;
-    var isAccessCodeValid = validateField({type:'minLength',value:4}, formAccessCode) && 
-    validateField({type:'maxLength',value:4}, formAccessCode);
+    var isAccessCodeValid = validateField({type: 'minLength', value: 4}, formAccessCode) &&
+    validateField({type: 'maxLength', value: 4}, formAccessCode);
     if (isAccessCodeValid) {
-      this.setState({ 
+      this.setState({
         accessCodeInputStatus: 'validated'
       });
       fetchFormIfNeeded(id);
@@ -286,7 +289,7 @@ class FormInteractive extends Component {
         fetchAnswers(sessionId);
       }
     } else {
-      if (!validateField({type:'minLength',value:4}, formAccessCode)) {
+      if (!validateField({type: 'minLength', value: 4}, formAccessCode)) {
         this.setState({ accessCodeInputStatus: 'minLengthUnvalidated' });
       } else {
         this.setState({ accessCodeInputStatus: 'maxLengthUnvalidated' });
@@ -301,7 +304,7 @@ class FormInteractive extends Component {
 
   // Temp Modal for submit response.
   renderTempResponseModal() {
-    const { sessionId, id, lastFormSubmitStatus } = this.props;
+    const { sessionId, id } = this.props;
     const { showTempModal } = this.state;
 
     return (
@@ -325,11 +328,10 @@ class FormInteractive extends Component {
 
   // Access Modal for Access form UI.
   renderAccessResponseModal(formAccessStatus) {
-    
-    const { showAccessModal, accessCodeInputStatus, accessCodeSubmitStatus } = this.state;
-    const { fetchForm, formAccessCode } = this.props;
-    const showVerificationStatus = accessCodeInputStatus === 'validated' && 
-      showAccessModal == true;
+    const { showAccessModal, accessCodeInputStatus } = this.state;
+    const { formAccessCode } = this.props;
+    const showVerificationStatus = accessCodeInputStatus === 'validated' &&
+      showAccessModal === true;
 
     var optionals = {};
     if (this.context.primaryColor) {
@@ -337,18 +339,18 @@ class FormInteractive extends Component {
         color: this.context.primaryColor
       };
     }
-    const accessCodeErrorText = "Access Code must be 4 digits.";
+    const accessCodeErrorText = 'Access Code must be 4 digits.';
     return (
       <Modal show={showAccessModal} dialogClassName={styles.modalWrapper}>
         <div className={styles.accessModalWrapper}>
-          Enter the 4 digit access code <br/>to continue
+          Enter the 4 digit access code <br />to continue
           <div className={styles.modalDigitInput}>
-            <ShortTextInput type="NumberField" value={formAccessCode} 
+            <ShortTextInput type="NumberField" value={formAccessCode}
               onChange={this.handleAccessCodeInput}
-              autoFocus onEnterKey={this.handleFormAccess}/>
+              autoFocus onEnterKey={this.handleFormAccess} />
           </div>
           <div className={styles.modalSubmitButton}>
-            <SubmitButton onClick={this.handleFormAccess}/>
+            <SubmitButton onClick={this.handleFormAccess} />
           </div>
           <div className={styles.modalValidator}>
             {accessCodeInputStatus === 'minLengthUnvalidated' &&
@@ -360,7 +362,7 @@ class FormInteractive extends Component {
                 displayText={accessCodeErrorText} />
             }
             {showVerificationStatus && formAccessStatus === 'fail' &&
-              <Verifier type="AccessCodeService" status={formAccessStatus !== 'fail'}/>
+              <Verifier type="AccessCodeService" status={formAccessStatus !== 'fail'} />
             }
           </div>
           <a href="javascript:;" className={styles.resendLink}
@@ -378,12 +380,12 @@ class FormInteractive extends Component {
       <div>
         <FormHeader submitAnswer={submitAnswer} />
         <div className={styles.flowLine}></div>
-        { status !== 'completion' && form && this.renderFormSteps }
-        { status !== 'completion' && this.renderTempResponseModal() }
-        { status === 'completion' && this.renderFormCompletionSection }
-        { formAccessStatus != 'success' && this.renderAccessResponseModal(formAccessStatus) }
+        {status !== 'completion' && form && this.renderFormSteps}
+        {status !== 'completion' && this.renderTempResponseModal()}
+        {status === 'completion' && this.renderFormCompletionSection}
+        {formAccessStatus !== 'success' && this.renderAccessResponseModal(formAccessStatus)}
       </div>
-    )
+    );
   }
 }
 

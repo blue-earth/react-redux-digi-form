@@ -7,10 +7,6 @@ class DropdownInput extends Component {
     primaryColor: React.PropTypes.string
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   static propTypes = {
     isDisabled: PropTypes.bool,
     isReadOnly: PropTypes.bool,
@@ -45,12 +41,12 @@ class DropdownInput extends Component {
     const { isDisabled, isReadOnly, value, choices, includeBlank } = this.props;
     const { primaryColor } = this.context;
     var optionals = {};
-    
+
     if (isDisabled || isReadOnly) {
       optionals['disabled'] = 'disabled';
     }
 
-    if ( typeof primaryColor !== 'undefined' ) {
+    if (typeof primaryColor !== 'undefined') {
       optionals['style'] = {
         color: primaryColor
       };
@@ -60,8 +56,9 @@ class DropdownInput extends Component {
       return <option value={item} key={index}>{item}</option>;
     });
 
-    if (includeBlank)
+    if (includeBlank) {
       choicesList.unshift(<option value="" key="empty_field"></option>);
+    }
 
     return (
       <select className={styles.dropdownInput}

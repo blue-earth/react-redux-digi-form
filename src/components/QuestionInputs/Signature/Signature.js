@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { findDOMNode } from 'react-dom';
 import FormEnterButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import SignatureModal from './SignatureModal';
 import styles from './Signature.scss';
@@ -9,10 +8,6 @@ class Signature extends Component {
   static contextTypes = {
     primaryColor: React.PropTypes.string
   };
-
-  constructor(props) {
-    super(props);
-  }
 
   static propTypes = {
     isDisabled: PropTypes.bool,
@@ -88,7 +83,7 @@ class Signature extends Component {
           <FormEnterButton buttonLabel="Sign"
             isDisabled={isDisabled}
             autoFocus={!value && autoFocus}
-            onClick={function () {show('signatureModal')}} />
+            onClick={function () { show('signatureModal'); }} />
         }
         <SignatureModal onSave={this.handleChange} value={value} />
       </div>

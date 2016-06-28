@@ -1,4 +1,4 @@
-import FormsListContainer from './containers/FormsListContainer'
+import FormsListContainer from './containers/FormsListContainer';
 
 // Sync route definition
-export default FormsListContainer
+export default FormsListContainer;

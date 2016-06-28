@@ -1,7 +1,7 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { mergeItemIntoArray } from 'helpers/pureFunctions';
-import { getImageDimension } from 'helpers/formBuilderHelper';
+import _ from 'lodash';
 
 export const RECEIVE_FORM = 'RECEIVE_FORM';
 export const REQUEST_FORM = 'REQUEST_FORM';
@@ -54,8 +54,9 @@ export const INIT_BUILDER_STATE = {
 // ------------------------------------
 export const processFetchForm = (id, accessCode) => {
   var apiURL = `${API_URL}/form_document/api/form/${id}/`;
-  if (accessCode.length > 0) 
+  if (accessCode.length > 0) {
     apiURL += `?access_code=${accessCode}`;
+  }
   const fetchParams = {
     headers: {
       Accept: 'application/json',
@@ -69,17 +70,17 @@ export const processFetchForm = (id, accessCode) => {
     return (dispatch, getState) => {
       dispatch(receiveForm(id, value));
       dispatch(doneFetchingForm()); // Hide loading spinner
-    }
+    };
   };
-  
+
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneFetchingForm()); // Hide loading spinner
-    }
+    };
   };
 
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
-}
+};
 
 // ------------------------------------
 // Action: requestForm
@@ -88,7 +89,7 @@ export const requestForm = () => {
   return {
     type: REQUEST_FORM
   };
-}
+};
 
 // ------------------------------------
 // Action: receiveForm
@@ -102,9 +103,9 @@ export const receiveForm = (id, data) => {
     documents: data.assets_urls,
     formConfig: data.form_config,
     title: data.title,
-    slug: data.slug,
+    slug: data.slug
   };
-}
+};
 
 // ------------------------------------
 // Action: doneFetchingForm
@@ -113,7 +114,7 @@ export const doneFetchingForm = () => {
   return {
     type: DONE_FETCHING_FORM
   };
-}
+};
 
 // ------------------------------------
 // Action: fetchForm
@@ -123,8 +124,8 @@ export const fetchForm = (id) => {
     const formBuilder = getState().formBuilder;
     dispatch(requestForm());
     dispatch(processFetchForm(id, formBuilder.formAccessCode));
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Action: setActiveInputName
@@ -134,7 +135,7 @@ export const setActiveInputName = (inputName) => {
     type: SET_ACTIVE_INPUT_NAME,
     inputName
   };
-}
+};
 
 // ------------------------------------
 // Action: addElement
@@ -144,7 +145,7 @@ export const addElement = (element) => {
     type: ADD_ELEMENT,
     element
   };
-}
+};
 
 const _addElement = (state, action) => {
   var { question, mappingInfo } = action.element;
@@ -157,7 +158,7 @@ const _addElement = (state, action) => {
     lastQuestionId: newQuestionId,
     currentQuestionId: newQuestionId
   };
-}
+};
 
 // ------------------------------------
 // Action: deleteElement
@@ -167,7 +168,7 @@ export const deleteElement = (id) => {
     type: DELETE_ELEMENT,
     id
   };
-}
+};
 
 // ------------------------------------
 // Action: updateMappingInfo
@@ -177,7 +178,7 @@ export const updateMappingInfo = (mappingInfo) => {
     type: UPDATE_MAPPING_INFO,
     mappingInfo
   };
-}
+};
 
 // ------------------------------------
 // Action: setCurrentQuestionId
@@ -187,7 +188,7 @@ export const setCurrentQuestionId = (id) => {
     type: SET_CURRENT_QUESTION_ID,
     id
   };
-}
+};
 
 // ------------------------------------
 // Action: setPageZoom
@@ -197,15 +198,15 @@ export const setPageZoom = (pageZoom) => {
     type: SET_PAGE_ZOOM,
     pageZoom
   };
-}
+};
 
 export const setQuestionEditMode = ({id, mode}) => {
   return {
     type: SET_QUESTION_EDIT_MODE,
     id,
     mode
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Reducer
@@ -245,7 +246,6 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
     case ADD_ELEMENT:
       return Object.assign({}, state, _addElement(state, action));
     case DELETE_ELEMENT:
-      console.log(_.pullAllBy(state.questions, [{id: action.id}], 'id'))
       return Object.assign({}, state, {
         questions: _.pullAllBy(state.questions, [{id: action.id}], 'id'),
         documentMapping: _.pullAllBy(state.documentMapping, [{id: action.id}], 'id'),
@@ -275,7 +275,7 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
       });
     default:
       return state;
-  };
-}
+  }
+};
 
 export default formBuilderReducer;

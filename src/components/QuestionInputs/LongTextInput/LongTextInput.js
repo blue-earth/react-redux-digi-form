@@ -21,14 +21,14 @@ class LongTextInput extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    onEnterKey: PropTypes.func,
+    onEnterKey: PropTypes.func
   };
 
   static defaultProps = {
     placeholderText: '',
     fullWidth: false,
     rows: 4,
-    cols: 50,
+    cols: 50
   };
 
   constructor(props) {
@@ -39,7 +39,7 @@ class LongTextInput extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.savedValue != this.state.savedValue;
+    return nextState.savedValue !== this.state.savedValue;
   }
 
   componentWillReceiveProps(props) {
@@ -78,21 +78,21 @@ class LongTextInput extends Component {
 
   render() {
     var props = this.props;
-    var { type, value, autoFocus } = this.props;
+    var { autoFocus } = this.props;
     var { primaryColor } = this.context;
     var optionals = {};
 
-    if ( typeof primaryColor !== 'undefined' ) {
+    if (typeof primaryColor !== 'undefined') {
       optionals['style'] = {
         color: primaryColor
       };
     }
     if (props.placeholderText) {
-      optionals['placeholder'] = props.placeholderText
-    };
+      optionals['placeholder'] = props.placeholderText;
+    }
     if (props.isDisabled) {
-      optionals['disabled'] = 'disabled'
-    };
+      optionals['disabled'] = 'disabled';
+    }
 
     return (
       <textarea
@@ -107,7 +107,7 @@ class LongTextInput extends Component {
         // onKeyDown={this.handleKeyDown}
         {...optionals}
       />
-    )
+    );
   }
 }
 

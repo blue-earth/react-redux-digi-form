@@ -10,8 +10,8 @@ const getComponent = (nextState, cb) => {
     cb(null, FormBuilder);
 
     /* Webpack named bundle   */
-  }, 'formBuilder')
-}
+  }, 'formBuilder');
+};
 
 module.exports = [
   {

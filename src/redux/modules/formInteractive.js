@@ -52,14 +52,14 @@ export const INIT_FORM_STATE = {
   lastFormSubmitStatus: {}, // holds the status of last form submit response.
   form: {
     questions: [],
-    logics:[]
+    logics: []
   }, // holds the received form data.
   title: 'Title',
   slug: 'slug',
   currentQuestionId: 0,
   answers: [],
   prefills: [],
-  verificationStatus:[],
+  verificationStatus: [],
   primaryColor: '#DD4814',
   shouldShowFinalSubmit: false, // indicates whether to show final form submit section.
   formAccessStatus: 'init', // can be 'init', 'waiting', 'failed', 'success'
@@ -76,8 +76,9 @@ export const INIT_FORM_STATE = {
 // ------------------------------------
 export const fetchForm = (id, accessCode) => {
   var apiURL = `${API_URL}/form_document/api/form/${id}/`;
-  if (accessCode.length > 0) 
+  if (accessCode.length > 0) {
     apiURL += `?access_code=${accessCode}`;
+  }
   const fetchParams = {
     headers: {
       Accept: 'application/json',
@@ -91,17 +92,17 @@ export const fetchForm = (id, accessCode) => {
     return (dispatch, getState) => {
       dispatch(receiveForm(id, value));
       dispatch(doneFetchingForm()); // Hide loading spinner
-    }
+    };
   };
-  
+
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneFetchingForm()); // Hide loading spinner
-    }
+    };
   };
 
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
-}
+};
 
 // ------------------------------------
 // Action: requestForm
@@ -110,7 +111,7 @@ export const requestForm = () => {
   return {
     type: REQUEST_FORM
   };
-}
+};
 
 // ------------------------------------
 // Action: receiveForm
@@ -126,7 +127,7 @@ export const receiveForm = (id, data) => {
     currentQuestionId: validateQuestionId(data.form_data),
     isAccessCodeProtected: data.is_access_code_protected
   };
-}
+};
 
 // ------------------------------------
 // Action: doneFetchingForm
@@ -135,18 +136,18 @@ export const doneFetchingForm = () => {
   return {
     type: DONE_FETCHING_FORM
   };
-}
+};
 
 const shouldFetchForm = (state, id) => {
   const formInteractive = state.formInteractive;
   // todo: Add documentation on how following conditions are triggered?
-  if ((id !== formInteractive.id || !formInteractive.form)
-    && !formInteractive.isFetchingForm) {
+  if ((id !== formInteractive.id || !formInteractive.form) &&
+  !formInteractive.isFetchingForm) {
     return true;
   } else {
     return false;
   }
-}
+};
 
 // ------------------------------------
 // Action: fetchFormIfNeeded
@@ -160,8 +161,8 @@ export const fetchFormIfNeeded = (id) => {
     } else {
       // dispatch(fetchAnswers());
     }
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Action: fetchAnswers
@@ -170,8 +171,8 @@ export const fetchAnswers = (sessionId) => {
   return (dispatch, getState) => {
     dispatch(requestAnswers());
     dispatch(processFetchAnswers(sessionId));
-  }
-}
+  };
+};
 // ------------------------------------
 // Action: requestAnswers
 // ------------------------------------
@@ -179,7 +180,7 @@ export const requestAnswers = () => {
   return {
     type: REQUEST_ANSWERS
   };
-}
+};
 
 // ------------------------------------
 // Action: receiveForm
@@ -190,7 +191,7 @@ export const receiveAnswers = (data) => {
     sessionId: data.response_id,
     answers: data.answers
   };
-}
+};
 // ------------------------------------
 // Action: doneFetchingAnswers
 // ------------------------------------
@@ -198,18 +199,17 @@ export const doneFetchingAnswers = () => {
   return {
     type: DONE_FETCHING_ANSWERS
   };
-}
+};
 
 export const processFetchAnswers = (sessionId) => {
-
-  const apiURL = `${API_URL}/form_document/api/form_response/${sessionId}/`
+  const apiURL = `${API_URL}/form_document/api/form_response/${sessionId}/`;
   // todo: DRY the common header setup
   const fetchParams = {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    redirect: 'follow',   //todo: Comment on this parameter, why this parameter is necessary
+    redirect: 'follow',   // todo: Comment on this parameter, why this parameter is necessary
     method: 'GET'
   };
 
@@ -217,26 +217,26 @@ export const processFetchAnswers = (sessionId) => {
     return (dispatch, getState) => {
       dispatch(receiveAnswers(value));
       dispatch(doneFetchingAnswers()); // Hide loading spinner
-    }
+    };
   };
-  
+
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneFetchingAnswers()); // Hide loading spinner
-    }
+    };
   };
 
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
-}
+};
 
 const validateQuestionId = (form) => {
   if (!form) return 0;
   const questions = form.questions;
-  for ( var i = 0; i < questions.length; i ++ ) {
+  for (var i = 0; i < questions.length; i++) {
     if (questions[i].type !== 'Group') return questions[i].id;
   }
   return 1;
-}
+};
 
 // ------------------------------------
 // Action: goToQuestion
@@ -245,8 +245,8 @@ export const goToQuestion = (id) => {
   return {
     type: GOTO_QUESTION,
     id: id
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Action: nextQuestion
@@ -256,12 +256,12 @@ export const nextQuestion = () => {
     const formInteractive = getState().formInteractive;
     const { form: { questions }, currentQuestionId } = formInteractive;
     var nextId = getNextQuestionId(questions, currentQuestionId);
-    if ( nextId === currentQuestionId) { //detect the last question
+    if (nextId === currentQuestionId) { // detect the last question
       return dispatch(showFinalSubmit());
     }
 
     const outcome = getOutcomeWithQuestionId(formInteractive, currentQuestionId);
-    if ( outcome !== false ) {
+    if (outcome !== false) {
       for (var item of outcome) {
         // Processes outcome before going to next question
         if (item.type === 'JumpToQuestion') {
@@ -272,23 +272,22 @@ export const nextQuestion = () => {
             value: item.value
           }));
         }
-
       }
     }
     dispatch(goToQuestion(nextId));
-  }
-}
+  };
+};
 
 const getNextQuestionId = (questions, questionId) => {
   var curIdx, nextIdx;
-  curIdx = nextIdx = _.findIndex(questions, function(o) { return o.id == questionId; })
-  while ( nextIdx < questions.length - 1 ) { 
+  curIdx = nextIdx = _.findIndex(questions, function (o) { return o.id === questionId; });
+  while (nextIdx < questions.length - 1) {
     var q = questions[++nextIdx];
-    if (q.type != 'Group') break;
+    if (q.type !== 'Group') break;
   }
-  if (questions[nextIdx].type == 'Group') nextIdx = curIdx;
+  if (questions[nextIdx].type === 'Group') nextIdx = curIdx;
   return questions[nextIdx].id;
-}
+};
 
 // ------------------------------------
 // Action: updateAccessCode
@@ -298,7 +297,7 @@ export const updateAccessCode = (accessCode) => {
     type: UPDATE_ACCESS_CODE,
     accessCode
   };
-}
+};
 
 // ------------------------------------
 // Action: showFinalSubmit
@@ -307,7 +306,7 @@ export const showFinalSubmit = () => {
   return {
     type: SHOW_FINAL_SUBMIT
   };
-}
+};
 
 // ------------------------------------
 // Action: prevQuestion
@@ -318,32 +317,32 @@ export const prevQuestion = () => {
     const { form: { questions }, currentQuestionId } = formInteractive;
     const prevId = getPrevQuestionId(questions, currentQuestionId);
     dispatch(goToQuestion(prevId));
-  }
-}
+  };
+};
 
 const getPrevQuestionId = (questions, questionId) => {
   var curIdx, prevIdx;
-  curIdx = prevIdx = _.findIndex(questions, function(o) { return o.id == questionId; });
-  while ( prevIdx > 1 ) { 
+  curIdx = prevIdx = _.findIndex(questions, function (o) { return o.id === questionId; });
+  while (prevIdx > 1) {
     var q = questions[--prevIdx];
-    if (q.type != 'Group') break;
+    if (q.type !== 'Group') break;
   }
-  if (questions[prevIdx].type == 'Group') prevIdx = curIdx; //In case it reaches index 0 and question type is 'Group'
+  if (questions[prevIdx].type === 'Group') prevIdx = curIdx; // In case it reaches index 0 and question type is 'Group'
   return questions[prevIdx].id;
-}
+};
 
 // ------------------------------------
 // Action: storeAnswer
 // ------------------------------------
 export const storeAnswer = ({id, value}) => {
   return (dispatch, getState) => {
-    const state = getState();
+    // const state = getState();
     // if ( shouldVerifyEmail(state, id) ) {
     //   dispatch(verifyEmail(id, value));
     // }
     dispatch(processStoreAnswer({id, value}));
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Action: processStoreAnswer
@@ -356,7 +355,7 @@ export const processStoreAnswer = ({id, value}) => {
       value
     }
   };
-}
+};
 
 // ------------------------------------
 // Action: answerPrefill
@@ -369,19 +368,19 @@ export const answerPrefill = ({id, value}) => {
       value
     }
   };
-}
+};
 
 // ------------------------------------
 // Action: verifyEmail
 // ------------------------------------
 export const verifyEmail = (questionId, email) => {
   return (dispatch, getState) => {
-    //if (!getState().isVerifying) {
-      dispatch(requestVerification());
-      dispatch(processVerifyEmail(questionId, email));
-    //}
+    // if (!getState().isVerifying) {
+    dispatch(requestVerification());
+    dispatch(processVerifyEmail(questionId, email));
+    // }
   };
-}
+};
 
 // ------------------------------------
 // Action: requestVerification
@@ -390,13 +389,12 @@ export const requestVerification = () => {
   return {
     type: REQUEST_VERIFICATION
   };
-}
+};
 
 // ------------------------------------
 // Action: processVerifyEmail
 // ------------------------------------
 export const processVerifyEmail = (questionId, email) => {
-
   const apiURL = `${API_URL}/verifications/api/email/verify/`;
   const fetchParams = {
     method: 'POST',
@@ -417,20 +415,22 @@ export const processVerifyEmail = (questionId, email) => {
         status: result
       }));
       dispatch(doneVerification()); // Hide loading spinner
-    }
+    };
   };
-  
+
   const fetchFail = (data) => {
-    dispatch(receiveVerification({
-      id: questionId,
-      type: 'EmondoEmailFieldService',
-      status: false
-    }));
-    dispatch(doneVerification()); // Hide loading spinner
+    return (dispatch, getState) => {
+      dispatch(receiveVerification({
+        id: questionId,
+        type: 'EmondoEmailFieldService',
+        status: false
+      }));
+      dispatch(doneVerification()); // Hide loading spinner
+    };
   };
 
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
-}
+};
 
 // const shouldVerifyEmail = (state, id) => {
 //   const { formInteractive: { form: { questions } } } = state;
@@ -445,17 +445,17 @@ export const processVerifyEmail = (questionId, email) => {
 const shouldVerify = (formInteractive) => {
   const { form: { questions }, currentQuestionId } = formInteractive;
   const idx = findIndexById(questions, currentQuestionId);
-  if (typeof questions[idx].verifications !== 'undefined' && questions[idx].verifications.length > 0)
+  if (typeof questions[idx].verifications !== 'undefined' && questions[idx].verifications.length > 0) {
     return true;
-  else
+  } else {
     return false;
-}
+  }
+};
 
 // ------------------------------------
 // Action: nextQuestionAfterVerification
 // ------------------------------------
 export const nextQuestionAfterVerification = () => {
-
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
     const { form: { questions }, currentQuestionId, answers } = formInteractive;
@@ -468,14 +468,14 @@ export const nextQuestionAfterVerification = () => {
         dispatch(verifyEmail(currentQuestionId, answers[answerIndex].value));
       }
     }
-  }
-}
+  };
+};
 
 const doneVerification = () => {
   return {
     type: DONE_VERIFICATION
   };
-}
+};
 
 // ------------------------------------
 // Action: receiveVerification
@@ -488,11 +488,11 @@ export const receiveVerification = (verification) => {
     const verifiedStatuses = _.filter(verificationStatus, {id: currentQuestionId, status: true});
     const idx = findIndexById(questions, currentQuestionId);
     // If all verified as true go to next question.
-    if (verifiedStatuses.length == questions[idx].verifications.length) {
+    if (verifiedStatuses.length === questions[idx].verifications.length) {
       dispatch(nextQuestion());
     }
   };
-}
+};
 
 // ------------------------------------
 // Action: updateVerificationStatus
@@ -502,7 +502,7 @@ export const updateVerificationStatus = (verification) => {
     type: RECEIVE_VERIFICATION,
     verification: verification
   };
-}
+};
 
 // ------------------------------------
 // Action: handleEnter
@@ -511,30 +511,30 @@ export const handleEnter = () => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
     // check if verification is required.
-    if ( shouldVerify(formInteractive) ) {
+    if (shouldVerify(formInteractive)) {
       dispatch(nextQuestionAfterVerification());
-      //dispatch(verifyEmail(currentQuestionId, answers[currentQuestionId].value));
+      // dispatch(verifyEmail(currentQuestionId, answers[currentQuestionId].value));
     } else {
-      dispatch(nextQuestion())
+      dispatch(nextQuestion());
     }
   };
-}
+};
 
 // ------------------------------------
 // Action: submitAnswer
 // ------------------------------------
 export const submitAnswer = (requestAction) => {
   return (dispatch, getState) => {
-      const formInteractive = getState().formInteractive;
-      if (requestAction === FORM_USER_SUBMISSION) {
-        dispatch(requestSubmitAnswer());
-        dispatch(processSubmitAnswer(requestAction, formInteractive));
-      }
-      if (requestAction === FORM_AUTOSAVE && formInteractive.isModified) {
-        dispatch(processSubmitAnswer(requestAction, formInteractive));
-      }
+    const formInteractive = getState().formInteractive;
+    if (requestAction === FORM_USER_SUBMISSION) {
+      dispatch(requestSubmitAnswer());
+      dispatch(processSubmitAnswer(requestAction, formInteractive));
+    }
+    if (requestAction === FORM_AUTOSAVE && formInteractive.isModified) {
+      dispatch(processSubmitAnswer(requestAction, formInteractive));
+    }
   };
-}
+};
 
 // ------------------------------------
 // Action: requestSubmitAnswer
@@ -542,14 +542,13 @@ export const submitAnswer = (requestAction) => {
 export const requestSubmitAnswer = () => {
   return {
     type: REQUEST_SUBMIT
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Action: processSubmitAnswer
 // ------------------------------------
 export const processSubmitAnswer = (requestAction, formInteractive) => {
-
   const { id, answers, sessionId } = formInteractive;
   var answerRequest = {
     request_action: requestAction,
@@ -577,26 +576,26 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
   // Temporary, should be fixed later with correct domain name.
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      const { form_id, response_id } = value;
+      const { response_id } = value;
       dispatch(updateSessionId(response_id));
       dispatch(doneSubmitAnswer({
         result: true,
         requestAction
       })); // Hide submitting spinner
-    }
+    };
   };
-  
+
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitAnswer({
         result: false,
-        requestAction,
+        requestAction
       })); // Hide submitting spinner
-    }
+    };
   };
 
   return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
-}
+};
 
 // ------------------------------------
 // Action: doneSubmitAnswer
@@ -605,8 +604,8 @@ export const doneSubmitAnswer = (status) => {
   return {
     type: DONE_SUBMIT,
     status
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Action: updateFormSession
@@ -615,8 +614,8 @@ export const updateSessionId = (sessionId) => {
   return {
     type: UPDATE_SESSION_ID,
     sessionId
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Action: resetFormSubmitStatus
@@ -625,8 +624,8 @@ export const resetFormSubmitStatus = (sessionId) => {
   // todo: Unused parameter?
   return {
     type: RESET_FORM_SUBMIT_STATUS
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Reducer
@@ -649,11 +648,11 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
     case REQUEST_FORM:
       return Object.assign({}, state, {
         isFetchingForm: true,
-        formAccessStatus: 'waiting',
+        formAccessStatus: 'waiting'
       });
     case DONE_FETCHING_FORM:
       return Object.assign({}, state, {
-        isFetchingForm: false,
+        isFetchingForm: false
       });
     case RECEIVE_ANSWERS:
       return Object.assign({}, state, {
@@ -662,11 +661,11 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
       });
     case REQUEST_ANSWERS:
       return Object.assign({}, state, {
-        isFetchingAnswers: true,
+        isFetchingAnswers: true
       });
     case DONE_FETCHING_ANSWERS:
       return Object.assign({}, state, {
-        isFetchingAnswers: false,
+        isFetchingAnswers: false
       });
     case GOTO_QUESTION:
       return Object.assign({}, state, {
@@ -675,7 +674,7 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
       });
     case ANSWER_PREFILL:
       return Object.assign({}, state, {
-        prefills: mergeItemIntoArray(state.prefills, action.prefill),
+        prefills: mergeItemIntoArray(state.prefills, action.prefill)
       });
     case STORE_ANSWER:
       return Object.assign({}, state, {
@@ -684,11 +683,11 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
       });
     case REQUEST_VERIFICATION:
       return Object.assign({}, state, {
-        isVerifying: true,
+        isVerifying: true
       });
     case DONE_VERIFICATION:
       return Object.assign({}, state, {
-        isVerifying: false,
+        isVerifying: false
       });
     case RECEIVE_VERIFICATION:
       return Object.assign({}, state, {
@@ -696,17 +695,17 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
       });
     case UPDATE_SESSION_ID:
       return Object.assign({}, state, {
-        sessionId: action.sessionId,
+        sessionId: action.sessionId
       });
     case REQUEST_SUBMIT:
       return Object.assign({}, state, {
-        isSubmitting: true,
+        isSubmitting: true
       });
     case DONE_SUBMIT:
       return Object.assign({}, state, {
         isSubmitting: false,
         isModified: action.status.result ? false : state.isModified,
-        lastFormSubmitStatus: action.status,
+        lastFormSubmitStatus: action.status
       });
     case SHOW_FINAL_SUBMIT:
       return Object.assign({}, state, {
@@ -722,7 +721,7 @@ const formInteractiveReducer = (state = INIT_FORM_STATE, action) => {
       });
     default:
       return state;
-  };
-}
+  }
+};
 
 export default formInteractiveReducer;

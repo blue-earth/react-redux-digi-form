@@ -64,14 +64,33 @@ class QuestionInteractive extends Component {
   static contextTypes = {
     primaryColor: React.PropTypes.string
   };
-  
+
   static propTypes = {
 
     /*
+     * value: Question answer value
+     */
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.object,
+      PropTypes.array
+    ]),
+
+    /*
+     * buttonLabel: Question button label.
+     */
+    buttonLabel: PropTypes.string,
+
+    /*
+     * type: Question type.
+     */
+    type: PropTypes.string,
+    /*
      * validations: Validations required for the question, it is a part of form response.
-     */ 
+     */
     validations: PropTypes.array,
-    
+
     /*
      * status: Status of current question.
      *         'current' - current active question that is prompted to answer
@@ -114,7 +133,15 @@ class QuestionInteractive extends Component {
     /*
      * show: Redux modal show
      */
-    show: PropTypes.func
+    show: PropTypes.func,
+
+    allowMultiple: PropTypes.bool,
+
+    id: PropTypes.number,
+
+    questionInstruction: PropTypes.string,
+
+    questionDescription: PropTypes.string
   };
 
   static defaultProps = {
@@ -128,13 +155,12 @@ class QuestionInteractive extends Component {
   };
 
   componentWillMount() {
-    this._determineChildComponent()
+    this._determineChildComponent();
   }
 
   _determineChildComponent() {
     var ChildComponent = null;
     const { type, allowMultiple } = this.props;
-    const { inputState, savedValue } = this.state;
     var inputPosClass = styles.leftColumn;
     var buttonPosClass = styles.rightColumn;
     var extraProps = {};
@@ -197,7 +223,7 @@ class QuestionInteractive extends Component {
       buttonPosClass,
       inputPosClass,
       extraProps
-    })
+    });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -227,10 +253,10 @@ class QuestionInteractive extends Component {
 
   handleFocus() {
     this.setState({
-      inputState: 'focus',
+      inputState: 'focus'
     });
   }
-  
+
   handleBlur() {
     this.setState({
       inputState: 'blur'
@@ -239,11 +265,11 @@ class QuestionInteractive extends Component {
 
   handleChange(value) {
     const { storeAnswer, id } = this.props;
-    
+
     this.setState({
       savedValue: value
     });
-    
+
     if (this.valueIsValid(value)) {
       storeAnswer({
         id: id,
@@ -252,10 +278,10 @@ class QuestionInteractive extends Component {
     }
   }
 
-  handleEnter() {
+  handleEnter = () => {
     // We only do validation and verification on enter, onChange submits the answer if valid.
     const { savedValue } = this.state;
-    const { handleEnter, isVerifying } = this.props;
+    const { handleEnter } = this.props;
     const isValid = this.valueIsValid(savedValue);
     if (isValid) handleEnter();
     this.setState({
@@ -266,8 +292,8 @@ class QuestionInteractive extends Component {
   valueIsValid(value) {
     const { validations } = this.props;
     var isValid = true;
-    for (var i = 0; i < validations.length; i ++) {
-      isValid = validateField( validations[i], value );
+    for (var i = 0; i < validations.length; i++) {
+      isValid = validateField(validations[i], value);
       if (!isValid) break;
     }
 
@@ -278,7 +304,7 @@ class QuestionInteractive extends Component {
     const { id, verificationStatus, isVerifying } = this.props;
     if (isVerifying) return false;
     const unavailables = _.filter(verificationStatus, {id: id, status: false});
-    return unavailables.length == 0;
+    return unavailables.length === 0;
   }
 
   compileTemplate(template, context) {
@@ -302,9 +328,8 @@ class QuestionInteractive extends Component {
   }
 
   renderInteractiveInput() {
-    const { id, type, validations, verificationStatus, isVerifying, buttonLabel } = this.props;
+    const { id, validations, verificationStatus, isVerifying, buttonLabel } = this.props;
     const { ChildComponent, inputPosClass, buttonPosClass, inputState, savedValue } = this.state;
-    let that = this;
 
     if (ChildComponent === null) return false;
 
@@ -321,33 +346,33 @@ class QuestionInteractive extends Component {
     const slideAnimation = new SlideAnimation(200);
     const anim = {
       enter: slideAnimation.enter,
-      leave: slideAnimation.leave,
+      leave: slideAnimation.leave
     };
 
-    const filteredValidations = _.filter(validations, function(validation) { 
-      return !validateField( validation, savedValue );
-    } )
-    
+    const filteredValidations = _.filter(validations, function (validation) {
+      return !validateField(validation, savedValue);
+    });
+
     return (
       <div className={styles.interactiveContainer}>
         <div className="clearfix">
           <div className={styles.leftColumn}>
-            <Animate exclusive={true} animation={anim} component="div">
-              { (inputState == 'enter')
+            <Animate exclusive animation={anim} component="div">
+              {(inputState === 'enter')
                 ? filteredValidations.map((validation, index) => {
-                    return (
-                      <Validator {...validation} key={validation.type} validateFor={savedValue} />
-                    )
-                  })
+                  return (
+                    <Validator {...validation} key={validation.type} validateFor={savedValue} />
+                    );
+                })
                 : <div key="null_key"></div>
               }
             </Animate>
-            <Animate exclusive={true} animation={anim} component="div">
+            <Animate exclusive animation={anim} component="div">
               {
                 _.filter(verificationStatus, {id: id, status: false}).map((verification, index) => {
                   return (
                     <Verifier {...verification} key={verification.type} />
-                  )
+                  );
                 })
               }
             </Animate>
@@ -357,13 +382,13 @@ class QuestionInteractive extends Component {
           <ChildComponent {...this.props} {...extraProps} />
         </div>
         <div className={buttonPosClass}>
-          <FormEnterButton 
-            onClick={this.handleEnter.bind(this)}
+          <FormEnterButton
+            onClick={this.handleEnter}
             buttonLabel={buttonLabel}
             isDisabled={isVerifying} />
         </div>
       </div>
-    )
+    );
   }
 
   renderActiveQuestion() {
@@ -372,39 +397,40 @@ class QuestionInteractive extends Component {
         {this.renderQuestionDisplay()}
         {this.renderInteractiveInput()}
       </div>
-    )
+    );
   }
-  
+
   renderNextQuestion() {
-    var { questionInstruction, context } = this.props
+    var { questionInstruction, context } = this.props;
     return (
       <div>
         <h3 className={styles.neighborInstruction}>
           {this.compileTemplate(questionInstruction, context)}
         </h3>
       </div>
-    )
+    );
   }
-  
+
   renderPrevQuestion() {
-    var { questionInstruction, context } = this.props
+    var { questionInstruction, context } = this.props;
     return (
       <div>
         <h3 className={styles.neighborInstruction}>
           {this.compileTemplate(questionInstruction, context)}
         </h3>
       </div>
-    )
+    );
   }
 
   render() {
-    const { status } = this.props
-    if ( status === 'current' )
+    const { status } = this.props;
+    if (status === 'current') {
       return this.renderActiveQuestion();
-    else if ( status === 'next' )
+    } else if (status === 'next') {
       return this.renderNextQuestion();
-    else if ( status === 'prev' )
+    } else if (status === 'prev') {
       return this.renderPrevQuestion();
+    }
     return false;
   }
 }

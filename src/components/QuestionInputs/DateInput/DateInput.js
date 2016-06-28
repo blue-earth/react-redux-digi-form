@@ -28,6 +28,7 @@ class DateInput extends Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     onEnterKey: PropTypes.func,
+    autoFocus: PropTypes.bool
   };
 
   static defaultProps = {
@@ -46,13 +47,14 @@ class DateInput extends Component {
       var dateInput = findDOMNode(this.refs.dateInput.refs.input);
       const that = this;
       dateInput.addEventListener('keydown', (event) => that.handleKeyDown(event));
-      if (this.context.primaryColor)
+      if (this.context.primaryColor) {
         dateInput.style = 'color:' + this.context.primaryColor;
+      }
     }
   }
 
   handleChange = (date) => {
-    const { onChange, onEnterKey } = this.props;
+    const { onChange } = this.props;
     var jsonDate = null;
     if (date !== null) {
       jsonDate = {
@@ -82,19 +84,18 @@ class DateInput extends Component {
   }
 
   handleKeyDown = (event) => {
-    const { onEnterKey, onChange, dateFormat } = this.props;
+    const { onEnterKey } = this.props;
     if (event.keyCode === 13 && typeof onEnterKey === 'function') {
       onEnterKey();
     }
   }
 
   render() {
-    const { isDisabled, isReadOnly, value, dateFormat, autoFocus } = this.props;
+    const { isDisabled, isReadOnly, dateFormat, autoFocus } = this.props;
     const { savedDate } = this.state;
-    const { primaryColor } = this.context;
     var optionals = {};
 
-    if ( typeof savedDate === 'object' && savedDate !== null ) {
+    if (typeof savedDate === 'object' && savedDate !== null) {
       if (isReadOnly) {
         optionals['value'] = moment(savedDate).format(dateFormat);
       } else {

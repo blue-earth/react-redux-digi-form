@@ -1,13 +1,9 @@
-import React, { Component, PropTypes } from 'react'
-import { Table, DropdownButton, MenuItem, Pagination } from 'react-bootstrap'
-import Header from 'components/Headers/Header'
-import styles from './FormListView.scss'
+import React, { Component } from 'react';
+import { Table, DropdownButton, MenuItem, Pagination } from 'react-bootstrap';
+import Header from 'components/Headers/Header';
+import styles from './FormListView.scss';
 
 class FormListView extends Component {
-
-  constructor(props) {
-    super(props);
-  }
 
   get renderFormList() {
     return (
@@ -26,7 +22,7 @@ class FormListView extends Component {
         </thead>
         <tbody>
           {
-            [{1:1},{2:2},{3:3}].map(function(data, i) {
+            [{1: 1}, {2: 2}, {3: 3}].map(function (data, i) {
               return (
                 <tr>
                   <td>SMSF Non Coroporate Application</td>
@@ -44,12 +40,12 @@ class FormListView extends Component {
                     </DropdownButton>
                   </td>
                 </tr>
-              )
+              );
             })
           }
         </tbody>
       </Table>
-    )
+    );
   }
   get renderPagination() {
     return (
@@ -58,7 +54,7 @@ class FormListView extends Component {
         items={10}
         activePage={1}
         onSelect={this.handleSelect} />
-    )
+    );
   }
 
   handleSelect() {
@@ -74,8 +70,8 @@ class FormListView extends Component {
           {this.renderPagination}
         </div>
       </div>
-    )
+    );
   }
 }
 
-export default FormListView
+export default FormListView;

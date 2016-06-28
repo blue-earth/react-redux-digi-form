@@ -10,7 +10,12 @@ class ResizableAndMovablePlus extends Component {
       PropTypes.object,
       PropTypes.number,
       PropTypes.string
-    ])
+    ]),
+    onResizeStart: PropTypes.func,
+    onDragStart: PropTypes.func,
+    onClick: PropTypes.func,
+    onDoubleClick: PropTypes.func,
+    children: PropTypes.string
   };
 
   static defaultProps = {
@@ -26,7 +31,7 @@ class ResizableAndMovablePlus extends Component {
     const { onResizeStart, metaData } = this.props;
     onResizeStart(direction, styleSize, clientSize, event, metaData);
   }
-  
+
   handleResizeStop = (direction, styleSize, clientSize, delta) => {
     const { onResizeStop, metaData } = this.props;
     onResizeStop(direction, styleSize, clientSize, delta, metaData);
@@ -34,12 +39,12 @@ class ResizableAndMovablePlus extends Component {
 
   handleDragStart = (event, ui) => {
     const { onDragStart, metaData } = this.props;
-    onDragStart(event, ui, metaData)
+    onDragStart(event, ui, metaData);
   }
 
   handleDragStop = (event, ui) => {
     const { onDragStop, metaData } = this.props;
-    onDragStop(event, ui, metaData)
+    onDragStop(event, ui, metaData);
   }
 
   handleClick = () => {

@@ -65,8 +65,8 @@ const questionInputs = [
     inputType: 'email',
     validations: [
       'is_required',
-      'is_email',
-    ], 
+      'is_email'
+    ],
     logicOperations: [
       'equal_to',
       'not_equal_to',
@@ -92,7 +92,7 @@ const questionInputs = [
       'begins_with',
       'ends_with',
       'contains',
-      'does_not_contain',
+      'does_not_contain'
     ],
     group: 'standard'
   },
