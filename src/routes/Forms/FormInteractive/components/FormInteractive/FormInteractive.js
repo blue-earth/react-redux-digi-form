@@ -9,7 +9,7 @@ import { Button, Modal } from 'react-bootstrap';
 import FormSection from '../FormSection/FormSection';
 import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
 import FormRow from '../FormRow/FormRow';
-import { groupFormQuestions, SlideAnimation, getSessionURL }
+import { groupFormQuestions, SlideAnimation, getSessionURL, loadScript }
   from 'helpers/formInteractiveHelper.js';
 import { FORM_AUTOSAVE, FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
@@ -169,9 +169,18 @@ class FormInteractive extends Component {
   componentWillMount() {
     const { fetchFormIfNeeded, fetchAnswers,
       params: { id, sessionId } } = this.props;
+
     fetchFormIfNeeded(id);
     if (sessionId) {
       fetchAnswers(sessionId);
+    }
+
+    // check if it's already loaded by id.
+    if (!document.getElementById('googlemap_script')) {
+      loadScript(
+        `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_API_KEY}&libraries=places`,
+        'googlemap_script'
+      );
     }
   }
 
