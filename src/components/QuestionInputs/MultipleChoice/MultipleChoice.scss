@@ -20,7 +20,7 @@
   display: inline-block;
   margin: 0 5px 10px;
   opacity: .8;
-  @include transition(all .15s);
+  @include transition(opacity .15s);
   &:hover, &:focus {
     opacity: 1;
     outline: none;

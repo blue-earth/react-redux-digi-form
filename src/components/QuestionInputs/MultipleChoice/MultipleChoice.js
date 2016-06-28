@@ -64,7 +64,7 @@ class MultipleChoice extends Component {
       }, 50);
     }
     window.addEventListener('resize', this.alignmentResizeHandle);
-    setTimeout(this.alignmentHandle, 0.5);   
+    setTimeout(this.alignmentHandle);   
   }
 
   alignmentResizeHandle = () => {
