@@ -110,12 +110,14 @@ class MultipleChoice extends Component {
   }
 
   handleClick = (val) => {
+    console.log(val)
     const { dispatch, allowMultiple, maxAnswers, 
       onChange, onEnterKey, value } = this.props;
     if (typeof onChange !== 'function') return;
     if ( allowMultiple ) {
       var newValue = _.xorWith(value, [val], _.isEqual);
       //if ( this.canAcceptChange(newValue) ) {
+      console.log('new-value', newValue)
         onChange(newValue);
       //}
     } else {
@@ -173,6 +175,7 @@ class MultipleChoice extends Component {
     const that = this;
     const isMultiSelectable = that.isMultiSelectable(value);
     var optionals = {};
+    console.log('render', value);
     var ChoiceItemTemplate = (item, index) => {
       const active = that.isActiveItem(item);
       const disabled = isDisabled || isReadOnly// || !active && (allowMultiple && !isMultiSelectable)

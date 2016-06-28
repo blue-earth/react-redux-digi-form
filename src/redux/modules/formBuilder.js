@@ -254,7 +254,7 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
       });
     case UPDATE_MAPPING_INFO:
       return Object.assign({}, state, {
-        documentMapping: mergeItemIntoArray(state.documentMapping, action.mappingInfo)
+        documentMapping: mergeItemIntoArray(state.documentMapping, action.mappingInfo, true)
       });
     case SET_CURRENT_QUESTION_ID:
       return Object.assign({}, state, {
