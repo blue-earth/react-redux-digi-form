@@ -2,12 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import styles from './HeaderButton.scss';
 
-
 class HeaderButton extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   static propTypes = {
     onClick: PropTypes.func,
     isDisabled: PropTypes.bool,
@@ -18,8 +13,7 @@ class HeaderButton extends Component {
     buttonLabel: ''
   };
 
-
-  handleClick() {
+  handleClick = () => {
     const { onClick } = this.props;
     if (typeof onClick === 'function') onClick();
   }
@@ -37,28 +31,26 @@ class HeaderButton extends Component {
     const { buttonLabel } = this.props;
     return (
       <div className={styles.btnInner}>
-        { buttonLabel }
+        {buttonLabel}
       </div>
     );
   }
-  
+
   render() {
-
-    const { buttonLabel, isDisabled } = this.props
+    const { buttonLabel, isDisabled } = this.props;
     var optionals = {};
-
 
     if (isDisabled) {
       optionals['disabled'] = true;
-    }
+    };
 
     return (
-      <Button type="button" onClick={this.handleClick.bind(this)}
+      <Button type="button" onClick={this.handleClick}
         className={styles.headerButton}
         {...optionals}>
-        { buttonLabel != '' ? this.renderButtonLabel() : this.renderDefaultLabel() }
+        {buttonLabel !== '' ? this.renderButtonLabel() : this.renderDefaultLabel()}
       </Button>
-    )
+    );
   }
 }
 

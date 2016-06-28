@@ -1,10 +1,10 @@
 export const getImageDimension = (url, callback) => {
   var img = new Image();
-  img.onload = function(){
+  img.onload = function () {
     callback({
-    	width: this.width,
-    	height: this.height
+      width: this.width,
+      height: this.height
     });
   };
   img.src = url;
-}
+};
