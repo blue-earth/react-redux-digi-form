@@ -170,7 +170,8 @@ class FormSection extends Component {
   }
 
   renderNavButtons() {
-    const { form, currentQuestionId, questionGroup, nextQuestion, prevQuestion } = this.props;
+    const { form, currentQuestionId, questionGroup, nextQuestion, prevQuestion,
+      isVerifying } = this.props;
     const groupQuestions = questionGroup.questions;
     const questionNumber = findIndexById(groupQuestions, currentQuestionId) + 1;
 
@@ -183,13 +184,13 @@ class FormSection extends Component {
             </li>
             <li>
               <Button className={styles.navButton} onClick={() => prevQuestion()}
-                disabled={shouldDisablePrevButton(form, currentQuestionId)}>
+                disabled={shouldDisablePrevButton(form, currentQuestionId) || isVerifying}>
                 <MdKeyboardArrowUp size="24" />
               </Button>
             </li>
             <li>
               <Button className={styles.navButton} onClick={() => nextQuestion()}
-                disabled={shouldDisableNextButton(form, currentQuestionId)}>
+                disabled={shouldDisableNextButton(form, currentQuestionId) || isVerifying}>
                 <MdKeyboardArrowDown size="24" />
               </Button>
             </li>
@@ -200,7 +201,7 @@ class FormSection extends Component {
   }
 
   render() {
-    const { step, status, totalSteps, questionGroup, goToQuestion } = this.props;
+    const { step, status, totalSteps, questionGroup, goToQuestion, isVerifying } = this.props;
     const firstQuestionId = getFirstQuestionOfGroup(questionGroup);
     
     const linkColor = {
@@ -249,7 +250,7 @@ class FormSection extends Component {
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>
                   {questionGroup.title}
-                  <a href="javascript:;" onClick={() => goToQuestion(firstQuestionId)} 
+                  <a href="javascript:;" onClick={() => goToQuestion(firstQuestionId)}
                     className={styles.formSectionEdit} style={linkColor}>Edit</a>
                 </h3>
               </div>

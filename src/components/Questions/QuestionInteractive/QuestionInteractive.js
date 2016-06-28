@@ -203,6 +203,9 @@ class QuestionInteractive extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const { inputState } = nextState;
 
+    // If verification status is changed, it should update to enable/disable input components.
+    if (nextProps.isVerifying !== this.props.isVerifying) return true;
+
     // If it's inactive question with the status unchanged, no need to update.
     if (nextProps.status === this.props.status && nextProps.value === this.props.value &&
       nextState.inputState === 'init') {
@@ -211,8 +214,8 @@ class QuestionInteractive extends Component {
     if (nextProps.type === 'AddressField' && inputState === 'blur') {
       return false;
     }
-    // For current question, if the status is not focus or no verifying status reverted, it should update.
-    return inputState !== 'focus' || (nextProps.isVerifying != this.props.isVerifying);
+    // For current question, if the status is not focus, it should update.
+    return inputState !== 'focus';
   }
 
   componentWillReceiveProps(props) {

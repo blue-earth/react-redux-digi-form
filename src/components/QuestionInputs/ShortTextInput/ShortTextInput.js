@@ -42,7 +42,8 @@ class ShortTextInput extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.savedValue != this.state.savedValue;
+    return nextState.savedValue !== this.state.savedValue
+      || nextProps.isDisabled !== this.props.isDisabled;
   }
 
   componentWillReceiveProps(props) {
@@ -117,7 +118,7 @@ class ShortTextInput extends Component {
       [styles.textInput]: true,
       [styles.fullWidth]: fullWidth
     });
-    
+
     return (
       <input
         className={inputClasses}
