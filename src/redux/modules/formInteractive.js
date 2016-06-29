@@ -50,7 +50,10 @@ export const INIT_FORM_STATE = {
   isVerifying: false, // indicates the verifying request is being processed.
   isModified: false, // indicates the form answer modified after submission.
   lastUpdated: Date.now(), // last form-questions received time.
-  lastFormSubmitStatus: {}, // holds the status of last form submit response.
+  lastFormSubmitStatus: { // holds the status of last form submit response.
+    // result: true / false, form submit result.
+    // requestAction: FORM_USER_SUBMISSION / FORM_AUTOSAVE
+  },
   form: {
     questions: [],
     logics: []
@@ -134,7 +137,6 @@ export const doneFetchingForm = () => {
 
 const shouldFetchForm = (state, id) => {
   const formInteractive = state.formInteractive;
-  // todo: Add documentation on how following conditions are triggered?
   /*
    * We should fetch form if
    * - no form_data has loaded
@@ -603,8 +605,7 @@ export const updateSessionId = (sessionId) => {
 // ------------------------------------
 // Action: resetFormSubmitStatus
 // ------------------------------------
-export const resetFormSubmitStatus = (sessionId) => {
-  // todo: Unused parameter?
+export const resetFormSubmitStatus = () => {
   return {
     type: RESET_FORM_SUBMIT_STATUS
   };

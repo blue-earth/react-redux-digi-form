@@ -1,34 +1,19 @@
 import React, { Component, PropTypes } from 'react';
-import Validator from 'components/Validator/Validator';
-import Verifier from 'components/Verifier/Verifier';
-import validateField from 'helpers/validationHelper';
 import FormHeader from 'components/Headers/FormHeader';
-import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
-import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
-import { Button, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import FormSection from '../FormSection/FormSection';
+import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
 import FormRow from '../FormRow/FormRow';
-import { groupFormQuestions, SlideAnimation, getSessionURL }
-  from 'helpers/formInteractiveHelper.js';
+import { groupFormQuestions, SlideAnimation } from 'helpers/formInteractiveHelper';
 import { FORM_AUTOSAVE, FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
+import SaveForLaterModal from '../SaveForLaterModal/SaveForLaterModal';
+import AccessCodeModal from '../AccessCodeModal/AccessCodeModal';
 import styles from './FormInteractive.scss';
 import Animate from 'rc-animate';
 
 class FormInteractive extends Component {
-
-  constructor(props) {
-    super(props);
-    // todo: Add comments to below three states
-    // When they are true/false, what are possible values?
-    this.state = {
-      showTempModal: false,   // todo: Change to a more descriptive name
-      showAccessModal: true,  // good example of a descriptive name
-      accessCodeInputStatus: 'changing'   // prefer to use a boolean here, and name the variable to
-                                          // isEnteringStatusCode, is this property needed
-    };
-  };
 
   static contextTypes = {
     router: React.PropTypes.object,
@@ -37,10 +22,6 @@ class FormInteractive extends Component {
 
   static childContextTypes = {
     primaryColor: PropTypes.string
-  };
-
-  getChildContext() {
-    return { primaryColor: this.props.primaryColor };
   };
 
   static propTypes = {
@@ -140,12 +121,12 @@ class FormInteractive extends Component {
     lastFormSubmitStatus: PropTypes.object.isRequired,
 
     /*
-     * shouldShowFinalSubmit: Redux statue to check if it's final stage.
+     * shouldShowFinalSubmit: Redux state to check if it's final stage.
      */
     shouldShowFinalSubmit: PropTypes.bool.isRequired,
 
     /*
-     * formAccessStatus: Redux statue to check if it's accessible to form UI.
+     * formAccessStatus: Redux state to check if it's accessible to form UI.
      */
     formAccessStatus: PropTypes.string.isRequired,
 
@@ -159,11 +140,29 @@ class FormInteractive extends Component {
      */
     show: PropTypes.func.isRequired,
 
+    /*
+     * params: Routing params
+     */
     params: PropTypes.object,
 
+    /*
+     * sessionId: Session ID to fetch saved answer
+     */
     sessionId: PropTypes.number,
 
-    updateAccessCode: PropTypes.func
+    /*
+     * updateAccessCode: Redux action to update the access code being typed.
+     */
+    updateAccessCode: PropTypes.func,
+
+    /*
+     * isAccessCodeProtected: Redux state to indicate the form is access code protected.
+     */
+    isAccessCodeProtected: PropTypes.bool
+  };
+
+  getChildContext() {
+    return { primaryColor: this.props.primaryColor };
   };
 
   componentWillMount() {
@@ -184,18 +183,19 @@ class FormInteractive extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { resetFormSubmitStatus } = this.props;
-    // todo: Comment on ``lastFormSubmitStatus``, what are an example of this object
-    // how each property is used etc..
-    // comment can be made on formInteractive.js file
+    const { resetFormSubmitStatus, show } = this.props;
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION &&
-    props.lastFormSubmitStatus.result) {
+      props.lastFormSubmitStatus.result) {
       if (props.shouldShowFinalSubmit) {
         this.context.router.push(`/forms/${this.props.id}/${this.props.sessionId}/completion`);
       } else {
-        this.setState({ showTempModal: true });
+        show('saveForLaterModal');
       }
       resetFormSubmitStatus();
+    }
+    if (this.props.formAccessStatus !== props.formAccessStatus &&
+      props.formAccessStatus === 'fail') {
+      show('accessCodeModal');
     }
   }
 
@@ -263,36 +263,11 @@ class FormInteractive extends Component {
     );
   }
 
-  handleHideTempModal = () => {
-    this.setState({'showTempModal': false});
-  }
-
-  handleAccessCodeInput = (value) => {
-    const { updateAccessCode } = this.props;
-    updateAccessCode(value);
-    this.setState({
-      accessCodeInputStatus: 'changing'
-    });
-  }
-
-  handleFormAccess = () => {
-    const { id, fetchFormIfNeeded, formAccessCode, sessionId, fetchAnswers } = this.props;
-    var isAccessCodeValid = validateField({type: 'minLength', value: 4}, formAccessCode) &&
-    validateField({type: 'maxLength', value: 4}, formAccessCode);
-    if (isAccessCodeValid) {
-      this.setState({
-        accessCodeInputStatus: 'validated'
-      });
-      fetchFormIfNeeded(id);
-      if (sessionId) {
-        fetchAnswers(sessionId);
-      }
-    } else {
-      if (!validateField({type: 'minLength', value: 4}, formAccessCode)) {
-        this.setState({ accessCodeInputStatus: 'minLengthUnvalidated' });
-      } else {
-        this.setState({ accessCodeInputStatus: 'maxLengthUnvalidated' });
-      }
+  handleAccessCodeSuccess = () => {
+    const { id, fetchFormIfNeeded, sessionId, fetchAnswers } = this.props;
+    fetchFormIfNeeded(id);
+    if (sessionId) {
+      fetchAnswers(sessionId);
     }
   }
 
@@ -301,88 +276,22 @@ class FormInteractive extends Component {
     submitAnswer(FORM_USER_SUBMISSION);
   }
 
-  // Temp Modal for submit response.
-  renderTempResponseModal() {
-    const { sessionId, id } = this.props;
-    const { showTempModal } = this.state;
-
-    return (
-      <Modal show={showTempModal} bsSize="large"
-        onHide={this.handleHideTempModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Form Saved.</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Here's the URL to restore your session.</p>
-          <div className="form-control">{getSessionURL(id, sessionId)}</div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={this.handleHideTempModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-
-  // Access Modal for Access form UI.
-  renderAccessResponseModal(formAccessStatus) {
-    const { showAccessModal, accessCodeInputStatus } = this.state;
-    const { formAccessCode } = this.props;
-    const showVerificationStatus = accessCodeInputStatus === 'validated' &&
-      showAccessModal === true;
-
-    var optionals = {};
-    if (this.context.primaryColor) {
-      optionals['style'] = {
-        color: this.context.primaryColor
-      };
-    }
-    const accessCodeErrorText = 'Access Code must be 4 digits.';
-    return (
-      <Modal show={showAccessModal} dialogClassName={styles.modalWrapper}>
-        <div className={styles.accessModalWrapper}>
-          Enter the 4 digit access code <br />to continue
-          <div className={styles.modalDigitInput}>
-            <ShortTextInput type="NumberField" value={formAccessCode}
-              onChange={this.handleAccessCodeInput}
-              autoFocus onEnterKey={this.handleFormAccess} />
-          </div>
-          <div className={styles.modalSubmitButton}>
-            <SubmitButton onClick={this.handleFormAccess} />
-          </div>
-          <div className={styles.modalValidator}>
-            {accessCodeInputStatus === 'minLengthUnvalidated' &&
-              <Validator type="minLength" value={4} validateFor={formAccessCode}
-                displayText={accessCodeErrorText} />
-            }
-            {accessCodeInputStatus === 'maxLengthUnvalidated' &&
-              <Validator type="maxLength" value={4} validateFor={formAccessCode}
-                displayText={accessCodeErrorText} />
-            }
-            {showVerificationStatus && formAccessStatus === 'fail' &&
-              <Verifier type="AccessCodeService" status={formAccessStatus !== 'fail'} />
-            }
-          </div>
-          <a href="javascript:;" className={styles.resendLink}
-            {...optionals}>
-            Resend access code
-          </a>
-        </div>
-      </Modal>
-    );
-  }
-
   render() {
-    const { submitAnswer, params: { status }, formAccessStatus, form } = this.props;
+    const { submitAnswer, params: { status }, formAccessStatus,
+      form, id, sessionId } = this.props;
     return (
       <div>
         <FormHeader submitAnswer={submitAnswer} />
         <div className={styles.flowLine}></div>
         {status !== 'completion' && form && this.renderFormSteps}
-        {status !== 'completion' && this.renderTempResponseModal()}
+        {status !== 'completion' &&
+          <SaveForLaterModal formId={id} sessionId={sessionId} />
+        }
         {status === 'completion' && this.renderFormCompletionSection}
-        {formAccessStatus !== 'success' && this.renderAccessResponseModal(formAccessStatus)}
+        {formAccessStatus !== 'success' &&
+          <AccessCodeModal onSuccess={this.handleAccessCodeSuccess}
+            {...this.props} />
+        }
       </div>
     );
   }
