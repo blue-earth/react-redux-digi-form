@@ -1,6 +1,7 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { mergeItemIntoArray } from 'helpers/pureFunctions';
+import { assignDefaults } from 'redux/utils/request';
 import _ from 'lodash';
 
 export const RECEIVE_FORM = 'RECEIVE_FORM';
@@ -57,14 +58,7 @@ export const processFetchForm = (id, accessCode) => {
   if (accessCode.length > 0) {
     apiURL += `?access_code=${accessCode}`;
   }
-  const fetchParams = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow',
-    method: 'GET'
-  };
+  const fetchParams = assignDefaults();
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {

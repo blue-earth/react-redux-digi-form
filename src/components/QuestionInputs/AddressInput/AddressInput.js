@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Row, Col } from 'react-bootstrap';
+import { loadScript } from 'helpers/pureFunctions';
 import styles from './AddressInput.scss';
 
 class AddressInput extends Component {
@@ -44,7 +45,16 @@ class AddressInput extends Component {
   componentDidMount() {
     const { autoComplete } = this.props;
     if (autoComplete) {
-      this.initAutocomplete();
+      // check if it's already loaded by id.
+      if (!document.getElementById('googlemap_script')) {
+        loadScript(
+          `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_API_KEY}&libraries=places`,
+          'googlemap_script',
+          this.initAutocomplete
+        );
+      } else {
+        this.initAutocomplete();
+      }
     }
   }
 
@@ -52,7 +62,8 @@ class AddressInput extends Component {
     const { autocomplete } = this.state;
     if (autocomplete) {
       google.maps.event.clearInstanceListeners(autocomplete);
-      document.querySelector('body').removeChild(document.querySelector('.pac-container'));
+      const pc = document.querySelector('.pac-container');
+      pc && document.querySelector('body').removeChild(pc);
     }
   }
 

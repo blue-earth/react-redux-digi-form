@@ -9,7 +9,7 @@ import { Button, Modal } from 'react-bootstrap';
 import FormSection from '../FormSection/FormSection';
 import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
 import FormRow from '../FormRow/FormRow';
-import { groupFormQuestions, SlideAnimation, getSessionURL, loadScript }
+import { groupFormQuestions, SlideAnimation, getSessionURL }
   from 'helpers/formInteractiveHelper.js';
 import { FORM_AUTOSAVE, FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
@@ -174,14 +174,13 @@ class FormInteractive extends Component {
     if (sessionId) {
       fetchAnswers(sessionId);
     }
+  }
 
-    // check if it's already loaded by id.
-    if (!document.getElementById('googlemap_script')) {
-      loadScript(
-        `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAP_API_KEY}&libraries=places`,
-        'googlemap_script'
-      );
-    }
+  componentDidMount() {
+    const { submitAnswer } = this.props;
+    setInterval(function () {
+      submitAnswer(FORM_AUTOSAVE);
+    }, 30000);  // todo: Will optimise this later
   }
 
   componentWillReceiveProps(props) {
@@ -198,15 +197,6 @@ class FormInteractive extends Component {
       }
       resetFormSubmitStatus();
     }
-  }
-
-  // todo: Can you restructure the code a bit?
-  // See https://github.com/airbnb/javascript/tree/master/react#ordering
-  componentDidMount() {
-    const { submitAnswer } = this.props;
-    setInterval(function () {
-      submitAnswer(FORM_AUTOSAVE);
-    }, 30000);  // todo: Will optimise this later
   }
 
   sectionStatus(allQuestions, currentQuestionId, questionGroup) {
