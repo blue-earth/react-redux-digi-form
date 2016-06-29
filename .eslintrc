@@ -17,6 +17,9 @@
     "__DEBUG_NEW_WINDOW__" : false,
     "__BASENAME__" : false,
     "API_URL": false,
+    "FRONTEND_ROOT": false,
+    "google": false,
+    "GOOGLE_MAP_API_KEY": false
   },
   "rules": {
     "import/default": 0,

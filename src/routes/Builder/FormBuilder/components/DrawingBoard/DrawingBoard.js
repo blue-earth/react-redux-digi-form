@@ -1,9 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import BuilderHeader from 'components/Headers/BuilderHeader';
 import { findIndexById } from 'helpers/pureFunctions';
 import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
-import { Button } from 'react-bootstrap';
-import { MdZoomIn, MdZoomOut, MdSettingsOverscan, MdZoomOutMap } from 'react-icons/lib/md';
 import classNames from 'classnames';
 import _ from 'lodash';
 import styles from './DrawingBoard.scss';
@@ -20,6 +17,8 @@ class DrawingBoard extends Component {
      * documents: Redux state to hold document image urls.
      */
     documents: PropTypes.array.isRequired,
+
+    questions: PropTypes.array.isRequired,
 
     /*
      * addElement: used to set active input element selected, and enables to draw on the right
@@ -74,33 +73,36 @@ class DrawingBoard extends Component {
     /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
-    setQuestionEditMode: PropTypes.func.isRequired
+    setQuestionEditMode: PropTypes.func.isRequired,
+
+    deleteElement: PropTypes.func.isRequired
   };
 
   getMousePos(event) {
-    var e = event || window.event; //Moz || IE
-    if (e.pageX || e.pageY) //Moz
+    var e = event || window.event; // Moz || IE
+    if (e.pageX || e.pageY) { // Moz
       return { x: e.pageX, y: e.pageY };
-    else if (e.clientX || e.clientY) //IE
+    } else if (e.clientX || e.clientY) { // IE
       return { x: e.clientX, y: e.clientY };
-    else
+    } else {
       return { x: 0, y: 0 };
+    }
   }
 
   getElementPos(el) {
     for (var lx=0, ly=0;
          el != null;
          lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
-    return {x: lx,y: ly};
+    return {x: lx, y: ly};
   }
 
   getScrollPos() {
     const { containerId } = this.props;
-    var el = document.querySelector("[data-id=" + containerId+ "]");
+    var el = document.querySelector('[data-id=' + containerId+ ']');
     return {
       x: el.scrollLeft,
       y: el.scrollTop
-    }
+    };
   }
 
   handleBoardMouseDown = (event) => {
@@ -145,7 +147,7 @@ class DrawingBoard extends Component {
     this.setState({
       isDrawing: false,
       endX,
-      endY 
+      endY
     });
     const { addElement, activeInputName, pageZoom, pageNumber } = this.props;
 
@@ -176,8 +178,8 @@ class DrawingBoard extends Component {
   }
 
   handleResizeStop = (direction, styleSize, clientSize, delta, metaData) => {
-    const { updateMappingInfo, documentMapping, pageZoom, pageNumber } = this.props;
-    const { id, subId } = metaData;
+    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
+    const { id } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
     var newLeft = boundingBox.left;
@@ -210,7 +212,7 @@ class DrawingBoard extends Component {
 
   handleDragStop = (event, ui, metaData) => {
     const { updateMappingInfo, documentMapping, pageZoom } = this.props;
-    const { id, subId } = metaData;
+    const { id } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
     const newBoundingBox = {
@@ -253,11 +255,11 @@ class DrawingBoard extends Component {
       return (
         <div className={styles.page} key={index}
           style={pageStyle}>
-          <img src={document.url} alt={`Page Image ${index + 1}`} 
+          <img src={document.url} alt={`Page Image ${index + 1}`}
             className={styles.pageImage} ref={`pageImage${index + 1}`} />
         </div>
       );
-    })
+    });
   }
 
   render() {
@@ -309,7 +311,7 @@ class DrawingBoard extends Component {
           </ResizableAndMovablePlus>
         );
       });
-    }
+    };
     return (
       <div className={styles.board}
         onMouseDown={this.handleBoardMouseDown}
@@ -324,15 +326,16 @@ class DrawingBoard extends Component {
 
         {isDrawing &&
           <div className={styles.newElementDraw}
-          style={{
-            left: Math.min(startX, endX),
-            top: Math.min(startY, endY),
-            width: Math.abs(endX - startX),
-            height: Math.abs(endY - startY)
-          }}></div>
+            style={{
+              left: Math.min(startX, endX),
+              top: Math.min(startY, endY),
+              width: Math.abs(endX - startX),
+              height: Math.abs(endY - startY)
+            }}>
+          </div>
         }
       </div>
-    )
+    );
   }
 }
 

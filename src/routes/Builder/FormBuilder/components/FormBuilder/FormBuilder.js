@@ -3,7 +3,7 @@ import BuilderHeader from 'components/Headers/BuilderHeader';
 import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
 import QuestionEditView from '../QuestionEditView/QuestionEditView';
-import styles from './FormBuilder.scss'
+import styles from './FormBuilder.scss';
 
 class FormBuilder extends Component {
 
@@ -22,7 +22,7 @@ class FormBuilder extends Component {
      * logics: Redux state to store the array of logics.
      */
     logics: PropTypes.array.isRequired,
-    
+
     /*
      * documents: Redux state to store the array of documents with image url.
      */
@@ -47,7 +47,7 @@ class FormBuilder extends Component {
      * activeInputName: Redux state to indicate the active input element name.
      */
     activeInputName: PropTypes.string.isRequired,
-    
+
     /*
      * setActiveInputName: Action to set active input element selected, and enables to draw on the right
      */
@@ -91,7 +91,11 @@ class FormBuilder extends Component {
     /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
-    setQuestionEditMode: PropTypes.func.isRequired
+    setQuestionEditMode: PropTypes.func.isRequired,
+
+    fetchForm: PropTypes.func.isRequired,
+
+    params: PropTypes.object
   };
 
   componentWillMount() {
@@ -105,14 +109,14 @@ class FormBuilder extends Component {
 
   componentDidMount() {
   }
-  
+
   resetActiveInputName = () => {
-    const { setActiveInputName, currentQuestionId } = this.props;
+    const { setActiveInputName } = this.props;
     setActiveInputName('');
   }
 
   render() {
-    const { params, questionEditMode, currentQuestionId } = this.props;
+    const { questionEditMode, currentQuestionId } = this.props;
     return (
       <div className={styles.formBuilderContainer}>
         <BuilderHeader />
@@ -128,7 +132,7 @@ class FormBuilder extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 

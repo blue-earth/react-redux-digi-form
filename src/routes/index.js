@@ -1,10 +1,8 @@
 // We only need to import the modules necessary for initial render
-import React from 'react'
-import { Route, IndexRoute } from 'react-router'
-import CoreLayout from '../layouts/CoreLayout/CoreLayout'
-import Home from './Home'
-import FormRoute from './Forms'
-import BuilderRoute from './Builder'
+import CoreLayout from '../layouts/CoreLayout/CoreLayout';
+import Home from './Home';
+import FormRoute from './Forms';
+import BuilderRoute from './Builder';
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -17,7 +15,7 @@ export default (store) => ({
     FormRoute(store),
     BuilderRoute(store)
   ]
-})
+});
 
 // /forms --> List all your forms
 // /forms/id/<form_id> --> Go to a specific form, blank, unfilled
@@ -53,4 +51,4 @@ export default (store) => ({
     when the route exists and matches.
 */
 
-//export default createRoutes;
+// export default createRoutes;

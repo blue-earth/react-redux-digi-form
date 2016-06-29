@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, PropTypes } from 'react';
 import { Modal, Button, Tabs, Tab, FormGroup, ControlLabel, Row, Col } from 'react-bootstrap';
 import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
 import DropdownInput from 'components/QuestionInputs/DropdownInput/DropdownInput';
@@ -16,7 +16,8 @@ class SignatureModal extends Component {
   static propTypes = {
     handleHide: PropTypes.func.isRequired,
     show: PropTypes.bool,
-    value: PropTypes.string
+    value: PropTypes.string,
+    onSave: PropTypes.func
   };
 
   constructor(props) {
@@ -27,7 +28,7 @@ class SignatureModal extends Component {
        * typeValue: type value.
        */
       typeValue: '',
-      typeFont: signatureFonts[0],
+      typeFont: signatureFonts[0]
     };
   };
 
@@ -54,7 +55,6 @@ class SignatureModal extends Component {
 
   handleTypeCanvasResize = () => {
     const { activeTabKey } = this.state;
-    console.log(activeTabKey)
     if (activeTabKey === 'type') {
       var canvas = this.refs.typeSignaturePad;
       canvas.width = canvas.parentElement.offsetWidth;
@@ -76,9 +76,9 @@ class SignatureModal extends Component {
   updateCanvas = () => {
     const { typeValue, typeFont } = this.state;
     var canvas = this.refs.typeSignaturePad;
-    var ctx = canvas.getContext("2d");
+    var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "100px " + typeFont;
+    ctx.font = '100px ' + typeFont;
     ctx.textBaseline = 'middle';
     ctx.fillText(typeValue, 20, canvas.height / 2);
   }
@@ -95,8 +95,8 @@ class SignatureModal extends Component {
     const { handleHide, show } = this.props;
     const { typeValue, typeFont, activeTabKey } = this.state;
     var preloadFonts = signatureFonts.map((fontName, index) => {
-      return <div className={`signature-font-preload preload-${fontName}`} key={index}>font</div>
-    })
+      return <div className={`signature-font-preload preload-${fontName}`} key={index}>font</div>;
+    });
     return (
       <Modal show={show} onHide={handleHide}
         aria-labelledby="ModalHeader">
@@ -108,7 +108,7 @@ class SignatureModal extends Component {
             onSelect={this.handleTabSelect}>
             <Tab eventKey="draw" title="Draw">
               <div className={styles.signaturePadWrapper}
-                 onKeyDown={this.handleKeyDown} tabIndex={0}>
+                onKeyDown={this.handleKeyDown} tabIndex={0}>
                 <SignaturePad clearButton="true" ref="signature" />
               </div>
             </Tab>
@@ -161,8 +161,8 @@ class SignatureModal extends Component {
           </Button>
         </Modal.Footer>
       </Modal>
-    )
+    );
   }
 }
 
-export default connectModal({ name: 'signatureModal' })(SignatureModal)
+export default connectModal({ name: 'signatureModal' })(SignatureModal);

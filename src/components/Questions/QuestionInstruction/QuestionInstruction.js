@@ -2,10 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import styles from './QuestionInstruction.scss';
 
 class QuestionDisplay extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   static propTypes = {
     instruction: PropTypes.oneOfType([
       PropTypes.string,
@@ -24,16 +20,13 @@ class QuestionDisplay extends Component {
     attachment: null
   };
 
-
   renderInstruction() {
-    var isRequired = <span>*</span>;
-
     var ItemTemplate = () => {
       return (
         <div className={styles.instructionTextWrapper}>
           <span className={styles.text}>{this.props.instruction}</span>
         </div>
-      )
+      );
     };
 
     return <ItemTemplate />;
@@ -46,7 +39,7 @@ class QuestionDisplay extends Component {
           <div className={styles.descriptionTextWrapper}
             dangerouslySetInnerHTML={{__html: this.props.description}}>
           </div>
-        )
+        );
       };
 
       return <ItemTemplate />;

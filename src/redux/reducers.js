@@ -1,6 +1,6 @@
-import { combineReducers } from 'redux'
-import { routerReducer as router } from 'react-router-redux'
-import { reducer as modal } from 'redux-modal'
+import { combineReducers } from 'redux';
+import { routerReducer as router } from 'react-router-redux';
+import { reducer as modal } from 'redux-modal';
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
@@ -8,12 +8,12 @@ export const makeRootReducer = (asyncReducers) => {
     router,
     modal,
     ...asyncReducers
-  })
-}
+  });
+};
 
 export const injectReducer = (store, { key, reducer }) => {
-  store.asyncReducers[key] = reducer
-  store.replaceReducer(makeRootReducer(store.asyncReducers))
-}
+  store.asyncReducers[key] = reducer;
+  store.replaceReducer(makeRootReducer(store.asyncReducers));
+};
 
-export default makeRootReducer
+export default makeRootReducer;

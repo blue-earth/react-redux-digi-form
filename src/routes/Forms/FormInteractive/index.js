@@ -10,8 +10,8 @@ const getComponent = (nextState, cb) => {
     cb(null, FormInteractive);
 
     /* Webpack named bundle   */
-  }, 'formInteractive')
-}
+  }, 'formInteractive');
+};
 
 module.exports = [
   {

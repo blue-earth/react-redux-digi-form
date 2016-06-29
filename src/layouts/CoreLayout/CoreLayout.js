@@ -1,7 +1,6 @@
-import React, { Component, PropTypes } from 'react'
-import classes from './CoreLayout.scss'
-import '../../styles/core.scss'
-
+import React, { Component, PropTypes } from 'react';
+import classes from './CoreLayout.scss';
+import '../../styles/core.scss';
 
 class CoreLayout extends Component {
   static propTypes = {
@@ -9,14 +8,13 @@ class CoreLayout extends Component {
   };
 
   render() {
-    const {children} = this.props
+    const {children} = this.props;
     return (
       <div className={classes.mainContainer}>
         {children}
       </div>
-    )
+    );
   }
 }
 
-
-export default CoreLayout
+export default CoreLayout;

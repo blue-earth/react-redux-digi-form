@@ -4,8 +4,8 @@ import { MdCheck, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib
 import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive';
 import FormRow from '../FormRow/FormRow';
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection';
-import { getContextFromAnswer, getFirstQuestionOfGroup, SlideAnimation, 
-  shouldDisableNextButton, shouldDisablePrevButton } from 'helpers/formInteractiveHelper';
+import { getContextFromAnswer, getFirstQuestionOfGroup, shouldDisableNextButton,
+  shouldDisablePrevButton } from 'helpers/formInteractiveHelper';
 import { findIndexById } from 'helpers/pureFunctions';
 import styles from './FormSection.scss';
 import _ from 'lodash';
@@ -18,14 +18,14 @@ class FormSection extends Component {
 
   static propTypes = {
     /*
-     * status: Status of current section. 'active' is current section, 
+     * status: Status of current section. 'active' is current section,
      *         'completed' is all-answered section and 'pending' is to-be-answered section.
      */
     status: PropTypes.oneOf(['pending', 'active', 'completed']),
 
     /*
      * step: current step number of the section, ex. in 2 of 5, 2 is step.
-     */ 
+     */
     step: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
@@ -33,7 +33,7 @@ class FormSection extends Component {
 
     /*
      * totalSteps: Calculated number of sections(steps), ex. in 1 of 5, 5 is totalSteps.
-     */ 
+     */
     totalSteps: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
@@ -41,12 +41,12 @@ class FormSection extends Component {
 
     /*
      * form: form_data of response, consists of questions and logics.
-     */ 
+     */
     form: PropTypes.object.isRequired,
 
     /*
      * questionGroup: A structured group of questions for this form section(step)
-     */ 
+     */
     questionGroup: PropTypes.object.isRequired,
 
     /*
@@ -105,10 +105,6 @@ class FormSection extends Component {
     show: PropTypes.func.isRequired
   };
 
-  constructor(props) {
-    super(props);
-  };
-
   static defaultProps = {
     status: 'pending',
     step: 1,
@@ -147,10 +143,10 @@ class FormSection extends Component {
             context={context}
             isVerifying={isVerifying}
             show={show}
-            status={currentQuestionIndex == idx 
-              ? 'current' : currentQuestionIndex - idx == 1 
-              ? 'next' : idx - currentQuestionIndex == 1
-              ? 'prev' : 'hidden'} 
+            status={currentQuestionIndex === idx
+              ? 'current' : currentQuestionIndex - idx === 1
+              ? 'next' : idx - currentQuestionIndex === 1
+              ? 'prev' : 'hidden'}
             {...optionals}
           />
         );
@@ -161,17 +157,16 @@ class FormSection extends Component {
   }
 
   shouldShowActiveTitle() {
-    const { form, currentQuestionId, questionGroup, goToQuestion } = this.props;
+    const { form, currentQuestionId, questionGroup } = this.props;
     const allQuestions = form.questions;
     const groupQuestions = questionGroup.questions;
     const currentQuestionIndex = findIndexById(allQuestions, currentQuestionId);
     const firstGroupIdx = findIndexById(allQuestions, groupQuestions[0].id);
-    return (currentQuestionIndex == firstGroupIdx);
+    return (currentQuestionIndex === firstGroupIdx);
   }
 
   renderNavButtons() {
-    const { form, currentQuestionId, questionGroup, nextQuestion, prevQuestion,
-      isVerifying } = this.props;
+    const { form, currentQuestionId, questionGroup, isVerifying, prevQuestion, nextQuestion } = this.props;
     const groupQuestions = questionGroup.questions;
     const questionNumber = findIndexById(groupQuestions, currentQuestionId) + 1;
 
@@ -180,16 +175,16 @@ class FormSection extends Component {
         <FormRow>
           <ul className={styles.navButtonsWrapper}>
             <li className={styles.activeQuestionNumber}>
-              { questionNumber } / { groupQuestions.length }
+              {questionNumber} / {groupQuestions.length}
             </li>
             <li>
-              <Button className={styles.navButton} onClick={() => prevQuestion()}
+              <Button className={styles.navButton} onClick={function () { prevQuestion(); }}
                 disabled={shouldDisablePrevButton(form, currentQuestionId) || isVerifying}>
                 <MdKeyboardArrowUp size="24" />
               </Button>
             </li>
             <li>
-              <Button className={styles.navButton} onClick={() => nextQuestion()}
+              <Button className={styles.navButton} onClick={function () { nextQuestion(); }}
                 disabled={shouldDisableNextButton(form, currentQuestionId) || isVerifying}>
                 <MdKeyboardArrowDown size="24" />
               </Button>
@@ -201,26 +196,26 @@ class FormSection extends Component {
   }
 
   render() {
-    const { step, status, totalSteps, questionGroup, goToQuestion, isVerifying } = this.props;
+    const { step, status, totalSteps, questionGroup, goToQuestion } = this.props;
     const firstQuestionId = getFirstQuestionOfGroup(questionGroup);
-    
+
     const linkColor = {
       color: this.context.primaryColor
     };
 
     return (
       <section className={`${styles.formSection} ${styles[status]}`}>
-        
+
         <Collapse in={status === 'active'} timeout={1000}>
           <div>
             {step > 1 && <hr className={styles.hrLine} />}
             <FormRow>
               <div className={styles.step}>
-                { `${step} of ${totalSteps}` }
+                {`${step} of ${totalSteps}`}
               </div>
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>
-                { this.shouldShowActiveTitle() && questionGroup.title}
+                {this.shouldShowActiveTitle() && questionGroup.title}
                 </h3>
                 {this.renderAllQuestions}
               </div>
@@ -232,7 +227,7 @@ class FormSection extends Component {
           <div>
             <FormRow>
               <div className={styles.step}>
-                { step }
+                {step}
               </div>
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>{questionGroup.title}</h3>
@@ -250,7 +245,7 @@ class FormSection extends Component {
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>
                   {questionGroup.title}
-                  <a href="javascript:;" onClick={() => goToQuestion(firstQuestionId)}
+                  <a href="javascript:;" onClick={function () { goToQuestion(firstQuestionId); }}
                     className={styles.formSectionEdit} style={linkColor}>Edit</a>
                 </h3>
               </div>
@@ -259,13 +254,13 @@ class FormSection extends Component {
         </Collapse>
 
         {status === 'active' && this.renderNavButtons()}
-        {status === 'active' && 
+        {status === 'active' &&
           <div>
             <hr className={styles.hrLine} />
             <FormRow>
               <LearnMoreSection isLastSection={step === totalSteps} />
             </FormRow>
-            { step < totalSteps &&
+            {step < totalSteps &&
               <FormRow>
                 <h2 className={styles.nextSectionTitle}>Next Sections</h2>
               </FormRow>
@@ -273,9 +268,9 @@ class FormSection extends Component {
           </div>
         }
       </section>
-    )
+    );
   }
 
 }
 
-export default FormSection
+export default FormSection;

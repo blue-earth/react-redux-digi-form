@@ -6,9 +6,10 @@ import classNames from 'classnames';
 
 class LearnMoreSection extends Component {
   static propTypes = {
-    link: PropTypes.string
+    link: PropTypes.string,
+    isLastSection: PropTypes.bool
   }
-  
+
   static contextTypes = {
     primaryColor: PropTypes.string,
     isLastSection: PropTypes.bool
@@ -19,15 +20,11 @@ class LearnMoreSection extends Component {
     isLastSection: false
   }
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const { link, isLastSection } = this.props
+    const { link, isLastSection } = this.props;
     var linkStyle = {
       color: this.context.primaryColor
-    }
+    };
     const sectionClass = classNames({
       [styles.learnMoreSection]: true,
       [styles.lastSection]: isLastSection
@@ -38,8 +35,8 @@ class LearnMoreSection extends Component {
         <div><FaLock size={24} color="#000" /></div>
         <div><Link to={link} style={linkStyle}>Learn More</Link></div>
       </section>
-    )
+    );
   }
 }
 
-export default LearnMoreSection
+export default LearnMoreSection;

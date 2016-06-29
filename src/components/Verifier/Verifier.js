@@ -7,7 +7,8 @@ class Verifier extends Component {
   };
 
   static propTypes = {
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
+    status: PropTypes.bool.isRequired
   };
 
   renderEmondoEmailFieldService() {
@@ -23,7 +24,7 @@ class Verifier extends Component {
   }
 
   render() {
-    var { type, status, verification } = this.props;
+    var { type, status } = this.props;
     var output = false;
     var validatorStyle = {
       backgroundColor: this.context.primaryColor

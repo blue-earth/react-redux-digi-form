@@ -1,3 +1,3 @@
-import BuilderHeader from './BuilderHeader'
+import BuilderHeader from './BuilderHeader';
 
-export default BuilderHeader
+export default BuilderHeader;

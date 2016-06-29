@@ -1,12 +1,8 @@
-import React, { Component, PropTypes } from 'react'
-import { Button } from 'react-bootstrap'
-import styles from './FormEnterButton.scss'
-
+import React, { Component, PropTypes } from 'react';
+import { Button } from 'react-bootstrap';
+import styles from './FormEnterButton.scss';
 
 class FormEnterButton extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   static propTypes = {
     onClick: PropTypes.func,
@@ -24,9 +20,9 @@ class FormEnterButton extends Component {
     primaryColor: React.PropTypes.string
   };
 
-  handleClick() {
-    const { onClick } = this.props
-    if (typeof onClick === 'function') onClick()
+  handleClick = () => {
+    const { onClick } = this.props;
+    if (typeof onClick === 'function') onClick();
   }
 
   renderDefaultLabel() {
@@ -39,17 +35,16 @@ class FormEnterButton extends Component {
   }
 
   renderButtonLabel() {
-    const { buttonLabel } = this.props
+    const { buttonLabel } = this.props;
     return (
       <div className={styles.btnInner}>
-        { buttonLabel }
+        {buttonLabel}
       </div>
     );
   }
-  
-  render() {
 
-    const { buttonLabel, isDisabled, autoFocus } = this.props
+  render() {
+    const { buttonLabel, isDisabled, autoFocus } = this.props;
     var { primaryColor } = this.context;
     var optionals = {};
 
@@ -58,7 +53,7 @@ class FormEnterButton extends Component {
         autoFocus: true
       };
     }
-    if ( typeof primaryColor !== 'undefined' ) {
+    if (typeof primaryColor !== 'undefined') {
       optionals['style'] = {
         color: primaryColor,
         borderColor: primaryColor
@@ -66,17 +61,17 @@ class FormEnterButton extends Component {
     }
 
     if (isDisabled) {
-      optionals['disabled'] = true
+      optionals['disabled'] = true;
     }
 
     return (
-      <Button type="button" onClick={this.handleClick.bind(this)}
+      <Button type="button" onClick={this.handleClick}
         className={styles.formEnterButton}
         {...optionals}>
-        { buttonLabel != '' ? this.renderButtonLabel() : this.renderDefaultLabel() }
+        {buttonLabel !== '' ? this.renderButtonLabel() : this.renderDefaultLabel()}
       </Button>
-    )
+    );
   }
 }
 
-export default FormEnterButton
+export default FormEnterButton;

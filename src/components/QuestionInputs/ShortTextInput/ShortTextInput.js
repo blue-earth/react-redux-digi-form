@@ -22,16 +22,16 @@ class ShortTextInput extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    onEnterKey: PropTypes.func,
+    onEnterKey: PropTypes.func
   };
 
   static defaultProps = {
     placeholderText: '',
     fullWidth: true,
-    value:'',
+    value: '',
     type: 'text',
     isDisabled: false,
-    isReadOnly: false,
+    isReadOnly: false
   };
 
   constructor(props) {
@@ -42,8 +42,8 @@ class ShortTextInput extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextState.savedValue !== this.state.savedValue
-      || nextProps.isDisabled !== this.props.isDisabled;
+    return nextState.savedValue !== this.state.savedValue ||
+      nextProps.isDisabled !== this.props.isDisabled;
   }
 
   componentWillReceiveProps(props) {
@@ -77,7 +77,7 @@ class ShortTextInput extends Component {
     const { onEnterKey } = this.props;
     if (event.keyCode === 13 && typeof onEnterKey === 'function') {
       onEnterKey();
-      //this.refs.input.blur()
+      // this.refs.input.blur()
     }
   }
 
@@ -93,25 +93,24 @@ class ShortTextInput extends Component {
   }
 
   render() {
-    var props = this.props;
-    var { type, value, autoFocus, fullWidth, placeholderText, 
+    var { type, autoFocus, fullWidth, placeholderText,
       isDisabled, isReadOnly } = this.props;
     var { primaryColor } = this.context;
     var optionals = {};
 
-    if ( typeof primaryColor !== 'undefined' ) {
+    if (typeof primaryColor !== 'undefined') {
       optionals['style'] = {
         color: primaryColor
       };
     }
     if (placeholderText) {
-      optionals['placeholder'] = placeholderText
+      optionals['placeholder'] = placeholderText;
     }
     if (isDisabled) {
-      optionals['disabled'] = 'disabled'
+      optionals['disabled'] = 'disabled';
     }
     if (isReadOnly) {
-      optionals['readOnly'] = true
+      optionals['readOnly'] = true;
     }
 
     const inputClasses = classNames({
@@ -132,7 +131,7 @@ class ShortTextInput extends Component {
         onKeyDown={this.handleKeyDown}
         {...optionals}
       />
-    )
+    );
   }
 }
 

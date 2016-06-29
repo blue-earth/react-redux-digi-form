@@ -28,3 +28,15 @@
     outline: none;
   }
 }
+
+:global {
+  .pac-container {
+    width: 280px !important;
+    @include media('>=sm') {
+      width: 400px !important;
+    }
+  }
+  .pac-logo:after {
+    content: none !important;
+  }
+}

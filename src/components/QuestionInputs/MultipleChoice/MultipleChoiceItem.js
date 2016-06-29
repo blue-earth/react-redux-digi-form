@@ -4,10 +4,6 @@ import classNames from 'classnames';
 
 class MultipleChoiceItem extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   static contextTypes = {
     primaryColor: React.PropTypes.string
   };
@@ -17,16 +13,12 @@ class MultipleChoiceItem extends Component {
     text: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
     active: PropTypes.bool,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired
   };
 
   static defaultProps = {
     active: false
   };
-
-  componentDidMount() {
-    const { text, label } = this.props;
-  }
 
   handleClick = () => {
     const { onClick, label, text } = this.props;
@@ -34,22 +26,21 @@ class MultipleChoiceItem extends Component {
   }
 
   handleKeyDown = (event) => {
-    const { label, onEnterKey } = this.props;
     if (event.keyCode === 32) {
       this.handleClick();
     }
   }
 
   render() {
-    const { label, text, onClick, active, disabled } = this.props;
+    const { label, text, active, disabled } = this.props;
     const { primaryColor } = this.context;
-    
+
     const choiceItemClasses = classNames({
       [styles.choiceItem]: true,
       [styles.active]: active,
       [styles.disabled]: disabled
     });
-    
+
     var optionals = {};
     if (active) {
       optionals['style'] = {
@@ -57,8 +48,8 @@ class MultipleChoiceItem extends Component {
       };
     }
     if (!disabled) {
-      optionals['onClick'] = this.handleClick
-      optionals['onKeyDown'] = this.handleKeyDown
+      optionals['onClick'] = this.handleClick;
+      optionals['onKeyDown'] = this.handleKeyDown;
     }
 
     return (
@@ -66,8 +57,8 @@ class MultipleChoiceItem extends Component {
         <label className={styles.label}>{label}</label>
         <span className={styles.text}>{text}</span>
       </div>
-    )
+    );
   }
 }
 
-export default MultipleChoiceItem
+export default MultipleChoiceItem;

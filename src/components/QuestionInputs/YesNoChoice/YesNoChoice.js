@@ -1,12 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import MultipleChoice from '../MultipleChoice/MultipleChoice';
-import _ from 'lodash';
 
 class YesNoChoice extends Component {
-
-  constructor(props) {
-    super(props);
-  }
 
   static propTypes = {
     isDisabled: PropTypes.bool,
@@ -17,6 +12,7 @@ class YesNoChoice extends Component {
     ]),
     onChange: PropTypes.func,
     onEnterKey: PropTypes.func,
+    autoFocus: PropTypes.bool
   };
 
   static defaultProps = {

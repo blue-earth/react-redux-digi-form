@@ -12,16 +12,17 @@ class AddressInput extends Component {
     super(props);
     this.state = props.value;
   }
-  
+
   static propTypes = {
     isDisabled: PropTypes.bool,
     isReadOnly: PropTypes.bool,
     autoFocus: PropTypes.bool,
+    autoComplete: PropTypes.bool,
     value: PropTypes.object,
     onChange: PropTypes.func,
     onEnterKey: PropTypes.func,
     onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
+    onBlur: PropTypes.func
   };
 
   static defaultProps = {
@@ -33,11 +34,130 @@ class AddressInput extends Component {
       state: '',
       postcode: ''
     },
+    autoComplete: true,
     onChange: () => {},
     onEnterKey: () => {},
     onFocus: () => {},
     onBlur: () => {}
   };
+
+  componentDidMount() {
+    const { autoComplete } = this.props;
+    if (autoComplete) {
+      this.initAutocomplete();
+    }
+  }
+
+  componentWillUnmount() {
+    const { autocomplete } = this.state;
+    if (autocomplete) {
+      google.maps.event.clearInstanceListeners(autocomplete);
+      document.querySelector('body').removeChild(document.querySelector('.pac-container'));
+    }
+  }
+
+  initAutocomplete = () => {
+    // Create the autocomplete object, restricting the search to geographical
+    // location types.
+    var autocomplete = new google.maps.places.Autocomplete(
+        /** @type {!HTMLInputElement} */this.refs.addressLine1Input,
+        {types: ['geocode']});
+
+    // When the user selects an address from the dropdown, populate the address
+    // fields in the form.
+    autocomplete.addListener('place_changed', this.fillInAddress);
+    this.setState({ autocomplete });
+  }
+
+  fillInAddress = () => {
+    const componentForm = {
+      street_number: {
+        fieldName: 'short_name',
+        ref: 'addressLine1Input',
+        for: 'address_line1'
+      },
+      route: {
+        fieldName: 'long_name',
+        ref: 'addressLine2Input',
+        for: 'address_line2'
+      },
+      locality: {
+        fieldName: 'long_name',
+        ref: 'suburbInput',
+        for: 'suburb'
+      },
+      administrative_area_level_1: {
+        fieldName: 'long_name',
+        ref: 'stateInput',
+        for: 'state'
+      },
+      /*
+      country: {
+        fieldName: 'long_name',
+        ref: ''
+      },*/
+      postal_code: {
+        fieldName: 'short_name',
+        ref: 'postcodeInput',
+        for: 'postcode'
+      }
+    };
+    const { autocomplete } = this.state;
+    var place = autocomplete.getPlace();
+
+    var newValue = {};
+    // Get each component of the address from the place details
+    // and fill the corresponding field on the form.
+    for (var i = 0; i < place.address_components.length; i++) {
+      var addressType = place.address_components[i].types[0];
+      if (componentForm[addressType]) {
+        var val = place.address_components[i][componentForm[addressType].fieldName];
+        newValue[componentForm[addressType].for] = val;
+      }
+    }
+    // adjust field values
+    if (newValue['address_line2']) {
+      if (newValue['address_line1']) {
+        newValue['address_line1'] += ' ' + newValue['address_line2'];
+      } else {
+        newValue['address_line1'] = newValue['address_line2'];
+      }
+      newValue['address_line2'] = '';
+    }
+
+    for (var prop in componentForm) {
+      var component = componentForm[prop];
+      this.refs[component.ref].value = newValue[component.for] ? newValue[component.for] : '';
+    }
+
+    this.handleChange();
+  }
+
+  // Bias the autocomplete object to the user's geographical location,
+  // as supplied by the browser's 'navigator.geolocation' object.
+  geolocate() {
+    const { autocomplete } = this.state;
+
+    if (navigator.geolocation && autocomplete) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var geolocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        var circle = new google.maps.Circle({
+          center: geolocation,
+          radius: position.coords.accuracy
+        });
+        autocomplete.setBounds(circle.getBounds());
+      });
+    }
+  }
+
+  handleFocusAddressLine1 = (event) => {
+    const { onFocus } = this.props;
+    this.geolocate();
+    onFocus();
+  }
 
   handleChangeAddressLine1 = (event) => {
 
@@ -68,7 +188,7 @@ class AddressInput extends Component {
         suburb: this.refs.suburbInput.value,
         state: this.refs.stateInput.value,
         postcode: this.refs.postcodeInput.value
-      }
+      };
       this.setState(newValue);
       onChange(newValue);
     }
@@ -82,11 +202,11 @@ class AddressInput extends Component {
   }
 
   render() {
-    const { isDisabled, isReadOnly, value, autoFocus, onFocus, onBlur } = this.props;
+    const { isDisabled, isReadOnly, autoFocus, onFocus, onBlur } = this.props;
     const { primaryColor } = this.context;
-    const { address_line1, address_line2, suburb, state, postcode } = this.state;
+    const { suburb, state, postcode } = this.state;
     var optionals = {};
-    
+
     if (isDisabled) {
       optionals['disabled'] = 'disabled';
     }
@@ -95,7 +215,7 @@ class AddressInput extends Component {
       optionals['readOnly'] = true;
     }
 
-    if ( typeof primaryColor !== 'undefined' ) {
+    if (typeof primaryColor !== 'undefined') {
       optionals['style'] = {
         color: primaryColor
       };
@@ -107,12 +227,11 @@ class AddressInput extends Component {
           <Col sm={6} className={styles.addressCol}>
             <input className={`${styles.addressInput} ${styles.addressLine1}`}
               onChange={this.handleChange}
-              onFocus={onFocus}
+              onFocus={this.handleFocusAddressLine1}
               onBlur={onBlur}
-              onKeyDown={this.handleKeyDown}
               autoFocus={autoFocus}
               placeholder="Address Line 1"
-              value={address_line1}
+              value={this.state.address_line1}
               data-name="addressLine1Input"
               ref="addressLine1Input"
               {...optionals}
@@ -124,7 +243,7 @@ class AddressInput extends Component {
               onFocus={onFocus}
               onBlur={onBlur}
               placeholder="Address Line 2"
-              value={address_line2}
+              value={this.state.address_line2}
               data-name="addressLine2Input"
               ref="addressLine2Input"
               {...optionals}

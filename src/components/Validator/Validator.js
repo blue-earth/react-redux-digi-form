@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, Collapse } from 'react';
+import React, { Component, PropTypes } from 'react';
 import validateField from 'helpers/validationHelper';
 import Hogan from 'hogan.js';
 import styles from './Validator.scss';
@@ -61,7 +61,7 @@ class Validator extends Component {
     };
 
     if (result === false) {
-      if (displayText){
+      if (displayText) {
         template = displayText;
       } else {
         template = Validator.defaultMessages[type];
@@ -71,12 +71,12 @@ class Validator extends Component {
         var t = Hogan.compile(template);
         output = t.render(this.props);
       }
-    
+
       return (
         <div className={styles.errorField} style={validatorStyle}>
           <span>{output}</span>
         </div>
-      )
+      );
     } else {
       return false;
     }
