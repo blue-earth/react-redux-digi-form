@@ -41,12 +41,13 @@ const mapStateToProps = (state) => {
     primaryColor,
     lastFormSubmitStatus,
     shouldShowFinalSubmit,
+    isAccessCodeProtected,
     formAccessStatus,
     formAccessCode
   } = formInteractive || INIT_FORM_STATE;
   return {
     id: parseInt(id, 10),
-    sessionId,
+    sessionId: parseInt(sessionId, 10),
     isFetchingForm,
     isVerifying,
     currentQuestionId,
@@ -57,6 +58,7 @@ const mapStateToProps = (state) => {
     verificationStatus,
     lastFormSubmitStatus,
     shouldShowFinalSubmit,
+    isAccessCodeProtected,
     formAccessStatus,
     formAccessCode
   };

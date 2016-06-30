@@ -2,6 +2,7 @@ import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { findIndexById, mergeItemIntoArray } from 'helpers/pureFunctions';
 import { getOutcomeWithQuestionId } from 'helpers/formInteractiveHelper';
+import { assignDefaults } from 'redux/utils/request';
 import _ from 'lodash';
 
 // ------------------------------------
@@ -49,7 +50,10 @@ export const INIT_FORM_STATE = {
   isVerifying: false, // indicates the verifying request is being processed.
   isModified: false, // indicates the form answer modified after submission.
   lastUpdated: Date.now(), // last form-questions received time.
-  lastFormSubmitStatus: {}, // holds the status of last form submit response.
+  lastFormSubmitStatus: { // holds the status of last form submit response.
+    // result: true / false, form submit result.
+    // requestAction: FORM_USER_SUBMISSION / FORM_AUTOSAVE
+  },
   form: {
     questions: [],
     logics: []
@@ -79,14 +83,7 @@ export const fetchForm = (id, accessCode) => {
   if (accessCode.length > 0) {
     apiURL += `?access_code=${accessCode}`;
   }
-  const fetchParams = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow',
-    method: 'GET'
-  };
+  const fetchParams = assignDefaults();
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
@@ -140,7 +137,12 @@ export const doneFetchingForm = () => {
 
 const shouldFetchForm = (state, id) => {
   const formInteractive = state.formInteractive;
-  // todo: Add documentation on how following conditions are triggered?
+  /*
+   * We should fetch form if
+   * - no form_data has loaded
+   * - it should load another form
+   * - if form is not being loaded
+   */
   if ((id !== formInteractive.id || !formInteractive.form) &&
   !formInteractive.isFetchingForm) {
     return true;
@@ -203,15 +205,8 @@ export const doneFetchingAnswers = () => {
 
 export const processFetchAnswers = (sessionId) => {
   const apiURL = `${API_URL}/form_document/api/form_response/${sessionId}/`;
-  // todo: DRY the common header setup
-  const fetchParams = {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    redirect: 'follow',   // todo: Comment on this parameter, why this parameter is necessary
-    method: 'GET'
-  };
+
+  const fetchParams = assignDefaults();
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
@@ -396,16 +391,11 @@ export const requestVerification = () => {
 // ------------------------------------
 export const processVerifyEmail = (questionId, email) => {
   const apiURL = `${API_URL}/verifications/api/email/verify/`;
-  const fetchParams = {
+  const body = { email };
+  const fetchParams = assignDefaults({
     method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      email: email
-    })
-  };
+    body
+  });
 
   const fetchSuccess = ({value: {result}}) => {
     return (dispatch, getState) => {
@@ -550,7 +540,7 @@ export const requestSubmitAnswer = () => {
 // ------------------------------------
 export const processSubmitAnswer = (requestAction, formInteractive) => {
   const { id, answers, sessionId } = formInteractive;
-  var answerRequest = {
+  var body = {
     request_action: requestAction,
     answers: answers,
     form_id: id,
@@ -564,16 +554,11 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
     method = 'PUT';
   }
 
-  const fetchParams = {
+  const fetchParams = assignDefaults({
     method,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(answerRequest)
-  };
+    body
+  });
 
-  // Temporary, should be fixed later with correct domain name.
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
       const { response_id } = value;
@@ -620,8 +605,7 @@ export const updateSessionId = (sessionId) => {
 // ------------------------------------
 // Action: resetFormSubmitStatus
 // ------------------------------------
-export const resetFormSubmitStatus = (sessionId) => {
-  // todo: Unused parameter?
+export const resetFormSubmitStatus = () => {
   return {
     type: RESET_FORM_SUBMIT_STATUS
   };
