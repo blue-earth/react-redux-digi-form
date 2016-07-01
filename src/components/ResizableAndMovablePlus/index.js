@@ -15,7 +15,7 @@ class ResizableAndMovablePlus extends Component {
     onDragStart: PropTypes.func,
     onClick: PropTypes.func,
     onDoubleClick: PropTypes.func,
-    children: PropTypes.string
+    children: PropTypes.node
   };
 
   static defaultProps = {
