@@ -90,6 +90,7 @@
     "hogan.js": "^3.0.2",
     "html-webpack-plugin": "^2.21.0",
     "imports-loader": "^0.6.5",
+    "interact.js": "^1.2.6",
     "ip": "^1.1.2",
     "isomorphic-fetch": "^2.2.1",
     "json-loader": "^0.5.4",

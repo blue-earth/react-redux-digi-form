@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { findIndexById } from 'helpers/pureFunctions';
-import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
-import classNames from 'classnames';
+// import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
+// import classNames from 'classnames';
+import InteractWrapper from 'components/InteractWrapper/InteractWrapper';
 import _ from 'lodash';
 import styles from './DrawingBoard.scss';
 
@@ -175,6 +176,7 @@ class DrawingBoard extends Component {
     });
   }
 
+  /*
   handleResizeStart = (direction, styleSize, clientSize, event, metaData) => {
     const { currentQuestionId, setCurrentQuestionId } = this.props;
     currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
@@ -221,6 +223,55 @@ class DrawingBoard extends Component {
     const newBoundingBox = {
       left: ui.position.left / pageZoom,
       top: ui.position.top / pageZoom,
+      width: boundingBox.width,
+      height: boundingBox.height
+    };
+    if (!_.isEqual(boundingBox, newBoundingBox)) {
+      updateMappingInfo({
+        id,
+        bounding_box: [newBoundingBox]
+      });
+    }
+  }
+  */
+  handleResizeStart = (metaData) => {
+    const { currentQuestionId, setCurrentQuestionId } = this.props;
+    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
+  }
+
+  handleResizeEnd = (x, y, w, h, metaData) => {
+    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
+    const { id } = metaData;
+    const index = findIndexById(documentMapping, id);
+    const boundingBox = documentMapping[index].bounding_box[0];
+    const newBoundingBox = {
+      left: x / pageZoom,
+      top: y / pageZoom,
+      width: w / pageZoom,
+      height: h / pageZoom
+    };
+    if (!_.isEqual(boundingBox, newBoundingBox)) {
+      updateMappingInfo({
+        id,
+        bounding_box: [newBoundingBox]
+      });
+    }
+  }
+
+  handleDragStart = (metaData) => {
+    const { currentQuestionId, setCurrentQuestionId } = this.props;
+    event.stopPropagation();
+    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
+  }
+
+  handleDragEnd = (x, y, metaData) => {
+    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
+    const { id } = metaData;
+    const index = findIndexById(documentMapping, id);
+    const boundingBox = documentMapping[index].bounding_box[0];
+    const newBoundingBox = {
+      left: x / pageZoom,
+      top: y / pageZoom,
       width: boundingBox.width,
       height: boundingBox.height
     };
@@ -283,10 +334,12 @@ class DrawingBoard extends Component {
         const { type } = questions[index];
         const isActive = mappingInfo.id === currentQuestionId;
         const zIndex = isActive ? 101 : 100;
+        /*
         const elementClass = classNames({
           [styles.element]: true,
           [styles.active]: isActive
         });
+
         return (
           <ResizableAndMovablePlus
             className={elementClass}
@@ -312,6 +365,37 @@ class DrawingBoard extends Component {
           >
             <div className={styles.elementName}>{type}</div>
           </ResizableAndMovablePlus>
+        );
+        */
+        return (
+          <InteractWrapper
+            x={boundingBox.left * pageZoom}
+            y={boundingBox.top * pageZoom}
+            zIndex={zIndex}
+            width={boundingBox.width * pageZoom}
+            height={boundingBox.height * pageZoom}
+            onResizeStart={this.handleResizeStart}
+            onResizeEnd={this.handleResizeEnd}
+            onDragStart={this.handleDragStart}
+            onDragEnd={this.handleDragEnd}
+            onClick={this.handleElementClick}
+            onDoubleClick={this.handleElementDoubleClick}
+            key={`${mappingInfo.id}-${0}`}
+            minWidth={10}
+            minHeight={10}
+            metaData={{
+              id: mappingInfo.id,
+              subId: 0
+            }}
+            dragSnapTargets={[
+              { x: 50 },
+              { x: 150 },
+              { x: 250 },
+              { y: 50 }
+            ]}
+          >
+            <div className={styles.elementName}>{type}</div>
+          </InteractWrapper>
         );
       });
     };
