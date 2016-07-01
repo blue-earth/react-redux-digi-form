@@ -75,6 +75,9 @@ class DrawingBoard extends Component {
      */
     setQuestionEditMode: PropTypes.func.isRequired,
 
+    /*
+     * deleteElement: Redux action to delete question element by id.
+     */
     deleteElement: PropTypes.func.isRequired
   };
 

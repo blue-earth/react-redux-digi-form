@@ -148,7 +148,7 @@ const _addElement = (state, action) => {
   mappingInfo.id = newQuestionId;
   return {
     questions: mergeItemIntoArray(state.questions, question),
-    documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo),
+    documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true),
     lastQuestionId: newQuestionId,
     currentQuestionId: newQuestionId
   };
