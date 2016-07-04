@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
+  INIT_BUILDER_STATE,
   fetchForm,
   setActiveInputName,
   addElement,
@@ -8,7 +9,8 @@ import {
   updateMappingInfo,
   setCurrentQuestionId,
   setPageZoom,
-  setQuestionEditMode
+  setQuestionEditMode,
+  insertAnswer
 } from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
@@ -21,7 +23,8 @@ const mapActionCreators = {
   updateMappingInfo,
   setCurrentQuestionId,
   setPageZoom,
-  setQuestionEditMode
+  setQuestionEditMode,
+  insertAnswer
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -42,8 +45,9 @@ const mapStateToProps = (state) => {
     currentQuestionId,
     pageZoom,
     pageWidth,
-    questionEditMode
-  } = formBuilder;
+    questionEditMode,
+    answerChoices
+  } = formBuilder || INIT_BUILDER_STATE;
   return {
     id: parseInt(id),
     isFetching,
@@ -56,7 +60,8 @@ const mapStateToProps = (state) => {
     currentQuestionId,
     pageZoom,
     pageWidth,
-    questionEditMode
+    questionEditMode,
+    answerChoices
   };
 };
 
