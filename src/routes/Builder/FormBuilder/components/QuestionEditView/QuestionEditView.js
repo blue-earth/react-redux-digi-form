@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
+import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
 import styles from './QuestionEditView.scss';
 
 class QuestionEditView extends Component {
@@ -18,7 +19,17 @@ class QuestionEditView extends Component {
     /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
-    setQuestionEditMode: PropTypes.func.isRequired
+    setQuestionEditMode: PropTypes.func.isRequired,
+
+    /*
+     * answerChoices: Answer Choices could be used when edit Question.
+     */
+    answerChoices: PropTypes.array.isRequired,
+
+    /*
+     * insertAnswer: Insert Answer into RichTextEditor and remove from dropdown
+     */
+    insertAnswer: PropTypes.func.isRequired
   };
 
   componentWillMount() {
@@ -72,6 +83,7 @@ class QuestionEditView extends Component {
       <div className={styles.questionEditView}>
         {this.renderTopActionButtons()}
         {'Question Edit View'}
+        <QuestionRichTextEditor {...this.props} />
       </div>
     );
   }

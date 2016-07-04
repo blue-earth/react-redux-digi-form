@@ -22,6 +22,8 @@ export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 export const SET_PAGE_WIDTH = 'SET_PAGE_WIDTH';
 
+export const INSERT_ANSWER = 'INSERT_ANSWER';
+
 export const INIT_BUILDER_STATE = {
   id: 0,
   isFetching: false, // indicates the form is being loaded.
@@ -47,7 +49,8 @@ export const INIT_BUILDER_STATE = {
   lastQuestionId: 0, // indicates lastly added question id
   formAccessCode: '1234', // form access code
   pageZoom: 1, // zoom ratio of PageView
-  questionEditMode: false
+  questionEditMode: false,
+  answerChoices: ['answer1', 'answer2', 'answer3']
 };
 
 // ------------------------------------
@@ -74,6 +77,17 @@ export const processFetchForm = (id, accessCode) => {
   };
 
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+// ------------------------------------
+// Action: insertAnswer
+// ------------------------------------
+export const insertAnswer = (answerValue, newAnswerChoices) => {
+  return {
+    type: INSERT_ANSWER,
+    answerValue,
+    newAnswerChoices
+  };
 };
 
 // ------------------------------------
@@ -261,6 +275,10 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
     case SET_PAGE_WIDTH:
       return Object.assign({}, state, {
         pageWidth: action.pageWidth
+      });
+    case INSERT_ANSWER:
+      return Object.assign({}, state, {
+        answerChoices: [action.newAnswerChoices]
       });
     case SET_QUESTION_EDIT_MODE:
       return Object.assign({}, state, {
