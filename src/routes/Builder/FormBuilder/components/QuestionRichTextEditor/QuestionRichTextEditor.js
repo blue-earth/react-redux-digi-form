@@ -5,6 +5,7 @@ import DropdownInput from 'components/QuestionInputs/DropdownInput/DropdownInput
 import styles from './QuestionRichTextEditor.scss';
 
 function findAnswerEntities(contentBlock, callback) {
+  console.log(contentBlock.getText());
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity();
@@ -55,22 +56,40 @@ class QuestionRichTextEditor extends Component {
   }
 
   handleAnswerSelect = (value) => {
+    const { editorState } = this.state;
     const answerBlockDecorator = new CompositeDecorator([
       {
         strategy: findAnswerEntities,
         component: AnswerSpan
       }
     ]);
+    const prevFocusOffset = editorState.getSelection().focusOffset;
+    const prevAnchorOffset = editorState.getSelection().anchorOffset;
     const answerEntity = Entity.create('ANSWER_BLOCK', 'IMMUTABLE', value);
-    const { editorState } = this.state;
+    var newEditorState = null;
+    var nextCursorPos = null;
     if (editorState.getSelection().isCollapsed()) {
-      var newEditorState = EditorState.createWithContent(
+      newEditorState = EditorState.createWithContent(
         Modifier.insertText(editorState.getCurrentContent(), editorState.getSelection(),
         value, null, answerEntity), answerBlockDecorator);
-      this.setState({
-        editorState: newEditorState
+      nextCursorPos = editorState.getSelection().merge({
+        anchorOffset: prevAnchorOffset + value.length,
+        focusOffset: prevFocusOffset + value.length,
+        hasFocus: true
+      });
+    } else {
+      newEditorState = EditorState.createWithContent(
+        Modifier.replaceText(editorState.getCurrentContent(), editorState.getSelection(),
+        value, null, answerEntity), answerBlockDecorator);
+      nextCursorPos = editorState.getSelection().merge({
+        anchorOffset: prevAnchorOffset + value.length,
+        focusOffset: prevAnchorOffset + value.length,
+        hasFocus: true
       });
     }
+    this.setState({
+      editorState: EditorState.forceSelection(newEditorState, nextCursorPos)
+    });
   }
 
   onBoldClick = () => {
@@ -81,12 +100,22 @@ class QuestionRichTextEditor extends Component {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
   }
 
+  showOffset = () => {
+    const { editorState } = this.state;
+    console.log(editorState.getSelection().focusOffset, editorState.getSelection().anchorOffset);
+  }
+
+  showValue = () => {
+    const { editorState } = this.state;
+    console.log(editorState.getCurrentContent().getBlockMap());
+  }
+
   render() {
     const { answerChoices } = this.props;
     return (
       <div className={styles.questionRichTextEditor}>
         <div className={styles.inputWidget}>
-          <Button block>+Insert Hyperlink</Button>
+          <Button block onClick={this.showValue}>+Insert Hyperlink</Button>
         </div>
         <div className={styles.inputWidget}>
           <DropdownInput choices={answerChoices} onChange={this.handleAnswerSelect} />
@@ -100,6 +129,8 @@ class QuestionRichTextEditor extends Component {
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
+            onFocus={this.showOffset}
+            ref="editor"
             spellCheck />
         </div>
       </div>
