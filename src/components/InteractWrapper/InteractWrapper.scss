@@ -91,7 +91,7 @@ $handle-size: 12px;
   position: absolute;
   width: $handle-size;
   height: $handle-size;
-  top: -($handle-size / 3);
+  bottom: -($handle-size / 3);
   right: -($handle-size / 3);
   cursor: nwse-resize;
 }
