@@ -127,15 +127,28 @@ class InteractWrapper extends Component {
   }
 
   handleMouseDown = (event) => {
-    const { x, y } = this.state;
+    const { x, y, width, height } = this.state;
     const element = this.refs.interactWrapper;
     var mousePos = this.getMousePos(event);
+    
+    // offsetX is equal to horizontal offset of mouse x pos from the left of elment + left of parent element.
+    // offsetY is equal to vertical offset of mouse y pos from the top of elment + top of parent element.
     var offsetX = mousePos.x - x;
     var offsetY = mousePos.y - y;
+
+    const elementPos = this.getElementPos(element);
+    // dX is equal to the offset from the nearest left or right of the element.
+    // dY is equal to the offset from the nearest top or bottom of the element.
+    console.log(mousePos.y, elementPos.y, height);
+    var dX = Math.min(mousePos.x - elementPos.x, elementPos.x + width - mousePos.x) + x;
+    var dY = Math.min(mousePos.y - elementPos.y, elementPos.y + height - mousePos.y) + y;
+
     element.setAttribute('data-x', x);
     element.setAttribute('data-y', y);
     element.setAttribute('data-offsetX', offsetX);
     element.setAttribute('data-offsetY', offsetY);
+    element.setAttribute('data-dX', dX);
+    element.setAttribute('data-dY', dY);
     event.stopPropagation();
   }
 
@@ -197,7 +210,9 @@ class InteractWrapper extends Component {
     const { onResizeStart, metaData, resizeSnapTargets } = this.props;
     const element = this.refs.interactWrapper;
     var elementPos = this.getElementPos(element);
-    const snapTargets = this.offsetSnapTargets(elementPos.x, elementPos.y, resizeSnapTargets);
+    var dX = (parseFloat(element.getAttribute('data-dX')) || 0);
+    var dY = (parseFloat(element.getAttribute('data-dY')) || 0);
+    const snapTargets = this.offsetSnapTargets(elementPos.x - dX, elementPos.y - dY, resizeSnapTargets);
     interact(element).resizable({
       snap: {
         targets: snapTargets,
@@ -231,7 +246,7 @@ class InteractWrapper extends Component {
     target.setAttribute('data-y', y);
     target.setAttribute('data-w', w);
     target.setAttribute('data-h', h);
-    console.log(event);
+    // console.log(event);
     // var isSnapping = event.snap.locked;
 
     onResizeMove({ left: x, top: y, width: w, height: h }, metaData, false); // isSnapping);
@@ -285,7 +300,17 @@ class InteractWrapper extends Component {
         onDblClick={this.handleDoubleClick}
         ref="interactWrapper"
         {...optionals}>
-        {this.props.children}
+        <div className={styles.innerContent}>
+          {this.props.children}
+        </div>
+        <div className={styles.handleLeft} ref="handleLeft"></div>
+        <div className={styles.handleTop} ref="handleTop"></div>
+        <div className={styles.handleRight} ref="handleRight"></div>
+        <div className={styles.handleBottom} ref="handleBottom"></div>
+        <div className={styles.handleBottomLeft} ref="handleBottomLeft"></div>
+        <div className={styles.handleTopLeft} ref="handleTopLeft"></div>
+        <div className={styles.handleTopRight} ref="handleTopRight"></div>
+        <div className={styles.handleBottomRight} ref="handleBottomRight"></div>
       </div>
     );
   }

@@ -42,9 +42,7 @@ $snapping-border-color: #f3d359;
   z-index: 102;
 }
 .snappingHelper {
-  border: 0px solid $snapping-border-color;
-  border-left-width: 1px;
-  border-top-width: 1px;
+  border: 1px solid $snapping-border-color;
   position: absolute;
   z-index: 103;
   display: none;

@@ -2,7 +2,7 @@
 @import '../../styles/variables';
 
 $element-border-color: #FF6600;
-
+$handle-size: 12px;
 .interactWrapper {
   width: 100px;
   height: 50px;
@@ -10,8 +10,8 @@ $element-border-color: #FF6600;
   border: 1px solid $element-border-color;
   @include box-shadow-custom(0 0 5px rgba(0, 0, 0, .3));
   background-color: rgba(255, 255, 255, .85);
-  overflow: hidden;
   @include transition(background .05s linear);
+  cursor: move;
   &:hover, &:focus {
   	background-color: rgba(255, 255, 255, .95);
   }
@@ -20,4 +20,78 @@ $element-border-color: #FF6600;
     background-color: rgba(255, 255, 255, 1);
     @include box-shadow-custom(0 0 5px rgba(0, 0, 0, .5));
   }
+}
+.innerContent {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+.handleLeft {
+  position: absolute;
+  width: $handle-size;
+  left: -($handle-size / 3);
+  top: ($handle-size * 2 / 3);
+  bottom: ($handle-size * 2 / 3);
+  cursor: ew-resize;
+}
+.handleRight {
+  position: absolute;
+  width: $handle-size;
+  right: -($handle-size / 3);
+  top: ($handle-size * 2 / 3);
+  bottom: ($handle-size * 2 / 3);
+  cursor: ew-resize;
+}
+.handleTop {
+  position: absolute;
+  height: $handle-size;
+  top: -($handle-size / 3);
+  left: ($handle-size * 2 / 3);
+  right: ($handle-size * 2 / 3);
+  cursor: ns-resize;
+}
+.handleBottom {
+  position: absolute;
+  height: $handle-size;
+  bottom: -($handle-size / 3);
+  left: ($handle-size * 2 / 3);
+  right: ($handle-size * 2 / 3);
+  cursor: ns-resize;
+}
+
+.handleBottomLeft {
+  position: absolute;
+  width: $handle-size;
+  height: $handle-size;
+  bottom: -($handle-size / 3);
+  left: -($handle-size / 3);
+  cursor: nesw-resize;
+}
+.handleTopLeft {
+  position: absolute;
+  width: $handle-size;
+  height: $handle-size;
+  top: -($handle-size / 3);
+  left: -($handle-size / 3);
+  cursor: nwse-resize;
+}
+.handleTopRight {
+  position: absolute;
+  width: $handle-size;
+  height: $handle-size;
+  top: -($handle-size / 3);
+  right: -($handle-size / 3);
+  cursor: nesw-resize;
+}
+.handleBottomRight {
+  position: absolute;
+  width: $handle-size;
+  height: $handle-size;
+  top: -($handle-size / 3);
+  right: -($handle-size / 3);
+  cursor: nwse-resize;
 }

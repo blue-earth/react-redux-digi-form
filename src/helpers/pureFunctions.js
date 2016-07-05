@@ -8,6 +8,10 @@ export const findIndexById = (objArray, id) => {
   return _.findIndex(objArray, function (o) { return o.id === id; });
 };
 
+export const findItemById = (objArray, id) => {
+  return _.find(objArray, function (o) { return o.id === id; });
+};
+
 export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false) => {
   if (deepMerge) {
     const index = findIndexById(itemArray, newItem.id);

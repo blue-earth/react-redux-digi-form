@@ -1,4 +1,4 @@
-import { findIndexById } from 'helpers/pureFunctions';
+import { findItemById } from 'helpers/pureFunctions';
 import _ from 'lodash';
 
 export const getImageDimension = (url, callback) => {
@@ -53,17 +53,18 @@ export const getDragSnappingTargets = (documentMapping, excludeId) => {
 
 export const getResizeSnappingTargets = (documentMapping, excludeId) => {
   var snappingTargets = [];
+  const boundingBox = findItemById(documentMapping, excludeId).bounding_box[0];
   documentMapping.forEach((mappingInfo) => {
-    const boundingBox = mappingInfo.bounding_box[0];
+    const targetBoundingBox = mappingInfo.bounding_box[0];
     if (excludeId === mappingInfo.id) return;
     snappingTargets.push({
-      x: boundingBox.left,
-      type: 'left',
+      x: boundingBox.left + targetBoundingBox.width,
+      type: 'width',
       id: mappingInfo.id
     });
     snappingTargets.push({
-      y: boundingBox.top,
-      type: 'top',
+      y: boundingBox.top + targetBoundingBox.height,
+      type: 'height',
       id: mappingInfo.id
     });
   });
@@ -71,10 +72,9 @@ export const getResizeSnappingTargets = (documentMapping, excludeId) => {
 };
 
 export const getSnappingHelperRect = (elRect, snappingTargets, documentMapping) => {
-  var helperRect = {left: 0, top: 0, width: 1, height: 1};
+  var helperRect = {left: 0, top: 0, width: 2, height: 2};
   for (let item of snappingTargets) {
-    const targetIndex = findIndexById(documentMapping, item.id);
-    const targetBoundingBox = documentMapping[targetIndex].bounding_box[0];
+    const targetBoundingBox = findItemById(documentMapping, item.id).bounding_box[0];
     var compX = elRect.left;
     var compY = elRect.top;
     if (item.type === 'hcenter') compX += elRect.width / 2;
@@ -85,13 +85,13 @@ export const getSnappingHelperRect = (elRect, snappingTargets, documentMapping) 
       helperRect.top = _.min([compY, targetBoundingBox.top]);
       helperRect.left = _.min([compX, targetBoundingBox.left]);
       if (item.x === compX) {
-        helperRect.left = compX;
+        helperRect.left = compX - 1; // 1px adjustment as helper width is 2px.
         helperRect.height =
           _.max([compY + elRect.height, targetBoundingBox.top + targetBoundingBox.height]) -
           _.min([compY, targetBoundingBox.top]);
       }
       if (item.y === compY) {
-        helperRect.top = compY;
+        helperRect.top = compY - 1;  // 1px adjustment as helper height is 2px.
         helperRect.width =
           _.max([compX + elRect.width, targetBoundingBox.left + targetBoundingBox.width]) -
           _.min([compX, targetBoundingBox.left]);
