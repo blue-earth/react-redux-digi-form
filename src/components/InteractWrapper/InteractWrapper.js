@@ -13,8 +13,10 @@ class InteractWrapper extends Component {
       PropTypes.string
     ]),
     onDragStart: PropTypes.func,
+    onDragMove: PropTypes.func,
     onDragEnd: PropTypes.func,
     onResizeStart: PropTypes.func,
+    onResizeMove: PropTypes.func,
     onResizeEnd: PropTypes.func,
     onClick: PropTypes.func,
     onDoubleClick: PropTypes.func,
@@ -28,13 +30,15 @@ class InteractWrapper extends Component {
     active: PropTypes.bool,
     zIndex: PropTypes.number,
     resizeSnapTargets: PropTypes.array,
-    dragSnapTargets: PropTypes.array
+    dragSnapTargets: PropTypes.array // array of target positions {id, type, x or y}, id: question id.
   };
 
   static defaultProps = {
     onResizeStart: () => {},
+    onDragMove: () => {},
     onResizeEnd: () => {},
     onDragStart: () => {},
+    onResizeMove: () => {},
     onDragEnd: () => {},
     onClick: () => {},
     onDoubleClick: () => {},
@@ -74,7 +78,10 @@ class InteractWrapper extends Component {
 
     interact(element)
       .draggable(true)
-      .resizable(true)
+      .resizable({
+        edges: { left: true, right: true, bottom: true, top: true },
+        invert: 'reposition'
+      })
       .on('dragstart', this.handleDragStart)
       .on('dragmove', this.handleDragMove)
       .on('dragend', this.handleDragEnd)
@@ -102,10 +109,19 @@ class InteractWrapper extends Component {
   }
 
   offsetSnapTargets(offsetX, offsetY, snapTargets) {
+    const { width, height } = this.state;
     return _.map(snapTargets, (item) => {
-      var newItem = {};
-      item.x && (newItem.x = item.x + offsetX);
-      item.y && (newItem.y = item.y + offsetY);
+      var newItem = item;
+      if (item.x) {
+        newItem.x = item.x + offsetX;
+        item.type === 'right' && (newItem.x -= width);
+        item.type === 'hcenter' && (newItem.x -= width / 2);
+      }
+      if (item.y) {
+        newItem.y = item.y + offsetY;
+        item.type === 'bottom' && (newItem.y -= height);
+        item.type === 'vcenter' && (newItem.y -= height / 2);
+      }
       return newItem;
     });
   }
@@ -131,13 +147,12 @@ class InteractWrapper extends Component {
     const { onDragStart, metaData, dragSnapTargets } = this.props;
 
     const snapTargets = this.offsetSnapTargets(offsetX, offsetY, dragSnapTargets);
-
+    console.log(snapTargets);
     interact(element).draggable({
       snap: {
         targets: snapTargets,
         range: 10
       },
-      inertia: true,
       restrict: {
         restriction: element.parentNode,
         elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
@@ -147,6 +162,8 @@ class InteractWrapper extends Component {
   }
 
   handleDragMove = (event) => {
+    const { onDragMove, metaData } = this.props;
+    const { width, height } = this.state;
     var target = event.target;
     var x = (parseFloat(target.getAttribute('data-x')) || 0);
     var y = (parseFloat(target.getAttribute('data-y')) || 0);
@@ -157,10 +174,15 @@ class InteractWrapper extends Component {
 
     event.target.style.webkitTransform =
     event.target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+
+    var isSnapping = event.snap.locked;
+
+    onDragMove({ left: x, top: y, width, height }, metaData, isSnapping);
   }
 
   handleDragEnd = (event) => {
     const { onDragEnd, metaData } = this.props;
+    const { width, height } = this.state;
     var target = event.target;
     var x = (parseFloat(target.getAttribute('data-x')) || 0);
     var y = (parseFloat(target.getAttribute('data-y')) || 0);
@@ -168,13 +190,19 @@ class InteractWrapper extends Component {
       x,
       y
     });
-    onDragEnd(x, y, metaData);
+    onDragEnd({ left: x, top: y, width, height }, metaData);
   }
 
   handleResizeStart = (event) => {
-    const { onResizeStart, metaData } = this.props;
+    const { onResizeStart, metaData, resizeSnapTargets } = this.props;
     const element = this.refs.interactWrapper;
-    interact(element).draggable({
+    var elementPos = this.getElementPos(element);
+    const snapTargets = this.offsetSnapTargets(elementPos.x, elementPos.y, resizeSnapTargets);
+    interact(element).resizable({
+      snap: {
+        targets: snapTargets,
+        range: 10
+      },
       edges: { left: true, right: true, bottom: true, top: true },
       invert: 'reposition'
     });
@@ -182,6 +210,7 @@ class InteractWrapper extends Component {
   }
 
   handleResizeMove = (event) => {
+    const { onResizeMove, metaData } = this.props;
     var target = event.target;
     var x = (parseFloat(target.getAttribute('data-x')) || 0);
     var y = (parseFloat(target.getAttribute('data-y')) || 0);
@@ -202,6 +231,10 @@ class InteractWrapper extends Component {
     target.setAttribute('data-y', y);
     target.setAttribute('data-w', w);
     target.setAttribute('data-h', h);
+    console.log(event);
+    // var isSnapping = event.snap.locked;
+
+    onResizeMove({ left: x, top: y, width: w, height: h }, metaData, false); // isSnapping);
   }
 
   handleResizeEnd = (event) => {
@@ -217,7 +250,7 @@ class InteractWrapper extends Component {
       width: w,
       height: h
     });
-    onResizeEnd(x, y, w, h, metaData);
+    onResizeEnd({ left: x, top: y, width: w, height: h }, metaData);
   }
 
   handleClick = (event) => {

@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { findIndexById } from 'helpers/pureFunctions';
+import { getDragSnappingTargets, getResizeSnappingTargets, getSnappingHelperRect }
+  from 'helpers/formBuilderHelper';
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 // import classNames from 'classnames';
 import InteractWrapper from 'components/InteractWrapper/InteractWrapper';
@@ -10,7 +12,7 @@ class DrawingBoard extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {isDrawing: false};
+    this.state = { isDrawing: false };
   };
 
   static propTypes = {
@@ -239,16 +241,16 @@ class DrawingBoard extends Component {
     currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
   }
 
-  handleResizeEnd = (x, y, w, h, metaData) => {
+  handleResizeEnd = (rect, metaData) => {
     const { updateMappingInfo, documentMapping, pageZoom } = this.props;
     const { id } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
     const newBoundingBox = {
-      left: x / pageZoom,
-      top: y / pageZoom,
-      width: w / pageZoom,
-      height: h / pageZoom
+      left: rect.left / pageZoom,
+      top: rect.top / pageZoom,
+      width: rect.width / pageZoom,
+      height: rect.height / pageZoom
     };
     if (!_.isEqual(boundingBox, newBoundingBox)) {
       updateMappingInfo({
@@ -260,18 +262,34 @@ class DrawingBoard extends Component {
 
   handleDragStart = (metaData) => {
     const { currentQuestionId, setCurrentQuestionId } = this.props;
-    event.stopPropagation();
     currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
   }
 
-  handleDragEnd = (x, y, metaData) => {
+  handleDragMove = (rect, metaData, isSnapping) => {
+    const snappingHelper = this.refs.snappingHelper;
+    const { documentMapping } = this.props;
+
+    if (isSnapping) {
+      const snappingTargets = getDragSnappingTargets(documentMapping, metaData.id);
+      const helperRect = getSnappingHelperRect(rect, snappingTargets, documentMapping);
+      snappingHelper.style.left = helperRect.left + 'px';
+      snappingHelper.style.top = helperRect.top + 'px';
+      snappingHelper.style.width = helperRect.width + 'px';
+      snappingHelper.style.height = helperRect.height + 'px';
+      snappingHelper.style.display = 'block';
+    } else {
+      snappingHelper.style.display = 'none';
+    }
+  }
+
+  handleDragEnd = (rect, metaData) => {
     const { updateMappingInfo, documentMapping, pageZoom } = this.props;
     const { id } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
     const newBoundingBox = {
-      left: x / pageZoom,
-      top: y / pageZoom,
+      left: rect.left / pageZoom,
+      top: rect.top / pageZoom,
       width: boundingBox.width,
       height: boundingBox.height
     };
@@ -281,6 +299,9 @@ class DrawingBoard extends Component {
         bounding_box: [newBoundingBox]
       });
     }
+    // Hide SnappingHelper
+    const snappingHelper = this.refs.snappingHelper;
+    snappingHelper.style.display = 'none';
   }
 
   handleElementClick = (metaData) => {
@@ -377,6 +398,7 @@ class DrawingBoard extends Component {
             onResizeStart={this.handleResizeStart}
             onResizeEnd={this.handleResizeEnd}
             onDragStart={this.handleDragStart}
+            onDragMove={this.handleDragMove}
             onDragEnd={this.handleDragEnd}
             onClick={this.handleElementClick}
             onDoubleClick={this.handleElementDoubleClick}
@@ -387,12 +409,8 @@ class DrawingBoard extends Component {
               id: mappingInfo.id,
               subId: 0
             }}
-            dragSnapTargets={[
-              { x: 50 },
-              { x: 150 },
-              { x: 250 },
-              { y: 50 }
-            ]}
+            dragSnapTargets={getDragSnappingTargets(documentMapping, mappingInfo.id)}
+            resizeSnapTargets={getResizeSnappingTargets(documentMapping, mappingInfo.id)}
           >
             <div className={styles.elementName}>{type}</div>
           </InteractWrapper>
@@ -421,6 +439,7 @@ class DrawingBoard extends Component {
             }}>
           </div>
         }
+        <div className={styles.snappingHelper} ref="snappingHelper"></div>
       </div>
     );
   }

@@ -2,7 +2,7 @@
 @import '../../../../../styles/variables';
 
 $element-border-color: #FF6600;
-
+$snapping-border-color: #f3d359;
 .board {
   position: absolute;
   top: 0;
@@ -40,4 +40,12 @@ $element-border-color: #FF6600;
   position: absolute;
   background-color: rgba(255, 255, 255, .7);
   z-index: 102;
+}
+.snappingHelper {
+  border: 0px solid $snapping-border-color;
+  border-left-width: 1px;
+  border-top-width: 1px;
+  position: absolute;
+  z-index: 103;
+  display: none;
 }
