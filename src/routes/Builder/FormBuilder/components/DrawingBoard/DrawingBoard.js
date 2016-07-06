@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-import { findIndexById } from 'helpers/pureFunctions';
+import { findIndexById, findItemById } from 'helpers/pureFunctions';
 import {
   getDragSnappingTargets,
   getResizeSnappingTargets,
   getDragSnappingHelpersRect,
-  getResizeSnappingHelpersPos
+  getResizeSnappingHelpersPos,
+  zoomValue
 } from 'helpers/formBuilderHelper';
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 // import classNames from 'classnames';
@@ -341,6 +342,8 @@ class DrawingBoard extends Component {
   }
 
   handleElementClick = (metaData) => {
+    const { currentQuestionId, setCurrentQuestionId } = this.props;
+    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
   }
 
   handleElementDoubleClick = (metaData) => {
@@ -352,9 +355,35 @@ class DrawingBoard extends Component {
   }
 
   handleKeyDown = (event) => {
-    const { deleteElement, currentQuestionId } = this.props;
-    if (event.keyCode === 46) {
-      deleteElement(currentQuestionId);
+    const { deleteElement, currentQuestionId, pageZoom, documentMapping, updateMappingInfo } = this.props;
+
+    if (currentQuestionId > 0) {
+      const boundingBox = findItemById(documentMapping, currentQuestionId).bounding_box[0];
+      const newBoundingBox = _.assign({}, boundingBox);
+      switch (event.keyCode) {
+        case 37: // Left key
+          newBoundingBox.left -= 1.0 / pageZoom;
+          break;
+        case 38: // Up key
+          newBoundingBox.top -= 1.0 / pageZoom;
+          break;
+        case 39: // Right key
+          newBoundingBox.left += 1.0 / pageZoom;
+          break;
+        case 40: // Down key
+          newBoundingBox.top += 1.0 / pageZoom;
+          break;
+        case 46: // Delete key
+          deleteElement(currentQuestionId);
+          return;
+        default:
+          return;
+      }
+      updateMappingInfo({
+        id: currentQuestionId,
+        bounding_box: [newBoundingBox]
+      });
+      event.preventDefault();
     }
   }
 
@@ -426,11 +455,12 @@ class DrawingBoard extends Component {
         */
         return (
           <InteractWrapper
-            x={boundingBox.left * pageZoom}
-            y={boundingBox.top * pageZoom}
+            x={zoomValue(boundingBox.left, pageZoom)}
+            y={zoomValue(boundingBox.top, pageZoom)}
             zIndex={zIndex}
-            width={boundingBox.width * pageZoom}
-            height={boundingBox.height * pageZoom}
+            active={isActive}
+            width={zoomValue(boundingBox.width, pageZoom)}
+            height={zoomValue(boundingBox.height, pageZoom)}
             onResizeStart={this.handleResizeStart}
             onResizeMove={this.handleResizeMove}
             onResizeEnd={this.handleResizeEnd}

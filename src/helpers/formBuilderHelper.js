@@ -19,38 +19,42 @@ export const getDragSnappingTargets = (documentMapping, excludeId, pageZoom) => 
     if (excludeId === mappingInfo.id) return;
     snappingTargets = _.unionWith(snappingTargets, [
       {
-        x: boundingBox.left * pageZoom,
+        x: zoomValue(boundingBox.left, pageZoom),
         type: 'left',
         id: mappingInfo.id
       },
       {
-        y: boundingBox.top * pageZoom,
+        y: zoomValue(boundingBox.top, pageZoom),
         type: 'top',
         id: mappingInfo.id
       },
       {
-        x: (boundingBox.left + boundingBox.width) * pageZoom,
+        x: zoomValue(boundingBox.left + boundingBox.width, pageZoom),
         type: 'right',
         id: mappingInfo.id
       },
       {
-        y: (boundingBox.top + boundingBox.height) * pageZoom,
+        y: zoomValue(boundingBox.top + boundingBox.height, pageZoom),
         type: 'bottom',
         id: mappingInfo.id
       },
       {
-        x: (boundingBox.left + boundingBox.width / 2) * pageZoom,
+        x: zoomValue(boundingBox.left + boundingBox.width / 2, pageZoom),
         type: 'hcenter',
         id: mappingInfo.id
       },
       {
-        y: (boundingBox.top + boundingBox.height / 2) * pageZoom,
+        y: zoomValue(boundingBox.top + boundingBox.height / 2, pageZoom),
         type: 'vcenter',
         id: mappingInfo.id
       }
     ]);
   });
   return snappingTargets;
+};
+
+export const zoomValue = (value, zoom) => {
+  return Math.round(value * zoom);
 };
 
 export const getResizeSnappingTargets = (documentMapping, excludeId, pageZoom) => {
@@ -61,42 +65,42 @@ export const getResizeSnappingTargets = (documentMapping, excludeId, pageZoom) =
     if (excludeId === mappingInfo.id) return;
     snappingTargets = _.unionWith(snappingTargets, [
       {
-        x: (boundingBox.left + targetBoundingBox.width) * pageZoom,
+        x: zoomValue(boundingBox.left + targetBoundingBox.width, pageZoom),
         type: 'width',
         id: mappingInfo.id
       },
       {
-        x: (boundingBox.left + boundingBox.width - targetBoundingBox.width) * pageZoom,
+        x: zoomValue(boundingBox.left + boundingBox.width - targetBoundingBox.width, pageZoom),
         type: 'width',
         id: mappingInfo.id
       },
       { // incase inverse resize.
-        x: (boundingBox.left - targetBoundingBox.width) * pageZoom,
+        x: zoomValue(boundingBox.left - targetBoundingBox.width, pageZoom),
         type: 'width',
         id: mappingInfo.id
       },
       { // incase inverse resize.
-        x: (boundingBox.left + boundingBox.width + targetBoundingBox.width) * pageZoom,
+        x: zoomValue(boundingBox.left + boundingBox.width + targetBoundingBox.width, pageZoom),
         type: 'width',
         id: mappingInfo.id
       },
       {
-        y: (boundingBox.top + targetBoundingBox.height) * pageZoom,
+        y: zoomValue(boundingBox.top + targetBoundingBox.height, pageZoom),
         type: 'height',
         id: mappingInfo.id
       },
       {
-        y: (boundingBox.top + boundingBox.height - targetBoundingBox.height) * pageZoom,
+        y: zoomValue(boundingBox.top + boundingBox.height - targetBoundingBox.height, pageZoom),
         type: 'height',
         id: mappingInfo.id
       },
       { // incase inverse resize.
-        y: (boundingBox.top - targetBoundingBox.height) * pageZoom,
+        y: zoomValue(boundingBox.top - targetBoundingBox.height, pageZoom),
         type: 'height',
         id: mappingInfo.id
       },
       { // incase inverse resize.
-        y: (boundingBox.top + boundingBox.height + targetBoundingBox.height) * pageZoom,
+        y: zoomValue(boundingBox.top + boundingBox.height + targetBoundingBox.height, pageZoom),
         type: 'height',
         id: mappingInfo.id
       }
@@ -121,6 +125,10 @@ export const getDragSnappingHelpersRect = (elRect, excludeId, documentMapping, p
     if (item.type === 'vcenter') compY += elRect.height / 2;
     if (item.type === 'right') compX += elRect.width;
     if (item.type === 'bottom') compY += elRect.height;
+
+    compX = zoomValue(compX, 1);
+    compY = zoomValue(compY, 1);
+
     if (item.x === compX || item.y === compY) {
       var helperRect = {
         top: _.min([compY, targetBoundingBox.top]),
@@ -154,7 +162,7 @@ export const getResizeSnappingHelpersPos = (elRect, excludeId, documentMapping, 
   for (let item of snappingTargets) {
     var targetBoundingBox = _.assign({}, findItemById(documentMapping, item.id).bounding_box[0]);
     for (var prop in targetBoundingBox) {
-      targetBoundingBox[prop] *= pageZoom;
+      targetBoundingBox[prop] = zoomValue(targetBoundingBox[prop], pageZoom);
     }
     if (elRect.width === targetBoundingBox.width) {
       hasWidthSnapping = true;
