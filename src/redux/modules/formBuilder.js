@@ -1,6 +1,6 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { mergeItemIntoArray } from 'helpers/pureFunctions';
+import { mergeItemIntoArray, editItemInArray } from 'helpers/pureFunctions';
 import { assignDefaults } from 'redux/utils/request';
 import _ from 'lodash';
 
@@ -10,7 +10,9 @@ export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
 export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
 export const DONE_SUBMIT = 'DONE_SUBMIT';
 
+export const SET_CURRENT_QUESTION_INSTRUCTION = 'SET_CURRENT_QUESTION_INSTRUCTION';
 export const SET_ACTIVE_INPUT_NAME = 'SET_ACTIVE_INPUT_NAME';
+export const EDIT_ELEMENT = 'EDIT_ELEMENT';
 export const ADD_ELEMENT = 'ADD_ELEMENT';
 export const DELETE_ELEMENT = 'DELETE_ELEMENT';
 export const UPDATE_MAPPING_INFO = 'UPDATE_MAPPING_INFO';
@@ -43,6 +45,7 @@ export const INIT_BUILDER_STATE = {
   formConfig: {},
   documentMapping: [],
   activeInputName: '',
+  currentQuestionInstruction: '',
   currentQuestionId: 0, // indicates the question connected with selected element.
   lastQuestionId: 0, // indicates lastly added question id
   formAccessCode: '1234', // form access code
@@ -132,6 +135,38 @@ export const setActiveInputName = (inputName) => {
 };
 
 // ------------------------------------
+// Action: setActiveInputName
+// ------------------------------------
+export const setCurrentQuestionInstruction = (questionInstruction) => {
+  return {
+    type: SET_CURRENT_QUESTION_INSTRUCTION,
+    questionInstruction
+  };
+};
+
+// ------------------------------------
+// Action: editElement
+// ------------------------------------
+export const editElement = (element, instruction) => {
+  return {
+    type: EDIT_ELEMENT,
+    element,
+    instruction
+  };
+};
+
+const _editElement = (state, action) => {
+  var { element, instruction } = action;
+  const editValue = {
+    id: element,
+    instruction: instruction
+  };
+  return {
+    questions: editItemInArray(state.questions, editValue)
+  };
+};
+
+// ------------------------------------
 // Action: addElement
 // ------------------------------------
 export const addElement = (element) => {
@@ -145,6 +180,7 @@ const _addElement = (state, action) => {
   var { question, mappingInfo } = action.element;
   const newQuestionId = state.lastQuestionId + 1;
   question.id = newQuestionId;
+  question.instruction = '';
   mappingInfo.id = newQuestionId;
   return {
     questions: mergeItemIntoArray(state.questions, question),
@@ -237,6 +273,10 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
       return Object.assign({}, state, {
         activeInputName: action.inputName
       });
+    case SET_CURRENT_QUESTION_INSTRUCTION:
+      return Object.assign({}, state, {
+        currentQuestionInstruction: action.questionInstruction
+      });
     case ADD_ELEMENT:
       return Object.assign({}, state, _addElement(state, action));
     case DELETE_ELEMENT:
@@ -246,6 +286,8 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
         currentQuestionId: 0,
         questionEditMode: false
       });
+    case EDIT_ELEMENT:
+      return Object.assign({}, state, _editElement(state, action));
     case UPDATE_MAPPING_INFO:
       return Object.assign({}, state, {
         documentMapping: mergeItemIntoArray(state.documentMapping, action.mappingInfo, true)
@@ -265,7 +307,8 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
     case SET_QUESTION_EDIT_MODE:
       return Object.assign({}, state, {
         currentQuestionId: action.id,
-        questionEditMode: action.mode
+        questionEditMode: action.mode,
+        currentQuestionInstruction: !action.mode ? '' : state.questions[state.questions.length - action.id].instruction
       });
     default:
       return state;
