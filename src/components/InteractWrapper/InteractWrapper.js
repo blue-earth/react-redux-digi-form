@@ -78,11 +78,10 @@ class InteractWrapper extends Component {
     const element = this.refs.interactWrapper;
     element.addEventListener('mousedown', this.handleMouseDown);
 
-    interact(element)
+    var interactable = interact(element)
       .draggable(true)
       .resizable({
-        edges: { left: true, right: true, bottom: true, top: true },
-        invert: 'reposition'
+        edges: { left: true, right: true, bottom: true, top: true }
       })
       .on('dragstart', this.handleDragStart)
       .on('dragmove', this.handleDragMove)
@@ -90,6 +89,8 @@ class InteractWrapper extends Component {
       .on('resizestart', this.handleResizeStart)
       .on('resizemove', this.handleResizeMove)
       .on('resizeend', this.handleResizeEnd);
+
+    interactable.preventDefault('always');
   }
 
   getMousePos(event) {
@@ -139,39 +140,48 @@ class InteractWrapper extends Component {
     var offsetY = mousePos.y - y;
 
     const elementPos = this.getElementPos(element);
+
+    var dXL = elementPos.x + x - mousePos.x;
+    var dXR = x + elementPos.x + width - mousePos.x;
+    var dYT = elementPos.y + y - mousePos.y;
+    var dYB = y + elementPos.y + height - mousePos.y;
+
     // dX is equal to the offset from the nearest left or right of the element.
     // dY is equal to the offset from the nearest top or bottom of the element.
-    var dX = Math.min(mousePos.x - elementPos.x, elementPos.x + width - mousePos.x) + x;
-    var dY = Math.min(mousePos.y - elementPos.y, elementPos.y + height - mousePos.y) + y;
+    var dX = _.minBy([dXL, dXR], Math.abs);
+    var dY = _.minBy([dYT, dYB], Math.abs);
 
     element.setAttribute('data-x', x);
     element.setAttribute('data-y', y);
-    element.setAttribute('data-offsetX', offsetX);
-    element.setAttribute('data-offsetY', offsetY);
-    element.setAttribute('data-dX', dX);
-    element.setAttribute('data-dY', dY);
     event.stopPropagation();
+
+    const { snapRange, dragSnapTargets, resizeSnapTargets } = this.props;
+    interact(element)
+      .draggable({
+        snap: {
+          targets: this.offsetSnapTargets(offsetX, offsetY, dragSnapTargets),
+          range: snapRange
+        },
+        restrict: {
+          restriction: element.parentNode,
+          elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+        }
+      })
+      .resizable({
+        snap: {
+          targets: this.offsetSnapTargets(elementPos.x - dX, elementPos.y - dY, resizeSnapTargets),
+          range: snapRange
+        },
+        edges: { left: true, right: true, bottom: true, top: true },
+        restrict: {
+          restriction: element.parentNode,
+          elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+        }
+      });
   }
 
   handleDragStart = (event) => {
-    const { snapRange } = this.props;
-    const element = this.refs.interactWrapper;
-    // const { offsetX, offsetY } = this.state;
-    var offsetX = (parseFloat(element.getAttribute('data-offsetX')) || 0);
-    var offsetY = (parseFloat(element.getAttribute('data-offsetY')) || 0);
-    const { onDragStart, metaData, dragSnapTargets } = this.props;
-
-    const snapTargets = this.offsetSnapTargets(offsetX, offsetY, dragSnapTargets);
-    console.log(interact(element).draggable({
-      snap: {
-        targets: snapTargets,
-        range: snapRange
-      },
-      restrict: {
-        restriction: element.parentNode,
-        elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-      }
-    }));
+    const { onDragStart, metaData } = this.props;
     onDragStart(metaData);
   }
 
@@ -208,21 +218,7 @@ class InteractWrapper extends Component {
   }
 
   handleResizeStart = (event) => {
-    const { snapRange } = this.props;
-    const { onResizeStart, metaData, resizeSnapTargets } = this.props;
-    const element = this.refs.interactWrapper;
-    var elementPos = this.getElementPos(element);
-    var dX = (parseFloat(element.getAttribute('data-dX')) || 0);
-    var dY = (parseFloat(element.getAttribute('data-dY')) || 0);
-    const snapTargets = this.offsetSnapTargets(elementPos.x - dX, elementPos.y - dY, resizeSnapTargets);
-    interact(element).resizable({
-      snap: {
-        targets: snapTargets,
-        range: snapRange
-      },
-      edges: { left: true, right: true, bottom: true, top: true },
-      invert: 'reposition'
-    });
+    const { onResizeStart, metaData } = this.props;
     onResizeStart(metaData);
   }
 
@@ -299,7 +295,7 @@ class InteractWrapper extends Component {
     return (
       <div className={wrapperClass}
         onClick={this.handleClick}
-        onDblClick={this.handleDoubleClick}
+        onDoubleClick={this.handleDoubleClick}
         ref="interactWrapper"
         {...optionals}>
         <div className={styles.innerContent}>
