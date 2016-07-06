@@ -49,6 +49,11 @@ class FormBuilder extends Component {
     activeInputName: PropTypes.string.isRequired,
 
     /*
+     * setCurrentQuestionInstruction: Action to set instruction of active input element selected
+     */
+    setCurrentQuestionInstruction: PropTypes.func.isRequired,
+
+    /*
      * setActiveInputName: Action to set active input element selected, and enables to draw on the right
      */
     setActiveInputName: PropTypes.func.isRequired,

@@ -1,8 +1,11 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
+  INIT_BUILDER_STATE,
   fetchForm,
   setActiveInputName,
+  setCurrentQuestionInstruction,
+  editElement,
   addElement,
   deleteElement,
   updateMappingInfo,
@@ -16,6 +19,8 @@ import FormBuilder from '../components/FormBuilder';
 const mapActionCreators = {
   fetchForm,
   setActiveInputName,
+  setCurrentQuestionInstruction,
+  editElement,
   addElement,
   deleteElement,
   updateMappingInfo,
@@ -40,10 +45,11 @@ const mapStateToProps = (state) => {
     documentMapping,
     activeInputName,
     currentQuestionId,
+    currentQuestionInstruction,
     pageZoom,
     pageWidth,
     questionEditMode
-  } = formBuilder;
+  } = formBuilder || INIT_BUILDER_STATE;
   return {
     id: parseInt(id),
     isFetching,
@@ -54,6 +60,7 @@ const mapStateToProps = (state) => {
     documentMapping,
     activeInputName,
     currentQuestionId,
+    currentQuestionInstruction,
     pageZoom,
     pageWidth,
     questionEditMode

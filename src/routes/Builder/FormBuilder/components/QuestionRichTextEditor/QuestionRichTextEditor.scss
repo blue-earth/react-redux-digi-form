@@ -1,0 +1,40 @@
+.questionRichTextEditor {
+	margin: 10px;	
+}
+
+.inputWidget {
+	float: left;
+  width: 40%;
+  padding: 0px 10px 10px 0;
+  > select, button {
+  	height: 36px;
+  }
+}
+
+.styleWidget {
+	float: left;
+	width: 20%;
+	> button {
+		margin: 1px 8px 0px 0 !important;
+		width: 40%;
+		float: left;
+	}
+}
+
+.editWidget {
+	width: 100%;
+	float: left;
+	background-color: #fff;
+	letter-spacing: 1px;
+  border: solid 1px #c7c7c7;
+  padding: 10px;
+}
+
+.block {
+	display: inline-block;
+  background: #bfe0f7;
+  padding: 3px 10px;
+  border-radius: 3px;
+  border: solid 1px;
+}
+
