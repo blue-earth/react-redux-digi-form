@@ -1,7 +1,15 @@
 import React, { Component, PropTypes } from 'react';
-import { findIndexById } from 'helpers/pureFunctions';
-import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
-import classNames from 'classnames';
+import { findIndexById, findItemById } from 'helpers/pureFunctions';
+import {
+  getDragSnappingTargets,
+  getResizeSnappingTargets,
+  getDragSnappingHelpersRect,
+  getResizeSnappingHelpersPos,
+  zoomValue
+} from 'helpers/formBuilderHelper';
+// import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
+// import classNames from 'classnames';
+import InteractWrapper from 'components/InteractWrapper/InteractWrapper';
 import _ from 'lodash';
 import styles from './DrawingBoard.scss';
 
@@ -9,7 +17,7 @@ class DrawingBoard extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {isDrawing: false};
+    this.state = { isDrawing: false };
   };
 
   static propTypes = {
@@ -175,6 +183,7 @@ class DrawingBoard extends Component {
     });
   }
 
+  /*
   handleResizeStart = (direction, styleSize, clientSize, event, metaData) => {
     const { currentQuestionId, setCurrentQuestionId } = this.props;
     currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
@@ -231,8 +240,110 @@ class DrawingBoard extends Component {
       });
     }
   }
+  */
+  handleResizeStart = (metaData) => {
+    const { currentQuestionId, setCurrentQuestionId } = this.props;
+    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
+  }
+
+  handleResizeMove = (rect, metaData, isSnapping) => {
+    const { documentMapping, pageZoom } = this.props;
+
+    if (isSnapping) {
+      const helpersPos = getResizeSnappingHelpersPos(rect, metaData.id, documentMapping, pageZoom);
+      this.setResizeSnappingHelpers(helpersPos);
+    } else {
+      this.resetSnappingHelper();
+    }
+  }
+
+  handleResizeEnd = (rect, metaData) => {
+    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
+    const { id } = metaData;
+    const index = findIndexById(documentMapping, id);
+    const boundingBox = documentMapping[index].bounding_box[0];
+    const newBoundingBox = {
+      left: rect.left / pageZoom,
+      top: rect.top / pageZoom,
+      width: rect.width / pageZoom,
+      height: rect.height / pageZoom
+    };
+    if (!_.isEqual(boundingBox, newBoundingBox)) {
+      updateMappingInfo({
+        id,
+        bounding_box: [newBoundingBox]
+      });
+    }
+    // Reset SnappingHelper
+    this.resetSnappingHelper();
+  }
+
+  handleDragStart = (metaData) => {
+    const { currentQuestionId, setCurrentQuestionId } = this.props;
+    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
+  }
+
+  handleDragMove = (rect, metaData, isSnapping) => {
+    const { documentMapping, pageZoom } = this.props;
+
+    if (isSnapping) {
+      const helpersRect = getDragSnappingHelpersRect(rect, metaData.id, documentMapping, pageZoom);
+      this.setDragSnappingHelpers(helpersRect);
+    } else {
+      this.resetSnappingHelper();
+    }
+  }
+
+  handleDragEnd = (rect, metaData) => {
+    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
+    const { id } = metaData;
+    const index = findIndexById(documentMapping, id);
+    const boundingBox = documentMapping[index].bounding_box[0];
+    const newBoundingBox = {
+      left: rect.left / pageZoom,
+      top: rect.top / pageZoom,
+      width: boundingBox.width,
+      height: boundingBox.height
+    };
+    if (!_.isEqual(boundingBox, newBoundingBox)) {
+      updateMappingInfo({
+        id,
+        bounding_box: [newBoundingBox]
+      });
+    }
+    // Reset SnappingHelper
+    this.resetSnappingHelper();
+  }
+
+  setDragSnappingHelpers(helpersRect) {
+    const snappingHelper = this.refs.snappingHelper;
+    var innerHTML = '';
+    helpersRect.map(rect => {
+      var style = `left: ${rect.left}px; top: ${rect.top}px;` +
+        `width: ${rect.width}px; height: ${rect.height}px;`;
+      innerHTML += `<div class="dragSnappingHelper" style="${style}"></div>`;
+    });
+    snappingHelper.innerHTML = innerHTML;
+  }
+
+  setResizeSnappingHelpers(helpersPos) {
+    const snappingHelper = this.refs.snappingHelper;
+    var innerHTML = '';
+    helpersPos.map(pos => {
+      var style = `left: ${pos.x}px; top: ${pos.y}px; ${pos.type}: ${pos.size}px;`;
+      innerHTML += `<div class="${pos.type}SnappingHelper" style="${style}"></div>`;
+    });
+    snappingHelper.innerHTML = innerHTML;
+  }
+
+  resetSnappingHelper() {
+    const snappingHelper = this.refs.snappingHelper;
+    snappingHelper.innerHTML = '';
+  }
 
   handleElementClick = (metaData) => {
+    const { currentQuestionId, setCurrentQuestionId } = this.props;
+    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
   }
 
   handleElementDoubleClick = (metaData) => {
@@ -244,9 +355,35 @@ class DrawingBoard extends Component {
   }
 
   handleKeyDown = (event) => {
-    const { deleteElement, currentQuestionId } = this.props;
-    if (event.keyCode === 46) {
-      deleteElement(currentQuestionId);
+    const { deleteElement, currentQuestionId, pageZoom, documentMapping, updateMappingInfo } = this.props;
+
+    if (currentQuestionId > 0) {
+      const boundingBox = findItemById(documentMapping, currentQuestionId).bounding_box[0];
+      const newBoundingBox = _.assign({}, boundingBox);
+      switch (event.keyCode) {
+        case 37: // Left key
+          newBoundingBox.left -= 1.0 / pageZoom;
+          break;
+        case 38: // Up key
+          newBoundingBox.top -= 1.0 / pageZoom;
+          break;
+        case 39: // Right key
+          newBoundingBox.left += 1.0 / pageZoom;
+          break;
+        case 40: // Down key
+          newBoundingBox.top += 1.0 / pageZoom;
+          break;
+        case 46: // Delete key
+          deleteElement(currentQuestionId);
+          return;
+        default:
+          return;
+      }
+      updateMappingInfo({
+        id: currentQuestionId,
+        bounding_box: [newBoundingBox]
+      });
+      event.preventDefault();
     }
   }
 
@@ -283,10 +420,12 @@ class DrawingBoard extends Component {
         const { type } = questions[index];
         const isActive = mappingInfo.id === currentQuestionId;
         const zIndex = isActive ? 101 : 100;
+        /*
         const elementClass = classNames({
           [styles.element]: true,
           [styles.active]: isActive
         });
+
         return (
           <ResizableAndMovablePlus
             className={elementClass}
@@ -313,6 +452,36 @@ class DrawingBoard extends Component {
             <div className={styles.elementName}>{type}</div>
           </ResizableAndMovablePlus>
         );
+        */
+        return (
+          <InteractWrapper
+            x={zoomValue(boundingBox.left, pageZoom)}
+            y={zoomValue(boundingBox.top, pageZoom)}
+            zIndex={zIndex}
+            active={isActive}
+            width={zoomValue(boundingBox.width, pageZoom)}
+            height={zoomValue(boundingBox.height, pageZoom)}
+            onResizeStart={this.handleResizeStart}
+            onResizeMove={this.handleResizeMove}
+            onResizeEnd={this.handleResizeEnd}
+            onDragStart={this.handleDragStart}
+            onDragMove={this.handleDragMove}
+            onDragEnd={this.handleDragEnd}
+            onClick={this.handleElementClick}
+            onDoubleClick={this.handleElementDoubleClick}
+            key={`${mappingInfo.id}-${0}`}
+            minWidth={10}
+            minHeight={10}
+            metaData={{
+              id: mappingInfo.id,
+              subId: 0
+            }}
+            dragSnapTargets={getDragSnappingTargets(documentMapping, mappingInfo.id, pageZoom)}
+            resizeSnapTargets={getResizeSnappingTargets(documentMapping, mappingInfo.id, pageZoom)}
+          >
+            <div className={styles.elementName}>{type}</div>
+          </InteractWrapper>
+        );
       });
     };
     return (
@@ -337,6 +506,7 @@ class DrawingBoard extends Component {
             }}>
           </div>
         }
+        <div className={styles.snappingHelper} ref="snappingHelper"></div>
       </div>
     );
   }
