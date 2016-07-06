@@ -31,21 +31,52 @@ class QuestionRichTextEditor extends Component {
         component: AnswerSpan
       }
     ]);
+    const { currentQuestionInstruction } = this.props;
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    this.state = {editorState: EditorState.createEmpty(answerBlockDecorator)};
+    const initialEditorState = EditorState.createEmpty(answerBlockDecorator);
+    const initialContentState = Modifier.insertText(initialEditorState.getCurrentContent(),
+      initialEditorState.getSelection(),currentQuestionInstruction)
+    this.state = {editorState: EditorState.createWithContent(initialContentState)};
   }
 
   static propTypes = {
     /*
-     * answerChoices: Answer Choices could be used when edit Question.
+     * currentQuestionId: Redux state that keeps the current active question ID.
      */
-    answerChoices: PropTypes.array.isRequired,
+    currentQuestionId: PropTypes.number.isRequired,
 
     /*
-     * insertAnswer: Insert Answer into RichTextEditor and remove from dropdown
+     * questions: Redux state to store the array of questions.
      */
-    insertAnswer: PropTypes.func.isRequired
+    questions: PropTypes.array.isRequired,
+
+    /*
+     * currentQuestionInstruction: Redux state to specify the active input instruction.
+     */
+    currentQuestionInstruction: PropTypes.string.isRequired,
+
+    /*
+     * setCurrentQuestionInstruction: Action to set instruction of active input element selected
+     */
+    setCurrentQuestionInstruction: PropTypes.func.isRequired
+
   };
+
+
+  componentWillReceiveProps(nextProps) {
+    const answerBlockDecorator = new CompositeDecorator([
+      {
+        strategy: findAnswerEntities,
+        component: AnswerSpan
+      }
+    ]);
+    const { currentQuestionInstruction } = nextProps;
+    this.handleKeyCommand = this.handleKeyCommand.bind(this);
+    const initialEditorState = EditorState.createEmpty(answerBlockDecorator);
+    const initialContentState = Modifier.insertText(initialEditorState.getCurrentContent(),
+      initialEditorState.getSelection(),currentQuestionInstruction)
+    this.state = {editorState: EditorState.createWithContent(initialContentState)};
+  }
 
   handleKeyCommand(command) {
     const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
@@ -58,7 +89,9 @@ class QuestionRichTextEditor extends Component {
 
   onChange = (editorState) => {
     this.setState({editorState});
-    console.log(editorState.getSelection().anchorOffset,editorState.getSelection().focusOffset);
+    const { setCurrentQuestionInstruction } = this.props;
+    setCurrentQuestionInstruction(editorState.getCurrentContent().getPlainText());
+    // console.log(editorState.getCurrentContent().getPlainText());
   }
 
   handleAnswerSelect = (value) => {
@@ -85,7 +118,7 @@ class QuestionRichTextEditor extends Component {
         hasFocus: true
       });
     }
-    newContent = Modifier.insertText(newContent, nextCursorPos, ' ')
+    newContent = Modifier.insertText(newContent, nextCursorPos, ' ');
     const newEditorState = EditorState.push(editorState, newContent, 'apply-entity');
     this.setState({
       editorState: newEditorState
@@ -112,14 +145,14 @@ class QuestionRichTextEditor extends Component {
   }
 
   render() {
-    const { answerChoices } = this.props;
+    console.log('render');
     return (
       <div className={styles.questionRichTextEditor}>
         <div className={styles.inputWidget}>
           <Button block onClick={this.showValue}>+Insert Hyperlink</Button>
         </div>
         <div className={styles.inputWidget}>
-          <DropdownInput choices={answerChoices} onChange={this.handleAnswerSelect} />
+          <DropdownInput onChange={this.handleAnswerSelect} />
         </div>
         <div className={styles.styleWidget}>
           <Button block onClick={this.onBoldClick}><b>B</b></Button>
@@ -130,7 +163,6 @@ class QuestionRichTextEditor extends Component {
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
             onChange={this.onChange}
-            onFocus={this.showOffset}
             ref="editor"
             spellCheck />
         </div>

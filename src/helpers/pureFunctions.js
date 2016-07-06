@@ -16,6 +16,17 @@ export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false) => {
   return _.unionBy([newItem], itemArray, 'id');
 };
 
+export const editItemInArray = (itemArray, editValue) => {
+  var newItemArray = itemArray;
+  for (var key in newItemArray) {
+    if (newItemArray[key].id === editValue.id) {
+      newItemArray[key].instruction = editValue.instruction;
+      break;
+    }
+  }
+  return newItemArray;
+};
+
 export const loadScript = (src, id, callback) => {
   var s, r, t;
   r = false;

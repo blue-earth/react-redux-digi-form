@@ -17,19 +17,25 @@ class QuestionEditView extends Component {
     deleteElement: PropTypes.func.isRequired,
 
     /*
+     * editElement: used to edit instruction of active input element selected
+     */
+    editElement: PropTypes.func.isRequired,
+
+    /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
     setQuestionEditMode: PropTypes.func.isRequired,
 
     /*
-     * answerChoices: Answer Choices could be used when edit Question.
+     * questions: Redux state to store the array of questions.
      */
-    answerChoices: PropTypes.array.isRequired,
+    questions: PropTypes.array.isRequired,
 
     /*
-     * insertAnswer: Insert Answer into RichTextEditor and remove from dropdown
+     * currentQuestionInstruction: Redux state to specify the active input instruction.
      */
-    insertAnswer: PropTypes.func.isRequired
+    currentQuestionInstruction: PropTypes.string.isRequired
+
   };
 
   componentWillMount() {
@@ -63,7 +69,8 @@ class QuestionEditView extends Component {
   }
 
   handleSave = () => {
-
+    const { editElement, currentQuestionId, currentQuestionInstruction } = this.props;
+    editElement(currentQuestionId, currentQuestionInstruction);
   }
 
   renderTopActionButtons() {

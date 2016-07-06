@@ -4,13 +4,14 @@ import {
   INIT_BUILDER_STATE,
   fetchForm,
   setActiveInputName,
+  setCurrentQuestionInstruction,
+  editElement,
   addElement,
   deleteElement,
   updateMappingInfo,
   setCurrentQuestionId,
   setPageZoom,
-  setQuestionEditMode,
-  insertAnswer
+  setQuestionEditMode
 } from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
@@ -18,13 +19,14 @@ import FormBuilder from '../components/FormBuilder';
 const mapActionCreators = {
   fetchForm,
   setActiveInputName,
+  setCurrentQuestionInstruction,
+  editElement,
   addElement,
   deleteElement,
   updateMappingInfo,
   setCurrentQuestionId,
   setPageZoom,
-  setQuestionEditMode,
-  insertAnswer
+  setQuestionEditMode
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -43,10 +45,10 @@ const mapStateToProps = (state) => {
     documentMapping,
     activeInputName,
     currentQuestionId,
+    currentQuestionInstruction,
     pageZoom,
     pageWidth,
-    questionEditMode,
-    answerChoices
+    questionEditMode
   } = formBuilder || INIT_BUILDER_STATE;
   return {
     id: parseInt(id),
@@ -58,10 +60,10 @@ const mapStateToProps = (state) => {
     documentMapping,
     activeInputName,
     currentQuestionId,
+    currentQuestionInstruction,
     pageZoom,
     pageWidth,
-    questionEditMode,
-    answerChoices
+    questionEditMode
   };
 };
 
