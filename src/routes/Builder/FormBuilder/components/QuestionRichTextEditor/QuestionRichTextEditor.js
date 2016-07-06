@@ -5,7 +5,6 @@ import DropdownInput from 'components/QuestionInputs/DropdownInput/DropdownInput
 import styles from './QuestionRichTextEditor.scss';
 
 function findAnswerEntities(contentBlock, callback) {
-  console.log(contentBlock.getText());
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity();
@@ -26,8 +25,14 @@ class QuestionRichTextEditor extends Component {
 
   constructor(props) {
     super(props);
+    const answerBlockDecorator = new CompositeDecorator([
+      {
+        strategy: findAnswerEntities,
+        component: AnswerSpan
+      }
+    ]);
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    this.state = {editorState: EditorState.createEmpty()};
+    this.state = {editorState: EditorState.createEmpty(answerBlockDecorator)};
   }
 
   static propTypes = {
@@ -53,42 +58,37 @@ class QuestionRichTextEditor extends Component {
 
   onChange = (editorState) => {
     this.setState({editorState});
+    console.log(editorState.getSelection().anchorOffset,editorState.getSelection().focusOffset);
   }
 
   handleAnswerSelect = (value) => {
     const { editorState } = this.state;
-    const answerBlockDecorator = new CompositeDecorator([
-      {
-        strategy: findAnswerEntities,
-        component: AnswerSpan
-      }
-    ]);
     const prevFocusOffset = editorState.getSelection().focusOffset;
     const prevAnchorOffset = editorState.getSelection().anchorOffset;
-    const answerEntity = Entity.create('ANSWER_BLOCK', 'IMMUTABLE', value);
-    var newEditorState = null;
+    const answerEntity = Entity.create('ANSWER_BLOCK', 'IMMUTABLE');
+    var newContent = null;
     var nextCursorPos = null;
     if (editorState.getSelection().isCollapsed()) {
-      newEditorState = EditorState.createWithContent(
-        Modifier.insertText(editorState.getCurrentContent(), editorState.getSelection(),
-        value, null, answerEntity), answerBlockDecorator);
+      newContent = Modifier.insertText(editorState.getCurrentContent(), editorState.getSelection(),
+        value, null, answerEntity);
       nextCursorPos = editorState.getSelection().merge({
         anchorOffset: prevAnchorOffset + value.length,
         focusOffset: prevFocusOffset + value.length,
         hasFocus: true
       });
     } else {
-      newEditorState = EditorState.createWithContent(
-        Modifier.replaceText(editorState.getCurrentContent(), editorState.getSelection(),
-        value, null, answerEntity), answerBlockDecorator);
+      newContent = Modifier.replaceText(editorState.getCurrentContent(), editorState.getSelection(),
+        value, null, answerEntity);
       nextCursorPos = editorState.getSelection().merge({
         anchorOffset: prevAnchorOffset + value.length,
         focusOffset: prevAnchorOffset + value.length,
         hasFocus: true
       });
     }
+    newContent = Modifier.insertText(newContent, nextCursorPos, ' ')
+    const newEditorState = EditorState.push(editorState, newContent, 'apply-entity');
     this.setState({
-      editorState: EditorState.forceSelection(newEditorState, nextCursorPos)
+      editorState: newEditorState
     });
   }
 
@@ -102,7 +102,8 @@ class QuestionRichTextEditor extends Component {
 
   showOffset = () => {
     const { editorState } = this.state;
-    console.log(editorState.getSelection().focusOffset, editorState.getSelection().anchorOffset);
+    console.log(editorState.getSelection().anchorOffset, editorState.getSelection().focusOffset);
+    console.log(editorState.getSelection().anchorKey, editorState.getSelection().focusKey);
   }
 
   showValue = () => {
