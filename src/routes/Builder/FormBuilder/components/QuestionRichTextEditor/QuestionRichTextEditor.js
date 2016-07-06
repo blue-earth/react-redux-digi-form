@@ -18,7 +18,7 @@ function findAnswerEntities(contentBlock, callback) {
 }
 
 const AnswerSpan = (props) => {
-  return <span {...props} contentEditable={false} className={styles.block}>{props.children}</span>;
+  return <span {...props} contentEditable={false} className={styles.block}>{props.children}</span>; // eslint-disable-line
 };
 
 class QuestionRichTextEditor extends Component {
@@ -35,7 +35,7 @@ class QuestionRichTextEditor extends Component {
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     const initialEditorState = EditorState.createEmpty(answerBlockDecorator);
     const initialContentState = Modifier.insertText(initialEditorState.getCurrentContent(),
-      initialEditorState.getSelection(),currentQuestionInstruction)
+      initialEditorState.getSelection(), currentQuestionInstruction);
     this.state = {editorState: EditorState.createWithContent(initialContentState)};
   }
 
@@ -62,7 +62,6 @@ class QuestionRichTextEditor extends Component {
 
   };
 
-
   componentWillReceiveProps(nextProps) {
     const answerBlockDecorator = new CompositeDecorator([
       {
@@ -74,7 +73,7 @@ class QuestionRichTextEditor extends Component {
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     const initialEditorState = EditorState.createEmpty(answerBlockDecorator);
     const initialContentState = Modifier.insertText(initialEditorState.getCurrentContent(),
-      initialEditorState.getSelection(),currentQuestionInstruction)
+      initialEditorState.getSelection(), currentQuestionInstruction);
     this.state = {editorState: EditorState.createWithContent(initialContentState)};
   }
 
