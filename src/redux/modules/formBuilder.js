@@ -1,6 +1,6 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { mergeItemIntoArray, editItemInArray } from 'helpers/pureFunctions';
+import { mergeItemIntoArray, editItemInArray, findItemById } from 'helpers/pureFunctions';
 import { assignDefaults } from 'redux/utils/request';
 import _ from 'lodash';
 
@@ -233,7 +233,7 @@ export const setPageZoom = (pageZoom) => {
 export const setQuestionEditMode = ({id, mode}) => {
   return {
     type: SET_QUESTION_EDIT_MODE,
-    id,
+    id: typeof id !== 'undefined' ? id : 0,
     mode
   };
 };
@@ -308,7 +308,7 @@ const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
       return Object.assign({}, state, {
         currentQuestionId: action.id,
         questionEditMode: action.mode,
-        currentQuestionInstruction: !action.mode ? '' : state.questions[state.questions.length - action.id].instruction
+        currentQuestionInstruction: action.mode ? findItemById(state.questions, action.id).instruction : ''
       });
     default:
       return state;

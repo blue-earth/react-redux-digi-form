@@ -90,7 +90,7 @@ class InteractWrapper extends Component {
       .on('resizemove', this.handleResizeMove)
       .on('resizeend', this.handleResizeEnd);
 
-    interactable.preventDefault('always');
+    interactable.styleCursor(false);
   }
 
   getMousePos(event) {
