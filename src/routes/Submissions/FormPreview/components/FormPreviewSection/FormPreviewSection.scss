@@ -1,0 +1,25 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+
+.formPreviewSection {
+  background-color: #fefefe;
+  position: relative;
+  background-color: $bg-color1;
+  .formSectionInner {
+    @include media('>=md') {
+      padding-top: 25 + $items-active-v-padding;
+      padding-bottom: $items-active-v-padding - 10;
+    }
+  }
+  .formSectionTitle {
+    color: $text-color;
+    text-transform: uppercase;
+  }
+}
+.formSectionTitle {
+  color: $text-dark-color;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 25px;
+}

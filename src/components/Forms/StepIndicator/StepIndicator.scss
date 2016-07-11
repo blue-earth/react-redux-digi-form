@@ -1,0 +1,33 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.step {
+  background-color: $bg-color2;
+  font-weight: 300;
+  text-align: center;
+  @include border-radius(50%);
+  z-index: 300;
+  border: 1px solid $border-color;
+  color: $text-color;
+  position: absolute;
+  top: $items-v-padding;
+  left: -12px;
+  width: 25px;
+  height: 25px;
+  line-height: 23px;
+  font-size: 16px;
+  @include media('<md') {
+    display: none;
+  }
+  &.active, &.preview {
+    width: 72px;
+    height: 72px;
+    line-height: 70px;
+    font-size: 16px;
+    top: $items-active-v-padding;
+    left: -36px;
+  }
+}
+.greenIcon {
+  color: #70C175;
+}

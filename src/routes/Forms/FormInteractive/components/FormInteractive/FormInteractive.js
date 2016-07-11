@@ -3,13 +3,14 @@ import FormHeader from 'components/Headers/FormHeader';
 import { Button } from 'react-bootstrap';
 import FormSection from '../FormSection/FormSection';
 import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
+import FlowLine from 'components/Forms/FlowLine/FlowLine';
 import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
-import FormRow from '../FormRow/FormRow';
+import FormRow from 'components/Forms/FormRow/FormRow';
 import { groupFormQuestions, SlideAnimation } from 'helpers/formInteractiveHelper';
 import { FORM_AUTOSAVE, FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
 import SaveForLaterModal from '../SaveForLaterModal/SaveForLaterModal';
-import AccessCodeModal from '../AccessCodeModal/AccessCodeModal';
+import AccessCodeModal from 'components/Forms/AccessCodeModal/AccessCodeModal';
 import styles from './FormInteractive.scss';
 import Animate from 'rc-animate';
 
@@ -214,8 +215,8 @@ class FormInteractive extends Component {
   }
 
   get renderFormSteps() {
-    const { form: { questions }, currentQuestionId, shouldShowFinalSubmit } = this.props;
     const props = this.props;
+    const { form: { questions }, currentQuestionId, shouldShowFinalSubmit } = props;
     const that = this;
     const questionGroups = groupFormQuestions(questions);
 
@@ -282,7 +283,7 @@ class FormInteractive extends Component {
     return (
       <div>
         <FormHeader submitAnswer={submitAnswer} />
-        <div className={styles.flowLine}></div>
+        <FlowLine />
         {status !== 'completion' && form && this.renderFormSteps}
         {status !== 'completion' &&
           <SaveForLaterModal formId={id} sessionId={sessionId} />
