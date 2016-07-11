@@ -8,9 +8,7 @@
   padding-left: $preview-left-padding;
   .formSectionInner {
     padding-right: 15px;
-    @include media('>=sm') {
-      padding-top: ($step-circle-active-size - $step-circle-size) / 2 + $section-active-v-padding;
-    }
+    padding-top: ($step-circle-active-size - $step-circle-size) / 2 + $section-active-v-padding;
     @include clearfix;
   }
   .formSectionTitle {

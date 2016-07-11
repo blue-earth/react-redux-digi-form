@@ -5,6 +5,8 @@
   position: relative;
 }
 .formSteps {
-  width: 60%;
+  @include media('>=sm') {
+    width: 60%;
+  }
   border: 1px solid $border-color;
 }
