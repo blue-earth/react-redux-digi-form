@@ -90,13 +90,12 @@ class QuestionPreview extends Component {
   }
 
   renderAddressField(value) {
-    const addressArray = [
-      value.address_line1 && value.address_line1,
-      value.address_line2 && value.address_line2,
-      value.suburb && value.suburb,
-      value.state && value.state,
-      value.postcode && value.postcode
-    ];
+    const addressArray = [];
+    value.address_line1 && addressArray.push(value.address_line1);
+    value.address_line2 && addressArray.push(value.address_line2);
+    value.suburb && addressArray.push(value.suburb);
+    value.state && addressArray.push(value.state);
+    value.postcode && addressArray.push(value.postcode);
     return addressArray.join(', ');
   }
 

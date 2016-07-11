@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import BuilderHeader from 'components/Headers/BuilderHeader';
 import FormPreviewSection from '../FormPreviewSection/FormPreviewSection';
-import FlowLine from 'components/Forms/FlowLine/FlowLine';
 import { groupFormQuestions } from 'helpers/formInteractiveHelper';
 import AccessCodeModal from 'components/Forms/AccessCodeModal/AccessCodeModal';
 import styles from './FormPreview.scss';
@@ -131,7 +130,6 @@ class FormPreview extends Component {
             return (
               <FormPreviewSection key={index} questionGroup={group}
                 step={index+1} totalSteps={questionGroups.length}
-                status="preview"
                 {...props} />
             );
           })
@@ -145,12 +143,13 @@ class FormPreview extends Component {
     return (
       <div className={styles.formPreview}>
         <BuilderHeader />
-        <FlowLine />
-        {form && this.renderFormSteps}
-        {formAccessStatus !== 'success' &&
-          <AccessCodeModal onSuccess={this.handleAccessCodeSuccess}
-            {...this.props} />
-        }
+        <div className={styles.formSteps}>
+          {form && this.renderFormSteps}
+          {formAccessStatus !== 'success' &&
+            <AccessCodeModal onSuccess={this.handleAccessCodeSuccess}
+              {...this.props} />
+          }
+        </div>
       </div>
     );
   }

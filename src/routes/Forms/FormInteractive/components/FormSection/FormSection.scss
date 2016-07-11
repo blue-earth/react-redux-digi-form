@@ -8,9 +8,9 @@ $nav-hover-color:           #000;
   &.active {
     background-color: $bg-color1;
     .formSectionInner {
-      @include media('>=md') {
-        padding-top: 25 + $items-active-v-padding;
-        padding-bottom: $items-active-v-padding - 10;
+      @include media('>=sm') {
+        padding-top: 25 + $section-active-v-padding;
+        padding-bottom: $section-active-v-padding - 10;
       }
     }
     .formSectionTitle {
@@ -25,7 +25,7 @@ $nav-hover-color:           #000;
   }
 }
 .formSectionInner {
-  padding: $items-v-padding 0;
+  padding: $section-v-padding 0;
 }
 .completed {
   display: block;

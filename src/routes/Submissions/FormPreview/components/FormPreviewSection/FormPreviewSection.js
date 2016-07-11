@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import QuestionPreview from 'components/Questions/QuestionPreview/QuestionPreview';
-import FormRow from 'components/Forms/FormRow/FormRow';
+import FlowLine from 'components/Forms/FlowLine/FlowLine';
 import StepIndicator from 'components/Forms/StepIndicator/StepIndicator';
 import { getContextFromAnswer } from 'helpers/formInteractiveHelper';
 import { findItemById } from 'helpers/pureFunctions';
@@ -89,15 +89,14 @@ class FormSection extends Component {
 
     return (
       <section className={styles.formPreviewSection}>
-        <FormRow>
-          <StepIndicator step={step} totalSteps={totalSteps} status="preview" />
-          <div className={styles.formSectionInner}>
-            <h3 className={styles.formSectionTitle}>
-            {questionGroup.title}
-            </h3>
-            {this.renderAllQuestions}
-          </div>
-        </FormRow>
+        <FlowLine forPreview />
+        <StepIndicator step={step} totalSteps={totalSteps} status="preview" />
+        <div className={styles.formSectionInner}>
+          <h3 className={styles.formSectionTitle}>
+          {questionGroup.title}
+          </h3>
+          {this.renderAllQuestions}
+        </div>
       </section>
     );
   }

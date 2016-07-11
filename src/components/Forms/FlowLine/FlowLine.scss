@@ -16,3 +16,12 @@
     margin-left: -($lg-min-width / 2 - $lg-container-width / 6 - 15);
   }
 }
+.previewFlowLine {
+  position: absolute;
+  left: calc(20% - #{$step-circle-active-size / 2 + 15px});
+  top: 0;
+  z-index: 100;
+  border-right: 1px solid $border-color;
+  border-left: 1px solid $border-color;
+  height: 100%;
+}
