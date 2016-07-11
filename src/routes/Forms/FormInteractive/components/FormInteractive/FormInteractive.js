@@ -167,13 +167,7 @@ class FormInteractive extends Component {
   };
 
   componentWillMount() {
-    const { fetchFormIfNeeded, fetchAnswers,
-      params: { id, sessionId } } = this.props;
-
-    fetchFormIfNeeded(id);
-    if (sessionId) {
-      fetchAnswers(sessionId);
-    }
+    this.loadFormSession();
   }
 
   componentDidMount() {
@@ -264,8 +258,9 @@ class FormInteractive extends Component {
     );
   }
 
-  handleAccessCodeSuccess = () => {
-    const { id, fetchFormIfNeeded, sessionId, fetchAnswers } = this.props;
+  loadFormSession = () => {
+    const { fetchFormIfNeeded, fetchAnswers,
+      params: { id, sessionId } } = this.props;
     fetchFormIfNeeded(id);
     if (sessionId) {
       fetchAnswers(sessionId);
@@ -290,7 +285,7 @@ class FormInteractive extends Component {
         }
         {status === 'completion' && this.renderFormCompletionSection}
         {formAccessStatus !== 'success' &&
-          <AccessCodeModal onSuccess={this.handleAccessCodeSuccess}
+          <AccessCodeModal onSuccess={this.loadFormSession}
             {...this.props} />
         }
       </div>
