@@ -64,8 +64,11 @@ class QuestionEditView extends Component {
   }
 
   handleCancel = () => {
-    const { setQuestionEditMode } = this.props;
-    setQuestionEditMode(false);
+    const { setQuestionEditMode, currentQuestionId } = this.props;
+    setQuestionEditMode({
+      id: currentQuestionId,
+      mode: false
+    });
   }
 
   handleSave = () => {
