@@ -14,9 +14,11 @@ export const getImageDimension = (url, callback) => {
 
 export const getDragSnappingTargets = (documentMapping, excludeId, pageZoom) => {
   var snappingTargets = [];
+  const excludeMappingInfo = findItemById(documentMapping, excludeId);
   documentMapping.forEach((mappingInfo) => {
     const boundingBox = mappingInfo.bounding_box[0];
     if (excludeId === mappingInfo.id) return;
+    if (mappingInfo.pageNumber !== excludeMappingInfo.pageNumber) return;
     snappingTargets = _.unionWith(snappingTargets, [
       {
         x: zoomValue(boundingBox.left, pageZoom),
@@ -54,7 +56,7 @@ export const getDragSnappingTargets = (documentMapping, excludeId, pageZoom) => 
 };
 
 export const zoomValue = (value, zoom) => {
-  return Math.round(value * zoom);
+  return Math.round(value * zoom * 100) / 100;
 };
 
 export const getResizeSnappingTargets = (documentMapping, excludeId, pageZoom) => {
