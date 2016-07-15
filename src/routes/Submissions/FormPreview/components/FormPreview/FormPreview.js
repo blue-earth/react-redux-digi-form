@@ -83,7 +83,7 @@ class FormPreview extends Component {
     /*
      * updateAccessCode: Redux action to update the access code being typed.
      */
-    updateAccessCode: PropTypes.func,
+    updateAccessCode: PropTypes.func
   };
 
   getChildContext() {
