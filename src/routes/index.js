@@ -2,8 +2,7 @@
 import CoreLayout from '../layouts/CoreLayout';
 import Home from './Home';
 import FormRoute from './Forms';
-import BuilderRoute from './Builder';
-import SubmissionsRoute from './Submissions';
+import DashboardRoute from './Dashboard';
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -14,8 +13,7 @@ export default (store) => ({
   indexRoute: Home,
   childRoutes: [
     FormRoute(store),
-    BuilderRoute(store),
-    SubmissionsRoute(store)
+    DashboardRoute(store)
   ]
 });
 

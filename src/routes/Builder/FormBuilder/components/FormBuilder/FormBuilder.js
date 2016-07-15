@@ -2,7 +2,6 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import BuilderHeader from 'components/Headers/BuilderHeader';
 import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
 import QuestionEditView from '../QuestionEditView/QuestionEditView';
@@ -127,17 +126,14 @@ class FormBuilder extends Component {
     const { questionEditMode, currentQuestionId } = this.props;
     return (
       <div className={styles.formBuilderContainer}>
-        <BuilderHeader />
-        <div className={styles.formBuilderContent}>
-          <div className={styles.leftPanel} onClick={this.resetActiveInputName}>
-            {questionEditMode && currentQuestionId
-              ? <QuestionEditView {...this.props} />
-              : <ElementsListView {...this.props} />
-            }
-          </div>
-          <div className={styles.rightPanel}>
-            <PageView {...this.props} />
-          </div>
+        <div className={styles.leftPanel} onClick={this.resetActiveInputName}>
+          {questionEditMode && currentQuestionId
+            ? <QuestionEditView {...this.props} />
+            : <ElementsListView {...this.props} />
+          }
+        </div>
+        <div className={styles.rightPanel}>
+          <PageView {...this.props} />
         </div>
       </div>
     );

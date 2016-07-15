@@ -8,14 +8,9 @@ $panel-border-color: #086DB6;
 .formBuilderContainer {
   background-color: $formbuilder-bg-color;
   min-height: 100%;
-  @include media('>=md') {
-    height: 100%;
-  }
-}
-.formBuilderContent {
   padding: 20px;
   @include media('>=md') {
-    height: calc(100% - 65px);
+    height: 100%;
   }
 }
 

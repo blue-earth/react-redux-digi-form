@@ -1,0 +1,12 @@
+@import 'mixins';
+@import 'variables';
+
+.dashboard {
+  height: 100%;
+}
+
+.contentWrapper {
+  @include media('>=md') {
+    height: calc(100% - 56px);
+  }
+}

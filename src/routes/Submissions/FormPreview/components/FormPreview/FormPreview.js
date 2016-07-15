@@ -141,7 +141,6 @@ class FormPreview extends Component {
     } = this.props;
     return (
       <div className={styles.formPreview}>
-        <BuilderHeader />
         <div className={styles.formSteps}>
           {form && this.renderFormSteps}
           {formAccessStatus !== 'success' &&
