@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import styles from './InteractWrapper.scss';
 import interact from 'interact.js';
 import classNames from 'classnames';

@@ -1,5 +1,11 @@
-import React, { Component, PropTypes } from 'react';
-import { findIndexById, findItemById } from 'helpers/pureFunctions';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
+import {
+  findIndexById,
+  findItemById
+} from 'helpers/pureFunctions';
 import {
   getDragSnappingTargets,
   getResizeSnappingTargets,
