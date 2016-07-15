@@ -31,7 +31,8 @@ class InteractWrapper extends Component {
     zIndex: PropTypes.number,
     resizeSnapTargets: PropTypes.array,
     dragSnapTargets: PropTypes.array, // array of target positions {id, type, x or y}, id: question id.
-    snapRange: PropTypes.number
+    snapRange: PropTypes.number,
+    className: PropTypes.string
   };
 
   static defaultProps = {
@@ -161,22 +162,22 @@ class InteractWrapper extends Component {
         snap: {
           targets: this.offsetSnapTargets(offsetX, offsetY, dragSnapTargets),
           range: snapRange
-        },
-        restrict: {
-          restriction: element.parentNode,
-          elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
         }
+        // restrict: {
+        //   restriction: 'parent',
+        //   elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+        // }
       })
       .resizable({
         snap: {
           targets: this.offsetSnapTargets(elementPos.x - dX, elementPos.y - dY, resizeSnapTargets),
           range: snapRange
         },
-        edges: { left: true, right: true, bottom: true, top: true },
-        restrict: {
-          restriction: element.parentNode,
-          elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-        }
+        edges: { left: true, right: true, bottom: true, top: true }
+        // restrict: {
+        //   restriction: 'parent',
+        //   elementRect: { top: 1, left: 1, bottom: 1, right: 1 }
+        // }
       });
   }
 
@@ -196,8 +197,8 @@ class InteractWrapper extends Component {
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
 
-    event.target.style.webkitTransform =
-    event.target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+    target.style.webkitTransform =
+    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
 
     var isSnapping = event.snap && event.snap.locked;
 
@@ -205,8 +206,9 @@ class InteractWrapper extends Component {
   }
 
   handleDragEnd = (event) => {
-    const { onDragEnd, metaData } = this.props;
+    const { onDragEnd } = this.props;
     const { width, height } = this.state;
+    const element = this.refs.interactWrapper;
     var target = event.target;
     var x = (parseFloat(target.getAttribute('data-x')) || 0);
     var y = (parseFloat(target.getAttribute('data-y')) || 0);
@@ -214,6 +216,7 @@ class InteractWrapper extends Component {
       x,
       y
     });
+    var metaData = JSON.parse(element.dataset.meta);
     onDragEnd({ left: x, top: y, width, height }, metaData);
   }
 
@@ -246,7 +249,6 @@ class InteractWrapper extends Component {
     target.setAttribute('data-h', h);
 
     var isSnapping = event.snap && event.snap.locked;
-
     onResizeMove({ left: x, top: y, width: w, height: h }, metaData, isSnapping);
   }
 
@@ -277,7 +279,7 @@ class InteractWrapper extends Component {
   }
 
   render() {
-    const { zIndex, active } = this.props;
+    const { zIndex, active, metaData, className } = this.props;
     const { x, y, width, height } = this.state;
     var style = {};
     var optionals = {};
@@ -286,8 +288,10 @@ class InteractWrapper extends Component {
     zIndex && (style['zIndex'] = zIndex);
     style['WebkitTransform'] = style['transform'] = 'translate(' + x + 'px,' + y + 'px)';
     style && (optionals['style'] = style);
+    optionals['data-meta'] = JSON.stringify(metaData);
 
     const wrapperClass = classNames({
+      [className]: true,
       [styles.interactWrapper]: true,
       [styles.active]: active
     });

@@ -11,6 +11,7 @@ import {
 // import classNames from 'classnames';
 import InteractWrapper from 'components/InteractWrapper/InteractWrapper';
 import _ from 'lodash';
+import interact from 'interact.js';
 import styles from './DrawingBoard.scss';
 
 class DrawingBoard extends Component {
@@ -86,8 +87,37 @@ class DrawingBoard extends Component {
     /*
      * deleteElement: Redux action to delete question element by id.
      */
-    deleteElement: PropTypes.func.isRequired
+    deleteElement: PropTypes.func.isRequired,
+
+    /*
+     * getPageDOM: Get page dom element by page number.
+     */
+    getPageDOM: PropTypes.func.isRequired
   };
+
+  componentDidMount() {
+    const element = this.refs.board;
+
+    interact(element)
+      .dropzone({
+        accept: '.interactWrapper'
+      })
+      .on('drop', this.handleDrop);
+
+    document.addEventListener('mousemove', this.handleBoardMouseMove);
+    document.addEventListener('mouseup', this.handleBoardMouseUp);
+  }
+
+  handleDrop = (event) => {
+    const { documentMapping, pageNumber } = this.props;
+    const { relatedTarget } = event;
+    var metaData = JSON.parse(relatedTarget.dataset.meta);
+    if (!metaData.id) return;
+    var mappingInfo = findItemById(documentMapping, metaData.id);
+    if (mappingInfo.pageNumber === pageNumber) return;
+    metaData.destPageNumber = pageNumber;
+    relatedTarget.dataset.meta = JSON.stringify(metaData);
+  }
 
   getMousePos(event) {
     var e = event || window.event; // Moz || IE
@@ -295,22 +325,34 @@ class DrawingBoard extends Component {
   }
 
   handleDragEnd = (rect, metaData) => {
-    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
+    const { updateMappingInfo, documentMapping, pageZoom, pageNumber, getPageDOM } = this.props;
     const { id } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
+
+    var newRect = rect;
+    const { destPageNumber } = metaData;
+    if (destPageNumber) {
+      const destPage = getPageDOM(destPageNumber);
+      const sourcePage = getPageDOM(pageNumber);
+      newRect.top = rect.top > 0
+        ? newRect.top - (destPage.offsetTop - sourcePage.offsetTop)
+        : (sourcePage.offsetTop - destPage.offsetTop) + newRect.top;
+    }
     const newBoundingBox = {
-      left: rect.left / pageZoom,
-      top: rect.top / pageZoom,
-      width: boundingBox.width,
-      height: boundingBox.height
+      left: newRect.left / pageZoom,
+      top: newRect.top / pageZoom,
+      width: newRect.width / pageZoom,
+      height: newRect.height / pageZoom
     };
     if (!_.isEqual(boundingBox, newBoundingBox)) {
       updateMappingInfo({
         id,
+        pageNumber: destPageNumber && destPageNumber,
         bounding_box: [newBoundingBox]
       });
-    }
+    };
+
     // Reset SnappingHelper
     this.resetSnappingHelper();
   }
@@ -459,6 +501,7 @@ class DrawingBoard extends Component {
             y={zoomValue(boundingBox.top, pageZoom)}
             zIndex={zIndex}
             active={isActive}
+            className="interactWrapper"
             width={zoomValue(boundingBox.width, pageZoom)}
             height={zoomValue(boundingBox.height, pageZoom)}
             onResizeStart={this.handleResizeStart}
@@ -487,8 +530,6 @@ class DrawingBoard extends Component {
     return (
       <div className={styles.board}
         onMouseDown={this.handleBoardMouseDown}
-        onMouseMove={this.handleBoardMouseMove}
-        onMouseUp={this.handleBoardMouseUp}
         onKeyDown={this.handleKeyDown}
         tabIndex={0}
         ref="board"

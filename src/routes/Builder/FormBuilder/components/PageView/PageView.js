@@ -91,17 +91,24 @@ class PageView extends Component {
     setPageZoom(1);
   }
 
+  getPageDOM = (pageNumber) => {
+    return this.refs[`page_${pageNumber}`];
+  }
+
   renderDocuments() {
     const { documents, pageZoom } = this.props;
     return documents.map((document, index) => {
       const zoomedWidth = document.width * pageZoom;
       const pageStyle = {width: zoomedWidth};
+      const pageNumber = index + 1;
       return (
         <div className={styles.page} key={index}
+          ref={`page_${pageNumber}`}
           style={pageStyle}>
-          <img src={document.url} alt={`Page Image ${index + 1}`}
-            className={styles.pageImage} ref={`pageImage${index + 1}`} />
-          <DrawingBoard {...this.props} pageNumber={index + 1} containerId="clientArea" />
+          <img src={document.url} alt={`Page Image ${pageNumber}`}
+            className={styles.pageImage} ref={`pageImage${pageNumber}`} />
+          <DrawingBoard {...this.props} pageNumber={pageNumber}
+            getPageDOM={this.getPageDOM} containerId="clientArea" />
         </div>
       );
     });
