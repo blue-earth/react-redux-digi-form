@@ -157,6 +157,7 @@ const questionInputs = [
     name: 'DateField',
     componentName: 'DateInput',
     displayText: 'Date',
+    defaultDateFormat: 'YYYY/MM/DD',
     validations: [
       'is_required'
     ],

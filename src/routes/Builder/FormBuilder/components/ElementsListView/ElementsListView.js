@@ -1,7 +1,22 @@
-import React, { Component, PropTypes } from 'react';
-import { Accordion, Panel, Row, Col, Button } from 'react-bootstrap';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
+import {
+  Accordion,
+  Panel,
+  Row,
+  Col,
+  Button,
+  ButtonToolbar,
+  Dropdown,
+  MenuItem,
+  Glyphicon
+} from 'react-bootstrap';
 import _ from 'lodash';
-import questionInputs, { questionInputGroups } from 'schemas/questionInputs';
+import questionInputs, {
+  questionInputGroups
+} from 'schemas/questionInputs';
 import styles from './ElementsListView.scss';
 
 class ElementsListView extends Component {
@@ -72,6 +87,38 @@ class ElementsListView extends Component {
         <Accordion defaultActiveKey={0}>
           {accordionItems}
         </Accordion>
+        <ButtonToolbar>
+          <Dropdown id="dropdown-custom-1">
+            <Dropdown.Toggle>
+              <Glyphicon glyph="star" />
+              Pow! Zoom!
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="super-colors">
+              <MenuItem eventKey="1">Action</MenuItem>
+              <MenuItem eventKey="2">Another action</MenuItem>
+              <MenuItem eventKey="3" active>Active Item</MenuItem>
+              <MenuItem divider />
+              <MenuItem eventKey="4">Separated link</MenuItem>
+            </Dropdown.Menu>
+          </Dropdown>
+
+          <Dropdown id="dropdown-custom-2">
+            <Button bsStyle="info">
+              mix it up style-wise
+            </Button>
+            <Dropdown.Toggle bsStyle="success"/>
+            <Dropdown.Menu className="super-colors">
+              <MenuItem eventKey="1">Action</MenuItem>
+              <MenuItem eventKey="2">Another action</MenuItem>
+              <MenuItem eventKey="3" active className="test">
+                <div><i>Active</i> Item</div>
+              </MenuItem>
+              <MenuItem divider />
+              <MenuItem eventKey="4">Separated link</MenuItem>
+            </Dropdown.Menu>
+          </Dropdown>
+
+        </ButtonToolbar>
       </div>
     );
   }

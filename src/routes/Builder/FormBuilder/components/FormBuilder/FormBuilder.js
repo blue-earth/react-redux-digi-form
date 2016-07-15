@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import BuilderHeader from 'components/Headers/BuilderHeader';
 import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
@@ -47,6 +50,11 @@ class FormBuilder extends Component {
      * activeInputName: Redux state to indicate the active input element name.
      */
     activeInputName: PropTypes.string.isRequired,
+
+    /*
+     * setCurrentQuestionInstruction: Action to set instruction of active input element selected
+     */
+    setCurrentQuestionInstruction: PropTypes.func.isRequired,
 
     /*
      * setActiveInputName: Action to set active input element selected, and enables to draw on the right

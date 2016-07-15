@@ -1,0 +1,18 @@
+.questionRow {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.question {
+  font-size: 18px;
+  font-weight: 500;
+}
+.answer {
+  font-size: 18px;
+  img {
+  	max-width: 100%;
+  	height: auto;
+  }
+}
+.choiceItem {
+  margin-bottom: 2px;
+}

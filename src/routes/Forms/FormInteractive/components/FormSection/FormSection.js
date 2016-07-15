@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { Button, Collapse } from 'react-bootstrap';
-import { MdCheck, MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib/md';
+import { MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib/md';
 import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive';
-import FormRow from '../FormRow/FormRow';
+import FormRow from 'components/Forms/FormRow/FormRow';
+import StepIndicator from 'components/Forms/StepIndicator/StepIndicator';
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection';
 import { getContextFromAnswer, getFirstQuestionOfGroup, shouldDisableNextButton,
   shouldDisablePrevButton } from 'helpers/formInteractiveHelper';
@@ -26,18 +27,12 @@ class FormSection extends Component {
     /*
      * step: current step number of the section, ex. in 2 of 5, 2 is step.
      */
-    step: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
+    step: PropTypes.number,
 
     /*
      * totalSteps: Calculated number of sections(steps), ex. in 1 of 5, 5 is totalSteps.
      */
-    totalSteps: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
+    totalSteps: PropTypes.number,
 
     /*
      * form: form_data of response, consists of questions and logics.
@@ -210,9 +205,7 @@ class FormSection extends Component {
           <div>
             {step > 1 && <hr className={styles.hrLine} />}
             <FormRow>
-              <div className={styles.step}>
-                {`${step} of ${totalSteps}`}
-              </div>
+              <StepIndicator step={step} totalSteps={totalSteps} status={status} />
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>
                 {this.shouldShowActiveTitle() && questionGroup.title}
@@ -226,9 +219,7 @@ class FormSection extends Component {
         <Collapse in={status === 'pending'} timeout={1000}>
           <div>
             <FormRow>
-              <div className={styles.step}>
-                {step}
-              </div>
+              <StepIndicator step={step} totalSteps={totalSteps} status={status} />
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>{questionGroup.title}</h3>
               </div>
@@ -239,9 +230,7 @@ class FormSection extends Component {
         <Collapse in={status === 'completed'} timeout={1000}>
           <div>
             <FormRow>
-              <div className={styles.step}>
-                <a href="javascript:;"><MdCheck className={styles.greenIcon} /></a>
-              </div>
+              <StepIndicator step={step} totalSteps={totalSteps} status={status} />
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>
                   {questionGroup.title}

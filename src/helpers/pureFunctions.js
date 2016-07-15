@@ -8,12 +8,27 @@ export const findIndexById = (objArray, id) => {
   return _.findIndex(objArray, function (o) { return o.id === id; });
 };
 
+export const findItemById = (objArray, id) => {
+  return _.find(objArray, function (o) { return o.id === id; });
+};
+
 export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false) => {
   if (deepMerge) {
     const index = findIndexById(itemArray, newItem.id);
     if (index !== -1) newItem = _.merge({}, itemArray[index], newItem);
   }
   return _.unionBy([newItem], itemArray, 'id');
+};
+
+export const editItemInArray = (itemArray, editValue) => {
+  var newItemArray = itemArray;
+  for (var key in newItemArray) {
+    if (newItemArray[key].id === editValue.id) {
+      newItemArray[key].instruction = editValue.instruction;
+      break;
+    }
+  }
+  return newItemArray;
 };
 
 export const loadScript = (src, id, callback) => {

@@ -1,0 +1,40 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.step {
+  background-color: $bg-color2;
+  font-weight: 300;
+  text-align: center;
+  @include border-radius(50%);
+  z-index: 300;
+  border: 1px solid $border-color;
+  color: $text-color;
+  position: absolute;
+  top: $section-v-padding;
+  left: -$step-circle-size / 2;
+  width: $step-circle-size;
+  height: $step-circle-size;
+  line-height: $step-circle-size - 2px;
+  font-size: 16px;
+  display: none;
+  @include media('>=md') {
+    display: block;
+  }
+  &.active, &.preview {
+    width: $step-circle-active-size;
+    height: $step-circle-active-size;
+    line-height: $step-circle-active-size - 2px;
+    font-size: 16px;
+    top: $section-active-v-padding;
+  }
+  &.active {
+    left: -$step-circle-active-size / 2;
+  }
+  &.preview {
+    left: calc(#{$preview-left-padding} - #{$step-circle-active-size + 15px});
+    display: block;
+  }
+}
+.greenIcon {
+  color: #70C175;
+}

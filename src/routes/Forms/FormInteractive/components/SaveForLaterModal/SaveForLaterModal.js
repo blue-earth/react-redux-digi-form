@@ -17,7 +17,7 @@ class SaveForLaterModal extends Component {
 
     return (
       <Modal show={show} bsSize="large"
-        onHide={this.handleHideTempModal}>
+        onHide={handleHide}>
         <Modal.Header closeButton>
           <Modal.Title>Form Saved.</Modal.Title>
         </Modal.Header>

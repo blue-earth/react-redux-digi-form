@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
+import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
 import styles from './QuestionEditView.scss';
 
 class QuestionEditView extends Component {
@@ -16,9 +17,25 @@ class QuestionEditView extends Component {
     deleteElement: PropTypes.func.isRequired,
 
     /*
+     * editElement: used to edit instruction of active input element selected
+     */
+    editElement: PropTypes.func.isRequired,
+
+    /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
-    setQuestionEditMode: PropTypes.func.isRequired
+    setQuestionEditMode: PropTypes.func.isRequired,
+
+    /*
+     * questions: Redux state to store the array of questions.
+     */
+    questions: PropTypes.array.isRequired,
+
+    /*
+     * currentQuestionInstruction: Redux state to specify the active input instruction.
+     */
+    currentQuestionInstruction: PropTypes.string.isRequired
+
   };
 
   componentWillMount() {
@@ -47,12 +64,16 @@ class QuestionEditView extends Component {
   }
 
   handleCancel = () => {
-    const { setQuestionEditMode } = this.props;
-    setQuestionEditMode(false);
+    const { setQuestionEditMode, currentQuestionId } = this.props;
+    setQuestionEditMode({
+      id: currentQuestionId,
+      mode: false
+    });
   }
 
   handleSave = () => {
-
+    const { editElement, currentQuestionId, currentQuestionInstruction } = this.props;
+    editElement(currentQuestionId, currentQuestionInstruction);
   }
 
   renderTopActionButtons() {
@@ -72,6 +93,7 @@ class QuestionEditView extends Component {
       <div className={styles.questionEditView}>
         {this.renderTopActionButtons()}
         {'Question Edit View'}
+        <QuestionRichTextEditor {...this.props} />
       </div>
     );
   }

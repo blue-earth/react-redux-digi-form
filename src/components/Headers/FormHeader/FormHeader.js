@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import classes from './FormHeader.scss';
 import { FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
 
