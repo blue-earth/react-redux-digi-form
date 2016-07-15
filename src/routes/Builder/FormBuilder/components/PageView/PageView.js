@@ -1,7 +1,15 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import styles from './PageView.scss';
 import { Button } from 'react-bootstrap';
-import { MdZoomIn, MdZoomOut, MdSettingsOverscan, MdZoomOutMap } from 'react-icons/lib/md';
+import {
+  MdZoomIn,
+  MdZoomOut,
+  MdSettingsOverscan,
+  MdZoomOutMap
+} from 'react-icons/lib/md';
 import DrawingBoard from '../DrawingBoard/DrawingBoard';
 import _ from 'lodash';
 

@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import BuilderHeader from 'components/Headers/BuilderHeader';
 import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
