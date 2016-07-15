@@ -1,45 +1,63 @@
 @import '../../../styles/mixins';
 @import '../../../styles/variables';
 
+$button-size:       32px;
+
 .headerButton {
   border: 1px solid $headerbutton-border-color;
   background: $headerbutton-bg-color;
-  border-radius: 2px;
+  @include border-radius(2px);
   cursor: pointer;
-  height: 40px;
-  padding: 0px 13px;
-  transition: color .15s, background-color .15s;
-  margin: 13px 6px;
+  height: $button-size;
+  padding: 1px 12px;
+  @include transition(color .15s, background-color .15s);
   color: white;
+  position: relative;
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1;
+  &.noPaddingButton {
+    padding: 1px;
+  }
+  &.squareButton {
+    padding: 1px;
+    width: $button-size;
+  }
   &:hover, &:focus {
     opacity: 1;
     background-color: #3c8abf;
     border: 1px solid #68addb;
+    outline: none;
     color: white;
   }
   &[disabled] {
     opacity: .5;
+    background: $headerbutton-bg-color !important;
+    border: 1px solid $headerbutton-border-color !important;
   }
-  &:active:focus, &:focus {
-    outline: none;
-    background-color: #3c8abf;
-    border: 1px solid #68addb;
-    color: white;
+  &:active {
+    &, &:hover, &:focus {
+      background-color: #3c8abf;
+      border: 1px solid #68addb;
+      outline: none;
+      color: white;
+    }
   }
 }
 
-.btnDefaultInner {
-  padding-left: 3px;
-  text-align: left;
-  font-size: 16px;
-  width: 75px;
-}
-
-.btnInner {
-  width: 100%;
-  line-height: 20px;
-  font-size: 18px;
-  font-weight: 200;
-  letter-spacing: 1px;
-  padding: 0 0px;
+.notificationCounter {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 18px;
+  height: 18px;
+  line-height: 16px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  @include border-radius(50%);
+  border: 1px solid white;
+  background-color: #FF6600;
+  text-align: center;
 }
