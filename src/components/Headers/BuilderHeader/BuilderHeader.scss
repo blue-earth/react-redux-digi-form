@@ -1,14 +1,30 @@
+@import '../../../styles/mixins';
 @import '../../../styles/variables';
 
 .header {
-	height: 65px;
-	background-color: $builderheader-bg-color;
-	z-index: 400;
-	position: relative;
+  padding: 12px;
+  background-color: $builderheader-bg-color;
+  z-index: 400;
+  position: relative;
+  @include clearfix;
 }
 
 .logo {
-	position: absolute;
-    margin-top: 10px;
-    left: calc(50% - 70px);
+  position: absolute;
+  @include hcenter;
+}
+
+.leftToolbar {
+  float: left;
+}
+
+.rightToolbar {
+  float: right;
+}
+
+.profileName {
+  padding-left: 5px;
+  padding-right: 10px;
+  display: inline-block;
+  vertical-align: middle;
 }

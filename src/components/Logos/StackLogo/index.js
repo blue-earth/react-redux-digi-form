@@ -1,42 +1,61 @@
-import React, {PropTypes} from 'react';
+import React, {
+  PropTypes,
+  Component
+} from 'react';
+import { connect } from 'react-redux';
+import { goTo } from 'redux/modules/router';
+import { bindActionCreators } from 'redux';
 
-const propTypes = {
-  width: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.number
-  ]),
-  height: React.PropTypes.oneOfType([
-    React.PropTypes.string,
-    React.PropTypes.number
-  ]),
-  link: PropTypes.string,
-  logoStyle: PropTypes.string
-};
+class StackLogo extends Component {
 
-const defaultProps = {
-  width: 140,
-  height: 'auto',
-  link: '/',
-  logoStyle: 'white'
-};
+  static propTypes = {
+    width: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number
+    ]),
+    height: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number
+    ]),
+    link: PropTypes.string,
+    logoStyle: PropTypes.string,
+    goTo: PropTypes.func
+  };
 
-class StackLogo extends React.Component {
+  static defaultProps = {
+    width: 140,
+    height: 'auto',
+    link: '/',
+    logoStyle: 'white'
+  };
+
+  handleLogoClick = (event) => {
+    const { link, goTo } = this.props;
+    goTo(link);
+    event.preventDefault();
+  }
   render() {
+    const {
+      link,
+      logoStyle,
+      width,
+      height
+    } = this.props;
     var style = {
       'textAlign': 'center'
     };
     var logoPath;
-    if (this.props.logoStyle === 'white') {
+    if (logoStyle === 'white') {
       logoPath = require('./Emondo-Logo-White.svg');
     } else {
       logoPath = require('./Emondo-Logo-Horizontal.svg');
     }
     return (
-      <a role="button" href={this.props.link}>
+      <a role="button" href={link} onClick={this.handleLogoClick}>
         <div style={style}>
           <img
-            width={this.props.width}
-            height={this.props.height}
+            width={width}
+            height={height}
             src={logoPath} />
         </div>
       </a>
@@ -44,6 +63,12 @@ class StackLogo extends React.Component {
   }
 }
 
-StackLogo.propTypes = propTypes;
-StackLogo.defaultProps = defaultProps;
-export default StackLogo;
+const mapActionCreators = {
+  goTo
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(mapActionCreators, dispatch);
+};
+
+export default connect(null, mapDispatchToProps)(StackLogo);

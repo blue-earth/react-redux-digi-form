@@ -3,17 +3,21 @@ import React, {
   PropTypes
 } from 'react';
 import { Button } from 'react-bootstrap';
+import classNames from 'classnames';
 import styles from './HeaderButton.scss';
 
 class HeaderButton extends Component {
   static propTypes = {
     onClick: PropTypes.func,
     isDisabled: PropTypes.bool,
-    buttonLabel: PropTypes.string
+    children: PropTypes.node,
+    notificationCounter: PropTypes.number,
+    style: PropTypes.oneOf(['normal', 'square', 'noPadding']),
+    defaultWidth: PropTypes.number
   };
 
   static defaultProps = {
-    buttonLabel: ''
+    style: 'normal'
   };
 
   handleClick = () => {
@@ -21,37 +25,51 @@ class HeaderButton extends Component {
     if (typeof onClick === 'function') onClick();
   }
 
-  renderDefaultLabel() {
-    return (
-      <div className={styles.btnDefaultInner}>
-        <div>press</div>
-        <div>ENTER</div>
-      </div>
-    );
+  getWrapperClass() {
+    const { style } = this.props;
+    return classNames({
+      [styles.headerButton]: true,
+      [styles.squareButton]: style === 'square',
+      [styles.noPaddingButton]: style === 'noPadding'
+    });
   }
 
-  renderButtonLabel() {
-    const { buttonLabel } = this.props;
-    return (
-      <div className={styles.btnInner}>
-        {buttonLabel}
-      </div>
-    );
+  getOptionalParams() {
+    const { isDisabled, defaultWidth } = this.props;
+    var optionals = {};
+    if (isDisabled) {
+      optionals['disabled'] = true;
+    }
+
+    if (defaultWidth) {
+      optionals['style'] = { minWidth: defaultWidth };
+    }
+    return optionals;
+  }
+
+  renderNotificationCounter() {
+    const { notificationCounter } = this.props;
+    if (typeof notificationCounter !== 'undefined') {
+      return (
+        <span className={styles.notificationCounter}>
+          {notificationCounter}
+        </span>
+      );
+    } else {
+      return false;
+    }
   }
 
   render() {
-    const { buttonLabel, isDisabled } = this.props;
-    var optionals = {};
-
-    if (isDisabled) {
-      optionals['disabled'] = true;
-    };
+    const { children } = this.props;
 
     return (
       <Button type="button" onClick={this.handleClick}
-        className={styles.headerButton}
-        {...optionals}>
-        {buttonLabel !== '' ? this.renderButtonLabel() : this.renderDefaultLabel()}
+        className={this.getWrapperClass()}
+        {...this.getOptionalParams()}
+      >
+        {this.renderNotificationCounter()}
+        {children}
       </Button>
     );
   }

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { routerReducer as router } from 'react-router-redux';
+import router from './modules/router';
 import { reducer as modal } from 'redux-modal';
 
 export const makeRootReducer = (asyncReducers) => {
