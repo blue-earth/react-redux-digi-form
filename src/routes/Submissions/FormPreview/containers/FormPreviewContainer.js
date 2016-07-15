@@ -40,7 +40,6 @@ const mapStateToProps = (state) => {
     form,
     answers,
     primaryColor,
-    isAccessCodeProtected,
     formAccessStatus,
     formAccessCode
   };
