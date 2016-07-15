@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import { Modal } from 'react-bootstrap';
 import { connectModal } from 'redux-modal';
 import Validator from 'components/Validator/Validator';

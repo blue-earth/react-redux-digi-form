@@ -145,7 +145,7 @@ class PageView extends Component {
     const { pageZoom, documents } = this.props;
     const maxPageWidth = _.maxBy(documents, function (o) { return o.width; }).width;
     const zoomedWidth = maxPageWidth * pageZoom;
-    const pageStyle = {width: zoomedWidth};
+    const pageStyle = { width: zoomedWidth };
 
     return (
       <div className={styles.pageView}>

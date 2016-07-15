@@ -1,8 +1,6 @@
 @import '../../../../../styles/mixins';
 @import '../../../../../styles/variables';
 
-$items-v-padding:           5px;
-$items-active-v-padding:    30px;
 $nav-hover-color:           #000;
 .formSection {
   background-color: #fefefe;
@@ -12,7 +10,7 @@ $nav-hover-color:           #000;
     height: 72px;
     line-height: 70px;
     font-size: 16px;
-    top: $items-active-v-padding;
+    top: $section-active-v-padding;
     left: -36px;
   }
 }
@@ -35,7 +33,7 @@ $nav-hover-color:           #000;
 }
 
 .formSectionInner {
-  padding: $items-v-padding 0;
+  padding: $section-v-padding 0;
 }
 .step {
   background-color: $bg-color2;
@@ -46,7 +44,7 @@ $nav-hover-color:           #000;
   border: 1px solid $border-color;
   color: #3bb562;
   position: absolute;
-  top: $items-v-padding;
+  top: $section-v-padding;
   left: -12px;
   width: 25px;
   height: 25px;

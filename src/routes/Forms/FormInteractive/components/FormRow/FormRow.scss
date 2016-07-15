@@ -1,8 +1,0 @@
-@import '../../../../../styles/mixins';
-@import '../../../../../styles/variables';
-
-.formRow {
-  @include media('>=md') {
-    padding-left: 60px;
-  }
-}

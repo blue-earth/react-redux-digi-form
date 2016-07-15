@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import { Col, Row } from 'react-bootstrap';
 import styles from './FormRow.scss';
 

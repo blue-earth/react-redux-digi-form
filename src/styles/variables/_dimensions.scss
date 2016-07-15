@@ -1,13 +1,21 @@
-$lg-min-width:				1200px;
-$md-min-width:				992px;
-$sm-min-width:				768px;
+$lg-min-width:              1200px;
+$md-min-width:              992px;
+$sm-min-width:              768px;
 
-$md-max-width:				$lg-min-width - 1;
-$sm-max-width:				$md-min-width - 1;
-$xs-max-width:				$sm-min-width - 1;
+$md-max-width:              $lg-min-width - 1;
+$sm-max-width:              $md-min-width - 1;
+$xs-max-width:              $sm-min-width - 1;
 
-$lg-container-width:	1170px;
-$md-container-width:	970px;
-$sm-container-width:	750px;
+$lg-container-width:    1170px;
+$md-container-width:    970px;
+$sm-container-width:    750px;
 
-$input-border-radius:	4px;
+$input-border-radius:   4px;
+
+$preview-left-padding:		20%;
+
+$step-circle-size:           26px;
+$step-circle-active-size:    60px;
+
+$section-v-padding:           5px;
+$section-active-v-padding:    24px;
