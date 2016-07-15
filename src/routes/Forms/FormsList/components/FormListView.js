@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { Table, DropdownButton, MenuItem, Pagination } from 'react-bootstrap';
+import {
+  Table,
+  DropdownButton,
+  MenuItem,
+  Pagination
+} from 'react-bootstrap';
 import Header from 'components/Headers/Header';
 import styles from './FormListView.scss';
 

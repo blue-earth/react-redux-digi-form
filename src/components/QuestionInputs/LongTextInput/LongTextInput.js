@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import styles from './LongTextInput.scss';
 
 class LongTextInput extends Component {

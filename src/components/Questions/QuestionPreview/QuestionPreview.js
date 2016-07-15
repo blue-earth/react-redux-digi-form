@@ -1,5 +1,11 @@
-import React, { Component, PropTypes } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
+import {
+  Row,
+  Col
+} from 'react-bootstrap';
 import styles from './QuestionPreview.scss';
 import moment from 'moment';
 import Hogan from 'hogan.js';

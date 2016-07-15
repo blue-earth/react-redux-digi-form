@@ -1,5 +1,17 @@
-import React, { Component, PropTypes } from 'react';
-import { Modal, Button, Tabs, Tab, FormGroup, ControlLabel, Row, Col } from 'react-bootstrap';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
+import {
+  Modal,
+  Button,
+  Tabs,
+  Tab,
+  FormGroup,
+  ControlLabel,
+  Row,
+  Col
+} from 'react-bootstrap';
 import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
 import DropdownInput from 'components/QuestionInputs/DropdownInput/DropdownInput';
 import SignaturePad from 'react-signature-pad';

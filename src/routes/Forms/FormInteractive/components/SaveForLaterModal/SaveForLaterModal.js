@@ -1,5 +1,11 @@
-import React, { Component, PropTypes } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
+import {
+  Modal,
+  Button
+} from 'react-bootstrap';
 import { getSessionURL } from 'helpers/formInteractiveHelper';
 import { connectModal } from 'redux-modal';
 
@@ -13,7 +19,12 @@ class SaveForLaterModal extends Component {
   };
 
   render() {
-    const { sessionId, formId, show, handleHide } = this.props;
+    const {
+      sessionId,
+      formId,
+      show,
+      handleHide
+    } = this.props;
 
     return (
       <Modal show={show} bsSize="large"

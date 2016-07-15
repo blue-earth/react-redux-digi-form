@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import FormHeader from 'components/Headers/FormHeader';
 import { Button } from 'react-bootstrap';
 import FormSection from '../FormSection/FormSection';
@@ -6,8 +9,14 @@ import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import FlowLine from 'components/Forms/FlowLine/FlowLine';
 import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
 import FormRow from 'components/Forms/FormRow/FormRow';
-import { groupFormQuestions, SlideAnimation } from 'helpers/formInteractiveHelper';
-import { FORM_AUTOSAVE, FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
+import {
+  groupFormQuestions,
+  SlideAnimation
+} from 'helpers/formInteractiveHelper';
+import {
+  FORM_AUTOSAVE,
+  FORM_USER_SUBMISSION
+} from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
 import SaveForLaterModal from '../SaveForLaterModal/SaveForLaterModal';
 import AccessCodeModal from 'components/Forms/AccessCodeModal/AccessCodeModal';

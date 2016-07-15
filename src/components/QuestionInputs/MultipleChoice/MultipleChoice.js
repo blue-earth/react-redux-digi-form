@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import styles from './MultipleChoice.scss';
 import MultipleChoiceItem from './MultipleChoiceItem.js';
 import _ from 'lodash';

@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import { Button } from 'react-bootstrap';
 import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
 import styles from './QuestionEditView.scss';

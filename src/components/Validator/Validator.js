@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import validateField from 'helpers/validationHelper';
 import Hogan from 'hogan.js';
 import styles from './Validator.scss';

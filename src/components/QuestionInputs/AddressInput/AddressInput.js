@@ -1,5 +1,11 @@
-import React, { Component, PropTypes } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
+import {
+  Row,
+  Col
+} from 'react-bootstrap';
 import { loadScript } from 'helpers/pureFunctions';
 import styles from './AddressInput.scss';
 

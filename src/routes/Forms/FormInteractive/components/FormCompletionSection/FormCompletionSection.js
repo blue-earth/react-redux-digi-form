@@ -1,7 +1,14 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import { Collapse } from 'react-bootstrap';
 import { Link } from 'react-router';
-import { FaGooglePlusSquare, FaFacebookSquare, FaLinkedinSquare } from 'react-icons/lib/fa';
+import {
+  FaGooglePlusSquare,
+  FaFacebookSquare,
+  FaLinkedinSquare
+} from 'react-icons/lib/fa';
 import { GoCheck } from 'react-icons/lib/go';
 import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
 import FormRow from 'components/Forms/FormRow/FormRow';

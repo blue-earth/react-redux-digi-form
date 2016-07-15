@@ -1,12 +1,25 @@
-import React, { Component, PropTypes } from 'react';
-import { Button, Collapse } from 'react-bootstrap';
-import { MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/lib/md';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
+import {
+  Button,
+  Collapse
+} from 'react-bootstrap';
+import {
+  MdKeyboardArrowUp,
+  MdKeyboardArrowDown
+} from 'react-icons/lib/md';
 import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive';
 import FormRow from 'components/Forms/FormRow/FormRow';
 import StepIndicator from 'components/Forms/StepIndicator/StepIndicator';
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection';
-import { getContextFromAnswer, getFirstQuestionOfGroup, shouldDisableNextButton,
-  shouldDisablePrevButton } from 'helpers/formInteractiveHelper';
+import {
+  getContextFromAnswer,
+  getFirstQuestionOfGroup,
+  shouldDisableNextButton,
+  shouldDisablePrevButton
+} from 'helpers/formInteractiveHelper';
 import { findIndexById } from 'helpers/pureFunctions';
 import styles from './FormSection.scss';
 import _ from 'lodash';

@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import IntlTelInput from 'react-intl-tel-input';
 import { findDOMNode } from 'react-dom';
 import '../../../../node_modules/react-intl-tel-input/dist/libphonenumber.js';

@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import classes from './CoreLayout.scss';
 import '../../styles/core.scss';
 

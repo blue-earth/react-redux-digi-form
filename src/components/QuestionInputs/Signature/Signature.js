@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import FormEnterButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import SignatureModal from './SignatureModal';
 import styles from './Signature.scss';

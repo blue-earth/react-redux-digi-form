@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import { findDOMNode } from 'react-dom';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';

@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import QuestionInstruction from '../QuestionInstruction/QuestionInstruction';
 import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput';
 import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';

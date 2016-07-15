@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import { FaLock } from 'react-icons/lib/fa';
 import { Link } from 'react-router';
 import styles from './LearnMoreSection.scss';

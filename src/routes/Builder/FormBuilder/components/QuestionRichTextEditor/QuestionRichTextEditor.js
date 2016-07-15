@@ -1,6 +1,16 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import { Button } from 'react-bootstrap';
-import {Modifier, Editor, EditorState, RichUtils, Entity, CompositeDecorator} from 'draft-js';
+import {
+  Modifier,
+  Editor,
+  EditorState,
+  RichUtils,
+  Entity,
+  CompositeDecorator
+} from 'draft-js';
 import DropdownInput from 'components/QuestionInputs/DropdownInput/DropdownInput';
 import styles from './QuestionRichTextEditor.scss';
 
