@@ -2,7 +2,6 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import BuilderHeader from 'components/Headers/BuilderHeader';
 import FormPreviewSection from '../FormPreviewSection/FormPreviewSection';
 import { groupFormQuestions } from 'helpers/formInteractiveHelper';
 import AccessCodeModal from 'components/Forms/AccessCodeModal/AccessCodeModal';
