@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import BuilderHeader from 'components/Headers/BuilderHeader';
 import FormPreviewSection from '../FormPreviewSection/FormPreviewSection';
 import { groupFormQuestions } from 'helpers/formInteractiveHelper';
@@ -81,11 +84,6 @@ class FormPreview extends Component {
      * updateAccessCode: Redux action to update the access code being typed.
      */
     updateAccessCode: PropTypes.func,
-
-    /*
-     * isAccessCodeProtected: Redux state to indicate the form is access code protected.
-     */
-    isAccessCodeProtected: PropTypes.bool
   };
 
   getChildContext() {
@@ -105,8 +103,11 @@ class FormPreview extends Component {
   }
 
   loadFormSession = () => {
-    const { fetchFormIfNeeded, fetchAnswers,
-      params: { id, sessionId } } = this.props;
+    const {
+      fetchFormIfNeeded,
+      fetchAnswers,
+      params: { id, sessionId }
+    } = this.props;
     fetchFormIfNeeded(id);
     if (sessionId) {
       fetchAnswers(sessionId);
@@ -134,7 +135,10 @@ class FormPreview extends Component {
   }
 
   render() {
-    const { form, formAccessStatus } = this.props;
+    const {
+      form,
+      formAccessStatus
+    } = this.props;
     return (
       <div className={styles.formPreview}>
         <BuilderHeader />

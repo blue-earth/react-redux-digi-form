@@ -27,18 +27,12 @@ class FormSection extends Component {
     /*
      * step: current step number of the section, ex. in 2 of 5, 2 is step.
      */
-    step: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
+    step: PropTypes.number,
 
     /*
      * totalSteps: Calculated number of sections(steps), ex. in 1 of 5, 5 is totalSteps.
      */
-    totalSteps: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
+    totalSteps: PropTypes.number,
 
     /*
      * form: form_data of response, consists of questions and logics.

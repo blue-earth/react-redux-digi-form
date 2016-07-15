@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import QuestionPreview from 'components/Questions/QuestionPreview/QuestionPreview';
 import FlowLine from 'components/Forms/FlowLine/FlowLine';
 import StepIndicator from 'components/Forms/StepIndicator/StepIndicator';
@@ -16,18 +19,12 @@ class FormSection extends Component {
     /*
      * step: current step number of the section, ex. in 2 of 5, 2 is step.
      */
-    step: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
+    step: PropTypes.number,
 
     /*
      * totalSteps: Calculated number of sections(steps), ex. in 1 of 5, 5 is totalSteps.
      */
-    totalSteps: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
+    totalSteps: PropTypes.number,
 
     /*
      * form: form_data of response, consists of questions and logics.
@@ -51,7 +48,6 @@ class FormSection extends Component {
   };
 
   static defaultProps = {
-    status: 'pending',
     step: 1,
     totalSteps: 1,
     questionGroup: {
@@ -85,7 +81,11 @@ class FormSection extends Component {
   }
 
   render() {
-    const { step, totalSteps, questionGroup } = this.props;
+    const {
+      step,
+      totalSteps,
+      questionGroup
+    } = this.props;
 
     return (
       <section className={styles.formPreviewSection}>

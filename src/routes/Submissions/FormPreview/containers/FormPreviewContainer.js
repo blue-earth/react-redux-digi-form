@@ -30,7 +30,6 @@ const mapStateToProps = (state) => {
     form,
     answers,
     primaryColor,
-    isAccessCodeProtected,
     formAccessStatus,
     formAccessCode
   } = formInteractive || INIT_FORM_STATE;

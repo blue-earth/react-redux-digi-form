@@ -1,4 +1,7 @@
-import React, { Component, PropTypes } from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import classNames from 'classnames';
 import { MdCheck } from 'react-icons/lib/md';
 import styles from './StepIndicator.scss';
@@ -11,20 +14,50 @@ class StepIndicator extends Component {
     status: PropTypes.oneOf(['pending', 'active', 'completed', 'preview'])
   };
 
+  renderPending() {
+    const { step } = this.props;
+    return step;
+  }
+
+  renderActive() {
+    const { step, totalSteps } = this.props;
+    return `${step} of ${totalSteps}`;
+  }
+
+  renderPreview() {
+    const { step, totalSteps } = this.props;
+    return `${step} of ${totalSteps}`;
+  }
+
+  renderCompleted() {
+    return <MdCheck className={styles.greenIcon} />;
+  }
+
   render() {
-    const { status, step, totalSteps } = this.props;
+    const { status } = this.props;
     const stepClasses = classNames({
       [styles.step]: true,
       [styles[status]]: true
     });
+
+    var output;
+    switch (status) {
+      case 'pending':
+        output = this.renderPending();
+        break;
+      case 'active':
+        output = this.renderActive();
+        break;
+      case 'completed':
+        output = this.renderCompleted();
+        break;
+      case 'preview':
+        output = this.renderPreview();
+        break;
+    }
     return (
       <div className={stepClasses}>
-        {status === 'pending'
-          ? step
-          : status === 'completed'
-            ? <MdCheck className={styles.greenIcon} />
-            : `${step} of ${totalSteps}`
-        }
+        {output}
       </div>
     );
   }
