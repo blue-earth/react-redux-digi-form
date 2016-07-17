@@ -11,8 +11,47 @@ import { connect } from 'react-redux';
 import { goTo } from 'redux/modules/router';
 import { bindActionCreators } from 'redux';
 import styles from './DashboardTabs.scss';
+import _ from 'lodash';
 
 const basePath = 'dashboard/';
+const navItems = [
+  {
+    path: 'submissions/1/1398',
+    label: 'Submissions'
+  },
+  {
+    path: 'sharing',
+    label: 'Sharing'
+  },
+  {
+    path: 'alerts',
+    label: 'Alerts'
+  },
+  {
+    path: 'analytics',
+    label: 'Analytics'
+  },
+  {
+    path: 'builder/new',
+    label: 'Forms'
+  },
+  {
+    path: 'documents',
+    label: 'Documents'
+  },
+  {
+    path: 'certification',
+    label: 'Certification'
+  },
+  {
+    path: 'users',
+    label: 'Users'
+  },
+  {
+    path: 'settings',
+    label: 'Settings'
+  }
+];
 
 class DashboardTabs extends Component {
 
@@ -27,14 +66,9 @@ class DashboardTabs extends Component {
   }
 
   getActiveKey() {
-    const { location } = this.props;
-    let pos;
-    if ((pos = location.pathname.indexOf(basePath)) >= 0) {
-      pos += basePath.length;
-      console.log(location.pathname.substring(pos));
-      return location.pathname.substring(pos);
-    }
-    return undefined;
+    const { location: { pathname } } = this.props;
+    const navItem = _.find(navItems, function(o) { return pathname.includes(o.path) });
+    return navItem ? navItem.path : undefined;
   }
 
   render() {
@@ -45,15 +79,15 @@ class DashboardTabs extends Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
-            <NavItem eventKey="submissions/1/1398" className="navItem" href="#">Submissions</NavItem>
-            <NavItem eventKey="sharing" className="navItem" href="#">Sharing</NavItem>
-            <NavItem eventKey="alerts" className="navItem" href="#">Alerts</NavItem>
-            <NavItem eventKey="analytics" className="navItem" href="#">Analytics</NavItem>
-            <NavItem eventKey="builder/new" className="navItem" href="#">Forms</NavItem>
-            <NavItem eventKey="documents" className="navItem" href="#">Documents</NavItem>
-            <NavItem eventKey="certification" className="navItem" href="#">Certification</NavItem>
-            <NavItem eventKey="users" className="navItem" href="#">Users</NavItem>
-            <NavItem eventKey="settings" className="navItem" href="#">Settings</NavItem>
+            {
+              navItems.map((navItem) => {
+                return (
+                  <NavItem eventKey={navItem.path} className="navItem" href="#">
+                    {navItem.label}
+                  </NavItem>
+                );
+              })
+            }
           </Nav>
         </Navbar.Collapse>
       </Navbar>

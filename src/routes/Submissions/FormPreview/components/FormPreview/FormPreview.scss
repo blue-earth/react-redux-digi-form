@@ -5,10 +5,16 @@
   position: relative;
   background-color: $dashboard-bg-color;
   padding: 10px;
+  @include media('>=md') {
+    height: 100%;
+  }
 }
 .formSteps {
   @include media('>=sm') {
     width: 60%;
+    float: left;
+    height: 100%;
   }
   border: 1px solid $border-color;
+  overflow: auto;
 }
