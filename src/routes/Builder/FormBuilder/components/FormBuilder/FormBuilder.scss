@@ -1,12 +1,11 @@
 @import './mixins';
 @import './variables';
 
-$formbuilder-bg-color: #4A9DD5;
 $panel-bg-color: #ECF4FB;
 $panel-border-color: #086DB6;
 
 .formBuilderContainer {
-  background-color: $formbuilder-bg-color;
+  background-color: $dashboard-bg-color;
   min-height: 100%;
   padding: 20px;
   @include media('>=md') {

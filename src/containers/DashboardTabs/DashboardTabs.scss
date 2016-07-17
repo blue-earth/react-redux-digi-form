@@ -1,0 +1,25 @@
+@import './mixins';
+@import './variables';
+
+.dashboardTabs {
+  background-color: transparent;
+  border: none;
+  margin-bottom: 0;
+  min-height: 40px;
+}
+
+:global {
+  .navItem {
+    padding-top: 15px;
+    a {
+      padding: 2px 10px 3px !important;
+      @include border-radius-separate(4px, 4px, 0, 0);
+      @include transition(color .15s, background-color .15s);
+    }
+    a:hover, a:focus,
+    &.active a {
+      background-color: $dashboard-bg-color !important;
+      color: white !important;
+    }
+  }
+}

@@ -3,19 +3,25 @@ import React, {
   PropTypes
 } from 'react';
 import BuilderHeader from 'components/Headers/BuilderHeader';
-import classes from './DashboardLayout.scss';
+import DashboardTabs from 'containers/DashboardTabs/DashboardTabs';
+import styles from './DashboardLayout.scss';
 
 class DashboardLayout extends Component {
   static propTypes = {
-    children: PropTypes.object.isRequired
+    children: PropTypes.object.isRequired,
+    location: PropTypes.object
   };
 
   render() {
-    const {children} = this.props;
+    const {
+      children,
+      location
+    } = this.props;
     return (
-      <div className={classes.dashboard}>
+      <div className={styles.dashboard}>
         <BuilderHeader />
-        <div className={classes.contentWrapper}>
+        <DashboardTabs location={location} />
+        <div className={styles.contentWrapper}>
           {children}
         </div>
       </div>
