@@ -2,6 +2,7 @@
 import DashboardLayout from 'layouts/DashboardLayout';
 import BuilderRoute from '../Builder';
 import SubmissionsRoute from '../Submissions';
+import SettingsRoute from '../Settings';
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -11,6 +12,7 @@ export default (store) => ({
   component: DashboardLayout,
   childRoutes: [
     BuilderRoute(store),
-    SubmissionsRoute(store)
+    SubmissionsRoute(store),
+    SettingsRoute(store)
   ]
 });
