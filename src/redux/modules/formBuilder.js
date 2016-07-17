@@ -4,6 +4,7 @@ import { mergeItemIntoArray, editItemInArray, findItemById } from 'helpers/pureF
 import { assignDefaults } from 'redux/utils/request';
 import _ from 'lodash';
 
+export const NEW_FORM = 'NEW_FORM';
 export const RECEIVE_FORM = 'RECEIVE_FORM';
 export const REQUEST_FORM = 'REQUEST_FORM';
 export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
@@ -51,6 +52,15 @@ export const INIT_BUILDER_STATE = {
   formAccessCode: '1234', // form access code
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: false
+};
+
+// ------------------------------------
+// Action: newForm
+// ------------------------------------
+export const newForm = (id) => {
+  return {
+    type: NEW_FORM
+  };
 };
 
 // ------------------------------------
@@ -243,6 +253,8 @@ export const setQuestionEditMode = ({id, mode}) => {
 // ------------------------------------
 const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
   switch (action.type) {
+    case NEW_FORM:
+      return Object.assign({}, INIT_BUILDER_STATE);
     case RECEIVE_FORM:
       return Object.assign({}, state, {
         id: action.id,

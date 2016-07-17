@@ -3,6 +3,8 @@
 
 .formPreview {
   position: relative;
+  background-color: $dashboard-bg-color;
+  padding: 10px;
 }
 .formSteps {
   @include media('>=sm') {

@@ -88,8 +88,8 @@ class PageView extends Component {
   }
 
   handleClickFitWidth = () => {
-    const { setPageZoom, documents } = this.props;
-    const maxPageWidth = _.maxBy(documents, function (o) { return o.width; }).width;
+    const { setPageZoom } = this.props;
+    const maxPageWidth = this.getMaxPageWidth();
     const newPageZoom = this.refs.spacer.offsetWidth / maxPageWidth;
     setPageZoom(newPageZoom);
   }
@@ -103,23 +103,30 @@ class PageView extends Component {
     return this.refs[`page_${pageNumber}`];
   }
 
+  getMaxPageWidth = () => {
+    const { documents } = this.props;
+    return documents ? _.maxBy(documents, function (o) { return o.width; }).width : 100;
+  }
+
   renderDocuments() {
     const { documents, pageZoom } = this.props;
-    return documents.map((document, index) => {
-      const zoomedWidth = document.width * pageZoom;
-      const pageStyle = {width: zoomedWidth};
-      const pageNumber = index + 1;
-      return (
-        <div className={styles.page} key={index}
-          ref={`page_${pageNumber}`}
-          style={pageStyle}>
-          <img src={document.url} alt={`Page Image ${pageNumber}`}
-            className={styles.pageImage} ref={`pageImage${pageNumber}`} />
-          <DrawingBoard {...this.props} pageNumber={pageNumber}
-            getPageDOM={this.getPageDOM} containerId="clientArea" />
-        </div>
-      );
-    });
+    return documents
+      ? documents.map((document, index) => {
+        const zoomedWidth = document.width * pageZoom;
+        const pageStyle = {width: zoomedWidth};
+        const pageNumber = index + 1;
+        return (
+          <div className={styles.page} key={index}
+            ref={`page_${pageNumber}`}
+            style={pageStyle}>
+            <img src={document.url} alt={`Page Image ${pageNumber}`}
+              className={styles.pageImage} ref={`pageImage${pageNumber}`} />
+            <DrawingBoard {...this.props} pageNumber={pageNumber}
+              getPageDOM={this.getPageDOM} containerId="clientArea" />
+          </div>
+        );
+      })
+      : false;
   }
 
   renderToolBox() {
@@ -142,8 +149,8 @@ class PageView extends Component {
   }
 
   render() {
-    const { pageZoom, documents } = this.props;
-    const maxPageWidth = _.maxBy(documents, function (o) { return o.width; }).width;
+    const { pageZoom } = this.props;
+    const maxPageWidth = this.getMaxPageWidth();
     const zoomedWidth = maxPageWidth * pageZoom;
     const pageStyle = { width: zoomedWidth };
 

@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
   INIT_BUILDER_STATE,
+  newForm,
   fetchForm,
   setActiveInputName,
   setCurrentQuestionInstruction,
@@ -17,6 +18,7 @@ import {
 import FormBuilder from '../components/FormBuilder';
 
 const mapActionCreators = {
+  newForm,
   fetchForm,
   setActiveInputName,
   setCurrentQuestionInstruction,

@@ -100,14 +100,26 @@ class FormBuilder extends Component {
      */
     setQuestionEditMode: PropTypes.func.isRequired,
 
+    /*
+     * newForm: Redux action to reset form with initial state for new form
+     */
+    newForm: PropTypes.func.isRequired,
+
+    /*
+     * fetchForm: Redux action to fetch form from backend with ID specified by request parameters
+     */
     fetchForm: PropTypes.func.isRequired,
 
     params: PropTypes.object
   };
 
   componentWillMount() {
-    const { fetchForm, params: { id } } = this.props;
-    if (id) fetchForm(id);
+    const { newForm, fetchForm, params: { id } } = this.props;
+    if (id) {
+      fetchForm(id);
+    } else {
+      newForm();
+    }
   }
 
   componentWillReceiveProps(props) {
