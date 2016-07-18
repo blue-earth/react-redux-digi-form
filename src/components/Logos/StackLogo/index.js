@@ -2,9 +2,7 @@ import React, {
   PropTypes,
   Component
 } from 'react';
-import { connect } from 'react-redux';
-import { goTo } from 'redux/modules/router';
-import { bindActionCreators } from 'redux';
+import { Link } from 'react-router';
 
 class StackLogo extends Component {
 
@@ -18,8 +16,7 @@ class StackLogo extends Component {
       React.PropTypes.number
     ]),
     link: PropTypes.string,
-    logoStyle: PropTypes.string,
-    goTo: PropTypes.func
+    logoStyle: PropTypes.string
   };
 
   static defaultProps = {
@@ -29,11 +26,6 @@ class StackLogo extends Component {
     logoStyle: 'white'
   };
 
-  handleLogoClick = (event) => {
-    const { link, goTo } = this.props;
-    goTo(link);
-    event.preventDefault();
-  }
   render() {
     const {
       link,
@@ -51,24 +43,16 @@ class StackLogo extends Component {
       logoPath = require('./Emondo-Logo-Horizontal.svg');
     }
     return (
-      <a role="button" href={link} onClick={this.handleLogoClick}>
+      <Link to={link}>
         <div style={style}>
           <img
             width={width}
             height={height}
             src={logoPath} />
         </div>
-      </a>
+      </Link>
     );
   }
 }
 
-const mapActionCreators = {
-  goTo
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(mapActionCreators, dispatch);
-};
-
-export default connect(null, mapDispatchToProps)(StackLogo);
+export default StackLogo;

@@ -7,9 +7,8 @@ import {
   Nav,
   NavItem
 } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import connect from 'redux/utils/connect';
 import { goTo } from 'redux/modules/router';
-import { bindActionCreators } from 'redux';
 import styles from './DashboardTabs.scss';
 import _ from 'lodash';
 
@@ -67,7 +66,7 @@ class DashboardTabs extends Component {
 
   getActiveKey() {
     const { location: { pathname } } = this.props;
-    const navItem = _.find(navItems, function(o) { return pathname.includes(o.path) });
+    const navItem = _.find(navItems, function (o) { return pathname.includes(o.path); });
     return navItem ? navItem.path : undefined;
   }
 
@@ -101,8 +100,4 @@ const mapActionCreators = {
   goTo
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(mapActionCreators, dispatch);
-};
-
-export default connect(null, mapDispatchToProps)(DashboardTabs);
+export default connect(null, mapActionCreators)(DashboardTabs);

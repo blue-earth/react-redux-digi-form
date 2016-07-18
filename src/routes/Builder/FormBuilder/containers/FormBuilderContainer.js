@@ -1,5 +1,4 @@
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import connect from 'redux/utils/connect';
 import {
   INIT_BUILDER_STATE,
   newForm,
@@ -29,10 +28,6 @@ const mapActionCreators = {
   setCurrentQuestionId,
   setPageZoom,
   setQuestionEditMode
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(mapActionCreators, dispatch);
 };
 
 const mapStateToProps = (state) => {
@@ -69,4 +64,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormBuilder);
+export default connect(mapStateToProps, mapActionCreators)(FormBuilder);
