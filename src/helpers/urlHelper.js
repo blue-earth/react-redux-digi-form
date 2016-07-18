@@ -3,7 +3,7 @@ export const formatUrl = (url) => _.replace(url, /\/\//g, '/');
 
 export const dashboardPath = 'dashboard';
 
-export const submissionsPath = 'sessions';
+export const submissionsPath = 'submissions';
 export const sharingPath = 'sharing';
 export const alertsPath = 'alerts';
 export const analyticsPath = 'analytics';
