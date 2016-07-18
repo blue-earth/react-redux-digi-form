@@ -1,11 +1,11 @@
-// /builder --> List all your forms
-// /builder/new --> Go to a specific form, blank, unfilled
-// /builder/id --> Continue a form session
+// /forms --> List all your forms
+// /forms/new --> Go to a specific form, blank, unfilled
+// /forms/:id/edit --> Continue a form session
 
 import { injectReducer } from 'redux/reducers';
 
 export default (store) => ({
-  path: 'builder',
+  path: 'forms',
   getChildRoutes(location, cb) {
     require.ensure([], (require) => {
       const reducer = require('redux/modules/formBuilder').default;

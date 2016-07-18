@@ -57,7 +57,7 @@ class FormListView extends Component {
                   <td>{form.created}</td>
                   <td>DRAFT</td>
                   <td>
-                    <Link to={`/dashboard/builder/${form.id}/edit`}>
+                    <Link to={`/dashboard/forms/${form.id}/edit`}>
                       <FaEdit />
                       {' '}
                       Edit

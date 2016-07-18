@@ -31,7 +31,7 @@ const navItems = [
     label: 'Analytics'
   },
   {
-    path: 'builder',
+    path: 'forms',
     label: 'Forms'
   },
   {
