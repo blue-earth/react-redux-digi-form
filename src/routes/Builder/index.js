@@ -3,9 +3,10 @@
 // /forms/:id/edit --> Continue a form session
 
 import { injectReducer } from 'redux/reducers';
+import { formsPath } from 'helpers/urlHelper';
 
 export default (store) => ({
-  path: 'forms',
+  path: formsPath,
   getChildRoutes(location, cb) {
     require.ensure([], (require) => {
       const reducer = require('redux/modules/formBuilder').default;

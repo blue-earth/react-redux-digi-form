@@ -9,45 +9,56 @@ import {
 } from 'react-bootstrap';
 import connect from 'redux/utils/connect';
 import { goTo } from 'redux/modules/router';
+import {
+  dashboardUrl,
+  submissionsPath,
+  sharingPath,
+  alertsPath,
+  analyticsPath,
+  formsPath,
+  documentsPath,
+  certificationPath,
+  usersPath,
+  settingsPath
+} from 'helpers/urlHelper';
 import styles from './DashboardTabs.scss';
 import _ from 'lodash';
 
-const basePath = 'dashboard/';
 const navItems = [
   {
-    path: 'submissions/1/1398',
+    path: `${submissionsPath}/1/1398`,
     label: 'Submissions'
   },
   {
-    path: 'sharing',
+    path: sharingPath,
     label: 'Sharing'
   },
   {
-    path: 'alerts',
+    path: alertsPath,
     label: 'Alerts'
   },
   {
-    path: 'analytics',
+    path: analyticsPath,
     label: 'Analytics'
   },
   {
-    path: 'forms',
+    path: formsPath,
     label: 'Forms'
   },
   {
-    path: 'documents',
+    path: documentsPath,
     label: 'Documents'
   },
   {
-    path: 'certification',
+    path: certificationPath,
     label: 'Certification'
   },
   {
-    path: 'users',
+    path: usersPath,
     label: 'Users'
   },
   {
-    path: 'settings',
+    path: settingsPath,
     label: 'Settings'
   }
 ];
@@ -59,9 +70,9 @@ class DashboardTabs extends Component {
     goTo: PropTypes.func
   };
 
-  handleSelect = (selectedKey) => {
+  handleSelect = (navPath) => {
     const { goTo } = this.props;
-    goTo(`/${basePath}` + selectedKey);
+    goTo(dashboardUrl(navPath));
   }
 
   getActiveKey() {

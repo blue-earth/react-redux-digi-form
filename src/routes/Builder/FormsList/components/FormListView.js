@@ -7,6 +7,7 @@ import {
   Pagination
 } from 'react-bootstrap';
 import { Link } from 'react-router';
+import { formsUrl } from 'helpers/urlHelper';
 import { FaEdit } from 'react-icons/lib/fa';
 import styles from './FormListView.scss';
 
@@ -57,7 +58,7 @@ class FormListView extends Component {
                   <td>{form.created}</td>
                   <td>DRAFT</td>
                   <td>
-                    <Link to={`/dashboard/forms/${form.id}/edit`}>
+                    <Link to={formsUrl(`/${form.id}/edit`)}>
                       <FaEdit />
                       {' '}
                       Edit
