@@ -87,6 +87,7 @@
     "extract-text-webpack-plugin": "^1.0.0",
     "file-loader": "^0.8.4",
     "fs-extra": "^0.30.0",
+    "griddle-react": "^0.6.1",
     "history": "^2.0.0",
     "hogan.js": "^3.0.2",
     "html-webpack-plugin": "^2.21.0",
