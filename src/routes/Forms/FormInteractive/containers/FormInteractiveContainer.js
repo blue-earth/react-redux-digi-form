@@ -1,5 +1,4 @@
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import connect from 'redux/utils/connect';
 import { show } from 'redux-modal';
 import {
   INIT_FORM_STATE,
@@ -29,10 +28,6 @@ const mapActionCreators = {
   updateAccessCode,
   resetFormSubmitStatus,
   show
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(mapActionCreators, dispatch);
 };
 
 const mapStateToProps = (state) => {
@@ -73,4 +68,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormInteractive);
+export default connect(mapStateToProps, mapActionCreators)(FormInteractive);
