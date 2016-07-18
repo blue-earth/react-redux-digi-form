@@ -26,7 +26,7 @@ import _ from 'lodash';
 
 const navItems = [
   {
-    path: `${submissionsPath}/1/1398`,
+    path: submissionsPath,
     label: 'Submissions'
   },
   {

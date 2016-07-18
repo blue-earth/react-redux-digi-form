@@ -1,0 +1,29 @@
+@import './mixins';
+@import './variables';
+$flt-header-bg-color:     	#ECF4FB;
+$flt-header-text-color: 	#1C4468;
+$flt-border-color: 			#ECF4FB;
+
+.submissionsList {
+  padding: 10px;
+  height: 100%;
+}
+.submissionsListInner {
+  background-color: white;
+  overflow: auto;
+  height: 100%;
+}
+.formListTable {
+  margin-top: 30px;
+  thead {
+    background-color: $flt-header-bg-color;
+  }
+  th {
+  	color: $flt-header-text-color;
+  	border-bottom: 1px solid $flt-border-color !important;
+  }
+  td {
+    vertical-align: middle !important;
+    border-bottom: 1px solid $flt-border-color !important;
+  }
+}
