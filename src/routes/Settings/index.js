@@ -1,4 +1,4 @@
-import { injectReducer } from 'redux/reducers';
+// import { injectReducer } from 'redux/reducers';
 import SettingsLayoutContainer from './containers/SettingsContainer';
 import ProfileSettings from './components/ProfileSettings/ProfileSettings';
 import NotificationSettings from './components/NotificationSettings/NotificationSettings';
@@ -10,7 +10,7 @@ export default (store) => ({
       // const reducer = require('redux/modules/formBuilder').default;
       // injectReducer(store, { key: 'formBuilder', reducer });
       // do asynchronous stuff to find the child routes
-      //cb(null, [ announcementsRoute, gradesRoute, assignmentsRoute ])
+      // cb(null, [ announcementsRoute, gradesRoute, assignmentsRoute ])
 
       cb(null, [
         {

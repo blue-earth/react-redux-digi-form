@@ -1,8 +1,7 @@
 import React, {
-  Component,
-  PropTypes
+  Component
 } from 'react';
-import { Link } from 'react-router'
+import { Link } from 'react-router';
 import classes from './SettingsNavigationMenu.scss';
 
 class SettingsNavigationMenu extends Component {
@@ -40,19 +39,19 @@ class SettingsNavigationMenu extends Component {
         url: '/dashboard/settings/security',
         text: 'Security'
       }
-    ]
+    ];
   }
 
   renderSettingMenuItems() {
     return this.getSettingMenuItems().map(menuItem => (
-        <li className={classes.menuListItem} key={menuItem.url}>
-          <Link
-            style={{'color': 'black'}}
-            className={classes.menuListItem}
-            activeClassName={classes.menuListItemAcitve}
-            to={menuItem.url}>{menuItem.text}</Link>
-        </li>
-      ));
+      <li className={classes.menuListItem} key={menuItem.url}>
+        <Link
+          style={{'color': 'black'}}
+          className={classes.menuListItem}
+          activeClassName={classes.menuListItemAcitve}
+          to={menuItem.url}>{menuItem.text}</Link>
+      </li>
+    ));
   }
 
   render() {
@@ -62,7 +61,7 @@ class SettingsNavigationMenu extends Component {
           {this.renderSettingMenuItems()}
         </ul>
       </nav>
-    )
+    );
   }
 }
 
