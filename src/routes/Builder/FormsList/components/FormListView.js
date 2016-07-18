@@ -1,44 +1,69 @@
-import React, { Component } from 'react';
-import { Table, DropdownButton, MenuItem, Pagination } from 'react-bootstrap';
-import Header from 'components/Headers/Header';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
+import {
+  Table,
+  Pagination
+} from 'react-bootstrap';
+import { Link } from 'react-router';
+import { FaEdit } from 'react-icons/lib/fa';
 import styles from './FormListView.scss';
 
 class FormListView extends Component {
+  static propTypes = {
+    /*
+     * isFetching: Redux state that indicates whether the requested form is being fetched from backend
+     */
+    isFetching: PropTypes.bool.isRequired,
+
+    /*
+     * forms: Redux state that indicates whether the requested form is being fetched from backend
+     */
+    forms: PropTypes.array.isRequired,
+
+    /*
+     * fetchForm: Redux action to fetch form from backend with ID specified by request parameters
+     */
+    fetchFormsList: PropTypes.func.isRequired
+  };
+
+  componentWillMount() {
+    const { fetchFormsList } = this.props;
+    fetchFormsList();
+  }
 
   get renderFormList() {
+    const { forms } = this.props;
     return (
       <Table hover className={styles.formListTable}>
         <thead>
           <tr>
             <th>My forms</th>
+            <th>Created by</th>
             <th>Created</th>
-            <th>Completed</th>
-            <th>Viewed</th>
-            <th>Incomplete</th>
-            <th>Sent</th>
-            <th>Abandoned</th>
+            <th>Status</th>
+            <th> - </th>
             <th> - </th>
           </tr>
         </thead>
         <tbody>
           {
-            [{1: 1}, {2: 2}, {3: 3}].map(function (data, i) {
+            forms.map(function (form, i) {
               return (
                 <tr>
-                  <td>SMSF Non Coroporate Application</td>
-                  <td>01/03/16</td>
-                  <td>12</td>
-                  <td>55</td>
-                  <td>34</td>
-                  <td>133</td>
-                  <td>133</td>
+                  <td>{form.title}</td>
+                  <td>Admin</td>
+                  <td>{form.created}</td>
+                  <td>DRAFT</td>
                   <td>
-                    <DropdownButton bsStyle="default" title="Quick actions" key={1} id={`dropdown-basic-${i}`}>
-                      <MenuItem eventKey="1">Action 1</MenuItem>
-                      <MenuItem eventKey="2">Action 2</MenuItem>
-                      <MenuItem eventKey="3">Action 3</MenuItem>
-                    </DropdownButton>
+                    <Link to={`/dashboard/builder/${form.id}/edit`}>
+                      <FaEdit />
+                      {' '}
+                      Edit
+                    </Link>
                   </td>
+                  <td></td>
                 </tr>
               );
             })
@@ -57,15 +82,10 @@ class FormListView extends Component {
     );
   }
 
-  handleSelect() {
-
-  }
-
   render() {
     return (
-      <div>
-        <Header />
-        <div className="container">
+      <div className={styles.formsList}>
+        <div className={styles.formsListInner}>
           {this.renderFormList}
           {this.renderPagination}
         </div>

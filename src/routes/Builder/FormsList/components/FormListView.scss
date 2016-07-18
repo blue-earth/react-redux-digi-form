@@ -4,6 +4,12 @@ $flt-header-bg-color:     	#ECF4FB;
 $flt-header-text-color: 	#1C4468;
 $flt-border-color: 			#ECF4FB;
 
+.formsList {
+  padding: 10px;
+}
+.formsListInner {
+  background-color: white;
+}
 .formListTable {
   margin-top: 30px;
   thead {

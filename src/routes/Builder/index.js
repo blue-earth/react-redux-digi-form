@@ -18,7 +18,9 @@ export default (store) => ({
   },
 
   getIndexRoute(location, cb) {
-    // do something async here
+    const reducer = require('redux/modules/formsList').default;
+    injectReducer(store, { key: 'formsList', reducer });
+
     const FormsList = require('./FormsList').default;
     cb(null, {component: FormsList});
   }

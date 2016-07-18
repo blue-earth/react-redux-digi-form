@@ -3,7 +3,6 @@
 
 .formPreview {
   position: relative;
-  background-color: $dashboard-bg-color;
   padding: 10px;
   @include media('>=md') {
     height: 100%;

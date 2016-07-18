@@ -9,4 +9,5 @@
   @include media('>=md') {
     height: calc(100% - 96px);
   }
+  background-color: $dashboard-bg-color;
 }
