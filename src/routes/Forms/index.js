@@ -14,11 +14,5 @@ export default (store) => ({
         require('./FormInteractive')
       );
     });
-  },
-
-  getIndexRoute(location, cb) {
-    // do something async here
-    const FormsList = require('./FormsList').default;
-    cb(null, {component: FormsList});
   }
 });
