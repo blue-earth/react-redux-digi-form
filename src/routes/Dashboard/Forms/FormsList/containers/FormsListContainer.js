@@ -13,10 +13,12 @@ import FormListView from '../components/FormListView';
 const mapStateToProps = (state) => {
   const { formsList } = state;
   const {
-    forms
+    forms,
+    isFetching
   } = formsList || INIT_FORMSLIST_STATE;
   return {
-    forms
+    forms,
+    isFetching
   };
 };
 

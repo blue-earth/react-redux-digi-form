@@ -1,7 +1,8 @@
 import connect from 'redux/utils/connect';
 import {
   INIT_SUBMISSIONSLIST_STATE,
-  fetchSubmissions
+  fetchSubmissions,
+  setPageSize
 } from 'redux/modules/submissionsList';
 
 import SubmissionsListView from '../components/SubmissionsListView';
@@ -13,15 +14,24 @@ import SubmissionsListView from '../components/SubmissionsListView';
 const mapStateToProps = (state) => {
   const { submissionsList } = state;
   const {
-    submissions
+    submissions,
+    isFetching,
+    currentPage,
+    pageSize,
+    totalCount
   } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
   return {
-    submissions
+    submissions,
+    isFetching,
+    currentPage,
+    pageSize,
+    totalCount
   };
 };
 
 const mapActionCreators = {
-  fetchSubmissions
+  fetchSubmissions,
+  setPageSize
 };
 
 export default connect(mapStateToProps, mapActionCreators)(SubmissionsListView);
