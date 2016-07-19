@@ -78,16 +78,20 @@ class QuestionPreview extends Component {
 
   renderMultipleChoice(value) {
     const { allowMultiple } = this.props;
-    if (allowMultiple) {
-      return value.map((item, index) => {
-        return (
-          <div className={styles.choiceItem} key={index}>
-            {`${item.label}. ${item.text}`}
-          </div>
-        );
-      });
+    if (value) {
+      if (allowMultiple) {
+        return value.map((item, index) => {
+          return (
+            <div className={styles.choiceItem} key={index}>
+              {`${item.label}. ${item.text}`}
+            </div>
+          );
+        });
+      } else {
+        return `${value.label}. ${value.text}`;
+      }
     } else {
-      return value ? `${value.label}. ${value.text}` : '';
+      return false;
     }
   }
 
@@ -97,12 +101,16 @@ class QuestionPreview extends Component {
 
   renderAddressField(value) {
     const addressArray = [];
-    value.address_line1 && addressArray.push(value.address_line1);
-    value.address_line2 && addressArray.push(value.address_line2);
-    value.suburb && addressArray.push(value.suburb);
-    value.state && addressArray.push(value.state);
-    value.postcode && addressArray.push(value.postcode);
-    return addressArray.join(', ');
+    if (value) {
+      value.address_line1 && addressArray.push(value.address_line1);
+      value.address_line2 && addressArray.push(value.address_line2);
+      value.suburb && addressArray.push(value.suburb);
+      value.state && addressArray.push(value.state);
+      value.postcode && addressArray.push(value.postcode);
+      return addressArray.join(', ');
+    } else {
+      return false;
+    }
   }
 
   renderSignatureField(value) {

@@ -1,0 +1,63 @@
+@import './mixins';
+@import './variables';
+
+$page-border-color: #797979;
+.pageView {
+  padding-right: 50px;
+  height: 100%;
+  position: relative;
+}
+
+.clientArea {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+  &:before {
+    content: '';
+    display: table;
+  }
+}
+.clientAreaInner {
+  padding: 5px;
+  position: relative;
+  display: inline-block;
+}
+.spacer {
+  &:before {
+    display: table;
+    content: '';
+  }
+}
+.pagesWrapper {
+  margin: 0 auto;
+  position: relative;
+}
+.page {
+  margin: 5px 0;
+  border: 1px solid $page-border-color;
+  position: relative;
+  @include box-shadow-custom(1px 1px 3px 0px rgba(0,0,0,0.6));
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+.pageImage {
+  width: 100%;
+  height: auto;
+  @include user-drag(none);
+}
+
+.toolBox {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50px;
+  height: 100%;
+  padding: 0 5px;
+}
+.toolButton {
+  margin-bottom: 5px;
+}

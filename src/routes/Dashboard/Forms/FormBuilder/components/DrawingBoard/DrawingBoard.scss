@@ -1,0 +1,92 @@
+@import './mixins';
+@import './variables';
+
+$element-border-color: #FF6600;
+$snapping-border-color: #f3d359;
+.board {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  &:focus {
+    outline: none;
+  }
+}
+
+.element {
+  border: 1px solid $element-border-color;
+  @include box-shadow-custom(0 0 5px rgba(0, 0, 0, .3));
+  background-color: rgba(255, 255, 255, .85);
+  overflow: hidden;
+  @include transition(background .05s linear);
+  &:hover, &:focus {
+  	background-color: rgba(255, 255, 255, .95);
+  }
+  &.active {
+    z-index: 999;
+    background-color: rgba(255, 255, 255, 1);
+    @include box-shadow-custom(0 0 5px rgba(0, 0, 0, .5));
+  }
+}
+.elementName {
+  font-size: 12px;
+  @include vhcenter;
+  padding: 2px;
+  @include user-select(none);
+}
+.newElementDraw {
+  border: 1px dashed $element-border-color;
+  position: absolute;
+  background-color: rgba(255, 255, 255, .7);
+  z-index: 102;
+}
+.snappingHelper {
+  position: absolute;
+  z-index: 103;
+}
+
+:global {
+  .dragSnappingHelper {
+    border: 1px solid $snapping-border-color;
+    position: absolute;
+  }
+  .widthSnappingHelper {
+    position: absolute;
+    height: 2px;
+    background-color: $snapping-border-color;
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      bottom: -5px;
+      width: 2px;
+      border: 1px solid $snapping-border-color;
+    }
+    &:before {
+      left: 0;
+    }
+    &:after {
+      right: 0;
+    }
+  }
+  .heightSnappingHelper {
+    position: absolute;
+    width: 2px;
+    background-color: $snapping-border-color;
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      left: -5px;
+      right: -5px;
+      height: 2px;
+      border: 1px solid $snapping-border-color;
+    }
+    &:before {
+      top: 0;
+    }
+    &:after {
+      bottom: 0;
+    }
+  }
+}

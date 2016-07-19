@@ -1,0 +1,14 @@
+.settingsNavMenu {
+
+  > .menuList {
+    list-style: none;
+    > .menuListItem > a {
+      font-size: 14px;
+      padding: 8px 0;
+      opacity: 0.35;
+    }
+    .menuListItemAcitve {
+      opacity: 1 !important;
+    }
+  }
+}

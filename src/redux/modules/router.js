@@ -1,10 +1,5 @@
 import { routerActions, routerReducer } from 'react-router-redux';
-import _ from 'lodash';
-
-// ------------------------------------
-// Helpers
-// ------------------------------------
-const formatUrl = (url) => _.replace(url, /\/\//g, '/');
+import { formatUrl } from 'helpers/urlHelper';
 
 // ------------------------------------
 // Actions

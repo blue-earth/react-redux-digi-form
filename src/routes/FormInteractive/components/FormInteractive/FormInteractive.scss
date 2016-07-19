@@ -1,0 +1,40 @@
+@import './mixins';
+@import './variables';
+
+.submitButtonsArea {
+  padding-top:30px;
+}
+.stepsWrapper {
+  padding: 15px 0;
+}
+.helpButtonWrapper {
+  width: 90px;
+  float: right;
+  margin-top: 10px;
+}
+.modalWrapper {
+  width: 357px;
+  top: calc(50% - 106px);
+  .accessModalWrapper {
+    position: relative;
+    padding: 20px;
+    font-size: 23px;
+    font-weight: 500;
+    .modalDigitInput{
+      padding: 10px 0 10px 0;
+      width: 150px;
+    }
+    .modalSubmitButton {
+      position: absolute;
+      top: 94px;
+      left: 190px;
+    }
+    .modalValidator {
+      font-size: 17px;
+      width: 260px;
+    }
+    .resendLink {
+      font-size: 16px;
+    }
+  }
+}

@@ -31,6 +31,39 @@ export const editItemInArray = (itemArray, editValue) => {
   return newItemArray;
 };
 
+const fnToString = (fn) => Function.prototype.toString.call(fn);
+
+/**
+ * isPlainObject
+ * @param {any} obj The object to inspect.
+ * @returns {boolean} True if the argument appears to be a plain object.
+ */
+export const isPlainObject = (obj) => {
+  if (!obj || typeof obj !== 'object') {
+    return false;
+  };
+
+  const proto = typeof obj.constructor === 'function'
+    ? Object.getPrototypeOf(obj)
+    : Object.prototype;
+
+  if (proto === null) {
+    return true;
+  };
+
+  const constructor = proto.constructor;
+
+  return typeof constructor === 'function' &&
+    constructor instanceof constructor &&
+    fnToString(constructor) === fnToString(Object);
+};
+
+/**
+ * loadScript
+ * @param src: js file url.
+ * @param id: script tag id.
+ * @param callback: callback function to be executed after the js file is loaded.
+ */
 export const loadScript = (src, id, callback) => {
   var s, r, t;
   r = false;

@@ -1,0 +1,20 @@
+@import './mixins';
+@import './variables';
+
+.formPreview {
+  position: relative;
+  padding: 10px;
+  @include media('>=md') {
+    height: 100%;
+  }
+}
+.formSteps {
+  @include media('>=sm') {
+    width: 60%;
+    float: left;
+    height: 100%;
+  }
+  background-color: white;
+  border: 1px solid $border-color;
+  overflow: auto;
+}
