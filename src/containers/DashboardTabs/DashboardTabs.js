@@ -24,45 +24,6 @@ import {
 import styles from './DashboardTabs.scss';
 import _ from 'lodash';
 
-const navItems = [
-  {
-    path: submissionsPath,
-    label: 'Submissions'
-  },
-  {
-    path: sharingPath,
-    label: 'Sharing'
-  },
-  {
-    path: alertsPath,
-    label: 'Alerts'
-  },
-  {
-    path: analyticsPath,
-    label: 'Analytics'
-  },
-  {
-    path: formsPath,
-    label: 'Forms'
-  },
-  {
-    path: documentsPath,
-    label: 'Documents'
-  },
-  {
-    path: certificationPath,
-    label: 'Certification'
-  },
-  {
-    path: usersPath,
-    label: 'Users'
-  },
-  {
-    path: settingsPath,
-    label: 'Settings'
-  }
-];
-
 class DashboardTabs extends Component {
 
   static propTypes = {
@@ -75,9 +36,50 @@ class DashboardTabs extends Component {
     goTo(dashboardUrl(navPath));
   }
 
+  get navItems() {
+    return [
+      {
+        path: submissionsPath,
+        label: 'Submissions'
+      },
+      {
+        path: sharingPath,
+        label: 'Sharing'
+      },
+      {
+        path: alertsPath,
+        label: 'Alerts'
+      },
+      {
+        path: analyticsPath,
+        label: 'Analytics'
+      },
+      {
+        path: formsPath,
+        label: 'Forms'
+      },
+      {
+        path: documentsPath,
+        label: 'Documents'
+      },
+      {
+        path: certificationPath,
+        label: 'Certification'
+      },
+      {
+        path: usersPath,
+        label: 'Users'
+      },
+      {
+        path: settingsPath,
+        label: 'Settings'
+      }
+    ];
+  }
+
   getActiveKey() {
     const { location: { pathname } } = this.props;
-    const navItem = _.find(navItems, function (o) { return pathname.includes(o.path); });
+    const navItem = _.find(this.navItems, function (o) { return pathname.includes(o.path); });
     return navItem ? navItem.path : undefined;
   }
 
@@ -90,7 +92,7 @@ class DashboardTabs extends Component {
         <Navbar.Collapse>
           <Nav pullRight onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
             {
-              navItems.map((navItem) => {
+              this.navItems.map((navItem) => {
                 return (
                   <NavItem eventKey={navItem.path} className="navItem" href="#">
                     {navItem.label}

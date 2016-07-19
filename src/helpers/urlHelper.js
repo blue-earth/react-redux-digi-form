@@ -17,28 +17,28 @@ export const dashboardUrl = (relativePath) =>
   formatUrl(`/${dashboardPath}/${relativePath}`);
 
 export const submissionsUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${submissionsPath}/${relativePath}`);
+  formatUrl(dashboardUrl(`/${submissionsPath}/${relativePath}`));
 
 export const alertsUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${alertsPath}/${relativePath}`);
+  formatUrl(dashboardUrl(`/${alertsPath}/${relativePath}`));
 
 export const sharingUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${sharingPath}/${relativePath}`);
+  formatUrl(dashboardUrl(`/${sharingPath}/${relativePath}`));
 
 export const analyticsUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${analyticsPath}/${relativePath}`);
+  formatUrl(dashboardUrl(`/${analyticsPath}/${relativePath}`));
 
 export const formsUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${formsPath}/${relativePath}`);
+  formatUrl(dashboardUrl(`/${formsPath}/${relativePath}`));
 
 export const documentsUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${documentsPath}/${relativePath}`);
+  formatUrl(dashboardUrl(`/${documentsPath}/${relativePath}`));
 
 export const certificationUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${certificationPath}/${relativePath}`);
+  formatUrl(dashboardUrl(`/${certificationPath}/${relativePath}`));
 
 export const usersUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${usersPath}/${relativePath}`);
+  formatUrl(dashboardUrl(`/${usersPath}/${relativePath}`));
 
 export const settingsUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${settingsPath}/${relativePath}`);
+  formatUrl(dashboardUrl(`/${settingsPath}/${relativePath}`));

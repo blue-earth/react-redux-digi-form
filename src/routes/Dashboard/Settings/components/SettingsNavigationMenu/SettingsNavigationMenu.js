@@ -2,6 +2,7 @@ import React, {
   Component
 } from 'react';
 import { Link } from 'react-router';
+import { settingsUrl } from 'helpers/urlHelper';
 import classes from './SettingsNavigationMenu.scss';
 
 class SettingsNavigationMenu extends Component {
@@ -17,33 +18,33 @@ class SettingsNavigationMenu extends Component {
     this.renderSettingMenuItems = this.renderSettingMenuItems.bind(this);
   }
 
-  getSettingMenuItems() {
+  get settingMenuItems() {
     return [
       {
-        url: '/dashboard/settings/profile',
+        url: settingsUrl('profile'),
         text: 'Profile'
       },
       {
-        url: '/dashboard/settings/notifications',
+        url: settingsUrl('notifications'),
         text: 'Notifications'
       },
       {
-        url: '/dashboard/settings/custom-branding',
+        url: settingsUrl('custom-branding'),
         text: 'Custom branding'
       },
       {
-        url: '/dashboard/settings/billing',
+        url: settingsUrl('billing'),
         text: 'My plan & billing'
       },
       {
-        url: '/dashboard/settings/security',
+        url: settingsUrl('security'),
         text: 'Security'
       }
     ];
   }
 
   renderSettingMenuItems() {
-    return this.getSettingMenuItems().map(menuItem => (
+    return this.settingMenuItems.map(menuItem => (
       <li className={classes.menuListItem} key={menuItem.url}>
         <Link
           style={{'color': 'black'}}

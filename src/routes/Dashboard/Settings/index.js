@@ -2,9 +2,10 @@
 import SettingsLayoutContainer from './containers/SettingsContainer';
 import ProfileSettings from './components/ProfileSettings/ProfileSettings';
 import NotificationSettings from './components/NotificationSettings/NotificationSettings';
+import { settingsPath, settingsUrl } from 'helpers/urlHelper';
 
 export default (store) => ({
-  path: 'settings',
+  path: settingsPath,
   getChildRoutes(location, cb) {
     require.ensure([], (require) => {
       // const reducer = require('redux/modules/formBuilder').default;
@@ -27,6 +28,6 @@ export default (store) => ({
   component: SettingsLayoutContainer,
   indexRoute: {
     // todo: any better way to avoid repeating the full paths?
-    onEnter: (nextState, replace) => replace('/dashboard/settings/profile')
+    onEnter: (nextState, replace) => replace(settingsUrl('profile'))
   }
 });
