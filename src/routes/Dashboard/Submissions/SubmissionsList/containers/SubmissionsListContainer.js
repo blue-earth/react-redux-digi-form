@@ -14,18 +14,22 @@ import SubmissionsListView from '../components/SubmissionsListView';
 const mapStateToProps = (state) => {
   const { submissionsList } = state;
   const {
-    submissions,
     isFetching,
-    currentPage,
+    submissions,
+    totalCount,
+    page,
     pageSize,
-    totalCount
+    sortColumn,
+    sortAscending
   } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
   return {
-    submissions,
     isFetching,
-    currentPage,
+    submissions,
+    totalCount,
+    page,
     pageSize,
-    totalCount
+    sortColumn,
+    sortAscending
   };
 };
 

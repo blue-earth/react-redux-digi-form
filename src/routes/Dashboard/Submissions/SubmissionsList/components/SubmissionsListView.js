@@ -4,7 +4,12 @@ import React, {
 } from 'react';
 import Griddle from 'griddle-react';
 import _ from 'lodash';
-import ActionsComponent from './ActionsComponent';
+import {
+  AuthorHeaderCell,
+  ProgressHeaderCell,
+  TypeHeaderCell,
+  ActionsCell
+} from './CustomCells';
 import styles from './SubmissionsListView.scss';
 
 class SubmissionsListView extends Component {
@@ -24,64 +29,38 @@ class SubmissionsListView extends Component {
      */
     fetchSubmissions: PropTypes.func.isRequired,
 
-    currentPage: PropTypes.number.isRequired,
+    page: PropTypes.number.isRequired,
 
     pageSize: PropTypes.number.isRequired,
 
     totalCount: PropTypes.number.isRequired,
 
-    setPageSize: PropTypes.func.isRequired
+    setPageSize: PropTypes.func.isRequired,
+
+    sortColumn: PropTypes.string.isRequired,
+
+    sortAscending: PropTypes.bool.isRequired
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      results: props.submissions,
-      currentPage: props.currentPage,
-      maxPages: Math.ceil(props.totalCount / props.pageSize),
-      externalResultsPerPage: props.pageSize,
-      externalSortColumn: null,
-      externalSortAscending: true
-    };
-  }
-
-  componentDidMount() {
-    this.getExternalData();
-  }
-
-  componentWillReceiveProps(props) {
-    // TODO: remove tempstartIndex and implement paginated data response in the backend.
-    const tempStartIndex = (props.currentPage - 1) * props.pageSize;
-    this.setState({
-      results: props.submissions.slice(tempStartIndex, tempStartIndex + props.pageSize),
-      currentPage: props.currentPage,
-      maxPages: Math.ceil(props.totalCount / props.pageSize),
-      externalResultsPerPage: props.pageSize
-    });
-  }
 
   /*
    * setPage: what page is currently viewed
    * A Wrapper Component methods for External Data
    */
   setPage = (index) => {
-    const { maxPages } = this.state;
-    const page = index > maxPages ? maxPages : index < 1 ? 1 : index + 1;
-    this.getExternalData(page);
-  }
-
-  /*
-   * sortData: this will handle how the data is sorted
-   * A Wrapper Component methods for External Data
-   */
-  sortData = (sort, sortAscending, data) => {
+    const maxPages = this.maxPages;
+    const page = index > maxPages ? maxPages - 1 : index < 1 ? 0 : index;
+    this.getExternalData({ page });
   }
 
   /*
    * changeSort: this changes whether data is sorted in ascending or descending order
    * A Wrapper Component methods for External Data
    */
-  changeSort = (sort, sortAscending) => {
+  changeSort = (sortColumn, sortAscending) => {
+    this.getExternalData({
+      sortColumn,
+      sortAscending
+    });
   }
 
   /*
@@ -95,13 +74,16 @@ class SubmissionsListView extends Component {
    * changeSort: this method handles determining the page size
    * A Wrapper Component methods for External Data
    */
-  setPageSize(size) {
+  setPageSize = (pageSize) => {
+    this.getExternalData({
+      page: 0,
+      pageSize
+    });
   }
 
-  getExternalData(page) {
+  getExternalData(options) {
     const { fetchSubmissions } = this.props;
-    page = page || 1;
-    fetchSubmissions(page);
+    fetchSubmissions(options);
   }
 
   get columnMetadata() {
@@ -125,24 +107,26 @@ class SubmissionsListView extends Component {
         'order': 3,
         'locked': false,
         'visible': true,
-        'displayName': 'Progress'
+        'displayName': 'Progress',
+        'customHeaderComponent': ProgressHeaderCell
       },
       {
-        'columnName': 'percent',
+        'columnName': 'completion_percent',
         'order': 4,
         'locked': false,
         'visible': true,
         'displayName': '%'
       },
       {
-        'columnName': 'author',
+        'columnName': 'completed_by_name',
         'order': 5,
         'locked': false,
         'visible': true,
-        'displayName': 'Created by'
+        'displayName': 'Created by',
+        'customHeaderComponent': AuthorHeaderCell
       },
       {
-        'columnName': 'channel',
+        'columnName': 'sent_channel',
         'order': 6,
         'locked': false,
         'visible': true,
@@ -167,21 +151,29 @@ class SubmissionsListView extends Component {
         'order': 9,
         'locked': false,
         'visible': true,
-        'displayName': 'Type'
+        'displayName': 'Type',
+        'customHeaderComponent': TypeHeaderCell
       },
       {
-        'columnName': 'duration',
+        'columnName': 'duration_seconds',
         'order': 10,
         'locked': false,
         'visible': true,
         'displayName': 'Time taken'
       },
       {
-        'columnName': 'contact',
+        'columnName': 'contact_email',
         'order': 10,
         'locked': false,
         'visible': true,
-        'displayName': 'Contact Info'
+        'displayName': 'Contact Email'
+      },
+      {
+        'columnName': 'contact_phone',
+        'order': 10,
+        'locked': false,
+        'visible': true,
+        'displayName': 'Contact Phone'
       },
       {
         'columnName': 'actions',
@@ -189,7 +181,7 @@ class SubmissionsListView extends Component {
         'locked': true,
         'sortable': false,
         'displayName': '',
-        'customComponent': ActionsComponent
+        'customComponent': ActionsCell
       }
     ];
   }
@@ -202,20 +194,26 @@ class SubmissionsListView extends Component {
   }
 
   get resultsData() {
-    const { results } = this.state;
-    return _.map(results, (submission) =>
+    const { submissions } = this.props;
+    return _.map(submissions, (submission) =>
       Object.assign({}, submission, { actions: '' })
     );
   }
 
+  get maxPages() {
+    const { totalCount, pageSize } = this.props;
+    return Math.ceil(totalCount / pageSize);
+  }
+
   renderSubmissionsList() {
     const {
-      maxPages,
-      currentPage,
-      externalResultsPerPage,
-      externalSortColumn,
-      externalSortAscending
-    } = this.state;
+      // isFetching,
+      totalCount,
+      page,
+      pageSize,
+      sortColumn,
+      sortAscending
+    } = this.props;
     return (
       <Griddle
         results={this.resultsData}
@@ -226,13 +224,15 @@ class SubmissionsListView extends Component {
         externalChangeSort={this.changeSort}
         externalSetFilter={this.setFilter}
         externalSetPageSize={this.setPageSize}
-        externalMaxPage={maxPages}
-        externalCurrentPage={currentPage - 1}
-        resultsPerPage={externalResultsPerPage}
-        externalSortColumn={externalSortColumn}
-        externalSortAscending={externalSortAscending}
+        externalMaxPage={this.maxPages}
+        externalCurrentPage={page}
+        resultsPerPage={pageSize}
+        externalSortColumn={sortColumn}
+        externalSortAscending={sortAscending}
+        initialSort="response_id"
         showFilter
         showSettings
+        // externalIsLoading={isFetching}
       />
     );
   }

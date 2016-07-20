@@ -1,33 +1,52 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
+import { buildQueryString } from 'helpers/pureFunctions';
+import _ from 'lodash';
 
 export const RECEIVE_SUBMISSIONS = 'RECEIVE_SUBMISSIONS';
 export const REQUEST_SUBMISSIONS = 'REQUEST_SUBMISSIONS';
 export const DONE_FETCHING_SUBMISSIONS = 'DONE_FETCHING_SUBMISSIONS';
 
-export const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
-
 export const INIT_SUBMISSIONS_STATE = {
   id: 0,
   isFetching: false, // indicates the Submissions is being loaded.
   submissions: [],
-  currentPage: 0, // indicates the current page number submission table page.
+  page: 0, // indicates the current page number submission table page.
   pageSize: 10, // indicates number of items per page.
-  totalCount: 0 // indicates total number of submission items available on server.
+  totalCount: 0, // indicates total number of submission items available on server.
+  sortColumn: null, // indicates the column name to sort by
+  sortAscending: true // indicates the sort direction (true: ascending | false: descending)
+};
+
+const getQueryParamsObject = (options) => {
+  var query = {};
+  options.page && (query['page'] = options.page);
+  options.pageSize && (query['page_size'] = options.pageSize);
+  if (options.sortColumn) {
+    query['ordering'] = options.sortAscending ? options.sortColumn : '-' + options.sortColumn;
+  }
+  return query;
 };
 
 // ------------------------------------
 // Action: processFetchSubmissions
+// Params
+//   query: Avilable query params - page, page_size, ordering
 // ------------------------------------
-export const processFetchSubmissions = (page) => {
+export const processFetchSubmissions = (options) => {
   var apiURL = `${API_URL}/form_document/api/form_response/`;
+
+  const query = getQueryParamsObject(options);
+  console.log(query);
+  const queryString = buildQueryString(query);
+  queryString && (apiURL += `?${queryString}`);
 
   const fetchParams = assignDefaults();
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(receiveSubmissions(value, page));
+      dispatch(receiveSubmissions(value, options));
       dispatch(doneFetchingSubmissions()); // Hide loading spinner
     };
   };
@@ -53,13 +72,25 @@ export const requestSubmissions = () => {
 // ------------------------------------
 // Action: receiveSubmissions
 // ------------------------------------
-export const receiveSubmissions = (data, page) => {
-  return {
+export const receiveSubmissions = (data, options) => {
+  // TODO: Emulate sorting & pagination, should be done in backend.
+  const totalCount = data.length;
+  if (options.sortColumn) {
+    data = _.orderBy(
+      data,
+      (item) => item[options.sortColumn],
+      options.sortAscending ? 'asc' : 'desc'
+    );
+  }
+  const tempStartIndex = (options.page) * options.pageSize;
+  data = data.slice(tempStartIndex, tempStartIndex + options.pageSize);
+  // TODO: End
+
+  return Object.assign({}, options, {
     type: RECEIVE_SUBMISSIONS,
     submissions: data,
-    page,
-    totalCount: data.length // TODO: need accurate api.
-  };
+    totalCount // TODO: need accurate field in api response.
+  });
 };
 
 // ------------------------------------
@@ -74,21 +105,17 @@ export const doneFetchingSubmissions = () => {
 // ------------------------------------
 // Action: fetchSubmissions
 // ------------------------------------
-export const fetchSubmissions = (page) => {
+export const fetchSubmissions = (options) => {
   return (dispatch, getState) => {
+    const submissionsList = getState().submissionsList;
+    options = Object.assign(_.pick(submissionsList, [
+      'page', // current page number, can be overwritten by options.
+      'pageSize', // current page size, can be overwritten by options.
+      'sortColumn', // current sort column, can be overwritten by options.
+      'sortAscending' // current sort direction, can be overwritten by options.
+    ]), options);
     dispatch(requestSubmissions());
-    dispatch(processFetchSubmissions(page));
-  };
-};
-
-// ------------------------------------
-// Action: setPageSize
-// ------------------------------------
-export const setPageSize = (size) => {
-  return {
-    type: SET_PAGE_SIZE,
-    page: 0,
-    pageSize: size
+    dispatch(processFetchSubmissions(options));
   };
 };
 
@@ -100,7 +127,10 @@ const submissionsReducer = (state = INIT_SUBMISSIONS_STATE, action) => {
     case RECEIVE_SUBMISSIONS:
       return Object.assign({}, state, {
         submissions: action.submissions,
-        currentPage: action.page,
+        page: action.page,
+        pageSize: action.pageSize,
+        sortColumn: action.sortColumn,
+        sortAscending: action.sortAscending,
         totalCount: action.totalCount
       });
     case REQUEST_SUBMISSIONS:
@@ -110,11 +140,6 @@ const submissionsReducer = (state = INIT_SUBMISSIONS_STATE, action) => {
     case DONE_FETCHING_SUBMISSIONS:
       return Object.assign({}, state, {
         isFetching: false
-      });
-    case SET_PAGE_SIZE:
-      return Object.assign({}, state, {
-        currentPage: action.page,
-        pageSize: action.pageSize
       });
     default:
       return state;

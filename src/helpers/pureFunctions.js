@@ -1,16 +1,13 @@
 import _ from 'lodash';
 
-export const underscoreToCamelCase = underscoredText => {
-  return underscoredText.replace(/_([a-z])/g, function (g) { return g[1].toUpperCase(); });
-};
+export const underscoreToCamelCase = underscoredText =>
+  underscoredText.replace(/_([a-z])/g, function (g) { return g[1].toUpperCase(); });
 
-export const findIndexById = (objArray, id) => {
-  return _.findIndex(objArray, function (o) { return o.id === id; });
-};
+export const findIndexById = (objArray, id) =>
+  _.findIndex(objArray, function (o) { return o.id === id; });
 
-export const findItemById = (objArray, id) => {
-  return _.find(objArray, function (o) { return o.id === id; });
-};
+export const findItemById = (objArray, id) =>
+  _.find(objArray, function (o) { return o.id === id; });
 
 export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false) => {
   if (deepMerge) {
@@ -30,6 +27,9 @@ export const editItemInArray = (itemArray, editValue) => {
   }
   return newItemArray;
 };
+
+export const buildQueryString = (query) =>
+  _.join(_.map(_.toPairs(query), pair => `${pair[0]}=${pair[1]}`), '&');
 
 const fnToString = (fn) => Function.prototype.toString.call(fn);
 
