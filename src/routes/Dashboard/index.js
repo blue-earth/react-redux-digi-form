@@ -3,7 +3,7 @@ import DashboardLayout from 'layouts/DashboardLayout';
 import FormsRoute from './Forms';
 import SubmissionsRoute from './Submissions';
 import SettingsRoute from './Settings';
-import { dashboardPath } from 'helpers/urlHelper';
+import { dashboardPath, dashboardUrl, submissionsPath } from 'helpers/urlHelper';
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -15,5 +15,8 @@ export default (store) => ({
     FormsRoute(store),
     SubmissionsRoute(store),
     SettingsRoute(store)
-  ]
+  ],
+  indexRoute: {
+    onEnter: (nextState, replace) => replace(dashboardUrl(submissionsPath))
+  }
 });
