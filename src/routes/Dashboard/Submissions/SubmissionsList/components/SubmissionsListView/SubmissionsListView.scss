@@ -1,0 +1,117 @@
+@import './mixins';
+@import './variables';
+$slt-header-bg-color:     	#ECF4FB;
+$slt-header-text-color:     #1C4468;
+$slt-border-color:          rgba(204, 204, 204, .3);
+
+.submissionsList {
+  padding: 10px;
+  height: 100%;
+}
+.submissionsListInner {
+  overflow: auto;
+  height: 100%;
+  position: relative;
+  font-size: 12px;
+}
+.tableWrapper {
+  position: relative;
+  @include border-radius(4px);
+  overflow: hidden;
+}
+.resultsTable {
+  background-color: white;
+  width: 100%;
+  thead {
+    background-color: $slt-header-bg-color;
+  }
+  th {
+    padding: 5px;
+    word-wrap: break-word;
+    color: $slt-header-text-color !important;
+    &:not(:first-child) {
+      border-left: 1px solid $slt-border-color !important;
+    }
+    &:not(:last-child) {
+      border-right: 1px solid $slt-border-color !important;
+    }
+    border-bottom: none !important;
+    background-color: $slt-header-bg-color !important;
+  }
+  td {
+    padding: 5px;
+    vertical-align: middle !important;
+    &:not(:first-child) {
+      border-left: 1px solid $slt-border-color !important;
+    }
+    &:not(:last-child) {
+      border-right: 1px solid $slt-border-color !important;
+    }
+    border-bottom: 1px solid $slt-header-bg-color !important;
+    border-top: none !important;
+  }
+}
+
+.loadingSpinner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  opacity: .5;
+  display: none;
+}
+.sortedCell {
+  position: relative;
+  padding-right: 20px !important;
+}
+.sortIcon {
+  position: absolute;
+  right: 5px;
+  display: block;
+  line-height: 1;
+  @include vcenter;
+}
+
+.columnID {
+  width: 4%;
+}
+.columnName {
+  width: 15%;
+}
+.columnProgress {
+  width: 7%;
+}
+.columnPercent {
+  width: 3%;
+}
+.columnAuthor {
+  width: 10%;
+}
+.columnChanel {
+  width: 6%;
+}
+.columnCreated {
+  width: 7%;
+}
+.columnStatus {
+  width: 8%;
+  text-align: center;
+}
+.columnType {
+  width: 8%;
+  text-align: center;
+}
+.columnLanguage {
+  width: 6%;
+  text-align: center;
+}
+.columnDuration {
+  width: 7%;
+  text-align: center;
+}
+.columnContactInfo {
+  width: 7%;
+  text-align: center;
+}

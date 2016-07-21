@@ -110,6 +110,7 @@
     "rc-animate": "^2.0.4",
     "react": "^15.1.0",
     "react-bootstrap": "^0.29.4",
+    "react-copy-to-clipboard": "^4.2.1",
     "react-datepicker": "^0.27.0",
     "react-dom": "^15.1.0",
     "react-icons": "^2.0.1",

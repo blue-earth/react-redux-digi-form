@@ -38,7 +38,6 @@ export const processFetchSubmissions = (options) => {
   var apiURL = `${API_URL}/form_document/api/form_response/`;
 
   const query = getQueryParamsObject(options);
-  console.log(query);
   const queryString = buildQueryString(query);
   queryString && (apiURL += `?${queryString}`);
 
