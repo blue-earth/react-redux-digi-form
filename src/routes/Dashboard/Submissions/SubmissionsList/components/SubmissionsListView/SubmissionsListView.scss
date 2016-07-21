@@ -9,26 +9,32 @@ $slt-border-color:          rgba(204, 204, 204, .3);
   height: 100%;
 }
 .submissionsListInner {
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   height: 100%;
   position: relative;
   font-size: 12px;
 }
 .tableWrapper {
   position: relative;
-  @include border-radius(4px);
-  overflow: hidden;
 }
 .resultsTable {
   background-color: white;
+  @include border-radius(4px);
   width: 100%;
   thead {
-    background-color: $slt-header-bg-color;
+    background-color: $slt-header-bg-color !important;
   }
   th {
     padding: 5px;
     word-wrap: break-word;
     color: $slt-header-text-color !important;
+    &:first-child {
+      @include border-radius-separate(4px, 0, 0, 0);
+    }
+    &:last-child {
+      @include border-radius-separate(0, 4px, 0, 0);
+    }
     &:not(:first-child) {
       border-left: 1px solid $slt-border-color !important;
     }
@@ -36,7 +42,6 @@ $slt-border-color:          rgba(204, 204, 204, .3);
       border-right: 1px solid $slt-border-color !important;
     }
     border-bottom: none !important;
-    background-color: $slt-header-bg-color !important;
   }
   td {
     padding: 5px;
@@ -47,8 +52,14 @@ $slt-border-color:          rgba(204, 204, 204, .3);
     &:not(:last-child) {
       border-right: 1px solid $slt-border-color !important;
     }
-    border-bottom: 1px solid $slt-header-bg-color !important;
     border-top: none !important;
+    border-bottom: none !important;
+  }
+  tr {
+    border-bottom: 1px solid $slt-header-bg-color !important;
+  }
+  tbody:last-child tr {
+    border-bottom: none !important;
   }
 }
 

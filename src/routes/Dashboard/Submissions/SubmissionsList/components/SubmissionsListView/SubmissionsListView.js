@@ -11,6 +11,7 @@ import {
   ContactInfoCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
+import Pagination from '../../containers/PaginationContainer';
 import {
   FaSortAlphaAsc,
   FaSortAlphaDesc
@@ -40,8 +41,6 @@ class SubmissionsListView extends Component {
     pageSize: PropTypes.number.isRequired,
 
     totalCount: PropTypes.number.isRequired,
-
-    setPageSize: PropTypes.func.isRequired,
 
     sortColumn: PropTypes.string.isRequired,
 
@@ -269,6 +268,8 @@ class SubmissionsListView extends Component {
           sortAscendingClassName={styles.sortedCell}
           sortDescendingClassName={styles.sortedCell}
           tableClassName={styles.resultsTable}
+          useCustomPagerComponent
+          customPagerComponent={Pagination}
           // externalIsLoading={isFetching}
           ref="griddle"
         />

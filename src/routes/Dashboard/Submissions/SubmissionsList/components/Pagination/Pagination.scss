@@ -1,0 +1,54 @@
+@import './mixins';
+@import './variables';
+
+.pagination {
+  margin: 0 -3px;
+  text-align: right;
+}
+.paginationItem {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 3px;
+  line-height: 1;
+}
+.maxPage {
+  vertical-align: middle;
+}
+.paginationInput {
+  width: 40px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 0;
+  padding: 2px;
+  height: 24px;
+  line-height: 1;
+  vertical-align: middle;
+}
+.paginationButton {
+  padding: 2px;
+  width: 22px;
+  height: 22px;
+  line-height: 1;
+  vertical-align: middle;
+  text-align: center;
+  @include border-radius(3px);
+  &:focus, &:hover, &:active:focus, &:hover:focus {
+    outline: none;
+  }
+}
+
+.pageSizeDropdown,
+.paginationDropdown {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: center;
+  min-width: 0;
+  > li {
+    min-width: 50px;
+  }
+  > li > a {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

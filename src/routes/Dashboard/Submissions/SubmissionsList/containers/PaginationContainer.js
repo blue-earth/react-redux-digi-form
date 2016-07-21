@@ -4,7 +4,7 @@ import {
   fetchSubmissions
 } from 'redux/modules/submissionsList';
 
-import SubmissionsListView from '../components/SubmissionsListView/SubmissionsListView';
+import Pagination from '../components/Pagination/Pagination';
 
 /*  Object of action creators (can also be function that returns object).
     Keys will be passed as props to presentational components. Here we are
@@ -13,22 +13,10 @@ import SubmissionsListView from '../components/SubmissionsListView/SubmissionsLi
 const mapStateToProps = (state) => {
   const { submissionsList } = state;
   const {
-    isFetching,
-    submissions,
-    totalCount,
-    page,
-    pageSize,
-    sortColumn,
-    sortAscending
+    pageSize
   } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
   return {
-    isFetching,
-    submissions,
-    totalCount,
-    page,
-    pageSize,
-    sortColumn,
-    sortAscending
+    pageSize
   };
 };
 
@@ -36,4 +24,4 @@ const mapActionCreators = {
   fetchSubmissions
 };
 
-export default connect(mapStateToProps, mapActionCreators)(SubmissionsListView);
+export default connect(mapStateToProps, mapActionCreators)(Pagination);
