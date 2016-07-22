@@ -71,19 +71,9 @@ export const requestSubmissions = () => {
 // ------------------------------------
 // Action: receiveSubmissions
 // ------------------------------------
-export const receiveSubmissions = (data, options) => {
-  // TODO: Emulate sorting & pagination, should be done in backend.
-  const totalCount = data.length;
-  if (options.sortColumn) {
-    data = _.orderBy(
-      data,
-      (item) => item[options.sortColumn],
-      options.sortAscending ? 'asc' : 'desc'
-    );
-  }
-  const tempStartIndex = (options.page) * options.pageSize;
-  data = data.slice(tempStartIndex, tempStartIndex + options.pageSize);
-  // TODO: End
+export const receiveSubmissions = (res, options) => {
+  const totalCount = res.count;
+  const data = res.data;
 
   return Object.assign({}, options, {
     type: RECEIVE_SUBMISSIONS,

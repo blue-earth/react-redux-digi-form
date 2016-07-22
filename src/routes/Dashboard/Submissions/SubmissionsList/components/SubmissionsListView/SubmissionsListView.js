@@ -106,7 +106,7 @@ class SubmissionsListView extends Component {
         cssClassName: styles.columnID
       },
       {
-        columnName: 'title',
+        columnName: 'form_title',
         order: 2,
         locked: false,
         visible: true,
@@ -161,24 +161,8 @@ class SubmissionsListView extends Component {
         locked: false,
         visible: true,
         displayName: 'Status',
-        cssClassName: styles.columnStatus
-      },
-      {
-        columnName: 'type',
-        order: 9,
-        locked: false,
-        visible: true,
-        displayName: 'Type',
         customHeaderComponent: StatusHeaderCell,
-        cssClassName: styles.columnType
-      },
-      {
-        columnName: 'language',
-        order: 10,
-        locked: false,
-        visible: true,
-        displayName: 'Language',
-        cssClassName: styles.columnLanguage
+        cssClassName: styles.columnStatus
       },
       {
         columnName: 'duration_seconds',
