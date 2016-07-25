@@ -9,6 +9,7 @@ import {
   ProgressHeaderCell,
   StatusHeaderCell,
   ContactInfoCell,
+  DateCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
 import Pagination from '../../containers/PaginationContainer';
@@ -153,7 +154,8 @@ class SubmissionsListView extends Component {
         locked: false,
         visible: true,
         displayName: 'Created',
-        cssClassName: styles.columnCreated
+        cssClassName: styles.columnCreated,
+        customComponent: DateCell
       },
       {
         columnName: 'status',

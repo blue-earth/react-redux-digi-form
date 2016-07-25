@@ -17,6 +17,7 @@ import {
   MdEmail,
   MdPhone
 } from 'react-icons/lib/md';
+import moment from 'moment';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import styles from './CustomCells.scss';
 
@@ -183,6 +184,33 @@ export class ActionsCell extends Component {
       <Link to={submissionsUrl(`/${rowData.form_id}/${rowData.response_id}`)}>
         View
       </Link>
+    );
+  }
+}
+
+export class DateCell extends Component {
+
+  static propTypes = {
+    data: PropTypes.string.isRequired
+  };
+
+  get formattedDate() {
+    const { data } = this.props;
+    const dateValue = moment(data);
+    const dateDiff = moment().diff(dateValue);
+    const aDay = 24 * 3600 * 1000;
+    if (dateDiff < aDay) {
+      return 'Today';
+    } else if (dateDiff < 2 * aDay) {
+      return 'Yesterday';
+    } else {
+      return dateValue.format('DD/MM/YY');
+    }
+  }
+
+  render() {
+    return (
+      <span>{this.formattedDate}</span>
     );
   }
 }
