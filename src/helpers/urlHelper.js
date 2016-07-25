@@ -1,6 +1,8 @@
 import _ from 'lodash';
 export const formatUrl = (url) => _.replace(url, /\/\//g, '/');
 
+export const rootPath = '/';
+
 export const dashboardPath = 'dashboard';
 
 export const submissionsPath = 'submissions';
@@ -14,7 +16,7 @@ export const usersPath = 'users';
 export const settingsPath = 'settings';
 
 export const dashboardUrl = (relativePath) =>
-  formatUrl(`/${dashboardPath}/${relativePath}`);
+  formatUrl(`${rootPath}/${dashboardPath}/${relativePath}`);
 
 export const submissionsUrl = (relativePath) =>
   formatUrl(dashboardUrl(`/${submissionsPath}/${relativePath}`));
