@@ -1,7 +1,7 @@
 import _ from 'lodash';
 export const formatUrl = (url) => _.replace(url, /\/\//g, '/');
 
-export const rootPath = '/';
+export const rootPath = '/app';
 
 export const dashboardPath = 'dashboard';
 

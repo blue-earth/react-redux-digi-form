@@ -77,7 +77,6 @@ export default class Pagination extends Component {
   renderPagination() {
     const { currentPage, maxPage, pageSize, previous, next } = this.props;
     var options = [];
-    console.log(this.props);
 
     for (var i = 0; i < maxPage; i++) {
       options.push(<MenuItem key={i} eventKey={i}>{i + 1}</MenuItem>);

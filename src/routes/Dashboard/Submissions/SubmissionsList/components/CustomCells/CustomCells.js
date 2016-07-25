@@ -4,80 +4,22 @@ import React, {
 } from 'react';
 
 import {
-  Dropdown,
-  MenuItem,
-  Checkbox,
   Popover,
   OverlayTrigger
 } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { submissionsUrl } from 'helpers/urlHelper';
 import {
-  MdKeyboardArrowDown,
   MdEmail,
   MdPhone
 } from 'react-icons/lib/md';
-import moment from 'moment';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import styles from './CustomCells.scss';
+import { DropdownHeaderCell, DateCell } from 'components/GriddleComponents/CommonCells/CommonCells';
 
-export class DropdownHeaderCellBase extends Component {
+export { DateCell };
 
-  static propTypes = {
-    displayName: PropTypes.string.isRequired,
-    columnName: PropTypes.string.isRequired
-  };
-
-  selectFilter = (key) => {
-    // this.props.filterByColumn(key, this.props.columnName)
-  }
-
-  // Override this member function for custom event handler.
-  handleCheckboxChange = (event) => {
-    console.log(event.target);
-  }
-
-  stopPropagation = (event) => {
-    event.stopPropagation();
-  }
-
-  // Override this property to add menu item.
-  get menuItems() {
-    return [
-      { key: 'todo', text: 'Add menu item' }
-    ];
-  }
-
-  render() {
-    return (
-      <div>
-        <Dropdown pullRight onSelect={this.selectFilter} className={styles.dropdownHeader}>
-          <span className={styles.dropdownText}>{this.props.displayName}</span>
-          <a href="javascript:;" bsRole="toggle"
-            className={styles.dropdownArrow}
-            onClick={this.stopPropagation}>
-            <MdKeyboardArrowDown size={16} />
-          </a>
-          <Dropdown.Menu onClick={this.stopPropagation}>
-            {
-              this.menuItems.map(item => {
-                return (
-                  <MenuItem eventKey={item.key} key={item.key}>
-                    <Checkbox inline onChange={this.handleCheckboxChange} value={item.key}>
-                      {item.text}
-                    </Checkbox>
-                  </MenuItem>
-                );
-              })
-            }
-          </Dropdown.Menu>
-        </Dropdown>
-      </div>
-    );
-  }
-}
-
-export class AuthorHeaderCell extends DropdownHeaderCellBase {
+export class AuthorHeaderCell extends DropdownHeaderCell {
 
   get menuItems() {
     return [
@@ -91,7 +33,7 @@ export class AuthorHeaderCell extends DropdownHeaderCellBase {
 
 }
 
-export class ProgressHeaderCell extends DropdownHeaderCellBase {
+export class ProgressHeaderCell extends DropdownHeaderCell {
 
   get menuItems() {
     return [
@@ -104,7 +46,7 @@ export class ProgressHeaderCell extends DropdownHeaderCellBase {
 
 }
 
-export class StatusHeaderCell extends DropdownHeaderCellBase {
+export class StatusHeaderCell extends DropdownHeaderCell {
 
   get menuItems() {
     return [
@@ -188,29 +130,3 @@ export class ActionsCell extends Component {
   }
 }
 
-export class DateCell extends Component {
-
-  static propTypes = {
-    data: PropTypes.string.isRequired
-  };
-
-  get formattedDate() {
-    const { data } = this.props;
-    const dateValue = moment(data);
-    const dateDiff = moment().diff(dateValue);
-    const aDay = 24 * 3600 * 1000;
-    if (dateDiff < aDay) {
-      return 'Today';
-    } else if (dateDiff < 2 * aDay) {
-      return 'Yesterday';
-    } else {
-      return dateValue.format('DD/MM/YY');
-    }
-  }
-
-  render() {
-    return (
-      <span>{this.formattedDate}</span>
-    );
-  }
-}

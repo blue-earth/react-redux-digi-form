@@ -4,7 +4,7 @@ import {
   fetchFormsList
 } from 'redux/modules/formsList';
 
-import FormListView from '../components/FormListView';
+import FormsListView from '../components/FormsListView/FormsListView';
 
 /*  Object of action creators (can also be function that returns object).
     Keys will be passed as props to presentational components. Here we are
@@ -13,12 +13,22 @@ import FormListView from '../components/FormListView';
 const mapStateToProps = (state) => {
   const { formsList } = state;
   const {
+    isFetching,
     forms,
-    isFetching
+    totalCount,
+    page,
+    pageSize,
+    sortColumn,
+    sortAscending
   } = formsList || INIT_FORMSLIST_STATE;
   return {
+    isFetching,
     forms,
-    isFetching
+    totalCount,
+    page,
+    pageSize,
+    sortColumn,
+    sortAscending
   };
 };
 
@@ -26,4 +36,4 @@ const mapActionCreators = {
   fetchFormsList
 };
 
-export default connect(mapStateToProps, mapActionCreators)(FormListView);
+export default connect(mapStateToProps, mapActionCreators)(FormsListView);

@@ -1,8 +1,8 @@
 import connect from 'redux/utils/connect';
 import {
-  INIT_SUBMISSIONSLIST_STATE,
-  fetchSubmissions
-} from 'redux/modules/submissionsList';
+  INIT_FORMSLIST_STATE,
+  fetchFormsList
+} from 'redux/modules/formsList';
 
 import Pagination from 'components/GriddleComponents/Pagination/Pagination';
 
@@ -11,17 +11,17 @@ import Pagination from 'components/GriddleComponents/Pagination/Pagination';
     implementing our wrapper around increment; the component doesn't care   */
 
 const mapStateToProps = (state) => {
-  const { submissionsList } = state;
+  const { formsList } = state;
   const {
     pageSize
-  } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
+  } = formsList || INIT_FORMSLIST_STATE;
   return {
     pageSize
   };
 };
 
 const mapActionCreators = {
-  fetchSubmissions
+  fetchFormsList
 };
 
 export default connect(mapStateToProps, mapActionCreators)(Pagination);
