@@ -19,8 +19,9 @@ export default {
     },
     globals: {
       ...config.globals,
-      API_URL: JSON.stringify('http://localdev.emondo.com.au'), // API_URL: JSON.stringify('http://localhost:8000'),
-      FRONTEND_ROOT: JSON.stringify('http://localdev.emondo.com.au/app'), // JSON.stringify(`http://localhost:${config.server_port}`),
+      API_URL: JSON.stringify('http://localhost:8000'),
+      //FRONTEND_ROOT: JSON.stringify(`http://${config.server_host}:${config.server_port}`)
+      FRONTEND_ROOT: JSON.stringify(`http://localhost:${config.server_port}`),
       GOOGLE_MAP_API_KEY: JSON.stringify('AIzaSyCtwNDvDLxw-JSB8RBvtdMuW2Qjh5AypEk')
     }
   }),
