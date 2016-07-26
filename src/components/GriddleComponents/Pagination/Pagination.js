@@ -64,7 +64,7 @@ export default class Pagination extends Component {
           {`Show: ${pageSize}`}
         </Dropdown.Toggle>
         <Dropdown.Menu className={styles.pageSizeDropdown}>
-          <MenuItem eventKey={2}>2</MenuItem>
+          <MenuItem eventKey={5}>5</MenuItem>
           <MenuItem eventKey={10}>10</MenuItem>
           <MenuItem eventKey={20}>20</MenuItem>
           <MenuItem eventKey={25}>25</MenuItem>

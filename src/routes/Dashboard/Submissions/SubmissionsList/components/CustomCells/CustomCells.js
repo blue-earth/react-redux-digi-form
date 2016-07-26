@@ -172,4 +172,3 @@ export class ActionsCell extends Component {
     );
   }
 }
-

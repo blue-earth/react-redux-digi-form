@@ -72,7 +72,7 @@ export class ActionsCell extends Component {
           <li>
             <Link to={formsUrl(`/${rowData.id}/edit`)}>
               <FaEdit size={16} />
-              <span className={styles.actionText}>View</span>
+              <span className={styles.actionText}>Edit</span>
             </Link>
           </li>
           <li>
@@ -92,4 +92,3 @@ export class ActionsCell extends Component {
     );
   }
 }
-
