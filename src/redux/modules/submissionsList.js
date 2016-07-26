@@ -9,16 +9,18 @@ import _ from 'lodash';
 export const RECEIVE_SUBMISSIONS = 'RECEIVE_SUBMISSIONS';
 export const REQUEST_SUBMISSIONS = 'REQUEST_SUBMISSIONS';
 export const DONE_FETCHING_SUBMISSIONS = 'DONE_FETCHING_SUBMISSIONS';
+export const SELECT_SUBMISSION_ITEMS = 'SELECT_SUBMISSION_ITEMS';
 
 export const INIT_SUBMISSIONS_STATE = {
   id: 0,
   isFetching: false, // indicates the Submissions is being loaded.
-  submissions: [],
+  submissions: [], // holds the submission data.
   page: 0, // indicates the current page number submission table page.
   pageSize: 10, // indicates number of items per page.
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: null, // indicates the column name to sort by
-  sortAscending: true // indicates the sort direction (true: ascending | false: descending)
+  sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
+  selectedItems: [] // holds the selected items id.
 };
 
 // ------------------------------------
@@ -37,6 +39,11 @@ export const receiveSubmissions = createAction(RECEIVE_SUBMISSIONS);
 export const doneFetchingSubmissions = createAction(DONE_FETCHING_SUBMISSIONS);
 
 // ------------------------------------
+// Action: selectItems
+// ------------------------------------
+export const selectItems = createAction(SELECT_SUBMISSION_ITEMS);
+
+// ------------------------------------
 // Action: fetchSubmissions
 // ------------------------------------
 export const fetchSubmissions = (options) => {
@@ -50,6 +57,49 @@ export const fetchSubmissions = (options) => {
     ]), options);
     dispatch(requestSubmissions());
     dispatch(processFetchSubmissions(options));
+  };
+};
+
+// ------------------------------------
+// Action: selectAllItems
+// ------------------------------------
+export const selectAllItems = (selected) => {
+  return (dispatch, getState) => {
+    var selectedItems = [];
+    if (selected) {
+      const submissionsList = getState().submissionsList;
+      const submissions = submissionsList.submissions;
+      selectedItems = _.map(submissions, 'response_id');
+    }
+    dispatch(selectItems(selectedItems));
+  };
+};
+
+// ------------------------------------
+// Action: toggleSelectItem
+// ------------------------------------
+export const toggleSelectItem = (id) => {
+  return (dispatch, getState) => {
+    const submissionsList = getState().submissionsList;
+    const selectedItems = submissionsList.selectedItems;
+    const newSelectedItems = _.xor(selectedItems, [id]);
+    dispatch(selectItems(newSelectedItems));
+  };
+};
+
+// ------------------------------------
+// Action: selectItem()
+// ------------------------------------
+export const selectItem = ({id, selected}) => {
+  return (dispatch, getState) => {
+    const submissionsList = getState().submissionsList;
+    var selectedItems = submissionsList.selectedItems;
+    if (selected) {
+      selectedItems = _.union(selectedItems, [id]);
+    } else {
+      selectedItems = _.difference(selectedItems, [id]);
+    }
+    dispatch(selectItems(selectedItems));
   };
 };
 
@@ -95,7 +145,8 @@ const processReceiveSubmissions = (res, options) => {
       sortColumn: options.sortColumn,
       sortAscending: options.sortAscending,
       submissions: data,
-      totalCount
+      totalCount,
+      selectedItems: []
     }));
     dispatch(doneFetchingSubmissions()); // Hide loading spinner
   };
@@ -115,6 +166,10 @@ const submissionsReducer = (state = INIT_SUBMISSIONS_STATE, action) => {
     case DONE_FETCHING_SUBMISSIONS:
       return Object.assign({}, state, {
         isFetching: false
+      });
+    case SELECT_SUBMISSION_ITEMS:
+      return Object.assign({}, state, {
+        selectedItems: action.payload
       });
     default:
       return state;

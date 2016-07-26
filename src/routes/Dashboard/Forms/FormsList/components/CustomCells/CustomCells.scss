@@ -18,3 +18,17 @@
   vertical-align: middle;
   line-height: 1;
 }
+
+.actionsHeaderCell,
+.actionsCell {
+  padding-right: 30px;
+  position: relative;
+  input {
+    cursor: pointer;
+  }
+}
+.rightMiddle {
+  position: absolute;
+  right: 0;
+  @include vcenter;
+}

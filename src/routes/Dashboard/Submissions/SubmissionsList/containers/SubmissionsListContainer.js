@@ -1,7 +1,9 @@
 import connect from 'redux/utils/connect';
 import {
   INIT_SUBMISSIONSLIST_STATE,
-  fetchSubmissions
+  fetchSubmissions,
+  selectAllItems,
+  toggleSelectItem
 } from 'redux/modules/submissionsList';
 
 import SubmissionsListView from '../components/SubmissionsListView/SubmissionsListView';
@@ -19,7 +21,8 @@ const mapStateToProps = (state) => {
     page,
     pageSize,
     sortColumn,
-    sortAscending
+    sortAscending,
+    selectedItems
   } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
   return {
     isFetching,
@@ -28,12 +31,15 @@ const mapStateToProps = (state) => {
     page,
     pageSize,
     sortColumn,
-    sortAscending
+    sortAscending,
+    selectedItems
   };
 };
 
 const mapActionCreators = {
-  fetchSubmissions
+  fetchSubmissions,
+  selectAllItems,
+  toggleSelectItem
 };
 
 export default connect(mapStateToProps, mapActionCreators)(SubmissionsListView);

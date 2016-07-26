@@ -24,27 +24,51 @@ class GriddleTable extends Component {
     results: PropTypes.array.isRequired,
 
     /*
-     * fetchList: Redux action to fetch form from backend with ID specified by request parameters
+     * fetchList: Map to redux action to fetch table data from backend
      */
     fetchList: PropTypes.func.isRequired,
 
+    /*
+     * page: Current page number
+     */
     page: PropTypes.number.isRequired,
 
+    /*
+     * pageSize: Number of items per page.
+     */
     pageSize: PropTypes.number.isRequired,
 
+    /*
+     * totalCount: Total number of items from backend.
+     */
     totalCount: PropTypes.number.isRequired,
 
+    /*
+     * sortColumn: Column ID to sort by.
+     */
     sortColumn: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object
     ]).isRequired,
 
+    /*
+     * sortAscending: true if ascending, false if descending
+     */
     sortAscending: PropTypes.bool.isRequired,
 
+    /*
+     * columnMetadata: Column metadata for Griddle
+     */
     columnMetadata: PropTypes.array.isRequired,
 
+    /*
+     * Pagination: Custom pagination component
+     */
     Pagination: PropTypes.node.isRequired,
 
+    /*
+     * initialSort: Column Id to sort by on init.
+     */
     initialSort: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object

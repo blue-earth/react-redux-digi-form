@@ -5,7 +5,8 @@ import React, {
 
 import {
   Popover,
-  OverlayTrigger
+  OverlayTrigger,
+  Checkbox
 } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { submissionsUrl } from 'helpers/urlHelper';
@@ -13,6 +14,7 @@ import {
   MdEmail,
   MdPhone
 } from 'react-icons/lib/md';
+import _ from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import styles from './CustomCells.scss';
 import { DropdownHeaderCell, DateCell } from 'components/GriddleComponents/CommonCells/CommonCells';
@@ -56,6 +58,33 @@ export class StatusHeaderCell extends DropdownHeaderCell {
     ];
   }
 
+}
+
+export class ActionsHeaderCell extends Component {
+  static propTypes = {
+    displayName: PropTypes.string.isRequired,
+    columnName: PropTypes.string.isRequired,
+    isAllSelected: PropTypes.bool.isRequired,
+    selectAllItems: PropTypes.func.isRequired
+  };
+
+  handleCheckboxChange = (event) => {
+    const { selectAllItems, isAllSelected } = this.props;
+    selectAllItems(!isAllSelected);
+  }
+
+  render() {
+    const { isAllSelected } = this.props;
+    return (
+      <div className={styles.actionsHeaderCell}>
+        <div className={styles.rightMiddle}>
+          <Checkbox onChange={this.handleCheckboxChange} checked={isAllSelected}>
+            &nbsp;
+          </Checkbox>
+        </div>
+      </div>
+    );
+  }
 }
 
 export class ContactInfoCell extends Component {
@@ -117,15 +146,29 @@ export class ContactInfoCell extends Component {
 export class ActionsCell extends Component {
 
   static propTypes = {
-    rowData: PropTypes.object.isRequired
+    rowData: PropTypes.object.isRequired,
+    metadata: PropTypes.object.isRequired
   };
 
+  handleCheckboxChange = (event) => {
+    const { metadata: { toggleSelectItem }, rowData } = this.props;
+    toggleSelectItem(rowData.response_id);
+  }
+
   render() {
-    const { rowData } = this.props;
+    const { rowData, metadata: { selectedItems } } = this.props;
     return (
-      <Link to={submissionsUrl(`/${rowData.form_id}/${rowData.response_id}`)}>
-        View
-      </Link>
+      <div className={styles.actionsCell}>
+        <Link to={submissionsUrl(`/${rowData.form_id}/${rowData.response_id}`)}>
+          View
+        </Link>
+        <div className={styles.rightMiddle}>
+          <Checkbox onChange={this.handleCheckboxChange}
+            checked={_.includes(selectedItems, rowData.response_id)}>
+            &nbsp;
+          </Checkbox>
+        </div>
+      </div>
     );
   }
 }

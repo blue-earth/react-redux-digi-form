@@ -9,6 +9,7 @@ import _ from 'lodash';
 export const RECEIVE_FORMSLIST = 'RECEIVE_FORMSLIST';
 export const REQUEST_FORMSLIST = 'REQUEST_FORMSLIST';
 export const DONE_FETCHING_FORMSLIST = 'DONE_FETCHING_FORMSLIST';
+export const SELECT_FORM_ITEMS = 'SELECT_FORM_ITEMS';
 
 export const INIT_FORMSLIST_STATE = {
   id: 0,
@@ -18,7 +19,8 @@ export const INIT_FORMSLIST_STATE = {
   pageSize: 10, // indicates number of items per page.
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: null, // indicates the column name to sort by
-  sortAscending: true // indicates the sort direction (true: ascending | false: descending)
+  sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
+  selectedItems: [] // holds the selected items id.
 };
 
 // ------------------------------------
@@ -37,6 +39,11 @@ export const receiveFormsList = createAction(RECEIVE_FORMSLIST);
 export const doneFetchingFormsList = createAction(DONE_FETCHING_FORMSLIST);
 
 // ------------------------------------
+// Action: selectItems
+// ------------------------------------
+export const selectItems = createAction(SELECT_FORM_ITEMS);
+
+// ------------------------------------
 // Action: fetchFormsList
 // ------------------------------------
 export const fetchFormsList = (options) => {
@@ -50,6 +57,49 @@ export const fetchFormsList = (options) => {
     ]), options);
     dispatch(requestFormsList());
     dispatch(processFetchFormsList(options));
+  };
+};
+
+// ------------------------------------
+// Action: selectAllItems
+// ------------------------------------
+export const selectAllItems = (selected) => {
+  return (dispatch, getState) => {
+    var selectedItems = [];
+    if (selected) {
+      const formsList = getState().formsList;
+      const forms = formsList.forms;
+      selectedItems = _.map(forms, 'id');
+    }
+    dispatch(selectItems(selectedItems));
+  };
+};
+
+// ------------------------------------
+// Action: toggleSelectItem
+// ------------------------------------
+export const toggleSelectItem = (id) => {
+  return (dispatch, getState) => {
+    const formsList = getState().formsList;
+    const selectedItems = formsList.selectedItems;
+    const newSelectedItems = _.xor(selectedItems, [id]);
+    dispatch(selectItems(newSelectedItems));
+  };
+};
+
+// ------------------------------------
+// Action: selectItem()
+// ------------------------------------
+export const selectItem = ({id, selected}) => {
+  return (dispatch, getState) => {
+    const formsList = getState().formsList;
+    var selectedItems = formsList.selectedItems;
+    if (selected) {
+      selectedItems = _.union(selectedItems, [id]);
+    } else {
+      selectedItems = _.difference(selectedItems, [id]);
+    }
+    dispatch(selectItems(selectedItems));
   };
 };
 
@@ -116,6 +166,10 @@ const formsListReducer = (state = INIT_FORMSLIST_STATE, action) => {
     case DONE_FETCHING_FORMSLIST:
       return Object.assign({}, state, {
         isFetching: false
+      });
+    case SELECT_FORM_ITEMS:
+      return Object.assign({}, state, {
+        selectedItems: action.payload
       });
     default:
       return state;

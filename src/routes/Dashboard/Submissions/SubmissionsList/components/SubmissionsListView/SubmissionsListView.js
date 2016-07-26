@@ -6,6 +6,7 @@ import {
   AuthorHeaderCell,
   ProgressHeaderCell,
   StatusHeaderCell,
+  ActionsHeaderCell,
   ContactInfoCell,
   DateCell,
   ActionsCell
@@ -32,18 +33,57 @@ class SubmissionsListView extends Component {
      */
     fetchSubmissions: PropTypes.func.isRequired,
 
+    /*
+     * page: Current page number
+     */
     page: PropTypes.number.isRequired,
 
+    /*
+     * pageSize: Number of items per page.
+     */
     pageSize: PropTypes.number.isRequired,
 
+    /*
+     * totalCount: Total number of items from backend.
+     */
     totalCount: PropTypes.number.isRequired,
 
-    sortColumn: PropTypes.string.isRequired,
+    /*
+     * sortColumn: Column ID to sort by.
+     */
+    sortColumn: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
+    ]).isRequired,
 
-    sortAscending: PropTypes.bool.isRequired
+    /*
+     * sortAscending: true if ascending, false if descending
+     */
+    sortAscending: PropTypes.bool.isRequired,
+
+    /*
+     * selectAllItems: Redux action to select all the rows in table
+     */
+    selectAllItems: PropTypes.func.isRequired,
+
+    /*
+     * toggleSelectItem: Redux action to select or deselect item by id.
+     */
+    toggleSelectItem: PropTypes.func.isRequired,
+
+    /*
+     * selectedItems: Redux state in array to hold selected item ids.
+     */
+    selectedItems: PropTypes.array.isRequired
   };
 
   get columnMetadata() {
+    const {
+      selectAllItems,
+      submissions,
+      selectedItems,
+      toggleSelectItem
+    } = this.props;
     return [
       {
         columnName: 'response_id',
@@ -136,7 +176,14 @@ class SubmissionsListView extends Component {
         locked: true,
         sortable: false,
         displayName: '',
-        customComponent: ActionsCell
+        customHeaderComponent: ActionsHeaderCell,
+        customComponent: ActionsCell,
+        selectedItems,
+        toggleSelectItem,
+        customHeaderComponentProps: {
+          selectAllItems,
+          isAllSelected: submissions.length === selectedItems.length
+        }
       }
     ];
   }

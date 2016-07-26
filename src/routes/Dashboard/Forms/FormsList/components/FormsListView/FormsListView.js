@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import {
   DateCell,
+  ActionsHeaderCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
@@ -28,72 +29,118 @@ class FormsListView extends Component {
      */
     fetchFormsList: PropTypes.func.isRequired,
 
+    /*
+     * page: Current page number
+     */
     page: PropTypes.number.isRequired,
 
+    /*
+     * pageSize: Number of items per page.
+     */
     pageSize: PropTypes.number.isRequired,
 
+    /*
+     * totalCount: Total number of items from backend.
+     */
     totalCount: PropTypes.number.isRequired,
 
-    sortColumn: PropTypes.string.isRequired,
+    /*
+     * sortColumn: Column ID to sort by.
+     */
+    sortColumn: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
+    ]).isRequired,
 
-    sortAscending: PropTypes.bool.isRequired
+    /*
+     * sortAscending: true if ascending, false if descending
+     */
+    sortAscending: PropTypes.bool.isRequired,
+
+    /*
+     * selectAllItems: Redux action to select all the rows in table
+     */
+    selectAllItems: PropTypes.func.isRequired,
+
+    /*
+     * toggleSelectItem: Redux action to select or deselect item by id.
+     */
+    toggleSelectItem: PropTypes.func.isRequired,
+
+    /*
+     * selectedItems: Redux state in array to hold selected item ids.
+     */
+    selectedItems: PropTypes.array.isRequired
   };
 
   get columnMetadata() {
+    const {
+      selectAllItems,
+      forms,
+      selectedItems,
+      toggleSelectItem
+    } = this.props;
     return [
       {
-        'columnName': 'id',
-        'order': 1,
-        'locked': false,
-        'visible': true,
-        'displayName': 'ID',
+        columnName: 'id',
+        order: 1,
+        locked: false,
+        visible: true,
+        displayName: 'ID',
         cssClassName: styles.columnID
       },
       {
-        'columnName': 'title',
-        'order': 2,
-        'locked': false,
-        'visible': true,
-        'displayName': 'Name',
+        columnName: 'title',
+        order: 2,
+        locked: false,
+        visible: true,
+        displayName: 'Name',
         cssClassName: styles.columnName
       },
       {
-        'columnName': 'author',
-        'order': 3,
-        'locked': false,
-        'visible': true,
-        'displayName': 'Created by',
+        columnName: 'author',
+        order: 3,
+        locked: false,
+        visible: true,
+        displayName: 'Created by',
         cssClassName: styles.columnCreatedBy
       },
       {
-        'columnName': 'created',
-        'order': 4,
-        'locked': false,
-        'visible': true,
-        'displayName': 'Created',
-        'customComponent': DateCell,
+        columnName: 'created',
+        order: 4,
+        locked: false,
+        visible: true,
+        displayName: 'Created',
+        customComponent: DateCell,
         cssClassName: styles.columnCreated
       },
       {
-        'columnName': 'status',
-        'order': 5,
-        'locked': false,
-        'visible': true,
-        'displayName': 'Status',
+        columnName: 'status',
+        order: 5,
+        locked: false,
+        visible: true,
+        displayName: 'Status',
         cssClassName: styles.columnStatus
       },
       {
-        'columnName': 'slug',
-        'locked': true,
-        'visible': false
+        columnName: 'slug',
+        locked: true,
+        visible: false
       },
       {
-        'columnName': 'actions',
-        'order': 6,
-        'locked': true,
-        'sortable': false,
-        'displayName': '',
-        'customComponent': ActionsCell
+        columnName: 'actions',
+        order: 6,
+        locked: true,
+        sortable: false,
+        displayName: '',
+        customHeaderComponent: ActionsHeaderCell,
+        customComponent: ActionsCell,
+        selectedItems,
+        toggleSelectItem,
+        customHeaderComponentProps: {
+          selectAllItems,
+          isAllSelected: forms.length === selectedItems.length
+        }
       }
     ];
   }

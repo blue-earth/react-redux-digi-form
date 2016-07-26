@@ -1,7 +1,9 @@
 import connect from 'redux/utils/connect';
 import {
   INIT_FORMSLIST_STATE,
-  fetchFormsList
+  fetchFormsList,
+  selectAllItems,
+  toggleSelectItem
 } from 'redux/modules/formsList';
 
 import FormsListView from '../components/FormsListView/FormsListView';
@@ -19,7 +21,8 @@ const mapStateToProps = (state) => {
     page,
     pageSize,
     sortColumn,
-    sortAscending
+    sortAscending,
+    selectedItems
   } = formsList || INIT_FORMSLIST_STATE;
   return {
     isFetching,
@@ -28,12 +31,15 @@ const mapStateToProps = (state) => {
     page,
     pageSize,
     sortColumn,
-    sortAscending
+    sortAscending,
+    selectedItems
   };
 };
 
 const mapActionCreators = {
-  fetchFormsList
+  fetchFormsList,
+  selectAllItems,
+  toggleSelectItem
 };
 
 export default connect(mapStateToProps, mapActionCreators)(FormsListView);
