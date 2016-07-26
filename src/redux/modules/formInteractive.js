@@ -185,7 +185,7 @@ export const requestAnswers = () => {
 };
 
 // ------------------------------------
-// Action: receiveForm
+// Action: receiveAnswers
 // ------------------------------------
 export const receiveAnswers = (data) => {
   return {
