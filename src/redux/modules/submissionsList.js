@@ -3,7 +3,7 @@ import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { buildQueryString } from 'helpers/pureFunctions';
 import { getPageQueryParamsObject } from 'helpers/pageListingHelpers';
-import { createAction } from 'redux-actions';
+import { createAction, handleActions } from 'redux-actions';
 import _ from 'lodash';
 
 export const RECEIVE_SUBMISSIONS = 'RECEIVE_SUBMISSIONS';
@@ -155,25 +155,25 @@ const processReceiveSubmissions = (res, options) => {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const submissionsReducer = (state = INIT_SUBMISSIONS_STATE, action) => {
-  switch (action.type) {
-    case RECEIVE_SUBMISSIONS:
-      return Object.assign({}, state, action.payload);
-    case REQUEST_SUBMISSIONS:
-      return Object.assign({}, state, {
-        isFetching: true
-      });
-    case DONE_FETCHING_SUBMISSIONS:
-      return Object.assign({}, state, {
-        isFetching: false
-      });
-    case SELECT_SUBMISSION_ITEMS:
-      return Object.assign({}, state, {
-        selectedItems: action.payload
-      });
-    default:
-      return state;
-  }
-};
+const submissionsReducer = handleActions({
+  RECEIVE_SUBMISSIONS: (state, action) =>
+    Object.assign({}, state, action.payload),
+
+  REQUEST_SUBMISSIONS: (state, action) =>
+    Object.assign({}, state, {
+      isFetching: true
+    }),
+
+  DONE_FETCHING_SUBMISSIONS: (state, action) =>
+    Object.assign({}, state, {
+      isFetching: false
+    }),
+
+  SELECT_SUBMISSION_ITEMS: (state, action) =>
+    Object.assign({}, state, {
+      selectedItems: action.payload
+    })
+
+}, INIT_SUBMISSIONS_STATE);
 
 export default submissionsReducer;

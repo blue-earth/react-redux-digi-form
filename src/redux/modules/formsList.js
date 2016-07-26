@@ -3,7 +3,7 @@ import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { buildQueryString } from 'helpers/pureFunctions';
 import { getPageQueryParamsObject } from 'helpers/pageListingHelpers';
-import { createAction } from 'redux-actions';
+import { createAction, handleActions } from 'redux-actions';
 import _ from 'lodash';
 
 export const RECEIVE_FORMSLIST = 'RECEIVE_FORMSLIST';
@@ -155,25 +155,25 @@ const processReceiveFormsList = (res, options) => {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const formsListReducer = (state = INIT_FORMSLIST_STATE, action) => {
-  switch (action.type) {
-    case RECEIVE_FORMSLIST:
-      return Object.assign({}, state, action.payload);
-    case REQUEST_FORMSLIST:
-      return Object.assign({}, state, {
-        isFetching: true
-      });
-    case DONE_FETCHING_FORMSLIST:
-      return Object.assign({}, state, {
-        isFetching: false
-      });
-    case SELECT_FORM_ITEMS:
-      return Object.assign({}, state, {
-        selectedItems: action.payload
-      });
-    default:
-      return state;
-  }
-};
+const formsListReducer = handleActions({
+
+  RECEIVE_FORMSLIST: (state, action) =>
+    Object.assign({}, state, action.payload),
+
+  REQUEST_FORMSLIST: (state, action) =>
+    Object.assign({}, state, {
+      isFetching: true
+    }),
+
+  DONE_FETCHING_FORMSLIST: (state, action) =>
+    Object.assign({}, state, {
+      isFetching: false
+    }),
+
+  SELECT_FORM_ITEMS: (state, action) =>
+    Object.assign({}, state, {
+      selectedItems: action.payload
+    })
+}, INIT_FORMSLIST_STATE);
 
 export default formsListReducer;
