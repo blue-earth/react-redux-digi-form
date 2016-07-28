@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import styles from './Verifier.scss';
-
 class Verifier extends Component {
   static contextTypes = {
     primaryColor: React.PropTypes.string
@@ -13,10 +12,15 @@ class Verifier extends Component {
     type: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired
   };
-
   renderEmondoEmailFieldService() {
     return (
       <span>This email is unavailable.</span>
+    );
+  }
+
+  renderEmondoAuthenticationService() {
+    return (
+      <span>Incorrect password. Passwords are case sensitive.</span>
     );
   }
 
@@ -40,6 +44,9 @@ class Verifier extends Component {
           break;
         case 'AccessCodeService':
           output = this.renderAccessCodeService();
+          break;
+        case 'EmondoAuthenticationService':
+          output = this.renderEmondoAuthenticationService();
           break;
         default:
           return false;

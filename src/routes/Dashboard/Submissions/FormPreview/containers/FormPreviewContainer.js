@@ -5,7 +5,7 @@ import {
   fetchAnswers,
   fetchFormIfNeeded,
   updateAccessCode
-} from 'redux/modules/formInteractive';
+} from 'redux/modules/submissionPreview';
 
 import FormPreview from '../components/FormPreview/FormPreview';
 
@@ -17,7 +17,7 @@ const mapActionCreators = {
 };
 
 const mapStateToProps = (state) => {
-  const { formInteractive } = state;
+  const { submissionPreview } = state;
   const {
     id,
     sessionId,
@@ -27,7 +27,7 @@ const mapStateToProps = (state) => {
     primaryColor,
     formAccessStatus,
     formAccessCode
-  } = formInteractive || INIT_FORM_STATE;
+  } = submissionPreview || INIT_FORM_STATE;
   return {
     id: parseInt(id, 10),
     sessionId: parseInt(sessionId, 10),

@@ -1,0 +1,59 @@
+@import './mixins';
+@import './variables';
+$slt-header-bg-color:     	#ECF4FB;
+$slt-header-text-color:     #1C4468;
+$slt-border-color:          rgba(204, 204, 204, .3);
+
+.submissionsList {
+  padding: 10px;
+  height: 100%;
+}
+.submissionsListInner {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  position: relative;
+  font-size: 12px;
+}
+
+.columnID {
+  width: 4%;
+}
+.columnName {
+  width: 15%;
+}
+.columnProgress {
+  width: 7%;
+}
+.columnPercent {
+  width: 3%;
+}
+.columnAuthor {
+  width: 10%;
+}
+.columnChanel {
+  width: 6%;
+}
+.columnCreated {
+  width: 7%;
+}
+.columnStatus {
+  width: 8%;
+  text-align: center;
+}
+.columnType {
+  width: 8%;
+  text-align: center;
+}
+.columnLanguage {
+  width: 6%;
+  text-align: center;
+}
+.columnDuration {
+  width: 7%;
+  text-align: center;
+}
+.columnContactInfo {
+  width: 7%;
+  text-align: center;
+}

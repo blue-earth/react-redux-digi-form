@@ -1,10 +1,13 @@
+
 import { combineReducers } from 'redux';
 import router from './modules/router';
 import { reducer as modal } from 'redux-modal';
+import authReducer from './modules/auth';
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
     // Add sync reducers here
+    auth: authReducer,
     router,
     modal,
     ...asyncReducers

@@ -1,0 +1,35 @@
+@import './mixins';
+@import './variables';
+$slt-header-bg-color:       #ECF4FB;
+$slt-header-text-color:     #1C4468;
+$slt-border-color:          rgba(204, 204, 204, .3);
+
+.formsList {
+  padding: 10px;
+  height: 100%;
+}
+.formsListInner {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  position: relative;
+  font-size: 12px;
+}
+
+.columnID {
+  width: 4%;
+}
+.columnName {
+  width: 20%;
+}
+.columnCreatedBy {
+  width: 10%;
+  text-align: center;
+}
+.columnCreated {
+  width: 10%;
+}
+.columnStatus {
+  width: 8%;
+  text-align: center;
+}

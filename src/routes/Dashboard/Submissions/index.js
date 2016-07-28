@@ -7,8 +7,8 @@ export default (store) => ({
   path: submissionsPath,
   getChildRoutes(location, cb) {
     require.ensure([], (require) => {
-      const reducer = require('redux/modules/formInteractive').default;
-      injectReducer(store, { key: 'formInteractive', reducer });
+      const reducer = require('redux/modules/submissionPreview').default;
+      injectReducer(store, { key: 'submissionPreview', reducer });
       cb(null,
         require('./FormPreview')
       );

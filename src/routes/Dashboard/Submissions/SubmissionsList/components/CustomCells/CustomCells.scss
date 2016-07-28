@@ -1,0 +1,28 @@
+@import './mixins';
+@import './variables';
+
+$contact-icon-color: #1C4468;
+
+.contactIcon {
+  margin: 0 5px;
+  display: inline-block;
+  cursor: pointer;
+  color: $contact-icon-color;
+  &:focus, &:hover, &:active:focus, &:hover:focus {
+    outline: none;
+  }
+}
+
+.actionsHeaderCell,
+.actionsCell {
+  padding-right: 30px;
+  position: relative;
+  input {
+    cursor: pointer;
+  }
+}
+.rightMiddle {
+  position: absolute;
+  right: 0;
+  @include vcenter;
+}

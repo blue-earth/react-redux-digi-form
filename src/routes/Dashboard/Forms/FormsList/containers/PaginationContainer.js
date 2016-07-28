@@ -1,12 +1,10 @@
 import connect from 'redux/utils/connect';
 import {
   INIT_FORMSLIST_STATE,
-  fetchFormsList,
-  selectAllItems,
-  toggleSelectItem
+  fetchFormsList
 } from 'redux/modules/formsList';
 
-import FormsListView from '../components/FormsListView/FormsListView';
+import Pagination from 'components/GriddleComponents/Pagination/Pagination';
 
 /*  Object of action creators (can also be function that returns object).
     Keys will be passed as props to presentational components. Here we are
@@ -15,31 +13,15 @@ import FormsListView from '../components/FormsListView/FormsListView';
 const mapStateToProps = (state) => {
   const { formsList } = state;
   const {
-    isFetching,
-    forms,
-    totalCount,
-    page,
-    pageSize,
-    sortColumn,
-    sortAscending,
-    selectedItems
+    pageSize
   } = formsList || INIT_FORMSLIST_STATE;
   return {
-    isFetching,
-    forms,
-    totalCount,
-    page,
-    pageSize,
-    sortColumn,
-    sortAscending,
-    selectedItems
+    pageSize
   };
 };
 
 const mapActionCreators = {
-  fetchFormsList,
-  selectAllItems,
-  toggleSelectItem
+  fetchFormsList
 };
 
-export default connect(mapStateToProps, mapActionCreators)(FormsListView);
+export default connect(mapStateToProps, mapActionCreators)(Pagination);
