@@ -95,14 +95,15 @@ export class ContactInfoCell extends Component {
 
   get emailPopover() {
     const { rowData } = this.props;
+    const contactEmail = rowData.contact_email ? rowData.contact_email : '';
     return (
       <Popover id={`emailPopOver_${rowData.response_id}`}>
         <div className="text-center">
           <MdEmail size={18} />
           <br />
-          {rowData.contact_email}
+          {contactEmail}
         </div>
-        <CopyToClipboard text={rowData.contact_email}>
+        <CopyToClipboard text={contactEmail}>
           <a href="javascript:;">Copy to clipboard</a>
         </CopyToClipboard>
       </Popover>
@@ -111,14 +112,15 @@ export class ContactInfoCell extends Component {
 
   get phonePopover() {
     const { rowData } = this.props;
+    const contactPhone = rowData.contact_phone ? rowData.contact_phone : '';
     return (
       <Popover id={`phonePopOver_${rowData.response_id}`}>
         <div className="text-center">
           <MdPhone size={18} />
           <br />
-          {rowData.contact_phone}
+          {contactPhone}
         </div>
-        <CopyToClipboard text={rowData.contact_phone}>
+        <CopyToClipboard text={contactPhone}>
           <a href="javascript:;">Copy to clipboard</a>
         </CopyToClipboard>
       </Popover>

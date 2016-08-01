@@ -18,7 +18,7 @@ export const INIT_FORMSLIST_STATE = {
   page: 0, // indicates the current page number submission table page.
   pageSize: 10, // indicates number of items per page.
   totalCount: 0, // indicates total number of submission items available on server.
-  sortColumn: null, // indicates the column name to sort by
+  sortColumn: 'id', // indicates the column name to sort by
   sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
   selectedItems: [] // holds the selected items id.
 };

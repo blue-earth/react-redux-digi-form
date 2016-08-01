@@ -94,7 +94,7 @@ class DashboardTabs extends Component {
             {
               this.navItems.map((navItem) => {
                 return (
-                  <NavItem eventKey={navItem.path} className="navItem" href="#">
+                  <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
                     {navItem.label}
                   </NavItem>
                 );
