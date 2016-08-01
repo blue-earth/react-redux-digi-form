@@ -14,6 +14,29 @@ import {
 import moment from 'moment';
 import styles from './CommonCells.scss';
 
+class CustomToggle extends Component {
+  static propTypes = {
+    className: PropTypes.string,
+    children: PropTypes.node,
+    onClick: PropTypes.func
+  };
+
+  handleClick = (e) => {
+    // e.preventDefault();
+    e.stopPropagation();
+    this.props.onClick(e);
+  }
+
+  render() {
+    const { children, className } = this.props;
+    return (
+      <a href="" className={className} onClick={this.handleClick}>
+        {children}
+      </a>
+    );
+  }
+}
+
 export class DropdownHeaderCell extends Component {
 
   static propTypes = {
@@ -27,6 +50,13 @@ export class DropdownHeaderCell extends Component {
       { key: 'todo', text: 'Add menu item' }
     ]
   };
+
+  static counter = 0;
+
+  constructor(props) {
+    super(props);
+    DropdownHeaderCell.counter++;
+  }
 
   selectFilter = (key) => {
     // this.props.filterByColumn(key, this.props.columnName)
@@ -49,13 +79,16 @@ export class DropdownHeaderCell extends Component {
   render() {
     return (
       <div>
-        <Dropdown pullRight onSelect={this.selectFilter} className={styles.dropdownHeader}>
+        <Dropdown pullRight
+          id={`dropdownHeaderCell_${DropdownHeaderCell.counter}`}
+          onSelect={this.selectFilter}
+          className={styles.dropdownHeader}>
           <span className={styles.dropdownText}>{this.props.displayName}</span>
-          <a href="javascript:;" bsRole="toggle"
+          <CustomToggle bsRole="toggle"
             className={styles.dropdownArrow}
-            onClick={this.stopPropagation}>
+          >
             <MdKeyboardArrowDown size={16} />
-          </a>
+          </CustomToggle>
           <Dropdown.Menu onClick={this.stopPropagation}>
             {
               this.menuItems.map(item => {

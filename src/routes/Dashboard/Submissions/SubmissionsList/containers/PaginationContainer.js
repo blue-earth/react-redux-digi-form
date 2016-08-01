@@ -21,7 +21,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapActionCreators = {
-  fetchSubmissions
+  fetchPage: fetchSubmissions
 };
 
 export default connect(mapStateToProps, mapActionCreators)(Pagination);

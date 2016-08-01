@@ -21,7 +21,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapActionCreators = {
-  fetchFormsList
+  fetchPage: fetchFormsList
 };
 
 export default connect(mapStateToProps, mapActionCreators)(Pagination);

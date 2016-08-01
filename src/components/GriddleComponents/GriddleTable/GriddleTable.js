@@ -64,7 +64,7 @@ class GriddleTable extends Component {
     /*
      * Pagination: Custom pagination component
      */
-    Pagination: PropTypes.node.isRequired,
+    Pagination: PropTypes.any,
 
     /*
      * initialSort: Column Id to sort by on init.

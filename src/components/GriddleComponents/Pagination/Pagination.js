@@ -25,13 +25,20 @@ export default class Pagination extends Component {
     next: PropTypes.func.isReuqired,
     setPage: PropTypes.func.isRequired,
     pageSize: PropTypes.number.isRequired,
-    fetchSubmissions: PropTypes.func.isRequired
+    fetchPage: PropTypes.func.isRequired
   };
 
   static defaultProps = {
     maxPage: 0,
     currentPage: 0
   };
+
+  static counter = 0;
+
+  constructor(props) {
+    super(props);
+    Pagination.counter++;
+  }
 
   changePage = (page) => {
     const { setPage } = this.props;
@@ -49,8 +56,8 @@ export default class Pagination extends Component {
   }
 
   changePageSize = (pageSize) => {
-    const { fetchSubmissions } = this.props;
-    fetchSubmissions({
+    const { fetchPage } = this.props;
+    fetchPage({
       page: 0,
       pageSize
     });
@@ -59,7 +66,9 @@ export default class Pagination extends Component {
   renderPageSize() {
     const { pageSize } = this.props;
     return (
-      <Dropdown pullRight dropup={pageSize >= 20} onSelect={this.changePageSize}>
+      <Dropdown pullRight dropup={pageSize >= 20}
+        id={`dropdownPageSize_${Pagination.counter}`}
+        onSelect={this.changePageSize}>
         <Dropdown.Toggle bsSize="xsmall">
           {`Show: ${pageSize}`}
         </Dropdown.Toggle>
@@ -94,7 +103,9 @@ export default class Pagination extends Component {
           </Button>
         </div>
         <div className={styles.paginationItem}>
-          <Dropdown pullRight dropup={pageSize >= 20} onSelect={this.changePage}>
+          <Dropdown pullRight dropup={pageSize >= 20}
+            id={`dropdownPageNumber_${Pagination.counter}`}
+            onSelect={this.changePage}>
             <Dropdown.Toggle bsSize="xsmall">
               {currentPage + 1}
             </Dropdown.Toggle>
