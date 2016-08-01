@@ -36,9 +36,9 @@ class DrawingBoard extends Component {
     questions: PropTypes.array.isRequired,
 
     /*
-     * addElement: used to set active input element selected, and enables to draw on the right
+     * saveElement: Redux action to save the current element being edited.
      */
-    addElement: PropTypes.func.isRequired,
+    saveElement: PropTypes.func.isRequired,
 
     /*
      * activeInputName: Redux state to indicate the active input element name.
@@ -196,26 +196,21 @@ class DrawingBoard extends Component {
       endX,
       endY
     });
-    const { addElement, activeInputName, pageZoom, pageNumber } = this.props;
+    const { updateMappingInfo, pageZoom, pageNumber } = this.props;
 
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
     }
 
-    addElement({
-      question: {
-        type: activeInputName
-      },
-      mappingInfo: {
-        type: 'Standard',
-        pageNumber,
-        bounding_box: [{
-          left: Math.min(startX, endX) / pageZoom,
-          top: Math.min(startY, endY) / pageZoom,
-          width: Math.abs(endX - startX) / pageZoom,
-          height: Math.abs(endY - startY) / pageZoom
-        }]
-      }
+    updateMappingInfo({
+      type: 'Standard',
+      pageNumber,
+      boundingBox: [{
+        left: Math.min(startX, endX) / pageZoom,
+        top: Math.min(startY, endY) / pageZoom,
+        width: Math.abs(endX - startX) / pageZoom,
+        height: Math.abs(endY - startY) / pageZoom
+      }]
     });
   }
 
@@ -278,8 +273,8 @@ class DrawingBoard extends Component {
   }
   */
   handleResizeStart = (metaData) => {
-    const { currentQuestionId, setCurrentQuestionId } = this.props;
-    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
+    // const { currentQuestionId, setCurrentQuestionId } = this.props;
+    // currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
   }
 
   handleResizeMove = (rect, metaData, isSnapping) => {
@@ -306,8 +301,7 @@ class DrawingBoard extends Component {
     };
     if (!_.isEqual(boundingBox, newBoundingBox)) {
       updateMappingInfo({
-        id,
-        bounding_box: [newBoundingBox]
+        boundingBox: [newBoundingBox]
       });
     }
     // Reset SnappingHelper
@@ -353,9 +347,8 @@ class DrawingBoard extends Component {
     };
     if (!_.isEqual(boundingBox, newBoundingBox)) {
       updateMappingInfo({
-        id,
         pageNumber: destPageNumber && destPageNumber,
-        bounding_box: [newBoundingBox]
+        boundingBox: [newBoundingBox]
       });
     };
 
@@ -428,8 +421,7 @@ class DrawingBoard extends Component {
           return;
       }
       updateMappingInfo({
-        id: currentQuestionId,
-        bounding_box: [newBoundingBox]
+        boundingBox: [newBoundingBox]
       });
       event.preventDefault();
     }
@@ -461,7 +453,9 @@ class DrawingBoard extends Component {
       });
     }
     var documentMappingComponents = () => {
-      const myDocumentMapping = _.filter(documentMapping, {pageNumber});
+      const myDocumentMapping = _.filter(documentMapping, {
+        'page_number': pageNumber
+      });
       return myDocumentMapping.map((mappingInfo) => {
         const boundingBox = mappingInfo.bounding_box[0];
         var index = findIndexById(questions, mappingInfo.id);

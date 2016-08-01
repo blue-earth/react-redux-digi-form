@@ -20,9 +20,9 @@ class QuestionEditView extends Component {
     deleteElement: PropTypes.func.isRequired,
 
     /*
-     * editElement: used to edit instruction of active input element selected
+     * saveElement: Redux action to save the current element being edited.
      */
-    editElement: PropTypes.func.isRequired,
+    saveElement: PropTypes.func.isRequired,
 
     /*
      * setQuestionEditMode: Redux action to set question edit mode
@@ -30,15 +30,14 @@ class QuestionEditView extends Component {
     setQuestionEditMode: PropTypes.func.isRequired,
 
     /*
-     * questions: Redux state to store the array of questions.
+     * currentElement: Redux state to store the state of the element being edited currently.
      */
-    questions: PropTypes.array.isRequired,
+    currentElement: PropTypes.object.isRequired,
 
     /*
      * currentQuestionInstruction: Redux state to specify the active input instruction.
      */
-    currentQuestionInstruction: PropTypes.string.isRequired
-
+    updateQuestionInfo: PropTypes.func.isRequired
   };
 
   componentWillMount() {
@@ -67,16 +66,22 @@ class QuestionEditView extends Component {
   }
 
   handleCancel = () => {
-    const { setQuestionEditMode, currentQuestionId } = this.props;
+    const { setQuestionEditMode } = this.props;
     setQuestionEditMode({
-      id: currentQuestionId,
       mode: false
     });
   }
 
   handleSave = () => {
-    const { editElement, currentQuestionId, currentQuestionInstruction } = this.props;
-    editElement(currentQuestionId, currentQuestionInstruction);
+    const { saveElement } = this.props;
+    saveElement();
+  }
+
+  setInstruction = (value) => {
+    const { updateQuestionInfo } = this.props;
+    updateQuestionInfo({
+      instruction: value
+    });
   }
 
   renderTopActionButtons() {
@@ -92,11 +97,16 @@ class QuestionEditView extends Component {
   }
 
   render() {
+    const { currentElement: { question } } = this.props;
+    const instruction = question.question_instruction ? question.question_instruction : '';
     return (
       <div className={styles.questionEditView}>
         {this.renderTopActionButtons()}
         {'Question Edit View'}
-        <QuestionRichTextEditor {...this.props} />
+        <QuestionRichTextEditor
+          value={instruction}
+          setValue={this.setInstruction}
+        />
       </div>
     );
   }

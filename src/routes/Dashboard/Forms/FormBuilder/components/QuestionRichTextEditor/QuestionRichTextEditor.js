@@ -33,6 +33,11 @@ const AnswerSpan = (props) => {
 
 class QuestionRichTextEditor extends Component {
 
+  static propTypes = {
+    value: PropTypes.string.isRequired,
+    setValue: PropTypes.func.isRequired
+  };
+
   constructor(props) {
     super(props);
     const answerBlockDecorator = new CompositeDecorator([
@@ -41,36 +46,13 @@ class QuestionRichTextEditor extends Component {
         component: AnswerSpan
       }
     ]);
-    const { currentQuestionInstruction } = this.props;
+    const { value } = this.props;
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     const initialEditorState = EditorState.createEmpty(answerBlockDecorator);
     const initialContentState = Modifier.insertText(initialEditorState.getCurrentContent(),
-      initialEditorState.getSelection(), currentQuestionInstruction);
+      initialEditorState.getSelection(), value);
     this.state = {editorState: EditorState.createWithContent(initialContentState)};
   }
-
-  static propTypes = {
-    /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
-     */
-    currentQuestionId: PropTypes.number.isRequired,
-
-    /*
-     * questions: Redux state to store the array of questions.
-     */
-    questions: PropTypes.array.isRequired,
-
-    /*
-     * currentQuestionInstruction: Redux state to specify the active input instruction.
-     */
-    currentQuestionInstruction: PropTypes.string.isRequired,
-
-    /*
-     * setCurrentQuestionInstruction: Action to set instruction of active input element selected
-     */
-    setCurrentQuestionInstruction: PropTypes.func.isRequired
-
-  };
 
   componentWillReceiveProps(nextProps) {
     const answerBlockDecorator = new CompositeDecorator([
@@ -79,11 +61,11 @@ class QuestionRichTextEditor extends Component {
         component: AnswerSpan
       }
     ]);
-    const { currentQuestionInstruction } = nextProps;
+    const { value } = nextProps;
     this.handleKeyCommand = this.handleKeyCommand.bind(this);
     const initialEditorState = EditorState.createEmpty(answerBlockDecorator);
     const initialContentState = Modifier.insertText(initialEditorState.getCurrentContent(),
-      initialEditorState.getSelection(), currentQuestionInstruction);
+      initialEditorState.getSelection(), value);
     this.state = {editorState: EditorState.createWithContent(initialContentState)};
   }
 
@@ -98,8 +80,8 @@ class QuestionRichTextEditor extends Component {
 
   onChange = (editorState) => {
     this.setState({editorState});
-    const { setCurrentQuestionInstruction } = this.props;
-    setCurrentQuestionInstruction(editorState.getCurrentContent().getPlainText());
+    const { setValue } = this.props;
+    setValue(editorState.getCurrentContent().getPlainText());
     // console.log(editorState.getCurrentContent().getPlainText());
   }
 

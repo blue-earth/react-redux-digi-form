@@ -5,6 +5,7 @@ import React, {
 import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
 import QuestionEditView from '../QuestionEditView/QuestionEditView';
+import classNames from 'classnames';
 import styles from './FormBuilder.scss';
 
 class FormBuilder extends Component {
@@ -51,11 +52,6 @@ class FormBuilder extends Component {
     activeInputName: PropTypes.string.isRequired,
 
     /*
-     * setCurrentQuestionInstruction: Action to set instruction of active input element selected
-     */
-    setCurrentQuestionInstruction: PropTypes.func.isRequired,
-
-    /*
      * setActiveInputName: Action to set active input element selected, and enables to draw on the right
      */
     setActiveInputName: PropTypes.func.isRequired,
@@ -71,9 +67,9 @@ class FormBuilder extends Component {
     setCurrentQuestionId: PropTypes.func.isRequired,
 
     /*
-     * addElement: Action to set active input element selected, and enables to draw on the right
+     * saveElement: Redux action to save the current element being edited.
      */
-    addElement: PropTypes.func.isRequired,
+    saveElement: PropTypes.func.isRequired,
 
     /*
      * updateMappingInfo: Action to update the document mapping info.
@@ -96,7 +92,9 @@ class FormBuilder extends Component {
     questionEditMode: PropTypes.bool.isRequired,
 
     /*
-     * setQuestionEditMode: Redux action to set question edit mode
+     * setQuestionEditMode: Redux action to set question edit mode.
+     * If id is specified, enters into existing question edit mode.
+     * If id is not specified, enters into new question edit mode.
      */
     setQuestionEditMode: PropTypes.func.isRequired,
 
@@ -135,16 +133,24 @@ class FormBuilder extends Component {
   }
 
   render() {
-    const { questionEditMode, currentQuestionId } = this.props;
+    const { questionEditMode } = this.props;
+    const leftPanelClass = classNames({
+      [styles.leftPanel]: true,
+      [styles.open]: questionEditMode
+    });
+    const rightPanelClass = classNames({
+      [styles.rightPanel]: true,
+      [styles.open]: questionEditMode
+    });
     return (
       <div className={styles.formBuilderContainer}>
-        <div className={styles.leftPanel} onClick={this.resetActiveInputName}>
-          {questionEditMode && currentQuestionId
+        <div className={leftPanelClass}>
+          {questionEditMode
             ? <QuestionEditView {...this.props} />
             : <ElementsListView {...this.props} />
           }
         </div>
-        <div className={styles.rightPanel}>
+        <div className={rightPanelClass}>
           <PageView {...this.props} />
         </div>
       </div>
