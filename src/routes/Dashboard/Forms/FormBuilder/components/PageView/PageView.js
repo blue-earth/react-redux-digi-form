@@ -27,11 +27,6 @@ class PageView extends Component {
     documents: PropTypes.array.isRequired,
 
     /*
-     * addElement: used to set active input element selected, and enables to draw on the right
-     */
-    addElement: PropTypes.func.isRequired,
-
-    /*
      * activeInputName: Redux state to indicate the active input element name.
      */
     activeInputName: PropTypes.string.isRequired,
