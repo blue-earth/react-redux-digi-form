@@ -18,11 +18,6 @@ class QuestionEditView extends Component {
 
   static propTypes = {
     /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
-     */
-    currentQuestionId: PropTypes.number.isRequired,
-
-    /*
      * deleteElement: used to set active input element selected, and enables to draw on the right
      */
     deleteElement: PropTypes.func.isRequired,
@@ -65,8 +60,8 @@ class QuestionEditView extends Component {
   }
 
   handleDelete = () => {
-    const { deleteElement, currentQuestionId } = this.props;
-    deleteElement(currentQuestionId);
+    const { deleteElement, currentElement } = this.props;
+    currentElement && deleteElement(currentElement.id);
   }
 
   handleReset = () => {
