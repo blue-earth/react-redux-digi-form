@@ -1,4 +1,5 @@
 import connect from 'redux/utils/connect';
+import { show } from 'redux-modal';
 import {
   INIT_BUILDER_STATE,
   newForm,
@@ -25,7 +26,8 @@ const mapActionCreators = {
   updateMappingInfo,
   setCurrentQuestionId,
   setPageZoom,
-  setQuestionEditMode
+  setQuestionEditMode,
+  show
 };
 
 const mapStateToProps = (state) => {
@@ -34,6 +36,7 @@ const mapStateToProps = (state) => {
     id,
     isFetching,
     isSubmitting,
+    isModified,
     questions,
     logics,
     documents,
@@ -50,6 +53,7 @@ const mapStateToProps = (state) => {
     id: parseInt(id),
     isFetching,
     isSubmitting,
+    isModified,
     questions,
     logics,
     documents,

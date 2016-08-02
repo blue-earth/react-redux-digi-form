@@ -47,6 +47,11 @@ class FormBuilder extends Component {
     isSubmitting: PropTypes.bool.isRequired,
 
     /*
+     * isModified: Redux state that indicates whether the form is modified since last save or load.
+     */
+    isModified: PropTypes.bool.isRequired,
+
+    /*
      * activeInputName: Redux state to indicate the active input element name.
      */
     activeInputName: PropTypes.string.isRequired,
@@ -113,7 +118,15 @@ class FormBuilder extends Component {
      */
     fetchForm: PropTypes.func.isRequired,
 
-    params: PropTypes.object
+    /*
+     * params: URL params
+     */
+    params: PropTypes.object,
+
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func.isRequired
   };
 
   componentWillMount() {
