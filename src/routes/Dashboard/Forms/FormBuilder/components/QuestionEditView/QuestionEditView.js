@@ -10,6 +10,7 @@ import {
 } from 'react-bootstrap';
 import { MdHelpOutline } from 'react-icons/lib/md';
 import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
+import CancelConfirmModal from '../CancelConfirmModal/CancelConfirmModal';
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
 import styles from './QuestionEditView.scss';
@@ -40,7 +41,17 @@ class QuestionEditView extends Component {
     /*
      * currentQuestionInstruction: Redux state to specify the active input instruction.
      */
-    updateQuestionInfo: PropTypes.func.isRequired
+    updateQuestionInfo: PropTypes.func.isRequired,
+
+    /*
+     * isModified: Redux state that indicates whether the form is modified since last save or load.
+     */
+    isModified: PropTypes.bool.isRequired,
+
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func.isRequired
   };
 
   componentWillMount() {
@@ -69,10 +80,15 @@ class QuestionEditView extends Component {
   }
 
   handleCancel = () => {
-    const { setQuestionEditMode } = this.props;
-    setQuestionEditMode({
-      mode: false
-    });
+    const { setQuestionEditMode, show, isModified } = this.props;
+    console.log(isModified);
+    if (isModified) {
+      show('cancelConfirmModal');
+    } else {
+      setQuestionEditMode({
+        mode: false
+      });
+    }
   }
 
   handleSave = () => {
@@ -164,6 +180,7 @@ class QuestionEditView extends Component {
   }
 
   render() {
+    const { saveElement, setQuestionEditMode } = this.props;
     return (
       <div className={styles.questionEditView}>
         {this.renderTopActionButtons()}
@@ -172,6 +189,9 @@ class QuestionEditView extends Component {
         {this.renderQuestionInstruction()}
         <hr className={styles.separator} />
         {this.renderQuestionDescription()}
+        <CancelConfirmModal
+          saveElement={saveElement}
+          setQuestionEditMode={setQuestionEditMode} />
       </div>
     );
   }

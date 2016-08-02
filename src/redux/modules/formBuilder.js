@@ -159,7 +159,8 @@ const _saveElement = (state, action) => {
     documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true),
     lastQuestionId: newQuestionId,
     currentQuestionId: newQuestionId,
-    currentElement
+    currentElement,
+    isModified: false
   });
 };
 
