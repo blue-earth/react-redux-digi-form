@@ -178,6 +178,8 @@ const _deleteElement = (state, action) => {
     documentMapping: _.pullAllBy(state.documentMapping, [{id}], 'id'),
     currentQuestionId: 0,
     questionEditMode: false,
+    currentElement: null,
+    activeInputName: '',
     isModified: true
   });
 };
