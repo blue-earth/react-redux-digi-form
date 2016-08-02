@@ -2,7 +2,11 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Button } from 'react-bootstrap';
+import {
+  Button,
+  Dropdown,
+  MenuItem
+} from 'react-bootstrap';
 import {
   Modifier,
   Editor,
@@ -11,7 +15,10 @@ import {
   Entity,
   CompositeDecorator
 } from 'draft-js';
-import DropdownInput from 'components/QuestionInputs/DropdownInput/DropdownInput';
+import classNames from 'classnames';
+import {
+  MdKeyboardArrowDown
+} from 'react-icons/lib/md';
 import styles from './QuestionRichTextEditor.scss';
 
 function findAnswerEntities(contentBlock, callback) {
@@ -78,14 +85,16 @@ class QuestionRichTextEditor extends Component {
     return false;
   }
 
-  onChange = (editorState) => {
+  handleValueChange = (editorState) => {
     this.setState({editorState});
+    console.log(editorState.getCurrentContent().getPlainText());
     const { setValue } = this.props;
     setValue(editorState.getCurrentContent().getPlainText());
     // console.log(editorState.getCurrentContent().getPlainText());
   }
 
   handleAnswerSelect = (value) => {
+    console.log(value);
     const { editorState } = this.state;
     const prevFocusOffset = editorState.getSelection().focusOffset;
     const prevAnchorOffset = editorState.getSelection().anchorOffset;
@@ -135,26 +144,65 @@ class QuestionRichTextEditor extends Component {
     console.log(editorState.getCurrentContent().getBlockMap());
   }
 
-  render() {
-    console.log('render');
+  renderToolbar() {
     return (
-      <div className={styles.questionRichTextEditor}>
+      <div className={styles.toolbar}>
         <div className={styles.inputWidget}>
-          <Button block onClick={this.showValue}>+Insert Hyperlink</Button>
+          <Button block bsSize="xsmall" onClick={this.showValue}>+ Insert Hyperlink</Button>
         </div>
         <div className={styles.inputWidget}>
-          <DropdownInput onChange={this.handleAnswerSelect} />
+          {this.renderAnswerDropdown()}
         </div>
         <div className={styles.styleWidget}>
-          <Button block onClick={this.onBoldClick}><b>B</b></Button>
-          <Button block onClick={this.onItalicClick}><i>I</i></Button>
+          <Button bsSize="xsmall"
+            className={`${styles.squareButton} pull-left`}
+            onClick={this.onBoldClick}>
+            <b>B</b>
+          </Button>
+          <Button bsSize="xsmall"
+            className={`${styles.squareButton} pull-right`}
+            onClick={this.onItalicClick}>
+            <i>I</i>
+          </Button>
         </div>
+      </div>
+    );
+  }
+
+  renderAnswerDropdown() {
+    const buttonClass = classNames({
+      [styles.dropdownAnswerButton]: true,
+      'btn btn-xs btn-default': true
+    });
+    return (
+      <Dropdown
+        id="QRT_AnswersDropdown"
+        className={styles.answersDropdown}
+        onSelect={this.handleAnswerSelect}>
+        <Button bsRole="toggle" block
+          className={buttonClass}>
+          + Insert Answer
+          <span className="pull-right">
+            <MdKeyboardArrowDown size={16} />
+          </span>
+        </Button>
+        <Dropdown.Menu>
+          <MenuItem eventKey="answer_1">answer_1</MenuItem>
+          <MenuItem eventKey="answer_2">answer_2</MenuItem>
+        </Dropdown.Menu>
+      </Dropdown>
+    );
+  }
+
+  render() {
+    return (
+      <div className={styles.questionRichTextEditor}>
+        {this.renderToolbar()}
         <div className={styles.editWidget}>
           <Editor
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
-            onChange={this.onChange}
-            ref="editor"
+            onChange={this.handleValueChange}
             spellCheck />
         </div>
       </div>

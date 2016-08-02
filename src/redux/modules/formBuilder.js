@@ -210,11 +210,19 @@ export const updateMappingInfo = createAction(UPDATE_MAPPING_INFO);
 // Helper: _updateQuestionInfo
 // ------------------------------------
 const _updateMappingInfo = (state, action) => {
+  const { id, pageNumber, boundingBox } = action.payload;
   const mappingInfo = {
-    'page_number': action.payload.pageNumber,
-    'bounding_box': action.payload.boundingBox
+    id,
+    'page_number': pageNumber,
+    'bounding_box': boundingBox
   };
-  return _updateCurrentElement(state, { mappingInfo });
+  if (id) { // If id is specified, directly update the documentMapping.
+    return Object.assign({}, state, {
+      documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true)
+    });
+  } else { // If id is not specified, update the currentElement.
+    return _updateCurrentElement(state, { mappingInfo });
+  }
 };
 
 // ------------------------------------
@@ -307,7 +315,7 @@ const formBuilderReducer = handleActions({
 
   SET_CURRENT_QUESTION_ID: (state, action) =>
     Object.assign({}, state, {
-      currentQuestionId: action.payload
+      currentQuestionId: _.defaultTo(action.payload, 0)
     }),
 
   SET_PAGE_ZOOM: (state, action) =>

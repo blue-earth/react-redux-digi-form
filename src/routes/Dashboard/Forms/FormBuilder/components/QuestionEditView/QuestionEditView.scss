@@ -1,2 +1,42 @@
+@import './mixins';
+@import './variables';
+
+$separator-color:   #666;
+
 .questionEditView {
+  padding: $builder-left-panel-padding;
+}
+.topActionButtons {
+  margin: 0px (-$builder-left-panel-padding + 10px);
+  @include clearfix;
+}
+.viewTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 15px 0 5px;
+}
+.separator {
+  margin: 0 (-$builder-left-panel-padding);
+  border-color: $separator-color;
+}
+.section {
+  @include clearfix;
+  padding: 10px 0;
+}
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+.popoverIcon {
+  cursor: pointer;
+  margin-left: 5px;
+  &:active:focus,
+  &:hover:focus,
+  &:focus {
+    outline: none;
+  }
+  &:hover, &:active {
+    color: #000;
+  }
 }
