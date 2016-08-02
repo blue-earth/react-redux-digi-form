@@ -72,6 +72,11 @@ class FormBuilder extends Component {
     saveElement: PropTypes.func.isRequired,
 
     /*
+     * currentElement: Redux state to hold the element currently being edited.
+     */
+    currentElement: PropTypes.object,
+
+    /*
      * updateMappingInfo: Action to update the document mapping info.
      */
     updateMappingInfo: PropTypes.func.isRequired,

@@ -152,12 +152,14 @@ const _saveElement = (state, action) => {
 
   question.id = newQuestionId;
   mappingInfo.id = newQuestionId;
+  currentElement.id = newQuestionId;
 
   return Object.assign({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
     documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true),
     lastQuestionId: newQuestionId,
-    currentQuestionId: newQuestionId
+    currentQuestionId: newQuestionId,
+    currentElement
   });
 };
 
@@ -211,18 +213,15 @@ export const updateMappingInfo = createAction(UPDATE_MAPPING_INFO);
 // ------------------------------------
 const _updateMappingInfo = (state, action) => {
   const { id, pageNumber, boundingBox } = action.payload;
-  const mappingInfo = {
-    id,
-    'page_number': pageNumber,
-    'bounding_box': boundingBox
+  const { currentElement: { mappingInfo } } = state;
+  const newMappingInfo = {
+    id: _.defaultTo(id, mappingInfo.id),
+    'page_number': _.defaultTo(pageNumber, mappingInfo.page_number),
+    'bounding_box': _.defaultTo(boundingBox, mappingInfo.bounding_box)
   };
-  if (id) { // If id is specified, directly update the documentMapping.
-    return Object.assign({}, state, {
-      documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true)
-    });
-  } else { // If id is not specified, update the currentElement.
-    return _updateCurrentElement(state, { mappingInfo });
-  }
+  return _updateCurrentElement(state, {
+    mappingInfo: newMappingInfo
+  });
 };
 
 // ------------------------------------
@@ -251,18 +250,22 @@ export const setPageZoom = createAction(SET_PAGE_ZOOM);
 export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
 
 const _setQuestionEditMode = (state, action) => {
-  const id = action.payload.id;
+  const { currentElement } = state;
+  const { id, mode, inputType } = action.payload;
   const question = id ? findItemById(state.questions, id) : INIT_QUESTION_STATE;
-  const currentElement = {
+  const newCurrentElement = mode ? {
     id,
     question,
-    logic: id ? findItemById(state.logics, id) : {},
-    mappingInfo: id ? findItemById(state.documentMapping, id) : {}
-  };
+    mappingInfo: id
+      ? findItemById(state.documentMapping, id)
+      : currentElement
+        ? currentElement.mappingInfo
+        : {}
+  } : null;
   return Object.assign({}, state, {
-    currentElement,
-    questionEditMode: action.payload.mode,
-    activeInputName: _.defaultTo(id ? question.type : action.payload.inputType, '')
+    currentElement: newCurrentElement,
+    questionEditMode: mode,
+    activeInputName: _.defaultTo(id ? question.type : inputType, '')
   });
 };
 

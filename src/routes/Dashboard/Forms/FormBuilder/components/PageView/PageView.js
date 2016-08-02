@@ -59,7 +59,12 @@ class PageView extends Component {
     /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
-    setQuestionEditMode: PropTypes.func.isRequired
+    setQuestionEditMode: PropTypes.func.isRequired,
+
+    /*
+     * currentElement: Redux state to hold the element currently being edited.
+     */
+    currentElement: PropTypes.object
   };
 
   componentWillMount() {
