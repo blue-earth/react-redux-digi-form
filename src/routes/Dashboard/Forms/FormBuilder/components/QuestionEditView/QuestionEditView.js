@@ -2,8 +2,16 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Button } from 'react-bootstrap';
+import {
+  Button,
+  ButtonToolbar,
+  Popover,
+  OverlayTrigger
+} from 'react-bootstrap';
+import { MdHelpOutline } from 'react-icons/lib/md';
 import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
+import questionInputs from 'schemas/questionInputs';
+import _ from 'lodash';
 import styles from './QuestionEditView.scss';
 
 class QuestionEditView extends Component {
@@ -84,29 +92,91 @@ class QuestionEditView extends Component {
     });
   }
 
+  setDescription = (value) => {
+    const { updateQuestionInfo } = this.props;
+    updateQuestionInfo({
+      description: value
+    });
+  }
+
   renderTopActionButtons() {
     return (
       <div className={styles.topActionButtons}>
-        <Button bsStyle="link" onClick={this.handlePreview}>Preview</Button>
-        <Button bsStyle="link" onClick={this.handleDelete}>Delete</Button>
-        <Button bsStyle="link" onClick={this.handleReset}>Reset</Button>
-        <Button bsStyle="link" onClick={this.handleCancel}>Cancel</Button>
-        <Button bsStyle="link" onClick={this.handleSave}>Save</Button>
+        <ButtonToolbar className="pull-right">
+          <Button bsStyle="link" bsSize="xsmall" onClick={this.handlePreview}>Preview</Button>
+          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleDelete}>Delete</Button>
+          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleReset}>Reset</Button>
+          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleCancel}>Cancel</Button>
+          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleSave}>Save</Button>
+        </ButtonToolbar>
+      </div>
+    );
+  }
+
+  renderViewTitle() {
+    const { currentElement: { question } } = this.props;
+    const inputType = _.find(questionInputs, { name: question.type });
+    return (
+      <h2 className={styles.viewTitle}>
+        {inputType.displayText}
+      </h2>
+    );
+  }
+
+  renderQuestionInstruction() {
+    const { currentElement: { question } } = this.props;
+    const instruction = _.defaultTo(question.question_instruction, '');
+    return (
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>
+          Question
+        </h3>
+        <QuestionRichTextEditor
+          value={instruction}
+          setValue={this.setInstruction}
+        />
+      </div>
+    );
+  }
+
+  get descriptionPopover() {
+    return (
+      <Popover id="questionDescriptionPopover">
+        TODO: Add question description popover text here.
+      </Popover>
+    );
+  }
+
+  renderQuestionDescription() {
+    const { currentElement: { question } } = this.props;
+    const description = _.defaultTo(question.question_description, '');
+    return (
+      <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>
+          Question description
+          <OverlayTrigger trigger="focus" overlay={this.descriptionPopover}>
+            <span tabIndex={0} className={styles.popoverIcon}>
+              <MdHelpOutline size={18} />
+            </span>
+          </OverlayTrigger>
+        </h3>
+        <QuestionRichTextEditor
+          value={description}
+          setValue={this.setDescription}
+        />
       </div>
     );
   }
 
   render() {
-    const { currentElement: { question } } = this.props;
-    const instruction = question.question_instruction ? question.question_instruction : '';
     return (
       <div className={styles.questionEditView}>
         {this.renderTopActionButtons()}
-        {'Question Edit View'}
-        <QuestionRichTextEditor
-          value={instruction}
-          setValue={this.setInstruction}
-        />
+        {this.renderViewTitle()}
+        <hr className={styles.separator} />
+        {this.renderQuestionInstruction()}
+        <hr className={styles.separator} />
+        {this.renderQuestionDescription()}
       </div>
     );
   }

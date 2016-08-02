@@ -273,8 +273,8 @@ class DrawingBoard extends Component {
   }
   */
   handleResizeStart = (metaData) => {
-    // const { currentQuestionId, setCurrentQuestionId } = this.props;
-    // currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
+    const { currentQuestionId, setCurrentQuestionId } = this.props;
+    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
   }
 
   handleResizeMove = (rect, metaData, isSnapping) => {
@@ -291,15 +291,21 @@ class DrawingBoard extends Component {
   handleResizeEnd = (rect, metaData) => {
     const { updateMappingInfo, documentMapping, pageZoom } = this.props;
     const { id } = metaData;
-    const index = findIndexById(documentMapping, id);
-    const boundingBox = documentMapping[index].bounding_box[0];
     const newBoundingBox = {
       left: rect.left / pageZoom,
       top: rect.top / pageZoom,
       width: rect.width / pageZoom,
       height: rect.height / pageZoom
     };
-    if (!_.isEqual(boundingBox, newBoundingBox)) {
+    if (id) {
+      const boundingBox = findItemById(documentMapping, id).bounding_box[0];
+      if (!_.isEqual(boundingBox, newBoundingBox)) {
+        updateMappingInfo({
+          id,
+          boundingBox: [newBoundingBox]
+        });
+      }
+    } else {
       updateMappingInfo({
         boundingBox: [newBoundingBox]
       });
@@ -327,8 +333,6 @@ class DrawingBoard extends Component {
   handleDragEnd = (rect, metaData) => {
     const { updateMappingInfo, documentMapping, pageZoom, pageNumber, getPageDOM } = this.props;
     const { id } = metaData;
-    const index = findIndexById(documentMapping, id);
-    const boundingBox = documentMapping[index].bounding_box[0];
 
     var newRect = rect;
     const { destPageNumber } = metaData;
@@ -345,12 +349,22 @@ class DrawingBoard extends Component {
       width: newRect.width / pageZoom,
       height: newRect.height / pageZoom
     };
-    if (!_.isEqual(boundingBox, newBoundingBox)) {
+
+    if (id) {
+      const boundingBox = findItemById(documentMapping, id).bounding_box[0];
+      if (!_.isEqual(boundingBox, newBoundingBox)) {
+        updateMappingInfo({
+          id,
+          pageNumber: destPageNumber && destPageNumber,
+          boundingBox: [newBoundingBox]
+        });
+      }
+    } else {
       updateMappingInfo({
         pageNumber: destPageNumber && destPageNumber,
         boundingBox: [newBoundingBox]
       });
-    };
+    }
 
     // Reset SnappingHelper
     this.resetSnappingHelper();
