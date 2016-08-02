@@ -121,14 +121,13 @@ class DrawingBoard extends Component {
   }
 
   handleDrop = (event) => {
-    const { documentMapping, pageNumber } = this.props;
+    const { pageNumber, currentElement } = this.props;
     const { relatedTarget } = event;
     var metaData = JSON.parse(relatedTarget.dataset.meta);
-    if (!metaData.id) return;
-    var mappingInfo = findItemById(documentMapping, metaData.id);
+    if (!currentElement) return;
+    const { mappingInfo } = currentElement;
     if (mappingInfo.pageNumber === pageNumber) return;
     metaData.destPageNumber = pageNumber;
-    console.log(metaData);
     relatedTarget.dataset.meta = JSON.stringify(metaData);
   }
 
@@ -355,7 +354,7 @@ class DrawingBoard extends Component {
       width: newRect.width / pageZoom,
       height: newRect.height / pageZoom
     };
-    console.log(destPageNumber);
+
     if (id) {
       const boundingBox = findItemById(documentMapping, id).bounding_box[0];
       if (!_.isEqual(boundingBox, newBoundingBox)) {
