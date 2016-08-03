@@ -3,7 +3,10 @@ import React, {
   PropTypes
 } from 'react';
 import styles from './PageView.scss';
-import { Button } from 'react-bootstrap';
+import {
+  Button,
+  ButtonToolbar
+} from 'react-bootstrap';
 import {
   MdZoomIn,
   MdZoomOut,
@@ -133,16 +136,12 @@ class PageView extends Component {
     return (
       <div className={styles.toolBox}>
         <div className={styles.toolButton}>
-          <Button onClick={this.handleClickZoomIn}><MdZoomIn size={24} /></Button>
-        </div>
-        <div className={styles.toolButton}>
-          <Button onClick={this.handleClickZoomOut}><MdZoomOut size={24} /></Button>
-        </div>
-        <div className={styles.toolButton}>
-          <Button onClick={this.handleClickFitWidth}><MdSettingsOverscan size={24} /></Button>
-        </div>
-        <div className={styles.toolButton}>
-          <Button onClick={this.handleClickOriginalSize}><MdZoomOutMap size={24} /></Button>
+          <ButtonToolbar>
+            <Button onClick={this.handleClickZoomIn} bsSize="small"><MdZoomIn size={18} /></Button>
+            <Button onClick={this.handleClickZoomOut} bsSize="small"><MdZoomOut size={18} /></Button>
+            <Button onClick={this.handleClickFitWidth} bsSize="small"><MdSettingsOverscan size={18} /></Button>
+            <Button onClick={this.handleClickOriginalSize} bsSize="small"><MdZoomOutMap size={18} /></Button>
+          </ButtonToolbar>
         </div>
       </div>
     );
@@ -156,6 +155,7 @@ class PageView extends Component {
 
     return (
       <div className={styles.pageView}>
+        {this.renderToolBox()}
         <div className={styles.clientArea} data-id="clientArea">
           <div className={styles.spacer} ref="spacer"></div>
           <div className={styles.clientAreaInner}>
@@ -164,7 +164,6 @@ class PageView extends Component {
             </div>
           </div>
         </div>
-        {this.renderToolBox()}
       </div>
     );
   }
