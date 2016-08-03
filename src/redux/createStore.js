@@ -4,6 +4,7 @@ import effects from 'redux-effects';
 import fetch, { fetchEncodeJSON } from 'redux-effects-fetch';
 import localstorage from 'redux-effects-localstorage';
 import thunk from 'redux-thunk';
+import multi from 'redux-multi';
 import makeRootReducer from './reducers';
 
 export default (initialState = {}, history) => {
@@ -11,6 +12,7 @@ export default (initialState = {}, history) => {
   // Middleware Configuration
   // ======================================================
   const middleware = [
+    multi,
     effects,
     fetch,
     fetchEncodeJSON,
