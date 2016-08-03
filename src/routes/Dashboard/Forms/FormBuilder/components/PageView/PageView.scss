@@ -2,8 +2,9 @@
 @import './variables';
 
 $page-border-color: #797979;
+$page-toolbar-height: 32px;
 .pageView {
-  padding-right: 50px;
+  padding-top: $page-toolbar-height;
   height: 100%;
   position: relative;
 }
@@ -51,13 +52,13 @@ $page-border-color: #797979;
 }
 
 .toolBox {
-  position: absolute;
-  right: 0;
   top: 0;
-  width: 50px;
-  height: 100%;
-  padding: 0 5px;
+  left: 0;
+  width: 100%;
+  height: $page-toolbar-height;
+  position: absolute;
 }
 .toolButton {
-  margin-bottom: 5px;
+  @include hcenter;
+  top: 0;
 }
