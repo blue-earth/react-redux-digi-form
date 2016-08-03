@@ -19,6 +19,7 @@ export const DELETE_ELEMENT = 'DELETE_ELEMENT';
 
 export const UPDATE_QUESTION_INFO = 'UPDATE_QUESTION_INFO';
 export const UPDATE_MAPPING_INFO = 'UPDATE_MAPPING_INFO';
+export const UPDATE_VALIDATION_INFO = 'UPDATE_VALIDATION_INFO';
 
 export const SET_CURRENT_QUESTION_ID = 'SET_CURRENT_QUESTION_ID';
 
@@ -194,15 +195,28 @@ export const updateQuestionInfo = createAction(UPDATE_QUESTION_INFO);
 // Helper: _updateQuestionInfo
 // ------------------------------------
 const _updateQuestionInfo = (state, action) => {
-  const { currentElement: { question } } = state;
-  const { instruction, description, type } = action.payload;
-  const newQuestion = {
-    'type': typeof type !== 'undefined' ? type : question.type,
-    'question_instruction': typeof instruction !== 'undefined' ? instruction : question.instruction,
-    'question_description': typeof description !== 'undefined' ? description : question.description
-  };
+  const question = _.get(state, ['currentElement', 'question'], {});
   return _updateCurrentElement(state, {
-    question: Object.assign({}, question, newQuestion)
+    question: Object.assign({}, question, action.payload)
+  });
+};
+
+// ------------------------------------
+// Action: updateValidationInfo
+// ------------------------------------
+export const updateValidationInfo = createAction(UPDATE_VALIDATION_INFO);
+
+// ------------------------------------
+// Helper: _updateQuestionInfo
+// ------------------------------------
+const _updateValidationInfo = (state, action) => {
+  const currentValidations = _.get(state, ['currentElement', 'question', 'validations'], []);
+  const { type, value } = action.payload;
+  const validations = typeof value !== 'undefined'
+    ? mergeItemIntoArray(currentValidations, { type, value }, false, 'type')
+    : _.pullAllBy(currentValidations, [{type}], 'type');
+  return _updateQuestionInfo(state, {
+    payload: { validations }
   });
 };
 
@@ -318,6 +332,9 @@ const formBuilderReducer = handleActions({
 
   UPDATE_MAPPING_INFO: (state, action) =>
     _updateMappingInfo(state, action),
+
+  UPDATE_VALIDATION_INFO: (state, action) =>
+    _updateValidationInfo(state, action),
 
   SET_CURRENT_QUESTION_ID: (state, action) =>
     Object.assign({}, state, {

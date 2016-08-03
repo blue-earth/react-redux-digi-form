@@ -82,6 +82,16 @@ class FormBuilder extends Component {
     currentElement: PropTypes.object,
 
     /*
+     * currentQuestionInstruction: Redux state to specify the active input instruction.
+     */
+    updateQuestionInfo: PropTypes.func.isRequired,
+
+    /*
+     * updateValidationInfo: Redux action to update validations array.
+     */
+    updateValidationInfo: PropTypes.func.isRequired,
+
+    /*
      * updateMappingInfo: Action to update the document mapping info.
      */
     updateMappingInfo: PropTypes.func.isRequired,

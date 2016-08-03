@@ -6,13 +6,18 @@ import {
   Button,
   ButtonToolbar,
   Popover,
-  OverlayTrigger
+  OverlayTrigger,
+  Collapse,
+  Row,
+  Col
 } from 'react-bootstrap';
 import { MdHelpOutline } from 'react-icons/lib/md';
+import Switch from 'rc-switch';
 import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
 import CancelConfirmModal from '../CancelConfirmModal/CancelConfirmModal';
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
+import 'rc-switch/assets/index.css';
 import styles from './QuestionEditView.scss';
 
 class QuestionEditView extends Component {
@@ -42,6 +47,11 @@ class QuestionEditView extends Component {
      * currentQuestionInstruction: Redux state to specify the active input instruction.
      */
     updateQuestionInfo: PropTypes.func.isRequired,
+
+    /*
+     * updateValidationInfo: Redux action to update validations array.
+     */
+    updateValidationInfo: PropTypes.func.isRequired,
 
     /*
      * isModified: Redux state that indicates whether the form is modified since last save or load.
@@ -81,7 +91,6 @@ class QuestionEditView extends Component {
 
   handleCancel = () => {
     const { setQuestionEditMode, show, isModified } = this.props;
-    console.log(isModified);
     if (isModified) {
       show('cancelConfirmModal');
     } else {
@@ -99,15 +108,62 @@ class QuestionEditView extends Component {
   setInstruction = (value) => {
     const { updateQuestionInfo } = this.props;
     updateQuestionInfo({
-      instruction: value
+      'question_instruction': value
     });
   }
 
   setDescription = (value) => {
     const { updateQuestionInfo } = this.props;
     updateQuestionInfo({
-      description: value
+      'question_description': value
     });
+  }
+
+  toggleDescription = (isOn) => {
+    const { updateQuestionInfo } = this.props;
+    updateQuestionInfo({ 'question_description': (isOn ? '' : undefined) });
+  }
+
+  handleMinLengthChange = (event) => {
+    const { updateValidationInfo } = this.props;
+    const value = _.defaultTo(parseInt(event.target.value), undefined);
+    updateValidationInfo({
+      type: 'minLength',
+      value
+    });
+  }
+
+  handleMaxLengthChange = (event) => {
+    const { updateValidationInfo } = this.props;
+    const value = _.defaultTo(parseInt(event.target.value), undefined);
+    updateValidationInfo({
+      type: 'maxLength',
+      value
+    });
+  }
+
+  get descriptionPopover() {
+    return (
+      <Popover id="questionDescriptionPopover">
+        TODO: Add question description popover text here.
+      </Popover>
+    );
+  }
+
+  get validationMinLength() {
+    return (
+      <Popover id="validationMinLength">
+        TODO: Add question validation min length popover text here.
+      </Popover>
+    );
+  }
+
+  get validationMaxLength() {
+    return (
+      <Popover id="validationMaxLength">
+        TODO: Add question validation max length popover text here.
+      </Popover>
+    );
   }
 
   renderTopActionButtons() {
@@ -142,25 +198,20 @@ class QuestionEditView extends Component {
         <h3 className={styles.sectionTitle}>
           Question
         </h3>
-        <QuestionRichTextEditor
-          value={instruction}
-          setValue={this.setInstruction}
-        />
+        <div className={styles.textEditorWrapper}>
+          <QuestionRichTextEditor
+            value={instruction}
+            setValue={this.setInstruction}
+          />
+        </div>
       </div>
-    );
-  }
-
-  get descriptionPopover() {
-    return (
-      <Popover id="questionDescriptionPopover">
-        TODO: Add question description popover text here.
-      </Popover>
     );
   }
 
   renderQuestionDescription() {
     const { currentElement: { question } } = this.props;
     const description = _.defaultTo(question.question_description, '');
+    const isDescriptionVisible = typeof question.question_description !== 'undefined';
     return (
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>
@@ -170,11 +221,64 @@ class QuestionEditView extends Component {
               <MdHelpOutline size={18} />
             </span>
           </OverlayTrigger>
+          <div className={styles.switchWrapper}>
+            <Switch onChange={this.toggleDescription} checked={isDescriptionVisible} />
+          </div>
         </h3>
-        <QuestionRichTextEditor
-          value={description}
-          setValue={this.setDescription}
-        />
+        <Collapse in={isDescriptionVisible}>
+          <div className={styles.textEditorWrapper}>
+            <QuestionRichTextEditor
+              value={description}
+              setValue={this.setDescription}
+            />
+          </div>
+        </Collapse>
+      </div>
+    );
+  }
+
+  renderLengthValidation() {
+    const validations = _.get(this.props, ['currentElement', 'question', 'validations'], []);
+    const minLength = _.defaultTo(_.find(validations, { type: 'minLength' }), { value: '' });
+    const maxLength = _.defaultTo(_.find(validations, { type: 'maxLength' }), { value: '' });
+    return (
+      <div className={styles.section}>
+        <Row className={styles.validationRow}>
+          <Col xs={8} sm={9}>
+            <h3 className={styles.sectionTitle}>
+              Minimum characters
+              <OverlayTrigger trigger="focus" overlay={this.validationMinLength}>
+                <span tabIndex={0} className={styles.popoverIcon}>
+                  <MdHelpOutline size={18} />
+                </span>
+              </OverlayTrigger>
+            </h3>
+            <p className={styles.titleDescription}>(Leave empty if not required)</p>
+          </Col>
+          <Col xs={4} sm={3}>
+            <input type="number" className={styles.textInput}
+              value={minLength.value}
+              onChange={this.handleMinLengthChange} />
+          </Col>
+        </Row>
+        <Row className={styles.validationRow}>
+          <Col xs={8} sm={9}>
+            <h3 className={styles.sectionTitle}>
+              Maximum characters
+              <OverlayTrigger trigger="focus" overlay={this.validationMaxLength}>
+                <span tabIndex={0} className={styles.popoverIcon}>
+                  <MdHelpOutline size={18} />
+                </span>
+              </OverlayTrigger>
+            </h3>
+            <p className={styles.titleDescription}>(Leave empty if not required)</p>
+          </Col>
+          <Col xs={4} sm={3}>
+            <input type="number" className={styles.textInput}
+              value={maxLength.value}
+              onChange={this.handleMaxLengthChange} />
+          </Col>
+        </Row>
       </div>
     );
   }
@@ -187,8 +291,8 @@ class QuestionEditView extends Component {
         {this.renderViewTitle()}
         <hr className={styles.separator} />
         {this.renderQuestionInstruction()}
-        <hr className={styles.separator} />
         {this.renderQuestionDescription()}
+        {this.renderLengthValidation()}
         <CancelConfirmModal
           saveElement={saveElement}
           setQuestionEditMode={setQuestionEditMode} />
