@@ -9,12 +9,26 @@ export const findIndexById = (objArray, id) =>
 export const findItemById = (objArray, id) =>
   _.find(objArray, function (o) { return o.id === id; });
 
-export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false) => {
-  if (deepMerge) {
-    const index = findIndexById(itemArray, newItem.id);
-    if (index !== -1) newItem = _.merge({}, itemArray[index], newItem);
+export const findIndexByProp = (objArray, value, iteratee) =>
+  _.findIndex(objArray, function (o) { return o[iteratee] === value; });
+
+export const findItemByProp = (objArray, value, iteratee) =>
+  _.find(objArray, function (o) { return o[iteratee] === value; });
+
+export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false, iteratee = 'id') => {
+  const index = findIndexByProp(itemArray, newItem[iteratee], iteratee);
+  console.log(index);
+  if (index !== -1) {
+    if (deepMerge) {
+      newItem = _.merge({}, itemArray[index], newItem);
+    }
+    var newItemArray = itemArray.slice(0);
+    newItemArray[index] = newItem;
+    return newItemArray;
+  } else {
+    console.log(itemArray, newItem, _.concat(itemArray, [newItem]));
+    return _.concat(itemArray, [newItem]);
   }
-  return _.unionBy([newItem], itemArray, 'id');
 };
 
 export const buildQueryString = (query) =>
