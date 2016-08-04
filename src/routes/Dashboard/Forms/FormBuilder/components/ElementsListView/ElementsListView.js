@@ -26,7 +26,17 @@ class ElementsListView extends Component {
     /*
      * setActiveInputName: used to set active input element selected, and enables to draw on the right
      */
-    setActiveInputName: PropTypes.func.isRequired
+    setActiveInputName: PropTypes.func.isRequired,
+
+    /*
+     * saveElement: Redux action to save the current element being edited.
+     */
+    saveElement: PropTypes.func.isRequired,
+
+    /*
+     * setQuestionEditMode: Redux action to set question edit mode
+     */
+    setQuestionEditMode: PropTypes.func.isRequired
   };
 
   componentWillMount() {
@@ -41,10 +51,13 @@ class ElementsListView extends Component {
 
   }
 
-  handleElementClick(event, inputName) {
+  handleElementClick(event, inputType) {
     event.stopPropagation();
-    const { setActiveInputName } = this.props;
-    setActiveInputName(inputName);
+    const { setQuestionEditMode } = this.props;
+    setQuestionEditMode({
+      mode: true,
+      inputType
+    });
   }
 
   renderPanelContent(elements) {

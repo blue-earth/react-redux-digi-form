@@ -1,4 +1,8 @@
+@import './mixins';
+@import './variables';
+
 .elementsListView {
+  padding: $builder-left-panel-padding;
 }
 .panelRow {
   margin-left: -5px;

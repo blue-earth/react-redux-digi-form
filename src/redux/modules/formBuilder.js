@@ -1,7 +1,8 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { mergeItemIntoArray, editItemInArray, findItemById } from 'helpers/pureFunctions';
+import { mergeItemIntoArray, findItemById } from 'helpers/pureFunctions';
 import { assignDefaults } from 'redux/utils/request';
+import { createAction, handleActions } from 'redux-actions';
 import _ from 'lodash';
 
 export const NEW_FORM = 'NEW_FORM';
@@ -11,11 +12,12 @@ export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
 export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
 export const DONE_SUBMIT = 'DONE_SUBMIT';
 
-export const SET_CURRENT_QUESTION_INSTRUCTION = 'SET_CURRENT_QUESTION_INSTRUCTION';
 export const SET_ACTIVE_INPUT_NAME = 'SET_ACTIVE_INPUT_NAME';
 export const EDIT_ELEMENT = 'EDIT_ELEMENT';
-export const ADD_ELEMENT = 'ADD_ELEMENT';
+export const SAVE_ELEMENT = 'SAVE_ELEMENT';
 export const DELETE_ELEMENT = 'DELETE_ELEMENT';
+
+export const UPDATE_QUESTION_INFO = 'UPDATE_QUESTION_INFO';
 export const UPDATE_MAPPING_INFO = 'UPDATE_MAPPING_INFO';
 
 export const SET_CURRENT_QUESTION_ID = 'SET_CURRENT_QUESTION_ID';
@@ -23,12 +25,12 @@ export const SET_CURRENT_QUESTION_ID = 'SET_CURRENT_QUESTION_ID';
 export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
 
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
-export const SET_PAGE_WIDTH = 'SET_PAGE_WIDTH';
 
 export const INIT_BUILDER_STATE = {
   id: 0,
   isFetching: false, // indicates the form is being loaded.
   isSubmitting: false, // indicates the form submission is being processed.
+  isModified: false, // indicates the form is modified since last load or submission.
   questions: [],
   logics: [],
   documents: [
@@ -46,36 +48,41 @@ export const INIT_BUILDER_STATE = {
   formConfig: {},
   documentMapping: [],
   activeInputName: '',
-  currentQuestionInstruction: '',
+  currentElement: null, // holds the current element state being added or edited.
   currentQuestionId: 0, // indicates the question connected with selected element.
   lastQuestionId: 0, // indicates lastly added question id
-  formAccessCode: '1234', // form access code
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: false
+};
+
+export const INIT_QUESTION_STATE = {
+  id: undefined, // Question ID
+  type: 'ShortTextField', // Question type
+  question_instruction: '', // Question instruction
+  question_description: '', // Question description
+  placeholder_text: undefined, // Question placeholder text
+  attachment: null, // Question attachment
+  validations: [], // Question validations
+  verifications: [], // Question verifications
+  group: 0 // Question group
 };
 
 // ------------------------------------
 // Action: newForm
 // ------------------------------------
-export const newForm = (id) => {
-  return {
-    type: NEW_FORM
-  };
-};
+export const newForm = createAction(NEW_FORM);
 
 // ------------------------------------
-// Action: processFetchForm
+// Helper Action: processFetchForm
 // ------------------------------------
-export const processFetchForm = (id, accessCode) => {
+export const processFetchForm = (id) => {
   var apiURL = `${API_URL}/form_document/api/form/${id}/`;
-  if (accessCode.length > 0) {
-    apiURL += `?access_code=${accessCode}`;
-  }
+  apiURL += '?access_code=1234'; // Temporary
   const fetchParams = assignDefaults();
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(receiveForm(id, value));
+      dispatch(receiveForm(_.merge({id}, value)));
       dispatch(doneFetchingForm()); // Hide loading spinner
     };
   };
@@ -92,36 +99,26 @@ export const processFetchForm = (id, accessCode) => {
 // ------------------------------------
 // Action: requestForm
 // ------------------------------------
-export const requestForm = () => {
-  return {
-    type: REQUEST_FORM
-  };
-};
+export const requestForm = createAction(REQUEST_FORM);
 
 // ------------------------------------
 // Action: receiveForm
 // ------------------------------------
-export const receiveForm = (id, data) => {
-  return {
-    type: RECEIVE_FORM,
-    id: id,
-    questions: data.form_data.questions,
-    logics: data.form_data.logics,
-    documents: data.assets_urls,
-    formConfig: data.form_config,
-    title: data.title,
-    slug: data.slug
-  };
-};
+export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
+  id: data.id,
+  questions: data.form_data.questions ? data.form_data.questions : [],
+  logics: data.form_data.logics ? data.form_data.logics : [],
+  documents: data.assets_urls ? data.assets_urls : [],
+  formConfig: data.form_config,
+  title: data.title,
+  slug: data.slug,
+  isModified: false
+}));
 
 // ------------------------------------
 // Action: doneFetchingForm
 // ------------------------------------
-export const doneFetchingForm = () => {
-  return {
-    type: DONE_FETCHING_FORM
-  };
-};
+export const doneFetchingForm = createAction(DONE_FETCHING_FORM);
 
 // ------------------------------------
 // Action: fetchForm
@@ -137,194 +134,197 @@ export const fetchForm = (id) => {
 // ------------------------------------
 // Action: setActiveInputName
 // ------------------------------------
-export const setActiveInputName = (inputName) => {
-  return {
-    type: SET_ACTIVE_INPUT_NAME,
-    inputName
-  };
-};
+export const setActiveInputName = createAction(SET_ACTIVE_INPUT_NAME);
 
 // ------------------------------------
-// Action: setActiveInputName
+// Action: saveElement
 // ------------------------------------
-export const setCurrentQuestionInstruction = (questionInstruction) => {
-  return {
-    type: SET_CURRENT_QUESTION_INSTRUCTION,
-    questionInstruction
-  };
-};
+export const saveElement = createAction(SAVE_ELEMENT);
 
 // ------------------------------------
-// Action: editElement
+// Helper: _saveElement
 // ------------------------------------
-export const editElement = (element, instruction) => {
-  return {
-    type: EDIT_ELEMENT,
-    element,
-    instruction
-  };
-};
+const _saveElement = (state, action) => {
+  const { currentElement } = state;
+  var question = Object.assign({}, INIT_QUESTION_STATE, currentElement.question);
+  var mappingInfo = _.defaultTo(currentElement.mappingInfo, {});
+  const newQuestionId = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
 
-const _editElement = (state, action) => {
-  var { element, instruction } = action;
-  const editValue = {
-    id: element,
-    instruction: instruction
-  };
-  return {
-    questions: editItemInArray(state.questions, editValue)
-  };
-};
-
-// ------------------------------------
-// Action: addElement
-// ------------------------------------
-export const addElement = (element) => {
-  return {
-    type: ADD_ELEMENT,
-    element
-  };
-};
-
-const _addElement = (state, action) => {
-  var { question, mappingInfo } = action.element;
-  const newQuestionId = state.lastQuestionId + 1;
   question.id = newQuestionId;
-  question.instruction = '';
   mappingInfo.id = newQuestionId;
-  return {
+
+  return Object.assign({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
     documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true),
     lastQuestionId: newQuestionId,
     currentQuestionId: newQuestionId
-  };
+  });
 };
 
 // ------------------------------------
 // Action: deleteElement
 // ------------------------------------
-export const deleteElement = (id) => {
-  return {
-    type: DELETE_ELEMENT,
-    id
+export const deleteElement = createAction(DELETE_ELEMENT);
+
+// ------------------------------------
+// Helper: _deleteElement
+// ------------------------------------
+const _deleteElement = (state, action) => {
+  const id = action.payload;
+  return Object.assign({}, state, {
+    questions: _.pullAllBy(state.questions, [{id}], 'id'),
+    documentMapping: _.pullAllBy(state.documentMapping, [{id}], 'id'),
+    currentQuestionId: 0,
+    questionEditMode: false,
+    isModified: true
+  });
+};
+
+// ------------------------------------
+// Action: updateQuestionInfo
+// ------------------------------------
+export const updateQuestionInfo = createAction(UPDATE_QUESTION_INFO);
+
+// ------------------------------------
+// Helper: _updateQuestionInfo
+// ------------------------------------
+const _updateQuestionInfo = (state, action) => {
+  const { currentElement: { question } } = state;
+  const { instruction, description, type } = action.payload;
+  const newQuestion = {
+    'type': typeof type !== 'undefined' ? type : question.type,
+    'question_instruction': typeof instruction !== 'undefined' ? instruction : question.instruction,
+    'question_description': typeof description !== 'undefined' ? description : question.description
   };
+  return _updateCurrentElement(state, {
+    question: Object.assign({}, question, newQuestion)
+  });
 };
 
 // ------------------------------------
 // Action: updateMappingInfo
 // ------------------------------------
-export const updateMappingInfo = (mappingInfo) => {
-  return {
-    type: UPDATE_MAPPING_INFO,
-    mappingInfo
+export const updateMappingInfo = createAction(UPDATE_MAPPING_INFO);
+
+// ------------------------------------
+// Helper: _updateQuestionInfo
+// ------------------------------------
+const _updateMappingInfo = (state, action) => {
+  const { id, pageNumber, boundingBox } = action.payload;
+  const mappingInfo = {
+    id,
+    'page_number': pageNumber,
+    'bounding_box': boundingBox
   };
+  if (id) { // If id is specified, directly update the documentMapping.
+    return Object.assign({}, state, {
+      documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true)
+    });
+  } else { // If id is not specified, update the currentElement.
+    return _updateCurrentElement(state, { mappingInfo });
+  }
+};
+
+// ------------------------------------
+// Helper Action: _updateCurrentElement
+// ------------------------------------
+export const _updateCurrentElement = (state, element) => {
+  return Object.assign({}, state, {
+    currentElement: Object.assign({}, state.currentElement, element),
+    isModified: true
+  });
 };
 
 // ------------------------------------
 // Action: setCurrentQuestionId
 // ------------------------------------
-export const setCurrentQuestionId = (id) => {
-  return {
-    type: SET_CURRENT_QUESTION_ID,
-    id
-  };
-};
+export const setCurrentQuestionId = createAction(SET_CURRENT_QUESTION_ID);
 
 // ------------------------------------
 // Action: setPageZoom
 // ------------------------------------
-export const setPageZoom = (pageZoom) => {
-  return {
-    type: SET_PAGE_ZOOM,
-    pageZoom
-  };
-};
+export const setPageZoom = createAction(SET_PAGE_ZOOM);
 
-export const setQuestionEditMode = ({id, mode}) => {
-  return {
-    type: SET_QUESTION_EDIT_MODE,
-    id: typeof id !== 'undefined' ? id : 0,
-    mode
+// ------------------------------------
+// Action: setQuestionEditMode
+// ------------------------------------
+export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
+
+const _setQuestionEditMode = (state, action) => {
+  const id = action.payload.id;
+  const question = id ? findItemById(state.questions, id) : INIT_QUESTION_STATE;
+  const currentElement = {
+    id,
+    question,
+    logic: id ? findItemById(state.logics, id) : {},
+    mappingInfo: id ? findItemById(state.documentMapping, id) : {}
   };
+  return Object.assign({}, state, {
+    currentElement,
+    questionEditMode: action.payload.mode,
+    activeInputName: _.defaultTo(id ? question.type : action.payload.inputType, '')
+  });
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const formBuilderReducer = (state = INIT_BUILDER_STATE, action) => {
-  switch (action.type) {
-    case NEW_FORM:
-      return Object.assign({}, INIT_BUILDER_STATE);
-    case RECEIVE_FORM:
-      return Object.assign({}, state, {
-        id: action.id,
-        questions: action.questions,
-        logics: action.logics,
-        documents: action.documents,
-        formConfig: action.formConfig,
-        title: action.title,
-        slug: action.slug
-      });
-    case REQUEST_FORM:
-      return Object.assign({}, state, {
-        isFetching: true
-      });
-    case DONE_FETCHING_FORM:
-      return Object.assign({}, state, {
-        isFetching: false
-      });
-    case REQUEST_SUBMIT:
-      return Object.assign({}, state, {
-        isSubmitting: true
-      });
-    case DONE_SUBMIT:
-      return Object.assign({}, state, {
-        isSubmitting: false
-      });
-    case SET_ACTIVE_INPUT_NAME:
-      return Object.assign({}, state, {
-        activeInputName: action.inputName
-      });
-    case SET_CURRENT_QUESTION_INSTRUCTION:
-      return Object.assign({}, state, {
-        currentQuestionInstruction: action.questionInstruction
-      });
-    case ADD_ELEMENT:
-      return Object.assign({}, state, _addElement(state, action));
-    case DELETE_ELEMENT:
-      return Object.assign({}, state, {
-        questions: _.pullAllBy(state.questions, [{id: action.id}], 'id'),
-        documentMapping: _.pullAllBy(state.documentMapping, [{id: action.id}], 'id'),
-        currentQuestionId: 0,
-        questionEditMode: false
-      });
-    case EDIT_ELEMENT:
-      return Object.assign({}, state, _editElement(state, action));
-    case UPDATE_MAPPING_INFO:
-      return Object.assign({}, state, {
-        documentMapping: mergeItemIntoArray(state.documentMapping, action.mappingInfo, true)
-      });
-    case SET_CURRENT_QUESTION_ID:
-      return Object.assign({}, state, {
-        currentQuestionId: action.id
-      });
-    case SET_PAGE_ZOOM:
-      return Object.assign({}, state, {
-        pageZoom: action.pageZoom
-      });
-    case SET_PAGE_WIDTH:
-      return Object.assign({}, state, {
-        pageWidth: action.pageWidth
-      });
-    case SET_QUESTION_EDIT_MODE:
-      return Object.assign({}, state, {
-        currentQuestionId: action.id,
-        questionEditMode: action.mode,
-        currentQuestionInstruction: action.mode ? findItemById(state.questions, action.id).instruction : ''
-      });
-    default:
-      return state;
-  }
-};
+const formBuilderReducer = handleActions({
+  NEW_FORM: (state, action) =>
+    Object.assign({}, INIT_BUILDER_STATE),
+
+  RECEIVE_FORM: (state, action) =>
+    Object.assign({}, state, action.payload),
+
+  REQUEST_FORM: (state, action) =>
+    Object.assign({}, state, {
+      isFetching: true
+    }),
+
+  DONE_FETCHING_FORM: (state, action) =>
+    Object.assign({}, state, {
+      isFetching: false
+    }),
+
+  REQUEST_SUBMIT: (state, action) =>
+    Object.assign({}, state, {
+      isSubmitting: true
+    }),
+
+  DONE_SUBMIT: (state, action) =>
+    Object.assign({}, state, {
+      isSubmitting: false
+    }),
+
+  SET_ACTIVE_INPUT_NAME: (state, action) =>
+    Object.assign({}, state, {
+      activeInputName: action.payload
+    }),
+
+  SAVE_ELEMENT: (state, action) =>
+    _saveElement(state, action),
+
+  DELETE_ELEMENT: (state, action) =>
+    _deleteElement(state, action),
+
+  UPDATE_QUESTION_INFO: (state, action) =>
+    _updateQuestionInfo(state, action),
+
+  UPDATE_MAPPING_INFO: (state, action) =>
+    _updateMappingInfo(state, action),
+
+  SET_CURRENT_QUESTION_ID: (state, action) =>
+    Object.assign({}, state, {
+      currentQuestionId: _.defaultTo(action.payload, 0)
+    }),
+
+  SET_PAGE_ZOOM: (state, action) =>
+    Object.assign({}, state, {
+      pageZoom: action.payload
+    }),
+
+  SET_QUESTION_EDIT_MODE: (state, action) =>
+    _setQuestionEditMode(state, action)
+}, INIT_BUILDER_STATE);
 
 export default formBuilderReducer;
