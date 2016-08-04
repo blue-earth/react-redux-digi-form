@@ -17,16 +17,14 @@ export const findItemByProp = (objArray, value, iteratee) =>
 
 export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false, iteratee = 'id') => {
   const index = findIndexByProp(itemArray, newItem[iteratee], iteratee);
-  console.log(index);
   if (index !== -1) {
     if (deepMerge) {
       newItem = _.merge({}, itemArray[index], newItem);
     }
-    var newItemArray = itemArray.slice(0);
-    newItemArray[index] = newItem;
-    return newItemArray;
+    // var newItemArray = itemArray.slice(0);
+    itemArray[index] = newItem;
+    return itemArray;
   } else {
-    console.log(itemArray, newItem, _.concat(itemArray, [newItem]));
     return _.concat(itemArray, [newItem]);
   }
 };

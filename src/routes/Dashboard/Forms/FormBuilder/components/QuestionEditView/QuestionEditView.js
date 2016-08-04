@@ -24,6 +24,11 @@ class QuestionEditView extends Component {
 
   static propTypes = {
     /*
+     * questions: Redux state to store the array of questions.
+     */
+    questions: PropTypes.array.isRequired,
+
+    /*
      * deleteElement: used to set active input element selected, and enables to draw on the right
      */
     deleteElement: PropTypes.func.isRequired,
@@ -142,6 +147,17 @@ class QuestionEditView extends Component {
     });
   }
 
+  get questionsList() {
+    const { questions, currentElement } = this.props;
+    const filteredQuestions = currentElement.id
+      ? _.differenceBy(questions, [{id: currentElement.id}], 'id')
+      : questions;
+    return filteredQuestions.map(item => ({
+      key: `answer_${item.id}`,
+      text: `answer_${item.id}`
+    }));
+  }
+
   get descriptionPopover() {
     return (
       <Popover id="questionDescriptionPopover">
@@ -202,6 +218,7 @@ class QuestionEditView extends Component {
           <QuestionRichTextEditor
             value={instruction}
             setValue={this.setInstruction}
+            questions={this.questionsList}
           />
         </div>
       </div>
@@ -230,6 +247,7 @@ class QuestionEditView extends Component {
             <QuestionRichTextEditor
               value={description}
               setValue={this.setDescription}
+              questions={this.questionsList}
             />
           </div>
         </Collapse>

@@ -42,7 +42,8 @@ class QuestionRichTextEditor extends Component {
 
   static propTypes = {
     value: PropTypes.string.isRequired,
-    setValue: PropTypes.func.isRequired
+    setValue: PropTypes.func.isRequired,
+    questions: PropTypes.array.isRequired
   };
 
   constructor(props) {
@@ -87,10 +88,13 @@ class QuestionRichTextEditor extends Component {
 
   handleValueChange = (editorState) => {
     this.setState({editorState});
-    console.log(editorState.getCurrentContent().getPlainText());
     const { setValue } = this.props;
     setValue(editorState.getCurrentContent().getPlainText());
-    // console.log(editorState.getCurrentContent().getPlainText());
+  }
+
+  handleInsertHyperLink = () => {
+    const { editorState } = this.state;
+    console.log(editorState.getCurrentContent().getBlockMap());
   }
 
   handleAnswerSelect = (value) => {
@@ -139,16 +143,11 @@ class QuestionRichTextEditor extends Component {
     console.log(editorState.getSelection().anchorKey, editorState.getSelection().focusKey);
   }
 
-  showValue = () => {
-    const { editorState } = this.state;
-    console.log(editorState.getCurrentContent().getBlockMap());
-  }
-
   renderToolbar() {
     return (
       <div className={styles.toolbar}>
         <div className={styles.inputWidget}>
-          <Button block bsSize="xsmall" onClick={this.showValue}>+ Insert Hyperlink</Button>
+          <Button block bsSize="xsmall" onClick={this.handleInsertHyperLink}>+ Insert Hyperlink</Button>
         </div>
         <div className={styles.inputWidget}>
           {this.renderAnswerDropdown()}
@@ -170,6 +169,7 @@ class QuestionRichTextEditor extends Component {
   }
 
   renderAnswerDropdown() {
+    const { questions } = this.props;
     const buttonClass = classNames({
       [styles.dropdownAnswerButton]: true,
       'btn btn-xs btn-default': true
@@ -187,8 +187,11 @@ class QuestionRichTextEditor extends Component {
           </span>
         </Button>
         <Dropdown.Menu>
-          <MenuItem eventKey="answer_1">answer_1</MenuItem>
-          <MenuItem eventKey="answer_2">answer_2</MenuItem>
+          {
+            questions.map(item => (
+              <MenuItem eventKey={`{{${item.key}}}`}>{item.text}</MenuItem>
+            ))
+          }
         </Dropdown.Menu>
       </Dropdown>
     );
