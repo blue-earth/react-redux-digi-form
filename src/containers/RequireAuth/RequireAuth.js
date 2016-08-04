@@ -18,7 +18,8 @@ export default function requiresAuth(Component) {
        */
       user: PropTypes.object.isRequired,
       setIsFetchingUserInfo: PropTypes.func.isRequired,
-      fetchUserInfo: PropTypes.func.isRequired
+      fetchUserInfo: PropTypes.func.isRequired,
+      goTo: PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -26,7 +27,7 @@ export default function requiresAuth(Component) {
       this._checkAndRedirect = this._checkAndRedirect.bind(this);
       this.state = {
         willAuthenticate: true
-      }
+      };
     }
     componentDidMount() {
       this.props.setIsFetchingUserInfo(true);
@@ -42,7 +43,7 @@ export default function requiresAuth(Component) {
       return this.props.isAuthenticating !== nextProps.isAuthenticating;
     }
     _checkAndRedirect() {
-      const { isAuthenticating, user } = this.props;
+      const { isAuthenticating, user, goTo } = this.props;
       if (!isAuthenticating && Object.keys(user).length === 0) {
         goTo('/login');
       }
@@ -67,7 +68,11 @@ export default function requiresAuth(Component) {
       user: state.auth.user
     };
   };
-  const mapActionCreators = { fetchUserInfo, setIsFetchingUserInfo };
+  const mapActionCreators = {
+    fetchUserInfo,
+    setIsFetchingUserInfo,
+    goTo
+  };
 
   return connect(mapStateToProps, mapActionCreators)(AuthenticatedComponent);
 }

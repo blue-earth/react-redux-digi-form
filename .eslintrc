@@ -4,8 +4,10 @@
     "standard",
     "standard-react"
   ],
-  "plugins" : [
-    "flow-vars", "import"
+  "plugins": [
+    "babel",
+    "react",
+    "promise"
   ],
   "env"     : {
     "browser" : true
@@ -14,7 +16,7 @@
     "__DEV__"      : false,
     "__PROD__"     : false,
     "__DEBUG__"    : false,
-    "__DEBUG_NEW_WINDOW__" : false,
+    "__COVERAGE__" : false,
     "__BASENAME__" : false,
     "API_URL": false,
     "FRONTEND_ROOT": false,
@@ -25,19 +27,13 @@
     "import/default": 0,
     "import/named": 0,
     "import/namespace": 0,
-    "import/no-duplicates": 2,
     "import/no-named-as-default": 0,
-    "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
-    "jsx-quotes": [2, "prefer-double"],
     "max-len": [2, 120, 2],
     "semi" : [2, "always"],
     "space-before-function-paren": [2, {"anonymous": "always", "named": "never"}],
-    "space-infix-ops": 0
-  },
-  "settings": {
-    "import/parser": "babel-eslint",
-    "import/resolve": {
-      "moduleDirectory": ["node_modules", "src"]
-    }
+    "space-infix-ops": 0,
+    "generator-star-spacing": 0,
+    "babel/generator-star-spacing": 1,
+    "jsx-quotes": [2, "prefer-double"]
   }
 }
