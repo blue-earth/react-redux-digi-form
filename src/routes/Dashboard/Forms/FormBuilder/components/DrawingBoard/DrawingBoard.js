@@ -51,16 +51,6 @@ class DrawingBoard extends Component {
     documentMapping: PropTypes.array.isRequired,
 
     /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
-     */
-    currentQuestionId: PropTypes.number.isRequired,
-
-    /*
-     * setCurrentQuestionId: Redux action to set the current active question ID.
-     */
-    setCurrentQuestionId: PropTypes.func.isRequired,
-
-    /*
      * setMappingInfo: Action to update the document mapping info.
      */
     setMappingInfo: PropTypes.func.isRequired,
@@ -218,67 +208,7 @@ class DrawingBoard extends Component {
     });
   }
 
-  /*
-  handleResizeStart = (direction, styleSize, clientSize, event, metaData) => {
-    const { currentQuestionId, setCurrentQuestionId } = this.props;
-    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
-  }
-
-  handleResizeStop = (direction, styleSize, clientSize, delta, metaData) => {
-    const { setMappingInfo, documentMapping, pageZoom } = this.props;
-    const { id } = metaData;
-    const index = findIndexById(documentMapping, id);
-    const boundingBox = documentMapping[index].bounding_box[0];
-    var newLeft = boundingBox.left;
-    var newTop = boundingBox.top;
-    if (direction === 'left' || direction === 'topLeft' || direction === 'bottomLeft') {
-      newLeft -= delta.width / pageZoom;
-    }
-    if (direction === 'top' || direction === 'topLeft' || direction === 'topRight') {
-      newTop -= delta.height / pageZoom;
-    }
-    const newBoundingBox = {
-      left: newLeft,
-      top: newTop,
-      width: styleSize.width / pageZoom,
-      height: styleSize.height / pageZoom
-    };
-    if (!_.isEqual(boundingBox, newBoundingBox)) {
-      setMappingInfo({
-        id,
-        bounding_box: [newBoundingBox]
-      });
-    }
-  }
-
-  handleDragStart = (event, ui, metaData) => {
-    const { currentQuestionId, setCurrentQuestionId } = this.props;
-    event.stopPropagation();
-    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
-  }
-
-  handleDragStop = (event, ui, metaData) => {
-    const { setMappingInfo, documentMapping, pageZoom } = this.props;
-    const { id } = metaData;
-    const index = findIndexById(documentMapping, id);
-    const boundingBox = documentMapping[index].bounding_box[0];
-    const newBoundingBox = {
-      left: ui.position.left / pageZoom,
-      top: ui.position.top / pageZoom,
-      width: boundingBox.width,
-      height: boundingBox.height
-    };
-    if (!_.isEqual(boundingBox, newBoundingBox)) {
-      setMappingInfo({
-        id,
-        bounding_box: [newBoundingBox]
-      });
-    }
-  }
-  */
   handleResizeStart = (metaData) => {
-    const { currentQuestionId, setCurrentQuestionId } = this.props;
-    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
   }
 
   handleResizeMove = (rect, metaData, isSnapping) => {
@@ -319,8 +249,6 @@ class DrawingBoard extends Component {
   }
 
   handleDragStart = (metaData) => {
-    const { currentQuestionId, setCurrentQuestionId } = this.props;
-    currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
   }
 
   handleDragMove = (rect, metaData, isSnapping) => {
@@ -401,8 +329,6 @@ class DrawingBoard extends Component {
   }
 
   handleElementClick = (metaData) => {
-    // const { currentQuestionId, setCurrentQuestionId } = this.props;
-    // currentQuestionId !== metaData.id && setCurrentQuestionId(metaData.id);
     const { setQuestionEditMode } = this.props;
     setQuestionEditMode({
       id: metaData.id,
@@ -471,39 +397,7 @@ class DrawingBoard extends Component {
       const { type } = questions[index];
       const isActive = false;
       const zIndex = isActive ? 101 : 100;
-      /*
-      const elementClass = classNames({
-        [styles.element]: true,
-        [styles.active]: isActive
-      });
 
-      return (
-        <ResizableAndMovablePlus
-          className={elementClass}
-          x={boundingBox.left * pageZoom}
-          y={boundingBox.top * pageZoom}
-          zIndex={zIndex}
-          width={boundingBox.width * pageZoom}
-          height={boundingBox.height * pageZoom}
-          onResizeStart={this.handleResizeStart}
-          onResizeStop={this.handleResizeStop}
-          onDragStart={this.handleDragStart}
-          onDragStop={this.handleDragStop}
-          onClick={this.handleElementClick}
-          onDoubleClick={this.handleElementDoubleClick}
-          key={`${mappingInfo.id}-${0}`}
-          minWidth={10}
-          minHeight={10}
-          tabIndex={0}
-          metaData={{
-            id: mappingInfo.id,
-            subId: 0
-          }}
-        >
-          <div className={styles.elementName}>{type}</div>
-        </ResizableAndMovablePlus>
-      );
-      */
       return (
         <InteractWrapper
           x={zoomValue(boundingBox.left, pageZoom)}

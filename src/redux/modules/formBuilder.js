@@ -53,7 +53,6 @@ export const INIT_BUILDER_STATE = {
   documentMapping: [],
   activeInputName: '',
   currentElement: null, // holds the current element state being added or edited.
-  currentQuestionId: 0, // indicates the question connected with selected element.
   lastQuestionId: 0, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: false
@@ -162,7 +161,6 @@ const _saveElement = (state, action) => {
     questions: mergeItemIntoArray(state.questions, question),
     documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true),
     lastQuestionId: newQuestionId,
-    currentQuestionId: newQuestionId,
     currentElement,
     isModified: false
   });
@@ -181,7 +179,6 @@ const _deleteElement = (state, action) => {
   return Object.assign({}, state, {
     questions: _.pullAllBy(state.questions, [{id}], 'id'),
     documentMapping: _.pullAllBy(state.documentMapping, [{id}], 'id'),
-    currentQuestionId: 0,
     questionEditMode: false,
     currentElement: null,
     activeInputName: '',
@@ -300,11 +297,6 @@ export const _updateCurrentElement = (state, element) => {
 };
 
 // ------------------------------------
-// Action: setCurrentQuestionId
-// ------------------------------------
-export const setCurrentQuestionId = createAction(SET_CURRENT_QUESTION_ID);
-
-// ------------------------------------
 // Action: setPageZoom
 // ------------------------------------
 export const setPageZoom = createAction(SET_PAGE_ZOOM);
@@ -392,11 +384,6 @@ const formBuilderReducer = handleActions({
 
   RESET_VALIDATION_INFO: (state, action) =>
     _resetValidationInfo(state, action),
-
-  SET_CURRENT_QUESTION_ID: (state, action) =>
-    Object.assign({}, state, {
-      currentQuestionId: _.defaultTo(action.payload, 0)
-    }),
 
   SET_PAGE_ZOOM: (state, action) =>
     Object.assign({}, state, {

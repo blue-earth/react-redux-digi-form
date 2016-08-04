@@ -62,16 +62,6 @@ class FormBuilder extends Component {
     setActiveInputName: PropTypes.func.isRequired,
 
     /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
-     */
-    currentQuestionId: PropTypes.number.isRequired,
-
-    /*
-     * setCurrentQuestionId: Redux action to set the current active question ID.
-     */
-    setCurrentQuestionId: PropTypes.func.isRequired,
-
-    /*
      * saveElement: Redux action to save the current element being edited.
      */
     saveElement: PropTypes.func.isRequired,

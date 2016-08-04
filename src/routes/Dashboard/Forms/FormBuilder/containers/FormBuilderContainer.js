@@ -14,8 +14,7 @@ import {
   resetMappingInfo,
   setPageZoom,
   saveElement,
-  deleteElement,
-  setCurrentQuestionId
+  deleteElement
 } from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
@@ -23,6 +22,7 @@ import FormBuilder from '../components/FormBuilder';
 const mapActionCreators = {
   newForm,
   fetchForm,
+  setQuestionEditMode,
   setActiveInputName,
   setQuestionInfo,
   resetQuestionInfo,
@@ -30,11 +30,9 @@ const mapActionCreators = {
   resetValidationInfo,
   setMappingInfo,
   resetMappingInfo,
+  setPageZoom,
   saveElement,
   deleteElement,
-  setCurrentQuestionId,
-  setPageZoom,
-  setQuestionEditMode,
   show
 };
 
@@ -51,7 +49,6 @@ const mapStateToProps = (state) => {
     documentMapping,
     currentElement,
     activeInputName,
-    currentQuestionId,
     currentQuestionInstruction,
     pageZoom,
     pageWidth,
@@ -68,7 +65,6 @@ const mapStateToProps = (state) => {
     documentMapping,
     currentElement,
     activeInputName,
-    currentQuestionId,
     currentQuestionInstruction,
     pageZoom,
     pageWidth,
