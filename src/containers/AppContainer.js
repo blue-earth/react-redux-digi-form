@@ -7,9 +7,9 @@ class AppContainer extends Component {
     history: PropTypes.object.isRequired,
     routes: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired
-  }
+  };
 
-  render () {
+  render() {
     const { history, routes, store } = this.props;
 
     return (

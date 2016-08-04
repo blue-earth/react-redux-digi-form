@@ -26,7 +26,7 @@ export default function requiresAuth(Component) {
       this._checkAndRedirect = this._checkAndRedirect.bind(this);
       this.state = {
         willAuthenticate: true
-      }
+      };
     }
     componentDidMount() {
       this.props.setIsFetchingUserInfo(true);

@@ -4,12 +4,10 @@ import FormsRoute from './Forms';
 import SubmissionsRoute from './Submissions';
 import SettingsRoute from './Settings';
 import { dashboardPath, dashboardUrl, submissionsPath } from 'helpers/urlHelper';
-import { routerActions } from 'react-router-redux';
 import requiresAuth from 'containers/RequireAuth/RequireAuth';
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
-
 
 export default (store) => ({
   path: dashboardPath,
