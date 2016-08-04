@@ -24,7 +24,6 @@ const webpackConfig = {
 // Entry Points
 // ------------------------------------
 const APP_ENTRY_PATHS = [
-  'babel-polyfill',
   paths.client('main.js')
 ]
 
@@ -182,12 +181,7 @@ webpackConfig.module.loaders = [{
   query: {
     cacheDirectory: true,
     plugins: ['transform-runtime'],
-    presets: ['es2015', 'react', 'stage-0'],
-    env: {
-      production: {
-        presets: ['react-optimize']
-      }
-    }
+    presets: ['es2015', 'react', 'stage-0']
   }
 },
 {
