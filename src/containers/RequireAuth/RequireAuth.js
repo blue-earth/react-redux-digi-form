@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import connect from 'redux/utils/connect';
-import { push } from 'react-router-redux';
 import {
   fetchUserInfo,
   setIsFetchingUserInfo
@@ -31,7 +30,7 @@ export default function requiresAuth(Component) {
       return this.props.isAuthenticating !== nextProps.isAuthenticating;
     }
     _checkAndRedirect() {
-      const {dispatch, isAuthenticating, user} = this.props;
+      const { isAuthenticating, user } = this.props;
       if (!isAuthenticating && Object.keys(user).length === 0) {
         goTo('/login');
       }
