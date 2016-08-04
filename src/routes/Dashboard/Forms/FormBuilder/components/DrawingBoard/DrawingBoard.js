@@ -419,10 +419,11 @@ class DrawingBoard extends Component {
   }
 
   handleKeyDown = (event) => {
-    const { deleteElement, currentQuestionId, pageZoom, documentMapping, setMappingInfo } = this.props;
+    const { currentElement, pageZoom, setMappingInfo, deleteElement } = this.props;
 
-    if (currentQuestionId > 0) {
-      const boundingBox = findItemById(documentMapping, currentQuestionId).bounding_box[0];
+    if (currentElement) {
+      const boundingBox = _.get(currentElement, ['mappingInfo', 'bounding_box', '0'], false);
+      if (!boundingBox) return;
       const newBoundingBox = _.assign({}, boundingBox);
       switch (event.keyCode) {
         case 37: // Left key
@@ -438,7 +439,7 @@ class DrawingBoard extends Component {
           newBoundingBox.top += 1.0 / pageZoom;
           break;
         case 46: // Delete key
-          deleteElement(currentQuestionId);
+          deleteElement();
           return;
         default:
           return;
