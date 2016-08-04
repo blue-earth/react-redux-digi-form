@@ -5,6 +5,7 @@ import {
   fetchUserInfo,
   setIsFetchingUserInfo
 } from 'redux/modules/auth';
+import { goTo } from 'redux/modules/router';
 
 export default function requiresAuth(Component) {
   class AuthenticatedComponent extends React.Component {
@@ -32,7 +33,7 @@ export default function requiresAuth(Component) {
     _checkAndRedirect() {
       const {dispatch, isAuthenticating, user} = this.props;
       if (!isAuthenticating && Object.keys(user).length === 0) {
-        dispatch(push('/login'));
+        goTo('/login');
       }
     }
     render() {
@@ -55,5 +56,6 @@ export default function requiresAuth(Component) {
     };
   };
   const mapActionCreators = { fetchUserInfo, setIsFetchingUserInfo };
+
   return connect(mapStateToProps, mapActionCreators)(AuthenticatedComponent);
 }
