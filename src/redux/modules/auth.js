@@ -8,9 +8,13 @@ export const RECEIVE_AUTH_STATUS = 'RECEIVE_AUTH_STATUS';
 export const NOT_LOGGED_IN = 'NOT_LOGGED_IN';
 export const LOGGING_IN = 'LOGGING_IN';
 export const LOGGED_IN = 'LOGGED_IN';
+export const SET_USER_PROFILE = 'SET_USER_PROFILE';
+export const SET_IS_FETCHING_USER = 'SET_IS_FETCHING_USER';
 
 export const INIT_AUTH_STATE = {
-  authStatus: NOT_LOGGED_IN
+  authStatus: NOT_LOGGED_IN,
+  user: {},
+  isAuthenticating: false
 };
 
 // ------------------------------------
@@ -60,6 +64,37 @@ export const processAuth = (email, password) => {
   return bind(fetch(`${API_URL}/accounts/api/auth/login/`, fetchParams), fetchSuccess, fetchFail);
 };
 
+export const setIsFetchingUserInfo = (isFetching) => {
+  return {
+    type: SET_IS_FETCHING_USER,
+    isAuthenticating: isFetching
+  };
+};
+
+// ------------------------------------
+// Action: fetchUserInfo
+// ------------------------------------
+export const fetchUserInfo = () => {
+  const fetchParams = assignDefaults({
+    method: 'GET'
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(setUserProfile(value));
+      dispatch(setIsFetchingUserInfo(false));
+    };
+  };
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(setIsFetchingUserInfo(false));
+    };
+  };
+  return [
+    setIsFetchingUserInfo(true),
+    bind(fetch(`${API_URL}/accounts/api/user/`, fetchParams), fetchSuccess, fetchFail)
+  ];
+};
+
 // ------------------------------------
 // Action: doneAuth
 // ------------------------------------
@@ -67,6 +102,13 @@ export const receiveAuthStatus = (value) => {
   return {
     type: RECEIVE_AUTH_STATUS,
     status: value.authenticated
+  };
+};
+
+export const setUserProfile = (profileDictionary) => {
+  return {
+    type: SET_USER_PROFILE,
+    data: profileDictionary
   };
 };
 
@@ -82,6 +124,14 @@ const authReducer = (state = INIT_AUTH_STATE, action) => {
     case RECEIVE_AUTH_STATUS:
       return Object.assign({}, state, {
         authStatus: action.status ? LOGGED_IN : NOT_LOGGED_IN
+      });
+    case SET_USER_PROFILE:
+      return Object.assign({}, state, {
+        user: {...action.data}
+      });
+    case SET_IS_FETCHING_USER:
+      return Object.assign({}, state, {
+        isAuthenticating: action.isAuthenticating
       });
     default:
       return state;
