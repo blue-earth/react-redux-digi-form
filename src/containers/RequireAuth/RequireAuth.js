@@ -1,17 +1,27 @@
 import React, {PropTypes} from 'react';
 import connect from 'redux/utils/connect';
-import {push} from 'react-router-redux';
+import { push } from 'react-router-redux';
+import {
+  fetchUserInfo,
+  setIsFetchingUserInfo
+} from 'redux/modules/auth';
 
 export default function requiresAuth(Component) {
   class AuthenticatedComponent extends React.Component {
     static propTypes = {
       isAuthenticating: PropTypes.bool.isRquired,
       user: PropTypes.object.isRquired,
-      dispatch: PropTypes.func.isRquired
+      dispatch: PropTypes.func.isRquired,
+      setIsFetchingUserInfo: PropTypes.func.isRquired,
+      fetchUserInfo: PropTypes.func.isRquired
     };
-
+    constructor(props) {
+      super(props);
+      this._checkAndRedirect = this._checkAndRedirect.bind(this);
+    }
     componentDidMount() {
-      this._checkAndRedirect();
+      this.props.setIsFetchingUserInfo(true);
+      this.props.fetchUserInfo();
     }
     componentDidUpdate() {
       this._checkAndRedirect();
@@ -19,16 +29,12 @@ export default function requiresAuth(Component) {
     shouldComponentUpdate(nextProps) {
       return this.props.isAuthenticating !== nextProps.isAuthenticating;
     }
-
-    _checkAndRedirect(nextProps) {
+    _checkAndRedirect() {
       const {dispatch, isAuthenticating, user} = this.props;
-      // todo: DRY user checking
-      console.log(isAuthenticating, user);
       if (!isAuthenticating && Object.keys(user).length === 0) {
-        debugger;
+        dispatch(push('/login'));
       }
     }
-
     render() {
       const { isAuthenticating } = this.props;
       if (isAuthenticating) {
@@ -48,6 +54,6 @@ export default function requiresAuth(Component) {
       user: state.auth.user
     };
   };
-
-  return connect(mapStateToProps)(AuthenticatedComponent);
+  const mapActionCreators = { fetchUserInfo, setIsFetchingUserInfo };
+  return connect(mapStateToProps, mapActionCreators)(AuthenticatedComponent);
 }
