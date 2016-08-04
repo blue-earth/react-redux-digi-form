@@ -19,6 +19,7 @@ export const DELETE_ELEMENT = 'DELETE_ELEMENT';
 
 export const UPDATE_QUESTION_INFO = 'UPDATE_QUESTION_INFO';
 export const UPDATE_MAPPING_INFO = 'UPDATE_MAPPING_INFO';
+export const RESET_MAPPING_INFO = 'RESET_MAPPING_INFO';
 export const UPDATE_VALIDATION_INFO = 'UPDATE_VALIDATION_INFO';
 
 export const SET_CURRENT_QUESTION_ID = 'SET_CURRENT_QUESTION_ID';
@@ -210,7 +211,9 @@ export const updateValidationInfo = createAction(UPDATE_VALIDATION_INFO);
 // Helper: _updateQuestionInfo
 // ------------------------------------
 const _updateValidationInfo = (state, action) => {
-  const currentValidations = _.get(state, ['currentElement', 'question', 'validations'], []);
+  const currentValidations = _.get(state, [
+    'currentElement', 'question', 'validations'
+  ], []);
   const { type, value } = action.payload;
   const validations = typeof value !== 'undefined'
     ? mergeItemIntoArray(currentValidations, { type, value }, false, 'type')
@@ -229,15 +232,26 @@ export const updateMappingInfo = createAction(UPDATE_MAPPING_INFO);
 // Helper: _updateQuestionInfo
 // ------------------------------------
 const _updateMappingInfo = (state, action) => {
-  const { id, pageNumber, boundingBox } = action.payload;
+  const newMappingInfo = _.pick(action.payload, [
+    'id', 'page_number', 'bounding_box'
+  ]);
   const { currentElement: { mappingInfo } } = state;
-  const newMappingInfo = {
-    id: _.defaultTo(id, mappingInfo.id),
-    'page_number': _.defaultTo(pageNumber, mappingInfo.page_number),
-    'bounding_box': _.defaultTo(boundingBox, mappingInfo.bounding_box)
-  };
   return _updateCurrentElement(state, {
-    mappingInfo: newMappingInfo
+    mappingInfo: Object.assign({}, mappingInfo, newMappingInfo)
+  });
+};
+
+// ------------------------------------
+// Action: resetMappingInfo
+// ------------------------------------
+export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
+
+// ------------------------------------
+// Helper: _resetMappingInfo
+// ------------------------------------
+const _resetMappingInfo = (state, action) => {
+  return _updateCurrentElement(state, {
+    mappingInfo: {}
   });
 };
 
@@ -332,6 +346,9 @@ const formBuilderReducer = handleActions({
 
   UPDATE_MAPPING_INFO: (state, action) =>
     _updateMappingInfo(state, action),
+
+  RESET_MAPPING_INFO: (state, action) =>
+    _resetMappingInfo(state, action),
 
   UPDATE_VALIDATION_INFO: (state, action) =>
     _updateValidationInfo(state, action),

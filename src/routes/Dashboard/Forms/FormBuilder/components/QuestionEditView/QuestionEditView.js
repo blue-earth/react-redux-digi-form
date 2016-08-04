@@ -17,6 +17,7 @@ import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEd
 import CancelConfirmModal from '../CancelConfirmModal/CancelConfirmModal';
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
+import popoverTexts from './PopoverTexts';
 import 'rc-switch/assets/index.css';
 import styles from './QuestionEditView.scss';
 
@@ -52,6 +53,11 @@ class QuestionEditView extends Component {
      * currentQuestionInstruction: Redux state to specify the active input instruction.
      */
     updateQuestionInfo: PropTypes.func.isRequired,
+
+    /*
+     * resetMappingInfo: Redux action to remove document mapping info
+     */
+    resetMappingInfo: PropTypes.func.isRequired,
 
     /*
      * updateValidationInfo: Redux action to update validations array.
@@ -147,6 +153,19 @@ class QuestionEditView extends Component {
     });
   }
 
+  handleDeleteSelection = (event) => {
+    const { resetMappingInfo } = this.props;
+    resetMappingInfo();
+  }
+
+  getPopover(popoverId) {
+    return (
+      <Popover id={`${popoverId}Popover`}>
+        {popoverTexts[popoverId]}
+      </Popover>
+    );
+  }
+
   get questionsList() {
     const { questions, currentElement } = this.props;
     const filteredQuestions = currentElement.id
@@ -156,30 +175,6 @@ class QuestionEditView extends Component {
       key: `answer_${item.id}`,
       text: `answer_${item.id}`
     }));
-  }
-
-  get descriptionPopover() {
-    return (
-      <Popover id="questionDescriptionPopover">
-        TODO: Add question description popover text here.
-      </Popover>
-    );
-  }
-
-  get validationMinLength() {
-    return (
-      <Popover id="validationMinLength">
-        TODO: Add question validation min length popover text here.
-      </Popover>
-    );
-  }
-
-  get validationMaxLength() {
-    return (
-      <Popover id="validationMaxLength">
-        TODO: Add question validation max length popover text here.
-      </Popover>
-    );
   }
 
   renderTopActionButtons() {
@@ -233,7 +228,7 @@ class QuestionEditView extends Component {
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>
           Question description
-          <OverlayTrigger trigger="focus" overlay={this.descriptionPopover}>
+          <OverlayTrigger trigger="focus" overlay={this.getPopover('questionDescription')}>
             <span tabIndex={0} className={styles.popoverIcon}>
               <MdHelpOutline size={18} />
             </span>
@@ -255,6 +250,31 @@ class QuestionEditView extends Component {
     );
   }
 
+  renderAnswerOutputArea() {
+    return (
+      <div className={styles.section}>
+        <Row className={styles.validationRow}>
+          <Col xs={6}>
+            <h3 className={styles.sectionTitle}>
+              Answer output area(s)
+              <OverlayTrigger trigger="focus" overlay={this.getPopover('outputArea')}>
+                <span tabIndex={0} className={styles.popoverIcon}>
+                  <MdHelpOutline size={18} />
+                </span>
+              </OverlayTrigger>
+            </h3>
+            <p className={styles.titleDescription}>(Leave empty if not required)</p>
+          </Col>
+          <Col xs={6}>
+            <Button block bsSize="small" onClick={this.handleDeleteSelection}>
+              Delete all output selections
+            </Button>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+
   renderLengthValidation() {
     const validations = _.get(this.props, ['currentElement', 'question', 'validations'], []);
     const minLength = _.defaultTo(_.find(validations, { type: 'minLength' }), { value: '' });
@@ -265,7 +285,7 @@ class QuestionEditView extends Component {
           <Col xs={8} sm={9}>
             <h3 className={styles.sectionTitle}>
               Minimum characters
-              <OverlayTrigger trigger="focus" overlay={this.validationMinLength}>
+              <OverlayTrigger trigger="focus" overlay={this.getPopover('validationMinLength')}>
                 <span tabIndex={0} className={styles.popoverIcon}>
                   <MdHelpOutline size={18} />
                 </span>
@@ -283,13 +303,13 @@ class QuestionEditView extends Component {
           <Col xs={8} sm={9}>
             <h3 className={styles.sectionTitle}>
               Maximum characters
-              <OverlayTrigger trigger="focus" overlay={this.validationMaxLength}>
+              <OverlayTrigger trigger="focus" overlay={this.getPopover('validationMaxLength')}>
                 <span tabIndex={0} className={styles.popoverIcon}>
                   <MdHelpOutline size={18} />
                 </span>
               </OverlayTrigger>
             </h3>
-            <p className={styles.titleDescription}>(Leave empty if not required)</p>
+            <p className={styles.titleDescription}>(Leave eptmy if not required)</p>
           </Col>
           <Col xs={4} sm={3}>
             <input type="number" className={styles.textInput}
@@ -310,6 +330,7 @@ class QuestionEditView extends Component {
         <hr className={styles.separator} />
         {this.renderQuestionInstruction()}
         {this.renderQuestionDescription()}
+        {this.renderAnswerOutputArea()}
         {this.renderLengthValidation()}
         <CancelConfirmModal
           saveElement={saveElement}

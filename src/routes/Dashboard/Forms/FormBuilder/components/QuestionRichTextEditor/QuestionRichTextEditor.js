@@ -130,11 +130,11 @@ class QuestionRichTextEditor extends Component {
   }
 
   onBoldClick = () => {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
+    this.handleValueChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
   }
 
   onItalicClick = () => {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
+    this.handleValueChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
   }
 
   showOffset = () => {

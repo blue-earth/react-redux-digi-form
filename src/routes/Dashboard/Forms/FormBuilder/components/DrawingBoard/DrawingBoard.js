@@ -126,7 +126,7 @@ class DrawingBoard extends Component {
     var metaData = JSON.parse(relatedTarget.dataset.meta);
     if (!currentElement) return;
     const { mappingInfo } = currentElement;
-    if (mappingInfo.pageNumber === pageNumber) return;
+    if (mappingInfo.page_umber === pageNumber) return;
     metaData.destPageNumber = pageNumber;
     relatedTarget.dataset.meta = JSON.stringify(metaData);
   }
@@ -208,9 +208,8 @@ class DrawingBoard extends Component {
       return; // no need to add too small-sized box.
     }
     updateMappingInfo({
-      type: 'Standard',
-      pageNumber,
-      boundingBox: [{
+      'page_number': pageNumber,
+      'bounding_box': [{
         left: Math.min(startX, endX) / pageZoom,
         top: Math.min(startY, endY) / pageZoom,
         width: Math.abs(endX - startX) / pageZoom,
@@ -307,12 +306,12 @@ class DrawingBoard extends Component {
       if (!_.isEqual(boundingBox, newBoundingBox)) {
         updateMappingInfo({
           id,
-          boundingBox: [newBoundingBox]
+          'bounding_box': [newBoundingBox]
         });
       }
     } else {
       updateMappingInfo({
-        boundingBox: [newBoundingBox]
+        'bounding_box': [newBoundingBox]
       });
     }
     // Reset SnappingHelper
@@ -360,14 +359,14 @@ class DrawingBoard extends Component {
       if (!_.isEqual(boundingBox, newBoundingBox)) {
         updateMappingInfo({
           id,
-          pageNumber: destPageNumber && destPageNumber,
-          boundingBox: [newBoundingBox]
+          'page_number': destPageNumber && destPageNumber,
+          'bounding_box': [newBoundingBox]
         });
       }
     } else {
       updateMappingInfo({
-        pageNumber: destPageNumber && destPageNumber,
-        boundingBox: [newBoundingBox]
+        'page_number': destPageNumber && destPageNumber,
+        'bounding_box': [newBoundingBox]
       });
     }
 
@@ -445,7 +444,7 @@ class DrawingBoard extends Component {
           return;
       }
       updateMappingInfo({
-        boundingBox: [newBoundingBox]
+        'bounding_box': [newBoundingBox]
       });
       event.preventDefault();
     }
