@@ -17,10 +17,12 @@ export const EDIT_ELEMENT = 'EDIT_ELEMENT';
 export const SAVE_ELEMENT = 'SAVE_ELEMENT';
 export const DELETE_ELEMENT = 'DELETE_ELEMENT';
 
-export const UPDATE_QUESTION_INFO = 'UPDATE_QUESTION_INFO';
-export const UPDATE_MAPPING_INFO = 'UPDATE_MAPPING_INFO';
+export const SET_QUESTION_INFO = 'SET_QUESTION_INFO';
+export const RESET_QUESTION_INFO = 'RESET_QUESTION_INFO';
+export const SET_MAPPING_INFO = 'SET_MAPPING_INFO';
 export const RESET_MAPPING_INFO = 'RESET_MAPPING_INFO';
-export const UPDATE_VALIDATION_INFO = 'UPDATE_VALIDATION_INFO';
+export const SET_VALIDATION_INFO = 'SET_VALIDATION_INFO';
+export const RESET_VALIDATION_INFO = 'RESET_VALIDATION_INFO';
 
 export const SET_CURRENT_QUESTION_ID = 'SET_CURRENT_QUESTION_ID';
 
@@ -188,14 +190,14 @@ const _deleteElement = (state, action) => {
 };
 
 // ------------------------------------
-// Action: updateQuestionInfo
+// Action: setQuestionInfo
 // ------------------------------------
-export const updateQuestionInfo = createAction(UPDATE_QUESTION_INFO);
+export const setQuestionInfo = createAction(SET_QUESTION_INFO);
 
 // ------------------------------------
-// Helper: _updateQuestionInfo
+// Helper: _setQuestionInfo
 // ------------------------------------
-const _updateQuestionInfo = (state, action) => {
+const _setQuestionInfo = (state, action) => {
   const question = _.get(state, ['currentElement', 'question'], {});
   return _updateCurrentElement(state, {
     question: Object.assign({}, question, action.payload)
@@ -203,35 +205,67 @@ const _updateQuestionInfo = (state, action) => {
 };
 
 // ------------------------------------
-// Action: updateValidationInfo
+// Action: resetQuestionInfo
 // ------------------------------------
-export const updateValidationInfo = createAction(UPDATE_VALIDATION_INFO);
+export const resetQuestionInfo = createAction(RESET_QUESTION_INFO);
 
 // ------------------------------------
-// Helper: _updateQuestionInfo
+// Helper: _resetQuestionInfo
 // ------------------------------------
-const _updateValidationInfo = (state, action) => {
+const _resetQuestionInfo = (state, action) => {
+  const question = _.get(state, ['currentElement', 'question'], {});
+  return _updateCurrentElement(state, {
+    question: Object.assign({}, _.omit(question, _.flatten([action.payload])))
+  });
+};
+
+// ------------------------------------
+// Action: setValidationInfo
+// ------------------------------------
+export const setValidationInfo = createAction(SET_VALIDATION_INFO);
+
+// ------------------------------------
+// Helper: _setValidationInfo
+// ------------------------------------
+const _setValidationInfo = (state, action) => {
   const currentValidations = _.get(state, [
     'currentElement', 'question', 'validations'
   ], []);
-  const { type, value } = action.payload;
-  const validations = typeof value !== 'undefined'
-    ? mergeItemIntoArray(currentValidations, { type, value }, false, 'type')
-    : _.pullAllBy(currentValidations, [{type}], 'type');
-  return _updateQuestionInfo(state, {
+  const validation = _.pick(action.payload, ['type', 'value']);
+  const validations = mergeItemIntoArray(currentValidations, validation, false, 'type');
+  return _setQuestionInfo(state, {
     payload: { validations }
   });
 };
 
 // ------------------------------------
-// Action: updateMappingInfo
+// Action: resetValidationInfo
 // ------------------------------------
-export const updateMappingInfo = createAction(UPDATE_MAPPING_INFO);
+export const resetValidationInfo = createAction(RESET_VALIDATION_INFO);
 
 // ------------------------------------
-// Helper: _updateQuestionInfo
+// Helper: _resetValidationInfo
 // ------------------------------------
-const _updateMappingInfo = (state, action) => {
+const _resetValidationInfo = (state, action) => {
+  const currentValidations = _.get(state, [
+    'currentElement', 'question', 'validations'
+  ], []);
+  const { type } = action.payload;
+  const validations = _.pullAllBy(currentValidations, [{type}], 'type');
+  return _setQuestionInfo(state, {
+    payload: { validations }
+  });
+};
+
+// ------------------------------------
+// Action: setMappingInfo
+// ------------------------------------
+export const setMappingInfo = createAction(SET_MAPPING_INFO);
+
+// ------------------------------------
+// Helper: _setQuestionInfo
+// ------------------------------------
+const _setMappingInfo = (state, action) => {
   const newMappingInfo = _.pick(action.payload, [
     'id', 'page_number', 'bounding_box'
   ]);
@@ -341,17 +375,23 @@ const formBuilderReducer = handleActions({
   DELETE_ELEMENT: (state, action) =>
     _deleteElement(state, action),
 
-  UPDATE_QUESTION_INFO: (state, action) =>
-    _updateQuestionInfo(state, action),
+  SET_QUESTION_INFO: (state, action) =>
+    _setQuestionInfo(state, action),
 
-  UPDATE_MAPPING_INFO: (state, action) =>
-    _updateMappingInfo(state, action),
+  RESET_QUESTION_INFO: (state, action) =>
+    _resetQuestionInfo(state, action),
+
+  SET_MAPPING_INFO: (state, action) =>
+    _setMappingInfo(state, action),
 
   RESET_MAPPING_INFO: (state, action) =>
     _resetMappingInfo(state, action),
 
-  UPDATE_VALIDATION_INFO: (state, action) =>
-    _updateValidationInfo(state, action),
+  SET_VALIDATION_INFO: (state, action) =>
+    _setValidationInfo(state, action),
+
+  RESET_VALIDATION_INFO: (state, action) =>
+    _resetValidationInfo(state, action),
 
   SET_CURRENT_QUESTION_ID: (state, action) =>
     Object.assign({}, state, {

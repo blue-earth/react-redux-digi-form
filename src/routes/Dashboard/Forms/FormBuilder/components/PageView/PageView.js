@@ -40,9 +40,9 @@ class PageView extends Component {
     documentMapping: PropTypes.array.isRequired,
 
     /*
-     * updateMappingInfo: Action to update the document mapping info.
+     * setMappingInfo: Action to update the document mapping info.
      */
-    updateMappingInfo: PropTypes.func.isRequired,
+    setMappingInfo: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.

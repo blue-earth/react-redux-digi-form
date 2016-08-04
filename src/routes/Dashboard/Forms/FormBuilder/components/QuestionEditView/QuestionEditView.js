@@ -52,17 +52,27 @@ class QuestionEditView extends Component {
     /*
      * currentQuestionInstruction: Redux state to specify the active input instruction.
      */
-    updateQuestionInfo: PropTypes.func.isRequired,
+    setQuestionInfo: PropTypes.func.isRequired,
+
+    /*
+     * resetQuestionInfo: Redux action to remove a specific item into current question.
+     */
+    resetQuestionInfo: PropTypes.func.isRequired,
+
+    /*
+     * setValidationInfo: Redux action to add or update a specific item in validations array.
+     */
+    setValidationInfo: PropTypes.func.isRequired,
+
+    /*
+     * resetValidationInfo: Redux action to remove a specific item in validations array.
+     */
+    resetValidationInfo: PropTypes.func.isRequired,
 
     /*
      * resetMappingInfo: Redux action to remove document mapping info
      */
     resetMappingInfo: PropTypes.func.isRequired,
-
-    /*
-     * updateValidationInfo: Redux action to update validations array.
-     */
-    updateValidationInfo: PropTypes.func.isRequired,
 
     /*
      * isModified: Redux state that indicates whether the form is modified since last save or load.
@@ -117,45 +127,52 @@ class QuestionEditView extends Component {
   }
 
   setInstruction = (value) => {
-    const { updateQuestionInfo } = this.props;
-    updateQuestionInfo({
+    const { setQuestionInfo } = this.props;
+    setQuestionInfo({
       'question_instruction': value
     });
   }
 
   setDescription = (value) => {
-    const { updateQuestionInfo } = this.props;
-    updateQuestionInfo({
+    const { setQuestionInfo } = this.props;
+    setQuestionInfo({
       'question_description': value
     });
   }
 
   toggleDescription = (isOn) => {
-    const { updateQuestionInfo } = this.props;
-    updateQuestionInfo({ 'question_description': (isOn ? '' : undefined) });
+    const { setQuestionInfo, resetQuestionInfo } = this.props;
+    isOn
+      ? setQuestionInfo({ 'question_description': '' })
+      : resetQuestionInfo('question_description');
   }
 
   handleMinLengthChange = (event) => {
-    const { updateValidationInfo } = this.props;
-    const value = _.defaultTo(parseInt(event.target.value), undefined);
-    updateValidationInfo({
-      type: 'minLength',
-      value
-    });
+    const { setValidationInfo, resetValidationInfo } = this.props;
+    const value = _.defaultTo(parseInt(event.target.value), false);
+    value
+    ? setValidationInfo({ type: 'minLength', value })
+    : resetValidationInfo({ type: 'minLength' });
   }
 
   handleMaxLengthChange = (event) => {
-    const { updateValidationInfo } = this.props;
-    const value = _.defaultTo(parseInt(event.target.value), undefined);
-    updateValidationInfo({
-      type: 'maxLength',
-      value
-    });
+    const { setValidationInfo, resetValidationInfo } = this.props;
+    const value = _.defaultTo(parseInt(event.target.value), false);
+    value
+    ? setValidationInfo({ type: 'maxLength', value })
+    : resetValidationInfo({ type: 'maxLength' });
   }
 
   handleDeleteSelection = (event) => {
     const { resetMappingInfo } = this.props;
     resetMappingInfo();
+  }
+
+  handleIsRequiredChange = (isOn) => {
+    const { setValidationInfo, resetValidationInfo } = this.props;
+    isOn
+      ? setValidationInfo({ type: 'isRequired' })
+      : resetValidationInfo({ type: 'isRequired' });
   }
 
   getPopover(popoverId) {
@@ -321,6 +338,32 @@ class QuestionEditView extends Component {
     );
   }
 
+  renderIsRequiredValidation() {
+    const validations = _.get(this.props, ['currentElement', 'question', 'validations'], []);
+    const isRequired = typeof _.find(validations, { type: 'isRequired' }) !== 'undefined';
+    return (
+      <div className={styles.section}>
+        <Row className={styles.validationRow}>
+          <Col xs={8} sm={9}>
+            <h3 className={styles.sectionTitle}>
+              Mandatory
+              <OverlayTrigger trigger="focus" overlay={this.getPopover('isRequired')}>
+                <span tabIndex={0} className={styles.popoverIcon}>
+                  <MdHelpOutline size={18} />
+                </span>
+              </OverlayTrigger>
+            </h3>
+          </Col>
+          <Col xs={4} sm={3}>
+            <div className={styles.switchWrapper}>
+              <Switch onChange={this.handleIsRequiredChange} checked={isRequired} />
+            </div>
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+
   render() {
     const { saveElement, setQuestionEditMode } = this.props;
     return (
@@ -332,6 +375,7 @@ class QuestionEditView extends Component {
         {this.renderQuestionDescription()}
         {this.renderAnswerOutputArea()}
         {this.renderLengthValidation()}
+        {this.renderIsRequiredValidation()}
         <CancelConfirmModal
           saveElement={saveElement}
           setQuestionEditMode={setQuestionEditMode} />

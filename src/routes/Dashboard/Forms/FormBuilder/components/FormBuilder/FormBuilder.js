@@ -82,24 +82,34 @@ class FormBuilder extends Component {
     currentElement: PropTypes.object,
 
     /*
-     * currentQuestionInstruction: Redux state to specify the active input instruction.
+     * setQuestionInfo: Redux action to add or update a specific item into current question.
      */
-    updateQuestionInfo: PropTypes.func.isRequired,
+    setQuestionInfo: PropTypes.func.isRequired,
 
     /*
-     * updateValidationInfo: Redux action to update validations array.
+     * resetQuestionInfo: Redux action to remove a specific item into current question.
      */
-    updateValidationInfo: PropTypes.func.isRequired,
+    resetQuestionInfo: PropTypes.func.isRequired,
+
+    /*
+     * setValidationInfo: Redux action to add or update a specific item in validations array.
+     */
+    setValidationInfo: PropTypes.func.isRequired,
+
+    /*
+     * resetValidationInfo: Redux action to remove a specific item in validations array.
+     */
+    resetValidationInfo: PropTypes.func.isRequired,
+
+    /*
+     * setMappingInfo: Action to update the document mapping info.
+     */
+    setMappingInfo: PropTypes.func.isRequired,
 
     /*
      * resetMappingInfo: Redux action to remove document mapping info
      */
     resetMappingInfo: PropTypes.func.isRequired,
-
-    /*
-     * updateMappingInfo: Action to update the document mapping info.
-     */
-    updateMappingInfo: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.

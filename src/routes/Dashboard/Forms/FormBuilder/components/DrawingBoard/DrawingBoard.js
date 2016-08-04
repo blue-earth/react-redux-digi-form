@@ -61,9 +61,9 @@ class DrawingBoard extends Component {
     setCurrentQuestionId: PropTypes.func.isRequired,
 
     /*
-     * updateMappingInfo: Action to update the document mapping info.
+     * setMappingInfo: Action to update the document mapping info.
      */
-    updateMappingInfo: PropTypes.func.isRequired,
+    setMappingInfo: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.
@@ -202,12 +202,12 @@ class DrawingBoard extends Component {
       endX,
       endY
     });
-    const { updateMappingInfo, pageZoom, pageNumber } = this.props;
+    const { setMappingInfo, pageZoom, pageNumber } = this.props;
 
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
     }
-    updateMappingInfo({
+    setMappingInfo({
       'page_number': pageNumber,
       'bounding_box': [{
         left: Math.min(startX, endX) / pageZoom,
@@ -225,7 +225,7 @@ class DrawingBoard extends Component {
   }
 
   handleResizeStop = (direction, styleSize, clientSize, delta, metaData) => {
-    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
+    const { setMappingInfo, documentMapping, pageZoom } = this.props;
     const { id } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
@@ -244,7 +244,7 @@ class DrawingBoard extends Component {
       height: styleSize.height / pageZoom
     };
     if (!_.isEqual(boundingBox, newBoundingBox)) {
-      updateMappingInfo({
+      setMappingInfo({
         id,
         bounding_box: [newBoundingBox]
       });
@@ -258,7 +258,7 @@ class DrawingBoard extends Component {
   }
 
   handleDragStop = (event, ui, metaData) => {
-    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
+    const { setMappingInfo, documentMapping, pageZoom } = this.props;
     const { id } = metaData;
     const index = findIndexById(documentMapping, id);
     const boundingBox = documentMapping[index].bounding_box[0];
@@ -269,7 +269,7 @@ class DrawingBoard extends Component {
       height: boundingBox.height
     };
     if (!_.isEqual(boundingBox, newBoundingBox)) {
-      updateMappingInfo({
+      setMappingInfo({
         id,
         bounding_box: [newBoundingBox]
       });
@@ -293,7 +293,7 @@ class DrawingBoard extends Component {
   }
 
   handleResizeEnd = (rect, metaData) => {
-    const { updateMappingInfo, documentMapping, pageZoom } = this.props;
+    const { setMappingInfo, documentMapping, pageZoom } = this.props;
     const { id } = metaData;
     const newBoundingBox = {
       left: rect.left / pageZoom,
@@ -304,13 +304,13 @@ class DrawingBoard extends Component {
     if (id) {
       const boundingBox = findItemById(documentMapping, id).bounding_box[0];
       if (!_.isEqual(boundingBox, newBoundingBox)) {
-        updateMappingInfo({
+        setMappingInfo({
           id,
           'bounding_box': [newBoundingBox]
         });
       }
     } else {
-      updateMappingInfo({
+      setMappingInfo({
         'bounding_box': [newBoundingBox]
       });
     }
@@ -335,7 +335,7 @@ class DrawingBoard extends Component {
   }
 
   handleDragEnd = (rect, metaData) => {
-    const { updateMappingInfo, documentMapping, pageZoom, pageNumber, getPageDOM } = this.props;
+    const { setMappingInfo, documentMapping, pageZoom, pageNumber, getPageDOM } = this.props;
     const { id } = metaData;
 
     var newRect = rect;
@@ -357,14 +357,14 @@ class DrawingBoard extends Component {
     if (id) {
       const boundingBox = findItemById(documentMapping, id).bounding_box[0];
       if (!_.isEqual(boundingBox, newBoundingBox)) {
-        updateMappingInfo({
+        setMappingInfo({
           id,
           'page_number': destPageNumber && destPageNumber,
           'bounding_box': [newBoundingBox]
         });
       }
     } else {
-      updateMappingInfo({
+      setMappingInfo({
         'page_number': destPageNumber && destPageNumber,
         'bounding_box': [newBoundingBox]
       });
@@ -419,7 +419,7 @@ class DrawingBoard extends Component {
   }
 
   handleKeyDown = (event) => {
-    const { deleteElement, currentQuestionId, pageZoom, documentMapping, updateMappingInfo } = this.props;
+    const { deleteElement, currentQuestionId, pageZoom, documentMapping, setMappingInfo } = this.props;
 
     if (currentQuestionId > 0) {
       const boundingBox = findItemById(documentMapping, currentQuestionId).bounding_box[0];
@@ -443,7 +443,7 @@ class DrawingBoard extends Component {
         default:
           return;
       }
-      updateMappingInfo({
+      setMappingInfo({
         'bounding_box': [newBoundingBox]
       });
       event.preventDefault();
