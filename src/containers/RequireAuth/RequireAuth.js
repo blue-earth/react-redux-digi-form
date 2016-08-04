@@ -9,11 +9,10 @@ import { goTo } from 'redux/modules/router';
 export default function requiresAuth(Component) {
   class AuthenticatedComponent extends React.Component {
     static propTypes = {
-      isAuthenticating: PropTypes.bool.isRquired,
-      user: PropTypes.object.isRquired,
-      dispatch: PropTypes.func.isRquired,
-      setIsFetchingUserInfo: PropTypes.func.isRquired,
-      fetchUserInfo: PropTypes.func.isRquired
+      isAuthenticating: PropTypes.bool.isRequired,
+      user: PropTypes.object.isRequired,
+      setIsFetchingUserInfo: PropTypes.func.isRequired,
+      fetchUserInfo: PropTypes.func.isRequired
     };
     constructor(props) {
       super(props);
