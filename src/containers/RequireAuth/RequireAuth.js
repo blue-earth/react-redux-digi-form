@@ -14,13 +14,20 @@ export default function requiresAuth(Component) {
       setIsFetchingUserInfo: PropTypes.func.isRequired,
       fetchUserInfo: PropTypes.func.isRequired
     };
+
     constructor(props) {
       super(props);
       this._checkAndRedirect = this._checkAndRedirect.bind(this);
+      this.state = {
+        willAuthenticate: true
+      }
     }
     componentDidMount() {
       this.props.setIsFetchingUserInfo(true);
       this.props.fetchUserInfo();
+      this.setState({
+        willAuthenticate: false
+      });
     }
     componentDidUpdate() {
       this._checkAndRedirect();
@@ -36,7 +43,8 @@ export default function requiresAuth(Component) {
     }
     render() {
       const { isAuthenticating } = this.props;
-      if (isAuthenticating) {
+      const { willAuthenticate } = this.state;
+      if (willAuthenticate || isAuthenticating) {
         // todo: Replace with loading state component
         return (<h1>Fetching user information</h1>);
       } else {
