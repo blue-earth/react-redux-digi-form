@@ -187,10 +187,11 @@ class QuestionRichTextEditor extends Component {
           </span>
         </Button>
         <Dropdown.Menu>
-          {
-            questions.map(item => (
-              <MenuItem eventKey={`{{${item.key}}}`}>{item.text}</MenuItem>
+          {questions.length > 0
+            ? questions.map(item => (
+              <MenuItem key={`{{${item.key}}}`} eventKey={`{{${item.key}}}`}>{item.text}</MenuItem>
             ))
+            : <MenuItem disabled>No questions available</MenuItem>
           }
         </Dropdown.Menu>
       </Dropdown>
