@@ -22,7 +22,7 @@ export default class Pagination extends Component {
     currentPage: PropTypes.number.isRequired,
     maxPage: PropTypes.number.isRequired,
     previous: PropTypes.func.isRequired,
-    next: PropTypes.func.isReuqired,
+    next: PropTypes.func.isRequired,
     setPage: PropTypes.func.isRequired,
     pageSize: PropTypes.number.isRequired,
     fetchPage: PropTypes.func.isRequired
