@@ -364,6 +364,17 @@ class QuestionEditView extends Component {
     );
   }
 
+  renderBottomActionButtons() {
+    return (
+      <div className={styles.bottomActionButtons}>
+        <ButtonToolbar className="pull-right">
+          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleCancel}>Cancel</Button>
+          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleSave}>Save</Button>
+        </ButtonToolbar>
+      </div>
+    );
+  }
+
   render() {
     const { saveElement, setQuestionEditMode } = this.props;
     return (
@@ -376,6 +387,7 @@ class QuestionEditView extends Component {
         {this.renderAnswerOutputArea()}
         {this.renderLengthValidation()}
         {this.renderIsRequiredValidation()}
+        {this.renderBottomActionButtons()}
         <CancelConfirmModal
           saveElement={saveElement}
           setQuestionEditMode={setQuestionEditMode} />

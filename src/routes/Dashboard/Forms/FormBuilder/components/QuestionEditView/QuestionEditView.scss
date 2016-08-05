@@ -77,3 +77,7 @@ $input-border-color: #797979;
     margin-bottom: 10px;
   }
 }
+
+.bottomActionButtons {
+  margin: 10px (-$builder-left-panel-padding + 10px);
+}
