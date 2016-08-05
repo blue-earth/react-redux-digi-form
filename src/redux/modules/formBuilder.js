@@ -9,8 +9,8 @@ export const NEW_FORM = 'NEW_FORM';
 export const RECEIVE_FORM = 'RECEIVE_FORM';
 export const REQUEST_FORM = 'REQUEST_FORM';
 export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
-export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
-export const DONE_SUBMIT = 'DONE_SUBMIT';
+export const REQUEST_FORM_SUBMIT = 'REQUEST_FORM_SUBMIT';
+export const DONE_FORM_SUBMIT = 'DONE_FORM_SUBMIT';
 
 export const SET_ACTIVE_INPUT_NAME = 'SET_ACTIVE_INPUT_NAME';
 export const EDIT_ELEMENT = 'EDIT_ELEMENT';
@@ -35,6 +35,8 @@ export const INIT_BUILDER_STATE = {
   isFetching: false, // indicates the form is being loaded.
   isSubmitting: false, // indicates the form submission is being processed.
   isModified: false, // indicates the form is modified since last load or submission.
+  title: 'New form',
+  slug: 'new-form',
   questions: [],
   logics: [],
   documents: [
@@ -80,7 +82,7 @@ export const newForm = createAction(NEW_FORM);
 // ------------------------------------
 export const processFetchForm = (id) => {
   var apiURL = `${API_URL}/form_document/api/form/${id}/`;
-  apiURL += '?access_code=1234'; // Temporary
+  // apiURL += '?access_code=1234'; // Temporary
   const fetchParams = assignDefaults();
 
   const fetchSuccess = ({value}) => {
@@ -128,9 +130,83 @@ export const doneFetchingForm = createAction(DONE_FETCHING_FORM);
 // ------------------------------------
 export const fetchForm = (id) => {
   return (dispatch, getState) => {
-    const formBuilder = getState().formBuilder;
     dispatch(requestForm());
-    dispatch(processFetchForm(id, formBuilder.formAccessCode));
+    dispatch(processFetchForm(id));
+  };
+};
+
+// ------------------------------------
+// Action: requestSubmitForm
+// ------------------------------------
+export const requestSubmitForm = createAction(REQUEST_FORM_SUBMIT);
+
+// ------------------------------------
+// Action: doneSubmitForm
+// ------------------------------------
+export const doneSubmitForm = createAction(DONE_FORM_SUBMIT);
+
+// ------------------------------------
+// Action: submitForm
+// ------------------------------------
+export const submitForm = () => {
+  return (dispatch, getState) => {
+    const formData = getState().formBuilder;
+    dispatch(requestSubmitForm());
+    dispatch(processSubmitForm(formData));
+  };
+};
+
+// ------------------------------------
+// Action: processSubmitAnswer
+// ------------------------------------
+export const processSubmitForm = (formData) => {
+  var body = {
+    'title': formData.title,
+    'slug': formData.slug,
+    'form_data': {
+      'logics': formData.logics,
+      'questions': formData.questiosn
+    },
+    'form_config': formData.formConfig,
+    'document_mapping': formData.documentMapping,
+    'assets_urls': formData.documents,
+    'is_access_code_protected': false
+  };
+
+  var method = 'POST';
+  var requestURL = `${API_URL}/form_document/api/form/`;
+  if (formData.id) {
+    requestURL += `${formData.id}/`;
+    method = 'PUT';
+  }
+
+  const fetchParams = assignDefaults({
+    method,
+    body
+  });
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(doneSubmitForm()); // Hide submitting spinner
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(doneSubmitForm()); // Hide submitting spinner
+    };
+  };
+
+  return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+// ------------------------------------
+// Action: saveForm
+// ------------------------------------
+export const saveForm = () => {
+  return (dispatch, getState) => {
+    dispatch(saveElement()); // Hide submitting spinner
+    dispatch(submitForm());
   };
 };
 
@@ -346,12 +422,12 @@ const formBuilderReducer = handleActions({
       isFetching: false
     }),
 
-  REQUEST_SUBMIT: (state, action) =>
+  REQUEST_FORM_SUBMIT: (state, action) =>
     Object.assign({}, state, {
       isSubmitting: true
     }),
 
-  DONE_SUBMIT: (state, action) =>
+  DONE_FORM_SUBMIT: (state, action) =>
     Object.assign({}, state, {
       isSubmitting: false
     }),

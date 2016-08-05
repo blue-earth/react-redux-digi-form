@@ -67,6 +67,11 @@ class FormBuilder extends Component {
     saveElement: PropTypes.func.isRequired,
 
     /*
+     * saveForm: Redux action to save the current element being edited and submit form.
+     */
+    saveForm: PropTypes.func.isRequired,
+
+    /*
      * currentElement: Redux state to hold the element currently being edited.
      */
     currentElement: PropTypes.object,

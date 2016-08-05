@@ -4,6 +4,7 @@ import {
   INIT_BUILDER_STATE,
   newForm,
   fetchForm,
+  saveForm,
   setQuestionEditMode,
   setActiveInputName,
   setQuestionInfo,
@@ -22,6 +23,7 @@ import FormBuilder from '../components/FormBuilder';
 const mapActionCreators = {
   newForm,
   fetchForm,
+  saveForm,
   setQuestionEditMode,
   setActiveInputName,
   setQuestionInfo,

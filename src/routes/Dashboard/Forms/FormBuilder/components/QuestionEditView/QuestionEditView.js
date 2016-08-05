@@ -40,6 +40,11 @@ class QuestionEditView extends Component {
     saveElement: PropTypes.func.isRequired,
 
     /*
+     * saveForm: Redux action to save the current element being edited and submit form.
+     */
+    saveForm: PropTypes.func.isRequired,
+
+    /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
     setQuestionEditMode: PropTypes.func.isRequired,
@@ -122,8 +127,8 @@ class QuestionEditView extends Component {
   }
 
   handleSave = () => {
-    const { saveElement } = this.props;
-    saveElement();
+    const { saveForm } = this.props;
+    saveForm();
   }
 
   setInstruction = (value) => {
