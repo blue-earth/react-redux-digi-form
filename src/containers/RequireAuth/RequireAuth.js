@@ -9,18 +9,32 @@ import { goTo } from 'redux/modules/router';
 export default function requiresAuth(Component) {
   class AuthenticatedComponent extends React.Component {
     static propTypes = {
+      /**
+       * Indicates whether the request to fetch user is running
+       */
       isAuthenticating: PropTypes.bool.isRequired,
+      /**
+       * The user dictionary object, includes first_name, last_name, email, and last_login
+       */
       user: PropTypes.object.isRequired,
       setIsFetchingUserInfo: PropTypes.func.isRequired,
-      fetchUserInfo: PropTypes.func.isRequired
+      fetchUserInfo: PropTypes.func.isRequired,
+      goTo: PropTypes.func.isRequired
     };
+
     constructor(props) {
       super(props);
       this._checkAndRedirect = this._checkAndRedirect.bind(this);
+      this.state = {
+        willAuthenticate: true
+      };
     }
     componentDidMount() {
       this.props.setIsFetchingUserInfo(true);
       this.props.fetchUserInfo();
+      this.setState({
+        willAuthenticate: false
+      });
     }
     componentDidUpdate() {
       this._checkAndRedirect();
@@ -29,14 +43,15 @@ export default function requiresAuth(Component) {
       return this.props.isAuthenticating !== nextProps.isAuthenticating;
     }
     _checkAndRedirect() {
-      const { isAuthenticating, user } = this.props;
+      const { isAuthenticating, user, goTo } = this.props;
       if (!isAuthenticating && Object.keys(user).length === 0) {
         goTo('/login');
       }
     }
     render() {
       const { isAuthenticating } = this.props;
-      if (isAuthenticating) {
+      const { willAuthenticate } = this.state;
+      if (willAuthenticate || isAuthenticating) {
         // todo: Replace with loading state component
         return (<h1>Fetching user information</h1>);
       } else {
@@ -53,7 +68,11 @@ export default function requiresAuth(Component) {
       user: state.auth.user
     };
   };
-  const mapActionCreators = { fetchUserInfo, setIsFetchingUserInfo };
+  const mapActionCreators = {
+    fetchUserInfo,
+    setIsFetchingUserInfo,
+    goTo
+  };
 
   return connect(mapStateToProps, mapActionCreators)(AuthenticatedComponent);
 }

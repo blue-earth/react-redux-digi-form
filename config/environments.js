@@ -41,8 +41,8 @@ export default {
     },
     globals: {
       ...config.globals,
-      API_URL: JSON.stringify('https://api.emondo.com.au'),
-      FRONTEND_ROOT: JSON.stringify('http://new.emondo.com.au'),
+      API_URL: JSON.stringify('http://api.emondo.co'),
+      FRONTEND_ROOT: JSON.stringify('http://app.emondo.co'),
       GOOGLE_MAP_API_KEY: JSON.stringify('AIzaSyCtwNDvDLxw-JSB8RBvtdMuW2Qjh5AypEk')
     }
   })
