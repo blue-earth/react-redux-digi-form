@@ -90,16 +90,25 @@ class QuestionEditView extends Component {
     show: PropTypes.func.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.setSchema(props.activeInputName);
+  }
+
   componentWillMount() {
 
   }
 
   componentWillReceiveProps(props) {
-
+    this.setSchema(props.activeInputName);
   }
 
   componentDidMount() {
 
+  }
+
+  setSchema(inputName) {
+    this.inputSchema = _.find(questionInputs, { name: inputName });
   }
 
   handlePreview = () => {
@@ -215,10 +224,9 @@ class QuestionEditView extends Component {
 
   renderViewTitle() {
     const { currentElement: { question } } = this.props;
-    const inputType = _.find(questionInputs, { name: question.type });
     return (
       <h2 className={styles.viewTitle}>
-        {inputType.displayText}
+        {this.inputSchema.displayText}
       </h2>
     );
   }
