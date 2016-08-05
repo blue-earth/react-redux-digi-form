@@ -1,6 +1,7 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
+import { createAction, handleActions } from 'redux-actions';
 
 export const REQUEST_AUTH = 'REQUEST_AUTH';
 export const RECEIVE_AUTH_STATUS = 'RECEIVE_AUTH_STATUS';
@@ -30,20 +31,14 @@ export const submitLoginForm = (email, password) => {
 // ------------------------------------
 // Action: requestAuth
 // ------------------------------------
-export const requestAuth = () => {
-  return {
-    type: REQUEST_AUTH
-  };
-};
+export const requestAuth = createAction(REQUEST_AUTH);
 
 // ------------------------------------
 // Action: processAuth
 // ------------------------------------
 export const processAuth = (email, password) => {
-  const body = {
-    email: email,
-    password: password
-  };
+  const apiURL = `${API_URL}/accounts/api/auth/login/`;
+  const body = { email, password };
   const fetchParams = assignDefaults({
     method: 'POST',
     body
@@ -51,25 +46,23 @@ export const processAuth = (email, password) => {
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(receiveAuthStatus(value));
+      dispatch(receiveAuthStatus(value.authenticated));
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
-      dispatch(receiveAuthStatus({authenticated: false})); // Hide loading spinner
+      dispatch(receiveAuthStatus(false)); // Hide loading spinner
     };
   };
 
-  return bind(fetch(`${API_URL}/accounts/api/auth/login/`, fetchParams), fetchSuccess, fetchFail);
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
 
-export const setIsFetchingUserInfo = (isFetching) => {
-  return {
-    type: SET_IS_FETCHING_USER,
-    isAuthenticating: isFetching
-  };
-};
+// ------------------------------------
+// Action: setIsFetchingUserInfo
+// ------------------------------------
+export const setIsFetchingUserInfo = createAction(SET_IS_FETCHING_USER);
 
 // ------------------------------------
 // Action: fetchUserInfo
@@ -98,44 +91,33 @@ export const fetchUserInfo = () => {
 // ------------------------------------
 // Action: doneAuth
 // ------------------------------------
-export const receiveAuthStatus = (value) => {
-  return {
-    type: RECEIVE_AUTH_STATUS,
-    status: value.authenticated
-  };
-};
+export const receiveAuthStatus = createAction(RECEIVE_AUTH_STATUS);
 
-export const setUserProfile = (profileDictionary) => {
-  return {
-    type: SET_USER_PROFILE,
-    data: profileDictionary
-  };
-};
+// ------------------------------------
+// Action: setUserProfile
+// ------------------------------------
+export const setUserProfile = createAction(SET_USER_PROFILE);
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const authReducer = (state = INIT_AUTH_STATE, action) => {
-  switch (action.type) {
-    case REQUEST_AUTH:
-      return Object.assign({}, state, {
-        authStatus: LOGGING_IN
-      });
-    case RECEIVE_AUTH_STATUS:
-      return Object.assign({}, state, {
-        authStatus: action.status ? LOGGED_IN : NOT_LOGGED_IN
-      });
-    case SET_USER_PROFILE:
-      return Object.assign({}, state, {
-        user: {...action.data}
-      });
-    case SET_IS_FETCHING_USER:
-      return Object.assign({}, state, {
-        isAuthenticating: action.isAuthenticating
-      });
-    default:
-      return state;
-  }
-};
+const authReducer = handleActions({
+  REQUEST_AUTH: (state, action) =>
+    Object.assign({}, state, {
+      authStatus: LOGGING_IN
+    }),
+  RECEIVE_AUTH_STATUS: (state, action) =>
+    Object.assign({}, state, {
+      authStatus: action.payload ? LOGGED_IN : NOT_LOGGED_IN
+    }),
+  SET_USER_PROFILE: (state, action) =>
+    Object.assign({}, state, {
+      user: {...action.payload}
+    }),
+  SET_IS_FETCHING_USER: (state, action) =>
+    Object.assign({}, state, {
+      isAuthenticating: action.payload
+    })
+}, INIT_AUTH_STATE);
 
 export default authReducer;

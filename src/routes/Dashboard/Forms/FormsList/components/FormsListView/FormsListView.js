@@ -52,7 +52,7 @@ class FormsListView extends Component {
     /*
      * goTo: Redux action to go to specific url.
      */
-    goTo: PropTypes.number.isRequired,
+    goTo: PropTypes.func.isRequired,
 
     /*
      * sortColumn: Column ID to sort by.
@@ -207,7 +207,6 @@ class FormsListView extends Component {
         <div className={styles.formsListInner}>
           {this.renderActions()}
           {this.renderFormsList()}
-          }
         </div>
       </div>
     );
