@@ -7,6 +7,11 @@ import {
   ActionsHeaderCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
+import {
+  MenuItem,
+  DropdownButton
+} from 'react-bootstrap';
+import { formsUrl } from 'helpers/urlHelper';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 
@@ -43,6 +48,11 @@ class FormsListView extends Component {
      * totalCount: Total number of items from backend.
      */
     totalCount: PropTypes.number.isRequired,
+
+    /*
+     * goTo: Redux action to go to specific url.
+     */
+    goTo: PropTypes.number.isRequired,
 
     /*
      * sortColumn: Column ID to sort by.
@@ -145,6 +155,24 @@ class FormsListView extends Component {
     ];
   }
 
+  handleNewForm = () => {
+    const { goTo } = this.props;
+    goTo(formsUrl('new'));
+  }
+
+  renderActions() {
+    return (
+      <div className={styles.actionsWrapper}>
+        <DropdownButton pullRight bsSize="small"
+          className={styles.actionsButton}
+          id="formListActions"
+          title="Quick actions">
+          <MenuItem onClick={this.handleNewForm}>New Form</MenuItem>
+        </DropdownButton>
+      </div>
+    );
+  }
+
   renderFormsList() {
     const {
       isFetching,
@@ -177,7 +205,9 @@ class FormsListView extends Component {
     return (
       <div className={styles.formsList}>
         <div className={styles.formsListInner}>
+          {this.renderActions()}
           {this.renderFormsList()}
+          }
         </div>
       </div>
     );
