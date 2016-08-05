@@ -207,7 +207,6 @@ class FormsListView extends Component {
         <div className={styles.formsListInner}>
           {this.renderActions()}
           {this.renderFormsList()}
-          }
         </div>
       </div>
     );
