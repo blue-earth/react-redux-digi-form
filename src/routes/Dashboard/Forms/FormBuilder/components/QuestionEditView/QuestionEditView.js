@@ -85,6 +85,11 @@ class QuestionEditView extends Component {
     isModified: PropTypes.bool.isRequired,
 
     /*
+     * activeInputName: Redux state to indicate the active input element name.
+     */
+    activeInputName: PropTypes.string.isRequired,
+
+    /*
      * show: Redux modal show
      */
     show: PropTypes.func.isRequired
@@ -223,7 +228,6 @@ class QuestionEditView extends Component {
   }
 
   renderViewTitle() {
-    const { currentElement: { question } } = this.props;
     return (
       <h2 className={styles.viewTitle}>
         {this.inputSchema.displayText}
