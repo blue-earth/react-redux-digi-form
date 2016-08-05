@@ -66,7 +66,9 @@ class InteractWrapper extends Component {
   }
 
   componentDidMount() {
-    this.initInteract();
+    if (this.props.active) {
+      this.initInteract();
+    }
   }
 
   componentWillReceiveProps(props) {

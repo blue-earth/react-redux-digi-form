@@ -47,6 +47,11 @@ class FormBuilder extends Component {
     isSubmitting: PropTypes.bool.isRequired,
 
     /*
+     * isModified: Redux state that indicates whether the form is modified since last save or load.
+     */
+    isModified: PropTypes.bool.isRequired,
+
+    /*
      * activeInputName: Redux state to indicate the active input element name.
      */
     activeInputName: PropTypes.string.isRequired,
@@ -57,24 +62,49 @@ class FormBuilder extends Component {
     setActiveInputName: PropTypes.func.isRequired,
 
     /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
-     */
-    currentQuestionId: PropTypes.number.isRequired,
-
-    /*
-     * setCurrentQuestionId: Redux action to set the current active question ID.
-     */
-    setCurrentQuestionId: PropTypes.func.isRequired,
-
-    /*
      * saveElement: Redux action to save the current element being edited.
      */
     saveElement: PropTypes.func.isRequired,
 
     /*
-     * updateMappingInfo: Action to update the document mapping info.
+     * saveForm: Redux action to save the current element being edited and submit form.
      */
-    updateMappingInfo: PropTypes.func.isRequired,
+    saveForm: PropTypes.func.isRequired,
+
+    /*
+     * currentElement: Redux state to hold the element currently being edited.
+     */
+    currentElement: PropTypes.object,
+
+    /*
+     * setQuestionInfo: Redux action to add or update a specific item into current question.
+     */
+    setQuestionInfo: PropTypes.func.isRequired,
+
+    /*
+     * resetQuestionInfo: Redux action to remove a specific item into current question.
+     */
+    resetQuestionInfo: PropTypes.func.isRequired,
+
+    /*
+     * setValidationInfo: Redux action to add or update a specific item in validations array.
+     */
+    setValidationInfo: PropTypes.func.isRequired,
+
+    /*
+     * resetValidationInfo: Redux action to remove a specific item in validations array.
+     */
+    resetValidationInfo: PropTypes.func.isRequired,
+
+    /*
+     * setMappingInfo: Action to update the document mapping info.
+     */
+    setMappingInfo: PropTypes.func.isRequired,
+
+    /*
+     * resetMappingInfo: Redux action to remove document mapping info
+     */
+    resetMappingInfo: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.
@@ -108,7 +138,15 @@ class FormBuilder extends Component {
      */
     fetchForm: PropTypes.func.isRequired,
 
-    params: PropTypes.object
+    /*
+     * params: URL params
+     */
+    params: PropTypes.object,
+
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func.isRequired
   };
 
   componentWillMount() {
