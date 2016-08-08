@@ -169,8 +169,7 @@ export const processSubmitForm = (formData) => {
     },
     'form_config': formData.formConfig,
     'document_mapping': formData.documentMapping,
-    'assets_urls': formData.documents,
-    'is_access_code_protected': false
+    'assets_urls': formData.documents
   };
 
   var method = 'POST';
