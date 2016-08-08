@@ -17,8 +17,8 @@ export const questionInputGroups = [
   }
 ];
 
-const questionInputs = [
-  {
+const questionInputs = {
+  'ShortTextField': {
     name: 'ShortTextField',
     componentName: 'ShortTextInput',
     displayText: 'Short Text',
@@ -38,7 +38,8 @@ const questionInputs = [
     ],
     group: 'standard'
   },
-  {
+
+  'NumberField': {
     name: 'NumberField',
     componentName: 'ShortTextInput',
     displayText: 'Number',
@@ -58,7 +59,8 @@ const questionInputs = [
     ],
     group: 'standard'
   },
-  {
+
+  'EmailField': {
     name: 'EmailField',
     componentName: 'ShortTextInput',
     displayText: 'Email',
@@ -77,7 +79,8 @@ const questionInputs = [
     ],
     group: 'standard'
   },
-  {
+
+  'LongTextField': {
     name: 'LongTextField',
     componentName: 'LongTextInput',
     displayText: 'Long Text',
@@ -96,7 +99,8 @@ const questionInputs = [
     ],
     group: 'standard'
   },
-  {
+
+  'MultipleChoice': {
     name: 'MultipleChoice',
     componentName: 'MultipleChoice',
     displayText: 'Multiple Choice',
@@ -109,7 +113,8 @@ const questionInputs = [
     ],
     group: 'standard'
   },
-  {
+
+  'DropdownField': {
     name: 'DropdownField',
     componentName: 'DropdownInput',
     displayText: 'Dropdown',
@@ -122,7 +127,8 @@ const questionInputs = [
     ],
     group: 'standard'
   },
-  {
+
+  'YesNoChoice': {
     name: 'YesNoChoice',
     componentName: 'YesNoChoice',
     displayText: 'Yes / No',
@@ -135,7 +141,8 @@ const questionInputs = [
     ],
     group: 'standard'
   },
-  {
+
+  'StatementField': {
     name: 'StatementField',
     componentName: 'Statement',
     displayText: 'Statement',
@@ -143,7 +150,8 @@ const questionInputs = [
     logicOperations: [],
     group: 'pricing'
   },
-  {
+
+  'AddressField': {
     name: 'AddressField',
     componentName: 'AddressInput',
     displayText: 'Address',
@@ -153,7 +161,8 @@ const questionInputs = [
     logicOperations: [],
     group: 'advanced'
   },
-  {
+
+  'DateField': {
     name: 'DateField',
     componentName: 'DateInput',
     displayText: 'Date',
@@ -171,7 +180,8 @@ const questionInputs = [
     ],
     group: 'advanced'
   },
-  {
+
+  'PhoneNumberField': {
     name: 'PhoneNumberField',
     componentName: 'PhoneNumberInput',
     displayText: 'Phone Number',
@@ -181,7 +191,8 @@ const questionInputs = [
     logicOperations: [],
     group: 'advanced'
   },
-  {
+
+  'SignatureField': {
     name: 'SignatureField',
     componentName: 'Signature',
     displayText: 'Signature',
@@ -191,6 +202,6 @@ const questionInputs = [
     logicOperations: [],
     group: 'signature'
   }
-];
+};
 
 export default questionInputs;
