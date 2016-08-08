@@ -5,19 +5,16 @@ import React, {
 import {
   Button,
   ButtonToolbar,
-  Popover,
-  OverlayTrigger,
   Collapse,
   Row,
   Col
 } from 'react-bootstrap';
-import { MdHelpOutline } from 'react-icons/lib/md';
 import Switch from 'rc-switch';
 import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
 import CancelConfirmModal from '../CancelConfirmModal/CancelConfirmModal';
 import questionInputs from 'schemas/questionInputs';
+import QuestionEditSectionTitle from '../QuestionEditSectionTitle/QuestionEditSectionTitle';
 import _ from 'lodash';
-import popoverTexts from './PopoverTexts';
 import 'rc-switch/assets/index.css';
 import styles from './QuestionEditView.scss';
 
@@ -194,14 +191,6 @@ class QuestionEditView extends Component {
       : resetValidationInfo({ type: 'isRequired' });
   }
 
-  getPopover(popoverId) {
-    return (
-      <Popover id={`${popoverId}Popover`}>
-        {popoverTexts[popoverId]}
-      </Popover>
-    );
-  }
-
   get questionsList() {
     const { questions, currentElement } = this.props;
     const filteredQuestions = currentElement.id
@@ -240,9 +229,8 @@ class QuestionEditView extends Component {
     const instruction = _.defaultTo(question.question_instruction, '');
     return (
       <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>
-          Question
-        </h3>
+        <QuestionEditSectionTitle
+          title="Question" />
         <div className={styles.textEditorWrapper}>
           <QuestionRichTextEditor
             value={instruction}
@@ -260,17 +248,12 @@ class QuestionEditView extends Component {
     const isDescriptionVisible = typeof question.question_description !== 'undefined';
     return (
       <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>
-          Question description
-          <OverlayTrigger trigger="focus" overlay={this.getPopover('questionDescription')}>
-            <span tabIndex={0} className={styles.popoverIcon}>
-              <MdHelpOutline size={18} />
-            </span>
-          </OverlayTrigger>
-          <div className={styles.switchWrapper}>
-            <Switch onChange={this.toggleDescription} checked={isDescriptionVisible} />
-          </div>
-        </h3>
+        <QuestionEditSectionTitle
+          title="Question description"
+          popoverId="questionDescription" />
+        <div className={styles.sectionSwitchWrapper}>
+          <Switch onChange={this.toggleDescription} checked={isDescriptionVisible} />
+        </div>
         <Collapse in={isDescriptionVisible}>
           <div className={styles.textEditorWrapper}>
             <QuestionRichTextEditor
@@ -289,15 +272,11 @@ class QuestionEditView extends Component {
       <div className={styles.section}>
         <Row className={styles.validationRow}>
           <Col xs={6}>
-            <h3 className={styles.sectionTitle}>
-              Answer output area(s)
-              <OverlayTrigger trigger="focus" overlay={this.getPopover('outputArea')}>
-                <span tabIndex={0} className={styles.popoverIcon}>
-                  <MdHelpOutline size={18} />
-                </span>
-              </OverlayTrigger>
-            </h3>
-            <p className={styles.titleDescription}>(Leave empty if not required)</p>
+            <QuestionEditSectionTitle
+              title="Answer output area(s)"
+              popoverId="outputArea"
+              description="(Leave empty if not required)"
+            />
           </Col>
           <Col xs={6}>
             <Button block bsSize="small" onClick={this.handleDeleteSelection}>
@@ -321,15 +300,11 @@ class QuestionEditView extends Component {
         {minLengthNeeded &&
           <Row className={styles.validationRow}>
             <Col xs={8} sm={9}>
-              <h3 className={styles.sectionTitle}>
-                Minimum characters
-                <OverlayTrigger trigger="focus" overlay={this.getPopover('validationMinLength')}>
-                  <span tabIndex={0} className={styles.popoverIcon}>
-                    <MdHelpOutline size={18} />
-                  </span>
-                </OverlayTrigger>
-              </h3>
-              <p className={styles.titleDescription}>(Leave empty if not required)</p>
+              <QuestionEditSectionTitle
+                title="Minimum characters"
+                popoverId="validationMinLength"
+                description="(Leave empty if not required)"
+              />
             </Col>
             <Col xs={4} sm={3}>
               <input type="number" className={styles.textInput}
@@ -341,15 +316,11 @@ class QuestionEditView extends Component {
         {maxLengthNeeded &&
           <Row className={styles.validationRow}>
             <Col xs={8} sm={9}>
-              <h3 className={styles.sectionTitle}>
-                Maximum characters
-                <OverlayTrigger trigger="focus" overlay={this.getPopover('validationMaxLength')}>
-                  <span tabIndex={0} className={styles.popoverIcon}>
-                    <MdHelpOutline size={18} />
-                  </span>
-                </OverlayTrigger>
-              </h3>
-              <p className={styles.titleDescription}>(Leave eptmy if not required)</p>
+              <QuestionEditSectionTitle
+                title="Maximum characters"
+                popoverId="validationMaxLength"
+                description="(Leave empty if not required)"
+              />
             </Col>
             <Col xs={4} sm={3}>
               <input type="number" className={styles.textInput}
@@ -370,14 +341,9 @@ class QuestionEditView extends Component {
       <div className={styles.section}>
         <Row className={styles.validationRow}>
           <Col xs={8} sm={9}>
-            <h3 className={styles.sectionTitle}>
-              Mandatory
-              <OverlayTrigger trigger="focus" overlay={this.getPopover('isRequired')}>
-                <span tabIndex={0} className={styles.popoverIcon}>
-                  <MdHelpOutline size={18} />
-                </span>
-              </OverlayTrigger>
-            </h3>
+            <QuestionEditSectionTitle
+              title="Mandatory"
+              popoverId="isRequired" />
           </Col>
           <Col xs={4} sm={3}>
             <div className={styles.switchWrapper}>

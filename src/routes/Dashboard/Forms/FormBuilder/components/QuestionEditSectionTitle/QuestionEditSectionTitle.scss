@@ -1,0 +1,25 @@
+@import './mixins';
+@import './variables';
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  @include clearfix;
+}
+.titleDescription {
+  font-size: 12px;
+  margin: 0;
+}
+.popoverIcon {
+  cursor: pointer;
+  margin-left: 5px;
+  &:active:focus,
+  &:hover:focus,
+  &:focus {
+    outline: none;
+  }
+  &:hover, &:active {
+    color: #000;
+  }
+}
