@@ -19,7 +19,8 @@ export default function requiresAuth(Component) {
       user: PropTypes.object.isRequired,
       setIsFetchingUserInfo: PropTypes.func.isRequired,
       fetchUserInfo: PropTypes.func.isRequired,
-      goTo: PropTypes.func.isRequired
+      goTo: PropTypes.func.isRequired,
+      location: PropTypes.object
     };
 
     constructor(props) {
@@ -40,7 +41,8 @@ export default function requiresAuth(Component) {
       this._checkAndRedirect();
     }
     shouldComponentUpdate(nextProps) {
-      return this.props.isAuthenticating !== nextProps.isAuthenticating;
+      return this.props.isAuthenticating !== nextProps.isAuthenticating ||
+        this.props.location.pathname !== nextProps.location.pathname;
     }
     _checkAndRedirect() {
       const { isAuthenticating, user, goTo } = this.props;

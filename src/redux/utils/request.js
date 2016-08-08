@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import getCsrfToken from './csrf';
 
 export const assignDefaults = request => {
   if (typeof request === 'undefined') request = {};
@@ -8,9 +9,15 @@ export const assignDefaults = request => {
     Cookie: document.cookie
   }, request.headers || {});
 
-  const body = _.includes(['POST', 'PUT'], request.method) && request.body
-    ? JSON.stringify(request.body)
-    : request.body;
+  var body = null;
+  if (_.includes(['POST', 'PUT'], request.method)) {
+    if (request.body) {
+      body = JSON.stringify(request.body);
+      headers['X-CSRFToken'] = getCsrfToken();
+    } else {
+      body = request.body;
+    }
+  }
 
   const other = {
     method: 'GET',

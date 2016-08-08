@@ -5,6 +5,7 @@ import {
   selectAllItems,
   toggleSelectItem
 } from 'redux/modules/formsList';
+import { goTo } from 'redux/modules/router.js';
 
 import FormsListView from '../components/FormsListView/FormsListView';
 
@@ -39,7 +40,8 @@ const mapStateToProps = (state) => {
 const mapActionCreators = {
   fetchFormsList,
   selectAllItems,
-  toggleSelectItem
+  toggleSelectItem,
+  goTo
 };
 
 export default connect(mapStateToProps, mapActionCreators)(FormsListView);

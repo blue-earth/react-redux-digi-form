@@ -2,6 +2,7 @@
 @import './variables';
 
 $separator-color:   #666;
+$input-border-color: #797979;
 
 .questionEditView {
   padding: $builder-left-panel-padding;
@@ -21,11 +22,18 @@ $separator-color:   #666;
 }
 .section {
   @include clearfix;
-  padding: 10px 0;
+  padding: 10px $builder-left-panel-padding;
+  margin: 0 (-$builder-left-panel-padding);
+  border-bottom: 1px solid $separator-color;
 }
 .sectionTitle {
   font-size: 14px;
   font-weight: 600;
+  margin: 0;
+  @include clearfix;
+}
+.titleDescription {
+  font-size: 12px;
   margin: 0;
 }
 .popoverIcon {
@@ -39,4 +47,37 @@ $separator-color:   #666;
   &:hover, &:active {
     color: #000;
   }
+}
+.switchWrapper {
+  float: right;
+}
+.textEditorWrapper {
+  width: 100%;
+  padding-top: 10px;
+}
+
+.textInput {
+  border: 1px solid $input-border-color;
+  @include border-radius(2px);
+  display: block;
+  width: 100%;
+  height: 30px;
+  line-height: 20px;
+  padding: 4px;
+  &:focus {
+    outline: none;
+  }
+}
+
+.validationRow {
+  &:not(:first-child) {
+    margin-top: 10px;
+  }
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.bottomActionButtons {
+  margin: 10px (-$builder-left-panel-padding + 10px);
 }

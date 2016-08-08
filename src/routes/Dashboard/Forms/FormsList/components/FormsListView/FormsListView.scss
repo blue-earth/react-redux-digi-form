@@ -16,6 +16,14 @@ $slt-border-color:          rgba(204, 204, 204, .3);
   font-size: 12px;
 }
 
+.actionsWrapper {
+  text-align: right;
+  margin-bottom: 3px;
+}
+.actionsButton {
+  background-color: $slt-header-bg-color;
+}
+
 .columnID {
   width: 4%;
 }

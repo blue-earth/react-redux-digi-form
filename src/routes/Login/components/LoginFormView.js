@@ -46,8 +46,6 @@ class LoginForm extends Component {
   componentWillReceiveProps(props) {
     const { authStatus, goTo } = props;
     if (authStatus === LOGGED_IN) {
-      console.log('here');
-      console.log(document.cookie);
       goTo(dashboardUrl(''));
     }
     if (props.authStatus === NOT_LOGGED_IN && this.props.authStatus !== props.authStatus) {

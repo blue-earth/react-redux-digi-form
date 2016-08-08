@@ -1,16 +1,21 @@
 import connect from 'redux/utils/connect';
+import { show } from 'redux-modal';
 import {
   INIT_BUILDER_STATE,
   newForm,
   fetchForm,
+  saveForm,
   setQuestionEditMode,
   setActiveInputName,
-  updateQuestionInfo,
-  updateMappingInfo,
+  setQuestionInfo,
+  resetQuestionInfo,
+  setValidationInfo,
+  resetValidationInfo,
+  setMappingInfo,
+  resetMappingInfo,
   setPageZoom,
   saveElement,
-  deleteElement,
-  setCurrentQuestionId
+  deleteElement
 } from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
@@ -18,14 +23,19 @@ import FormBuilder from '../components/FormBuilder';
 const mapActionCreators = {
   newForm,
   fetchForm,
+  saveForm,
+  setQuestionEditMode,
   setActiveInputName,
-  updateQuestionInfo,
+  setQuestionInfo,
+  resetQuestionInfo,
+  setValidationInfo,
+  resetValidationInfo,
+  setMappingInfo,
+  resetMappingInfo,
+  setPageZoom,
   saveElement,
   deleteElement,
-  updateMappingInfo,
-  setCurrentQuestionId,
-  setPageZoom,
-  setQuestionEditMode
+  show
 };
 
 const mapStateToProps = (state) => {
@@ -34,13 +44,13 @@ const mapStateToProps = (state) => {
     id,
     isFetching,
     isSubmitting,
+    isModified,
     questions,
     logics,
     documents,
     documentMapping,
     currentElement,
     activeInputName,
-    currentQuestionId,
     currentQuestionInstruction,
     pageZoom,
     pageWidth,
@@ -50,13 +60,13 @@ const mapStateToProps = (state) => {
     id: parseInt(id),
     isFetching,
     isSubmitting,
+    isModified,
     questions,
     logics,
     documents,
     documentMapping,
     currentElement,
     activeInputName,
-    currentQuestionId,
     currentQuestionInstruction,
     pageZoom,
     pageWidth,

@@ -12,13 +12,14 @@ export const getImageDimension = (url, callback) => {
   img.src = url;
 };
 
-export const getDragSnappingTargets = (documentMapping, excludeId, pageZoom) => {
+export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom) => {
+  const currentMappingInfo = currentElement.mappingInfo;
   var snappingTargets = [];
-  const excludeMappingInfo = findItemById(documentMapping, excludeId);
+  const excludeId = currentElement.id;
   documentMapping.forEach((mappingInfo) => {
     mappingInfo.bounding_box.forEach(boundingBox => {
       if (excludeId === mappingInfo.id) return;
-      if (mappingInfo.pageNumber !== excludeMappingInfo.pageNumber) return;
+      if (mappingInfo.page_number !== currentMappingInfo.page_number) return;
       snappingTargets = _.concat(snappingTargets, [
         {
           x: zoomValue(boundingBox.left, pageZoom),
@@ -60,9 +61,11 @@ export const zoomValue = (value, zoom) => {
   return Math.round(value * zoom * 100) / 100;
 };
 
-export const getResizeSnappingTargets = (documentMapping, excludeId, pageZoom) => {
+export const getResizeSnappingTargets = (documentMapping, currentElement, pageZoom) => {
+  const currentMappingInfo = currentElement.mappingInfo;
   var snappingTargets = [];
-  const boundingBox = findItemById(documentMapping, excludeId).bounding_box[0];
+  const boundingBox = currentMappingInfo.bounding_box[0];
+  const excludeId = currentElement.id;
   documentMapping.forEach((mappingInfo) => {
     mappingInfo.bounding_box.forEach(targetBoundingBox => {
       if (excludeId === mappingInfo.id) return;
@@ -113,8 +116,8 @@ export const getResizeSnappingTargets = (documentMapping, excludeId, pageZoom) =
   return snappingTargets;
 };
 
-export const getDragSnappingHelpersRect = (elRect, excludeId, documentMapping, pageZoom) => {
-  const snappingTargets = getDragSnappingTargets(documentMapping, excludeId, pageZoom);
+export const getDragSnappingHelpersRect = (elRect, currentElement, documentMapping, pageZoom) => {
+  const snappingTargets = getDragSnappingTargets(documentMapping, currentElement, pageZoom);
 
   var helperRects = [];
 
@@ -160,8 +163,8 @@ export const getDragSnappingHelpersRect = (elRect, excludeId, documentMapping, p
   return helperRects;
 };
 
-export const getResizeSnappingHelpersPos = (elRect, excludeId, documentMapping, pageZoom) => {
-  const snappingTargets = getDragSnappingTargets(documentMapping, excludeId, pageZoom);
+export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapping, pageZoom) => {
+  const snappingTargets = getDragSnappingTargets(documentMapping, currentElement, pageZoom);
   var helpersPos = [];
   var hasWidthSnapping = false;
   var hasHeightSnapping = false;
