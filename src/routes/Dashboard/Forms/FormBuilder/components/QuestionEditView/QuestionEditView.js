@@ -310,52 +310,60 @@ class QuestionEditView extends Component {
   }
 
   renderLengthValidation() {
+    const minLengthNeeded = _.includes(this.inputSchema.validations, 'min_length');
+    const maxLengthNeeded = _.includes(this.inputSchema.validations, 'max_length');
+    if (!minLengthNeeded && !maxLengthNeeded) return false;
     const validations = _.get(this.props, ['currentElement', 'question', 'validations'], []);
     const minLength = _.defaultTo(_.find(validations, { type: 'minLength' }), { value: '' });
     const maxLength = _.defaultTo(_.find(validations, { type: 'maxLength' }), { value: '' });
     return (
       <div className={styles.section}>
-        <Row className={styles.validationRow}>
-          <Col xs={8} sm={9}>
-            <h3 className={styles.sectionTitle}>
-              Minimum characters
-              <OverlayTrigger trigger="focus" overlay={this.getPopover('validationMinLength')}>
-                <span tabIndex={0} className={styles.popoverIcon}>
-                  <MdHelpOutline size={18} />
-                </span>
-              </OverlayTrigger>
-            </h3>
-            <p className={styles.titleDescription}>(Leave empty if not required)</p>
-          </Col>
-          <Col xs={4} sm={3}>
-            <input type="number" className={styles.textInput}
-              value={minLength.value}
-              onChange={this.handleMinLengthChange} />
-          </Col>
-        </Row>
-        <Row className={styles.validationRow}>
-          <Col xs={8} sm={9}>
-            <h3 className={styles.sectionTitle}>
-              Maximum characters
-              <OverlayTrigger trigger="focus" overlay={this.getPopover('validationMaxLength')}>
-                <span tabIndex={0} className={styles.popoverIcon}>
-                  <MdHelpOutline size={18} />
-                </span>
-              </OverlayTrigger>
-            </h3>
-            <p className={styles.titleDescription}>(Leave eptmy if not required)</p>
-          </Col>
-          <Col xs={4} sm={3}>
-            <input type="number" className={styles.textInput}
-              value={maxLength.value}
-              onChange={this.handleMaxLengthChange} />
-          </Col>
-        </Row>
+        {minLengthNeeded &&
+          <Row className={styles.validationRow}>
+            <Col xs={8} sm={9}>
+              <h3 className={styles.sectionTitle}>
+                Minimum characters
+                <OverlayTrigger trigger="focus" overlay={this.getPopover('validationMinLength')}>
+                  <span tabIndex={0} className={styles.popoverIcon}>
+                    <MdHelpOutline size={18} />
+                  </span>
+                </OverlayTrigger>
+              </h3>
+              <p className={styles.titleDescription}>(Leave empty if not required)</p>
+            </Col>
+            <Col xs={4} sm={3}>
+              <input type="number" className={styles.textInput}
+                value={minLength.value}
+                onChange={this.handleMinLengthChange} />
+            </Col>
+          </Row>
+        }
+        {maxLengthNeeded &&
+          <Row className={styles.validationRow}>
+            <Col xs={8} sm={9}>
+              <h3 className={styles.sectionTitle}>
+                Maximum characters
+                <OverlayTrigger trigger="focus" overlay={this.getPopover('validationMaxLength')}>
+                  <span tabIndex={0} className={styles.popoverIcon}>
+                    <MdHelpOutline size={18} />
+                  </span>
+                </OverlayTrigger>
+              </h3>
+              <p className={styles.titleDescription}>(Leave eptmy if not required)</p>
+            </Col>
+            <Col xs={4} sm={3}>
+              <input type="number" className={styles.textInput}
+                value={maxLength.value}
+                onChange={this.handleMaxLengthChange} />
+            </Col>
+          </Row>
+        }
       </div>
     );
   }
 
   renderIsRequiredValidation() {
+    if (!_.includes(this.inputSchema.validations, 'is_required')) return false;
     const validations = _.get(this.props, ['currentElement', 'question', 'validations'], []);
     const isRequired = typeof _.find(validations, { type: 'isRequired' }) !== 'undefined';
     return (
