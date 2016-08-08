@@ -113,7 +113,7 @@ class QuestionEditView extends Component {
   }
 
   setSchema(inputName) {
-    this.inputSchema = _.find(questionInputs, { name: inputName });
+    this.inputSchema = questionInputs[inputName];
   }
 
   handlePreview = () => {
