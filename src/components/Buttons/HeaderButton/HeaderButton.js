@@ -22,6 +22,7 @@ class HeaderButton extends Component {
     // adds a counter
     notificationCounter: PropTypes.number,
 
+    // button style.
     style: PropTypes.oneOf(['normal', 'square', 'noPadding', 'iconOnly']),
 
     // adds css min-width in pixels
@@ -120,6 +121,8 @@ class HeaderButton extends Component {
         {...this.getOptionalParams()}
       >
         {this.renderNotificationCounter()}
+        {this.renderIcon()}
+        {this.renderSpace()}
         {children}
         {this.renderSpace()}
         {this.renderIcon()}
