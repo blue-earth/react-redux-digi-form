@@ -24,10 +24,8 @@ export const RESET_MAPPING_INFO = 'RESET_MAPPING_INFO';
 export const SET_VALIDATION_INFO = 'SET_VALIDATION_INFO';
 export const RESET_VALIDATION_INFO = 'RESET_VALIDATION_INFO';
 
-export const SET_CURRENT_QUESTION_ID = 'SET_CURRENT_QUESTION_ID';
-
+export const UPDATE_FORM_ID = 'UPDATE_FORM_ID';
 export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
-
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
 export const INIT_BUILDER_STATE = {
@@ -113,7 +111,8 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
   id: data.id,
   questions: data.form_data.questions ? data.form_data.questions : [],
   logics: data.form_data.logics ? data.form_data.logics : [],
-  documents: data.assets_urls ? data.assets_urls : [],
+  documents: data.assets_urls.length ? data.assets_urls : INIT_BUILDER_STATE.documents,
+  documentMapping: data.document_mapping ? data.document_mapping : [],
   formConfig: data.form_config,
   title: data.title,
   slug: data.slug,
@@ -186,6 +185,8 @@ export const processSubmitForm = (formData) => {
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
+      const { id } = value;
+      id && dispatch(updateFormId(id));
       dispatch(doneSubmitForm()); // Hide submitting spinner
     };
   };
@@ -208,6 +209,11 @@ export const saveForm = () => {
     dispatch(submitForm());
   };
 };
+
+// ------------------------------------
+// Action: updateFormId
+// ------------------------------------
+export const updateFormId = createAction(UPDATE_FORM_ID);
 
 // ------------------------------------
 // Action: setActiveInputName
@@ -430,7 +436,10 @@ const formBuilderReducer = handleActions({
     Object.assign({}, state, {
       isSubmitting: false
     }),
-
+  UPDATE_FORM_ID: (state, action) =>
+    Object.assign({}, state, {
+      id: action.payload
+    }),
   SET_ACTIVE_INPUT_NAME: (state, action) =>
     Object.assign({}, state, {
       activeInputName: action.payload
