@@ -1,0 +1,10 @@
+@import './mixins';
+@import './variables';
+
+.section {
+  @include clearfix;
+  position: relative;
+  padding: 10px $builder-left-panel-padding;
+  margin: 0 (-$builder-left-panel-padding);
+  border-bottom: 1px solid $question-edit-separator-color;
+}

@@ -8,9 +8,9 @@ import {
 } from 'react-bootstrap';
 import { MdHelpOutline } from 'react-icons/lib/md';
 import popoverTexts from 'schemas/popoverTexts';
-import styles from './QuestionEditSectionTitle.scss';
+import styles from './SectionTitle.scss';
 
-class QuestionEditSectionTitle extends Component {
+class SectionTitle extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     popoverId: PropTypes.string,
@@ -52,4 +52,4 @@ class QuestionEditSectionTitle extends Component {
   }
 }
 
-export default QuestionEditSectionTitle;
+export default SectionTitle;
