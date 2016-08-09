@@ -116,7 +116,8 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
   formConfig: data.form_config,
   title: data.title,
   slug: data.slug,
-  isModified: false
+  isModified: false,
+  lastQuestionId: _.max(_.map(data.form_data.questions, 'id'))
 }));
 
 // ------------------------------------
@@ -390,7 +391,11 @@ export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
 const _setQuestionEditMode = (state, action) => {
   const { currentElement } = state;
   const { id, mode, inputType } = action.payload;
-  const question = id ? findItemById(state.questions, id) : INIT_QUESTION_STATE;
+  const question = id
+    ? findItemById(state.questions, id) 
+    : Object.assign({}, INIT_QUESTION_STATE, {
+      type: inputType
+    });
   const newCurrentElement = mode ? {
     id,
     question,
