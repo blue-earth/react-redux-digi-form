@@ -9,13 +9,28 @@ import Spinner from 'components/Spinner';
 
 class HeaderButton extends Component {
   static propTypes = {
+
+    // click function
     onClick: PropTypes.func,
+
+    // disables the button if true
     isDisabled: PropTypes.bool,
+
+    // text and any additional stuff such as profile image
     children: PropTypes.node,
+
+    // adds a counter
     notificationCounter: PropTypes.number,
+
     style: PropTypes.oneOf(['normal', 'square', 'noPadding', 'iconOnly']),
+
+    // adds css min-width in pixels
     defaultWidth: PropTypes.number,
+
+    // adds a bootstrap glyphicon, eg. bsIcon="star"
     bsIcon: PropTypes.string,
+
+    // adds an animated spinner icon. overrides bsIcon.
     showSpinner: PropTypes.bool
   };
 
