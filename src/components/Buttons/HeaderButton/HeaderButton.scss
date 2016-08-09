@@ -62,7 +62,7 @@ $button-size:       36px;
   letter-spacing: 0;
   @include border-radius(50%);
   border: none;
-  background-color: #FF6600;
+  background-color: $highlight-color;
   text-align: center;
   color: #fff;
 }
