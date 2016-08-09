@@ -1,5 +1,6 @@
 import connect from 'redux/utils/connect';
 import { show } from 'redux-modal';
+import { goTo } from 'redux/modules/router';
 import {
   INIT_BUILDER_STATE,
   newForm,
@@ -23,6 +24,7 @@ import FormBuilder from '../components/FormBuilder';
 const mapActionCreators = {
   newForm,
   fetchForm,
+  goTo,
   saveForm,
   setQuestionEditMode,
   setActiveInputName,

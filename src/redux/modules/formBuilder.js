@@ -392,7 +392,7 @@ const _setQuestionEditMode = (state, action) => {
   const { currentElement } = state;
   const { id, mode, inputType } = action.payload;
   const question = id
-    ? findItemById(state.questions, id) 
+    ? findItemById(state.questions, id)
     : Object.assign({}, INIT_QUESTION_STATE, {
       type: inputType
     });
