@@ -1,12 +1,16 @@
-$header-bg-color:           #f0f0f0;
-$builderheader-bg-color:    #3279BC;
+$header-bg-color:   #ededed;
+$builderheader-bg-color:#ededed;
 
-$text-color:                #868686;
-$text-dark-color:           #333;
-$text-light-color:          #999;
+$text-color:        #7b7b7b;
+$text-dark-color:   #333;
+$text-light-color:  #999;
 
-$bg-color1:                 #fff;
-$bg-color2:                 #fafafa;
+$button-default-bg-color: #d6d6d6;
+$button-default-border-color: darken($button-default-bg-color, 1%);
+$button-default-text-color: $text-color;
+
+$bg-color1:         #fff;
+$bg-color2:         #fafafa;
 
 $border-color:              #e6ebed;
 

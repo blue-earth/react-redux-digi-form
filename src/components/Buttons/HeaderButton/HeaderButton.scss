@@ -1,17 +1,17 @@
 @import './mixins';
 @import './variables';
 
-$button-size:       32px;
+$button-size:       36px;
 
 .headerButton {
-  border: 1px solid $headerbutton-border-color;
-  background: $headerbutton-bg-color;
-  @include border-radius(2px);
+  border: 1px solid $button-default-border-color;
+  background: $button-default-bg-color;
+  @include border-radius(4px);
   cursor: pointer;
   height: $button-size;
   padding: 1px 12px;
   @include transition(color .15s, background-color .15s);
-  color: white;
+  color: $button-default-text-color;
   position: relative;
   font-size: 16px;
   font-weight: 300;
@@ -24,12 +24,16 @@ $button-size:       32px;
     padding: 1px;
     width: $button-size;
   }
+  &.iconOnly {
+    border: none !important;
+    background: none !important;
+  }
   &:hover, &:focus {
     opacity: 1;
-    background-color: #3c8abf;
-    border: 1px solid #68addb;
+    background-color: darken($button-default-bg-color, 5%);
+    border: 1px solid darken($button-default-border-color, 5%);
     outline: none;
-    color: white;
+    color: darken($button-default-text-color, 5%);
   }
   &[disabled] {
     opacity: .5;
@@ -38,26 +42,27 @@ $button-size:       32px;
   }
   &:active {
     &, &:hover, &:focus {
-      background-color: #3c8abf;
-      border: 1px solid #68addb;
+      background-color: $button-default-text-color;
+      border: 1px solid $button-default-text-color;
       outline: none;
-      color: white;
+      color: #fff;
     }
   }
 }
 
 .notificationCounter {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: 0;
+  left: 50%;
   width: 18px;
   height: 18px;
-  line-height: 16px;
+  line-height: 18px;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0;
   @include border-radius(50%);
-  border: 1px solid white;
+  border: none;
   background-color: #FF6600;
   text-align: center;
+  color: #fff;
 }

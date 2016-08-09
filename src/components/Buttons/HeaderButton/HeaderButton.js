@@ -2,9 +2,10 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Glyphicon } from 'react-bootstrap';
 import classNames from 'classnames';
 import styles from './HeaderButton.scss';
+import Spinner from 'components/Spinner';
 
 class HeaderButton extends Component {
   static propTypes = {
@@ -12,8 +13,10 @@ class HeaderButton extends Component {
     isDisabled: PropTypes.bool,
     children: PropTypes.node,
     notificationCounter: PropTypes.number,
-    style: PropTypes.oneOf(['normal', 'square', 'noPadding']),
-    defaultWidth: PropTypes.number
+    style: PropTypes.oneOf(['normal', 'square', 'noPadding', 'iconOnly']),
+    defaultWidth: PropTypes.number,
+    bsIcon: PropTypes.string,
+    showSpinner: PropTypes.bool
   };
 
   static defaultProps = {
@@ -30,7 +33,8 @@ class HeaderButton extends Component {
     return classNames({
       [styles.headerButton]: true,
       [styles.squareButton]: style === 'square',
-      [styles.noPaddingButton]: style === 'noPadding'
+      [styles.noPaddingButton]: style === 'noPadding',
+      [styles.iconOnly]: style === 'iconOnly'
     });
   }
 
@@ -60,6 +64,38 @@ class HeaderButton extends Component {
     }
   }
 
+  // add an icon to the button
+  renderIcon() {
+    const { bsIcon, showSpinner } = this.props;
+    if (showSpinner === true) {
+      return (
+        <Spinner />
+      );
+    } else if (typeof bsIcon !== 'undefined') {
+      return (
+        <Glyphicon glyph={bsIcon} />
+      );
+    } else {
+      return false;
+    }
+  }
+
+  // add a space if there is an icon and text
+  renderSpace() {
+    const { children, bsIcon, showSpinner } = this.props;
+    if (typeof children !== 'undefined') {
+      if (typeof bsIcon !== 'undefined' || showSpinner === true) {
+        return (
+          <span className="iconSpacer">{' '}</span>
+        );
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
   render() {
     const { children } = this.props;
 
@@ -69,6 +105,8 @@ class HeaderButton extends Component {
         {...this.getOptionalParams()}
       >
         {this.renderNotificationCounter()}
+        {this.renderIcon()}
+        {this.renderSpace()}
         {children}
       </Button>
     );
