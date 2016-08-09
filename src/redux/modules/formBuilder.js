@@ -165,11 +165,11 @@ export const processSubmitForm = (formData) => {
     'slug': formData.slug,
     'form_data': {
       'logics': formData.logics,
-      'questions': formData.questiosn
+      'questions': formData.questions
     },
     'form_config': formData.formConfig,
-    'document_mapping': formData.documentMapping,
-    'assets_urls': formData.documents
+    'document_mapping': formData.documentMapping
+    // 'assets_urls': formData.documents
   };
 
   var method = 'POST';
