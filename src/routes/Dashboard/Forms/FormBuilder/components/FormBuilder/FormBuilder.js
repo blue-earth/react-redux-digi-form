@@ -2,11 +2,12 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import { formsUrl } from 'helpers/urlHelper';
+import classNames from 'classnames';
 import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
 import QuestionEditView from '../QuestionEditView/QuestionEditView';
-import classNames from 'classnames';
-import { formsUrl } from 'helpers/urlHelper';
+import UploadModal from '../UploadModal/UploadModal';
 import styles from './FormBuilder.scss';
 
 class FormBuilder extends Component {
@@ -156,12 +157,6 @@ class FormBuilder extends Component {
   };
 
   componentWillMount() {
-    const { newForm, fetchForm, params: { id } } = this.props;
-    if (id) {
-      fetchForm(id);
-    } else {
-      newForm();
-    }
   }
 
   componentWillReceiveProps(props) {
@@ -169,6 +164,13 @@ class FormBuilder extends Component {
   }
 
   componentDidMount() {
+    const { newForm, fetchForm, params: { id }, show } = this.props;
+    if (id) {
+      fetchForm(id);
+    } else {
+      newForm();
+      show('uploadModal');
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -202,6 +204,7 @@ class FormBuilder extends Component {
         <div className={rightPanelClass}>
           <PageView {...this.props} />
         </div>
+        <UploadModal />
       </div>
     );
   }

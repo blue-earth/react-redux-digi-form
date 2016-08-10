@@ -443,7 +443,7 @@ const formBuilderReducer = handleActions({
     }),
   UPDATE_FORM_ID: (state, action) =>
     Object.assign({}, state, {
-      id: action.payload
+      id: parseInt(action.payload)
     }),
   SET_ACTIVE_INPUT_NAME: (state, action) =>
     Object.assign({}, state, {
