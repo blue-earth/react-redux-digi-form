@@ -18,6 +18,7 @@ import {
   settingsPath
 } from 'helpers/urlHelper';
 import styles from './DashboardTabs.scss';
+import { MdHome } from 'react-icons/lib/md';
 import _ from 'lodash';
 
 class DashboardTabs extends Component {
@@ -70,6 +71,7 @@ class DashboardTabs extends Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
+          <a className="homelink" onClick={() => this.handleSelect(submissionsPath)}><MdHome size={30} /></a>
           <Nav onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
             {
               this.navItems.map((navItem) => {
