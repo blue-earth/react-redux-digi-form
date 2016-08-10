@@ -6,6 +6,7 @@ import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
 import QuestionEditView from '../QuestionEditView/QuestionEditView';
 import classNames from 'classnames';
+import { formsUrl } from 'helpers/urlHelper';
 import styles from './FormBuilder.scss';
 
 class FormBuilder extends Component {
@@ -146,7 +147,12 @@ class FormBuilder extends Component {
     /*
      * show: Redux modal show
      */
-    show: PropTypes.func.isRequired
+    show: PropTypes.func.isRequired,
+
+    /*
+     * goTo: Redux action to go to specific url.
+     */
+    goTo: PropTypes.func.isRequired
   };
 
   componentWillMount() {
@@ -163,6 +169,11 @@ class FormBuilder extends Component {
   }
 
   componentDidMount() {
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { id, goTo } = this.props;
+    id && prevProps.id !== id && goTo(formsUrl(`/${id}/edit`));
   }
 
   resetActiveInputName = () => {
