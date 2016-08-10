@@ -4,22 +4,28 @@
 .dashboardTabs {
   background-color: transparent;
   border: none;
+  border-bottom: 1px solid lighten($blue, 40%);
+  @include border-radius(0);
   margin-bottom: 0;
-  min-height: 40px;
+  min-height: auto;
+  font-size: 13px;
 }
 
 :global {
   .navItem {
     padding-top: 15px;
+    margin-bottom: -1px;
     a {
-      padding: 2px 10px 3px !important;
-      @include border-radius-separate(4px, 4px, 0, 0);
-      @include transition(color .15s, background-color .15s);
+      color: $dashtabs-color !important;
+      background: none !important;
+      padding: 0px 15px !important;
+      height: 33px;
+      @include transition(color .15s);
     }
     a:hover, a:focus,
     &.active a {
-      background-color: $dashboard-bg-color !important;
-      color: white !important;
+      color: $dashtabs-active-color !important;
+      border-bottom: 4px solid $dashtabs-active-border-color;
     }
   }
 }

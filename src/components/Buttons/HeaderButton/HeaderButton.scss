@@ -1,19 +1,20 @@
 @import './mixins';
 @import './variables';
 
-$button-size:       36px;
+$button-size:       38px;
 
 .headerButton {
-  border: 1px solid $button-default-border-color;
-  background: $button-default-bg-color;
+  border: none;
+  background: $orange;
   @include border-radius(4px);
   cursor: pointer;
   height: $button-size;
   padding: 1px 12px;
+  margin-left: 10px !important;
   @include transition(color .15s, background-color .15s);
-  color: $button-default-text-color;
+  color: #fff;
   position: relative;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 300;
   letter-spacing: 1px;
   line-height: 1;
@@ -30,22 +31,19 @@ $button-size:       36px;
   }
   &:hover, &:focus {
     opacity: 1;
-    background-color: darken($button-default-bg-color, 5%);
-    border: 1px solid darken($button-default-border-color, 5%);
+    background-color: darken($orange, 5%);
+    color: #fff;
     outline: none;
-    color: darken($button-default-text-color, 5%);
   }
   &[disabled] {
     opacity: .5;
     background: $headerbutton-bg-color !important;
-    border: 1px solid $headerbutton-border-color !important;
   }
   &:active {
     &, &:hover, &:focus {
-      background-color: $button-default-text-color;
-      border: 1px solid $button-default-text-color;
-      outline: none;
+      background-color: lighten($orange, 5%);
       color: #fff;
+      outline: none;
     }
   }
 }
@@ -62,7 +60,7 @@ $button-size:       36px;
   letter-spacing: 0;
   @include border-radius(50%);
   border: none;
-  background-color: $highlight-color;
+  background-color: $orange;
   text-align: center;
   color: #fff;
 }

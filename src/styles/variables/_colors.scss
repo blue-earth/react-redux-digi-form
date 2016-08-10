@@ -1,7 +1,15 @@
-$header-bg-color:   #ededed;
-$builderheader-bg-color:#ededed;
+$blue: #3993d1;
+$darkblue: #2c3744;
+$paleblue: #f3faff;
+$orange: #ff8a00;
+$grey: #c0c3c9;
+$green: #65b82d;
+$red: #d45644;
 
-$text-color:        #7b7b7b;
+$header-bg-color: $blue;
+$builderheader-bg-color: $blue;
+
+$text-color: $darkblue;
 $text-dark-color:   #333;
 $text-light-color:  #999;
 
@@ -11,6 +19,10 @@ $highlight-color: #ff6600;
 $button-default-bg-color: #d6d6d6;
 $button-default-border-color: darken($button-default-bg-color, 1%);
 $button-default-text-color: $text-color;
+
+$dashtabs-color: #c0c3ca;
+$dashtabs-active-color: #2c3744;
+$dashtabs-active-border-color: #3993d1;
 
 $bg-color1:         #fff;
 $bg-color2:         #fafafa;

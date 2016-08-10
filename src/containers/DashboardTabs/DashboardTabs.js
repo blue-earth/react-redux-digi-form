@@ -90,7 +90,7 @@ class DashboardTabs extends Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
-          <Nav pullRight onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
+          <Nav onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
             {
               this.navItems.map((navItem) => {
                 return (

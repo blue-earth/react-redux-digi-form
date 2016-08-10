@@ -120,9 +120,9 @@ class HeaderButton extends Component {
         {...this.getOptionalParams()}
       >
         {this.renderNotificationCounter()}
-        {this.renderIcon()}
-        {this.renderSpace()}
         {children}
+        {this.renderSpace()}
+        {this.renderIcon()}
       </Button>
     );
   }

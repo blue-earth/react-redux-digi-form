@@ -16,7 +16,7 @@ class BuilderHeader extends Component {
       <div className={styles.header}>
         <Grid fluid>
           <div className={styles.logo}>
-            <StackLogo className={styles.logo} width="auto" height={32} logoStyle="darkgrey" />
+            <StackLogo className={styles.logo} width="auto" height={38} logoStyle="white" />
           </div>
           <ButtonToolbar className={styles.leftToolbar}>
             <HeaderButton defaultWidth={76} bsIcon="plus">
