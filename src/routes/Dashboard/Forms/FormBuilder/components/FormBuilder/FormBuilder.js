@@ -173,7 +173,7 @@ class FormBuilder extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { id, goTo } = this.props;
-    prevProps.id !== this.props.id && goTo(formsUrl(`/${id}/edit`));
+    id && prevProps.id !== id && goTo(formsUrl(`/${id}/edit`));
   }
 
   resetActiveInputName = () => {
