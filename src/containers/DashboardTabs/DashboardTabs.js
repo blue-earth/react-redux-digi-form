@@ -12,12 +12,8 @@ import { goTo } from 'redux/modules/router';
 import {
   dashboardUrl,
   submissionsPath,
-  sharingPath,
-  alertsPath,
-  analyticsPath,
   formsPath,
   documentsPath,
-  certificationPath,
   usersPath,
   settingsPath
 } from 'helpers/urlHelper';
@@ -43,28 +39,12 @@ class DashboardTabs extends Component {
         label: 'Submissions'
       },
       {
-        path: sharingPath,
-        label: 'Sharing'
-      },
-      {
-        path: alertsPath,
-        label: 'Alerts'
-      },
-      {
-        path: analyticsPath,
-        label: 'Analytics'
-      },
-      {
         path: formsPath,
         label: 'Forms'
       },
       {
         path: documentsPath,
         label: 'Documents'
-      },
-      {
-        path: certificationPath,
-        label: 'Certification'
       },
       {
         path: usersPath,

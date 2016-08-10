@@ -29,6 +29,7 @@ $button-size:       38px;
   &.iconOnly {
     border: none !important;
     background: none !important;
+    box-shadow: none !important;
   }
   &:hover, &:focus {
     opacity: 1;
@@ -43,7 +44,7 @@ $button-size:       38px;
   &:active {
     &, &:hover, &:focus {
       background-color: lighten($orange, 5%);
-      color: #fff;
+      color: #fff !important;
       outline: none;
     }
   }

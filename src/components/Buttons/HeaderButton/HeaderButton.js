@@ -2,7 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button, DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap';
 import classNames from 'classnames';
 import styles from './HeaderButton.scss';
 import Spinner from 'components/Spinner';
@@ -32,11 +32,21 @@ class HeaderButton extends Component {
     bsIcon: PropTypes.string,
 
     // adds an animated spinner icon. overrides bsIcon.
-    showSpinner: PropTypes.bool
+    showSpinner: PropTypes.bool,
+
+    // array of object with elements path, label, divider
+    // divider should be on it's own if present
+    // this will make this component render as a DropdownButton
+    dropDown: PropTypes.any,
+
+    // html id attribute.
+    // this is required for dropdowns or it will throw an error
+    id: PropTypes.string
   };
 
   static defaultProps = {
-    style: 'normal'
+    style: 'normal',
+    id: 'id'
   };
 
   handleClick = () => {
@@ -113,19 +123,40 @@ class HeaderButton extends Component {
   }
 
   render() {
-    const { children } = this.props;
-
-    return (
-      <Button type="button" onClick={this.handleClick}
-        className={this.getWrapperClass()}
-        {...this.getOptionalParams()}
-      >
-        {this.renderNotificationCounter()}
-        {children}
-        {this.renderSpace()}
-        {this.renderIcon()}
-      </Button>
-    );
+    const { children, dropDown, id } = this.props;
+    if (typeof dropDown !== 'undefined') {
+      let title = <span>{this.renderNotificationCounter()} {children} {this.renderSpace()} {this.renderIcon()}</span>;
+      return (
+        <DropdownButton title={title} id={id} noCaret
+          className={this.getWrapperClass()}
+          {...this.getOptionalParams()}
+        >
+          {
+            dropDown.map((navItem) => {
+              return (
+                <MenuItem key={navItem.path} eventKey={navItem.path}
+                  onSelect={this.props.onClick} divider={navItem.divider}
+                >
+                  {navItem.label}
+                </MenuItem>
+              );
+            })
+          }
+        </DropdownButton>
+      );
+    } else {
+      return (
+        <Button type="button" onClick={this.handleClick}
+          className={this.getWrapperClass()}
+          {...this.getOptionalParams()}
+        >
+          {this.renderNotificationCounter()}
+          {children}
+          {this.renderSpace()}
+          {this.renderIcon()}
+        </Button>
+      );
+    }
   }
 }
 

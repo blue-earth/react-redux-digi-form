@@ -1,15 +1,64 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import connect from 'redux/utils/connect';
 import StackLogo from 'components/Logos/StackLogo';
 import { Grid, ButtonToolbar } from 'react-bootstrap';
 import HeaderButton from 'components/Buttons/HeaderButton/HeaderButton';
 import { FaBellO } from 'react-icons/lib/fa';
 import styles from './BuilderHeader.scss';
+import { goTo } from 'redux/modules/router';
+import {
+  dashboardUrl,
+  submissionsPath,
+  formsPath,
+  documentsPath,
+  usersPath,
+  settingsPath
+} from 'helpers/urlHelper';
 
 class BuilderHeader extends Component {
 
   static contextTypes = {
     primaryColor: React.PropTypes.string
   };
+
+  static propTypes = {
+    location: PropTypes.object,
+    goTo: PropTypes.func
+  };
+
+  handleNav = (navPath) => {
+    const { goTo } = this.props;
+    goTo(dashboardUrl(navPath));
+  }
+
+  get profileDropdown() {
+    return [
+      {
+        path: submissionsPath,
+        label: 'Submissions'
+      },
+      {
+        path: formsPath,
+        label: 'Forms'
+      },
+      {
+        path: documentsPath,
+        label: 'Documents'
+      },
+      {
+        path: ' ',
+        divider: true
+      },
+      {
+        path: usersPath,
+        label: 'Users'
+      },
+      {
+        path: settingsPath,
+        label: 'Settings'
+      }
+    ];
+  }
 
   render() {
     return (
@@ -33,7 +82,7 @@ class BuilderHeader extends Component {
             </HeaderButton>
           </ButtonToolbar>
           <ButtonToolbar className={styles.rightToolbar}>
-            <HeaderButton style="iconOnly">
+            <HeaderButton style="iconOnly" dropDown={this.profileDropdown} onClick={this.handleNav} id="profile-menu">
               <img src="http://localhost:3000/avatar.jpg" alt="" className={styles.profileImage} />
               <span className={styles.profileName}>{'JM'}</span>
             </HeaderButton>
@@ -48,3 +97,9 @@ class BuilderHeader extends Component {
 }
 
 export default BuilderHeader;
+
+const mapActionCreators = {
+  goTo
+};
+
+export default connect(null, mapActionCreators)(BuilderHeader);
