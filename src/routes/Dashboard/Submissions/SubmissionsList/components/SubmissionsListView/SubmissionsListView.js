@@ -102,14 +102,23 @@ class SubmissionsListView extends Component {
         cssClassName: styles.columnName
       },
       {
-        columnName: 'progress',
+        columnName: 'status',
         order: 3,
         locked: false,
         visible: true,
-        displayName: 'Progress',
-        customHeaderComponent: ProgressHeaderCell,
-        cssClassName: styles.columnProgress
+        displayName: 'Status',
+        customHeaderComponent: StatusHeaderCell,
+        cssClassName: styles.columnStatus
       },
+      // {
+      //   columnName: 'progress',
+      //   order: 3,
+      //   locked: false,
+      //   visible: true,
+      //   displayName: 'Progress',
+      //   customHeaderComponent: ProgressHeaderCell,
+      //   cssClassName: styles.columnProgress
+      // },
       {
         columnName: 'completion_percent',
         order: 4,
@@ -135,42 +144,34 @@ class SubmissionsListView extends Component {
         displayName: 'Channel',
         cssClassName: styles.columnChanel
       },
-      {
-        columnName: 'created',
-        order: 7,
-        locked: false,
-        visible: true,
-        displayName: 'Created',
-        cssClassName: styles.columnCreated,
-        customComponent: DateCell
-      },
-      {
-        columnName: 'status',
-        order: 8,
-        locked: false,
-        visible: true,
-        displayName: 'Status',
-        customHeaderComponent: StatusHeaderCell,
-        cssClassName: styles.columnStatus
-      },
-      {
-        columnName: 'duration_seconds',
-        order: 11,
-        locked: false,
-        visible: true,
-        displayName: 'Time taken',
-        cssClassName: styles.columnDuration
-      },
-      {
-        columnName: 'contact_info',
-        order: 12,
-        locked: false,
-        visible: true,
-        sortable: false,
-        displayName: 'Contact Info',
-        customComponent: ContactInfoCell,
-        cssClassName: styles.columnContactInfo
-      },
+      // {
+      //   columnName: 'created',
+      //   order: 7,
+      //   locked: false,
+      //   visible: true,
+      //   displayName: 'Created',
+      //   cssClassName: styles.columnCreated,
+      //   customComponent: DateCell
+      // },
+      //
+      // {
+      //   columnName: 'duration_seconds',
+      //   order: 11,
+      //   locked: false,
+      //   visible: true,
+      //   displayName: 'Time taken',
+      //   cssClassName: styles.columnDuration
+      // },
+      // {
+      //   columnName: 'contact_info',
+      //   order: 12,
+      //   locked: false,
+      //   visible: true,
+      //   sortable: false,
+      //   displayName: 'Contact Info',
+      //   customComponent: ContactInfoCell,
+      //   cssClassName: styles.columnContactInfo
+      // },
       {
         columnName: 'actions',
         locked: true,

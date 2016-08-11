@@ -5,7 +5,6 @@ $slt-header-text-color:     #1C4468;
 $slt-border-color:          rgba(204, 204, 204, .3);
 
 .submissionsList {
-  padding: 10px;
   height: 100%;
 }
 .submissionsListInner {
@@ -17,43 +16,38 @@ $slt-border-color:          rgba(204, 204, 204, .3);
 }
 
 .columnID {
-  width: 4%;
+  width: auto;
 }
 .columnName {
-  width: 15%;
+  width: auto;
 }
 .columnProgress {
-  width: 7%;
+  width: auto;
 }
 .columnPercent {
-  width: 3%;
+  width: auto;
 }
 .columnAuthor {
-  width: 10%;
+  width: auto;
 }
 .columnChanel {
-  width: 6%;
+  width: auto;
 }
 .columnCreated {
-  width: 7%;
+  width: auto;
 }
 .columnStatus {
-  width: 8%;
-  text-align: center;
+  width: auto;
 }
 .columnType {
-  width: 8%;
-  text-align: center;
+  width: auto;
 }
 .columnLanguage {
-  width: 6%;
-  text-align: center;
+  width: auto;
 }
 .columnDuration {
-  width: 7%;
-  text-align: center;
+  width: auto;
 }
 .columnContactInfo {
-  width: 7%;
-  text-align: center;
+  width: auto;
 }
