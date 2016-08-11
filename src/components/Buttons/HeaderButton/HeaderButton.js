@@ -23,7 +23,10 @@ class HeaderButton extends Component {
     notificationCounter: PropTypes.number,
 
     // button style.
-    style: PropTypes.oneOf(['normal', 'square', 'noPadding', 'iconOnly']),
+    style: PropTypes.oneOf(['headerButton', 'formButton', 'defaultButton']),
+
+    // removes background and border
+    iconOnly: PropTypes.bool,
 
     // adds css min-width in pixels
     defaultWidth: PropTypes.number,
@@ -45,7 +48,7 @@ class HeaderButton extends Component {
   };
 
   static defaultProps = {
-    style: 'normal',
+    style: 'defaultButton',
     id: 'id'
   };
 
@@ -55,12 +58,12 @@ class HeaderButton extends Component {
   }
 
   getWrapperClass() {
-    const { style } = this.props;
+    const { style, iconOnly } = this.props;
     return classNames({
-      [styles.headerButton]: true,
-      [styles.squareButton]: style === 'square',
-      [styles.noPaddingButton]: style === 'noPadding',
-      [styles.iconOnly]: style === 'iconOnly'
+      [styles.headerButton]: style === 'headerButton',
+      [styles.formButton]: style === 'formButton',
+      [styles.defaultButton]: style === 'defaultButton',
+      [styles.iconOnly]: iconOnly === true
     });
   }
 

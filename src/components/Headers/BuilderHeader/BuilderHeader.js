@@ -68,25 +68,29 @@ class BuilderHeader extends Component {
             <StackLogo className={styles.logo} width="auto" height={38} logoStyle="white" />
           </div>
           <ButtonToolbar className={styles.leftToolbar}>
-            <HeaderButton defaultWidth={76} bsIcon="plus">
+            <HeaderButton defaultWidth={76} bsIcon="plus" style="formButton">
               Create
             </HeaderButton>
-            <HeaderButton defaultWidth={76} bsIcon="pencil">
+            <HeaderButton defaultWidth={76} bsIcon="pencil" style="headerButton">
               Sign
             </HeaderButton>
-            <HeaderButton defaultWidth={76} bsIcon="send">
+            <HeaderButton defaultWidth={76} bsIcon="send" style="headerButton">
               Send
             </HeaderButton>
-            <HeaderButton defaultWidth={76} bsIcon="thumbs-up">
+            <HeaderButton defaultWidth={76} bsIcon="thumbs-up" style="headerButton">
               Certify
             </HeaderButton>
           </ButtonToolbar>
           <ButtonToolbar className={styles.rightToolbar}>
-            <HeaderButton style="iconOnly" dropDown={this.profileDropdown} onClick={this.handleNav} id="profile-menu">
+            <HeaderButton style="headerButton" iconOnly
+              dropDown={this.profileDropdown}
+              onClick={this.handleNav}
+              id="profile-menu"
+            >
               <img src="http://localhost:3000/avatar.jpg" alt="" className={styles.profileImage} />
               <span className={styles.profileName}>{'JM'}</span>
             </HeaderButton>
-            <HeaderButton style="iconOnly" notificationCounter={5}>
+            <HeaderButton style="headerButton" iconOnly notificationCounter={5}>
               <FaBell size={24} />
             </HeaderButton>
           </ButtonToolbar>

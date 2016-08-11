@@ -3,48 +3,87 @@
 
 $button-size:       38px;
 
+.headerButton, .formButton, .defaultButton {
+  @include border-radius(4px);
+  @include transition(color .15s, background-color .15s);
+  cursor: pointer;
+  position: relative;
+  height: $button-size;
+  padding: 1px 12px;
+  &.iconOnly {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 1px;
+  }
+  &:hover, &:focus {
+    outline: none;
+  }
+}
+
 .headerButton {
   border: none;
   background: $orange;
-  @include border-radius(4px);
-  cursor: pointer;
-  height: $button-size;
-  padding: 1px 12px;
-  margin-left: 10px !important;
-  @include transition(color .15s, background-color .15s);
   color: #fff;
-  position: relative;
   font-size: 13px;
   font-weight: 300;
   letter-spacing: 1px;
   line-height: 1;
   font-family: "roble_alt_boldbold";
-  &.noPaddingButton {
-    padding: 1px;
-  }
-  &.squareButton {
-    padding: 1px;
-    width: $button-size;
-  }
-  &.iconOnly {
-    border: none !important;
-    background: none !important;
-    box-shadow: none !important;
-  }
+  margin-left: 10px !important;
   &:hover, &:focus {
     opacity: 1;
     background-color: darken($orange, 5%);
     color: #fff;
-    outline: none;
   }
   &[disabled] {
     opacity: .5;
-    background: $headerbutton-bg-color !important;
   }
   &:active {
     &, &:hover, &:focus {
       background-color: lighten($orange, 5%);
       color: #fff !important;
+      outline: none;
+    }
+  }
+}
+
+.formButton {
+  @include background-gradient(#fff, lighten($grey, 15%));
+  color: $darkblue;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1;
+  font-family: "roble_alt_boldbold";
+  &:hover, &:focus {
+    opacity: 1;
+  }
+  &[disabled] {
+    opacity: .5;
+  }
+  &:active {
+    &, &:hover, &:focus {
+      outline: none;
+    }
+  }
+}
+
+.defaultButton {
+  @include background-gradient(#fff, lighten($grey, 15%));
+  color: $darkblue;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1;
+  &:hover, &:focus {
+    opacity: 1;
+  }
+  &[disabled] {
+    opacity: .5;
+  }
+  &:active {
+    &, &:hover, &:focus {
       outline: none;
     }
   }
