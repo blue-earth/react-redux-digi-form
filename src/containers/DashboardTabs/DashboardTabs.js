@@ -33,6 +33,11 @@ class DashboardTabs extends Component {
     goTo(dashboardUrl(navPath));
   }
 
+  onClickHome = () => {
+    const { goTo } = this.props;
+    goTo(dashboardUrl(submissionsPath));
+  }
+
   get navItems() {
     return [
       {
@@ -71,7 +76,7 @@ class DashboardTabs extends Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
-          <a className="homelink" onClick={() => this.handleSelect(submissionsPath)}><MdHome size={30} /></a>
+          <a className="homelink" onClick={this.onClickHome}><MdHome size={30} /></a>
           <Nav onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
             {
               this.navItems.map((navItem) => {

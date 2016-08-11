@@ -2,7 +2,7 @@
 @import './variables';
 
 .dashboardTabs {
-  background-color: transparent;
+  background-color: #fff;
   border: none;
   border-bottom: 1px solid lighten($blue, 40%);
   @include border-radius(0);
