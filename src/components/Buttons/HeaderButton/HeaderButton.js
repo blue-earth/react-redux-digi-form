@@ -10,7 +10,7 @@ import Spinner from 'components/Spinner';
 class HeaderButton extends Component {
   static propTypes = {
 
-    // click function
+    // click function, currently only takes 1 argument
     onClick: PropTypes.func,
 
     // disables the button if true
@@ -35,9 +35,9 @@ class HeaderButton extends Component {
     showSpinner: PropTypes.bool,
 
     // array of object with elements path, label, divider
-    // divider should be on it's own if present
-    // this will make this component render as a DropdownButton
-    dropDown: PropTypes.any,
+    // divider should not have a label
+    // will make this component render as a DropdownButton
+    dropDown: PropTypes.array,
 
     // html id attribute.
     // this is required for dropdowns or it will throw an error
@@ -49,9 +49,9 @@ class HeaderButton extends Component {
     id: 'id'
   };
 
-  handleClick = () => {
+  handleClick = (arg) => {
     const { onClick } = this.props;
-    if (typeof onClick === 'function') onClick();
+    if (typeof onClick === 'function') onClick(arg);
   }
 
   getWrapperClass() {
@@ -135,7 +135,7 @@ class HeaderButton extends Component {
             dropDown.map((navItem) => {
               return (
                 <MenuItem key={navItem.path} eventKey={navItem.path}
-                  onSelect={this.props.onClick} divider={navItem.divider}
+                  onSelect={this.handleClick} divider={navItem.divider}
                 >
                   {navItem.label}
                 </MenuItem>
