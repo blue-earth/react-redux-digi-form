@@ -3,7 +3,7 @@ import connect from 'redux/utils/connect';
 import StackLogo from 'components/Logos/StackLogo';
 import { Grid, ButtonToolbar } from 'react-bootstrap';
 import HeaderButton from 'components/Buttons/HeaderButton/HeaderButton';
-import { FaBellO } from 'react-icons/lib/fa';
+import { FaBell } from 'react-icons/lib/fa';
 import styles from './BuilderHeader.scss';
 import { goTo } from 'redux/modules/router';
 import {
@@ -87,7 +87,7 @@ class BuilderHeader extends Component {
               <span className={styles.profileName}>{'JM'}</span>
             </HeaderButton>
             <HeaderButton style="iconOnly" notificationCounter={5}>
-              <FaBellO size={24} />
+              <FaBell size={24} />
             </HeaderButton>
           </ButtonToolbar>
         </Grid>
