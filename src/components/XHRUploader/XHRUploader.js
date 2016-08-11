@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaCloudUpload, FaFileTextO, FaClose } from 'react-icons/lib/fa';
 import classNames from 'classnames';
+import getCsrfToken from 'redux/utils/csrf';
 import _ from 'lodash';
 import styles from './XHRUploader.scss';
 
@@ -12,6 +13,7 @@ const fileSizeWithUnit = (fileSize) =>
 export default class XHRUploader extends React.Component {
 
   static propTypes = {
+    accept: React.PropTypes.string,
     url: React.PropTypes.string.isRequired,
     fieldName: React.PropTypes.string,
     dropzoneLabel: React.PropTypes.string,
@@ -22,10 +24,12 @@ export default class XHRUploader extends React.Component {
     maxFiles: React.PropTypes.number,
     encrypt: React.PropTypes.bool,
     clearTimeOut: React.PropTypes.number,
-    method: React.PropTypes.string
+    method: React.PropTypes.string,
+    onSuccess: React.PropTypes.func
   };
 
   static defaultProps = {
+    accept: '*',
     fieldName: 'datafile',
     dropzoneLabel: 'Drag and drop your files here or pick them from your computer',
     maxSize: 25 * 1024 * 1024,
@@ -35,7 +39,8 @@ export default class XHRUploader extends React.Component {
     maxFiles: 1,
     encrypt: false,
     clearTimeOut: 3000,
-    method: 'POST'
+    method: 'POST',
+    onSuccess: () => {}
   };
 
   constructor(props) {
@@ -185,13 +190,15 @@ export default class XHRUploader extends React.Component {
   }
 
   uploadFile(file, progressCallback) {
+    const { onSuccess } = this.props;
     if (file) {
       const formData = new FormData();
       const xhr = new XMLHttpRequest();
-
+      xhr.withCredentials = true;
       formData.append(this.props.fieldName, file, file.name);
 
-      xhr.onload = () => {
+      xhr.onload = (e) => {
+        onSuccess(e.target.response);
         progressCallback(100);
       };
 
@@ -200,8 +207,13 @@ export default class XHRUploader extends React.Component {
           progressCallback((e.loaded / e.total) * 100);
         }
       };
+      xhr.upload.onload = (e) => {
+        console.log('uploadComplete');
+      };
 
       xhr.open('POST', this.props.url, true);
+      xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
+      xhr.setRequestHeader('Accept', 'application/json');
       xhr.send(formData);
       this.xhrs[file.index] = xhr;
     }
@@ -254,7 +266,6 @@ export default class XHRUploader extends React.Component {
     const that = this;
     if (activeItems.length > 0) {
       // const progress = this.state.progress;
-      console.log(activeItems);
       return (
         <div className={styles.fileset}>
         {
@@ -313,6 +324,7 @@ export default class XHRUploader extends React.Component {
         multiple={maxFiles > 1}
         type="file"
         ref="fileInput"
+        accept={this.props.accept}
         onChange={this.onFileSelect}
       />
     );

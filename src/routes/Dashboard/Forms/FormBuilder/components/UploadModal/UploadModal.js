@@ -17,6 +17,10 @@ class UploadModal extends Component {
     formId: PropTypes.number
   };
 
+  handleUploadSuccess = (res) => {
+    console.log(res);
+  }
+
   render() {
     const { show, handleHide, formId } = this.props;
     var requestURL = `${API_URL}/form_document/api/form/`;
@@ -39,6 +43,7 @@ class UploadModal extends Component {
               fieldName="uploaded_document"
               method={method}
               maxFiles={1}
+              onSuccess={this.handleUploadSuccess}
             />
           </div>
         </Modal.Body>
