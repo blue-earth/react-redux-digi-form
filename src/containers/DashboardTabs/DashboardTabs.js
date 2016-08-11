@@ -73,10 +73,10 @@ class DashboardTabs extends Component {
     return (
       <Navbar fluid className={styles.dashboardTabs}>
         <Navbar.Header>
+          <a className="homelink" onClick={this.onClickHome}><MdHome size={30} /></a>
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
-          <a className="homelink" onClick={this.onClickHome}><MdHome size={30} /></a>
           <Nav onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
             {
               this.navItems.map((navItem) => {
