@@ -82,7 +82,7 @@ class BuilderHeader extends Component {
             </HeaderButton>
           </ButtonToolbar>
           <ButtonToolbar className={styles.rightToolbar}>
-            <HeaderButton style="headerButton" iconOnly noCaret
+            <HeaderButton style="headerButton" iconOnly noCaret pullRight
               dropDown={this.profileDropdown}
               onClick={this.handleNav}
               id="profile-menu"

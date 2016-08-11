@@ -44,7 +44,10 @@ class HeaderButton extends Component {
     id: PropTypes.string,
 
     // removes the caret from dropdown button
-    noCaret: PropTypes.bool
+    noCaret: PropTypes.bool,
+
+    // aligns a dropdown to the right of the button
+    pullRight: PropTypes.bool
   };
 
   static defaultProps = {
@@ -69,13 +72,16 @@ class HeaderButton extends Component {
   }
 
   getOptionalParams() {
-    const { isDisabled, defaultWidth, noCaret, dropDown } = this.props;
+    const { isDisabled, defaultWidth, noCaret, pullRight, dropDown } = this.props;
     var optionals = {};
     if (isDisabled) {
       optionals['disabled'] = true;
     }
     if (noCaret && dropDown) {
       optionals['noCaret'] = true;
+    }
+    if (pullRight && dropDown) {
+      optionals['pullRight'] = true;
     }
     if (defaultWidth) {
       optionals['style'] = { minWidth: defaultWidth };
