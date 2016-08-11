@@ -14,15 +14,22 @@ $text-dark-color:   #333;
 $text-light-color:  #999;
 
 // orange highlight
-$highlight-color: #ff6600;
+$highlight-color: $orange;
 
-$button-default-bg-color: #d6d6d6;
-$button-default-border-color: darken($button-default-bg-color, 1%);
-$button-default-text-color: $text-color;
+// headerButton component
+$button-default-color: $darkblue;
+$button-default-border-color: $grey;
+$button-default-bg-color: lighten($grey, 15%);
+$button-default-bg-start: #fff;
+$button-default-bg-end: lighten($grey, 15%);
 
-$dashtabs-color: #c0c3ca;
-$dashtabs-active-color: #2c3744;
-$dashtabs-active-border-color: #3993d1;
+$button-header-color: #fff;
+$button-header-bg-color: $orange;
+
+// dashboard tabs component
+$dashtabs-color: $grey;
+$dashtabs-active-color: $darkblue;
+$dashtabs-active-border-color: $blue;
 
 $bg-color1:         #fff;
 $bg-color2:         #fafafa;
