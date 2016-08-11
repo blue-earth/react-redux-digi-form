@@ -31,9 +31,6 @@ class HeaderButton extends Component {
     // adds css min-width in pixels
     defaultWidth: PropTypes.number,
 
-    // adds a bootstrap glyphicon, eg. bsIcon="star"
-    bsIcon: PropTypes.string,
-
     // adds an animated spinner icon. overrides bsIcon.
     showSpinner: PropTypes.bool,
 
@@ -93,33 +90,13 @@ class HeaderButton extends Component {
     }
   }
 
-  // add an icon to the button
-  renderIcon() {
-    const { bsIcon, showSpinner } = this.props;
+  // add a spinner to the button
+  renderSpinner() {
+    const { showSpinner } = this.props;
     if (showSpinner === true) {
       return (
         <Spinner />
       );
-    } else if (typeof bsIcon !== 'undefined') {
-      return (
-        <Glyphicon glyph={bsIcon} />
-      );
-    } else {
-      return false;
-    }
-  }
-
-  // add a space if there is an icon and text
-  renderSpace() {
-    const { children, bsIcon, showSpinner } = this.props;
-    if (typeof children !== 'undefined') {
-      if (typeof bsIcon !== 'undefined' || showSpinner === true) {
-        return (
-          <span className="iconSpacer">{' '}</span>
-        );
-      } else {
-        return false;
-      }
     } else {
       return false;
     }
@@ -128,7 +105,7 @@ class HeaderButton extends Component {
   render() {
     const { children, dropDown, id } = this.props;
     if (typeof dropDown !== 'undefined') {
-      let title = <span>{this.renderNotificationCounter()} {children} {this.renderSpace()} {this.renderIcon()}</span>;
+      let title = <span>{this.renderNotificationCounter()} {children}</span>;
       return (
         <DropdownButton title={title} id={id} noCaret
           className={this.getWrapperClass()}
@@ -155,8 +132,6 @@ class HeaderButton extends Component {
         >
           {this.renderNotificationCounter()}
           {children}
-          {this.renderSpace()}
-          {this.renderIcon()}
         </Button>
       );
     }

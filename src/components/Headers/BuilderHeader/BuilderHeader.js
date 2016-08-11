@@ -3,7 +3,7 @@ import connect from 'redux/utils/connect';
 import StackLogo from 'components/Logos/StackLogo';
 import { Grid, ButtonToolbar } from 'react-bootstrap';
 import HeaderButton from 'components/Buttons/HeaderButton/HeaderButton';
-import { FaBell } from 'react-icons/lib/fa';
+import { FaBell, FaEdit, FaPencil, FaPaperPlane, FaStar } from 'react-icons/lib/fa';
 import styles from './BuilderHeader.scss';
 import { goTo } from 'redux/modules/router';
 import {
@@ -68,17 +68,17 @@ class BuilderHeader extends Component {
             <StackLogo className={styles.logo} width="auto" height={38} logoStyle="white" />
           </div>
           <ButtonToolbar className={styles.leftToolbar}>
-            <HeaderButton defaultWidth={76} bsIcon="plus" style="formButton">
-              Create
+            <HeaderButton defaultWidth={76} style="headerButton">
+              Create <FaEdit />
             </HeaderButton>
-            <HeaderButton defaultWidth={76} bsIcon="pencil" style="headerButton">
-              Sign
+            <HeaderButton defaultWidth={76} style="headerButton">
+              Sign <FaPencil />
             </HeaderButton>
-            <HeaderButton defaultWidth={76} bsIcon="send" style="headerButton">
-              Send
+            <HeaderButton defaultWidth={76} style="headerButton">
+              Send <FaPaperPlane />
             </HeaderButton>
-            <HeaderButton defaultWidth={76} bsIcon="thumbs-up" style="headerButton">
-              Certify
+            <HeaderButton defaultWidth={76} style="headerButton">
+              Certify <FaStar />
             </HeaderButton>
           </ButtonToolbar>
           <ButtonToolbar className={styles.rightToolbar}>
