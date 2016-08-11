@@ -43,6 +43,7 @@ class UploadModal extends Component {
               fieldName="uploaded_document"
               method={method}
               maxFiles={1}
+              accept="application/pdf"
               onSuccess={this.handleUploadSuccess}
             />
           </div>

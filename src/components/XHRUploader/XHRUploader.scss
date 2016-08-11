@@ -55,6 +55,7 @@ $progressbar-bg-color: #e8e6e7;
 .removeButton {
   float: right;
   color: $dashboard-text-color;
+  line-height: 1;
   &:hover, &:active {
     color: darken($dashboard-text-color, 10%);
   }
