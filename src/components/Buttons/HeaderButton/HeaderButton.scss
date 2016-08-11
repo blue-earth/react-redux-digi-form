@@ -16,6 +16,9 @@ $button-size:       38px;
     box-shadow: none !important;
     padding: 1px;
   }
+  &.loading {
+    cursor: not-allowed;
+  }
   &:hover, &:focus {
     outline: none;
   }

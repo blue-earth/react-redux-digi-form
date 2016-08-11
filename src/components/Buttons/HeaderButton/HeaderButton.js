@@ -2,7 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Button, DropdownButton, MenuItem, Glyphicon } from 'react-bootstrap';
+import { Button, DropdownButton, MenuItem } from 'react-bootstrap';
 import classNames from 'classnames';
 import styles from './HeaderButton.scss';
 import Spinner from 'components/Spinner';
@@ -15,6 +15,9 @@ class HeaderButton extends Component {
 
     // disables the button if true
     isDisabled: PropTypes.bool,
+
+    // disables the button and adds a spinner icon
+    isLoading: PropTypes.bool,
 
     // text and any additional stuff such as profile image
     children: PropTypes.node,
@@ -31,9 +34,6 @@ class HeaderButton extends Component {
     // adds css min-width in pixels
     defaultWidth: PropTypes.number,
 
-    // adds an animated spinner icon. overrides bsIcon.
-    showSpinner: PropTypes.bool,
-
     // array of object with elements path, label, divider
     // divider should not have a label
     // will make this component render as a DropdownButton
@@ -41,7 +41,10 @@ class HeaderButton extends Component {
 
     // html id attribute.
     // this is required for dropdowns or it will throw an error
-    id: PropTypes.string
+    id: PropTypes.string,
+
+    // removes the caret from dropdown button
+    noCaret: PropTypes.bool
   };
 
   static defaultProps = {
@@ -50,27 +53,30 @@ class HeaderButton extends Component {
   };
 
   handleClick = (arg) => {
-    const { onClick } = this.props;
-    if (typeof onClick === 'function') onClick(arg);
+    const { onClick, isLoading } = this.props;
+    if (typeof onClick === 'function' && !isLoading) onClick(arg);
   }
 
   getWrapperClass() {
-    const { style, iconOnly } = this.props;
+    const { style, iconOnly, isLoading } = this.props;
     return classNames({
       [styles.headerButton]: style === 'headerButton',
       [styles.formButton]: style === 'formButton',
       [styles.defaultButton]: style === 'defaultButton',
-      [styles.iconOnly]: iconOnly === true
+      [styles.iconOnly]: iconOnly === true,
+      [styles.loading]: isLoading === true
     });
   }
 
   getOptionalParams() {
-    const { isDisabled, defaultWidth } = this.props;
+    const { isDisabled, defaultWidth, noCaret, dropDown } = this.props;
     var optionals = {};
     if (isDisabled) {
       optionals['disabled'] = true;
     }
-
+    if (noCaret && dropDown) {
+      optionals['noCaret'] = true;
+    }
     if (defaultWidth) {
       optionals['style'] = { minWidth: defaultWidth };
     }
@@ -92,8 +98,8 @@ class HeaderButton extends Component {
 
   // add a spinner to the button
   renderSpinner() {
-    const { showSpinner } = this.props;
-    if (showSpinner === true) {
+    const { isLoading } = this.props;
+    if (isLoading === true) {
       return (
         <Spinner />
       );
@@ -107,7 +113,7 @@ class HeaderButton extends Component {
     if (typeof dropDown !== 'undefined') {
       let title = <span>{this.renderNotificationCounter()} {children}</span>;
       return (
-        <DropdownButton title={title} id={id} noCaret
+        <DropdownButton title={title} id={id}
           className={this.getWrapperClass()}
           {...this.getOptionalParams()}
         >
@@ -131,6 +137,7 @@ class HeaderButton extends Component {
           {...this.getOptionalParams()}
         >
           {this.renderNotificationCounter()}
+          {this.renderSpinner()}
           {children}
         </Button>
       );
