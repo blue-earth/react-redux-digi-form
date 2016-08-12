@@ -45,7 +45,8 @@ class SelectButton extends Component {
 
   static defaultProps = {
     style: 'defaultButton',
-    id: 'id'
+    id: 'id',
+    label: ''
   };
 
   constructor(props) {
@@ -64,7 +65,7 @@ class SelectButton extends Component {
       }
     }
     this.setState({ selectedIndex: newIndex });
-    if (typeof onClick === 'function' && !isLoading) onClick(arg);
+    if (typeof onClick === 'function' && !isLoading) onClick(optionList[newIndex]);
   }
 
   getWrapperClass() {
