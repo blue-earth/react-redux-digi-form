@@ -7,6 +7,7 @@ $panel-border-color: #086DB6;
 .formBuilderContainer {
   min-height: 100%;
   padding: 10px;
+  color: $dashboard-text-color;
   @include media('>=md') {
     height: 100%;
   }

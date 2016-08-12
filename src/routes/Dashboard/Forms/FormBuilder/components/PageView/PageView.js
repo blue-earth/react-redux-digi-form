@@ -107,8 +107,8 @@ class PageView extends Component {
   }
 
   getMaxPageWidth = () => {
-    const { documents } = this.props;
-    return documents ? _.maxBy(documents, function (o) { return o.width; }).width : 100;
+    const { documents = [] } = this.props;
+    return documents.length > 0 ? _.maxBy(documents, o => o.width).width : 100;
   }
 
   renderDocuments() {

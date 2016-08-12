@@ -38,16 +38,16 @@ export const INIT_BUILDER_STATE = {
   questions: [],
   logics: [],
   documents: [
-    {
-      url: 'http://localhost:3000/doc_example1.jpg', // for temp purpose, should fetch from backend.
-      width: 1020,
-      height: 1441
-    },
-    {
-      url: 'http://localhost:3000/doc_example2.jpg', // for temp purpose, should fetch from backend.
-      width: 620,
-      height: 877
-    }
+    // {
+    //   url: 'http://localhost:3000/doc_example1.jpg', // for temp purpose, should fetch from backend.
+    //   width: 1020,
+    //   height: 1441
+    // },
+    // {
+    //   url: 'http://localhost:3000/doc_example2.jpg', // for temp purpose, should fetch from backend.
+    //   width: 620,
+    //   height: 877
+    // }
   ],
   formConfig: {},
   documentMapping: [],
@@ -107,18 +107,22 @@ export const requestForm = createAction(REQUEST_FORM);
 // ------------------------------------
 // Action: receiveForm
 // ------------------------------------
-export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
-  id: data.id,
-  questions: data.form_data.questions ? data.form_data.questions : [],
-  logics: data.form_data.logics ? data.form_data.logics : [],
-  documents: data.assets_urls.length ? data.assets_urls : INIT_BUILDER_STATE.documents,
-  documentMapping: data.document_mapping ? data.document_mapping : [],
-  formConfig: data.form_config,
-  title: data.title,
-  slug: data.slug,
-  isModified: false,
-  lastQuestionId: _.max(_.map(data.form_data.questions, 'id'))
-}));
+export const receiveForm = createAction(RECEIVE_FORM, (data) => {
+  const questions = data.form_data ? _.defaultTo(data.form_data.questions, []) : [];
+  const logics = data.form_data ? _.defaultTo(data.form_data.logics, []) : [];
+  return {
+    id: data.id,
+    questions,
+    logics,
+    documents: data.assets_urls ? data.assets_urls : [],
+    documentMapping: data.document_mapping ? data.document_mapping : [],
+    formConfig: data.form_config,
+    title: data.title,
+    slug: data.slug,
+    isModified: false,
+    lastQuestionId: _.max(_.map(questions, 'id'))
+  };
+});
 
 // ------------------------------------
 // Action: doneFetchingForm
@@ -443,7 +447,7 @@ const formBuilderReducer = handleActions({
     }),
   UPDATE_FORM_ID: (state, action) =>
     Object.assign({}, state, {
-      id: action.payload
+      id: parseInt(action.payload)
     }),
   SET_ACTIVE_INPUT_NAME: (state, action) =>
     Object.assign({}, state, {

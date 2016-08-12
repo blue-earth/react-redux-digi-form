@@ -1,0 +1,51 @@
+@import './mixins';
+@import './variables';
+
+$dashboard-modal-bg-color:        #f8f8f8;
+$dashboard-modal-footer-bg-color: #f0eeef;
+
+.uploadModal {
+  text-align: center;
+  padding: 0!important;
+  &:before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+  }
+}
+.uploadModalDialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+  @include media('>=sm') {
+    max-width: 450px;
+  }
+}
+.modalBody {
+  background-color: $dashboard-modal-bg-color;
+}
+.modalFooter {
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: $dashboard-modal-footer-bg-color;
+}
+.modalTitle {
+  font-family: 'roble_altregular';
+  font-size: 18px;
+  text-align: center;
+  color: $dashboard-text-color;
+}
+
+.uploaderWrapper {
+  padding: 15px;
+}
+
+:global {
+  .modal-content {
+    overflow: hidden;
+  }
+}

@@ -2,11 +2,12 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import { formsUrl } from 'helpers/urlHelper';
+import classNames from 'classnames';
 import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
 import QuestionEditView from '../QuestionEditView/QuestionEditView';
-import classNames from 'classnames';
-import { formsUrl } from 'helpers/urlHelper';
+import UploadModal from '../UploadModal';
 import styles from './FormBuilder.scss';
 
 class FormBuilder extends Component {
@@ -156,12 +157,6 @@ class FormBuilder extends Component {
   };
 
   componentWillMount() {
-    const { newForm, fetchForm, params: { id } } = this.props;
-    if (id) {
-      fetchForm(id);
-    } else {
-      newForm();
-    }
   }
 
   componentWillReceiveProps(props) {
@@ -169,11 +164,28 @@ class FormBuilder extends Component {
   }
 
   componentDidMount() {
+    const { newForm, fetchForm, params: { id }, show } = this.props;
+    if (id) {
+      fetchForm(id);
+    } else {
+      newForm();
+      show('uploadModal');
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { id, goTo } = this.props;
-    id && prevProps.id !== id && goTo(formsUrl(`/${id}/edit`));
+    const { id, goTo, params, fetchForm, documents, show, isFetching } = this.props;
+
+    // If it was redirected from forms/new, fetchForm again.
+    params.id && !prevProps.params.id && !id && fetchForm(params.id);
+
+    // If it was in forms/new and received id from Upload modal, redirects to {:formId}/edit
+    id && !params.id && goTo(formsUrl(`/${id}/edit`));
+
+    // If no document image loaded, show Upload modal.
+    if (id && documents.length === 0) {
+      show('uploadModal', { formId: id });
+    }
   }
 
   resetActiveInputName = () => {
@@ -202,6 +214,7 @@ class FormBuilder extends Component {
         <div className={rightPanelClass}>
           <PageView {...this.props} />
         </div>
+        <UploadModal {...this.props} />
       </div>
     );
   }
