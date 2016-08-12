@@ -4,16 +4,16 @@ import React, {
 } from 'react';
 import {
   AuthorHeaderCell,
-  ProgressHeaderCell,
+  // ProgressHeaderCell,
   StatusHeaderCell,
   ActionsHeaderCell,
-  ContactInfoCell,
+  // ContactInfoCell,
   DateCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
+import SubmissionsFilter from './SubmissionsFilter';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
-
 import styles from './SubmissionsListView.scss';
 
 class SubmissionsListView extends Component {
@@ -110,15 +110,6 @@ class SubmissionsListView extends Component {
         customHeaderComponent: StatusHeaderCell,
         cssClassName: styles.columnStatus
       },
-      // {
-      //   columnName: 'progress',
-      //   order: 3,
-      //   locked: false,
-      //   visible: true,
-      //   displayName: 'Progress',
-      //   customHeaderComponent: ProgressHeaderCell,
-      //   cssClassName: styles.columnProgress
-      // },
       {
         columnName: 'completion_percent',
         order: 4,
@@ -144,34 +135,15 @@ class SubmissionsListView extends Component {
         displayName: 'Channel',
         cssClassName: styles.columnChanel
       },
-      // {
-      //   columnName: 'created',
-      //   order: 7,
-      //   locked: false,
-      //   visible: true,
-      //   displayName: 'Created',
-      //   cssClassName: styles.columnCreated,
-      //   customComponent: DateCell
-      // },
-      //
-      // {
-      //   columnName: 'duration_seconds',
-      //   order: 11,
-      //   locked: false,
-      //   visible: true,
-      //   displayName: 'Time taken',
-      //   cssClassName: styles.columnDuration
-      // },
-      // {
-      //   columnName: 'contact_info',
-      //   order: 12,
-      //   locked: false,
-      //   visible: true,
-      //   sortable: false,
-      //   displayName: 'Contact Info',
-      //   customComponent: ContactInfoCell,
-      //   cssClassName: styles.columnContactInfo
-      // },
+      {
+        columnName: 'created',
+        order: 7,
+        locked: false,
+        visible: true,
+        displayName: 'Created',
+        cssClassName: styles.columnCreated,
+        customComponent: DateCell
+      },
       {
         columnName: 'actions',
         locked: true,
@@ -181,6 +153,7 @@ class SubmissionsListView extends Component {
         customComponent: ActionsCell,
         selectedItems,
         toggleSelectItem,
+        cssClassName: styles.columnActions,
         customHeaderComponentProps: {
           selectAllItems,
           isAllSelected: submissions.length === selectedItems.length
@@ -213,14 +186,24 @@ class SubmissionsListView extends Component {
         Pagination={Pagination}
         initialSort="response_id"
         isFetching={isFetching}
+        showFilter
+        useCustomFilterComponent
+        customFilterComponent={SubmissionsFilter}
+        showSettings
       />
     );
   }
+
+  /* TODO: the SubmissionsFilter component is currently
+  in render() because filters aren't rendered in griddle
+  unless there is data in the table
+  */
 
   render() {
     return (
       <div className={styles.submissionsList}>
         <div className={styles.submissionsListInner}>
+          <SubmissionsFilter />
           {this.renderSubmissionsList()}
         </div>
       </div>
