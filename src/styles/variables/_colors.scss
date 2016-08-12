@@ -24,11 +24,11 @@ $button-default-bg-start: #fff;
 $button-default-bg-end: lighten($grey, 15%);
 
 $button-header-color: #fff;
-$button-header-bg-color: $orange;
+$button-header-bg-color: darken($blue, 13%);
 
 // dashboard tabs component
 $dashtabs-color: $grey;
-$dashtabs-active-color: $darkblue;
+$dashtabs-active-color: $blue;
 $dashtabs-active-border-color: $blue;
 
 $table-header-bg-color: #f4f8fb;

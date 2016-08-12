@@ -69,16 +69,16 @@ class BuilderHeader extends Component {
           </div>
           <ButtonToolbar className={styles.leftToolbar}>
             <HeaderButton defaultWidth={76} style="headerButton">
-              Create <FaEdit />
+              <FaEdit /> Create
             </HeaderButton>
             <HeaderButton defaultWidth={76} style="headerButton">
-              Sign <FaPencil />
+              <FaPencil /> Sign
             </HeaderButton>
             <HeaderButton defaultWidth={76} style="headerButton">
-              Send <FaPaperPlane />
+              <FaPaperPlane /> Send
             </HeaderButton>
             <HeaderButton defaultWidth={76} style="headerButton">
-              Certify <FaStar />
+              <FaStar /> Certify
             </HeaderButton>
           </ButtonToolbar>
           <ButtonToolbar className={styles.rightToolbar}>

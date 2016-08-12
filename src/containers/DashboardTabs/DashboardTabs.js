@@ -42,7 +42,8 @@ class DashboardTabs extends Component {
     return [
       {
         path: submissionsPath,
-        label: 'Submissions'
+        label: 'Submissions',
+        icon: <MdHome size={16} style={{'verticalAlign': 'text-top'}} />
       },
       {
         path: formsPath,
@@ -73,7 +74,6 @@ class DashboardTabs extends Component {
     return (
       <Navbar fluid className={styles.dashboardTabs}>
         <Navbar.Header>
-          <a className="homelink" onClick={this.onClickHome}><MdHome size={30} /></a>
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
@@ -82,7 +82,7 @@ class DashboardTabs extends Component {
               this.navItems.map((navItem) => {
                 return (
                   <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
-                    {navItem.label}
+                    {navItem.icon} {navItem.label}
                   </NavItem>
                 );
               })
