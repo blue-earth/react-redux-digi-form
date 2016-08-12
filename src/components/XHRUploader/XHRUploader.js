@@ -1,13 +1,20 @@
 import React from 'react';
-import { FaCloudUpload, FaFileTextO, FaClose } from 'react-icons/lib/fa';
+import { FaCloudUpload, FaFileTextO, FaClose, FaSpinner } from 'react-icons/lib/fa';
 import classNames from 'classnames';
 import getCsrfToken from 'redux/utils/csrf';
 import styles from './XHRUploader.scss';
+import _ from 'lodash';
 
 const fileSizeWithUnit = (fileSize) =>
   fileSize < 1024 * 1000
   ? `${(fileSize / 1024).toFixed(1)}kb`
   : `${(fileSize / (1024 * 1024)).toFixed(1)}MB`;
+
+const XHR_INIT = 'XHR_INIT';
+const XHR_SUCCESS = 'XHR_SUCCESS';
+const XHR_UPLOADING = 'XHR_UPLOADING';
+const XHR_WAITING = 'XHR_WAITING';
+const XHR_FAIL = 'XHR_FAIL';
 
 export default class XHRUploader extends React.Component {
 
@@ -17,7 +24,9 @@ export default class XHRUploader extends React.Component {
     fieldName: React.PropTypes.string,
     dropzoneLabel: React.PropTypes.string,
     method: React.PropTypes.string,
+    onStart: React.PropTypes.func,
     onSuccess: React.PropTypes.func,
+    onFail: React.PropTypes.func,
     onCancel: React.PropTypes.func
   };
 
@@ -26,7 +35,9 @@ export default class XHRUploader extends React.Component {
     fieldName: 'datafile',
     dropzoneLabel: 'Drag and drop your files here or pick them from your computer',
     method: 'POST',
+    onStart: () => {},
     onSuccess: () => {},
+    onFail: () => {},
     onCancel: () => {}
   };
 
@@ -40,30 +51,30 @@ export default class XHRUploader extends React.Component {
     this.xhr = null;
   }
 
-  onClick = () => {
+  handleClick = () => {
     this.refs.fileInput.click();
   }
 
-  onFileSelect = (event) => {
+  handleFileSelect = (event) => {
     const item = this.fileToItem(this.refs.fileInput.files[0]);
     this.setState({ item }, () => {
       this.upload();
     });
   }
 
-  onDragEnter = (event) => {
+  handleDragEnter = (event) => {
     event.preventDefault();
     this.activeDrag += 1;
     this.setState({isDragging: this.activeDrag > 0});
   }
 
-  onDragOver = (event) => {
+  handleDragOver = (event) => {
     event.preventDefault();
     event.stopPropagation();
     return false;
   }
 
-  onDragLeave = (event) => {
+  handleDragLeave = (event) => {
     event.preventDefault();
     this.activeDrag -= 1;
     if (this.activeDrag === 0) {
@@ -71,7 +82,7 @@ export default class XHRUploader extends React.Component {
     }
   }
 
-  onDrop = (event) => {
+  handleDrop = (event) => {
     const { accept } = this.props;
     event.preventDefault();
     this.activeDrag = 0;
@@ -89,23 +100,33 @@ export default class XHRUploader extends React.Component {
     }
   }
 
-  onUploadComplete = () => {
+  handleUploadComplete = (event) => {
     const { item } = this.state;
     const updatedItem = Object.assign({}, item, {
       progress: 100,
-      completed: false
+      status: XHR_WAITING
     });
     this.setState({ item: updatedItem });
   }
 
-  onUploadResponse = (response) => {
-    const { onSuccess } = this.props;
+  handleUploadResponse = (event) => {
+    const { onSuccess, onFail } = this.props;
     const { item } = this.state;
-    const updatedItem = Object.assign({}, item, {
-      completed: true
-    });
-    this.setState({ item: updatedItem });
-    onSuccess(response);
+    if (_.inRange(event.target.status, 200, 206)) {
+      this.setState({
+        item: Object.assign({}, item, {
+          status: XHR_SUCCESS
+        })
+      });
+      onSuccess(JSON.parse(event.target.response));
+    } else {
+      this.setState({
+        item: Object.assign({}, item, {
+          status: XHR_FAIL
+        })
+      });
+      onFail(JSON.parse(event.target.response));
+    }
   }
 
   updateFileProgress(progress) {
@@ -126,36 +147,39 @@ export default class XHRUploader extends React.Component {
 
   upload() {
     const { item } = this.state;
+    const { method, onStart } = this.props;
     if (item) {
+      onStart();
       const file = item.file;
       const formData = new FormData();
       const xhr = new XMLHttpRequest();
       xhr.withCredentials = true;
       formData.append(this.props.fieldName, file, file.name);
 
-      xhr.onload = (event) => {
-        this.onUploadResponse(event.target.response);
-      };
+      xhr.onload = this.handleUploadResponse;
 
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
           this.updateFileProgress((event.loaded / event.total) * 100);
         }
       };
-      xhr.upload.onload = (event) => {
-        this.onUploadComplete();
-      };
+      xhr.upload.onload = this.handleUploadComplete;
 
-      xhr.open('POST', this.props.url, true);
+      xhr.open(method, this.props.url, true);
       xhr.setRequestHeader('X-CSRFToken', getCsrfToken());
       xhr.setRequestHeader('Accept', 'application/json');
       xhr.send(formData);
       this.xhr = xhr;
+      this.setState({
+        item: Object.assign({}, item, {
+          status: XHR_UPLOADING
+        })
+      });
     }
   }
 
   fileToItem(file) {
-    return {file, progress: 0, completed: false};
+    return {file, progress: 0, status: XHR_INIT};
   }
 
   renderDropTarget() {
@@ -168,11 +192,11 @@ export default class XHRUploader extends React.Component {
     });
     return (
       <div ref="dropTarget" className={dropTargetStyle}
-        onClick={this.onClick}
-        onDragEnter={this.onDragEnter}
-        onDragOver={this.onDragOver}
-        onDragLeave={this.onDragLeave}
-        onDrop={this.onDrop}
+        onClick={this.handleClick}
+        onDragEnter={this.handleDragEnter}
+        onDragOver={this.handleDragOver}
+        onDragLeave={this.handleDragLeave}
+        onDrop={this.handleDrop}
       >
         <div className={styles.placeHolder}>
           <div className="text-center">
@@ -212,7 +236,7 @@ export default class XHRUploader extends React.Component {
               <FaClose />
             </a>
           </div>
-          {!item.completed && item.progress < 100 &&
+          {item.status === XHR_UPLOADING &&
             <div>
               <div className={styles.progressBar}>
                 <div className={styles.progress}
@@ -232,8 +256,12 @@ export default class XHRUploader extends React.Component {
               </div>
             </div>
           }
-          {!item.completed && item.progress === 100 &&
+          {item.status === XHR_WAITING &&
             <div className={styles.fileBottomSection}>
+              <span className={styles.spin}>
+                <FaSpinner />
+              </span>
+              {' '}
               Processing uploaded file ...
             </div>
           }
@@ -248,7 +276,7 @@ export default class XHRUploader extends React.Component {
         type="file"
         ref="fileInput"
         accept={this.props.accept}
-        onChange={this.onFileSelect}
+        onChange={this.handleFileSelect}
       />
     );
   }

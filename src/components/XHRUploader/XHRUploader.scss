@@ -95,3 +95,30 @@ $progressbar-bg-color: #e8e6e7;
   font-weight: 600;
   color: $dashboard-text-color;
 }
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+.spin {
+  animation: spin 2s infinite linear;
+  display: inline-block;
+  line-height: 1;
+}
