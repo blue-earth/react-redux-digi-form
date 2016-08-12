@@ -174,10 +174,18 @@ class FormBuilder extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { id, goTo, params, fetchForm } = this.props;
-    console.log(prevProps.params, this.props.params);
+    const { id, goTo, params, fetchForm, documents, show, isFetching } = this.props;
+
+    // If it was redirected from forms/new, fetchForm again.
     params.id && !prevProps.params.id && !id && fetchForm(params.id);
+
+    // If it was in forms/new and received id from Upload modal, redirects to {:formId}/edit
     id && !params.id && goTo(formsUrl(`/${id}/edit`));
+
+    // If no document image loaded, show Upload modal.
+    if (id && documents.length === 0) {
+      show('uploadModal', { formId: id });
+    }
   }
 
   resetActiveInputName = () => {

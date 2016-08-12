@@ -38,16 +38,16 @@ export const INIT_BUILDER_STATE = {
   questions: [],
   logics: [],
   documents: [
-    {
-      url: 'http://localhost:3000/doc_example1.jpg', // for temp purpose, should fetch from backend.
-      width: 1020,
-      height: 1441
-    },
-    {
-      url: 'http://localhost:3000/doc_example2.jpg', // for temp purpose, should fetch from backend.
-      width: 620,
-      height: 877
-    }
+    // {
+    //   url: 'http://localhost:3000/doc_example1.jpg', // for temp purpose, should fetch from backend.
+    //   width: 1020,
+    //   height: 1441
+    // },
+    // {
+    //   url: 'http://localhost:3000/doc_example2.jpg', // for temp purpose, should fetch from backend.
+    //   width: 620,
+    //   height: 877
+    // }
   ],
   formConfig: {},
   documentMapping: [],
@@ -114,7 +114,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
     id: data.id,
     questions,
     logics,
-    documents: data.assets_urls.length ? data.assets_urls : INIT_BUILDER_STATE.documents,
+    documents: data.assets_urls ? data.assets_urls : [],
     documentMapping: data.document_mapping ? data.document_mapping : [],
     formConfig: data.form_config,
     title: data.title,
