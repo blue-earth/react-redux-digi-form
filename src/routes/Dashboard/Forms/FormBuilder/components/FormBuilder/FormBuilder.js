@@ -174,7 +174,7 @@ class FormBuilder extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { id, goTo, params, fetchForm, documents, show, isFetching } = this.props;
+    const { id, goTo, params, fetchForm, documents, show } = this.props;
 
     // If it was redirected from forms/new, fetchForm again.
     params.id && !prevProps.params.id && !id && fetchForm(params.id);
