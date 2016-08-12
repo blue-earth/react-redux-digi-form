@@ -70,6 +70,9 @@ $button-size:       38px;
       outline: none;
     }
   }
+  svg {
+    fill: $text-light-color;
+  }
 }
 
 .defaultButton {

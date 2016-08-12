@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import connect from 'redux/utils/connect';
 import StackLogo from 'components/Logos/StackLogo';
 import { Grid, ButtonToolbar } from 'react-bootstrap';
-import HeaderButton from 'components/Buttons/HeaderButton/HeaderButton';
+import HeaderButton from 'components/Buttons/DashButtons/HeaderButton';
 import { FaBell, FaEdit, FaPencil, FaPaperPlane, FaStar } from 'react-icons/lib/fa';
 import styles from './BuilderHeader.scss';
 import { goTo } from 'redux/modules/router';
@@ -34,27 +34,32 @@ class BuilderHeader extends Component {
   get profileDropdown() {
     return [
       {
-        path: submissionsPath,
+        key: submissionsPath,
+        eventKey: submissionsPath,
         label: 'Submissions'
       },
       {
-        path: formsPath,
+        key: formsPath,
+        eventKey: formsPath,
         label: 'Forms'
       },
       {
-        path: documentsPath,
+        key: documentsPath,
+        eventKey: documentsPath,
         label: 'Documents'
       },
       {
-        path: ' ',
+        key: '1',
         divider: true
       },
       {
-        path: usersPath,
+        key: usersPath,
+        eventKey: usersPath,
         label: 'Users'
       },
       {
-        path: settingsPath,
+        key: settingsPath,
+        eventKey: settingsPath,
         label: 'Settings'
       }
     ];

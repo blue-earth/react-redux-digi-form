@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import { Button, DropdownButton, MenuItem } from 'react-bootstrap';
 import classNames from 'classnames';
-import styles from './HeaderButton.scss';
+import styles from './DashButtons.scss';
 import Spinner from 'components/Spinner';
 
 class HeaderButton extends Component {
@@ -34,8 +34,13 @@ class HeaderButton extends Component {
     // adds css min-width in pixels
     defaultWidth: PropTypes.number,
 
-    // array of object with elements path, label, divider
-    // divider should not have a label
+    /* array of objects with elements
+    key (string), eventKey (string), label (string), divider (bool)
+    divider creates a horizontal line
+    eg.
+    [{key: 'keystring', eventKey: 'keystring', label: 'something'},
+    {key: 'keystring', divider: true}]
+    */
     // will make this component render as a DropdownButton
     dropDown: PropTypes.array,
 
@@ -126,7 +131,7 @@ class HeaderButton extends Component {
           {
             dropDown.map((navItem) => {
               return (
-                <MenuItem key={navItem.path} eventKey={navItem.path}
+                <MenuItem key={navItem.key} eventKey={navItem.eventKey}
                   onSelect={this.handleClick} divider={navItem.divider}
                 >
                   {navItem.label}
