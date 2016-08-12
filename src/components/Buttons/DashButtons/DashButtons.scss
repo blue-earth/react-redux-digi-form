@@ -78,9 +78,7 @@ $button-size:       38px;
 .defaultButton {
   @include background-gradient($button-default-bg-start, $button-default-bg-end);
   color: $button-default-color;
-  font-size: 13px;
-  font-weight: 300;
-  letter-spacing: 1px;
+  font-size: 12px;
   line-height: 1;
   &:hover, &:focus {
     opacity: 1;
