@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
 import QuestionEditView from '../QuestionEditView/QuestionEditView';
-import UploadModal from '../UploadModal/UploadModal';
+import UploadModal from '../UploadModal';
 import styles from './FormBuilder.scss';
 
 class FormBuilder extends Component {
@@ -174,8 +174,10 @@ class FormBuilder extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { id, goTo } = this.props;
-    id && prevProps.id !== id && goTo(formsUrl(`/${id}/edit`));
+    const { id, goTo, params, fetchForm } = this.props;
+    console.log(prevProps.params, this.props.params);
+    params.id && !prevProps.params.id && !id && fetchForm(params.id);
+    id && !params.id && goTo(formsUrl(`/${id}/edit`));
   }
 
   resetActiveInputName = () => {
@@ -204,7 +206,7 @@ class FormBuilder extends Component {
         <div className={rightPanelClass}>
           <PageView {...this.props} />
         </div>
-        <UploadModal />
+        <UploadModal {...this.props} />
       </div>
     );
   }

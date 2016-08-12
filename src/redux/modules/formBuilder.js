@@ -107,18 +107,22 @@ export const requestForm = createAction(REQUEST_FORM);
 // ------------------------------------
 // Action: receiveForm
 // ------------------------------------
-export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
-  id: data.id,
-  questions: data.form_data.questions ? data.form_data.questions : [],
-  logics: data.form_data.logics ? data.form_data.logics : [],
-  documents: data.assets_urls.length ? data.assets_urls : INIT_BUILDER_STATE.documents,
-  documentMapping: data.document_mapping ? data.document_mapping : [],
-  formConfig: data.form_config,
-  title: data.title,
-  slug: data.slug,
-  isModified: false,
-  lastQuestionId: _.max(_.map(data.form_data.questions, 'id'))
-}));
+export const receiveForm = createAction(RECEIVE_FORM, (data) => {
+  const questions = data.form_data ? _.defaultTo(data.form_data.questions, []) : [];
+  const logics = data.form_data ? _.defaultTo(data.form_data.logics, []) : [];
+  return {
+    id: data.id,
+    questions,
+    logics,
+    documents: data.assets_urls.length ? data.assets_urls : INIT_BUILDER_STATE.documents,
+    documentMapping: data.document_mapping ? data.document_mapping : [],
+    formConfig: data.form_config,
+    title: data.title,
+    slug: data.slug,
+    isModified: false,
+    lastQuestionId: _.max(_.map(questions, 'id'))
+  };
+});
 
 // ------------------------------------
 // Action: doneFetchingForm
