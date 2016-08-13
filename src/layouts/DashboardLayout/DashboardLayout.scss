@@ -3,12 +3,10 @@
 
 .dashboard {
   height: 100%;
+  background-color: $dashboard-bg-color;
 }
 
 .contentWrapper {
-  @include media('>=md') {
-    height: calc(100% - 96px);
-  }
-  background-color: $dashboard-bg-color;
   padding: 30px 0 50px;
+  height: calc(100% - #{$dashboard-header-height + $dashboard-tabs-height});
 }

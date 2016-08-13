@@ -3,9 +3,10 @@
 
 .header {
   padding: 16px 0;
-  background-color: $builderheader-bg-color;
+  background-color: $dashboard-header-bg-color;
   z-index: 400;
   position: relative;
+  height: $dashboard-header-height;
   @include clearfix;
 }
 

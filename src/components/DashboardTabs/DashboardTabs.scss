@@ -7,7 +7,7 @@
   border-bottom: 1px solid lighten($blue, 40%);
   @include border-radius(0);
   margin-bottom: 0;
-  min-height: auto;
+  height: $dashboard-tabs-height;
   font-size: 13px;
   font-family: "roble_alt_boldbold";
 }

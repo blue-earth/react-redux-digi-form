@@ -7,7 +7,6 @@ $green: #65b82d;
 $red: #d45644;
 
 $header-bg-color: $blue;
-$builderheader-bg-color: $blue;
 
 $text-color: $darkblue;
 $text-dark-color:   #333;
@@ -15,6 +14,11 @@ $text-light-color:  #79899f;
 
 // orange highlight
 $highlight-color: $orange;
+
+// dashboard layout color
+$dashboard-header-bg-color: $blue;
+$dashboard-bg-color: 		$paleblue;
+$dashboard-text-color:      #7b7b7b;
 
 // headerButton component
 $button-default-color: $darkblue;
@@ -51,7 +55,5 @@ $headerbutton-border-color: #68ADDB;
 $text-border-color:         #A9A9A9;
 $text-bg-color:             #F8F8F8;
 $text-hover-border-color:   #888;
-$dashboard-bg-color: $paleblue;
 
-$dashboard-text-color:      #7b7b7b;
 $question-edit-separator-color: #797979;

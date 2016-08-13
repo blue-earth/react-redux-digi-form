@@ -11,7 +11,7 @@ import {
   DateCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
-import SubmissionsFilter from './SubmissionsFilter';
+import SubmissionsFilter from '../SubmissionsFilter';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import styles from './SubmissionsListView.scss';

@@ -7,8 +7,6 @@ import {
   Nav,
   NavItem
 } from 'react-bootstrap';
-import connect from 'redux/utils/connect';
-import { goTo } from 'redux/modules/router';
 import {
   dashboardUrl,
   submissionsPath,
@@ -95,9 +93,3 @@ class DashboardTabs extends Component {
 }
 
 export default DashboardTabs;
-
-const mapActionCreators = {
-  goTo
-};
-
-export default connect(null, mapActionCreators)(DashboardTabs);
