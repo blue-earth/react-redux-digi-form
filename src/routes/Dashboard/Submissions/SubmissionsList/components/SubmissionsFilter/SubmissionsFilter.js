@@ -1,8 +1,8 @@
 import React, {
   Component
 } from 'react';
-import HeaderButton from 'components/Buttons/DashButtons/HeaderButton';
-import SelectButton from 'components/Buttons/DashButtons/SelectButton';
+import Button from 'components/Buttons/DashboardButtons/Button';
+import SelectButton from 'components/Buttons/DashboardButtons/SelectButton';
 import { ButtonToolbar } from 'react-bootstrap';
 import { FaRefresh, FaPlus } from 'react-icons/lib/fa';
 
@@ -57,8 +57,8 @@ class SubmissionsFilter extends Component {
     return (
       <div className="filter-container">
         <ButtonToolbar className="left">
-          <HeaderButton style="formButton"><FaRefresh /> Refresh</HeaderButton>
-          <HeaderButton style="formButton"><FaPlus /> Custom Column</HeaderButton>
+          <Button style="formButton"><FaRefresh /> Refresh</Button>
+          <Button style="formButton"><FaPlus /> Custom Column</Button>
         </ButtonToolbar>
         <ButtonToolbar className="right">
           <SelectButton optionList={this.typeOptions} label="Type" />

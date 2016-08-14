@@ -2,12 +2,16 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Button, DropdownButton, MenuItem } from 'react-bootstrap';
+import {
+  Button as BootstrapButton,
+  DropdownButton,
+  MenuItem
+} from 'react-bootstrap';
 import classNames from 'classnames';
-import styles from './DashButtons.scss';
+import styles from './DashboardButtons.scss';
 import Spinner from 'components/Spinner';
 
-class HeaderButton extends Component {
+class Button extends Component {
   static propTypes = {
 
     // click function, currently only takes 1 argument
@@ -143,17 +147,17 @@ class HeaderButton extends Component {
       );
     } else {
       return (
-        <Button type="button" onClick={this.handleClick}
+        <BootstrapButton type="button" onClick={this.handleClick}
           className={this.getWrapperClass()}
           {...this.getOptionalParams()}
         >
           {this.renderNotificationCounter()}
           {this.renderSpinner()}
           {children}
-        </Button>
+        </BootstrapButton>
       );
     }
   }
 }
 
-export default HeaderButton;
+export default Button;

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import StackLogo from 'components/Logos/StackLogo';
 import { Grid, ButtonToolbar } from 'react-bootstrap';
-import HeaderButton from 'components/Buttons/DashButtons/HeaderButton';
+import Button from 'components/Buttons/DashboardButtons/Button';
 import { FaBell, FaEdit, FaPencil, FaPaperPlane, FaStar } from 'react-icons/lib/fa';
 import styles from './DashboardHeader.scss';
 import {
@@ -71,31 +71,31 @@ export default class DashboardHeader extends Component {
             <StackLogo className={styles.logo} width="auto" height={38} logoStyle="white" />
           </div>
           <ButtonToolbar className={styles.leftToolbar}>
-            <HeaderButton defaultWidth={76} style="headerButton">
+            <Button defaultWidth={76} style="headerButton">
               <FaEdit /> Create
-            </HeaderButton>
-            <HeaderButton defaultWidth={76} style="headerButton">
+            </Button>
+            <Button defaultWidth={76} style="headerButton">
               <FaPencil /> Sign
-            </HeaderButton>
-            <HeaderButton defaultWidth={76} style="headerButton">
+            </Button>
+            <Button defaultWidth={76} style="headerButton">
               <FaPaperPlane /> Send
-            </HeaderButton>
-            <HeaderButton defaultWidth={76} style="headerButton">
+            </Button>
+            <Button defaultWidth={76} style="headerButton">
               <FaStar /> Certify
-            </HeaderButton>
+            </Button>
           </ButtonToolbar>
           <ButtonToolbar className={styles.rightToolbar}>
-            <HeaderButton style="headerButton" iconOnly noCaret pullRight
+            <Button style="headerButton" iconOnly noCaret pullRight
               dropDown={this.profileDropdown}
               onClick={this.handleNav}
               id="profile-menu"
             >
               <img src="http://localhost:3000/avatar.jpg" alt="" className={styles.profileImage} />
               <span className={styles.profileName}>{'JM'}</span>
-            </HeaderButton>
-            <HeaderButton style="headerButton" iconOnly notificationCounter={5}>
+            </Button>
+            <Button style="headerButton" iconOnly notificationCounter={5}>
               <FaBell size={24} />
-            </HeaderButton>
+            </Button>
           </ButtonToolbar>
         </Grid>
       </div>

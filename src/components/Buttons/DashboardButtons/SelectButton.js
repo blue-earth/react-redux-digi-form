@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 import classNames from 'classnames';
-import styles from './DashButtons.scss';
+import styles from './DashboardButtons.scss';
 import Spinner from 'components/Spinner';
 
 class SelectButton extends Component {

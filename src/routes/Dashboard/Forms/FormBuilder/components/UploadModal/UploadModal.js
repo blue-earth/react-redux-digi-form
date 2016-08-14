@@ -7,7 +7,7 @@ import {
 } from 'react-bootstrap';
 import { formsUrl } from 'helpers/urlHelper';
 import { connectModal } from 'redux-modal';
-import DashboardButton from 'components/Buttons/DashboardButton';
+import Button from 'components/Buttons/DashboardButtons/Button';
 import styles from './UploadModal.scss';
 import XHRUploader from 'components/XHRUploader/XHRUploader';
 
@@ -82,10 +82,10 @@ class UploadModal extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer className={styles.modalFooter}>
-          <DashboardButton isDisabled={buttonDisabled}
+          <Button isDisabled={buttonDisabled}
             onClick={this.handleCreate}>
             Create your form
-          </DashboardButton>
+          </Button>
         </Modal.Footer>
       </Modal>
     );
