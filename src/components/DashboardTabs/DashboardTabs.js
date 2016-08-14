@@ -7,21 +7,16 @@ import {
   Nav,
   NavItem
 } from 'react-bootstrap';
-import connect from 'redux/utils/connect';
-import { goTo } from 'redux/modules/router';
 import {
   dashboardUrl,
   submissionsPath,
-  sharingPath,
-  alertsPath,
-  analyticsPath,
   formsPath,
   documentsPath,
-  certificationPath,
   usersPath,
   settingsPath
 } from 'helpers/urlHelper';
 import styles from './DashboardTabs.scss';
+import { MdHome } from 'react-icons/lib/md';
 import _ from 'lodash';
 
 class DashboardTabs extends Component {
@@ -36,23 +31,17 @@ class DashboardTabs extends Component {
     goTo(dashboardUrl(navPath));
   }
 
+  onClickHome = () => {
+    const { goTo } = this.props;
+    goTo(dashboardUrl(submissionsPath));
+  }
+
   get navItems() {
     return [
       {
         path: submissionsPath,
-        label: 'Submissions'
-      },
-      {
-        path: sharingPath,
-        label: 'Sharing'
-      },
-      {
-        path: alertsPath,
-        label: 'Alerts'
-      },
-      {
-        path: analyticsPath,
-        label: 'Analytics'
+        label: 'Submissions',
+        icon: <MdHome size={16} style={{'verticalAlign': 'text-top'}} />
       },
       {
         path: formsPath,
@@ -61,10 +50,6 @@ class DashboardTabs extends Component {
       {
         path: documentsPath,
         label: 'Documents'
-      },
-      {
-        path: certificationPath,
-        label: 'Certification'
       },
       {
         path: usersPath,
@@ -90,12 +75,12 @@ class DashboardTabs extends Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse>
-          <Nav pullRight onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
+          <Nav onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
             {
               this.navItems.map((navItem) => {
                 return (
                   <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
-                    {navItem.label}
+                    {navItem.icon} {navItem.label}
                   </NavItem>
                 );
               })
@@ -108,9 +93,3 @@ class DashboardTabs extends Component {
 }
 
 export default DashboardTabs;
-
-const mapActionCreators = {
-  goTo
-};
-
-export default connect(null, mapActionCreators)(DashboardTabs);

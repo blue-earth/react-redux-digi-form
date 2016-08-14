@@ -2,26 +2,33 @@
 @import './variables';
 
 .header {
-  padding: 12px;
-  background-color: $builderheader-bg-color;
+  padding: 16px 0;
+  background-color: $dashboard-header-bg-color;
   z-index: 400;
   position: relative;
+  height: $dashboard-header-height;
   @include clearfix;
 }
 
 .logo {
-  position: absolute;
-  @include hcenter;
+  float: left;
+  /*position: absolute;
+  @include hcenter;*/
 }
 
 .leftToolbar {
   float: left;
+  padding: 0 20px;
 }
 
 .rightToolbar {
   float: right;
 }
 
+.profileImage {
+  @include border-radius(50%);
+  height: 100%;
+}
 .profileName {
   padding-left: 5px;
   padding-right: 10px;

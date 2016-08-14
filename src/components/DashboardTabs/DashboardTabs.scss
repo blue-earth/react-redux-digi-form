@@ -1,0 +1,41 @@
+@import './mixins';
+@import './variables';
+
+.dashboardTabs {
+  background-color: #fff;
+  border: none;
+  border-bottom: 1px solid lighten($blue, 40%);
+  @include border-radius(0);
+  margin-bottom: 0;
+  height: $dashboard-tabs-height;
+  font-size: 13px;
+  font-family: "roble_alt_boldbold";
+}
+
+:global {
+  .homelink {
+    float: left;
+    margin: 13px 15px 12px 0;
+    color: $blue;
+    cursor: pointer;
+    @media (max-width: 767px) {
+      margin-left: 15px;
+    }
+  }
+  .navItem {
+    padding-top: 19px;
+    margin-bottom: -1px;
+    a {
+      color: $dashtabs-color !important;
+      background: none !important;
+      padding: 0px 15px !important;
+      height: 37px;
+      @include transition(color .15s);
+    }
+    a:hover, a:focus,
+    &.active a {
+      color: $dashtabs-active-color !important;
+      border-bottom: 4px solid $dashtabs-active-border-color;
+    }
+  }
+}

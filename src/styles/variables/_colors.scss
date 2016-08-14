@@ -1,12 +1,45 @@
-$header-bg-color:           #f0f0f0;
-$builderheader-bg-color:    #3279BC;
+$blue: #3993d1;
+$darkblue: #2c3744;
+$paleblue: #f3faff;
+$orange: #ff8a00;
+$grey: #c0c3c9;
+$green: #65b82d;
+$red: #d45644;
 
-$text-color:                #868686;
-$text-dark-color:           #333;
-$text-light-color:          #999;
+$header-bg-color: $blue;
 
-$bg-color1:                 #fff;
-$bg-color2:                 #fafafa;
+$text-color: $darkblue;
+$text-dark-color:   #333;
+$text-light-color:  #79899f;
+
+// orange highlight
+$highlight-color: $orange;
+
+// dashboard layout color
+$dashboard-header-bg-color: $blue;
+$dashboard-bg-color: 		$paleblue;
+$dashboard-text-color:      #7b7b7b;
+
+// headerButton component
+$button-default-color: $darkblue;
+$button-default-border-color: $grey;
+$button-default-bg-color: lighten($grey, 15%);
+$button-default-bg-start: #fff;
+$button-default-bg-end: lighten($grey, 15%);
+
+$button-header-color: #fff;
+$button-header-bg-color: darken($blue, 13%);
+
+// dashboard tabs component
+$dashtabs-color: $grey;
+$dashtabs-active-color: $blue;
+$dashtabs-active-border-color: $blue;
+
+$table-header-bg-color: #f4f8fb;
+$table-border-color: #eaeff3;
+
+$bg-color1:         #fff;
+$bg-color2:         #fafafa;
 
 $border-color:              #e6ebed;
 
@@ -23,6 +56,4 @@ $text-border-color:         #A9A9A9;
 $text-bg-color:             #F8F8F8;
 $text-hover-border-color:   #888;
 
-$dashboard-text-color:      #7b7b7b;
-$dashboard-bg-color:        #4A9DD5;
 $question-edit-separator-color: #797979;

@@ -6,7 +6,7 @@ import {
   toggleSelectItem
 } from 'redux/modules/submissionsList';
 
-import SubmissionsListView from '../components/SubmissionsListView/SubmissionsListView';
+import SubmissionsListView from '../components/SubmissionsListView';
 
 /*  Object of action creators (can also be function that returns object).
     Keys will be passed as props to presentational components. Here we are

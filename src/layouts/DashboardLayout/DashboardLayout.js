@@ -2,8 +2,9 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import BuilderHeader from 'components/Headers/BuilderHeader';
-import DashboardTabs from 'containers/DashboardTabs/DashboardTabs';
+import { Grid } from 'react-bootstrap';
+import DashboardHeader from 'containers/Headers/DashboardHeaderContainer';
+import DashboardTabs from 'containers/DashboardTabsContainer';
 import styles from './DashboardLayout.scss';
 
 class DashboardLayout extends Component {
@@ -19,11 +20,11 @@ class DashboardLayout extends Component {
     } = this.props;
     return (
       <div className={styles.dashboard}>
-        <BuilderHeader />
+        <DashboardHeader />
         <DashboardTabs location={location} />
-        <div className={styles.contentWrapper}>
+        <Grid className={styles.contentWrapper}>
           {children}
-        </div>
+        </Grid>
       </div>
     );
   }

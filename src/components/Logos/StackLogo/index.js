@@ -39,6 +39,8 @@ class StackLogo extends Component {
     var logoPath;
     if (logoStyle === 'white') {
       logoPath = require('./Emondo-Logo-White.svg');
+    } else if (logoStyle === 'darkgrey') {
+      logoPath = require('./Emondo-Logo-Darkgrey.svg');
     } else {
       logoPath = require('./Emondo-Logo-Horizontal.svg');
     }

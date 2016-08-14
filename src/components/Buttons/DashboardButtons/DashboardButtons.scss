@@ -1,0 +1,111 @@
+@import './mixins';
+@import './variables';
+
+$button-size:       38px;
+
+.headerButton, .formButton, .defaultButton {
+  @include border-radius(4px);
+  @include transition(color .15s, background-color .15s);
+  cursor: pointer;
+  position: relative;
+  height: $button-size;
+  padding: 1px 12px;
+  &.iconOnly {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 1px;
+  }
+  &.loading {
+    cursor: not-allowed;
+  }
+  &:hover, &:focus {
+    outline: none;
+  }
+}
+
+.headerButton {
+  border: none;
+  background: $button-header-bg-color;
+  color: $button-header-color;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1;
+  font-family: "roble_alt_boldbold";
+  margin-left: 10px !important;
+  &:hover, &:focus {
+    opacity: 1;
+    background-color: darken($button-header-bg-color, 5%);
+    color: $button-header-color;
+  }
+  &[disabled] {
+    opacity: .5;
+  }
+  &:active {
+    &, &:hover, &:focus {
+      background-color: lighten($button-header-bg-color, 5%);
+      color: $button-header-color !important;
+      outline: none;
+    }
+  }
+}
+
+.formButton {
+  @include background-gradient($button-default-bg-start, $button-default-bg-end);
+  color: $button-default-color;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  line-height: 1;
+  font-family: "roble_alt_boldbold";
+  &:hover, &:focus {
+    opacity: 1;
+  }
+  &[disabled] {
+    opacity: .5;
+  }
+  &:active {
+    &, &:hover, &:focus {
+      outline: none;
+    }
+  }
+  svg {
+    fill: $text-light-color;
+  }
+}
+
+.defaultButton {
+  @include background-gradient($button-default-bg-start, $button-default-bg-end);
+  color: $button-default-color;
+  font-size: 12px;
+  line-height: 1;
+  &:hover, &:focus {
+    opacity: 1;
+  }
+  &[disabled] {
+    opacity: .5;
+  }
+  &:active {
+    &, &:hover, &:focus {
+      outline: none;
+    }
+  }
+}
+
+.notificationCounter {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  @include border-radius(50%);
+  border: none;
+  background-color: $highlight-color;
+  text-align: center;
+  color: #fff;
+}

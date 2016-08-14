@@ -16,6 +16,14 @@
   src: url(signature-fonts/MonsieurLaDoulaise-Regular.ttf) format("opentype");
 }
 
+/*
+ * Web Fonts from fontspring.com
+ *
+ * (c) 2010-2016 Fontspring
+ *
+ * Vendor:      Latinotype
+ * License URL: http://www.fontspring.com/licenses/latinotype/webfont
+ */
 @font-face {
     font-family: 'roble_alt_boldbold';
     src: url('roblealt_bold_macroman/RobleAltBold-webfont.eot');
