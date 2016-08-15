@@ -235,7 +235,6 @@ class DrawingBoard extends Component {
       const boundingBox = findItemById(documentMapping, id).bounding_box[0];
       if (!_.isEqual(boundingBox, newBoundingBox)) {
         setMappingInfo({
-          id,
           'bounding_box': [newBoundingBox]
         });
       }
@@ -286,7 +285,6 @@ class DrawingBoard extends Component {
       const boundingBox = findItemById(documentMapping, id).bounding_box[0];
       if (!_.isEqual(boundingBox, newBoundingBox)) {
         setMappingInfo({
-          id,
           'page_number': destPageNumber && destPageNumber,
           'bounding_box': [newBoundingBox]
         });
@@ -459,7 +457,6 @@ class DrawingBoard extends Component {
         minWidth={10}
         minHeight={10}
         metaData={{
-          id: mappingInfo.id,
           subId: 0
         }}
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
