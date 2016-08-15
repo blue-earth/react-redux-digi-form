@@ -56,7 +56,10 @@ class Button extends Component {
     noCaret: PropTypes.bool,
 
     // aligns a dropdown to the right of the button
-    pullRight: PropTypes.bool
+    pullRight: PropTypes.bool,
+
+    // block button
+    block: PropTypes.bool
   };
 
   static defaultProps = {
@@ -70,13 +73,14 @@ class Button extends Component {
   }
 
   getWrapperClass() {
-    const { style, iconOnly, isLoading } = this.props;
+    const { block, style, iconOnly, isLoading } = this.props;
     return classNames({
       [styles.headerButton]: style === 'headerButton',
       [styles.formButton]: style === 'formButton',
       [styles.defaultButton]: style === 'defaultButton',
       [styles.iconOnly]: iconOnly === true,
-      [styles.loading]: isLoading === true
+      [styles.loading]: isLoading === true,
+      [styles.block]: block === true
     });
   }
 
