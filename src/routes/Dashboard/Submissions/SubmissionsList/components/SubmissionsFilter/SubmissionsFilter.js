@@ -61,9 +61,9 @@ class SubmissionsFilter extends Component {
           <Button style="formButton"><FaPlus /> Custom Column</Button>
         </ButtonToolbar>
         <ButtonToolbar className="right">
-          <SelectButton optionList={this.typeOptions} label="Type" />
-          <SelectButton optionList={this.userOptions} label="User" />
-          <SelectButton optionList={this.timeOptions} />
+          <SelectButton style="formButton" optionList={this.typeOptions} label="Type" />
+          <SelectButton style="formButton" optionList={this.userOptions} label="User" />
+          <SelectButton style="formButton" optionList={this.timeOptions} />
         </ButtonToolbar>
       </div>
     );

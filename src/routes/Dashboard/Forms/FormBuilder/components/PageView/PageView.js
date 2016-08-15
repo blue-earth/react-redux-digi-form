@@ -4,17 +4,11 @@ import React, {
 } from 'react';
 import styles from './PageView.scss';
 import {
-  Button,
-  ButtonToolbar
+  Button
 } from 'react-bootstrap';
-import {
-  MdZoomIn,
-  MdZoomOut,
-  MdSettingsOverscan,
-  MdZoomOutMap
-} from 'react-icons/lib/md';
 import DrawingBoard from '../DrawingBoard/DrawingBoard';
 import _ from 'lodash';
+import { pageZoomPercent } from 'helpers/formBuilderHelper';
 
 class PageView extends Component {
 
@@ -133,16 +127,12 @@ class PageView extends Component {
   }
 
   renderToolBox() {
+    const { pageZoom } = this.props;
     return (
       <div className={styles.toolBox}>
-        <div className={styles.toolButton}>
-          <ButtonToolbar>
-            <Button onClick={this.handleClickZoomIn} bsSize="small"><MdZoomIn size={18} /></Button>
-            <Button onClick={this.handleClickZoomOut} bsSize="small"><MdZoomOut size={18} /></Button>
-            <Button onClick={this.handleClickFitWidth} bsSize="small"><MdSettingsOverscan size={18} /></Button>
-            <Button onClick={this.handleClickOriginalSize} bsSize="small"><MdZoomOutMap size={18} /></Button>
-          </ButtonToolbar>
-        </div>
+        <Button onClick={this.handleClickZoomOut} className={styles.zoomButton}>-</Button>
+        <div className={styles.zoomPercent}>{pageZoomPercent(pageZoom)}</div>
+        <Button onClick={this.handleClickZoomIn} className={styles.zoomButton}>+</Button>
       </div>
     );
   }

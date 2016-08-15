@@ -2,17 +2,14 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import {
-  Button,
-  ButtonToolbar
-} from 'react-bootstrap';
-import CancelConfirmModal from '../CancelConfirmModal/CancelConfirmModal';
-import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea/AnswerOutputArea';
-import Instruction from 'components/QuestionEditFields/Instruction/Instruction';
-import Description from 'components/QuestionEditFields/Description/Description';
-import LengthValidation from 'components/QuestionEditFields/LengthValidation/LengthValidation';
-import RangeValidation from 'components/QuestionEditFields/RangeValidation/RangeValidation';
-import RequiredValidation from 'components/QuestionEditFields/RequiredValidation/RequiredValidation';
+import Button from 'components/Buttons/DashboardButtons/Button';
+import CancelConfirmModal from '../CancelConfirmModal';
+import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
+import Instruction from 'components/QuestionEditFields/Instruction';
+import Description from 'components/QuestionEditFields/Description';
+import LengthValidation from 'components/QuestionEditFields/LengthValidation';
+import RangeValidation from 'components/QuestionEditFields/RangeValidation';
+import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
 import 'rc-switch/assets/index.css';
@@ -156,13 +153,11 @@ class QuestionEditView extends Component {
   renderTopActionButtons() {
     return (
       <div className={styles.topActionButtons}>
-        <ButtonToolbar className="pull-right">
-          <Button bsStyle="link" bsSize="xsmall" onClick={this.handlePreview}>Preview</Button>
-          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleDelete}>Delete</Button>
-          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleReset}>Reset</Button>
-          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleCancel}>Cancel</Button>
-          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleSave}>Save</Button>
-        </ButtonToolbar>
+        <Button bsStyle="link" bsSize="xsmall" onClick={this.handlePreview}>Preview</Button>
+        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleDelete}>Delete</Button>
+        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleReset}>Reset</Button>
+        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleCancel}>Cancel</Button>
+        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleSave}>Save</Button>
       </div>
     );
   }
@@ -177,12 +172,18 @@ class QuestionEditView extends Component {
 
   renderBottomActionButtons() {
     return (
-      <div className={styles.bottomActionButtons}>
-        <ButtonToolbar className="pull-right">
-          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleCancel}>Cancel</Button>
-          <Button bsStyle="link" bsSize="xsmall" onClick={this.handleSave}>Save</Button>
-        </ButtonToolbar>
-      </div>
+      <ul className={styles.bottomActionButtons}>
+        <li>
+          <Button onClick={this.handleSave} className={styles.saveButton}>
+            Save &amp; continue
+          </Button>
+        </li>
+        <li>
+          <Button onClick={this.handleCancel} style="linkButton">
+            Cancel
+          </Button>
+        </li>
+      </ul>
     );
   }
 
@@ -194,9 +195,7 @@ class QuestionEditView extends Component {
     });
     return (
       <div className={styles.questionEditView}>
-        {this.renderTopActionButtons()}
         {this.renderViewTitle()}
-        <hr className={styles.separator} />
         <Instruction {...componentProps} />
         <Description {...componentProps} />
         <AnswerOutputArea {...componentProps} />

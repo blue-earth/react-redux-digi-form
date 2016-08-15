@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import EditSection from '../EditSection/EditSection';
-import SectionTitle from '../SectionTitle/SectionTitle';
 import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
 import _ from 'lodash';
 import styles from './Instruction.scss';
@@ -27,10 +26,9 @@ class Instruction extends Component {
     const instruction = _.defaultTo(question.question_instruction, '');
     return (
       <EditSection>
-        <SectionTitle
-          title="Question" />
         <div className={styles.textEditorWrapper}>
           <QuestionRichTextEditor
+            title="Question"
             value={instruction}
             setValue={this.setInstruction}
             questions={questions}

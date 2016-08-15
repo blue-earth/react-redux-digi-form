@@ -20,13 +20,15 @@ $dashboard-header-bg-color: $blue;
 $dashboard-bg-color: 		$paleblue;
 $dashboard-text-color:      #7b7b7b;
 
-// headerButton component
+// defaultButton component
 $button-default-color: $darkblue;
 $button-default-border-color: $grey;
-$button-default-bg-color: lighten($grey, 15%);
+$button-default-bg-color: #d6d6d6;
+
 $button-default-bg-start: #fff;
 $button-default-bg-end: lighten($grey, 15%);
 
+// headerButton component
 $button-header-color: #fff;
 $button-header-bg-color: darken($blue, 13%);
 
@@ -56,4 +58,7 @@ $text-border-color:         #A9A9A9;
 $text-bg-color:             #F8F8F8;
 $text-hover-border-color:   #888;
 
-$question-edit-separator-color: #797979;
+$question-edit-separator-color: #dfdfdf;
+
+$panel-heading-bg-color: #dfdfdf;
+$panel-body-bg-color: #ededed;

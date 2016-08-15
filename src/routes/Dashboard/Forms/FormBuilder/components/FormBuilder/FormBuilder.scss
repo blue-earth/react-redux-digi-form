@@ -13,36 +13,12 @@ $panel-border-color: #086DB6;
 }
 
 .leftPanel {
-  background-color: $panel-bg-color;
-  border: 1px solid $panel-border-color;
-  overflow: auto;
-  @include transition(width .1s);
-  @include border-radius(2px);
   @include media('>=md') {
-    width: calc(50% - 2px);
-    float: left;
     height: 100%;
-  }
-  &.open {
-    @include media('>=md') {
-      width: calc(30% - 2px);
-    }
   }
 }
 .rightPanel {
-  background-color: $panel-bg-color;
-  border: 1px solid $panel-border-color;
-  padding: 15px;
-  @include transition(width .1s);
-  @include border-radius(2px);
   @include media('>=md') {
-    width: calc(50% - 2px);
-    float: right;
     height: 100%;
-  }
-  &.open {
-    @include media('>=md') {
-      width: calc(70% - 2px);
-    }
   }
 }

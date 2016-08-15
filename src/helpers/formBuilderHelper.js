@@ -212,3 +212,7 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
   }
   return helpersPos;
 };
+
+export const pageZoomPercent = (pageZoom) => {
+  return Math.round(pageZoom * 100) + '%';
+};

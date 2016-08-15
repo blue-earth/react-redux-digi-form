@@ -3,7 +3,7 @@
 
 $button-size:       38px;
 
-.headerButton, .formButton, .defaultButton {
+.headerButton, .formButton, .defaultButton, .linkButton {
   @include border-radius(4px);
   @include transition(color .15s, background-color .15s);
   cursor: pointer;
@@ -23,7 +23,7 @@ $button-size:       38px;
     display: block;
     width: 100%;
   }
-  &:hover, &:focus {
+  &:hover, &:focus, &:active:focus, &:active:hover {
     outline: none;
   }
 }
@@ -60,11 +60,10 @@ $button-size:       38px;
   color: $button-default-color;
   font-size: 13px;
   font-weight: 300;
-  letter-spacing: 1px;
   line-height: 1;
   font-family: "roble_alt_boldbold";
   &:hover, &:focus {
-    opacity: 1;
+    background-color: darken($button-default-bg-color, 5%);
   }
   &[disabled] {
     opacity: .5;
@@ -80,20 +79,36 @@ $button-size:       38px;
 }
 
 .defaultButton {
-  @include background-gradient($button-default-bg-start, $button-default-bg-end);
+  background-color: $button-default-bg-color;
   color: $button-default-color;
-  font-size: 12px;
+  font-family: "roble_alt_boldbold";
+  font-size: 13px;
   line-height: 1;
+  border: none !important;
   &:hover, &:focus {
-    opacity: 1;
+    background-color: darken($button-default-bg-color, 5%);
   }
   &[disabled] {
     opacity: .5;
+    background-color: $button-default-bg-color !important;
   }
   &:active {
     &, &:hover, &:focus {
       outline: none;
     }
+  }
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  &:hover, &:focus {
+    background-color: transparent;
+    text-decoration: underline;
+  }
+  &:active {
+    background-color: transparent !important;
+    @include box-shadow-custom(none);
   }
 }
 

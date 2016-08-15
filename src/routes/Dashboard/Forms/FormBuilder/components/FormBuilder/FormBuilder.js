@@ -2,6 +2,10 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import {
+  Row,
+  Col
+} from 'react-bootstrap';
 import { formsUrl } from 'helpers/urlHelper';
 import classNames from 'classnames';
 import ElementsListView from '../ElementsListView/ElementsListView';
@@ -204,18 +208,18 @@ class FormBuilder extends Component {
       [styles.open]: questionEditMode
     });
     return (
-      <div className={styles.formBuilderContainer}>
-        <div className={leftPanelClass}>
+      <Row className={styles.formBuilderContainer}>
+        <Col sm={4} className={leftPanelClass}>
           {questionEditMode
             ? <QuestionEditView {...this.props} />
             : <ElementsListView {...this.props} />
           }
-        </div>
-        <div className={rightPanelClass}>
+        </Col>
+        <Col sm={8} className={rightPanelClass}>
           <PageView {...this.props} />
-        </div>
+        </Col>
         <UploadModal {...this.props} />
-      </div>
+      </Row>
     );
   }
 }
