@@ -19,6 +19,10 @@ $button-size:       38px;
   &.loading {
     cursor: not-allowed;
   }
+  &.block {
+    display: block;
+    width: 100%;
+  }
   &:hover, &:focus {
     outline: none;
   }
