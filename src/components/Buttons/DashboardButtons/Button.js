@@ -26,11 +26,14 @@ class Button extends Component {
     // text and any additional stuff such as profile image
     children: PropTypes.node,
 
+    // className attribute
+    className: PropTypes.string,
+
     // adds a counter
     notificationCounter: PropTypes.number,
 
     // button style.
-    style: PropTypes.oneOf(['headerButton', 'formButton', 'defaultButton']),
+    style: PropTypes.oneOf(['headerButton', 'formButton', 'defaultButton', 'linkButton']),
 
     // removes background and border
     iconOnly: PropTypes.bool,
@@ -64,7 +67,8 @@ class Button extends Component {
 
   static defaultProps = {
     style: 'defaultButton',
-    id: 'id'
+    id: 'id',
+    className: ''
   };
 
   handleClick = (arg) => {
@@ -73,14 +77,13 @@ class Button extends Component {
   }
 
   getWrapperClass() {
-    const { block, style, iconOnly, isLoading } = this.props;
+    const { block, style, iconOnly, isLoading, className } = this.props;
     return classNames({
-      [styles.headerButton]: style === 'headerButton',
-      [styles.formButton]: style === 'formButton',
-      [styles.defaultButton]: style === 'defaultButton',
+      [styles[style]]: true,
       [styles.iconOnly]: iconOnly === true,
       [styles.loading]: isLoading === true,
-      [styles.block]: block === true
+      [styles.block]: block === true,
+      [className]: true
     });
   }
 

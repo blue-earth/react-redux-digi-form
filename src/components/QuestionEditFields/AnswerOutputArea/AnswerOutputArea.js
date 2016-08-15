@@ -6,6 +6,7 @@ import {
   Button,
   Col
 } from 'react-bootstrap';
+import { FaTrash } from 'react-icons/lib/fa';
 import EditSection from '../EditSection/EditSection';
 import EditRow from '../EditRow/EditRow';
 import SectionTitle from '../SectionTitle/SectionTitle';
@@ -31,9 +32,9 @@ class AnswerOutputArea extends Component {
               description="(Leave empty if not required)"
             />
           </Col>
-          <Col xs={6}>
-            <Button block bsSize="small" onClick={this.handleDeleteSelection}>
-              Delete all output selections
+          <Col xs={6} className="text-right">
+            <Button bsSize="small" onClick={this.handleDeleteSelection}>
+              <FaTrash />
             </Button>
           </Col>
         </EditRow>

@@ -120,7 +120,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
     title: data.title,
     slug: data.slug,
     isModified: false,
-    lastQuestionId: _.max(_.map(questions, 'id'))
+    lastQuestionId: _.defaultTo(_.max(_.map(questions, 'id')), 0)
   };
 });
 
@@ -350,7 +350,7 @@ export const setMappingInfo = createAction(SET_MAPPING_INFO);
 // ------------------------------------
 const _setMappingInfo = (state, action) => {
   const newMappingInfo = _.pick(action.payload, [
-    'id', 'page_number', 'bounding_box'
+    'page_number', 'bounding_box'
   ]);
   const { currentElement: { mappingInfo } } = state;
   return _updateCurrentElement(state, {

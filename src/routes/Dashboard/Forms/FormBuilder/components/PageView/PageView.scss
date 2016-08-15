@@ -1,12 +1,24 @@
 @import './mixins';
 @import './variables';
 
-$page-border-color: #797979;
-$page-toolbar-height: 32px;
+$page-border-color: #ddd;
+$page-bg-color: #ededed;
+
+$toolbutton-border-color: #dadada;
+$page-toolbar-bg-color: #f4f4f4;
+
 .pageView {
-  padding-top: $page-toolbar-height;
   height: 100%;
   position: relative;
+  @include border-radius(4px);
+  background-color: $page-bg-color;
+  padding: 15px;
+  &:hover {
+    .toolBox {
+      opacity: 1;
+      top: 30px;
+    }
+  }
 }
 
 .clientArea {
@@ -37,7 +49,7 @@ $page-toolbar-height: 32px;
   margin: 5px 0;
   border: 1px solid $page-border-color;
   position: relative;
-  @include box-shadow-custom(1px 1px 3px 0px rgba(0,0,0,0.6));
+  // @include box-shadow-custom(1px 1px 3px 0px rgba(0,0,0,0.6));
   &:first-child {
     margin-top: 0;
   }
@@ -52,13 +64,30 @@ $page-toolbar-height: 32px;
 }
 
 .toolBox {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: $page-toolbar-height;
-  position: absolute;
-}
-.toolButton {
   @include hcenter;
   top: 0;
+  background-color: $page-toolbar-bg-color;
+  padding: 10px;
+  position: absolute;
+  z-index: 200;
+  display: inline-block;
+  opacity: 0;
+  vertical-align: middle;
+  @include transition(all .15s);
+}
+.zoomPercent {
+  font-size: 14px;
+  display: inline-block;
+  margin: 0 20px;
+  vertical-align: middle;
+}
+.zoomButton {
+  @include border-radius(50%);
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  line-height: 20px;
+  text-align: center;
+  background-color: transparent;
+  border: 2px solid $toolbutton-border-color;
 }

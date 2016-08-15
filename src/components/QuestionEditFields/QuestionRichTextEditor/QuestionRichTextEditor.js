@@ -17,8 +17,10 @@ import {
 } from 'draft-js';
 import classNames from 'classnames';
 import {
-  MdKeyboardArrowDown
-} from 'react-icons/lib/md';
+  FaChain,
+  FaChevronDown
+} from 'react-icons/lib/fa';
+import SectionTitle from '../SectionTitle';
 import styles from './QuestionRichTextEditor.scss';
 
 function findAnswerEntities(contentBlock, callback) {
@@ -43,7 +45,8 @@ class QuestionRichTextEditor extends Component {
   static propTypes = {
     value: PropTypes.string.isRequired,
     setValue: PropTypes.func.isRequired,
-    questions: PropTypes.array.isRequired
+    questions: PropTypes.array.isRequired,
+    title: PropTypes.string.isRequired
   };
 
   constructor(props) {
@@ -86,15 +89,15 @@ class QuestionRichTextEditor extends Component {
     return false;
   }
 
+  handleInsertHyperLink = () => {
+    const { editorState } = this.state;
+    console.log(editorState.getCurrentContent().getBlockMap());
+  }
+
   handleValueChange = (editorState) => {
     this.setState({editorState});
     const { setValue } = this.props;
     setValue(editorState.getCurrentContent().getPlainText());
-  }
-
-  handleInsertHyperLink = () => {
-    const { editorState } = this.state;
-    console.log(editorState.getCurrentContent().getBlockMap());
   }
 
   handleAnswerSelect = (value) => {
@@ -144,26 +147,38 @@ class QuestionRichTextEditor extends Component {
   }
 
   renderToolbar() {
+    const { title } = this.props;
     return (
       <div className={styles.toolbar}>
-        <div className={styles.inputWidget}>
-          <Button block bsSize="xsmall" onClick={this.handleInsertHyperLink}>+ Insert Hyperlink</Button>
+        <div className={styles.titleWidget}>
+          <SectionTitle title={title} />
         </div>
         <div className={styles.inputWidget}>
           {this.renderAnswerDropdown()}
         </div>
-        <div className={styles.styleWidget}>
-          <Button bsSize="xsmall"
-            className={`${styles.squareButton} pull-left`}
-            onClick={this.onBoldClick}>
-            <b>B</b>
-          </Button>
-          <Button bsSize="xsmall"
-            className={`${styles.squareButton} pull-right`}
-            onClick={this.onItalicClick}>
-            <i>I</i>
-          </Button>
-        </div>
+        <ul className={styles.styleWidget}>
+          <li>
+            <Button bsSize="xsmall"
+              className={styles.squareButton}
+              onClick={this.handleInsertHyperLink}>
+              <FaChain />
+            </Button>
+          </li>
+          <li>
+            <Button bsSize="xsmall"
+              className={styles.squareButton}
+              onClick={this.onBoldClick}>
+              <b>B</b>
+            </Button>
+          </li>
+          <li>
+            <Button bsSize="xsmall"
+              className={styles.squareButton}
+              onClick={this.onItalicClick}>
+              <i>I</i>
+            </Button>
+          </li>
+        </ul>
       </div>
     );
   }
@@ -181,9 +196,9 @@ class QuestionRichTextEditor extends Component {
         onSelect={this.handleAnswerSelect}>
         <Button bsRole="toggle" block
           className={buttonClass}>
-          + Insert Answer
+          + Answer
           <span className="pull-right">
-            <MdKeyboardArrowDown size={16} />
+            <FaChevronDown size={8} />
           </span>
         </Button>
         <Dropdown.Menu>

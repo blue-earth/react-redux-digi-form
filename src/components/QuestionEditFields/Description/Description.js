@@ -9,7 +9,6 @@ import {
 import Switch from 'rc-switch';
 import _ from 'lodash';
 import EditSection from '../EditSection/EditSection';
-import SectionTitle from '../SectionTitle/SectionTitle';
 import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
 import styles from './Description.scss';
 
@@ -41,15 +40,13 @@ class Description extends Component {
     const isDescriptionVisible = typeof question.question_description !== 'undefined';
     return (
       <EditSection>
-        <SectionTitle
-          title="Question description"
-          popoverId="questionDescription" />
         <div className={styles.sectionSwitchWrapper}>
           <Switch onChange={this.toggleDescription} checked={isDescriptionVisible} />
         </div>
         <Collapse in={isDescriptionVisible}>
           <div className={styles.textEditorWrapper}>
             <QuestionRichTextEditor
+              title="Question description"
               value={description}
               setValue={this.setDescription}
               questions={questions}

@@ -3,13 +3,14 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  Accordion,
   Panel,
   Row,
-  Col,
-  Button
+  Col
 } from 'react-bootstrap';
+import { FaChevronDown } from 'react-icons/lib/fa';
+import Button from 'components/Buttons/DashboardButtons/Button';
 import _ from 'lodash';
+import classNames from 'classnames';
 import questionInputs, {
   questionInputGroups
 } from 'schemas/questionInputs';
@@ -39,6 +40,13 @@ class ElementsListView extends Component {
     setQuestionEditMode: PropTypes.func.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      panels: { 0: true }
+    };
+  }
+
   componentWillMount() {
 
   }
@@ -49,6 +57,14 @@ class ElementsListView extends Component {
 
   componentDidMount() {
 
+  }
+
+  handleHeaderClick = (key) => {
+    const { panels } = this.state;
+    const newValue = !_.defaultTo(panels[key], false);
+    this.setState({
+      panels: Object.assign({}, panels, { [key]: newValue })
+    });
   }
 
   handleElementClick(event, inputType) {
@@ -68,10 +84,12 @@ class ElementsListView extends Component {
         {
           elements.map((element, index) => {
             return (
-              <Col sm={4} className={styles.panelCol} key={index}>
+              <Col sm={6} className={styles.panelCol} key={index}>
                 <Button block active={activeInputName === element.name}
                   onClick={function (e) { that.handleElementClick(e, element.name); }}>
-                  {element.displayText}
+                  <span className={styles.inputTypeLabel}>
+                    {element.displayText}
+                  </span>
                 </Button>
               </Col>
             );
@@ -83,19 +101,29 @@ class ElementsListView extends Component {
 
   render() {
     const that = this;
-    var accordionItems = questionInputGroups.map((group, index) => {
+    var panelItems = questionInputGroups.map((group, index) => {
+      const expanded = _.defaultTo(this.state.panels[index], false);
+      const headerClass = classNames({
+        [styles.panelHeader]: true,
+        [styles.expanded]: expanded
+      });
       return (
-        <Panel header={group.displayText} key={index} eventKey={index}>
-          {that.renderPanelContent(_.filter(questionInputs, {group: group.name}))}
-        </Panel>
+        <div key={index} className={styles.panelWrapper}>
+          <div className={headerClass} onClick={function () { that.handleHeaderClick(index); }}>
+            {group.displayText}
+            <span className={styles.headerArrow}><FaChevronDown size={12} /></span>
+          </div>
+          <Panel eventKey={index} className={styles.panel}
+            expanded={expanded} collapsible>
+            {that.renderPanelContent(_.filter(questionInputs, {group: group.name}))}
+          </Panel>
+        </div>
       );
     });
 
     return (
       <div className={styles.elementsListView}>
-        <Accordion defaultActiveKey={0}>
-          {accordionItems}
-        </Accordion>
+        {panelItems}
       </div>
     );
   }

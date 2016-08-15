@@ -26,6 +26,9 @@ class SelectButton extends Component {
     // adds css min-width in pixels
     defaultWidth: PropTypes.number,
 
+    // className attribute
+    className: PropTypes.string,
+
     /* array of objects with elements
     key (string), eventKey (string), label (string), divider (bool)
     divider creates a horizontal line
@@ -46,7 +49,8 @@ class SelectButton extends Component {
   static defaultProps = {
     style: 'defaultButton',
     id: 'id',
-    label: ''
+    label: '',
+    className: ''
   };
 
   constructor(props) {
@@ -69,12 +73,11 @@ class SelectButton extends Component {
   }
 
   getWrapperClass() {
-    const { style, isLoading } = this.props;
+    const { style, isLoading, className } = this.props;
     return classNames({
-      [styles.headerButton]: style === 'headerButton',
-      [styles.formButton]: style === 'formButton',
-      [styles.defaultButton]: style === 'defaultButton',
-      [styles.loading]: isLoading === true
+      [styles[style]]: true,
+      [styles.loading]: isLoading === true,
+      [className]: true
     });
   }
 

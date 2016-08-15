@@ -29,17 +29,31 @@
   margin-bottom: 10px;
 }
 
+.titleWidget {
+  display: table-cell;
+  width: 50%;
+  vertical-align: middle;
+}
 .inputWidget {
   display: table-cell;
-  width: 45%;
+  width: 30%;
   padding: 0px 5px 0 0;
   vertical-align: middle;
 }
 
 .styleWidget {
   display: table-cell;
-  width: 45px;
+  width: 70px;
   vertical-align: middle;
+  list-style: none;
+  padding: 0;
+  li {
+    float: left;
+    padding-right: 5px;
+    &:last-child {
+      padding-right: 0;
+    }
+  }
 }
 
 .answersDropdown {
@@ -54,6 +68,7 @@
 
 .squareButton {
   width: 20px;
+  display: block;
   padding-left: 0;
   padding-right: 0;
 }
