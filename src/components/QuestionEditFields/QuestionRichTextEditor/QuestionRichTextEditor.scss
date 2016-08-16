@@ -1,6 +1,10 @@
 @import './mixins';
 @import './variables';
 
+$qrt-border-color: #d5d5d5;
+$qrt-toolbutton-color: #7a7a7a;
+$qrt-toolbutton-bg-color: #dfdfdf;
+
 .questionRichTextEditor {
   @include clearfix;
 }
@@ -9,9 +13,10 @@
   width: 100%;
   float: left;
   background-color: #fff;
-  letter-spacing: 1px;
-  border: solid 1px #c7c7c7;
-  padding: 10px;
+  border: solid 1px $qrt-border-color;
+  @include border-radius(4px);
+  padding: 7px 10px 8px;
+  font-size: 14px;
 }
 
 .block {
@@ -23,31 +28,25 @@
 }
 
 .toolbar {
-  display: table;
-  table-layout: fixed;
   width: 100%;
   margin-bottom: 10px;
+  @include clearfix;
 }
 
 .titleWidget {
-  display: table-cell;
+  float: left;
   width: 50%;
-  vertical-align: middle;
-}
-.inputWidget {
-  display: table-cell;
-  width: 30%;
-  padding: 0px 5px 0 0;
+  padding-top: 5px;
   vertical-align: middle;
 }
 
-.styleWidget {
-  display: table-cell;
-  width: 70px;
+.buttonsWidget {
+  float: right;
   vertical-align: middle;
   list-style: none;
   padding: 0;
-  li {
+  margin: 0;
+  > li {
     float: left;
     padding-right: 5px;
     &:last-child {
@@ -60,14 +59,31 @@
   display: block;
 }
 
+.dropdownAnswerButton,
+.squareButton {
+  background-color: $qrt-toolbutton-bg-color;
+  color: $qrt-toolbutton-color;
+  border: none;
+  height: 24px;
+  @include border-radius(4px);
+  &:focus, &:active:focus, &:hover:focus {
+    outline: none;
+  }
+  &:hover, &:focus {
+    background-color: darken($qrt-toolbutton-bg-color, 5%);
+  }
+}
+
 .dropdownAnswerButton {
   display: block;
-  width: 100%;
+  margin-left: auto !important;
   float: none !important;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .squareButton {
-  width: 20px;
+  width: 24px;
   display: block;
   padding-left: 0;
   padding-right: 0;

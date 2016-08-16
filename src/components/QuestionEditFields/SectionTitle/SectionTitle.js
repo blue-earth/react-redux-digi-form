@@ -6,7 +6,6 @@ import {
   Popover,
   OverlayTrigger
 } from 'react-bootstrap';
-import { MdHelpOutline } from 'react-icons/lib/md';
 import popoverTexts from 'schemas/popoverTexts';
 import styles from './SectionTitle.scss';
 
@@ -38,9 +37,7 @@ class SectionTitle extends Component {
           {title}
           {popoverId &&
             <OverlayTrigger trigger="focus" overlay={this.getPopover(popoverId)}>
-              <span tabIndex={0} className={styles.popoverIcon}>
-                <MdHelpOutline size={18} />
-              </span>
+              <span tabIndex={0} className={styles.popoverIcon}>i</span>
             </OverlayTrigger>
           }
         </h3>

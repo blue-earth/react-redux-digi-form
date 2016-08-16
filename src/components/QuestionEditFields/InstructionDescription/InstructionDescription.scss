@@ -1,0 +1,6 @@
+.textEditorWrapper {
+  width: 100%;
+  &:not(:first-child) {
+  	padding-top: 20px;
+  }
+}

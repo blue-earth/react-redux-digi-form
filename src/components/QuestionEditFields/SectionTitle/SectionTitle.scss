@@ -1,6 +1,8 @@
 @import './mixins';
 @import './variables';
 
+$popover-bg-color:    #bbb;
+
 .sectionTitle {
   font-size: 13px;
   font-weight: 700;
@@ -14,12 +16,24 @@
 .popoverIcon {
   cursor: pointer;
   margin-left: 5px;
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  font-size: 11px;
+  line-height: 15px;
+  vertical-align: middle;
+  text-align: center;
+  font-family: 'Times New Roman';
+  font-style: italic;
+  @include border-radius(50%);
+  background-color: $popover-bg-color;
+  color: $dashboard-bg-color;
   &:active:focus,
   &:hover:focus,
   &:focus {
     outline: none;
   }
   &:hover, &:active {
-    color: #000;
+    background-color: darken($popover-bg-color, 5%);
   }
 }

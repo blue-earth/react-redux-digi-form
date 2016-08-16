@@ -5,8 +5,7 @@ import React, {
 import Button from 'components/Buttons/DashboardButtons/Button';
 import CancelConfirmModal from '../CancelConfirmModal';
 import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
-import Instruction from 'components/QuestionEditFields/Instruction';
-import Description from 'components/QuestionEditFields/Description';
+import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
 import LengthValidation from 'components/QuestionEditFields/LengthValidation';
 import RangeValidation from 'components/QuestionEditFields/RangeValidation';
 import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
@@ -196,8 +195,7 @@ class QuestionEditView extends Component {
     return (
       <div className={styles.questionEditView}>
         {this.renderViewTitle()}
-        <Instruction {...componentProps} />
-        <Description {...componentProps} />
+        <InstructionDescription {...componentProps} />
         <AnswerOutputArea {...componentProps} />
         <LengthValidation {...componentProps} />
         <RangeValidation {...componentProps} />
