@@ -161,7 +161,11 @@ webpackConfig.eslint = {
 */
 webpackConfig.module.preLoaders = [{
   test: /\.(js|jsx)$/,
-  loader: 'eslint',
+  // we are using `eslint-loader` explicitly since
+  // we have eslint module installed. This way we
+  // can be certain that it uses the right loader
+  // See https://github.com/survivejs/react/commit/164166338a685b39cb737ca6082b1b97be08d5a7
+  loader: 'eslint-loader',
   exclude: /node_modules/
 }]
 
