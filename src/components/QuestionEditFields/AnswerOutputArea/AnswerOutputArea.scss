@@ -1,0 +1,110 @@
+@import './mixins';
+@import './variables';
+
+$action-button-size: 28px;
+$action-button-padding: 3px;
+$items-offset: -10px;
+$action-button-hover-bg-color: #b4b4b4;
+$add-button-border-color: #bbb;
+
+.formGroup {
+  margin-top: 15px;
+	padding-right: ($action-button-size + $action-button-padding * 2) * 2 + $items-offset;
+  position: relative;
+}
+
+.itemLabel {
+  background-color: white;
+}
+
+.actionItems {
+  position: absolute;
+  top: 0;
+  right: $items-offset;
+  list-style: none;
+  padding: 0;
+}
+
+.actionItems li {
+	float: left;
+  width: $action-button-size + $action-button-padding * 2;
+  padding: $action-button-padding;
+  position: relative;
+}
+
+.actionButton {
+  color: $dashboard-text-color;
+  padding: 0 5px;
+  height: $action-button-size;
+  text-align: center;
+  border: none !important;
+  background-color: transparent !important;
+  @include transition(all .15s);
+  @include border-radius(4px);
+  &:active, &:focus, &:active:focus, &:hover:focus {
+    outline: none;
+  }
+  &:hover, &:active:focus {
+    color: white;
+    background-color: $action-button-hover-bg-color !important;
+  }
+}
+
+.deleteButton {
+  position: absolute;
+  padding: 0 5px;
+  right: $action-button-padding;
+  top: $action-button-padding;
+  z-index: 3;
+}
+
+.removeLabel {
+  font-size: 12px;
+  width: 0;
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+  line-height: 1;
+  opacity: 0;
+  @include transition(width .15s, opacity .15s, padding .15s);
+}
+
+.deleteButton:hover .removeLabel {
+  width: 58px;
+  opacity: 1;
+  padding: 0 5px;
+}
+
+.addButton {
+  border: 1px dashed $add-button-border-color;
+  background-color: transparent !important;
+  color: $dashboard-text-color;
+  @include transition(all .15s);
+  @include border-radius(4px);
+  &:active, &:focus, &:active:focus, &:hover:focus {
+    outline: none;
+  }
+  &:hover, &:active:focus {
+    color: white;
+    background-color: $action-button-hover-bg-color !important;
+    border-style: solid;
+  }
+}
+
+.otherOption {
+  display: table;
+  margin-top: 15px;
+  table-layout: fixed;
+}
+
+.otherOptionLeft {
+  display: table-cell;
+  width: 100%;
+  vertical-align: middle;
+}
+.otherOptionRight {
+  display: table-cell;
+  width: 50px;
+  text-align: right;
+  vertical-align: middle;
+}
