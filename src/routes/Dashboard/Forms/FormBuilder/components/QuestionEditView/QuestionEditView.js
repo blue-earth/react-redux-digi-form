@@ -150,25 +150,25 @@ class QuestionEditView extends Component {
     );
   }
 
-  renderViewTitle() {
+  renderViewHeader() {
     return (
-      <h2 className={styles.viewTitle}>
+      <h2 className={styles.viewHeader}>
         {this.inputSchema.displayText}
       </h2>
     );
   }
 
-  renderBottomActionButtons() {
+  renderViewFooter() {
     return (
-      <ul className={styles.bottomActionButtons}>
-        <li>
-          <Button onClick={this.handleSave} className={styles.saveButton}>
-            Save &amp; continue
-          </Button>
-        </li>
-        <li>
+      <ul className={styles.viewFooter}>
+        <li className="pull-left">
           <Button onClick={this.handleCancel} style="linkButton">
             Cancel
+          </Button>
+        </li>
+        <li className="pull-right">
+          <Button onClick={this.handleSave} className={styles.saveButton}>
+            Save &amp; continue
           </Button>
         </li>
       </ul>
@@ -182,13 +182,15 @@ class QuestionEditView extends Component {
     });
     return (
       <div className={styles.questionEditView}>
-        {this.renderViewTitle()}
-        <InstructionDescription {...componentProps} />
-        <AnswerOutputArea {...componentProps} />
-        <LengthValidation {...componentProps} />
-        <RangeValidation {...componentProps} />
-        <RequiredValidation {...componentProps} />
-        {this.renderBottomActionButtons()}
+        {this.renderViewHeader()}
+        <div className={styles.viewBody}>
+          <InstructionDescription {...componentProps} />
+          <AnswerOutputArea {...componentProps} />
+          <LengthValidation {...componentProps} />
+          <RangeValidation {...componentProps} />
+          <RequiredValidation {...componentProps} />
+        </div>
+        {this.renderViewFooter()}
         <CancelConfirmModal
           saveElement={saveElement}
           setQuestionEditMode={setQuestionEditMode} />

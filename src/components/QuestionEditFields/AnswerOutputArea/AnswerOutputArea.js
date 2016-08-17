@@ -56,7 +56,9 @@ class AnswerOutputArea extends Component {
           <ul className={styles.actionItems}>
             <li>
               <OverlayTrigger trigger="hover" overlay={this.getPopover('reselectOutputArea')}>
-                <Button className={styles.actionButton} onClick={this.handleDeleteSelection}>
+                <Button className={`${styles.actionButton} ${styles.reselectButton}`}
+                  onClick={this.handleDeleteSelection}
+                >
                   <MdCropFree size={18} />
                 </Button>
               </OverlayTrigger>

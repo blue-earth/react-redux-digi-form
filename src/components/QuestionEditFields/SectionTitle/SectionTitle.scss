@@ -1,13 +1,14 @@
 @import './mixins';
 @import './variables';
 
-$popover-bg-color:    #bbb;
-
+$popover-bg-color:      #c3cdd7;
+$section-title-color:   $panel-text-color1;
 .sectionTitle {
   font-size: 13px;
   font-weight: 700;
   margin: 0;
   @include clearfix;
+  color: $section-title-color;
 }
 .titleDescription {
   font-size: 12px;

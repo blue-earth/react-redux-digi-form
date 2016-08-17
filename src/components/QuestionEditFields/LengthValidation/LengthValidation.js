@@ -4,7 +4,8 @@ import React, {
 } from 'react';
 
 import {
-  Col
+  Col,
+  FormControl
 } from 'react-bootstrap';
 import _ from 'lodash';
 import EditRow from '../EditRow/EditRow';
@@ -57,7 +58,7 @@ class LengthValidation extends Component {
               />
             </Col>
             <Col xs={4} sm={3}>
-              <input type="number" className={styles.textInput}
+              <FormControl type="number" className={styles.textInput}
                 value={minLength.value}
                 onChange={this.handleMinLengthChange} />
             </Col>
@@ -73,7 +74,7 @@ class LengthValidation extends Component {
               />
             </Col>
             <Col xs={4} sm={3}>
-              <input type="number" className={styles.textInput}
+              <FormControl type="number" className={styles.textInput}
                 value={maxLength.value}
                 onChange={this.handleMaxLengthChange} />
             </Col>

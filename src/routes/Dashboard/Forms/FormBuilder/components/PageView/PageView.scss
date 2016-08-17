@@ -11,8 +11,8 @@ $page-toolbar-bg-color: #f4f4f4;
   height: 100%;
   position: relative;
   @include border-radius(4px);
-  background-color: $page-bg-color;
-  padding: 15px;
+  // background-color: $page-bg-color;
+  @include box-shadow-custom(0 3px 5px rgba(0, 0, 0, .1));
   &:hover {
     .toolBox {
       opacity: 1;
@@ -31,7 +31,7 @@ $page-toolbar-bg-color: #f4f4f4;
   }
 }
 .clientAreaInner {
-  padding: 5px;
+  // padding: 5px;
   position: relative;
   display: inline-block;
 }

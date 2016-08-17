@@ -4,14 +4,9 @@
 $input-border-color: #797979;
 
 .textInput {
-  border: 1px solid $input-border-color;
-  @include border-radius(2px);
   display: block;
   width: 100%;
   height: 30px;
   line-height: 20px;
   padding: 4px;
-  &:focus {
-    outline: none;
-  }
 }

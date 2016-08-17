@@ -4,8 +4,8 @@
 $action-button-size: 28px;
 $action-button-padding: 3px;
 $items-offset: -10px;
-$action-button-hover-bg-color: #b4b4b4;
-$add-button-border-color: #bbb;
+$action-button-hover-bg-color: $panel-text-color1;
+$add-button-border-color: $panel-text-color1;
 
 .formGroup {
   margin-top: 15px;
@@ -33,38 +33,44 @@ $add-button-border-color: #bbb;
 }
 
 .actionButton {
-  color: $dashboard-text-color;
+  color: $panel-text-color4;
   padding: 0 5px;
   height: $action-button-size;
   text-align: center;
   border: none !important;
   background-color: transparent !important;
   @include transition(all .15s);
-  @include border-radius(4px);
   &:active, &:focus, &:active:focus, &:hover:focus {
     outline: none;
   }
+}
+
+.reselectButton {
+  @include border-radius(4px);
   &:hover, &:active:focus {
-    color: white;
-    background-color: $action-button-hover-bg-color !important;
+    color: $panel-text-color1;
   }
 }
 
 .deleteButton {
   position: absolute;
-  padding: 0 5px;
   right: $action-button-padding;
   top: $action-button-padding;
   z-index: 3;
+  @include border-radius(999px);
+  &:hover, &:active:focus {
+    color: white;
+    background-color: $panel-text-color1 !important;
+  }
 }
 
 .removeLabel {
   font-size: 12px;
+  line-height: 1;
   width: 0;
   display: inline-block;
   vertical-align: middle;
   overflow: hidden;
-  line-height: 1;
   opacity: 0;
   @include transition(width .15s, opacity .15s, padding .15s);
 }
@@ -78,7 +84,10 @@ $add-button-border-color: #bbb;
 .addButton {
   border: 1px dashed $add-button-border-color;
   background-color: transparent !important;
-  color: $dashboard-text-color;
+  color: $panel-text-color3;
+  font-size: 12px;
+  line-height: 1;
+  padding: 10px;
   @include transition(all .15s);
   @include border-radius(4px);
   &:active, &:focus, &:active:focus, &:hover:focus {
