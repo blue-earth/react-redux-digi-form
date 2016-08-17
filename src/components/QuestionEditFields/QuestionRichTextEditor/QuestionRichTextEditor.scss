@@ -22,9 +22,11 @@ $qrt-toolbutton-bg-color: #dfdfdf;
 .block {
   display: inline-block;
   background: #bfe0f7;
-  padding: 3px 10px;
+  padding: 0 5px;
+  font-size: 12px;
   border-radius: 3px;
   border: solid 1px;
+  cursor: default;
 }
 
 .toolbar {

@@ -28,8 +28,19 @@ class Instruction extends Component {
     });
   }
 
+  get otherQuestions() {
+    const { questions, currentElement } = this.props;
+    const filteredQuestions = currentElement.id
+      ? _.differenceBy(questions, [{id: currentElement.id}], 'id')
+      : questions;
+    return filteredQuestions.map(item => ({
+      key: `answer_${item.id}`,
+      text: `answer_${item.id}`
+    }));
+  }
+
   render() {
-    const { currentElement: { question }, questions } = this.props;
+    const { currentElement: { question } } = this.props;
     const instruction = _.defaultTo(question.question_instruction, '');
     const description = _.defaultTo(question.question_description, '');
     return (
@@ -39,7 +50,7 @@ class Instruction extends Component {
             title="Question"
             value={instruction}
             setValue={this.setInstruction}
-            questions={questions}
+            questions={this.otherQuestions}
           />
         </div>
         <div className={styles.textEditorWrapper}>
@@ -48,7 +59,7 @@ class Instruction extends Component {
             value={description}
             popoverId="questionDescription"
             setValue={this.setDescription}
-            questions={questions}
+            questions={this.otherQuestions}
           />
         </div>
       </EditSection>

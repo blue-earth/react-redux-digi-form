@@ -28,18 +28,15 @@ import _ from 'lodash';
 import SectionTitle from '../SectionTitle';
 import styles from './QuestionRichTextEditor.scss';
 
-function findAnswerEntities(contentBlock, callback) {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        Entity.get(entityKey).getType() === 'ANSWER_BLOCK'
-      );
-    },
-    callback
-  );
-}
+const answersRegex = /\{\{(.*?)\}\}/g;
+const findAnswerEntities = (contentBlock, callback) => {
+  const text = contentBlock.getText();
+  let matchArr, start;
+  while ((matchArr = answersRegex.exec(text)) !== null) {
+    start = matchArr.index;
+    callback(start, start + matchArr[0].length);
+  }
+};
 
 const AnswerSpan = (props) => {
   return <span {...props} contentEditable={false} className={styles.block}>{props.children}</span>; // eslint-disable-line
@@ -100,7 +97,6 @@ class QuestionRichTextEditor extends Component {
   }
 
   handleAnswerSelect = (value) => {
-    console.log(value);
     const { editorState } = this.state;
     const prevFocusOffset = editorState.getSelection().focusOffset;
     const prevAnchorOffset = editorState.getSelection().anchorOffset;

@@ -138,17 +138,6 @@ class QuestionEditView extends Component {
     saveForm();
   }
 
-  get questionsList() {
-    const { questions, currentElement } = this.props;
-    const filteredQuestions = currentElement.id
-      ? _.differenceBy(questions, [{id: currentElement.id}], 'id')
-      : questions;
-    return filteredQuestions.map(item => ({
-      key: `answer_${item.id}`,
-      text: `answer_${item.id}`
-    }));
-  }
-
   renderTopActionButtons() {
     return (
       <div className={styles.topActionButtons}>
@@ -189,7 +178,6 @@ class QuestionEditView extends Component {
   render() {
     const { saveElement, setQuestionEditMode } = this.props;
     const componentProps = _.merge({}, this.props, {
-      questions: this.questionsList,
       inputSchema: this.inputSchema
     });
     return (
