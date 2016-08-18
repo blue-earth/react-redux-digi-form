@@ -17,7 +17,8 @@ export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom
   var snappingTargets = [];
   const excludeId = currentElement.id;
   documentMapping.forEach((mappingInfo) => {
-    mappingInfo.bounding_box.forEach(boundingBox => {
+    mappingInfo.positions.forEach(position => {
+      const boundingBox = position.bounding_box;
       if (excludeId === mappingInfo.id) return;
       if (mappingInfo.page_number !== currentMappingInfo.page_number) return;
       snappingTargets = _.concat(snappingTargets, [
@@ -64,10 +65,11 @@ export const zoomValue = (value, zoom) => {
 export const getResizeSnappingTargets = (documentMapping, currentElement, pageZoom) => {
   const currentMappingInfo = currentElement.mappingInfo;
   var snappingTargets = [];
-  const boundingBox = currentMappingInfo.bounding_box[0];
+  const boundingBox = currentMappingInfo.positions[0].bounding_box;
   const excludeId = currentElement.id;
   documentMapping.forEach((mappingInfo) => {
-    mappingInfo.bounding_box.forEach(targetBoundingBox => {
+    mappingInfo.positions.forEach(position => {
+      const targetBoundingBox = position.bounding_box;
       if (excludeId === mappingInfo.id) return;
       snappingTargets = _.concat(snappingTargets, [
         {
@@ -122,7 +124,8 @@ export const getDragSnappingHelpersRect = (elRect, currentElement, documentMappi
   var helperRects = [];
 
   for (let item of snappingTargets) {
-    for (let boundingBox of findItemById(documentMapping, item.id).bounding_box) {
+    for (let position of findItemById(documentMapping, item.id).positions) {
+      const boundingBox = position.bounding_box;
       var targetBoundingBox = _.assign({}, boundingBox);
       for (var prop in targetBoundingBox) {
         targetBoundingBox[prop] *= pageZoom;
@@ -169,7 +172,8 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
   var hasWidthSnapping = false;
   var hasHeightSnapping = false;
   for (let item of snappingTargets) {
-    for (let boundingBox of findItemById(documentMapping, item.id).bounding_box) {
+    for (let position of findItemById(documentMapping, item.id).positions) {
+      const boundingBox = position.bounding_box;
       var targetBoundingBox = _.assign({}, boundingBox);
       for (var prop in targetBoundingBox) {
         targetBoundingBox[prop] = zoomValue(targetBoundingBox[prop], pageZoom);

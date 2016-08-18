@@ -14,6 +14,7 @@ import {
   resetValidationInfo,
   setMappingInfo,
   resetMappingInfo,
+  setMappingPositionInfo,
   setPageZoom,
   saveElement,
   deleteElement
@@ -34,6 +35,7 @@ const mapActionCreators = {
   resetValidationInfo,
   setMappingInfo,
   resetMappingInfo,
+  setMappingPositionInfo,
   setPageZoom,
   saveElement,
   deleteElement,

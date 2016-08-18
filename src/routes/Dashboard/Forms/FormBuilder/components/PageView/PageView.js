@@ -39,6 +39,11 @@ class PageView extends Component {
     setMappingInfo: PropTypes.func.isRequired,
 
     /*
+     * setMappingPositionInfo: Action to update the document mapping position info of active selection.
+     */
+    setMappingPositionInfo: PropTypes.func.isRequired,
+
+    /*
      * pageZoom: Redux state to keep the page zoom ratio.
      */
     pageZoom: PropTypes.number.isRequired,

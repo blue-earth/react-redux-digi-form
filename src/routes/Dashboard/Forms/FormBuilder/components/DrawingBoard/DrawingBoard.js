@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  findIndexById,
   findItemById
 } from 'helpers/pureFunctions';
 import {
@@ -54,6 +53,11 @@ class DrawingBoard extends Component {
      * setMappingInfo: Action to update the document mapping info.
      */
     setMappingInfo: PropTypes.func.isRequired,
+
+    /*
+     * setMappingPositionInfo: Action to update the document mapping position info of active selection.
+     */
+    setMappingPositionInfo: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.
@@ -192,19 +196,19 @@ class DrawingBoard extends Component {
       endX,
       endY
     });
-    const { setMappingInfo, pageZoom, pageNumber } = this.props;
+    const { setMappingPositionInfo, pageZoom, pageNumber } = this.props;
 
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
     }
-    setMappingInfo({
+    setMappingPositionInfo({
       'page_number': pageNumber,
-      'bounding_box': [{
+      'bounding_box': {
         left: Math.min(startX, endX) / pageZoom,
         top: Math.min(startY, endY) / pageZoom,
         width: Math.abs(endX - startX) / pageZoom,
         height: Math.abs(endY - startY) / pageZoom
-      }]
+      }
     });
   }
 
@@ -223,26 +227,18 @@ class DrawingBoard extends Component {
   }
 
   handleResizeEnd = (rect, metaData) => {
-    const { setMappingInfo, documentMapping, pageZoom } = this.props;
-    const { id } = metaData;
+    const { setMappingPositionInfo, pageZoom } = this.props;
     const newBoundingBox = {
       left: rect.left / pageZoom,
       top: rect.top / pageZoom,
       width: rect.width / pageZoom,
       height: rect.height / pageZoom
     };
-    if (id) {
-      const boundingBox = findItemById(documentMapping, id).bounding_box[0];
-      if (!_.isEqual(boundingBox, newBoundingBox)) {
-        setMappingInfo({
-          'bounding_box': [newBoundingBox]
-        });
-      }
-    } else {
-      setMappingInfo({
-        'bounding_box': [newBoundingBox]
-      });
-    }
+
+    setMappingPositionInfo({
+      'bounding_box': newBoundingBox
+    });
+
     // Reset SnappingHelper
     this.resetSnappingHelper();
   }
@@ -262,8 +258,7 @@ class DrawingBoard extends Component {
   }
 
   handleDragEnd = (rect, metaData) => {
-    const { setMappingInfo, documentMapping, pageZoom, pageNumber, getPageDOM } = this.props;
-    const { id } = metaData;
+    const { setMappingPositionInfo, pageZoom, pageNumber, getPageDOM } = this.props;
 
     var newRect = rect;
     const { destPageNumber } = metaData;
@@ -281,20 +276,10 @@ class DrawingBoard extends Component {
       height: newRect.height / pageZoom
     };
 
-    if (id) {
-      const boundingBox = findItemById(documentMapping, id).bounding_box[0];
-      if (!_.isEqual(boundingBox, newBoundingBox)) {
-        setMappingInfo({
-          'page_number': destPageNumber && destPageNumber,
-          'bounding_box': [newBoundingBox]
-        });
-      }
-    } else {
-      setMappingInfo({
-        'page_number': destPageNumber && destPageNumber,
-        'bounding_box': [newBoundingBox]
-      });
-    }
+    setMappingPositionInfo({
+      'page_number': destPageNumber && destPageNumber,
+      'bounding_box': newBoundingBox
+    });
 
     // Reset SnappingHelper
     this.resetSnappingHelper();
@@ -326,24 +311,21 @@ class DrawingBoard extends Component {
     snappingHelper.innerHTML = '';
   }
 
+  get activeMappingIndex() {
+    return _.get(this.props, ['currentElement', 'mappingInfo', 'activeIndex'], false);
+  }
+
   handleElementClick = (metaData) => {
     const { setQuestionEditMode } = this.props;
     setQuestionEditMode({
       id: metaData.id,
+      activeBoxIndex: metaData.boxIndex,
       mode: true
     });
   }
 
-  handleElementDoubleClick = (metaData) => {
-    // const { setQuestionEditMode } = this.props;
-    // setQuestionEditMode({
-    //   id: metaData.id,
-    //   mode: true
-    // });
-  }
-
   handleKeyDown = (event) => {
-    const { currentElement, pageZoom, setMappingInfo, deleteElement } = this.props;
+    const { currentElement, pageZoom, setMappingPositionInfo, deleteElement } = this.props;
 
     if (currentElement) {
       const boundingBox = _.get(currentElement, ['mappingInfo', 'bounding_box', '0'], false);
@@ -368,8 +350,8 @@ class DrawingBoard extends Component {
         default:
           return;
       }
-      setMappingInfo({
-        'bounding_box': [newBoundingBox]
+      setMappingPositionInfo({
+        'bounding_box': newBoundingBox
       });
       event.preventDefault();
     }
@@ -384,60 +366,68 @@ class DrawingBoard extends Component {
         cursor: 'crosshair'
       });
     }
-    const myDocumentMapping = _.filter(documentMapping, {
-      'page_number': pageNumber
-    });
-    return myDocumentMapping.map((mappingInfo) => {
-      const boundingBox = mappingInfo.bounding_box[0];
-      var index = findIndexById(questions, mappingInfo.id);
-      // skip current element
-      if (currentElement && mappingInfo.id === currentElement.id) return false;
-      const { type } = questions[index];
-      const isActive = false;
-      const zIndex = isActive ? 101 : 100;
+    const activeMappingIndex = this.activeMappingIndex;
 
-      return (
-        <InteractWrapper
-          x={zoomValue(boundingBox.left, pageZoom)}
-          y={zoomValue(boundingBox.top, pageZoom)}
-          zIndex={zIndex}
-          active={isActive}
-          className="interactWrapper"
-          width={zoomValue(boundingBox.width, pageZoom)}
-          height={zoomValue(boundingBox.height, pageZoom)}
-          onClick={this.handleElementClick}
-          onDoubleClick={this.handleElementDoubleClick}
-          key={`${mappingInfo.id}-${0}`}
-          minWidth={10}
-          minHeight={10}
-          metaData={{
-            id: mappingInfo.id,
-            subId: 0
-          }}
-        >
-          <div className={styles.elementName}>{type}</div>
-        </InteractWrapper>
-      );
-    });
+    const isActiveBox = (mappingInfo, index) =>
+      currentElement && mappingInfo.id === currentElement.id && activeMappingIndex === index;
+
+    const belongsToPage = (position) =>
+      position.page_number === pageNumber;
+
+    return documentMapping.map(mappingInfo => (
+      mappingInfo.positions.map((position, index) => {
+        const isActive = isActiveBox(mappingInfo, index);
+        if (isActive) return false;
+        if (!belongsToPage(position)) return false;
+
+        const boundingBox = position.bounding_box;
+        const question = findItemById(questions, mappingInfo.id);
+        const { type } = question;
+        const zIndex = isActive ? 101 : 100;
+        return (
+          <InteractWrapper
+            x={zoomValue(boundingBox.left, pageZoom)}
+            y={zoomValue(boundingBox.top, pageZoom)}
+            zIndex={zIndex}
+            active={isActive}
+            className="interactWrapper"
+            width={zoomValue(boundingBox.width, pageZoom)}
+            height={zoomValue(boundingBox.height, pageZoom)}
+            minWidth={10}
+            minHeight={10}
+            onClick={this.handleElementClick}
+            metaData={{
+              id: mappingInfo.id,
+              boxIndex: index
+            }}
+          >
+            <div className={styles.elementName}>{type}</div>
+          </InteractWrapper>
+        );
+      })
+    ));
   }
 
   renderCurrentElement() {
-    const { activeInputName, documentMapping, pageNumber,
+    const { documentMapping, pageNumber,
       pageZoom, currentElement } = this.props;
-    var boardOptionals = {};
-    if (activeInputName) {
-      boardOptionals['style'] = _.merge(boardOptionals['style'], {
-        cursor: 'crosshair'
-      });
-    }
-    if (!currentElement) return false;
-    const { mappingInfo, question: { type } } = currentElement;
-    if (!mappingInfo.bounding_box) return false;
-    if (pageNumber !== mappingInfo.page_number) return false;
 
-    const boundingBox = mappingInfo.bounding_box[0];
+    if (!currentElement) return false;
+
+    const activeMappingIndex = this.activeMappingIndex;
+
+    const position = _.get(currentElement, [
+      'mappingInfo', 'positions', activeMappingIndex
+    ]);
+    if (!position) return false;
+    if (pageNumber !== position.page_number) return false;
+    const boundingBox = position.bounding_box;
+    if (!boundingBox) return false;
+
     const isActive = true;
     const zIndex = isActive ? 101 : 100;
+
+    const { question: { type } } = currentElement;
 
     return (
       <InteractWrapper
@@ -448,16 +438,16 @@ class DrawingBoard extends Component {
         className="interactWrapper"
         width={zoomValue(boundingBox.width, pageZoom)}
         height={zoomValue(boundingBox.height, pageZoom)}
+        minWidth={10}
+        minHeight={10}
         onResizeStart={this.handleResizeStart}
         onResizeMove={this.handleResizeMove}
         onResizeEnd={this.handleResizeEnd}
         onDragStart={this.handleDragStart}
         onDragMove={this.handleDragMove}
         onDragEnd={this.handleDragEnd}
-        minWidth={10}
-        minHeight={10}
         metaData={{
-          subId: 0
+          boxIndex: activeMappingIndex
         }}
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}

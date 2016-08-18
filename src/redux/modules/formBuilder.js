@@ -24,6 +24,8 @@ export const RESET_MAPPING_INFO = 'RESET_MAPPING_INFO';
 export const SET_VALIDATION_INFO = 'SET_VALIDATION_INFO';
 export const RESET_VALIDATION_INFO = 'RESET_VALIDATION_INFO';
 
+export const SET_MAPPING_POSITION_INFO = 'SET_MAPPING_POSITION_INFO';
+
 export const UPDATE_FORM_ID = 'UPDATE_FORM_ID';
 export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
@@ -68,6 +70,12 @@ export const INIT_QUESTION_STATE = {
   validations: [], // Question validations
   verifications: [], // Question verifications
   group: 0 // Question group
+};
+
+export const INIT_MAPPING_INFO_STATE = {
+  type: 'Standard',
+  positions: [],
+  activeIndex: 0
 };
 
 // ------------------------------------
@@ -350,9 +358,10 @@ export const setMappingInfo = createAction(SET_MAPPING_INFO);
 // ------------------------------------
 const _setMappingInfo = (state, action) => {
   const newMappingInfo = _.pick(action.payload, [
-    'page_number', 'bounding_box', 'activeIndex'
+    'type', 'positions', 'activeIndex'
   ]);
   const { currentElement: { mappingInfo } } = state;
+
   return _updateCurrentElement(state, {
     mappingInfo: Object.assign({}, mappingInfo, newMappingInfo)
   });
@@ -369,6 +378,30 @@ export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
 const _resetMappingInfo = (state, action) => {
   return _updateCurrentElement(state, {
     mappingInfo: {}
+  });
+};
+
+// ------------------------------------
+// Action: setMappingPositionInfo
+// ------------------------------------
+export const setMappingPositionInfo = createAction(SET_MAPPING_POSITION_INFO);
+
+// ------------------------------------
+// Helper: _setMappingPositionInfo
+// ------------------------------------
+const _setMappingPositionInfo = (state, action) => {
+  const positions = _.get(state, [
+    'currentElement', 'mappingInfo', 'positions'
+  ], []).slice(0);
+  const index = _.get(state, [
+    'currentElement', 'mappingInfo', 'activeIndex'
+  ], 0);
+  const newPosition = _.pick(action.payload, [
+    'page_number', 'bounding_box'
+  ]);
+  positions[index] = _.merge({}, positions[index], newPosition);
+  return _setMappingInfo(state, {
+    payload: { positions }
   });
 };
 
@@ -394,7 +427,7 @@ export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
 
 const _setQuestionEditMode = (state, action) => {
   const { currentElement } = state;
-  const { id, mode, inputType } = action.payload;
+  const { id, mode, inputType, activeBoxIndex } = action.payload;
   const question = id
     ? findItemById(state.questions, id)
     : Object.assign({}, INIT_QUESTION_STATE, {
@@ -403,11 +436,13 @@ const _setQuestionEditMode = (state, action) => {
   const newCurrentElement = mode ? {
     id,
     question,
-    mappingInfo: id
+    mappingInfo: _.pick(Object.assign({}, id
       ? findItemById(state.documentMapping, id)
       : currentElement
         ? currentElement.mappingInfo
-        : {}
+        : INIT_MAPPING_INFO_STATE,
+      { activeIndex: _.defaultTo(activeBoxIndex, 0) }
+    ), _.keys(INIT_MAPPING_INFO_STATE))
   } : null;
   return Object.assign({}, state, {
     currentElement: newCurrentElement,
@@ -471,6 +506,9 @@ const formBuilderReducer = handleActions({
 
   RESET_MAPPING_INFO: (state, action) =>
     _resetMappingInfo(state, action),
+
+  SET_MAPPING_POSITION_INFO: (state, action) =>
+    _setMappingPositionInfo(state, action),
 
   SET_VALIDATION_INFO: (state, action) =>
     _setValidationInfo(state, action),
