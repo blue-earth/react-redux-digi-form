@@ -6,6 +6,7 @@ $action-button-padding: 3px;
 $items-offset: -10px;
 $action-button-hover-bg-color: $panel-text-color1;
 $add-button-border-color: $panel-text-color1;
+$preview-button-bg-color: white;
 
 .formGroup {
   margin-top: 15px;
@@ -88,10 +89,11 @@ $add-button-border-color: $panel-text-color1;
   font-size: 12px;
   line-height: 1;
   padding: 10px;
+  margin-top: 15px;
   @include transition(all .15s);
   @include border-radius(4px);
   &:active, &:focus, &:active:focus, &:hover:focus {
-    outline: none;
+    outline: none !important;
   }
   &:hover, &:active:focus {
     color: white;
@@ -116,4 +118,37 @@ $add-button-border-color: $panel-text-color1;
   width: 50px;
   text-align: right;
   vertical-align: middle;
+}
+
+.previewItems {
+  list-style: none;
+  margin: 15px 0;
+  padding-left: 0;
+  @include clearfix;
+}
+.previewItems li {
+  float: left;
+  margin-right: 8px;
+}
+
+.previewItemButton {
+  background-color: $preview-button-bg-color !important;
+  color: $panel-text-color1;
+  border: none;
+  width: 35px;
+  height: 35px;
+  @include box-shadow-custom(0 1px 1px rgba(0, 0, 0,.2));
+  @include border-radius(4px);
+  @include transition(all .15s);
+  &:focus, &:active:focus, &:hover:focus {
+    outline: none !important;
+    background-color: $preview-button-bg-color !important;
+  }
+  &:hover, &:focus {
+    background-color: $preview-button-bg-color !important;
+    @include box-shadow-custom(0 1px 5px rgba(0, 0, 0,.4));
+  }
+  &[class*=active] {
+    @include box-shadow-custom(0 1px 5px rgba(0, 0, 0,.8));
+  }
 }

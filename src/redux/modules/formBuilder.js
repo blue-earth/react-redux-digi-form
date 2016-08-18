@@ -334,7 +334,7 @@ const _resetValidationInfo = (state, action) => {
     'currentElement', 'question', 'validations'
   ], []);
   const { type } = action.payload;
-  const validations = _.pullAllBy(currentValidations, [{type}], 'type');
+  const validations = _.differenceBy(currentValidations, [{type}], 'type');
   return _setQuestionInfo(state, {
     payload: { validations }
   });
@@ -350,7 +350,7 @@ export const setMappingInfo = createAction(SET_MAPPING_INFO);
 // ------------------------------------
 const _setMappingInfo = (state, action) => {
   const newMappingInfo = _.pick(action.payload, [
-    'page_number', 'bounding_box'
+    'page_number', 'bounding_box', 'activeIndex'
   ]);
   const { currentElement: { mappingInfo } } = state;
   return _updateCurrentElement(state, {
