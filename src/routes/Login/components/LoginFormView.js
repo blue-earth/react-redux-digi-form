@@ -3,12 +3,12 @@ import React, {
   PropTypes
 } from 'react';
 import { dashboardUrl } from 'helpers/urlHelper';
-import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
-import PasswordInput from 'components/QuestionInputs/PasswordInput/PasswordInput';
-import Validator from 'components/Validator/Validator';
+// import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
+// import PasswordInput from 'components/QuestionInputs/PasswordInput/PasswordInput';
+// import Validator from 'components/Validator/Validator';
 import Verifier from 'components/Verifier/Verifier';
-import validateField from 'helpers/validationHelper';
-import { Button } from 'react-bootstrap';
+// import validateField from 'helpers/validationHelper';
+import Button from 'components/Buttons/DashboardButtons/Button';
 import {
   LOGGED_IN,
   NOT_LOGGED_IN
@@ -21,12 +21,29 @@ import {
 import Header from 'components/Headers/Header';
 import styles from './LoginFormView.scss';
 
+const domOnlyProps = ({
+  initialValue,
+  autofill,
+  onUpdate,
+  valid,
+  invalid,
+  dirty,
+  pristine,
+  active,
+  touched,
+  visited,
+  autofilled,
+  error,
+  ...domProps }) => domProps;
+
 class LoginForm extends Component {
 
   static propTypes = {
     submitLoginForm: PropTypes.func.isRequired,
     authStatus: PropTypes.string.isRequired,
-    goTo: PropTypes.func.isRequired
+    goTo: PropTypes.func.isRequired,
+    isAuthenticating: PropTypes.bool.isRequired,
+    fields: PropTypes.object.isRequired
   };
 
   static contextTypes = {
@@ -36,10 +53,8 @@ class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
-      emailInputStatus: 'init',
-      passwordInputStatus: 'init'
+      hasSubmitted: false,
+      isSubmitting: false
     };
   }
 
@@ -53,66 +68,52 @@ class LoginForm extends Component {
     }
   }
 
-  handleEmailChange = (value) => {
-    this.setState({
-      email: value,
-      emailInputStatus: 'changing'
-    });
+  handleSubmit = () => {
+    const { fields: {email, password}, authStatus, submitLoginForm } = this.props;
+    if (email.touched && password.touched) {
+      if (!email.error && !password.error && authStatus === NOT_LOGGED_IN) {
+        this.setState({isSubmitting: true});
+        submitLoginForm(email.value, password.value);
+        this.setState({hasSubmitted: true, isSubmitting: false});
+      }
+    }
   }
 
-  handlePasswordChange = (value) => {
-    this.setState({
-      password: value,
-      passwordInputStatus: 'changing'
-    });
-  }
-
-  handleClick = () => {
-    const { submitLoginForm } = this.props;
-    const { email, password, emailInputStatus, passwordInputStatus } = this.state;
-    var isEmailValid = validateField({ type: 'isEmail' }, email);
-    var isPasswordValid = validateField({ type: 'isRequired' }, password);
-
-    if (isEmailValid && isPasswordValid) {
-      this.setState({
-        emailInputStatus: 'validated',
-        passwordInputStatus: 'validated'
-      });
-      submitLoginForm(email, password);
+  renderVerificationStatus = () => {
+    const { authStatus, isAuthenticating } = this.props;
+    const { hasSubmitted, isSubmitting } = this.state;
+    if (hasSubmitted && !isSubmitting && !isAuthenticating && authStatus !== 'LOGGING_IN') {
+      return (<Verifier type="EmondoAuthenticationService" status={authStatus === LOGGED_IN} />);
     } else {
-      this.setState({
-        emailInputStatus: isEmailValid ? emailInputStatus : 'failed',
-        passwordInputStatus: isPasswordValid ? passwordInputStatus : 'failed'
-      });
+      return false;
     }
   }
 
   render() {
-    const { email, password, emailInputStatus, passwordInputStatus } = this.state;
-    const { authStatus } = this.props;
-    const showVerificationStatus = emailInputStatus === 'validated' &&
-      passwordInputStatus === 'validated' && authStatus === NOT_LOGGED_IN;
+    const { fields: {email, password}, isAuthenticating, authStatus } = this.props;
+    const { isSubmitting } = this.state;
     return (
       <div className={styles.loginFormWrapper}>
         <Header />
         <div className={styles.inputWrapper}>
-          <h2>LOG IN</h2>
-          {emailInputStatus === 'failed' &&
-            <Validator type="isEmail" validateFor={email} />
-          }
-          <ShortTextInput type="EmailField" placeholderText="Email" value={email} onChange={this.handleEmailChange} />
-          <div className={styles.splitter}></div>
-          <PasswordInput type="password" placeholderText="Password" value={password}
-            onChange={this.handlePasswordChange} onEnterKey={this.handleClick} />
-          {passwordInputStatus === 'failed' &&
-            <Validator type="isRequired" validateFor={password} />
-          }
-          {showVerificationStatus &&
-            <Verifier type="EmondoAuthenticationService" status={authStatus === LOGGED_IN} />
-          }
+          <h2>Login to your account</h2>
+          <div className={'form-group' + (email.touched && email.error ? ' has-error':'')}>
+            <input type="text" placeholder="Email" className="form-control input-lg"
+              {...domOnlyProps(email)} />
+            {email.touched && email.error && <div className="help-block">{email.error}</div>}
+          </div>
+          <div className={'form-group' + (password.touched && password.error ? ' has-error':'')}>
+            <input type="password" placeholder="Password" className="form-control input-lg"
+              {...domOnlyProps(password)} />
+            {password.touched && password.error && <div className="help-block">{password.error}</div>}
+          </div>
+          {this.renderVerificationStatus()}
           <div className={styles.submitButtonWrapper}>
-            <Button onClick={this.handleClick} bsStyle={null} className={styles.btn_submit}>
-              <l>PRESS</l><br />ENTER
+            <Button onClick={this.handleSubmit} className="btn-lg btn-block" style="submitButton"
+              isDisabled={password.error || email.error ? true : false}
+              isLoading={authStatus === 'LOGGING_IN'}
+              spinnerStyle="replaceAll" spinnerForeground="white" spinnerBackground="blue">
+              Login
             </Button>
           </div>
           <h3>Forgot your password?</h3>
