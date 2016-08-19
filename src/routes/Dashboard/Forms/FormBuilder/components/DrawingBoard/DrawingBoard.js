@@ -12,6 +12,7 @@ import {
   getResizeSnappingHelpersPos,
   getActiveBoxIndex,
   isActiveBox,
+  isCurrentElementId,
   zoomValue
 } from 'helpers/formBuilderHelper';
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
@@ -375,7 +376,8 @@ class DrawingBoard extends Component {
         ? currentElement.mappingInfo
         : mappingInfo;
       return finalMappingInfo.positions.map((position, index) => {
-        const isActive = isActiveBox(currentElement, mappingInfo, index);
+        const isActive = isCurrentElementId(mappingInfo.id, currentElement) &&
+          isActiveBox(currentElement, index);
         if (isActive) return false;
         if (!belongsToPage(position)) return false;
 
