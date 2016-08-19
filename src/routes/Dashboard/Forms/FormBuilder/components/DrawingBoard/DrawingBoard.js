@@ -35,7 +35,15 @@ class DrawingBoard extends Component {
      */
     documents: PropTypes.array.isRequired,
 
+    /*
+     * questions: Redux state to store the array of questions.
+     */
     questions: PropTypes.array.isRequired,
+
+    /*
+     * isModified: Redux state that indicates whether the form is modified since last save or load.
+     */
+    isModified: PropTypes.bool.isRequired,
 
     /*
      * saveElement: Redux action to save the current element being edited.
@@ -100,8 +108,12 @@ class DrawingBoard extends Component {
     /*
      * currentElement: Redux state to hold the element currently being edited.
      */
-    currentElement: PropTypes.object
+    currentElement: PropTypes.object,
 
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -315,14 +327,18 @@ class DrawingBoard extends Component {
   }
 
   handleBoxClick = (metaData) => {
-    const { setQuestionEditMode, setMappingInfo, currentElement } = this.props;
-    currentElement && currentElement.id === metaData.id
-    ? setMappingInfo({ activeIndex: metaData.boxIndex })
-    : setQuestionEditMode({
-      id: metaData.id,
-      activeBoxIndex: metaData.boxIndex,
-      mode: true
-    });
+    const { setQuestionEditMode, setMappingInfo, currentElement, isModified, show } = this.props;
+    if (isCurrentElementId(metaData.id, currentElement)) {
+      setMappingInfo({ activeIndex: metaData.boxIndex });
+    } else {
+      isModified && currentElement
+      ? show('cancelConfirmModal')
+      : setQuestionEditMode({
+        id: metaData.id,
+        activeBoxIndex: metaData.boxIndex,
+        mode: true
+      });
+    }
   }
 
   handleKeyDown = (event) => {

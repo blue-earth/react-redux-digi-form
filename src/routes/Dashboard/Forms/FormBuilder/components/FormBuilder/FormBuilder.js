@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import ElementsListView from '../ElementsListView/ElementsListView';
 import PageView from '../PageView/PageView';
 import QuestionEditView from '../QuestionEditView/QuestionEditView';
+import CancelConfirmModal from '../CancelConfirmModal';
 import UploadModal from '../UploadModal';
 import styles from './FormBuilder.scss';
 
@@ -203,7 +204,7 @@ class FormBuilder extends Component {
   }
 
   render() {
-    const { questionEditMode } = this.props;
+    const { saveElement, setQuestionEditMode, questionEditMode } = this.props;
     const leftPanelClass = classNames({
       [styles.leftPanel]: true,
       [styles.open]: questionEditMode
@@ -224,6 +225,9 @@ class FormBuilder extends Component {
           <PageView {...this.props} />
         </Col>
         <UploadModal {...this.props} />
+        <CancelConfirmModal
+          saveElement={saveElement}
+          setQuestionEditMode={setQuestionEditMode} />
       </Row>
     );
   }

@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import Button from 'components/Buttons/DashboardButtons/Button';
-import CancelConfirmModal from '../CancelConfirmModal';
 import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
 import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
 import LengthValidation from 'components/QuestionEditFields/LengthValidation';
@@ -176,7 +175,6 @@ class QuestionEditView extends Component {
   }
 
   render() {
-    const { saveElement, setQuestionEditMode } = this.props;
     const componentProps = _.merge({}, this.props, {
       inputSchema: this.inputSchema
     });
@@ -191,9 +189,6 @@ class QuestionEditView extends Component {
           <RequiredValidation {...componentProps} />
         </div>
         {this.renderViewFooter()}
-        <CancelConfirmModal
-          saveElement={saveElement}
-          setQuestionEditMode={setQuestionEditMode} />
       </div>
     );
   }
