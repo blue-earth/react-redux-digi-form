@@ -313,9 +313,11 @@ class DrawingBoard extends Component {
     snappingHelper.innerHTML = '';
   }
 
-  handleElementClick = (metaData) => {
-    const { setQuestionEditMode } = this.props;
-    setQuestionEditMode({
+  handleBoxClick = (metaData) => {
+    const { setQuestionEditMode, setMappingInfo, currentElement } = this.props;
+    currentElement && currentElement.id === metaData.id
+    ? setMappingInfo({ activeIndex: metaData.boxIndex })
+    : setQuestionEditMode({
       id: metaData.id,
       activeBoxIndex: metaData.boxIndex,
       mode: true
@@ -368,8 +370,11 @@ class DrawingBoard extends Component {
     const belongsToPage = (position) =>
       position.page_number === pageNumber;
 
-    return documentMapping.map(mappingInfo => (
-      mappingInfo.positions.map((position, index) => {
+    return documentMapping.map(mappingInfo => {
+      let finalMappingInfo = currentElement && mappingInfo.id === currentElement.id
+        ? currentElement.mappingInfo
+        : mappingInfo;
+      return finalMappingInfo.positions.map((position, index) => {
         const isActive = isActiveBox(currentElement, mappingInfo, index);
         if (isActive) return false;
         if (!belongsToPage(position)) return false;
@@ -389,7 +394,7 @@ class DrawingBoard extends Component {
             height={zoomValue(boundingBox.height, pageZoom)}
             minWidth={10}
             minHeight={10}
-            onClick={this.handleElementClick}
+            onClick={this.handleBoxClick}
             metaData={{
               id: mappingInfo.id,
               boxIndex: index
@@ -398,8 +403,8 @@ class DrawingBoard extends Component {
             <div className={styles.elementName}>{type}</div>
           </InteractWrapper>
         );
-      })
-    ));
+      });
+    });
   }
 
   renderCurrentElement() {
@@ -472,7 +477,7 @@ class DrawingBoard extends Component {
         {this.renderDocumentMappingComponents()}
         {this.renderCurrentElement()}
         {isDrawing &&
-          <div className={styles.newElementDraw}
+          <div className={styles.newBoxDraw}
             style={{
               left: Math.min(startX, endX),
               top: Math.min(startY, endY),
