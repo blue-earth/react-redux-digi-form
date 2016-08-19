@@ -1,12 +1,20 @@
+@import './mixins';
 @import './variables';
 
 .header {
-	height: 65px;
-	background-color: $header-bg-color;
-	border-bottom: 1px solid $border-color;
-	z-index: 400;
-	position: relative;
+  padding: 16px 0;
+  background-color: $dashboard-header-bg-color;
+  z-index: 400;
+  position: relative;
+  height: $dashboard-header-height;
+  @include clearfix;
 }
+
+.logo {
+  position: absolute;
+  @include hcenter;
+}
+
 .activeRoute {
   font-weight: bold;
   text-decoration: underline;
