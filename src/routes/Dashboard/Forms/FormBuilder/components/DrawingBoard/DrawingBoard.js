@@ -10,6 +10,8 @@ import {
   getResizeSnappingTargets,
   getDragSnappingHelpersRect,
   getResizeSnappingHelpersPos,
+  getActiveBoxIndex,
+  isActiveBox,
   zoomValue
 } from 'helpers/formBuilderHelper';
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
@@ -311,10 +313,6 @@ class DrawingBoard extends Component {
     snappingHelper.innerHTML = '';
   }
 
-  get activeMappingIndex() {
-    return _.get(this.props, ['currentElement', 'mappingInfo', 'activeIndex'], false);
-  }
-
   handleElementClick = (metaData) => {
     const { setQuestionEditMode } = this.props;
     setQuestionEditMode({
@@ -366,17 +364,13 @@ class DrawingBoard extends Component {
         cursor: 'crosshair'
       });
     }
-    const activeMappingIndex = this.activeMappingIndex;
-
-    const isActiveBox = (mappingInfo, index) =>
-      currentElement && mappingInfo.id === currentElement.id && activeMappingIndex === index;
 
     const belongsToPage = (position) =>
       position.page_number === pageNumber;
 
     return documentMapping.map(mappingInfo => (
       mappingInfo.positions.map((position, index) => {
-        const isActive = isActiveBox(mappingInfo, index);
+        const isActive = isActiveBox(currentElement, mappingInfo, index);
         if (isActive) return false;
         if (!belongsToPage(position)) return false;
 
@@ -414,10 +408,10 @@ class DrawingBoard extends Component {
 
     if (!currentElement) return false;
 
-    const activeMappingIndex = this.activeMappingIndex;
+    const activeBoxIndex = getActiveBoxIndex(currentElement);
 
     const position = _.get(currentElement, [
-      'mappingInfo', 'positions', activeMappingIndex
+      'mappingInfo', 'positions', activeBoxIndex
     ]);
     if (!position) return false;
     if (pageNumber !== position.page_number) return false;
@@ -447,7 +441,7 @@ class DrawingBoard extends Component {
         onDragMove={this.handleDragMove}
         onDragEnd={this.handleDragEnd}
         metaData={{
-          boxIndex: activeMappingIndex
+          boxIndex: activeBoxIndex
         }}
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}

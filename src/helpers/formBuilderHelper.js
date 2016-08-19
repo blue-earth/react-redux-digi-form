@@ -12,14 +12,20 @@ export const getImageDimension = (url, callback) => {
   img.src = url;
 };
 
+export const getActiveBoxIndex = (currentElement) =>
+  _.get(currentElement, ['mappingInfo', 'activeIndex'], false);
+
+export const isActiveBox = (currentElement, mappingInfo, index) =>
+  currentElement && mappingInfo.id === currentElement.id && getActiveBoxIndex(currentElement) === index;
+
 export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom) => {
   const currentMappingInfo = currentElement.mappingInfo;
   var snappingTargets = [];
-  const excludeId = currentElement.id;
+
   documentMapping.forEach((mappingInfo) => {
-    mappingInfo.positions.forEach(position => {
+    mappingInfo.positions.forEach((position, index) => {
       const boundingBox = position.bounding_box;
-      if (excludeId === mappingInfo.id) return;
+      if (isActiveBox(currentElement, mappingInfo, index)) return;
       if (mappingInfo.page_number !== currentMappingInfo.page_number) return;
       snappingTargets = _.concat(snappingTargets, [
         {
@@ -66,11 +72,11 @@ export const getResizeSnappingTargets = (documentMapping, currentElement, pageZo
   const currentMappingInfo = currentElement.mappingInfo;
   var snappingTargets = [];
   const boundingBox = currentMappingInfo.positions[0].bounding_box;
-  const excludeId = currentElement.id;
+
   documentMapping.forEach((mappingInfo) => {
-    mappingInfo.positions.forEach(position => {
+    mappingInfo.positions.forEach((position, index) => {
       const targetBoundingBox = position.bounding_box;
-      if (excludeId === mappingInfo.id) return;
+      if (isActiveBox(currentElement, mappingInfo, index)) return;
       snappingTargets = _.concat(snappingTargets, [
         {
           x: zoomValue(boundingBox.left + targetBoundingBox.width, pageZoom),

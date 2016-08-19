@@ -66,7 +66,7 @@ class AnswerOutputArea extends Component {
     return this.getLabelByIndex(this.choices.length);
   }
 
-  get activeMappingIndex() {
+  get activeBoxIndex() {
     return _.get(this.props, ['currentElement', 'mappingInfo', 'activeIndex'], false);
   }
 
@@ -191,7 +191,7 @@ class AnswerOutputArea extends Component {
             <li key={index}>
               <Button onClick={function (e) { that.handlePreviewButtonClick(index); }}
                 className={styles.previewItemButton}
-                active={that.activeMappingIndex === index}
+                active={that.activeBoxIndex === index}
               >
                 {item.label}
               </Button>
