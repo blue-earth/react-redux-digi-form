@@ -22,6 +22,10 @@ class Button extends Component {
 
     // disables the button and adds a spinner icon
     isLoading: PropTypes.bool,
+    spinnerStyle: PropTypes.oneOf(['replaceAll', 'replaceIcon', false]),
+    // TODO: find a better way to deal with spinner colour
+    spinnerForeground: PropTypes.string,
+    spinnerBackground: PropTypes.string,
 
     // text and any additional stuff such as profile image
     children: PropTypes.node,
@@ -33,7 +37,7 @@ class Button extends Component {
     notificationCounter: PropTypes.number,
 
     // button style.
-    style: PropTypes.oneOf(['headerButton', 'formButton', 'defaultButton', 'linkButton']),
+    style: PropTypes.oneOf(['headerButton', 'formButton', 'submitButton', 'defaultButton', 'linkButton']),
 
     // removes background and border
     iconOnly: PropTypes.bool,
@@ -77,12 +81,14 @@ class Button extends Component {
   }
 
   getWrapperClass() {
-    const { block, style, iconOnly, isLoading, className } = this.props;
+    const { block, style, iconOnly, isLoading, className, spinnerStyle } = this.props;
     return classNames({
       [styles[style]]: true,
       [styles.iconOnly]: iconOnly === true,
       [styles.loading]: isLoading === true,
       [styles.block]: block === true,
+      [styles.spinnerReplaceAll]: spinnerStyle === 'replaceAll',
+      [styles.spinnerReplaceIcon]: spinnerStyle === 'replaceIcon',
       [className]: true
     });
   }
@@ -120,10 +126,10 @@ class Button extends Component {
 
   // add a spinner to the button
   renderSpinner() {
-    const { isLoading } = this.props;
+    const { isLoading, spinnerForeground, spinnerBackground } = this.props;
     if (isLoading === true) {
       return (
-        <Spinner />
+        <Spinner foreground={spinnerForeground} background={spinnerBackground} />
       );
     } else {
       return false;
@@ -160,7 +166,7 @@ class Button extends Component {
         >
           {this.renderNotificationCounter()}
           {this.renderSpinner()}
-          {children}
+          <span>{children}</span>
         </BootstrapButton>
       );
     }

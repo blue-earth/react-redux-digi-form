@@ -2,8 +2,9 @@
 @import './variables';
 
 $button-size:       38px;
+$button-lg-size: 64px;
 
-.headerButton, .formButton, .defaultButton, .linkButton {
+.headerButton, .formButton, .defaultButton, .linkButton, .submitButton {
   @include border-radius(4px);
   @include transition(color .15s, background-color .15s);
   cursor: pointer;
@@ -18,6 +19,12 @@ $button-size:       38px;
   }
   &.loading {
     cursor: not-allowed;
+    &.spinnerReplaceAll {
+      span {display: none;}
+    }
+    &.spinnerReplaceIcon {
+      svg {display: none;}
+    }
   }
   &.block {
     display: block;
@@ -25,6 +32,11 @@ $button-size:       38px;
   }
   &:hover, &:focus, &:active:focus, &:active:hover {
     outline: none;
+  }
+}
+:global {
+  .btn-lg {
+    height: $button-lg-size !important;
   }
 }
 
@@ -75,6 +87,41 @@ $button-size:       38px;
   }
   svg {
     fill: $text-light-color;
+  }
+}
+
+.submitButton {
+  background: $blue;
+  border-color: $blue;
+  color: #fff;
+  font-family: "roble_alt_boldbold";
+  &:focus {
+    background: $blue;
+    border-color: $blue;
+    color: #fff;
+  }
+  &:hover {
+    background-color: $button-header-bg-color;
+    border-color: $button-header-bg-color;
+    color: #fff;
+  }
+  &[disabled] {
+    opacity: .5;
+    &:hover, &:focus {
+      background-color: $blue;
+      border-color: $blue;
+      color: #fff;
+    }
+  }
+  &.loading {
+    opacity: 1 !important;
+    background: $blue !important;
+    border-color: $blue !important;
+  }
+  &:active {
+    &, &:hover, &:focus {
+      outline: none;
+    }
   }
 }
 
