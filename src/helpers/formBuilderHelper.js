@@ -31,6 +31,7 @@ export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom
       : mappingInfo;
 
     finalMappingInfo.positions.forEach((position, index) => {
+      if (!position) return;
       const boundingBox = position.bounding_box;
       if (isActiveBox(currentElement, index)) return;
       if (mappingInfo.page_number !== currentMappingInfo.page_number) return;
@@ -86,6 +87,7 @@ export const getResizeSnappingTargets = (documentMapping, currentElement, pageZo
       : mappingInfo;
 
     finalMappingInfo.positions.forEach((position, index) => {
+      if (!position) return;
       const targetBoundingBox = position.bounding_box;
       if (isActiveBox(currentElement, index)) return;
       snappingTargets = _.concat(snappingTargets, [
@@ -146,6 +148,7 @@ export const getDragSnappingHelpersRect = (elRect, currentElement, documentMappi
       : findItemById(documentMapping, item.id);
 
     mappingInfo.positions.forEach((position, index) => {
+      if (!position) return;
       if (isActiveBox(currentElement, index)) return;
 
       const boundingBox = position.bounding_box;
@@ -200,6 +203,7 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
       : findItemById(documentMapping, item.id);
 
     mappingInfo.positions.forEach((position, index) => {
+      if (!position) return;
       if (isActiveBox(currentElement, index)) return;
 
       const boundingBox = position.bounding_box;

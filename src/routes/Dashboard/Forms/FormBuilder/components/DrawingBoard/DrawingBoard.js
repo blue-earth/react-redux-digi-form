@@ -385,7 +385,7 @@ class DrawingBoard extends Component {
     }
 
     const belongsToPage = (position) =>
-      position.page_number === pageNumber;
+      position && position.page_number === pageNumber;
 
     return documentMapping.map(mappingInfo => {
       let finalMappingInfo = currentElement && mappingInfo.id === currentElement.id

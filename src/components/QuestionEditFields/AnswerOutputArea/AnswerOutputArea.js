@@ -24,7 +24,6 @@ import styles from './AnswerOutputArea.scss';
 class AnswerOutputArea extends Component {
   static propTypes = {
     setMappingInfo: PropTypes.func.isRequired,
-    resetMappingInfo: PropTypes.func.isRequired,
     setQuestionInfo: PropTypes.func.isRequired,
     inputSchema: PropTypes.object.isRequired
   };
@@ -51,6 +50,10 @@ class AnswerOutputArea extends Component {
     return _.get(this.props, ['currentElement', 'question', 'choices'], []);
   }
 
+  get positions() {
+    return _.get(this.props, ['currentElement', 'mappingInfo', 'positions'], []);
+  }
+
   get finalChoices() {
     return this.includeOther ? _.concat(this.choices, [{
       label: this.newLabel,
@@ -71,21 +74,30 @@ class AnswerOutputArea extends Component {
   }
 
   handleDeleteSelection = (index) => {
-    const { setQuestionInfo } = this.props;
+    const { setQuestionInfo, setMappingInfo } = this.props;
     const choices = this.choices;
     const that = this;
     _.pullAt(choices, [index]);
     _.map(choices, (item, index) => { item.label = that.getLabelByIndex(index); });
     setQuestionInfo({ choices });
+
+    const positions = this.positions;
+    _.pullAt(positions, [index]);
+    setMappingInfo({ positions });
   }
 
-  handleReselect = (event) => {
-    const { resetMappingInfo } = this.props;
-    resetMappingInfo();
+  handleReselect = (index) => {
+    const { setMappingInfo } = this.props;
+    const positions = this.positions;
+    positions[index] = null;
+    setMappingInfo({
+      positions,
+      activeIndex: index
+    });
   }
 
   handleAddChoice = () => {
-    const { setQuestionInfo } = this.props;
+    const { setQuestionInfo, setMappingInfo } = this.props;
     const choices = this.choices;
     const newItem = {
       label: this.newLabel,
@@ -93,6 +105,14 @@ class AnswerOutputArea extends Component {
     };
     setQuestionInfo({
       choices: _.concat(choices, [newItem])
+    });
+
+    const positions = this.positions;
+    const newIndex = choices.length;
+    positions.splice(newIndex, 0, null)
+    setMappingInfo({
+      activeIndex: newIndex,
+      positions
     });
   }
 
@@ -106,10 +126,22 @@ class AnswerOutputArea extends Component {
   }
 
   handleIncludeOther = () => {
-    const { setQuestionInfo } = this.props;
+    const { setQuestionInfo, setMappingInfo } = this.props;
+    const choices = this.choices;
+    const positions = this.positions;
     setQuestionInfo({
       include_other: !this.includeOther
     });
+    if (this.includeOther) {
+      setMappingInfo({
+        activeIndex: 0,
+        positions: positions.slice(0, choices.length)
+      });
+    } else {
+      setMappingInfo({
+        activeIndex: positions.length
+      });
+    }
   }
 
   handlePreviewButtonClick = (activeIndex) => {
@@ -135,9 +167,9 @@ class AnswerOutputArea extends Component {
         </InputGroup>
         <ul className={styles.actionItems}>
           <li>
-            <OverlayTrigger trigger="hover,focus" overlay={this.getPopover('reselectOutputArea')}>
+            <OverlayTrigger trigger={['hover', 'focus']} overlay={this.getPopover('reselectOutputArea')}>
               <Button className={`${styles.actionButton} ${styles.reselectButton}`}
-                onClick={this.handleReselect}
+                onClick={function (e) { that.handleReselect(index); }}
               >
                 <MdCropFree size={18} />
               </Button>
