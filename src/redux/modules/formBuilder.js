@@ -243,19 +243,15 @@ export const saveElement = createAction(SAVE_ELEMENT);
 // ------------------------------------
 const _saveElement = (state, action) => {
   const { currentElement } = state;
-  var question = Object.assign({}, INIT_QUESTION_STATE, currentElement.question);
-  var mappingInfo = _.defaultTo(currentElement.mappingInfo, {});
-  const newQuestionId = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
+  const id = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
+  var question = _.merge({}, INIT_QUESTION_STATE, currentElement.question, { id });
+  var mappingInfo = _.merge({}, INIT_MAPPING_INFO_STATE, currentElement.mappingInfo, { id });
 
-  question.id = newQuestionId;
-  mappingInfo.id = newQuestionId;
-  currentElement.id = newQuestionId;
-
-  return Object.assign({}, state, {
+  return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
-    documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true),
-    lastQuestionId: newQuestionId,
-    currentElement,
+    documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo),
+    lastQuestionId: id,
+    currentElement: _.merge({}, currentElement, { id }),
     isModified: false
   });
 };
@@ -377,7 +373,10 @@ export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
 // ------------------------------------
 const _resetMappingInfo = (state, action) => {
   return _updateCurrentElement(state, {
-    mappingInfo: {}
+    mappingInfo: {
+      positions: [],
+      activeIndex: 0
+    }
   });
 };
 

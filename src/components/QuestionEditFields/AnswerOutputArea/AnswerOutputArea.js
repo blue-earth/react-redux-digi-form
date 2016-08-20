@@ -109,7 +109,7 @@ class AnswerOutputArea extends Component {
 
     const positions = this.positions;
     const newIndex = choices.length;
-    positions.splice(newIndex, 0, null)
+    positions.splice(newIndex, 0, null);
     setMappingInfo({
       activeIndex: newIndex,
       positions
