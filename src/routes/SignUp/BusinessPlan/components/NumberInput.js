@@ -65,7 +65,7 @@ class NumberInput extends Component {
     return (
       <span className={styles.numberInputWrapper + ' ' + className}>
         <CircleOutlineButton buttonLabel="&minus;" size={height} hoverColor={"#3993d1"} color={"#DCE6ED"}
-          onClick={this.handleReduceNumber} isDisabled={this.props.value === minValue} />
+          onClick={this.handleReduceNumber} isDisabled={minValue && this.props.value === minValue} />
         <input
           style={{
             height: height + 'px',
@@ -78,7 +78,7 @@ class NumberInput extends Component {
           onFocus={this.handleOnFocus}
           onBlur={this.handleOnBlur} />
         <CircleOutlineButton buttonLabel="+" size={height} hoverColor={"#3993d1"} color={"#DCE6ED"}
-          isDisabled={this.props.value === maxValue} onClick={this.handleAddNumber} />
+          isDisabled={maxValue && this.props.value === maxValue} onClick={this.handleAddNumber} />
       </span>
     );
   }
