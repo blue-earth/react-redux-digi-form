@@ -239,7 +239,11 @@ class BusinessPlan extends Component {
                     })}>Save 33%</div>
                   </div>
                   <h4 className={styles.selectTitle}>Annually</h4>
-                  <p>${annually} per seat per month</p>
+                  <p>
+                    <PriceTag price={annually} />
+                    {' '}
+                    per seat per month
+                  </p>
                 </Panel>
                 <Panel className={classNames(
                   styles.selectionPanel,
@@ -250,7 +254,11 @@ class BusinessPlan extends Component {
                   })}
                   onClick={this.selectMonthly}>
                   <h4 className={styles.selectTitle}>Monthly</h4>
-                  <p>${monthly} per seat per month</p>
+                  <p>
+                    <PriceTag price={monthly} />
+                    {' '}
+                    per seat per month
+                  </p>
                 </Panel>
               </div>
               <div className={styles.clearFloat}>
