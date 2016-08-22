@@ -22,14 +22,15 @@ import classNames from 'classnames';
 
 class BusinessPlan extends Component {
   static propTypes = {
-    detail: PropTypes.shape({
-      price: PropTypes.shape({
-        monthly: PropTypes.number,
-        annually: PropTypes.number
-      }),
-      min_required_user: PropTypes.number,
-      max_required_user: PropTypes.number
-    }),
+    plans: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        price_cents: PropTypes.number,
+        price_currency: PropTypes.string,
+        min_required_users: PropTypes.number,
+        max_num_users: PropTypes.number
+      })
+    ),
     planConfig: PropTypes.shape({
       subdomain: PropTypes.string,
       number_of_users: PropTypes.number,
@@ -48,17 +49,20 @@ class BusinessPlan extends Component {
     purchaseErrorMessage: PropTypes.string.isRequired,
     isPurchasing: PropTypes.bool.isRequired,
     stepIndex: PropTypes.number.isRequired,
-    fetchPlanDetail: PropTypes.func.isRequired,
+    fetchPlans: PropTypes.func.isRequired,
     goToNextStep: PropTypes.func.isRequired,
     goToPreviousStep: PropTypes.func.isRequired,
     verifySubdomain: PropTypes.func.isRequired,
     setPlanConfig: PropTypes.func.isRequired,
     setPaymentMethod: PropTypes.func.isRequired,
-    purchasePlan: PropTypes.func.isRequired
+    purchasePlan: PropTypes.func.isRequired,
+    plan: PropTypes.string.isRequired,
+    period: PropTypes.string.isRequired
+  }
   }
 
   componentDidMount() {
-    this.props.fetchPlanDetail();
+    this.props.fetchPlans();
   }
 
   isBillingCycleActive = (cycle) => {
@@ -107,6 +111,20 @@ class BusinessPlan extends Component {
 
   haveDiscount = () => {
     return this.props.planConfig.billing_cycle === 'annually';
+  }
+
+  getPlanDetail = (period) => {
+    const { plan, plans } = this.props;
+    for (let i in plans) {
+      if (plans[i].name === plan + '-' + period) {
+        return plans[i];
+      }
+    }
+  }
+  getPlanPrices = () => {
+    const annually = this.getPlanDetail('annually').price_cents;
+    const monthly = this.getPlanDetail('monthly').price_cents;
+    return { annually, monthly };
   }
 
   getDiscountMount = () => {

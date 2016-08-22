@@ -2,7 +2,7 @@ import connect from 'redux/utils/connect';
 import {
   purchasePlan,
   goToNextStep,
-  fetchPlanDetail,
+  fetchPlans,
   goToPreviousStep,
   verifySubdomain,
   setPlanConfig,
@@ -16,7 +16,7 @@ const mapActionCreators = {
   purchasePlan,
   goToNextStep,
   goToPreviousStep,
-  fetchPlanDetail,
+  fetchPlans,
   verifySubdomain,
   setPlanConfig,
   setPaymentMethod
@@ -24,8 +24,9 @@ const mapActionCreators = {
 
 const mapStateToProps = (state) => {
   const { businessPlan } = state;
+  const { plan, period } = state.router.locationBeforeTransitions.query;
   const {
-    detail,
+    plans,
     stepIndex,
     planConfig,
     validations,
@@ -34,13 +35,15 @@ const mapStateToProps = (state) => {
     isPurchasing
   } = businessPlan || INIT_BUSINESS_PLAN_STATE;
   return {
-    detail,
+    plans,
     stepIndex,
     planConfig,
     validations,
     paymentMethod,
     purchaseErrorMessage,
-    isPurchasing
+    isPurchasing,
+    plan,
+    period
   };
 };
 

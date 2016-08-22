@@ -6,7 +6,7 @@ import { createAction, handleActions } from 'redux-actions';
 export const NEXT_STEP = 'NEXT_STEP';
 export const PREVIOUS_STEP = 'PREVIOUS_STEP';
 
-export const SET_PLAN_DETAIL = 'SET_PLAN_DETAIL';
+export const SET_PLANS = 'SET_PLANS';
 export const SET_PAYMENT_METHOD = 'SET_PAYMENT_METHOD';
 export const SET_PLAN_CONFIG = 'SET_PLAN_CONFIG';
 export const SET_IS_PURCHASING = 'SET_IS_PURCHASING';
@@ -16,14 +16,19 @@ export const RECEIVE_PURCHASE_RESULT = 'RECEIVE_PURCHASE_RESULT';
 
 export const INIT_BUSINESS_PLAN_STATE = {
   stepIndex: 0,
-  detail: {
-    min_required_user: 1,
-    max_required_user: null,
-    price: {
-      monthly: 74,
-      annually: 47
-    }
-  },
+  plans: [{
+    name:'global-annually',
+    price_cents: 4500,
+    price_currency:'AUD',
+    min_required_users: 1,
+    max_num_users:null
+  }, {
+    name:'global-monthly',
+    price_cents: 7400,
+    price_currency:'AUD',
+    min_required_users: 1,
+    max_num_users:null
+  }],
   planConfig: {
     subdomain: '',
     number_of_users: 1,
@@ -47,7 +52,7 @@ export const nextStep = createAction(NEXT_STEP);
 export const previousStep = createAction(PREVIOUS_STEP);
 export const setPlanConfig = createAction(SET_PLAN_CONFIG);
 export const setPaymentMethod = createAction(SET_PAYMENT_METHOD);
-export const setPlanDetail = createAction(SET_PLAN_DETAIL);
+export const setPlans = createAction(SET_PLANS);
 export const receiveVerifySubdomain = createAction(RECEIVE_VERIFY_SUBDOMAIN);
 export const receivePurchaseResult = createAction(RECEIVE_PURCHASE_RESULT);
 export const setIsPurchasing = createAction(SET_IS_PURCHASING);
@@ -76,10 +81,10 @@ export const goToPreviousStep = () => {
     dispatch(previousStep());
   };
 };
-export const fetchPlanDetail = () => {
+export const fetchPlans = () => {
   return (dispatch, getState) => {
     const { plan, period } = getState().router.locationBeforeTransitions.query;
-    dispatch(processFetchPlanDetail(plan, period));
+    dispatch(processFetchPlans(plan, period));
   };
 };
 
@@ -90,46 +95,65 @@ export const purchasePlan = () => {
     dispatch(processPurchase({ planConfig, paymentMethod }));
   };
 };
-const processFetchPlanDetail = (plan, period) => {
-  const apiURL = `${API_URL}/accounts/api/`;
-  const body = { plan };
+const processFetchPlans = (plan, period) => {
+  const apiURL = `${API_URL}/billing/api/plan/`;
   const fetchParams = assignDefaults({
-    method: 'POST',
-    body
+    method: 'GET'
   });
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      // const {result} = value;
-      dispatch(setPlanDetail({
-        price: {
-          monthly: 74,
-          annually: 49
-        },
-        min_required_user: 2,
-        max_required_user: 30
-      }));
+      console.log(value);
+      const plans = [{
+        name:'global-annually',
+        price_cents: 4500,
+        price_currency:'AUD',
+        min_required_users: 3,
+        max_num_users:6
+      }, {
+        name:'global-monthly',
+        price_cents: 7400,
+        price_currency:'AUD',
+        min_required_users: 3,
+        max_num_users:6
+      }];
+      dispatch(setPlans(plans));
+      dispatch(_setPlanConfig(plans, plan, period));
     };
   };
   const fetchFail = (data) => {
     return (dispatch, getState) => {
-      dispatch(setPlanDetail({
-        price: {
-          monthly: 74,
-          annually: 45
-        },
-        min_required_user: 2,
-        max_required_user: 30
-      }));
-      console.log(period);
-      dispatch(setPlanConfig({
-        number_of_users: 2,
-        billing_cycle: period
-      }));
+      const plans = [{
+        name:'global-annually',
+        price_cents: 4500,
+        price_currency:'AUD',
+        min_required_users: 3,
+        max_num_users:null
+      }, {
+        name:'global-monthly',
+        price_cents: 7400,
+        price_currency:'AUD',
+        min_required_users: 3,
+        max_num_users:null
+      }];
+      dispatch(setPlans(plans));
+      dispatch(_setPlanConfig(plans, plan, period));
     };
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
-
+const _setPlanConfig = (plans, plan, period) => {
+  return (dispatch, getState) =>{
+    for (let i in plans) {
+      const planDetail = plans[i];
+      if (planDetail.name === plan + '-' + period) {
+        return dispatch(setPlanConfig({
+          number_of_users: planDetail.min_required_users,
+          billing_cycle: period
+        }));
+      }
+    }
+  }
+}
 const processVerifySubdomain = (subdomain) => {
   const apiURL = `${API_URL}/accounts/api/subdomain/verify/`;
   const body = {subdomain};
@@ -195,9 +219,9 @@ const businessPlanReducer = handleActions({
     Object.assign({}, state, {
       stepIndex: 0
     }),
-  SET_PLAN_DETAIL: (state, action) =>
+  SET_PLANS: (state, action) =>
     Object.assign({}, state, {
-      detail: action.payload
+      plans: action.payload
     }),
   RECEIVE_VERIFY_SUBDOMAIN: (state, action) =>
     Object.assign({}, state, {
