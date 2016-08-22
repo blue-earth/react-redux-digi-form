@@ -52,7 +52,6 @@ class NumberInput extends Component {
     if (!value) {
       onChange(minValue);
     }
-    
     if (minValue && value < minValue) {
       onChange(minValue);
     }

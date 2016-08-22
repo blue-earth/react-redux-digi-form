@@ -34,8 +34,8 @@ class BusinessPlan extends Component {
     ),
     planConfig: PropTypes.shape({
       subdomain: PropTypes.string,
-      number_of_users: PropTypes.number,
-      billing_cycle: PropTypes.oneOf(['annually', 'monthly'])
+      numberOfUsers: PropTypes.number,
+      billingCycle: PropTypes.oneOf(['annually', 'monthly'])
     }),
     validations: PropTypes.shape({
       isSubdomainVerified: PropTypes.bool,
@@ -43,7 +43,7 @@ class BusinessPlan extends Component {
     }),
     paymentMethod: PropTypes.shape({
       email: PropTypes.string,
-      card_number: PropTypes.string,
+      cardNumber: PropTypes.string,
       expiry: PropTypes.string,
       cvc: PropTypes.string
     }),
@@ -72,14 +72,14 @@ class BusinessPlan extends Component {
   }
 
   isBillingCycleActive = (cycle) => {
-    const {planConfig: {billing_cycle}} = this.props;
-    return billing_cycle === cycle;
+    const {planConfig: {billingCycle}} = this.props;
+    return billingCycle === cycle;
   }
   selectAnnually = () => {
-    this.props.setPlanConfig({billing_cycle: 'annually'});
+    this.props.setPlanConfig({billingCycle: 'annually'});
   }
   selectMonthly = () => {
-    this.props.setPlanConfig({billing_cycle: 'monthly'});
+    this.props.setPlanConfig({billingCycle: 'monthly'});
   }
 
   handleSubdomainChange = (event) => {
@@ -103,13 +103,13 @@ class BusinessPlan extends Component {
   }
 
   handleUsersNumberChange = (number) => {
-    this.props.setPlanConfig({number_of_users: number});
+    this.props.setPlanConfig({numberOfUsers: number});
   }
   handleEmailChange = (event) => {
     this.props.setPaymentMethod({email: event.target.value});
   }
   handleCardNumberChange = (event) => {
-    this.props.setPaymentMethod({card_number: event.target.value});
+    this.props.setPaymentMethod({cardNumber: event.target.value});
   }
   handleExpireChange = (event) => {
     this.props.setPaymentMethod({expiry: event.target.value});
@@ -128,7 +128,7 @@ class BusinessPlan extends Component {
   }
 
   haveDiscount = () => {
-    return this.props.planConfig.billing_cycle === 'annually';
+    return this.props.planConfig.billingCycle === 'annually';
   }
 
   getPlanDetail = (period) => {
@@ -147,10 +147,10 @@ class BusinessPlan extends Component {
 
   getDiscountMount = () => {
     const { monthly, annually } = this.getPlanPrices();
-    return this.props.planConfig.number_of_users * (annually-monthly) * 12;
+    return this.props.planConfig.numberOfUsers * (annually-monthly) * 12;
   }
   getTotalPrice = () => {
-    return this.props.planConfig.number_of_users * this.getSinglePrice() * 12;
+    return this.props.planConfig.numberOfUsers * this.getSinglePrice() * 12;
   }
   getSinglePrice = () => {
     const { monthly, annually } = this.getPlanPrices();
@@ -162,7 +162,7 @@ class BusinessPlan extends Component {
     const { max_num_users, min_required_users } = this.getPlanDetail(period);
     const annually = this.getPlanDetail('annually').price_cents;
     const monthly = this.getPlanDetail('monthly').price_cents;
-    const { subdomain, number_of_users } = this.props.planConfig;
+    const { subdomain, numberOfUsers } = this.props.planConfig;
     const { isSubdomainVerified, subdomainErrorMessage } = this.props.validations;
     const isActive = (cycle) => {
       return this.isBillingCycleActive(cycle);
@@ -214,7 +214,7 @@ class BusinessPlan extends Component {
               <div>
                 <p className={styles.sectionTitle}>Choose number of users:</p>
                 <NumberInput height={54} className={styles.bigNumberInput}
-                  value={number_of_users} onChange={this.handleUsersNumberChange}
+                  value={numberOfUsers} onChange={this.handleUsersNumberChange}
                   minValue={min_required_users} maxValue={max_num_users} />
               </div>
             </Panel>
@@ -279,9 +279,9 @@ class BusinessPlan extends Component {
 
   renderPurchasePage() {
     const { planConfig, paymentMethod, purchaseErrorMessage, isPurchasing } = this.props;
-    const { number_of_users, billing_cycle } = planConfig;
-    const { email, card_number, expiry, cvc } = paymentMethod;
-    const { price_currency, min_required_users, max_num_users } = this.getPlanDetail(billing_cycle);
+    const { numberOfUsers, billingCycle } = planConfig;
+    const { email, cardNumber, expiry, cvc } = paymentMethod;
+    const { price_currency, min_required_users, max_num_users } = this.getPlanDetail(billingCycle);
     return (
       <Grid fluid>
         <div className="text-center">
@@ -328,9 +328,9 @@ class BusinessPlan extends Component {
               <div className={styles.creditCardInputWrapper}>
                 <MaskedInput mask="1111 1111 1111 1111" name="card" size="16"
                   className={classNames(styles.creditCardInput, styles.cardNumberInput)}
-                  value={card_number} placeholder="Card number" onChange={this.handleCardNumberChange} />
+                  value={cardNumber} placeholder="Card number" onChange={this.handleCardNumberChange} />
                 <span className={styles.creditCardType}>
-                  <CardType cardNumber={card_number} />
+                  <CardType cardNumber={cardNumber} />
                 </span>
               </div>
               <div className={styles.creditCardInputWrapper}>
@@ -353,16 +353,16 @@ class BusinessPlan extends Component {
                 <p>
                   <strong className={styles.orderItem}>Business Plan</strong>
                   {' '}
-                  <span className={styles.price}>AUD ${number_of_users * 74 * 12}</span>
+                  <span className={styles.price}>AUD ${numberOfUsers * 74 * 12}</span>
                 </p>
                 <p>
                   Users: {' '}
                   <NumberInput height={24} className={styles.smallNumberInput}
-                    value={number_of_users} onChange={this.handleUsersNumberChange}
+                    value={numberOfUsers} onChange={this.handleUsersNumberChange}
                     minValue={min_required_users} maxValue={max_num_users} />
                 </p>
                 <p style={{marginBottom: '30px'}}>
-                  <span className={styles.orderItem}>Billed {billing_cycle} {this.haveDiscount()?'(save 33%)':''}</span>
+                  <span className={styles.orderItem}>Billed {billingCycle} {this.haveDiscount()?'(save 33%)':''}</span>
                   {' '}
                   <span onClick={this.handleBillingCycleChange} className={styles.changeBillingCycle}>CHANGE</span>
                   <span className={classNames(styles.price, {'hidden': !this.haveDiscount()})}>
@@ -370,7 +370,7 @@ class BusinessPlan extends Component {
                   </span>
                 </p>
                 <hr className={styles.divideLine} />
-                <p>
+                <p style={{marginBottom: '30px'}}>
                   <span>Subtotal (<PriceTag price={this.getSinglePrice()} /> per month)</span>
                   <span className={styles.price}>
                     <PriceTag price={this.getSinglePrice() * 12} currency={price_currency} />
