@@ -6,6 +6,7 @@ import { createAction, handleActions } from 'redux-actions';
 export const NEXT_STEP = 'NEXT_STEP';
 export const PREVIOUS_STEP = 'PREVIOUS_STEP';
 
+export const SET_PLAN_DETAIL = 'SET_PLAN_DETAIL';
 export const SET_PAYMENT_METHOD = 'SET_PAYMENT_METHOD';
 export const SET_PLAN_CONFIG = 'SET_PLAN_CONFIG';
 export const SET_IS_PURCHASING = 'SET_IS_PURCHASING';
@@ -15,6 +16,14 @@ export const RECEIVE_PURCHASE_RESULT = 'RECEIVE_PURCHASE_RESULT';
 
 export const INIT_BUSINESS_PLAN_STATE = {
   stepIndex: 0,
+  detail: {
+    min_required_user: 1,
+    max_required_user: null,
+    price: {
+      monthly: 74,
+      annually: 47
+    }
+  },
   planConfig: {
     subdomain: '',
     number_of_users: 1,
@@ -38,6 +47,7 @@ export const nextStep = createAction(NEXT_STEP);
 export const previousStep = createAction(PREVIOUS_STEP);
 export const setPlanConfig = createAction(SET_PLAN_CONFIG);
 export const setPaymentMethod = createAction(SET_PAYMENT_METHOD);
+export const setPlanDetail = createAction(SET_PLAN_DETAIL);
 export const receiveVerifySubdomain = createAction(RECEIVE_VERIFY_SUBDOMAIN);
 export const receivePurchaseResult = createAction(RECEIVE_PURCHASE_RESULT);
 export const setIsPurchasing = createAction(SET_IS_PURCHASING);
@@ -49,9 +59,8 @@ export const verifySubdomain = (subdomain) => {
         isSubdomainVerified: false,
         subdomainErrorMessage: 'Subdomain must be longer than four characters'
       }));
-    }
-    else {
-      dispatch(processVerifySubdomain(subdomain));      
+    } else {
+      dispatch(processVerifySubdomain(subdomain));
     }
   };
 };
@@ -67,6 +76,12 @@ export const goToPreviousStep = () => {
     dispatch(previousStep());
   };
 };
+export const fetchPlanDetail = () => {
+  return (dispatch, getState) => {
+    const { plan, period } = getState().router.locationBeforeTransitions.query;
+    dispatch(processFetchPlanDetail(plan, period));
+  };
+};
 
 export const purchasePlan = () => {
   return (dispatch, getState) => {
@@ -74,6 +89,45 @@ export const purchasePlan = () => {
     dispatch(setIsPurchasing(true));
     dispatch(processPurchase({ planConfig, paymentMethod }));
   };
+};
+const processFetchPlanDetail = (plan, period) => {
+  const apiURL = `${API_URL}/accounts/api/`;
+  const body = { plan };
+  const fetchParams = assignDefaults({
+    method: 'POST',
+    body
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      // const {result} = value;
+      dispatch(setPlanDetail({
+        price: {
+          monthly: 74,
+          annually: 49
+        },
+        min_required_user: 2,
+        max_required_user: 30
+      }));
+    };
+  };
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(setPlanDetail({
+        price: {
+          monthly: 74,
+          annually: 45
+        },
+        min_required_user: 2,
+        max_required_user: 30
+      }));
+      console.log(period);
+      dispatch(setPlanConfig({
+        number_of_users: 2,
+        billing_cycle: period
+      }));
+    };
+  };
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
 
 const processVerifySubdomain = (subdomain) => {
@@ -140,6 +194,10 @@ const businessPlanReducer = handleActions({
   PREVIOUS_STEP: (state, action) =>
     Object.assign({}, state, {
       stepIndex: 0
+    }),
+  SET_PLAN_DETAIL: (state, action) =>
+    Object.assign({}, state, {
+      detail: action.payload
     }),
   RECEIVE_VERIFY_SUBDOMAIN: (state, action) =>
     Object.assign({}, state, {

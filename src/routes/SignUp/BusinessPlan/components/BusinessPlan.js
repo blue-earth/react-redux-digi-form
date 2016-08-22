@@ -13,56 +13,23 @@ import {
   Panel,
   Button
 } from 'react-bootstrap';
-import { FaLock, FaArrowLeft, FaPaypal, FaCcVisa, FaCcAmex, FaCcMastercard, FaCreditCardAlt } from 'react-icons/lib/fa';
+import { FaLock, FaArrowLeft, FaPaypal, FaCreditCardAlt } from 'react-icons/lib/fa';
 import { MdDone } from 'react-icons/lib/md';
 import HelpContactFooter from 'components/Footer/HelpContactFooter';
+import CardType from 'components/CardType';
 import styles from './BusinessPlan.scss';
 import classNames from 'classnames';
 
-const cards =[{
-  type: 'mastercard',
-  pattern: /^5[1-5]/
-}, {
-  type: 'amex',
-  pattern: /^3[47]/,
-  format: /(\d{1,4})(\d{1,6})?(\d{1,5})?/
-}, {
-  type: 'visa',
-  pattern: /^4/
-}];
-
-class CardType extends Component {
-  static propTypes = {
-    cardNumber: PropTypes.string
-  }
-  getType = (num) => {
-    if (num.length === 0) return;
-    let number = num.replace(/D/g, '');
-    for (let i = 0; i < cards.length; i++) {
-      let n = cards[i];
-      if (n.pattern.test(number)) {
-        return n.type;
-      }
-    }
-  }
-  render() {
-    const size = 28;
-    const color = '#194a6c';
-    switch (this.getType(this.props.cardNumber)) {
-      case 'visa':
-        return (<FaCcVisa size={size} color={color} />);
-      case 'amex':
-        return (<FaCcAmex size={size} color={color} />);
-      case 'mastercard':
-        return (<FaCcMastercard size={size} color={color} />);
-      default:
-        return (<FaCreditCardAlt size={size} color={color} />);
-    }
-  }
-}
-
 class BusinessPlan extends Component {
   static propTypes = {
+    detail: PropTypes.shape({
+      price: PropTypes.shape({
+        monthly: PropTypes.number,
+        annually: PropTypes.number
+      }),
+      min_required_user: PropTypes.number,
+      max_required_user: PropTypes.number
+    }),
     planConfig: PropTypes.shape({
       subdomain: PropTypes.string,
       number_of_users: PropTypes.number,
@@ -81,12 +48,17 @@ class BusinessPlan extends Component {
     purchaseErrorMessage: PropTypes.string.isRequired,
     isPurchasing: PropTypes.bool.isRequired,
     stepIndex: PropTypes.number.isRequired,
+    fetchPlanDetail: PropTypes.func.isRequired,
     goToNextStep: PropTypes.func.isRequired,
     goToPreviousStep: PropTypes.func.isRequired,
     verifySubdomain: PropTypes.func.isRequired,
     setPlanConfig: PropTypes.func.isRequired,
     setPaymentMethod: PropTypes.func.isRequired,
     purchasePlan: PropTypes.func.isRequired
+  }
+
+  componentDidMount() {
+    this.props.fetchPlanDetail();
   }
 
   isBillingCycleActive = (cycle) => {
@@ -138,15 +110,19 @@ class BusinessPlan extends Component {
   }
 
   getDiscountMount = () => {
-    return this.props.planConfig.number_of_users * (74-49) * 12;
+    const {annually, monthly} = this.props.detail.price;
+    return this.props.planConfig.number_of_users * (monthly-annually) * 12;
   }
   getTotalPrice = () => {
-    const { number_of_users } = this.props.planConfig;
-    const singlePrice = this.haveDiscount() ? 49 : 74;
-    return number_of_users * singlePrice * 12;
+    return this.props.planConfig.number_of_users * this.getSinglePrice() * 12;
+  }
+  getSinglePrice = () => {
+    const {annually, monthly} = this.props.detail.price;
+    return this.haveDiscount() ? annually : monthly;
   }
 
   renderConfigurePage() {
+    const { max_required_user, min_required_user, price: { annually, monthly } } = this.props.detail;
     const { subdomain, number_of_users } = this.props.planConfig;
     const { isSubdomainVerified, subdomainErrorMessage } = this.props.validations;
     const isActive = (cycle) => {
@@ -187,7 +163,7 @@ class BusinessPlan extends Component {
               <div>
                 <p className={styles.sectionTitle}>Choose number of users:</p>
                 <NumberInput height={54} className={styles.bigNumberInput}
-                  value={number_of_users} onChange={this.handleUsersNumberChange} minValue={1} />
+                  value={number_of_users} onChange={this.handleUsersNumberChange} minValue={min_required_user} maxValue={max_required_user} />
               </div>
             </Panel>
             <div className={styles.billingCycleSection}>
@@ -211,7 +187,7 @@ class BusinessPlan extends Component {
                     })}>Save 33%</div>
                   </div>
                   <h4 className={styles.selectTitle}>Annually</h4>
-                  <p>$49 per seat per month</p>
+                  <p>${annually} per seat per month</p>
                 </Panel>
                 <Panel className={classNames(
                   styles.selectionPanel,
@@ -222,7 +198,7 @@ class BusinessPlan extends Component {
                   })}
                   onClick={this.selectMonthly}>
                   <h4 className={styles.selectTitle}>Monthly</h4>
-                  <p>$74 per seat per month</p>
+                  <p>${monthly} per seat per month</p>
                 </Panel>
               </div>
               <div className={styles.clearFloat}>
@@ -333,8 +309,8 @@ class BusinessPlan extends Component {
                 </p>
                 <hr className={styles.divideLine} />
                 <p>
-                  <span>Subtotal (${this.haveDiscount() ? 49 : 74} per month)</span>
-                  <span className={styles.price}>AUD ${this.haveDiscount() ? 49 * 12 : 74 * 12}</span>
+                  <span>Subtotal (${this.getSinglePrice()} per month)</span>
+                  <span className={styles.price}>AUD ${this.getSinglePrice() * 12}</span>
                 </p>
                 <hr className={styles.divideLine} />
                 <p>
