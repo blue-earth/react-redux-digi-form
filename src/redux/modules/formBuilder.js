@@ -201,12 +201,14 @@ export const processSubmitForm = (formData) => {
       const { id } = value;
       id && dispatch(updateFormId(id));
       dispatch(doneSubmitForm()); // Hide submitting spinner
+      dispatch(setQuestionEditMode({ mode: false }));
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitForm()); // Hide submitting spinner
+      dispatch(setQuestionEditMode({ mode: false }));
     };
   };
 
