@@ -22,9 +22,9 @@ const mapActionCreators = {
   setPaymentMethod
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const { businessPlan } = state;
-  const { plan, period } = state.router.locationBeforeTransitions.query;
+  const { plan, period } = ownProps.location.query;
   const {
     plans,
     stepIndex,
