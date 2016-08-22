@@ -6,7 +6,12 @@ import React, {
 export default class PriceTag extends Component {
   static propTypes = {
     price: PropTypes.number.isRequired,
-    currency: PropTypes.string
+    currency: PropTypes.string,
+    currencySymbol: PropTypes.string
+  }
+  static defaultProps = {
+    currencySymbol: '$',
+    currency: ''
   }
   processPrice = () => {
     const { price } = this.props;
@@ -14,12 +19,12 @@ export default class PriceTag extends Component {
       const value = Math.abs(price);
       return {
         mark: '- ',
-        value: value % 100 === 0 ? value / 100 : value / 100 + '.' + value % 100
+        value: value % 100 === 0 ? value / 100 : parseInt(value / 100) + '.' + value % 100
       };
     } else {
       return {
         mark: null,
-        value: price % 100 === 0 ? price / 100 : price / 100 + '.' + price % 100
+        value: price % 100 === 0 ? price / 100 : parseInt(price / 100) + '.' + price % 100
       };
     }
   }
@@ -28,7 +33,8 @@ export default class PriceTag extends Component {
       <span>
         {this.processPrice().mark}
         {this.props.currency || ''}
-        {' $'}
+        {' '}
+        {this.props.currencySymbol}
         {this.processPrice().value}
       </span>
     );
