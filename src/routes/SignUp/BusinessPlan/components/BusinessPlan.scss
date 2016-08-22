@@ -37,17 +37,15 @@
 }
 .domainInput{
   width: 100%;
-  height: 54px;
+  height: 56px;
   margin: 20px 0;
   padding: 20px 40px 20px 20px;
   @include border-radius(6px);
   border: 1px solid #ECF0F3;
   color: $blackblue;
-  font-weight: bolder;
-  font-family: "roble_alt_boldbold";
-  &:focus{
-    outline: none;
-  }
+  font-weight: 700;
+  font-size: 20px;
+  font-family: 'roble_altregular', sans-serif;
 }
 .rootDomain{
   padding: 0 20px;
@@ -122,12 +120,18 @@
     cursor: not-allowed;
   }
 }
+.selectTitle {
+  font-family: "roble_alt_boldbold";
+}
 .bigPanel{
   padding: 20px;
 }
 .activePanel{
   border: 3px solid $dashboard-header-bg-color;
   box-shadow: 0px 0px 10px 4px rgba(57,147,209,0.15);
+}
+.smallPanel{
+  padding: 0;
 }
 .clearFloat{
   clear: both;

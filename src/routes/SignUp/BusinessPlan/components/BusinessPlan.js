@@ -207,14 +207,14 @@ class BusinessPlan extends Component {
                   {
                     [styles.activePanel]: isActive('annually')
                   })}
-                  value="annually" onClick={this.selectAnnually}>
+                  onClick={this.selectAnnually}>
                   <div className={styles.ribbonWrapper}>
                     <div className={classNames({
                       [styles.ribbon]: true,
                       [styles.activeRibbon]: isActive('annually')
                     })}>Save 33%</div>
                   </div>
-                  <h4>Annually</h4>
+                  <h4 className={styles.selectTitle}>Annually</h4>
                   <p>$49 per seat per month</p>
                 </Panel>
                 <Panel className={classNames(
@@ -224,8 +224,8 @@ class BusinessPlan extends Component {
                   {
                     [styles.activePanel]: isActive('monthly')
                   })}
-                  value="monthly" onClick={this.selectMonthly}>
-                  <h4>Monthly</h4>
+                  onClick={this.selectMonthly}>
+                  <h4 className={styles.selectTitle}>Monthly</h4>
                   <p>$74 per seat per month</p>
                 </Panel>
               </div>
@@ -265,20 +265,25 @@ class BusinessPlan extends Component {
               <Panel className={classNames(
                 styles.activePanel,
                 styles.selectionPanel,
-                styles.creditCardSelection,
+                styles.smallPanel,
                 'text-center',
                 'pull-left'
               )}>
                 <h4>
-                  <FaCreditCardAlt /> {' '} Credit Card
+                  <FaCreditCardAlt />
+                  {' '}
+                  <span className={styles.selectTitle}>Credit Card</span>
                 </h4>
               </Panel>
               <Panel className={classNames(
                 styles.selectionPanel,
+                styles.smallPanel,
                 'text-center',
                 'pull-right'
               )} disabled>
-                <h4><FaPaypal />{' '} Paypal</h4>
+                <h4>
+                  <FaPaypal />{' '} Paypal
+                </h4>
               </Panel>
               <div className={styles.clearFloat}></div>
               <p className="h5">
