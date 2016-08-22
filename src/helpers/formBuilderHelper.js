@@ -250,6 +250,8 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
   return helpersPos;
 };
 
-export const pageZoomPercent = (pageZoom) => {
-  return Math.round(pageZoom * 100) + '%';
-};
+export const pageZoomPercent = (pageZoom) =>
+  Math.round(pageZoom * 100) + '%';
+
+export const getChoiceLabelByIndex = (index) =>
+  String.fromCharCode('A'.charCodeAt(0) + index);

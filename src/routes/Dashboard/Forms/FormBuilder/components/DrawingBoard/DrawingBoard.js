@@ -13,7 +13,8 @@ import {
   getActiveBoxIndex,
   isActiveBox,
   isCurrentElementId,
-  zoomValue
+  zoomValue,
+  getChoiceLabelByIndex
 } from 'helpers/formBuilderHelper';
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 // import classNames from 'classnames';
@@ -374,6 +375,15 @@ class DrawingBoard extends Component {
     }
   }
 
+  getBoxLabel(elementId, boxIndex) {
+    const { questions, currentElement } = this.props;
+    const question = isCurrentElementId(elementId, currentElement)
+      ? currentElement.question
+      : findItemById(questions, elementId);
+    const { type, choices } = question;
+    return choices ? _.get(choices, [boxIndex, 'label'], getChoiceLabelByIndex(choices.length)) : type;
+  }
+
   renderDocumentMappingComponents() {
     const { activeInputName, documentMapping, currentElement,
       questions, pageZoom, pageNumber } = this.props;
@@ -398,8 +408,6 @@ class DrawingBoard extends Component {
         if (!belongsToPage(position)) return false;
 
         const boundingBox = position.bounding_box;
-        const question = findItemById(questions, mappingInfo.id);
-        const { type } = question;
         const zIndex = isActive ? 101 : 100;
         return (
           <InteractWrapper
@@ -418,7 +426,7 @@ class DrawingBoard extends Component {
               boxIndex: index
             }}
           >
-            <div className={styles.elementName}>{type}</div>
+            <div className={styles.boxLabel}>{this.getBoxLabel(mappingInfo.id, index)}</div>
           </InteractWrapper>
         );
       });
@@ -444,8 +452,6 @@ class DrawingBoard extends Component {
     const isActive = true;
     const zIndex = isActive ? 101 : 100;
 
-    const { question: { type } } = currentElement;
-
     return (
       <InteractWrapper
         x={zoomValue(boundingBox.left, pageZoom)}
@@ -469,7 +475,9 @@ class DrawingBoard extends Component {
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}
       >
-        <div className={styles.elementName}>{type}</div>
+        <div className={styles.boxLabel}>
+          {this.getBoxLabel(currentElement.id, activeBoxIndex)}
+        </div>
       </InteractWrapper>
     );
   }

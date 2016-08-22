@@ -10,6 +10,7 @@ import {
   OverlayTrigger,
   Popover
 } from 'react-bootstrap';
+import { getChoiceLabelByIndex } from 'helpers/formBuilderHelper';
 import Switch from 'rc-switch';
 import popoverTexts from 'schemas/popoverTexts';
 import {
@@ -34,10 +35,6 @@ class AnswerOutputArea extends Component {
         {popoverTexts[popoverId]}
       </Popover>
     );
-  }
-
-  getLabelByIndex(index) {
-    return String.fromCharCode('A'.charCodeAt(0) + index);
   }
 
   sectionIsNeeded() {
@@ -66,7 +63,7 @@ class AnswerOutputArea extends Component {
   }
 
   get newLabel() {
-    return this.getLabelByIndex(this.choices.length);
+    return getChoiceLabelByIndex(this.choices.length);
   }
 
   get activeBoxIndex() {
@@ -78,7 +75,7 @@ class AnswerOutputArea extends Component {
     const choices = this.choices;
     const that = this;
     _.pullAt(choices, [index]);
-    _.map(choices, (item, index) => { item.label = that.getLabelByIndex(index); });
+    _.map(choices, (item, index) => { item.label = getChoiceLabelByIndex(index); });
     setQuestionInfo({ choices });
 
     const positions = this.positions;
