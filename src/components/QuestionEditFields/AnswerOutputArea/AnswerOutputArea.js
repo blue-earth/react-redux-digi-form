@@ -73,7 +73,6 @@ class AnswerOutputArea extends Component {
   handleDeleteSelection = (index) => {
     const { setQuestionInfo, setMappingInfo } = this.props;
     const choices = this.choices;
-    const that = this;
     _.pullAt(choices, [index]);
     _.map(choices, (item, index) => { item.label = getChoiceLabelByIndex(index); });
     setQuestionInfo({ choices });

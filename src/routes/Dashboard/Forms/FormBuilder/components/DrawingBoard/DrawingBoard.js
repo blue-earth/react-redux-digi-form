@@ -386,7 +386,7 @@ class DrawingBoard extends Component {
 
   renderDocumentMappingComponents() {
     const { activeInputName, documentMapping, currentElement,
-      questions, pageZoom, pageNumber } = this.props;
+      pageZoom, pageNumber } = this.props;
     var boardOptionals = {};
     if (activeInputName) {
       boardOptionals['style'] = _.merge(boardOptionals['style'], {
