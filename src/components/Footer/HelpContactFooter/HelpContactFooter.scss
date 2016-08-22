@@ -1,0 +1,12 @@
+.footerLinkList{
+  font-size: 12px;
+  padding: 0;
+  list-style: none;
+}
+.footerLink{
+  float: left;
+  margin-right: 30px;
+  &:last-child{
+    margin: 0;
+  }
+}

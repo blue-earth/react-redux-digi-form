@@ -14,6 +14,7 @@ export const documentsPath = 'documents';
 export const certificationPath = 'certification';
 export const usersPath = 'users';
 export const settingsPath = 'settings';
+export const signupPath = 'sign-up';
 
 export const dashboardUrl = (relativePath) =>
   formatUrl(`${rootPath}/${dashboardPath}/${relativePath}`);
@@ -44,3 +45,6 @@ export const usersUrl = (relativePath) =>
 
 export const settingsUrl = (relativePath) =>
   formatUrl(dashboardUrl(`/${settingsPath}/${relativePath}`));
+
+export const signupUrl = (relativePath) =>
+  formatUrl(`${rootPath}/${signupPath}/${relativePath}`);

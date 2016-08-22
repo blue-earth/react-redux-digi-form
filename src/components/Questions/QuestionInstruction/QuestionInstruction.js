@@ -24,10 +24,11 @@ class QuestionDisplay extends Component {
   };
 
   renderInstruction() {
+    const { instruction } = this.props;
     var ItemTemplate = () => {
       return (
-        <div className={styles.instructionTextWrapper}>
-          <span className={styles.text}>{this.props.instruction}</span>
+        <div className={styles.instructionTextWrapper}
+          dangerouslySetInnerHTML={{__html: instruction}}>
         </div>
       );
     };
@@ -36,11 +37,12 @@ class QuestionDisplay extends Component {
   }
 
   renderDescription() {
-    if (this.props.description) {
+    const { description } = this.props;
+    if (description) {
       var ItemTemplate = () => {
         return (
           <div className={styles.descriptionTextWrapper}
-            dangerouslySetInnerHTML={{__html: this.props.description}}>
+            dangerouslySetInnerHTML={{__html: description}}>
           </div>
         );
       };
