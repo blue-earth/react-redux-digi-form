@@ -14,6 +14,7 @@ import {
   Button
 } from 'react-bootstrap';
 import { FaLock, FaArrowLeft, FaPaypal, FaCcVisa, FaCcAmex, FaCcMastercard, FaCreditCardAlt } from 'react-icons/lib/fa';
+import { MdDone } from 'react-icons/lib/md';
 import HelpContactFooter from 'components/Footer/HelpContactFooter';
 import styles from './BusinessPlan.scss';
 import classNames from 'classnames';
@@ -166,16 +167,11 @@ class BusinessPlan extends Component {
                     <input autoFocus className={styles.domainInput} placeholder="subdomain"
                       value={subdomain} onChange={this.handleSubdomainChange} />
                     <span className={classNames(
-                      'glyphicon',
-                      {
-                        'glyphicon-ok': isSubdomainVerified,
-                        'glyphicon-remove': !isSubdomainVerified,
-                        [styles.validatorPass]: isSubdomainVerified,
-                        [styles.validatorFail]: !isSubdomainVerified,
-                        'hide': subdomain.length === 0
-                      },
-                      styles.validationIndicator
-                    )}></span>
+                      styles.validationIndicator,
+                      styles.validatorPass
+                    )}>
+                      <MdDone />
+                    </span>
                   </div>
                   <span className={classNames(
                     styles.sectionTitle,
@@ -234,7 +230,7 @@ class BusinessPlan extends Component {
               <hr className={styles.divideLine} />
             </div>
             <div className={styles.nextButtonWrapper}>
-              <button disabled={!this.props.validations.isSubdomainVerified} className={styles.nextButton}
+              <button disabled={!isSubdomainVerified} className={styles.nextButton}
                 onClick={this.props.goToNextStep}>
                   Next
               </button>
