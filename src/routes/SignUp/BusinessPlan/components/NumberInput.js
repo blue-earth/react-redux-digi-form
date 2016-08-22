@@ -47,8 +47,17 @@ class NumberInput extends Component {
     });
   }
   handleOnBlur = (event) => {
-    if (!event.target.value) {
-      this.props.onChange(1);
+    const value = event.target.value;
+    const { minValue, maxValue, onChange } = this.props;
+    if (!value) {
+      onChange(minValue);
+    }
+    
+    if (minValue && value < minValue) {
+      onChange(minValue);
+    }
+    if (maxValue && value > maxValue) {
+      onChange(maxValue);
     }
   }
   handleAddNumber = () => {
