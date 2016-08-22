@@ -14,9 +14,10 @@ import {
   Button
 } from 'react-bootstrap';
 import { FaLock, FaArrowLeft, FaPaypal, FaCreditCardAlt } from 'react-icons/lib/fa';
-import { MdDone } from 'react-icons/lib/md';
+import { IoAndroidDone, IoAndroidClose } from 'react-icons/lib/io';
 import HelpContactFooter from 'components/Footer/HelpContactFooter';
 import CardType from 'components/CardType';
+import PriceTag from 'components/PriceTag';
 import styles from './BusinessPlan.scss';
 import classNames from 'classnames';
 
@@ -59,6 +60,11 @@ class BusinessPlan extends Component {
     plan: PropTypes.string.isRequired,
     period: PropTypes.string.isRequired
   }
+  constructor(props) {
+    super(props);
+    this.state = {
+      showSubdomainHint: false
+    };
   }
 
   componentDidMount() {
@@ -84,6 +90,18 @@ class BusinessPlan extends Component {
     }
     setPlanConfig({subdomain: subdomain});
   }
+
+  handleSubdomainFocus = (event) => {
+    this.setState({
+      showSubdomainHint: false
+    });
+  }
+  handleSubdomainBlur = (event) => {
+    this.setState({
+      showSubdomainHint: true
+    });
+  }
+
   handleUsersNumberChange = (number) => {
     this.props.setPlanConfig({number_of_users: number});
   }
@@ -128,19 +146,22 @@ class BusinessPlan extends Component {
   }
 
   getDiscountMount = () => {
-    const {annually, monthly} = this.props.detail.price;
-    return this.props.planConfig.number_of_users * (monthly-annually) * 12;
+    const { monthly, annually } = this.getPlanPrices();
+    return this.props.planConfig.number_of_users * (annually-monthly) * 12;
   }
   getTotalPrice = () => {
     return this.props.planConfig.number_of_users * this.getSinglePrice() * 12;
   }
   getSinglePrice = () => {
-    const {annually, monthly} = this.props.detail.price;
+    const { monthly, annually } = this.getPlanPrices();
     return this.haveDiscount() ? annually : monthly;
   }
 
   renderConfigurePage() {
-    const { max_required_user, min_required_user, price: { annually, monthly } } = this.props.detail;
+    const { period } = this.props;
+    const { max_num_users, min_required_users } = this.getPlanDetail(period);
+    const annually = this.getPlanDetail('annually').price_cents;
+    const monthly = this.getPlanDetail('monthly').price_cents;
     const { subdomain, number_of_users } = this.props.planConfig;
     const { isSubdomainVerified, subdomainErrorMessage } = this.props.validations;
     const isActive = (cycle) => {
@@ -159,12 +180,24 @@ class BusinessPlan extends Component {
                 <div className={styles.domainInputWrapper}>
                   <div className={styles.domainInputGroup}>
                     <input autoFocus className={styles.domainInput} placeholder="subdomain"
-                      value={subdomain} onChange={this.handleSubdomainChange} />
+                      value={subdomain} onChange={this.handleSubdomainChange}
+                      onBlur={this.handleSubdomainBlur} onFocus={this.handleSubdomainFocus} />
                     <span className={classNames(
                       styles.validationIndicator,
-                      styles.validatorPass
+                      styles.validatorPass,
+                      {
+                        'hide': !isSubdomainVerified
+                      }
                     )}>
-                      <MdDone />
+                      <IoAndroidDone />
+                    </span>
+                    <span className={classNames(
+                      styles.validationIndicator,
+                      styles.validatorFail,
+                      {
+                        'hide': subdomain.length === 0 || isSubdomainVerified
+                      })}>
+                      <IoAndroidClose />
                     </span>
                   </div>
                   <span className={classNames(
@@ -174,14 +207,15 @@ class BusinessPlan extends Component {
                   <div className={classNames(
                     styles.validatorFail,
                     styles.subdomainErrorMessage,
-                    {'hide': subdomain.length === 0}
+                    {'hide': !this.state.showSubdomainHint}
                   )}>{subdomainErrorMessage}</div>
                 </div>
               </div>
               <div>
                 <p className={styles.sectionTitle}>Choose number of users:</p>
                 <NumberInput height={54} className={styles.bigNumberInput}
-                  value={number_of_users} onChange={this.handleUsersNumberChange} minValue={min_required_user} maxValue={max_required_user} />
+                  value={number_of_users} onChange={this.handleUsersNumberChange}
+                  minValue={min_required_users} maxValue={max_num_users} />
               </div>
             </Panel>
             <div className={styles.billingCycleSection}>
@@ -239,6 +273,7 @@ class BusinessPlan extends Component {
     const { planConfig, paymentMethod, purchaseErrorMessage, isPurchasing } = this.props;
     const { number_of_users, billing_cycle } = planConfig;
     const { email, card_number, expiry, cvc } = paymentMethod;
+    const { price_currency, min_required_users, max_num_users } = this.getPlanDetail(billing_cycle);
     return (
       <Grid fluid>
         <div className="text-center">
@@ -315,25 +350,30 @@ class BusinessPlan extends Component {
                 <p>
                   Users: {' '}
                   <NumberInput height={24} className={styles.smallNumberInput}
-                    value={number_of_users} minValue={1} onChange={this.handleUsersNumberChange} />
+                    value={number_of_users} onChange={this.handleUsersNumberChange}
+                    minValue={min_required_users} maxValue={max_num_users} />
                 </p>
                 <p style={{marginBottom: '30px'}}>
                   <span className={styles.orderItem}>Billed {billing_cycle} {this.haveDiscount()?'(save 33%)':''}</span>
                   {' '}
                   <span onClick={this.handleBillingCycleChange} className={styles.changeBillingCycle}>CHANGE</span>
                   <span className={classNames(styles.price, {'hidden': !this.haveDiscount()})}>
-                    - AUD ${this.getDiscountMount()}
+                    <PriceTag price={this.getDiscountMount()} currency={price_currency} />
                   </span>
                 </p>
                 <hr className={styles.divideLine} />
                 <p>
-                  <span>Subtotal (${this.getSinglePrice()} per month)</span>
-                  <span className={styles.price}>AUD ${this.getSinglePrice() * 12}</span>
+                  <span>Subtotal (<PriceTag price={this.getSinglePrice()} /> per month)</span>
+                  <span className={styles.price}>
+                    <PriceTag price={this.getSinglePrice() * 12} currency={price_currency} />
+                  </span>
                 </p>
                 <hr className={styles.divideLine} />
                 <p>
                   <span className={classNames(styles.totalTitle, 'h3')}>Total due</span>
-                  <span className={classNames(styles.price, 'h3')}>AUD ${this.getTotalPrice()}</span>
+                  <span className={classNames(styles.price, 'h3')}>
+                    <PriceTag price={this.getTotalPrice()} currency={price_currency} />
+                  </span>
                 </p>
               </Panel>
               <Panel className={classNames(styles.infoPanel, styles.featurePanel)}>
