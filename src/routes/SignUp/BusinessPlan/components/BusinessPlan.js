@@ -139,6 +139,9 @@ class BusinessPlan extends Component {
       }
     }
   }
+  getOriginalPrice = () => {
+    return 12 * this.props.planConfig.numberOfUsers * this.getPlanDetail('monthly').priceCents;
+  }
   getPlanPrices = () => {
     const annually = this.getPlanDetail('annually').priceCents;
     const monthly = this.getPlanDetail('monthly').priceCents;
@@ -354,7 +357,9 @@ class BusinessPlan extends Component {
                 <p>
                   <strong className={styles.orderItem}>Business Plan</strong>
                   {' '}
-                  <span className={styles.price}>AUD ${numberOfUsers * 74 * 12}</span>
+                  <span className={styles.price}>
+                    <PriceTag price={this.getOriginalPrice()} currency={priceCurrency} />
+                  </span>
                 </p>
                 <p>
                   Users: {' '}
