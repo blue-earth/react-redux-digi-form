@@ -116,8 +116,8 @@
   border: 3px solid white;
   &[disabled] {
     color: white;
-    border-color: $shadow-color;
-    background-color: $shadow-color;
+    border-color: $panel-heading-bg-color;
+    background-color: $panel-heading-bg-color;
     cursor: not-allowed;
   }
 }

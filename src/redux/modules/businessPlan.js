@@ -129,7 +129,12 @@ const processFetchPlans = (plan, period) => {
         min_required_users: 3,
         max_num_users: 6
       }];
-      dispatch(setPlans(plans));
+
+      const newPlan = plans.map(item => Object.assign({},
+        ...Object.keys(item).map(key => ({
+          [camelize(key)]: item[key]
+        }))));
+      dispatch(setPlans(newPlan));
       dispatch(_setPlanConfig(plans, plan, period));
     };
   };

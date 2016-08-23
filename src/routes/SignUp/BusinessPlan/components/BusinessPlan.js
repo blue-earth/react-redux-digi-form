@@ -26,10 +26,10 @@ class BusinessPlan extends Component {
     plans: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string,
-        price_cents: PropTypes.number,
-        price_currency: PropTypes.string,
-        min_required_users: PropTypes.number,
-        max_num_users: PropTypes.number
+        priceCents: PropTypes.number,
+        priceCurrency: PropTypes.string,
+        minRequiredUsers: PropTypes.number,
+        maxNumUsers: PropTypes.number
       })
     ),
     planConfig: PropTypes.shape({
@@ -140,8 +140,8 @@ class BusinessPlan extends Component {
     }
   }
   getPlanPrices = () => {
-    const annually = this.getPlanDetail('annually').price_cents;
-    const monthly = this.getPlanDetail('monthly').price_cents;
+    const annually = this.getPlanDetail('annually').priceCents;
+    const monthly = this.getPlanDetail('monthly').priceCents;
     return { annually, monthly };
   }
 
@@ -159,9 +159,9 @@ class BusinessPlan extends Component {
 
   renderConfigurePage() {
     const { period } = this.props;
-    const { max_num_users, min_required_users } = this.getPlanDetail(period);
-    const annually = this.getPlanDetail('annually').price_cents;
-    const monthly = this.getPlanDetail('monthly').price_cents;
+    const { maxNumUsers, minRequiredUsers } = this.getPlanDetail(period);
+    const annually = this.getPlanDetail('annually').priceCents;
+    const monthly = this.getPlanDetail('monthly').priceCents;
     const { subdomain, numberOfUsers } = this.props.planConfig;
     const { isSubdomainVerified, subdomainErrorMessage } = this.props.validations;
     const isActive = (cycle) => {
@@ -215,7 +215,7 @@ class BusinessPlan extends Component {
                 <p className={styles.sectionTitle}>Choose number of users:</p>
                 <NumberInput height={54} className={styles.bigNumberInput}
                   value={numberOfUsers} onChange={this.handleUsersNumberChange}
-                  minValue={min_required_users} maxValue={max_num_users} />
+                  minValue={minRequiredUsers} maxValue={maxNumUsers} />
               </div>
             </Panel>
             <div className={styles.billingCycleSection}>
@@ -281,7 +281,7 @@ class BusinessPlan extends Component {
     const { planConfig, paymentMethod, purchaseErrorMessage, isPurchasing } = this.props;
     const { numberOfUsers, billingCycle } = planConfig;
     const { email, cardNumber, expiry, cvc } = paymentMethod;
-    const { price_currency, min_required_users, max_num_users } = this.getPlanDetail(billingCycle);
+    const { priceCurrency, minRequiredUsers, maxNumUsers } = this.getPlanDetail(billingCycle);
     return (
       <Grid fluid>
         <div className="text-center">
@@ -360,28 +360,28 @@ class BusinessPlan extends Component {
                   Users: {' '}
                   <NumberInput height={24} className={styles.smallNumberInput}
                     value={numberOfUsers} onChange={this.handleUsersNumberChange}
-                    minValue={min_required_users} maxValue={max_num_users} />
+                    minValue={minRequiredUsers} maxValue={maxNumUsers} />
                 </p>
                 <p style={{marginBottom: '30px'}}>
                   <span className={styles.orderItem}>Billed {billingCycle} {this.haveDiscount()?'(save 33%)':''}</span>
                   {' '}
                   <span onClick={this.handleBillingCycleChange} className={styles.changeBillingCycle}>CHANGE</span>
                   <span className={classNames(styles.price, {'hidden': !this.haveDiscount()})}>
-                    <PriceTag price={this.getDiscountMount()} currency={price_currency} />
+                    <PriceTag price={this.getDiscountMount()} currency={priceCurrency} />
                   </span>
                 </p>
                 <hr className={styles.divideLine} />
                 <p style={{marginBottom: '30px'}}>
                   <span>Subtotal (<PriceTag price={this.getSinglePrice()} /> per month)</span>
                   <span className={styles.price}>
-                    <PriceTag price={this.getSinglePrice() * 12} currency={price_currency} />
+                    <PriceTag price={this.getSinglePrice() * 12} currency={priceCurrency} />
                   </span>
                 </p>
                 <hr className={styles.divideLine} />
                 <p>
                   <span className={classNames(styles.totalTitle, 'h3')}>Total due</span>
                   <span className={classNames(styles.price, 'h3')}>
-                    <PriceTag price={this.getTotalPrice()} currency={price_currency} />
+                    <PriceTag price={this.getTotalPrice()} currency={priceCurrency} />
                   </span>
                 </p>
               </Panel>
