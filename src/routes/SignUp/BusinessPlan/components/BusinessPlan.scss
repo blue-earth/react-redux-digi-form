@@ -200,7 +200,10 @@
   color: $red;
 }
 .infoPanel{
-  padding: 4px 25px
+  padding: 4px 20px;
+  h4{
+    font-family: "roble_alt_boldbold";
+  }
 }
 .featurePanel{
   background-color: $blue;
