@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import PlainHeader from 'components/Headers/PlainHeader';
 import BusinessPlanStep from './BusinessPlanStep';
-import NumberInput from './NumberInput';
+import NumberInput from 'components/NumberInput';
 import MaskedInput from 'react-maskedinput';
 import {
   Grid,
