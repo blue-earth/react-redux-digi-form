@@ -5,11 +5,12 @@ import React, {
 
 export default class PriceTag extends Component {
   static propTypes = {
-    price: PropTypes.number.isRequired,
+    price: PropTypes.number,
     currency: PropTypes.string,
     currencySymbol: PropTypes.string
   }
   static defaultProps = {
+    price: 0,
     currencySymbol: '$',
     currency: ''
   }
