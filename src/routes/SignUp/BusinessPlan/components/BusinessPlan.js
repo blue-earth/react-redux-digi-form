@@ -103,20 +103,15 @@ class BusinessPlan extends Component {
     });
   }
 
+  handlePaymentChange = (event) => {
+    let object = {};
+    const name = event.target.getAttribute('name');
+    object[name] = event.target.value;
+    this.props.setPaymentMethod(object);
+  }
+
   handleUsersNumberChange = (number) => {
     this.props.setPlanConfig({numberOfUsers: number});
-  }
-  handleEmailChange = (event) => {
-    this.props.setPaymentMethod({email: event.target.value});
-  }
-  handleCardNumberChange = (event) => {
-    this.props.setPaymentMethod({cardNumber: event.target.value});
-  }
-  handleExpireChange = (event) => {
-    this.props.setPaymentMethod({expiry: event.target.value});
-  }
-  handleCvcChange = (event) => {
-    this.props.setPaymentMethod({cvc: event.target.value});
   }
 
   handleBillingCycleChange = () => {
@@ -327,13 +322,13 @@ class BusinessPlan extends Component {
               <p className="h5">
                 <FaLock /> Your purchase is secured using 256-bit encryption
               </p>
-              <input type="email" placeholder="Email" autoFocus
+              <input type="email" name="email" placeholder="Email" autoFocus
                 className={classNames(styles.creditCardInput, styles.emailInput)}
-                value={email} onChange={this.handleEmailChange} />
+                value={email} onChange={this.handlePaymentChange} />
               <div className={styles.creditCardInputWrapper}>
-                <MaskedInput mask="1111 1111 1111 1111" name="card" size="16"
+                <MaskedInput mask="1111 1111 1111 1111" name="cardNumber" size="16"
                   className={classNames(styles.creditCardInput, styles.cardNumberInput)}
-                  value={cardNumber} placeholder="Card number" onChange={this.handleCardNumberChange} />
+                  value={cardNumber} placeholder="Card number" onChange={this.handlePaymentChange} />
                 <span className={styles.creditCardType}>
                   <CardType cardNumber={cardNumber} />
                 </span>
@@ -341,10 +336,10 @@ class BusinessPlan extends Component {
               <div className={styles.creditCardInputWrapper}>
                 <MaskedInput mask="11/11" name="expiry" placeholder="MM/YY"
                   className={classNames(styles.creditCardInput, styles.expireDateInput)}
-                  value={expiry} onChange={this.handleExpireChange} />
+                  value={expiry} onChange={this.handlePaymentChange} />
                 <MaskedInput mask="111" name="cvc" placeholder="CVC"
                   className={classNames(styles.creditCardInput, styles.cvcInput)}
-                  value={cvc} onChange={this.handleCvcChange} />
+                  value={cvc} onChange={this.handlePaymentChange} />
               </div>
               <button className={styles.purchaseButton} onClick={this.handlePurchase}>
                 {isPurchasing? 'Processing...' : 'Purchase'}
