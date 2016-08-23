@@ -390,22 +390,22 @@ class BusinessPlan extends Component {
                 <hr className={styles.divideLine} />
                 <ul className={styles.featureList}>
                   <li className={styles.featureItem}>
-                    &#x2713;
+                    <IoAndroidDone size={20} />
                     {'  '}
                     On-board customers up to 50x faster
                   </li>
                   <li className={styles.featureItem}>
-                    &#x2713;
+                   <IoAndroidDone size={20} />
                     {'  '}
                     Capture new leads from abandoned forms
                   </li>
                   <li className={styles.featureItem}>
-                    &#x2713;
+                    <IoAndroidDone size={20} />
                     {'  '}
                     Convert documents into beautiful online forms
                   </li>
                   <li className={styles.featureItem}>
-                    &#x2713;
+                    <IoAndroidDone size={20} />
                     {'  '}
                     Unlimited digital signatures
                   </li>
