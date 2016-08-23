@@ -11,10 +11,11 @@ import {
   Row,
   Col,
   Panel,
+
   Button
 } from 'react-bootstrap';
 import { FaLock, FaArrowLeft, FaCreditCardAlt } from 'react-icons/lib/fa';
-import { IoAndroidDone, IoAndroidClose } from 'react-icons/lib/io';
+import { IoAndroidDone, IoAndroidClose, IoAndroidArrowBack } from 'react-icons/lib/io';
 import HelpContactFooter from 'components/Footer/HelpContactFooter';
 import CardType from 'components/CardType';
 import PriceTag from 'components/PriceTag';
@@ -348,7 +349,11 @@ class BusinessPlan extends Component {
               <button className={styles.purchaseButton} onClick={this.handlePurchase}>
                 {isPurchasing? 'Processing...' : 'Purchase'}
               </button>
-              <Button bsStyle="link" onClick={this.props.goToPreviousStep}><FaArrowLeft />Back</Button>
+              <Button className={styles.backButton} bsStyle="link" onClick={this.props.goToPreviousStep}>
+                <IoAndroidArrowBack size={14} style={{height: '22px'}} />
+                {' '}
+                <span style={{lineHeight: '22px'}}>Back</span>
+              </Button>
             </Col>
             <Col sm={6} md={5} mdPush={1} lg={4} lgPush={2} className="text-left">
               <Panel className={classNames(styles.infoPanel, styles.orderPanel)}>

@@ -196,6 +196,16 @@
     outline: none;
   }
 }
+.backButton{
+  padding: 4px 0;
+  font-size: 14px;
+  &:hover {
+    text-decoration: none;
+  }
+  &:focus {
+    outline: none;
+  }
+}
 .purchaseStatus{
   color: $red;
 }
