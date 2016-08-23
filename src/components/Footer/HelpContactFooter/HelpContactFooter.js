@@ -2,7 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { FaCircle } from 'react-icons/lib/fa';
+import { IoIosTelephone, IoIosChatbubble, IoHelpCircled } from 'react-icons/lib/io';
 import styles from './HelpContactFooter.scss';
 
 export default class HelpContactFooter extends Component {
@@ -16,21 +16,21 @@ export default class HelpContactFooter extends Component {
           Questions?
         </li>
         <li className={styles.footerLink}>
-          <FaCircle />
+          <IoIosTelephone size={16} style={{verticalAlign: 'bottom'}} />
           {' '}
           <a href="#">
             1800 Emondo
           </a>
         </li>
         <li className={styles.footerLink}>
-          <FaCircle />
+          <IoIosChatbubble size={16} style={{verticalAlign: 'bottom'}} />
           {' '}
           <a href="#">
             Live Chat
           </a>
         </li>
         <li className={styles.footerLink}>
-          <FaCircle />
+          <IoHelpCircled size={16} style={{verticalAlign: 'bottom'}} />
           {' '}
           <a href="#">
             FAQ
