@@ -110,7 +110,7 @@ class LoginForm extends Component {
           {this.renderVerificationStatus()}
           <div className={styles.submitButtonWrapper}>
             <Button onClick={this.handleSubmit} className="btn-lg btn-block" style="submitButton"
-              isDisabled={password.error || email.error ? true : false}
+              isDisabled={typeof password.error !== 'undefined' || typeof email.error !== 'undefined'}
               isLoading={authStatus === 'LOGGING_IN'}
               spinnerStyle="replaceAll" spinnerForeground="white" spinnerBackground="blue">
               Login
