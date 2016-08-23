@@ -13,7 +13,7 @@ import {
   Panel,
   Button
 } from 'react-bootstrap';
-import { FaLock, FaArrowLeft, FaPaypal, FaCreditCardAlt } from 'react-icons/lib/fa';
+import { FaLock, FaArrowLeft, FaCreditCardAlt } from 'react-icons/lib/fa';
 import { IoAndroidDone, IoAndroidClose } from 'react-icons/lib/io';
 import HelpContactFooter from 'components/Footer/HelpContactFooter';
 import CardType from 'components/CardType';
@@ -302,7 +302,7 @@ class BusinessPlan extends Component {
                 'text-center',
                 'pull-left'
               )}>
-                <h4>
+                <h4 style={{lineHeight: '26px'}}>
                   <FaCreditCardAlt />
                   {' '}
                   <span className={styles.selectTitle}>Credit Card</span>
@@ -315,7 +315,8 @@ class BusinessPlan extends Component {
                 'pull-right'
               )} disabled>
                 <h4>
-                  <FaPaypal />{' '} Paypal
+                  <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png"
+                    alt="PayPal" />
                 </h4>
               </Panel>
               <div className={styles.clearFloat}></div>
