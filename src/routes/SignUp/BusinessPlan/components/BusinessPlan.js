@@ -14,7 +14,7 @@ import {
 
   Button
 } from 'react-bootstrap';
-import { FaLock, FaArrowLeft, FaCreditCardAlt } from 'react-icons/lib/fa';
+import { FaLock, FaCreditCardAlt } from 'react-icons/lib/fa';
 import { IoAndroidDone, IoAndroidClose, IoAndroidArrowBack } from 'react-icons/lib/io';
 import HelpContactFooter from 'components/Footer/HelpContactFooter';
 import CardType from 'components/CardType';
