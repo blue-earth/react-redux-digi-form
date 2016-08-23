@@ -395,7 +395,7 @@ class BusinessPlan extends Component {
                     On-board customers up to 50x faster
                   </li>
                   <li className={styles.featureItem}>
-                   <IoAndroidDone size={20} />
+                    <IoAndroidDone size={20} />
                     {'  '}
                     Capture new leads from abandoned forms
                   </li>

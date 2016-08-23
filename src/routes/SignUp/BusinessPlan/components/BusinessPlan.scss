@@ -6,7 +6,7 @@
 }
 .purchasePageContent{
   min-height: 100%;
-  background-color: #ECF0F3; 
+  background-color: $bg-color3; 
 }
 .pageTitleWrapper{
    margin: 50px 0;
@@ -41,7 +41,7 @@
   margin: 20px 0;
   padding: 20px 40px 20px 20px;
   @include border-radius(6px);
-  border: 1px solid #ECF0F3;
+  border: 1px solid $bg-color3;
   color: $blackblue;
   font-weight: 700;
   font-size: 20px;
@@ -64,7 +64,7 @@
   color: $blue;
 }
 .validatorFail{
-  color: #a94442;
+  color: $red;
 }
 .bigNumberInput{
   font-size: 20px;
@@ -166,7 +166,7 @@
   margin: 10px 0;
   padding: 0 20px;
   @include border-radius(6px);
-  border: 1px solid #ECF0F3;
+  border: 1px solid $bg-color3;
   color: $blackblue;
   font-weight: bolder;
 }
@@ -197,7 +197,7 @@
   }
 }
 .purchaseStatus{
-  color: #a94442;
+  color: $red;
 }
 .infoPanel{
   padding: 0 16px;
@@ -243,5 +243,5 @@
   font-size: 12px;
 }
 .divideLine{
-  border-color: #E2F0FB;
+  border-color: $divider-line-color;
 }
