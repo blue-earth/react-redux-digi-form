@@ -301,7 +301,7 @@ class BusinessPlan extends Component {
                 'text-center',
                 'pull-left'
               )}>
-                <h4 style={{lineHeight: '26px'}}>
+                <h4 className={styles.paymentSelection}>
                   <FaCreditCardAlt />
                   {' '}
                   <span className={styles.selectTitle}>Credit Card</span>
@@ -313,7 +313,7 @@ class BusinessPlan extends Component {
                 'text-center',
                 'pull-right'
               )} disabled>
-                <h4>
+                <h4 className={styles.paymentSelection}>
                   <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png"
                     alt="PayPal" />
                 </h4>
@@ -367,7 +367,7 @@ class BusinessPlan extends Component {
                     value={numberOfUsers} onChange={this.handleUsersNumberChange}
                     minValue={minRequiredUsers} maxValue={maxNumUsers} />
                 </p>
-                <p style={{marginBottom: '30px'}}>
+                <p style={{marginBottom: '24px'}}>
                   <span className={styles.orderItem}>Billed {billingCycle} {this.haveDiscount()?'(save 33%)':''}</span>
                   {' '}
                   <span onClick={this.handleBillingCycleChange} className={styles.changeBillingCycle}>CHANGE</span>
@@ -376,7 +376,7 @@ class BusinessPlan extends Component {
                   </span>
                 </p>
                 <hr className={styles.divideLine} />
-                <p style={{marginBottom: '30px'}}>
+                <p style={{marginBottom: '24px'}}>
                   <span>Subtotal (<PriceTag price={this.getSinglePrice()} /> per month)</span>
                   <span className={styles.price}>
                     <PriceTag price={this.getSinglePrice() * 12} currency={priceCurrency} />

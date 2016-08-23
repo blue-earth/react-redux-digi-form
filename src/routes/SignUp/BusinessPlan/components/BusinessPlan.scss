@@ -121,6 +121,10 @@
     cursor: not-allowed;
   }
 }
+.paymentSelection {
+  margin: 6px 0;
+  line-height: 28px;
+}
 .selectTitle {
   font-family: "roble_alt_boldbold";
 }
@@ -197,6 +201,7 @@
   }
 }
 .backButton{
+  margin-bottom: 20px;
   padding: 4px 0;
   font-size: 14px;
   &:hover {
