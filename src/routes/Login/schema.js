@@ -11,7 +11,6 @@ const schema = {
     required: true
   }
 };
-// console.log(buildSchema(schema));
-// export default buildSchema(schema);
+
 const formSchema = buildSchema(schema);
 export default formSchema;

@@ -3,11 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import { dashboardUrl } from 'helpers/urlHelper';
-// import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
-// import PasswordInput from 'components/QuestionInputs/PasswordInput/PasswordInput';
-// import Validator from 'components/Validator/Validator';
 import Verifier from 'components/Verifier/Verifier';
-// import validateField from 'helpers/validationHelper';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import {
   LOGGED_IN,
