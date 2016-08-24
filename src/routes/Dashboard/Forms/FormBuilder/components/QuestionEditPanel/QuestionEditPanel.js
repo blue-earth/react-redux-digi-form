@@ -2,6 +2,11 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import {
+  Nav,
+  NavItem,
+  Tab
+} from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
 import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
@@ -137,23 +142,15 @@ export default class QuestionEditPanel extends Component {
     saveForm();
   }
 
-  renderTopActionButtons() {
-    return (
-      <div className={styles.topActionButtons}>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handlePreview}>Preview</Button>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleDelete}>Delete</Button>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleReset}>Reset</Button>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleCancel}>Cancel</Button>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleSave}>Save</Button>
-      </div>
-    );
-  }
-
   renderViewHeader() {
     return (
-      <h2 className={styles.viewHeader}>
-        {this.inputSchema.displayText}
-      </h2>
+      <div className={styles.viewHeader}>
+        <h2>{this.inputSchema.displayText}</h2>
+        <Nav bsStyle="tabs" className="mainTabs">
+          <NavItem eventKey="general">General</NavItem>
+          <NavItem eventKey="advanced">Advanced</NavItem>
+        </Nav>
+      </div>
     );
   }
 
@@ -179,17 +176,28 @@ export default class QuestionEditPanel extends Component {
       inputSchema: this.inputSchema
     });
     return (
-      <div className={styles.questionEditView}>
-        {this.renderViewHeader()}
-        <div className={styles.viewBody}>
-          <InstructionDescription {...componentProps} />
-          <AnswerOutputArea {...componentProps} />
-          <LengthValidation {...componentProps} />
-          <RangeValidation {...componentProps} />
-          <RequiredValidation {...componentProps} />
+      <Tab.Container defaultActiveKey="general">
+        <div className={styles.questionEditView}>
+          {this.renderViewHeader()}
+          <Tab.Content animation>
+            <Tab.Pane eventKey="general">
+              <div className={styles.viewBody}>
+                <InstructionDescription {...componentProps} />
+                <AnswerOutputArea {...componentProps} />
+                <LengthValidation {...componentProps} />
+                <RangeValidation {...componentProps} />
+                <RequiredValidation {...componentProps} />
+              </div>
+            </Tab.Pane>
+            <Tab.Pane eventKey="advanced">
+              <div className={styles.viewBody}>
+                TODO: Add components here.
+              </div>
+            </Tab.Pane>
+          </Tab.Content>
+          {this.renderViewFooter()}
         </div>
-        {this.renderViewFooter()}
-      </div>
+      </Tab.Container>
     );
   }
 }

@@ -2,7 +2,7 @@
 @import './variables';
 
 $save-button-bg-color: $blue;
-$header-height: 47px;
+$header-height: 55px;
 $footer-height: 68px;
 
 .questionEditView {
@@ -21,16 +21,20 @@ $footer-height: 68px;
   left: 0;
   right: 0;
   height: $header-height;
-  font-size: 16px;
-  font-family: 'roble_alt_boldbold';
-  font-weight: 600;
   padding: 15px;
   background-color: $panel-heading-bg-color;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  margin: 0;
   border-bottom: 1px solid $panel-border-color;
   color: $panel-heading-text-color;
+  h2 {
+    font-size: 16px;
+    font-family: 'roble_alt_boldbold';
+    font-weight: 600;
+    line-height: 25px;
+    padding: 0;
+    margin: 0;
+  }
 }
 .viewBody {
   position: absolute;
@@ -66,5 +70,30 @@ $footer-height: 68px;
   font-size: 14px;
   &:hover, &:focus, &:active {
     background-color: darken($save-button-bg-color, 5%) !important;
+  }
+}
+
+:global {
+  .mainTabs {
+    font-size: 12px;
+    font-weight: 600;
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
+    border: none;
+    > li > a {
+      padding: 10px 15px;
+      color: $panel-text-color4;
+      &:focus, &:hover {
+        border-bottom-color: $panel-border-color;
+      }
+    }
+    > li.active > a {
+      border-color: $panel-border-color !important;
+      border-bottom-color: transparent !important;
+      &, &:focus, &:hover {
+        background-color: $panel-body-bg-color;
+      }
+    }
   }
 }
