@@ -7,6 +7,7 @@ import {
   verifySubdomain,
   setPlanConfig,
   setPaymentMethod,
+  setDisplaySubdomainHint,
   INIT_BUSINESS_PLAN_STATE
 } from 'redux/modules/businessPlan';
 
@@ -19,7 +20,8 @@ const mapActionCreators = {
   fetchPlans,
   verifySubdomain,
   setPlanConfig,
-  setPaymentMethod
+  setPaymentMethod,
+  setDisplaySubdomainHint
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -32,7 +34,8 @@ const mapStateToProps = (state, ownProps) => {
     validations,
     paymentMethod,
     purchaseErrorMessage,
-    isPurchasing
+    isPurchasing,
+    showSubdomainHint
   } = businessPlan || INIT_BUSINESS_PLAN_STATE;
   return {
     plans,
@@ -42,6 +45,7 @@ const mapStateToProps = (state, ownProps) => {
     paymentMethod,
     purchaseErrorMessage,
     isPurchasing,
+    showSubdomainHint,
     plan,
     period
   };

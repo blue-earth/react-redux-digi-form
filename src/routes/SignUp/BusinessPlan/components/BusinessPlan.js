@@ -57,15 +57,11 @@ class BusinessPlan extends Component {
     verifySubdomain: PropTypes.func.isRequired,
     setPlanConfig: PropTypes.func.isRequired,
     setPaymentMethod: PropTypes.func.isRequired,
+    setDisplaySubdomainHint: PropTypes.func.isRequired,
     purchasePlan: PropTypes.func.isRequired,
+    showSubdomainHint: PropTypes.bool.isRequired,
     plan: PropTypes.string.isRequired,
     period: PropTypes.string.isRequired
-  }
-  constructor(props) {
-    super(props);
-    this.state = {
-      showSubdomainHint: false
-    };
   }
   componentDidMount() {
     this.props.fetchPlans();
@@ -92,14 +88,10 @@ class BusinessPlan extends Component {
   }
 
   handleSubdomainFocus = (event) => {
-    this.setState({
-      showSubdomainHint: false
-    });
+    this.props.setDisplaySubdomainHint(false);
   }
   handleSubdomainBlur = (event) => {
-    this.setState({
-      showSubdomainHint: true
-    });
+    this.props.setDisplaySubdomainHint(true);
   }
 
   handlePaymentChange = (event) => {
@@ -156,7 +148,7 @@ class BusinessPlan extends Component {
   }
 
   renderConfigurePage() {
-    const { period, planConfig, validations } = this.props;
+    const { period, planConfig, validations, showSubdomainHint } = this.props;
     const { maxNumUser, minRequiredNumUser } = this.getPlanDetail(period);
     const { annually, monthly } = this.getPlanPrices();
     const { subdomain, numberOfUsers } = planConfig;
@@ -204,7 +196,7 @@ class BusinessPlan extends Component {
                   <div className={classNames(
                     styles.validatorFail,
                     styles.subdomainErrorMessage,
-                    {'hide': !this.state.showSubdomainHint}
+                    {'hide': !showSubdomainHint}
                   )}>{subdomainErrorMessage}</div>
                 </div>
               </div>

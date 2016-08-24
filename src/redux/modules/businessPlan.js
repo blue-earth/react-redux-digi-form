@@ -11,6 +11,7 @@ export const SET_PLANS = 'SET_PLANS';
 export const SET_PAYMENT_METHOD = 'SET_PAYMENT_METHOD';
 export const SET_PLAN_CONFIG = 'SET_PLAN_CONFIG';
 export const SET_IS_PURCHASING = 'SET_IS_PURCHASING';
+export const SET_DISPLAY_SUBDOMAIN_HINT = 'SET_DISPLAY_SUBDOMAIN_HINT';
 
 export const RECEIVE_VERIFY_SUBDOMAIN = 'RECEIVE_VERIFY_SUBDOMAIN';
 export const RECEIVE_PURCHASE_RESULT = 'RECEIVE_PURCHASE_RESULT';
@@ -71,7 +72,8 @@ export const INIT_BUSINESS_PLAN_STATE = {
     cvc: ''
   },
   purchaseErrorMessage: '',
-  isPurchasing: false
+  isPurchasing: false,
+  showSubdomainHint: false
 };
 
 export const nextStep = createAction(NEXT_STEP);
@@ -82,6 +84,7 @@ export const setPlans = createAction(SET_PLANS);
 export const receiveVerifySubdomain = createAction(RECEIVE_VERIFY_SUBDOMAIN);
 export const receivePurchaseResult = createAction(RECEIVE_PURCHASE_RESULT);
 export const setIsPurchasing = createAction(SET_IS_PURCHASING);
+export const setDisplaySubdomainHint = createAction(SET_DISPLAY_SUBDOMAIN_HINT);
 
 export const verifySubdomain = (subdomain) => {
   return (dispatch, getState) => {
@@ -255,6 +258,10 @@ const businessPlanReducer = handleActions({
   SET_IS_PURCHASING: (state, action) =>
     Object.assign({}, state, {
       isPurchasing: action.payload
+    }),
+  SET_DISPLAY_SUBDOMAIN_HINT: (state, action) =>
+    Object.assign({}, state, {
+      showSubdomainHint: action.payload
     })
 }, INIT_BUSINESS_PLAN_STATE);
 
