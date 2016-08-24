@@ -140,7 +140,6 @@ const processFetchPlans = (plan, period) => {
   });
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      console.log(value);
       const newPlan = value.map(item => Object.assign({},
         ...Object.keys(item).map(key => ({
           [camelize(key)]: item[key]
@@ -151,52 +150,6 @@ const processFetchPlans = (plan, period) => {
   };
   const fetchFail = (data) => {
     console.log(data);
-    return (dispatch, getState) => {
-      const plans = [{
-        name: 'global-annually',
-        price_cents: 9983,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }, {
-        name: 'global-monthly',
-        price_cents: 14900,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }, {
-        name: 'teams-annually',
-        price_cents: 5293,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }, {
-        name: 'teams-monthly',
-        price_cents: 7490,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }, {
-        name: 'professional-annually',
-        price_cents: 2613,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: 20
-      }, {
-        name: 'professional-monthly',
-        price_cents: 3900,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }];
-
-      const newPlan = plans.map(item => Object.assign({},
-        ...Object.keys(item).map(key => ({
-          [camelize(key)]: item[key]
-        }))));
-      dispatch(setPlans(newPlan));
-      dispatch(_setPlanConfig(plans, plan, period));
-    };
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
