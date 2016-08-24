@@ -248,13 +248,13 @@ const _saveElement = (state, action) => {
   const id = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
   var question = _.merge({}, INIT_QUESTION_STATE, currentElement.question, { id });
   var mappingInfo = _.merge({}, INIT_MAPPING_INFO_STATE, currentElement.mappingInfo, { id });
-
+  var isModified = state.isModified || currentElement.isModified;
   return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
     documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo),
     lastQuestionId: id,
     currentElement: _.merge({}, currentElement, { id }),
-    isModified: false
+    isModified
   });
 };
 
@@ -411,8 +411,9 @@ const _setMappingPositionInfo = (state, action) => {
 // ------------------------------------
 export const _updateCurrentElement = (state, element) => {
   return Object.assign({}, state, {
-    currentElement: Object.assign({}, state.currentElement, element),
-    isModified: true
+    currentElement: Object.assign({}, state.currentElement, element, {
+      isModified: true
+    })
   });
 };
 
@@ -437,6 +438,7 @@ const _setQuestionEditMode = (state, action) => {
   const newCurrentElement = mode ? {
     id,
     question,
+    isModified: false,
     mappingInfo: _.pick(Object.assign({}, id
       ? findItemById(state.documentMapping, id)
       : currentElement
@@ -469,7 +471,8 @@ const formBuilderReducer = handleActions({
 
   DONE_FETCHING_FORM: (state, action) =>
     Object.assign({}, state, {
-      isFetching: false
+      isFetching: false,
+      isModified: false
     }),
 
   REQUEST_FORM_SUBMIT: (state, action) =>

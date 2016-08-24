@@ -127,8 +127,8 @@ export default class QuestionEditPanel extends Component {
   }
 
   handleCancel = () => {
-    const { setQuestionEditMode, show, isModified } = this.props;
-    if (isModified) {
+    const { setQuestionEditMode, show, currentElement } = this.props;
+    if (currentElement.isModified) {
       show('cancelConfirmModal');
     } else {
       setQuestionEditMode({
