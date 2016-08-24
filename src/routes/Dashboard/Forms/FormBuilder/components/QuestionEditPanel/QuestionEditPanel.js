@@ -11,9 +11,9 @@ import RequiredValidation from 'components/QuestionEditFields/RequiredValidation
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
 import 'rc-switch/assets/index.css';
-import styles from './QuestionEditView.scss';
+import styles from './QuestionEditPanel.scss';
 
-class QuestionEditView extends Component {
+export default class QuestionEditPanel extends Component {
 
   static propTypes = {
     /*
@@ -194,4 +194,3 @@ class QuestionEditView extends Component {
   }
 }
 
-export default QuestionEditView;

@@ -15,9 +15,9 @@ import classNames from 'classnames';
 import questionInputs, {
   questionInputGroups
 } from 'schemas/questionInputs';
-import styles from './ElementsListView.scss';
+import styles from './ElementsListPanel.scss';
 
-class ElementsListView extends Component {
+export default class ElementsListPanel extends Component {
 
   static propTypes = {
     /*
@@ -132,5 +132,3 @@ class ElementsListView extends Component {
     );
   }
 }
-
-export default ElementsListView;

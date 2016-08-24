@@ -6,7 +6,7 @@ import styles from './PageView.scss';
 import {
   Button
 } from 'react-bootstrap';
-import DrawingBoard from '../DrawingBoard/DrawingBoard';
+import DrawingBoard from '../DrawingBoard';
 import _ from 'lodash';
 import { pageZoomPercent } from 'helpers/formBuilderHelper';
 
