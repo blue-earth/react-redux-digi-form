@@ -90,8 +90,7 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { fields: {email, password}, isAuthenticating, authStatus } = this.props;
-    const { isSubmitting } = this.state;
+    const { fields: {email, password}, authStatus } = this.props;
     return (
       <div className={styles.loginFormWrapper}>
         <Header />

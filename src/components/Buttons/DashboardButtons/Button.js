@@ -23,9 +23,6 @@ class Button extends Component {
     // disables the button and adds a spinner icon
     isLoading: PropTypes.bool,
     spinnerStyle: PropTypes.oneOf(['replaceAll', 'replaceIcon', false]),
-    // TODO: find a better way to deal with spinner colour
-    spinnerForeground: PropTypes.string,
-    spinnerBackground: PropTypes.string,
 
     // text and any additional stuff such as profile image
     children: PropTypes.node,
@@ -126,10 +123,10 @@ class Button extends Component {
 
   // add a spinner to the button
   renderSpinner() {
-    const { isLoading, spinnerForeground, spinnerBackground } = this.props;
+    const { isLoading } = this.props;
     if (isLoading === true) {
       return (
-        <Spinner foreground={spinnerForeground} background={spinnerBackground} />
+        <Spinner />
       );
     } else {
       return false;
@@ -166,7 +163,7 @@ class Button extends Component {
         >
           {this.renderNotificationCounter()}
           {this.renderSpinner()}
-          <span>{children}</span>
+          <span className={styles.children}>{children}</span>
         </BootstrapButton>
       );
     }

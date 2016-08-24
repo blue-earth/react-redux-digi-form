@@ -20,7 +20,7 @@ $button-lg-size: 64px;
   &.loading {
     cursor: not-allowed;
     &.spinnerReplaceAll {
-      span {display: none;}
+      .children {display: none;}
     }
     &.spinnerReplaceIcon {
       svg {display: none;}
