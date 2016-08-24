@@ -106,8 +106,7 @@ class LoginForm extends Component {
           <div className={styles.submitButtonWrapper}>
             <Button onClick={this.handleSubmit} className="btn-lg btn-block" style="submitButton"
               isDisabled={typeof password.error !== 'undefined' || typeof email.error !== 'undefined'}
-              isLoading={authStatus === 'LOGGING_IN'}
-              spinnerStyle="replaceAll" spinnerForeground="white" spinnerBackground="blue">
+              isLoading={authStatus === 'LOGGING_IN'} spinnerStyle="replaceAll">
               Login
             </Button>
           </div>
