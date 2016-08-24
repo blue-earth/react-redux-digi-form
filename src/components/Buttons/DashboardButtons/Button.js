@@ -77,7 +77,7 @@ class Button extends Component {
   }
 
   getWrapperClass() {
-    const { block, style, iconOnly, isLoading, className, spinnerStyle } = this.props;
+    const { block, style, iconOnly, isLoading, className } = this.props;
     return classNames({
       [styles[style]]: true,
       [styles.iconOnly]: iconOnly === true,
