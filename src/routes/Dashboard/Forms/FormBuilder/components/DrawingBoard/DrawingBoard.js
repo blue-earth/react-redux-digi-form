@@ -345,34 +345,38 @@ class DrawingBoard extends Component {
   handleKeyDown = (event) => {
     const { currentElement, pageZoom, setMappingPositionInfo, deleteElement } = this.props;
 
-    if (currentElement) {
-      const boundingBox = _.get(currentElement, ['mappingInfo', 'bounding_box', '0'], false);
-      if (!boundingBox) return;
-      const newBoundingBox = _.assign({}, boundingBox);
-      switch (event.keyCode) {
-        case 37: // Left key
-          newBoundingBox.left -= 1.0 / pageZoom;
-          break;
-        case 38: // Up key
-          newBoundingBox.top -= 1.0 / pageZoom;
-          break;
-        case 39: // Right key
-          newBoundingBox.left += 1.0 / pageZoom;
-          break;
-        case 40: // Down key
-          newBoundingBox.top += 1.0 / pageZoom;
-          break;
-        case 46: // Delete key
-          deleteElement();
-          return;
-        default:
-          return;
-      }
-      setMappingPositionInfo({
-        'bounding_box': newBoundingBox
-      });
-      event.preventDefault();
+    if (!currentElement) return;
+    const activeBoxIndex = getActiveBoxIndex(currentElement);
+    const boundingBox = _.get(currentElement, [
+      'mappingInfo', 'positions', activeBoxIndex, 'bounding_box'
+    ], false);
+    if (!boundingBox) return;
+
+    const newBoundingBox = _.assign({}, boundingBox);
+
+    switch (event.keyCode) {
+      case 37: // Left key
+        newBoundingBox.left -= 1.0 / pageZoom;
+        break;
+      case 38: // Up key
+        newBoundingBox.top -= 1.0 / pageZoom;
+        break;
+      case 39: // Right key
+        newBoundingBox.left += 1.0 / pageZoom;
+        break;
+      case 40: // Down key
+        newBoundingBox.top += 1.0 / pageZoom;
+        break;
+      case 46: // Delete key
+        deleteElement();
+        return;
+      default:
+        return;
     }
+    setMappingPositionInfo({
+      'bounding_box': newBoundingBox
+    });
+    event.preventDefault();
   }
 
   getBoxLabel(elementId, boxIndex) {
