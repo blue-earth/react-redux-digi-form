@@ -21,38 +21,38 @@ export const INIT_BUSINESS_PLAN_STATE = {
     name: 'global-annually',
     price_cents: 9983,
     price_currency: 'AUD',
-    min_required_users: 1,
-    max_num_users: null
+    min_required_num_user: 1,
+    max_num_user: null
   }, {
     name: 'global-monthly',
     price_cents: 14900,
     price_currency: 'AUD',
-    min_required_users: 1,
-    max_num_users: null
+    min_required_num_user: 1,
+    max_num_user: null
   }, {
     name: 'teams-annually',
     price_cents: 5293,
     price_currency: 'AUD',
-    min_required_users: 1,
-    max_num_users: null
+    min_required_num_user: 1,
+    max_num_user: null
   }, {
     name: 'teams-monthly',
     price_cents: 7900,
     price_currency: 'AUD',
-    min_required_users: 1,
-    max_num_users: null
+    min_required_num_user: 1,
+    max_num_user: null
   }, {
     name: 'professional-annually',
     price_cents: 2613,
     price_currency: 'AUD',
-    min_required_users: 1,
-    max_num_users: 20
+    min_required_num_user: 1,
+    max_num_user: 20
   }, {
     name: 'professional-monthly',
     price_cents: 3900,
     price_currency: 'AUD',
-    min_required_users: 1,
-    max_num_users: null
+    min_required_num_user: 1,
+    max_num_user: null
   }],
   planConfig: {
     name: 'teams',
@@ -141,50 +141,12 @@ const processFetchPlans = (plan, period) => {
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
       console.log(value);
-      const plans = [{
-        name: 'global-annually',
-        price_cents: 9983,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }, {
-        name: 'global-monthly',
-        price_cents: 14900,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }, {
-        name: 'teams-annually',
-        price_cents: 5293,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }, {
-        name: 'teams-monthly',
-        price_cents: 7900,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }, {
-        name: 'professional-annually',
-        price_cents: 2613,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: 20
-      }, {
-        name: 'professional-monthly',
-        price_cents: 3900,
-        price_currency: 'AUD',
-        min_required_users: 1,
-        max_num_users: null
-      }];
-
-      const newPlan = plans.map(item => Object.assign({},
+      const newPlan = value.map(item => Object.assign({},
         ...Object.keys(item).map(key => ({
           [camelize(key)]: item[key]
         }))));
       dispatch(setPlans(newPlan));
-      dispatch(_setPlanConfig(plans, plan, period));
+      dispatch(_setPlanConfig(value, plan, period));
     };
   };
   const fetchFail = (data) => {
@@ -245,7 +207,7 @@ const _setPlanConfig = (plans, plan, period) => {
       if (planDetail.name === plan + '-' + period) {
         return dispatch(setPlanConfig({
           name: plan,
-          numberOfUsers: planDetail.min_required_users,
+          numberOfUsers: planDetail.min_required_num_user,
           billingCycle: period
         }));
       }

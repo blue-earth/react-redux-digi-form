@@ -29,8 +29,8 @@ class BusinessPlan extends Component {
         name: PropTypes.string,
         priceCents: PropTypes.number,
         priceCurrency: PropTypes.string,
-        minRequiredUsers: PropTypes.number,
-        maxNumUsers: PropTypes.number
+        minRequiredNumUser: PropTypes.number,
+        maxNumUser: PropTypes.number
       })
     ),
     planConfig: PropTypes.shape({
@@ -67,7 +67,6 @@ class BusinessPlan extends Component {
       showSubdomainHint: false
     };
   }
-
   componentDidMount() {
     this.props.fetchPlans();
   }
@@ -158,7 +157,7 @@ class BusinessPlan extends Component {
 
   renderConfigurePage() {
     const { period } = this.props;
-    const { maxNumUsers, minRequiredUsers } = this.getPlanDetail(period);
+    const { maxNumUser, minRequiredNumUser } = this.getPlanDetail(period);
     const annually = this.getPlanDetail('annually').priceCents;
     const monthly = this.getPlanDetail('monthly').priceCents;
     const { subdomain, numberOfUsers } = this.props.planConfig;
@@ -214,7 +213,7 @@ class BusinessPlan extends Component {
                 <p className={styles.sectionTitle}>Choose number of users:</p>
                 <NumberInput height={54} className={styles.bigNumberInput}
                   value={numberOfUsers} onChange={this.handleUsersNumberChange}
-                  minValue={minRequiredUsers} maxValue={maxNumUsers} />
+                  minValue={minRequiredNumUser} maxValue={maxNumUser} />
               </div>
             </Panel>
             <div className={styles.billingCycleSection}>
@@ -280,7 +279,7 @@ class BusinessPlan extends Component {
     const { planConfig, paymentMethod, purchaseErrorMessage, isPurchasing } = this.props;
     const { numberOfUsers, billingCycle } = planConfig;
     const { email, cardNumber, expiry, cvc } = paymentMethod;
-    const { priceCurrency, minRequiredUsers, maxNumUsers } = this.getPlanDetail(billingCycle);
+    const { priceCurrency, minRequiredNumUser, maxNumUser } = this.getPlanDetail(billingCycle);
     return (
       <Grid fluid>
         <div className="text-center">
@@ -365,7 +364,7 @@ class BusinessPlan extends Component {
                   Users: {' '}
                   <NumberInput height={24} className={styles.smallNumberInput}
                     value={numberOfUsers} onChange={this.handleUsersNumberChange}
-                    minValue={minRequiredUsers} maxValue={maxNumUsers} />
+                    minValue={minRequiredNumUser} maxValue={maxNumUser} />
                 </p>
                 <p style={{marginBottom: '24px'}}>
                   <span className={styles.orderItem}>Billed {billingCycle} {this.haveDiscount()?'(save 33%)':''}</span>
