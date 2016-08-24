@@ -129,7 +129,7 @@
   font-family: "roble_alt_boldbold";
 }
 .bigPanel{
-  padding: 20px;
+  padding: 20px 4px;
 }
 .activePanel{
   border: 3px solid $dashboard-header-bg-color;
@@ -204,12 +204,21 @@
   margin-bottom: 20px;
   padding: 4px 0;
   font-size: 14px;
+  line-height: 22px;
+  height: 22px;
   &:hover {
     text-decoration: none;
   }
-  &:focus {
+  &:focus{
     outline: none;
   }
+  &:active {
+    outline: none;
+  }
+}
+.backArrow {
+  height: 22px;
+  vertical-align: bottom;
 }
 .purchaseStatus{
   color: $red;
@@ -219,6 +228,9 @@
   h4{
     font-family: "roble_alt_boldbold";
   }
+}
+.orderPanelSection{
+  margin-bottom: 24px;
 }
 .featurePanel{
   background-color: $blue;

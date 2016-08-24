@@ -344,9 +344,9 @@ class BusinessPlan extends Component {
                 {isPurchasing? 'Processing...' : 'Purchase'}
               </button>
               <Button className={styles.backButton} bsStyle="link" onClick={this.props.goToPreviousStep}>
-                <IoAndroidArrowBack size={14} style={{height: '22px'}} />
+                <IoAndroidArrowBack size={14} className={styles.backArrow} style={{verticalAlign: 'bottom'}} />
                 {' '}
-                <span style={{lineHeight: '22px'}}>Back</span>
+                <span>Back</span>
               </Button>
             </Col>
             <Col sm={6} md={5} mdPush={1} lg={4} lgPush={2} className="text-left">
@@ -366,7 +366,7 @@ class BusinessPlan extends Component {
                     value={numberOfUsers} onChange={this.handleUsersNumberChange}
                     minValue={minRequiredNumUser} maxValue={maxNumUser} />
                 </p>
-                <p style={{marginBottom: '24px'}}>
+                <p className={styles.orderPanelSection}>
                   <span className={styles.orderItem}>Billed {billingCycle} {this.haveDiscount()?'(save 33%)':''}</span>
                   {' '}
                   <span onClick={this.handleBillingCycleChange} className={styles.changeBillingCycle}>CHANGE</span>
@@ -375,7 +375,7 @@ class BusinessPlan extends Component {
                   </span>
                 </p>
                 <hr className={styles.divideLine} />
-                <p style={{marginBottom: '24px'}}>
+                <p className={styles.orderPanelSection}>
                   <span>Subtotal (<PriceTag price={this.getSinglePrice()} /> per month)</span>
                   <span className={styles.price}>
                     <PriceTag price={this.getSinglePrice() * 12} currency={priceCurrency} />
