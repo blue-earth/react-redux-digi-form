@@ -97,11 +97,6 @@ class DrawingBoard extends Component {
     setQuestionEditMode: PropTypes.func.isRequired,
 
     /*
-     * deleteElement: Redux action to delete question element by id.
-     */
-    deleteElement: PropTypes.func.isRequired,
-
-    /*
      * getPageDOM: Get page dom element by page number.
      */
     getPageDOM: PropTypes.func.isRequired,
@@ -343,7 +338,7 @@ class DrawingBoard extends Component {
   }
 
   handleKeyDown = (event) => {
-    const { currentElement, pageZoom, setMappingPositionInfo, deleteElement } = this.props;
+    const { currentElement, pageZoom, setMappingPositionInfo } = this.props;
 
     if (!currentElement) return;
     const activeBoxIndex = getActiveBoxIndex(currentElement);
@@ -368,7 +363,7 @@ class DrawingBoard extends Component {
         newBoundingBox.top += 1.0 / pageZoom;
         break;
       case 46: // Delete key
-        deleteElement();
+        this.handleDeleteBox();
         return;
       default:
         return;
@@ -377,6 +372,17 @@ class DrawingBoard extends Component {
       'bounding_box': newBoundingBox
     });
     event.preventDefault();
+  }
+
+  handleDeleteBox = () => {
+    const { setMappingInfo, currentElement } = this.props;
+    const positions = _.get(currentElement, ['mappingInfo', 'positions'], []);
+    const activeBoxIndex = getActiveBoxIndex(currentElement);
+    positions[activeBoxIndex] = null;
+    setMappingInfo({
+      positions,
+      activeIndex: activeBoxIndex
+    });
   }
 
   getBoxLabel(elementId, boxIndex) {
