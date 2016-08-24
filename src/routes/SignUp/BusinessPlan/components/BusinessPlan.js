@@ -156,12 +156,11 @@ class BusinessPlan extends Component {
   }
 
   renderConfigurePage() {
-    const { period } = this.props;
+    const { period, planConfig, validations } = this.props;
     const { maxNumUser, minRequiredNumUser } = this.getPlanDetail(period);
-    const annually = this.getPlanDetail('annually').priceCents;
-    const monthly = this.getPlanDetail('monthly').priceCents;
-    const { subdomain, numberOfUsers } = this.props.planConfig;
-    const { isSubdomainVerified, subdomainErrorMessage } = this.props.validations;
+    const { annually, monthly } = this.getPlanPrices();
+    const { subdomain, numberOfUsers } = planConfig;
+    const { isSubdomainVerified, subdomainErrorMessage } = validations;
     const isActive = (cycle) => {
       return this.isBillingCycleActive(cycle);
     };
