@@ -19,12 +19,7 @@ $button-lg-size: 64px;
   }
   &.loading {
     cursor: not-allowed;
-    &.spinnerReplaceAll {
-      .children {display: none;}
-    }
-    &.spinnerReplaceIcon {
-      svg {display: none;}
-    }
+    .children {display: none;}
   }
   &.block {
     display: block;

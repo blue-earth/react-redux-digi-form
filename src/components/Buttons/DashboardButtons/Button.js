@@ -22,7 +22,6 @@ class Button extends Component {
 
     // disables the button and adds a spinner icon
     isLoading: PropTypes.bool,
-    spinnerStyle: PropTypes.oneOf(['replaceAll', 'replaceIcon', false]),
 
     // text and any additional stuff such as profile image
     children: PropTypes.node,
@@ -84,8 +83,6 @@ class Button extends Component {
       [styles.iconOnly]: iconOnly === true,
       [styles.loading]: isLoading === true,
       [styles.block]: block === true,
-      [styles.spinnerReplaceAll]: spinnerStyle === 'replaceAll',
-      [styles.spinnerReplaceIcon]: spinnerStyle === 'replaceIcon',
       [className]: true
     });
   }
