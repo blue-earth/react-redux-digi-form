@@ -91,7 +91,7 @@ class LoginForm extends Component {
       <div className={styles.loginFormWrapper}>
         <Header />
         <div className={styles.inputWrapper}>
-          <h2>Login to your account</h2>
+          <h2>Log in to your account</h2>
           <div className={'form-group' + (email.touched && email.error ? ' has-error':'')}>
             <input type="text" placeholder="Email" className="form-control input-lg"
               {...domOnlyProps(email)} />
@@ -110,14 +110,14 @@ class LoginForm extends Component {
               Login
             </Button>
           </div>
-          <h3>Forgot your password?</h3>
+          <p className={styles.forgotPass}><a>Forgot your password?</a></p>
           <h4>Log in with:</h4>
           <div className={styles.socialIconArea}>
             <FaGooglePlusSquare size="45" />
             <FaFacebookSquare size="45" />
             <FaLinkedinSquare size="45" />
           </div>
-          <h5>or <l>join for free</l></h5>
+          <p>or <a>join for free</a></p>
         </div>
       </div>
     );

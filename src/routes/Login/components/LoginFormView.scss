@@ -6,22 +6,16 @@
   width: 400px;
   margin: 0 auto;
   padding: 40px 0;
-  .btn_submit{
-    background: $blue;
-    border-color: $blue;
-    color: #fff;
-    font-family: "roble_alt_boldbold";
-    &:hover, &:focus {
-      background: $button-header-bg-color;
-      border-color: $button-header-bg-color;
-      outline: none;
-    }
-  }
   input[type='text'], input[type='password'] {
     background: lighten($grey, 20%);
     &:focus {
       background: #fff;
     }
+  }
+  .forgotPass {
+    font-size: 11px;
+    text-align: right;
+    padding: 10px 0;
   }
   h2 {
     font-family: "roble_alt_boldbold";
@@ -29,26 +23,12 @@
     text-align: center;
     margin: 0 0 40px;
   }
-  h3 {
-    font-size:11px;
-    color:#4880da;
-    float:right;
-  }
   h4 {
-    font-size:13px;
     padding-top:40px;
   }
-  h5 {
-    font-size:13px;
-    padding-top: 50px;
-    l{
-      color:#4880da;
-    }
-  }
   .socialIconArea{
-    color:#4880da;
-    position:absolute;
-    left:-4px;
+    color: $blue;
+    margin-left: -4px; // adjust for padding on icon svg
   }
 
 }
