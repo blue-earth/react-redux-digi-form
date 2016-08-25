@@ -1,0 +1,16 @@
+.switchRow {
+  display: table;
+  table-layout: fixed;
+}
+
+.switchColLeft {
+  display: table-cell;
+  width: 100%;
+  vertical-align: middle;
+}
+.switchColRight {
+  display: table-cell;
+  width: 50px;
+  text-align: right;
+  vertical-align: middle;
+}

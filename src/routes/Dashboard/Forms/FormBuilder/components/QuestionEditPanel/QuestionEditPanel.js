@@ -13,6 +13,7 @@ import InstructionDescription from 'components/QuestionEditFields/InstructionDes
 import LengthValidation from 'components/QuestionEditFields/LengthValidation';
 import RangeValidation from 'components/QuestionEditFields/RangeValidation';
 import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
+import MultipleSelection from 'components/QuestionEditFields/MultipleSelection';
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
 import 'rc-switch/assets/index.css';
@@ -191,7 +192,7 @@ export default class QuestionEditPanel extends Component {
             </Tab.Pane>
             <Tab.Pane eventKey="advanced">
               <div className={styles.viewBody}>
-                TODO: Add components here.
+                <MultipleSelection {...componentProps} />
               </div>
             </Tab.Pane>
           </Tab.Content>
