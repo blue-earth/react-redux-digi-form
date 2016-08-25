@@ -7,9 +7,9 @@ import {
   Col
 } from 'react-bootstrap';
 import _ from 'lodash';
-import EditRow from '../EditRow/EditRow';
-import EditSection from '../EditSection/EditSection';
-import SectionTitle from '../SectionTitle/SectionTitle';
+import EditRow from '../EditRow';
+import EditSection from '../EditSection';
+import SectionTitle from '../SectionTitle';
 import styles from './RangeValidation.scss';
 
 class RangeValidation extends Component {

@@ -18,7 +18,7 @@ import {
 } from 'helpers/formBuilderHelper';
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 // import classNames from 'classnames';
-import InteractWrapper from 'components/InteractWrapper/InteractWrapper';
+import InteractWrapper from 'components/InteractWrapper';
 import _ from 'lodash';
 import interact from 'interact.js';
 import styles from './DrawingBoard.scss';

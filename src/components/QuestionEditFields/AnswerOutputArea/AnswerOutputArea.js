@@ -11,14 +11,14 @@ import {
   Popover
 } from 'react-bootstrap';
 import { getChoiceLabelByIndex } from 'helpers/formBuilderHelper';
-import Switch from 'rc-switch';
 import popoverTexts from 'schemas/popoverTexts';
 import {
   MdCropFree,
   MdDelete
 } from 'react-icons/lib/md';
-import EditSection from '../EditSection/EditSection';
-import SectionTitle from '../SectionTitle/SectionTitle';
+import EditSection from '../EditSection';
+import SectionTitle from '../SectionTitle';
+import SwitchRow from '../SwitchRow';
 import _ from 'lodash';
 import styles from './AnswerOutputArea.scss';
 
@@ -186,29 +186,6 @@ class AnswerOutputArea extends Component {
     ));
   }
 
-  renderAddButton() {
-    return (
-      <Button block className={styles.addButton}
-        onClick={this.handleAddChoice}
-      >
-        + Add new answer output area
-      </Button>
-    );
-  }
-
-  renderAllowOtherOption() {
-    return (
-      <div className={styles.otherOption}>
-        <div className={styles.otherOptionLeft}>
-          <SectionTitle title={'Allow "Other" option'} />
-        </div>
-        <div className={styles.otherOptionRight}>
-          <Switch onChange={this.handleIncludeOther} checked={this.includeOther} />
-        </div>
-      </div>
-    );
-  }
-
   renderPreviewAnswerOutput() {
     const choices = this.finalChoices;
     const that = this;
@@ -240,8 +217,13 @@ class AnswerOutputArea extends Component {
             popoverId="outputArea"
           />
           {this.renderList()}
-          {this.renderAddButton()}
-          {this.renderAllowOtherOption()}
+          <Button block className={styles.addButton} onClick={this.handleAddChoice}>
+            + Add new answer output area
+          </Button>
+          <SwitchRow className={styles.otherOption}
+            title={'Allow "Other" option'}
+            onChange={this.handleIncludeOther}
+            checked={this.includeOther} />
         </EditSection>
         <EditSection>
           <SectionTitle

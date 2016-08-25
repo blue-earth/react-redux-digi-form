@@ -103,21 +103,7 @@ $preview-button-bg-color: white;
 }
 
 .otherOption {
-  display: table;
   margin-top: 15px;
-  table-layout: fixed;
-}
-
-.otherOptionLeft {
-  display: table-cell;
-  width: 100%;
-  vertical-align: middle;
-}
-.otherOptionRight {
-  display: table-cell;
-  width: 50px;
-  text-align: right;
-  vertical-align: middle;
 }
 
 .previewItems {

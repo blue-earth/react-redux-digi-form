@@ -2,8 +2,8 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import EditSection from '../EditSection/EditSection';
-import QuestionRichTextEditor from '../QuestionRichTextEditor/QuestionRichTextEditor';
+import EditSection from '../EditSection';
+import QuestionRichTextEditor from '../QuestionRichTextEditor';
 import _ from 'lodash';
 import styles from './InstructionDescription.scss';
 

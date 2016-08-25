@@ -9,7 +9,7 @@ import { formsUrl } from 'helpers/urlHelper';
 import { connectModal } from 'redux-modal';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import styles from './UploadModal.scss';
-import XHRUploader from 'components/XHRUploader/XHRUploader';
+import XHRUploader from 'components/XHRUploader';
 
 class UploadModal extends Component {
   static propTypes = {

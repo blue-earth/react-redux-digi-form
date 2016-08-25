@@ -2,16 +2,9 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-
-import {
-  Col
-} from 'react-bootstrap';
-import Switch from 'rc-switch';
 import _ from 'lodash';
-import EditRow from '../EditRow/EditRow';
-import EditSection from '../EditSection/EditSection';
-import SectionTitle from '../SectionTitle/SectionTitle';
-import styles from './RequiredValidation.scss';
+import EditSection from '../EditSection';
+import SwitchRow from '../SwitchRow';
 
 class RequiredValidation extends Component {
   static propTypes = {
@@ -35,18 +28,8 @@ class RequiredValidation extends Component {
     const isRequired = typeof _.find(validations, { type: 'isRequired' }) !== 'undefined';
     return (
       <EditSection>
-        <EditRow>
-          <Col xs={8} sm={9}>
-            <SectionTitle
-              title="Mandatory"
-              popoverId="isRequired" />
-          </Col>
-          <Col xs={4} sm={3}>
-            <div className={styles.switchWrapper}>
-              <Switch onChange={this.handleIsRequiredChange} checked={isRequired} />
-            </div>
-          </Col>
-        </EditRow>
+        <SwitchRow title="Mandatory" popoverId="isRequired"
+          onChange={this.handleIsRequiredChange} checked={isRequired} />
       </EditSection>
     );
   }
