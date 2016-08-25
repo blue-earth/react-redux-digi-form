@@ -2,20 +2,24 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import {
+  Nav,
+  NavItem,
+  Tab
+} from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
-import CancelConfirmModal from '../CancelConfirmModal';
 import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
-import Instruction from 'components/QuestionEditFields/Instruction';
-import Description from 'components/QuestionEditFields/Description';
+import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
 import LengthValidation from 'components/QuestionEditFields/LengthValidation';
 import RangeValidation from 'components/QuestionEditFields/RangeValidation';
 import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
+import MultipleSelection from 'components/QuestionEditFields/MultipleSelection';
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
 import 'rc-switch/assets/index.css';
-import styles from './QuestionEditView.scss';
+import styles from './QuestionEditPanel.scss';
 
-class QuestionEditView extends Component {
+export default class QuestionEditPanel extends Component {
 
   static propTypes = {
     /*
@@ -124,8 +128,8 @@ class QuestionEditView extends Component {
   }
 
   handleCancel = () => {
-    const { setQuestionEditMode, show, isModified } = this.props;
-    if (isModified) {
+    const { setQuestionEditMode, show, currentElement } = this.props;
+    if (currentElement.isModified) {
       show('cancelConfirmModal');
     } else {
       setQuestionEditMode({
@@ -139,48 +143,29 @@ class QuestionEditView extends Component {
     saveForm();
   }
 
-  get questionsList() {
-    const { questions, currentElement } = this.props;
-    const filteredQuestions = currentElement.id
-      ? _.differenceBy(questions, [{id: currentElement.id}], 'id')
-      : questions;
-    return filteredQuestions.map(item => ({
-      key: `answer_${item.id}`,
-      text: `answer_${item.id}`
-    }));
-  }
-
-  renderTopActionButtons() {
+  renderViewHeader() {
     return (
-      <div className={styles.topActionButtons}>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handlePreview}>Preview</Button>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleDelete}>Delete</Button>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleReset}>Reset</Button>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleCancel}>Cancel</Button>
-        <Button bsStyle="link" bsSize="xsmall" onClick={this.handleSave}>Save</Button>
+      <div className={styles.viewHeader}>
+        <h2>{this.inputSchema.displayText}</h2>
+        <Nav bsStyle="tabs" className="mainTabs">
+          <NavItem eventKey="general">General</NavItem>
+          <NavItem eventKey="advanced">Advanced</NavItem>
+        </Nav>
       </div>
     );
   }
 
-  renderViewTitle() {
+  renderViewFooter() {
     return (
-      <h2 className={styles.viewTitle}>
-        {this.inputSchema.displayText}
-      </h2>
-    );
-  }
-
-  renderBottomActionButtons() {
-    return (
-      <ul className={styles.bottomActionButtons}>
-        <li>
-          <Button onClick={this.handleSave} className={styles.saveButton}>
-            Save &amp; continue
-          </Button>
-        </li>
-        <li>
+      <ul className={styles.viewFooter}>
+        <li className="pull-left">
           <Button onClick={this.handleCancel} style="linkButton">
             Cancel
+          </Button>
+        </li>
+        <li className="pull-right">
+          <Button onClick={this.handleSave} className={styles.saveButton}>
+            Save &amp; continue
           </Button>
         </li>
       </ul>
@@ -188,27 +173,33 @@ class QuestionEditView extends Component {
   }
 
   render() {
-    const { saveElement, setQuestionEditMode } = this.props;
     const componentProps = _.merge({}, this.props, {
-      questions: this.questionsList,
       inputSchema: this.inputSchema
     });
     return (
-      <div className={styles.questionEditView}>
-        {this.renderViewTitle()}
-        <Instruction {...componentProps} />
-        <Description {...componentProps} />
-        <AnswerOutputArea {...componentProps} />
-        <LengthValidation {...componentProps} />
-        <RangeValidation {...componentProps} />
-        <RequiredValidation {...componentProps} />
-        {this.renderBottomActionButtons()}
-        <CancelConfirmModal
-          saveElement={saveElement}
-          setQuestionEditMode={setQuestionEditMode} />
-      </div>
+      <Tab.Container defaultActiveKey="general">
+        <div className={styles.questionEditView}>
+          {this.renderViewHeader()}
+          <Tab.Content animation>
+            <Tab.Pane eventKey="general">
+              <div className={styles.viewBody}>
+                <InstructionDescription {...componentProps} />
+                <AnswerOutputArea {...componentProps} />
+                <LengthValidation {...componentProps} />
+                <RangeValidation {...componentProps} />
+                <RequiredValidation {...componentProps} />
+              </div>
+            </Tab.Pane>
+            <Tab.Pane eventKey="advanced">
+              <div className={styles.viewBody}>
+                <MultipleSelection {...componentProps} />
+              </div>
+            </Tab.Pane>
+          </Tab.Content>
+          {this.renderViewFooter()}
+        </div>
+      </Tab.Container>
     );
   }
 }
 
-export default QuestionEditView;

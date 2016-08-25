@@ -6,7 +6,7 @@ import styles from './PageView.scss';
 import {
   Button
 } from 'react-bootstrap';
-import DrawingBoard from '../DrawingBoard/DrawingBoard';
+import DrawingBoard from '../DrawingBoard';
 import _ from 'lodash';
 import { pageZoomPercent } from 'helpers/formBuilderHelper';
 
@@ -37,6 +37,11 @@ class PageView extends Component {
      * setMappingInfo: Action to update the document mapping info.
      */
     setMappingInfo: PropTypes.func.isRequired,
+
+    /*
+     * setMappingPositionInfo: Action to update the document mapping position info of active selection.
+     */
+    setMappingPositionInfo: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.

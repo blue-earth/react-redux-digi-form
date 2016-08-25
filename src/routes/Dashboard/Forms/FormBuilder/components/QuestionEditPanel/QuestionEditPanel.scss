@@ -1,0 +1,99 @@
+@import './mixins';
+@import './variables';
+
+$save-button-bg-color: $blue;
+$header-height: 55px;
+$footer-height: 68px;
+
+.questionEditView {
+  background-color: $panel-body-bg-color;
+  @include border-radius(4px);
+  border: 1px solid $panel-border-color;
+  @include box-shadow-custom(0 3px 5px rgba(0, 0, 0, .1));
+  padding-bottom: $footer-height;
+  padding-top: $header-height;
+  position: relative;
+  height: 100%;
+}
+.viewHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $header-height;
+  padding: 15px;
+  background-color: $panel-heading-bg-color;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom: 1px solid $panel-border-color;
+  color: $panel-heading-text-color;
+  h2 {
+    font-size: 16px;
+    font-family: 'roble_alt_boldbold';
+    font-weight: 600;
+    line-height: 25px;
+    padding: 0;
+    margin: 0;
+  }
+}
+.viewBody {
+  position: absolute;
+  top: $header-height;
+  bottom: $footer-height;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+.viewFooter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: $footer-height;
+  background-color: $panel-heading-bg-color;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  margin-bottom: 0;
+  @include clearfix;
+  padding: 15px;
+  list-style: none;
+  li {
+    list-style: none;
+    float: left;
+    margin-right: 10px;
+  }
+}
+
+.saveButton {
+  background-color: $save-button-bg-color !important;
+  color: white !important;
+  font-size: 14px;
+  &:hover, &:focus, &:active {
+    background-color: darken($save-button-bg-color, 5%) !important;
+  }
+}
+
+:global {
+  .mainTabs {
+    font-size: 12px;
+    font-weight: 600;
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
+    border: none;
+    > li > a {
+      padding: 10px 15px;
+      color: $panel-text-color4;
+      &:focus, &:hover {
+        border-bottom-color: $panel-border-color;
+      }
+    }
+    > li.active > a {
+      border-color: $panel-border-color !important;
+      border-bottom-color: transparent !important;
+      &, &:focus, &:hover {
+        background-color: $panel-body-bg-color;
+      }
+    }
+  }
+}

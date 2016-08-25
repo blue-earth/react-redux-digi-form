@@ -82,7 +82,6 @@ class InteractWrapper extends Component {
 
   initInteract() {
     const element = this.refs.interactWrapper;
-    element.addEventListener('mousedown', this.handleMouseDown);
 
     var interactable = interact(element)
       .draggable(true)
@@ -136,6 +135,10 @@ class InteractWrapper extends Component {
   }
 
   handleMouseDown = (event) => {
+    const { active } = this.props;
+    event.stopPropagation();
+    if (!active) return;
+
     const { x, y, width, height } = this.state;
     const element = this.refs.interactWrapper;
     var mousePos = this.getMousePos(event);
@@ -159,7 +162,6 @@ class InteractWrapper extends Component {
 
     element.setAttribute('data-x', x);
     element.setAttribute('data-y', y);
-    event.stopPropagation();
 
     const { snapRange, dragSnapTargets, resizeSnapTargets } = this.props;
     interact(element)
@@ -303,6 +305,7 @@ class InteractWrapper extends Component {
 
     return (
       <div className={wrapperClass}
+        onMouseDown={this.handleMouseDown}
         onClick={this.handleClick}
         onDoubleClick={this.handleDoubleClick}
         ref="interactWrapper"

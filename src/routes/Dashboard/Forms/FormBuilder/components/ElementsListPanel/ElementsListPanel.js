@@ -5,7 +5,8 @@ import React, {
 import {
   Panel,
   Row,
-  Col
+  Col,
+  Collapse
 } from 'react-bootstrap';
 import { FaChevronDown } from 'react-icons/lib/fa';
 import Button from 'components/Buttons/DashboardButtons/Button';
@@ -14,9 +15,9 @@ import classNames from 'classnames';
 import questionInputs, {
   questionInputGroups
 } from 'schemas/questionInputs';
-import styles from './ElementsListView.scss';
+import styles from './ElementsListPanel.scss';
 
-class ElementsListView extends Component {
+export default class ElementsListPanel extends Component {
 
   static propTypes = {
     /*
@@ -113,20 +114,21 @@ class ElementsListView extends Component {
             {group.displayText}
             <span className={styles.headerArrow}><FaChevronDown size={12} /></span>
           </div>
-          <Panel eventKey={index} className={styles.panel}
-            expanded={expanded} collapsible>
-            {that.renderPanelContent(_.filter(questionInputs, {group: group.name}))}
-          </Panel>
+          <Collapse in={expanded}>
+            <Panel eventKey={index} className={styles.panel}>
+              {that.renderPanelContent(_.filter(questionInputs, {group: group.name}))}
+            </Panel>
+          </Collapse>
         </div>
       );
     });
 
     return (
       <div className={styles.elementsListView}>
-        {panelItems}
+        <div className={styles.elementsListViewInner}>
+          {panelItems}
+        </div>
       </div>
     );
   }
 }
-
-export default ElementsListView;

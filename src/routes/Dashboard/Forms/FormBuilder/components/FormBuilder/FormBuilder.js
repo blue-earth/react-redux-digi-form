@@ -8,9 +8,10 @@ import {
 } from 'react-bootstrap';
 import { formsUrl } from 'helpers/urlHelper';
 import classNames from 'classnames';
-import ElementsListView from '../ElementsListView/ElementsListView';
-import PageView from '../PageView/PageView';
-import QuestionEditView from '../QuestionEditView/QuestionEditView';
+import ElementsListPanel from '../ElementsListPanel';
+import PageView from '../PageView';
+import QuestionEditPanel from '../QuestionEditPanel';
+import CancelConfirmModal from '../CancelConfirmModal';
 import UploadModal from '../UploadModal';
 import styles from './FormBuilder.scss';
 
@@ -108,6 +109,11 @@ class FormBuilder extends Component {
     setMappingInfo: PropTypes.func.isRequired,
 
     /*
+     * setMappingPositionInfo: Action to update the document mapping position info of active selection.
+     */
+    setMappingPositionInfo: PropTypes.func.isRequired,
+
+    /*
      * resetMappingInfo: Redux action to remove document mapping info
      */
     resetMappingInfo: PropTypes.func.isRequired,
@@ -198,7 +204,7 @@ class FormBuilder extends Component {
   }
 
   render() {
-    const { questionEditMode } = this.props;
+    const { saveElement, setQuestionEditMode, questionEditMode } = this.props;
     const leftPanelClass = classNames({
       [styles.leftPanel]: true,
       [styles.open]: questionEditMode
@@ -211,14 +217,17 @@ class FormBuilder extends Component {
       <Row className={styles.formBuilderContainer}>
         <Col sm={4} className={leftPanelClass}>
           {questionEditMode
-            ? <QuestionEditView {...this.props} />
-            : <ElementsListView {...this.props} />
+            ? <QuestionEditPanel {...this.props} />
+            : <ElementsListPanel {...this.props} />
           }
         </Col>
         <Col sm={8} className={rightPanelClass}>
           <PageView {...this.props} />
         </Col>
         <UploadModal {...this.props} />
+        <CancelConfirmModal
+          saveElement={saveElement}
+          setQuestionEditMode={setQuestionEditMode} />
       </Row>
     );
   }

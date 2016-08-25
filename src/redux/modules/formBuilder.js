@@ -24,6 +24,8 @@ export const RESET_MAPPING_INFO = 'RESET_MAPPING_INFO';
 export const SET_VALIDATION_INFO = 'SET_VALIDATION_INFO';
 export const RESET_VALIDATION_INFO = 'RESET_VALIDATION_INFO';
 
+export const SET_MAPPING_POSITION_INFO = 'SET_MAPPING_POSITION_INFO';
+
 export const UPDATE_FORM_ID = 'UPDATE_FORM_ID';
 export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
@@ -68,6 +70,12 @@ export const INIT_QUESTION_STATE = {
   validations: [], // Question validations
   verifications: [], // Question verifications
   group: 0 // Question group
+};
+
+export const INIT_MAPPING_INFO_STATE = {
+  type: 'Standard',
+  positions: [],
+  activeIndex: 0
 };
 
 // ------------------------------------
@@ -193,12 +201,14 @@ export const processSubmitForm = (formData) => {
       const { id } = value;
       id && dispatch(updateFormId(id));
       dispatch(doneSubmitForm()); // Hide submitting spinner
+      dispatch(setQuestionEditMode({ mode: false }));
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitForm()); // Hide submitting spinner
+      dispatch(setQuestionEditMode({ mode: false }));
     };
   };
 
@@ -235,20 +245,16 @@ export const saveElement = createAction(SAVE_ELEMENT);
 // ------------------------------------
 const _saveElement = (state, action) => {
   const { currentElement } = state;
-  var question = Object.assign({}, INIT_QUESTION_STATE, currentElement.question);
-  var mappingInfo = _.defaultTo(currentElement.mappingInfo, {});
-  const newQuestionId = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
-
-  question.id = newQuestionId;
-  mappingInfo.id = newQuestionId;
-  currentElement.id = newQuestionId;
-
-  return Object.assign({}, state, {
+  const id = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
+  var question = _.merge({}, INIT_QUESTION_STATE, currentElement.question, { id });
+  var mappingInfo = _.merge({}, INIT_MAPPING_INFO_STATE, currentElement.mappingInfo, { id });
+  var isModified = state.isModified || currentElement.isModified;
+  return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
-    documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo, true),
-    lastQuestionId: newQuestionId,
-    currentElement,
-    isModified: false
+    documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo),
+    lastQuestionId: id,
+    currentElement: _.merge({}, currentElement, { id }),
+    isModified
   });
 };
 
@@ -334,7 +340,7 @@ const _resetValidationInfo = (state, action) => {
     'currentElement', 'question', 'validations'
   ], []);
   const { type } = action.payload;
-  const validations = _.pullAllBy(currentValidations, [{type}], 'type');
+  const validations = _.differenceBy(currentValidations, [{type}], 'type');
   return _setQuestionInfo(state, {
     payload: { validations }
   });
@@ -350,9 +356,10 @@ export const setMappingInfo = createAction(SET_MAPPING_INFO);
 // ------------------------------------
 const _setMappingInfo = (state, action) => {
   const newMappingInfo = _.pick(action.payload, [
-    'page_number', 'bounding_box'
+    'type', 'positions', 'activeIndex'
   ]);
   const { currentElement: { mappingInfo } } = state;
+
   return _updateCurrentElement(state, {
     mappingInfo: Object.assign({}, mappingInfo, newMappingInfo)
   });
@@ -368,7 +375,34 @@ export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
 // ------------------------------------
 const _resetMappingInfo = (state, action) => {
   return _updateCurrentElement(state, {
-    mappingInfo: {}
+    mappingInfo: {
+      positions: [],
+      activeIndex: 0
+    }
+  });
+};
+
+// ------------------------------------
+// Action: setMappingPositionInfo
+// ------------------------------------
+export const setMappingPositionInfo = createAction(SET_MAPPING_POSITION_INFO);
+
+// ------------------------------------
+// Helper: _setMappingPositionInfo
+// ------------------------------------
+const _setMappingPositionInfo = (state, action) => {
+  const positions = _.get(state, [
+    'currentElement', 'mappingInfo', 'positions'
+  ], []).slice(0);
+  const index = _.get(state, [
+    'currentElement', 'mappingInfo', 'activeIndex'
+  ], 0);
+  const newPosition = _.pick(action.payload, [
+    'page_number', 'bounding_box'
+  ]);
+  positions[index] = _.merge({}, positions[index], newPosition);
+  return _setMappingInfo(state, {
+    payload: { positions }
   });
 };
 
@@ -377,8 +411,9 @@ const _resetMappingInfo = (state, action) => {
 // ------------------------------------
 export const _updateCurrentElement = (state, element) => {
   return Object.assign({}, state, {
-    currentElement: Object.assign({}, state.currentElement, element),
-    isModified: true
+    currentElement: Object.assign({}, state.currentElement, element, {
+      isModified: true
+    })
   });
 };
 
@@ -394,7 +429,7 @@ export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
 
 const _setQuestionEditMode = (state, action) => {
   const { currentElement } = state;
-  const { id, mode, inputType } = action.payload;
+  const { id, mode, inputType, activeBoxIndex } = action.payload;
   const question = id
     ? findItemById(state.questions, id)
     : Object.assign({}, INIT_QUESTION_STATE, {
@@ -403,11 +438,14 @@ const _setQuestionEditMode = (state, action) => {
   const newCurrentElement = mode ? {
     id,
     question,
-    mappingInfo: id
+    isModified: false,
+    mappingInfo: _.pick(Object.assign({}, id
       ? findItemById(state.documentMapping, id)
       : currentElement
         ? currentElement.mappingInfo
-        : {}
+        : INIT_MAPPING_INFO_STATE,
+      { activeIndex: _.defaultTo(activeBoxIndex, 0) }
+    ), _.keys(INIT_MAPPING_INFO_STATE))
   } : null;
   return Object.assign({}, state, {
     currentElement: newCurrentElement,
@@ -433,7 +471,8 @@ const formBuilderReducer = handleActions({
 
   DONE_FETCHING_FORM: (state, action) =>
     Object.assign({}, state, {
-      isFetching: false
+      isFetching: false,
+      isModified: false
     }),
 
   REQUEST_FORM_SUBMIT: (state, action) =>
@@ -471,6 +510,9 @@ const formBuilderReducer = handleActions({
 
   RESET_MAPPING_INFO: (state, action) =>
     _resetMappingInfo(state, action),
+
+  SET_MAPPING_POSITION_INFO: (state, action) =>
+    _setMappingPositionInfo(state, action),
 
   SET_VALIDATION_INFO: (state, action) =>
     _setValidationInfo(state, action),

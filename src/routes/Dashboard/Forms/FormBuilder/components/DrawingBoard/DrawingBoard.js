@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  findIndexById,
   findItemById
 } from 'helpers/pureFunctions';
 import {
@@ -11,11 +10,15 @@ import {
   getResizeSnappingTargets,
   getDragSnappingHelpersRect,
   getResizeSnappingHelpersPos,
-  zoomValue
+  getActiveBoxIndex,
+  isActiveBox,
+  isCurrentElementId,
+  zoomValue,
+  getChoiceLabelByIndex
 } from 'helpers/formBuilderHelper';
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 // import classNames from 'classnames';
-import InteractWrapper from 'components/InteractWrapper/InteractWrapper';
+import InteractWrapper from 'components/InteractWrapper';
 import _ from 'lodash';
 import interact from 'interact.js';
 import styles from './DrawingBoard.scss';
@@ -33,7 +36,15 @@ class DrawingBoard extends Component {
      */
     documents: PropTypes.array.isRequired,
 
+    /*
+     * questions: Redux state to store the array of questions.
+     */
     questions: PropTypes.array.isRequired,
+
+    /*
+     * isModified: Redux state that indicates whether the form is modified since last save or load.
+     */
+    isModified: PropTypes.bool.isRequired,
 
     /*
      * saveElement: Redux action to save the current element being edited.
@@ -54,6 +65,11 @@ class DrawingBoard extends Component {
      * setMappingInfo: Action to update the document mapping info.
      */
     setMappingInfo: PropTypes.func.isRequired,
+
+    /*
+     * setMappingPositionInfo: Action to update the document mapping position info of active selection.
+     */
+    setMappingPositionInfo: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.
@@ -81,11 +97,6 @@ class DrawingBoard extends Component {
     setQuestionEditMode: PropTypes.func.isRequired,
 
     /*
-     * deleteElement: Redux action to delete question element by id.
-     */
-    deleteElement: PropTypes.func.isRequired,
-
-    /*
      * getPageDOM: Get page dom element by page number.
      */
     getPageDOM: PropTypes.func.isRequired,
@@ -93,8 +104,12 @@ class DrawingBoard extends Component {
     /*
      * currentElement: Redux state to hold the element currently being edited.
      */
-    currentElement: PropTypes.object
+    currentElement: PropTypes.object,
 
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -192,19 +207,19 @@ class DrawingBoard extends Component {
       endX,
       endY
     });
-    const { setMappingInfo, pageZoom, pageNumber } = this.props;
+    const { setMappingPositionInfo, pageZoom, pageNumber } = this.props;
 
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
     }
-    setMappingInfo({
+    setMappingPositionInfo({
       'page_number': pageNumber,
-      'bounding_box': [{
+      'bounding_box': {
         left: Math.min(startX, endX) / pageZoom,
         top: Math.min(startY, endY) / pageZoom,
         width: Math.abs(endX - startX) / pageZoom,
         height: Math.abs(endY - startY) / pageZoom
-      }]
+      }
     });
   }
 
@@ -223,26 +238,18 @@ class DrawingBoard extends Component {
   }
 
   handleResizeEnd = (rect, metaData) => {
-    const { setMappingInfo, documentMapping, pageZoom } = this.props;
-    const { id } = metaData;
+    const { setMappingPositionInfo, pageZoom } = this.props;
     const newBoundingBox = {
       left: rect.left / pageZoom,
       top: rect.top / pageZoom,
       width: rect.width / pageZoom,
       height: rect.height / pageZoom
     };
-    if (id) {
-      const boundingBox = findItemById(documentMapping, id).bounding_box[0];
-      if (!_.isEqual(boundingBox, newBoundingBox)) {
-        setMappingInfo({
-          'bounding_box': [newBoundingBox]
-        });
-      }
-    } else {
-      setMappingInfo({
-        'bounding_box': [newBoundingBox]
-      });
-    }
+
+    setMappingPositionInfo({
+      'bounding_box': newBoundingBox
+    });
+
     // Reset SnappingHelper
     this.resetSnappingHelper();
   }
@@ -262,8 +269,7 @@ class DrawingBoard extends Component {
   }
 
   handleDragEnd = (rect, metaData) => {
-    const { setMappingInfo, documentMapping, pageZoom, pageNumber, getPageDOM } = this.props;
-    const { id } = metaData;
+    const { setMappingPositionInfo, pageZoom, pageNumber, getPageDOM } = this.props;
 
     var newRect = rect;
     const { destPageNumber } = metaData;
@@ -281,20 +287,10 @@ class DrawingBoard extends Component {
       height: newRect.height / pageZoom
     };
 
-    if (id) {
-      const boundingBox = findItemById(documentMapping, id).bounding_box[0];
-      if (!_.isEqual(boundingBox, newBoundingBox)) {
-        setMappingInfo({
-          'page_number': destPageNumber && destPageNumber,
-          'bounding_box': [newBoundingBox]
-        });
-      }
-    } else {
-      setMappingInfo({
-        'page_number': destPageNumber && destPageNumber,
-        'bounding_box': [newBoundingBox]
-      });
-    }
+    setMappingPositionInfo({
+      'page_number': destPageNumber && destPageNumber,
+      'bounding_box': newBoundingBox
+    });
 
     // Reset SnappingHelper
     this.resetSnappingHelper();
@@ -326,116 +322,143 @@ class DrawingBoard extends Component {
     snappingHelper.innerHTML = '';
   }
 
-  handleElementClick = (metaData) => {
-    const { setQuestionEditMode } = this.props;
-    setQuestionEditMode({
-      id: metaData.id,
-      mode: true
-    });
-  }
-
-  handleElementDoubleClick = (metaData) => {
-    // const { setQuestionEditMode } = this.props;
-    // setQuestionEditMode({
-    //   id: metaData.id,
-    //   mode: true
-    // });
+  handleBoxClick = (metaData) => {
+    const { setQuestionEditMode, setMappingInfo, currentElement, isModified, show } = this.props;
+    if (isCurrentElementId(metaData.id, currentElement)) {
+      setMappingInfo({ activeIndex: metaData.boxIndex });
+    } else {
+      isModified && currentElement
+      ? show('cancelConfirmModal')
+      : setQuestionEditMode({
+        id: metaData.id,
+        activeBoxIndex: metaData.boxIndex,
+        mode: true
+      });
+    }
   }
 
   handleKeyDown = (event) => {
-    const { currentElement, pageZoom, setMappingInfo, deleteElement } = this.props;
+    const { currentElement, pageZoom, setMappingPositionInfo } = this.props;
 
-    if (currentElement) {
-      const boundingBox = _.get(currentElement, ['mappingInfo', 'bounding_box', '0'], false);
-      if (!boundingBox) return;
-      const newBoundingBox = _.assign({}, boundingBox);
-      switch (event.keyCode) {
-        case 37: // Left key
-          newBoundingBox.left -= 1.0 / pageZoom;
-          break;
-        case 38: // Up key
-          newBoundingBox.top -= 1.0 / pageZoom;
-          break;
-        case 39: // Right key
-          newBoundingBox.left += 1.0 / pageZoom;
-          break;
-        case 40: // Down key
-          newBoundingBox.top += 1.0 / pageZoom;
-          break;
-        case 46: // Delete key
-          deleteElement();
-          return;
-        default:
-          return;
-      }
-      setMappingInfo({
-        'bounding_box': [newBoundingBox]
-      });
-      event.preventDefault();
+    if (!currentElement) return;
+    const activeBoxIndex = getActiveBoxIndex(currentElement);
+    const boundingBox = _.get(currentElement, [
+      'mappingInfo', 'positions', activeBoxIndex, 'bounding_box'
+    ], false);
+    if (!boundingBox) return;
+
+    const newBoundingBox = _.assign({}, boundingBox);
+
+    switch (event.keyCode) {
+      case 37: // Left key
+        newBoundingBox.left -= 1.0 / pageZoom;
+        break;
+      case 38: // Up key
+        newBoundingBox.top -= 1.0 / pageZoom;
+        break;
+      case 39: // Right key
+        newBoundingBox.left += 1.0 / pageZoom;
+        break;
+      case 40: // Down key
+        newBoundingBox.top += 1.0 / pageZoom;
+        break;
+      case 46: // Delete key
+        this.handleDeleteBox();
+        return;
+      default:
+        return;
     }
+    setMappingPositionInfo({
+      'bounding_box': newBoundingBox
+    });
+    event.preventDefault();
+  }
+
+  handleDeleteBox = () => {
+    const { setMappingInfo, currentElement } = this.props;
+    const positions = _.get(currentElement, ['mappingInfo', 'positions'], []);
+    const activeBoxIndex = getActiveBoxIndex(currentElement);
+    positions[activeBoxIndex] = null;
+    setMappingInfo({
+      positions,
+      activeIndex: activeBoxIndex
+    });
+  }
+
+  getBoxLabel(elementId, boxIndex) {
+    const { questions, currentElement } = this.props;
+    const question = isCurrentElementId(elementId, currentElement)
+      ? currentElement.question
+      : findItemById(questions, elementId);
+    const { type, choices } = question;
+    return choices ? _.get(choices, [boxIndex, 'label'], getChoiceLabelByIndex(choices.length)) : type;
   }
 
   renderDocumentMappingComponents() {
     const { activeInputName, documentMapping, currentElement,
-      questions, pageZoom, pageNumber } = this.props;
+      pageZoom, pageNumber } = this.props;
     var boardOptionals = {};
     if (activeInputName) {
       boardOptionals['style'] = _.merge(boardOptionals['style'], {
         cursor: 'crosshair'
       });
     }
-    const myDocumentMapping = _.filter(documentMapping, {
-      'page_number': pageNumber
-    });
-    return myDocumentMapping.map((mappingInfo) => {
-      const boundingBox = mappingInfo.bounding_box[0];
-      var index = findIndexById(questions, mappingInfo.id);
-      // skip current element
-      if (currentElement && mappingInfo.id === currentElement.id) return false;
-      const { type } = questions[index];
-      const isActive = false;
-      const zIndex = isActive ? 101 : 100;
 
-      return (
-        <InteractWrapper
-          x={zoomValue(boundingBox.left, pageZoom)}
-          y={zoomValue(boundingBox.top, pageZoom)}
-          zIndex={zIndex}
-          active={isActive}
-          className="interactWrapper"
-          width={zoomValue(boundingBox.width, pageZoom)}
-          height={zoomValue(boundingBox.height, pageZoom)}
-          onClick={this.handleElementClick}
-          onDoubleClick={this.handleElementDoubleClick}
-          key={`${mappingInfo.id}-${0}`}
-          minWidth={10}
-          minHeight={10}
-          metaData={{
-            id: mappingInfo.id,
-            subId: 0
-          }}
-        >
-          <div className={styles.elementName}>{type}</div>
-        </InteractWrapper>
-      );
+    const belongsToPage = (position) =>
+      position && position.page_number === pageNumber;
+
+    return documentMapping.map(mappingInfo => {
+      let finalMappingInfo = currentElement && mappingInfo.id === currentElement.id
+        ? currentElement.mappingInfo
+        : mappingInfo;
+      return finalMappingInfo.positions.map((position, index) => {
+        const isActive = isCurrentElementId(mappingInfo.id, currentElement) &&
+          isActiveBox(currentElement, index);
+        if (isActive) return false;
+        if (!belongsToPage(position)) return false;
+
+        const boundingBox = position.bounding_box;
+        const zIndex = isActive ? 101 : 100;
+        return (
+          <InteractWrapper
+            x={zoomValue(boundingBox.left, pageZoom)}
+            y={zoomValue(boundingBox.top, pageZoom)}
+            zIndex={zIndex}
+            active={isActive}
+            className="interactWrapper"
+            width={zoomValue(boundingBox.width, pageZoom)}
+            height={zoomValue(boundingBox.height, pageZoom)}
+            minWidth={10}
+            minHeight={10}
+            onClick={this.handleBoxClick}
+            metaData={{
+              id: mappingInfo.id,
+              boxIndex: index
+            }}
+          >
+            <div className={styles.boxLabel}>{this.getBoxLabel(mappingInfo.id, index)}</div>
+          </InteractWrapper>
+        );
+      });
     });
   }
 
   renderCurrentElement() {
-    const { activeInputName, documentMapping, pageNumber,
+    const { documentMapping, pageNumber,
       pageZoom, currentElement } = this.props;
-    var boardOptionals = {};
-    if (activeInputName) {
-      boardOptionals['style'] = _.merge(boardOptionals['style'], {
-        cursor: 'crosshair'
-      });
-    }
-    if (!currentElement) return false;
-    const { mappingInfo, question: { type } } = currentElement;
-    if (!mappingInfo.bounding_box) return false;
-    if (pageNumber !== mappingInfo.page_number) return false;
 
-    const boundingBox = mappingInfo.bounding_box[0];
+    if (!currentElement) return false;
+
+    const activeBoxIndex = getActiveBoxIndex(currentElement);
+
+    const position = _.get(currentElement, [
+      'mappingInfo', 'positions', activeBoxIndex
+    ]);
+    if (!position) return false;
+    if (pageNumber !== position.page_number) return false;
+    const boundingBox = position.bounding_box;
+    if (!boundingBox) return false;
+
     const isActive = true;
     const zIndex = isActive ? 101 : 100;
 
@@ -448,21 +471,23 @@ class DrawingBoard extends Component {
         className="interactWrapper"
         width={zoomValue(boundingBox.width, pageZoom)}
         height={zoomValue(boundingBox.height, pageZoom)}
+        minWidth={10}
+        minHeight={10}
         onResizeStart={this.handleResizeStart}
         onResizeMove={this.handleResizeMove}
         onResizeEnd={this.handleResizeEnd}
         onDragStart={this.handleDragStart}
         onDragMove={this.handleDragMove}
         onDragEnd={this.handleDragEnd}
-        minWidth={10}
-        minHeight={10}
         metaData={{
-          subId: 0
+          boxIndex: activeBoxIndex
         }}
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}
       >
-        <div className={styles.elementName}>{type}</div>
+        <div className={styles.boxLabel}>
+          {this.getBoxLabel(currentElement.id, activeBoxIndex)}
+        </div>
       </InteractWrapper>
     );
   }
@@ -488,7 +513,7 @@ class DrawingBoard extends Component {
         {this.renderDocumentMappingComponents()}
         {this.renderCurrentElement()}
         {isDrawing &&
-          <div className={styles.newElementDraw}
+          <div className={styles.newBoxDraw}
             style={{
               left: Math.min(startX, endX),
               top: Math.min(startY, endY),

@@ -1,0 +1,140 @@
+@import './mixins';
+@import './variables';
+
+$action-button-size: 28px;
+$action-button-padding: 3px;
+$items-offset: -10px;
+$action-button-hover-bg-color: $panel-text-color1;
+$add-button-border-color: $panel-text-color1;
+$preview-button-bg-color: white;
+
+.formGroup {
+  margin-top: 15px;
+	padding-right: ($action-button-size + $action-button-padding * 2) * 2 + $items-offset;
+  position: relative;
+}
+
+.itemLabel {
+  background-color: white;
+}
+
+.actionItems {
+  position: absolute;
+  top: 0;
+  right: $items-offset;
+  list-style: none;
+  padding: 0;
+}
+
+.actionItems li {
+	float: left;
+  width: $action-button-size + $action-button-padding * 2;
+  padding: $action-button-padding;
+  position: relative;
+}
+
+.actionButton {
+  color: $panel-text-color4;
+  padding: 0 5px;
+  height: $action-button-size;
+  text-align: center;
+  border: none !important;
+  background-color: transparent !important;
+  @include transition(all .15s);
+  &:active, &:focus, &:active:focus, &:hover:focus {
+    outline: none;
+  }
+}
+
+.reselectButton {
+  @include border-radius(4px);
+  &:hover, &:active:focus {
+    color: $panel-text-color1;
+  }
+}
+
+.deleteButton {
+  position: absolute;
+  right: $action-button-padding;
+  top: $action-button-padding;
+  z-index: 3;
+  @include border-radius(999px);
+  &:hover, &:active:focus {
+    color: white;
+    background-color: $panel-text-color1 !important;
+  }
+}
+
+.removeLabel {
+  font-size: 12px;
+  line-height: 1;
+  width: 0;
+  display: inline-block;
+  vertical-align: middle;
+  overflow: hidden;
+  opacity: 0;
+  @include transition(width .15s, opacity .15s, padding .15s);
+}
+
+.deleteButton:hover .removeLabel {
+  width: 58px;
+  opacity: 1;
+  padding: 0 5px;
+}
+
+.addButton {
+  border: 1px dashed $add-button-border-color;
+  background-color: transparent !important;
+  color: $panel-text-color3;
+  font-size: 12px;
+  line-height: 1;
+  padding: 10px;
+  margin-top: 15px;
+  @include transition(all .15s);
+  @include border-radius(4px);
+  &:active, &:focus, &:active:focus, &:hover:focus {
+    outline: none !important;
+  }
+  &:hover, &:active:focus {
+    color: white;
+    background-color: $action-button-hover-bg-color !important;
+    border-style: solid;
+  }
+}
+
+.otherOption {
+  margin-top: 15px;
+}
+
+.previewItems {
+  list-style: none;
+  margin: 15px 0;
+  padding-left: 0;
+  @include clearfix;
+}
+.previewItems li {
+  float: left;
+  margin-right: 8px;
+}
+
+.previewItemButton {
+  background-color: $preview-button-bg-color !important;
+  color: $panel-text-color1;
+  border: none;
+  width: 35px;
+  height: 35px;
+  @include box-shadow-custom(0 1px 1px rgba(0, 0, 0,.2));
+  @include border-radius(4px);
+  @include transition(all .15s);
+  &:focus, &:active:focus, &:hover:focus {
+    outline: none !important;
+    background-color: $preview-button-bg-color !important;
+  }
+  &:hover, &:focus {
+    background-color: $preview-button-bg-color !important;
+    @include box-shadow-custom(0 1px 5px rgba(0, 0, 0,.4));
+  }
+  &[class*=active] {
+    @include box-shadow-custom(0 1px 5px rgba(0, 0, 0,.8));
+  }
+}

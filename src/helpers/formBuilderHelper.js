@@ -12,14 +12,31 @@ export const getImageDimension = (url, callback) => {
   img.src = url;
 };
 
+export const isCurrentElementId = (id, currentElement) =>
+  currentElement && id === currentElement.id;
+
+export const getActiveBoxIndex = (currentElement) =>
+  _.get(currentElement, ['mappingInfo', 'activeIndex'], false);
+
+export const isActiveBox = (currentElement, index) =>
+  currentElement && getActiveBoxIndex(currentElement) === index;
+
 export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom) => {
-  const currentMappingInfo = currentElement.mappingInfo;
+  const activeBoxPosition = _.get(currentElement, [
+    'mappingInfo', 'positions', getActiveBoxIndex(currentElement)
+  ], null);
   var snappingTargets = [];
-  const excludeId = currentElement.id;
+
   documentMapping.forEach((mappingInfo) => {
-    mappingInfo.bounding_box.forEach(boundingBox => {
-      if (excludeId === mappingInfo.id) return;
-      if (mappingInfo.page_number !== currentMappingInfo.page_number) return;
+    const finalMappingInfo = isCurrentElementId(mappingInfo.id, currentElement)
+      ? currentElement.mappingInfo
+      : mappingInfo;
+
+    finalMappingInfo.positions.forEach((position, index) => {
+      if (!position) return;
+      const boundingBox = position.bounding_box;
+      if (isCurrentElementId(mappingInfo.id, currentElement) && isActiveBox(currentElement, index)) return;
+      if (position.page_number !== activeBoxPosition.page_number) return;
       snappingTargets = _.concat(snappingTargets, [
         {
           x: zoomValue(boundingBox.left, pageZoom),
@@ -62,13 +79,19 @@ export const zoomValue = (value, zoom) => {
 };
 
 export const getResizeSnappingTargets = (documentMapping, currentElement, pageZoom) => {
-  const currentMappingInfo = currentElement.mappingInfo;
+  const boundingBox = _.get(currentElement, [
+    'mappingInfo', 'positions', getActiveBoxIndex(currentElement), 'bounding_box'
+  ], null);
   var snappingTargets = [];
-  const boundingBox = currentMappingInfo.bounding_box[0];
-  const excludeId = currentElement.id;
+
   documentMapping.forEach((mappingInfo) => {
-    mappingInfo.bounding_box.forEach(targetBoundingBox => {
-      if (excludeId === mappingInfo.id) return;
+    const finalMappingInfo = isCurrentElementId(mappingInfo.id, currentElement)
+      ? currentElement.mappingInfo
+      : mappingInfo;
+
+    finalMappingInfo.positions.forEach((position, index) => {
+      if (!position) return;
+      const targetBoundingBox = position.bounding_box;
       snappingTargets = _.concat(snappingTargets, [
         {
           x: zoomValue(boundingBox.left + targetBoundingBox.width, pageZoom),
@@ -122,7 +145,15 @@ export const getDragSnappingHelpersRect = (elRect, currentElement, documentMappi
   var helperRects = [];
 
   for (let item of snappingTargets) {
-    for (let boundingBox of findItemById(documentMapping, item.id).bounding_box) {
+    const mappingInfo = isCurrentElementId(item.id, currentElement)
+      ? currentElement.mappingInfo
+      : findItemById(documentMapping, item.id);
+
+    mappingInfo.positions.forEach((position, index) => {
+      if (!position) return;
+      if (isCurrentElementId(mappingInfo.id, currentElement) && isActiveBox(currentElement, index)) return;
+
+      const boundingBox = position.bounding_box;
       var targetBoundingBox = _.assign({}, boundingBox);
       for (var prop in targetBoundingBox) {
         targetBoundingBox[prop] *= pageZoom;
@@ -158,7 +189,7 @@ export const getDragSnappingHelpersRect = (elRect, currentElement, documentMappi
         }
         helperRects.push(helperRect);
       }
-    }
+    });
   }
   return helperRects;
 };
@@ -169,7 +200,15 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
   var hasWidthSnapping = false;
   var hasHeightSnapping = false;
   for (let item of snappingTargets) {
-    for (let boundingBox of findItemById(documentMapping, item.id).bounding_box) {
+    const mappingInfo = isCurrentElementId(item.id, currentElement)
+      ? currentElement.mappingInfo
+      : findItemById(documentMapping, item.id);
+
+    mappingInfo.positions.forEach((position, index) => {
+      if (!position) return;
+      if (isCurrentElementId(mappingInfo.id, currentElement) && isActiveBox(currentElement, index)) return;
+
+      const boundingBox = position.bounding_box;
       var targetBoundingBox = _.assign({}, boundingBox);
       for (var prop in targetBoundingBox) {
         targetBoundingBox[prop] = zoomValue(targetBoundingBox[prop], pageZoom);
@@ -192,7 +231,7 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
           size: targetBoundingBox.height
         });
       }
-    }
+    });
   }
   if (hasWidthSnapping) {
     helpersPos.push({
@@ -210,9 +249,12 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
       size: elRect.height
     });
   }
+  console.log(helpersPos);
   return helpersPos;
 };
 
-export const pageZoomPercent = (pageZoom) => {
-  return Math.round(pageZoom * 100) + '%';
-};
+export const pageZoomPercent = (pageZoom) =>
+  Math.round(pageZoom * 100) + '%';
+
+export const getChoiceLabelByIndex = (index) =>
+  String.fromCharCode('A'.charCodeAt(0) + index);

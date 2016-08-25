@@ -15,26 +15,28 @@ import {
   Entity,
   CompositeDecorator
 } from 'draft-js';
+import { stateToHTML } from 'draft-js-export-html';
+import { stateFromHTML } from 'draft-js-import-html';
 import classNames from 'classnames';
 import {
   FaChain,
+  FaBold,
+  FaItalic,
   FaChevronDown
 } from 'react-icons/lib/fa';
+import _ from 'lodash';
 import SectionTitle from '../SectionTitle';
 import styles from './QuestionRichTextEditor.scss';
 
-function findAnswerEntities(contentBlock, callback) {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        Entity.get(entityKey).getType() === 'ANSWER_BLOCK'
-      );
-    },
-    callback
-  );
-}
+const answersRegex = /\{\{(.*?)\}\}/g;
+const findAnswerEntities = (contentBlock, callback) => {
+  const text = contentBlock.getText();
+  let matchArr, start;
+  while ((matchArr = answersRegex.exec(text)) !== null) {
+    start = matchArr.index;
+    callback(start, start + matchArr[0].length);
+  }
+};
 
 const AnswerSpan = (props) => {
   return <span {...props} contentEditable={false} className={styles.block}>{props.children}</span>; // eslint-disable-line
@@ -46,41 +48,35 @@ class QuestionRichTextEditor extends Component {
     value: PropTypes.string.isRequired,
     setValue: PropTypes.func.isRequired,
     questions: PropTypes.array.isRequired,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    popoverId: PropTypes.string
+  };
+
+  static defaultProps = {
+    popoverId: ''
   };
 
   constructor(props) {
     super(props);
+    const { value } = this.props;
     const answerBlockDecorator = new CompositeDecorator([
       {
         strategy: findAnswerEntities,
         component: AnswerSpan
       }
     ]);
-    const { value } = this.props;
-    this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    const initialEditorState = EditorState.createEmpty(answerBlockDecorator);
-    const initialContentState = Modifier.insertText(initialEditorState.getCurrentContent(),
-      initialEditorState.getSelection(), value);
-    this.state = {editorState: EditorState.createWithContent(initialContentState)};
+    this.state = {
+      editorState: EditorState.createWithContent(
+        stateFromHTML(_.defaultTo(value, '')),
+        answerBlockDecorator
+      )
+    };
   }
 
   componentWillReceiveProps(nextProps) {
-    const answerBlockDecorator = new CompositeDecorator([
-      {
-        strategy: findAnswerEntities,
-        component: AnswerSpan
-      }
-    ]);
-    const { value } = nextProps;
-    this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    const initialEditorState = EditorState.createEmpty(answerBlockDecorator);
-    const initialContentState = Modifier.insertText(initialEditorState.getCurrentContent(),
-      initialEditorState.getSelection(), value);
-    this.state = {editorState: EditorState.createWithContent(initialContentState)};
   }
 
-  handleKeyCommand(command) {
+  handleKeyCommand = (command) => {
     const newState = RichUtils.handleKeyCommand(this.state.editorState, command);
     if (newState) {
       this.onChange(newState);
@@ -97,11 +93,10 @@ class QuestionRichTextEditor extends Component {
   handleValueChange = (editorState) => {
     this.setState({editorState});
     const { setValue } = this.props;
-    setValue(editorState.getCurrentContent().getPlainText());
+    setValue(stateToHTML(editorState.getCurrentContent()));
   }
 
   handleAnswerSelect = (value) => {
-    console.log(value);
     const { editorState } = this.state;
     const prevFocusOffset = editorState.getSelection().focusOffset;
     const prevAnchorOffset = editorState.getSelection().anchorOffset;
@@ -147,16 +142,16 @@ class QuestionRichTextEditor extends Component {
   }
 
   renderToolbar() {
-    const { title } = this.props;
+    const { title, popoverId } = this.props;
     return (
       <div className={styles.toolbar}>
         <div className={styles.titleWidget}>
-          <SectionTitle title={title} />
+          <SectionTitle title={title} popoverId={popoverId} />
         </div>
-        <div className={styles.inputWidget}>
-          {this.renderAnswerDropdown()}
-        </div>
-        <ul className={styles.styleWidget}>
+        <ul className={styles.buttonsWidget}>
+          <li>
+            {this.renderAnswerDropdown()}
+          </li>
           <li>
             <Button bsSize="xsmall"
               className={styles.squareButton}
@@ -168,14 +163,14 @@ class QuestionRichTextEditor extends Component {
             <Button bsSize="xsmall"
               className={styles.squareButton}
               onClick={this.onBoldClick}>
-              <b>B</b>
+              <FaBold />
             </Button>
           </li>
           <li>
             <Button bsSize="xsmall"
               className={styles.squareButton}
               onClick={this.onItalicClick}>
-              <i>I</i>
+              <FaItalic />
             </Button>
           </li>
         </ul>
