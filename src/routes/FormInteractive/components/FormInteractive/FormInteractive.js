@@ -41,6 +41,11 @@ class FormInteractive extends Component {
     id: PropTypes.number.isRequired,
 
     /*
+     * title: Form title
+     */
+    title: PropTypes.string,
+
+    /*
      * form: form_data of response, consists of questions and logics.
      */
     form: PropTypes.object,
@@ -282,11 +287,11 @@ class FormInteractive extends Component {
   }
 
   render() {
-    const { submitAnswer, params: { status }, formAccessStatus,
+    const { title, submitAnswer, params: { status }, formAccessStatus,
       form, id, sessionId } = this.props;
     return (
       <div>
-        <FormHeader submitAnswer={submitAnswer} />
+        <FormHeader title={title} submitAnswer={submitAnswer} />
         <FlowLine />
         {status !== 'completion' && form && this.renderFormSteps}
         {status !== 'completion' &&

@@ -1,17 +1,106 @@
 @import './variables';
+@import './mixins';
 
-.header {
-	height: 65px;
-	background-color: $header-bg-color;
-	border-bottom: 1px solid $border-color;
-	z-index: 400;
-	position: relative;
+$button-text-color:       #848c98;
+$button-border-color:     #dadce0;
+$header-text-color:       #333c48;
+$mobile-menu-bg-color:    #f4f5f8;
+
+.wrapper {
+  height: $frontend-header-height;
+  position: relative;
+  display: flex;
+  align-items: center;
+  @include media('<sm') {
+    height: $frontend-header-height-mobile;
+  }
 }
-.saveLink {
-	float: right;
-	margin: 40px 30px 0;
+.logoWrapper {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 25px;
 }
-.activeRoute {
-  font-weight: bold;
-  text-decoration: underline;
+.title {
+  vertical-align: middle;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+  display: inline-block;
+  margin: 0;
+  flex: 1;
+  letter-spacing: 1px;
+  color: $header-text-color;
+}
+.buttonWrapper {
+  margin-left: 15px;
+}
+.saveButton {
+  padding: 8px 25px;
+  color: $button-text-color;
+  border: 2px solid $button-border-color;
+  cursor: pointer;
+  outline: none !important;
+  @include media('<sm') {
+    display: none;
+  }
+}
+.mobileToggleMenu {
+  border: none !important;
+  padding: 10px;
+  color: $header-text-color;
+  background-color: transparent;
+  cursor: pointer;
+  @include media('>=sm') {
+    display: none;
+  }
+  &:focus {
+    background-color: transparent;
+    outline: none !important;
+  }
+}
+.mobileMenu {
+  z-index: 999;
+  position: fixed;
+  right: 0;
+  width: 280px;
+  top: 0;
+  bottom: 0;
+  @include box-shadow-custom(0 0 250px black);
+  background-color: $mobile-menu-bg-color;
+  @include transform-origin(0 100%);
+  @include transform(translate(100%, 0));
+  @include transition(all .3s ease);
+  opacity: 0;
+  &.isOpen {
+    opacity: 1;
+    @include transform(translate(0, 0));
+  }
+  @include media('>=sm') {
+    display: none;
+  }
+}
+.mobileMenuTop {
+  text-align: right;
+  padding: 5px 5px 15px;
+}
+
+.navMenu {
+  list-style: none;
+  padding-left: 0;
+  li {
+    list-style: none;
+    margin-bottom: 5px;
+  }
+  a {
+    color: $header-text-color;
+    font-size: 20px;
+    display: block;
+    padding: 10px 20px;
+    text-align: right;
+    &:hover, &:focus {
+      text-decoration: none;
+      background-color: darken($mobile-menu-bg-color, 10%);
+      outline: none !important;
+    }
+  }
 }
