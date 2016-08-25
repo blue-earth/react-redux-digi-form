@@ -3,6 +3,17 @@ export const formatUrl = (url) => _.replace(url, /\/\//g, '/');
 
 export const rootPath = '/';
 
+/*
+login
+*/
+export const loginPath = 'login';
+
+export const loginUrl = (relativePath) =>
+  formatUrl(`${rootPath}/${loginPath}/${relativePath}`);
+
+/*
+dashboard
+*/
 export const dashboardPath = 'dashboard';
 
 export const submissionsPath = 'submissions';
