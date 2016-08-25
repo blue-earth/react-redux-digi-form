@@ -14,7 +14,7 @@ import {
   resetFormSubmitStatus
 } from 'redux/modules/formInteractive';
 
-import FormInteractive from '../components/FormInteractive/FormInteractive';
+import FormInteractive from '../components/FormInteractive';
 
 const mapActionCreators = {
   prevQuestion,

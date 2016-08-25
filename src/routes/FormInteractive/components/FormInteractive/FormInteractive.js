@@ -4,11 +4,11 @@ import React, {
 } from 'react';
 import FormHeader from 'components/Headers/FormHeader';
 import { Button } from 'react-bootstrap';
-import FormSection from '../FormSection/FormSection';
-import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
-import FlowLine from 'components/Forms/FlowLine/FlowLine';
-import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
-import FormRow from 'components/Forms/FormRow/FormRow';
+import FormSection from '../FormSection';
+import SubmitButton from 'components/Buttons/FormEnterButton';
+import FlowLine from 'components/Forms/FlowLine';
+import FormCompletionSection from '../FormCompletionSection';
+import FormRow from 'components/Forms/FormRow';
 import {
   groupFormQuestions,
   SlideAnimation
@@ -18,8 +18,8 @@ import {
   FORM_USER_SUBMISSION
 } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
-import SaveForLaterModal from '../SaveForLaterModal/SaveForLaterModal';
-import AccessCodeModal from 'components/Forms/AccessCodeModal/AccessCodeModal';
+import SaveForLaterModal from '../SaveForLaterModal';
+import AccessCodeModal from 'components/Forms/AccessCodeModal';
 import styles from './FormInteractive.scss';
 import Animate from 'rc-animate';
 

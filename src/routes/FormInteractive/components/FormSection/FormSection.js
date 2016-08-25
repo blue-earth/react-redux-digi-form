@@ -10,9 +10,9 @@ import {
   MdKeyboardArrowUp,
   MdKeyboardArrowDown
 } from 'react-icons/lib/md';
-import QuestionInteractive from 'components/Questions/QuestionInteractive/QuestionInteractive';
+import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import FormRow from 'components/Forms/FormRow/FormRow';
-import StepIndicator from 'components/Forms/StepIndicator/StepIndicator';
+import StepIndicator from 'components/Forms/StepIndicator';
 import LearnMoreSection from '../LearnMoreSection/LearnMoreSection';
 import {
   getContextFromAnswer,
