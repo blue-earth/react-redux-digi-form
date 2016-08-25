@@ -1,40 +1,29 @@
 @import './mixins';
 @import './variables';
 
+$frontend-bg-start-color:       #ffffff;
+$frontend-bg-end-color:         #f4f5f8;
+$form-interactive-border-color: #e6e8eb;
+.wrapper {
+  height: 100%;
+  @include media('>=sm') {
+    @include background-gradient($frontend-bg-start-color, $frontend-bg-end-color);
+  }
+}
 .submitButtonsArea {
   padding-top:30px;
 }
 .stepsWrapper {
   padding: 15px 0;
+  @include media('>=sm') {
+    background-color: white;
+    @include border-radius(5px);
+    @include box-shadow-custom(0 0 15px rgba(0, 0, 0, .03));
+    border: 1px solid $form-interactive-border-color;
+  }
 }
 .helpButtonWrapper {
   width: 90px;
   float: right;
   margin-top: 10px;
-}
-.modalWrapper {
-  width: 357px;
-  top: calc(50% - 106px);
-  .accessModalWrapper {
-    position: relative;
-    padding: 20px;
-    font-size: 23px;
-    font-weight: 500;
-    .modalDigitInput{
-      padding: 10px 0 10px 0;
-      width: 150px;
-    }
-    .modalSubmitButton {
-      position: absolute;
-      top: 94px;
-      left: 190px;
-    }
-    .modalValidator {
-      font-size: 17px;
-      width: 260px;
-    }
-    .resendLink {
-      font-size: 16px;
-    }
-  }
 }

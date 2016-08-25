@@ -2,11 +2,11 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import FormHeader from 'components/Headers/FormHeader';
 import { Button } from 'react-bootstrap';
+import Animate from 'rc-animate';
+import FormHeader from 'components/Headers/FormHeader';
 import FormSection from '../FormSection';
 import SubmitButton from 'components/Buttons/FormEnterButton';
-import FlowLine from 'components/Forms/FlowLine';
 import FormCompletionSection from '../FormCompletionSection';
 import FormRow from 'components/Forms/FormRow';
 import {
@@ -18,10 +18,9 @@ import {
   FORM_USER_SUBMISSION
 } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
-import SaveForLaterModal from '../SaveForLaterModal';
 import AccessCodeModal from 'components/Forms/AccessCodeModal';
+import SaveForLaterModal from '../SaveForLaterModal';
 import styles from './FormInteractive.scss';
-import Animate from 'rc-animate';
 
 class FormInteractive extends Component {
 
@@ -235,28 +234,30 @@ class FormInteractive extends Component {
     };
 
     return (
-      <div className={styles.stepsWrapper}>
-        <Animate exclusive animation={anim}>
-          {
-            questionGroups.map(function (group, index) {
-              return (
-                <FormSection key={index} questionGroup={group}
-                  step={index+1} totalSteps={questionGroups.length}
-                  status={that.sectionStatus(questions, currentQuestionId, group)}
-                  {...props} />
-              );
-            })
-          }
-        </Animate>
-        <FormRow>
-          {shouldShowFinalSubmit &&
-            <div className={styles.submitButtonsArea}>
-              <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
-            </div>}
-          <div className={styles.helpButtonWrapper}>
-            <Button bsStyle="danger" block>Help</Button>
-          </div>
-        </FormRow>
+      <div className="container">
+        <div className={styles.stepsWrapper}>
+          <Animate exclusive animation={anim}>
+            {
+              questionGroups.map(function (group, index) {
+                return (
+                  <FormSection key={index} questionGroup={group}
+                    step={index+1} totalSteps={questionGroups.length}
+                    status={that.sectionStatus(questions, currentQuestionId, group)}
+                    {...props} />
+                );
+              })
+            }
+          </Animate>
+          <FormRow>
+            {shouldShowFinalSubmit &&
+              <div className={styles.submitButtonsArea}>
+                <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
+              </div>}
+            <div className={styles.helpButtonWrapper}>
+              <Button bsStyle="danger" block>Help</Button>
+            </div>
+          </FormRow>
+        </div>
       </div>
     );
   }
@@ -290,9 +291,8 @@ class FormInteractive extends Component {
     const { title, submitAnswer, params: { status }, formAccessStatus,
       form, id, sessionId } = this.props;
     return (
-      <div>
+      <div className={styles.wrapper}>
         <FormHeader title={title} submitAnswer={submitAnswer} />
-        <FlowLine />
         {status !== 'completion' && form && this.renderFormSteps}
         {status !== 'completion' &&
           <SaveForLaterModal formId={id} sessionId={sessionId} />

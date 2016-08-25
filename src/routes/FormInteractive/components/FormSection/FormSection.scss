@@ -3,10 +3,8 @@
 
 $nav-hover-color:           #000;
 .formSection {
-  background-color: #fefefe;
   position: relative;
   &.active {
-    background-color: $bg-color1;
     .formSectionInner {
       @include media('>=sm') {
         padding-top: 25 + $section-active-v-padding;
