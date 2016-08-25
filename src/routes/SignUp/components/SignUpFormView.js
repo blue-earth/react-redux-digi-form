@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { dashboardUrl } from 'helpers/urlHelper';
+import { dashboardUrl, loginUrl } from 'helpers/urlHelper';
 import Verifier from 'components/Verifier/Verifier';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
@@ -60,6 +60,11 @@ class SignUpForm extends Component {
     if (props.authStatus === NOT_LOGGED_IN && this.props.authStatus !== props.authStatus) {
       this.setState({ password: '' });
     }
+  }
+
+  handleLoginClick = () => {
+    const { goTo } = this.props;
+    goTo(loginUrl(''));
   }
 
   handleSubmit = () => {
@@ -134,7 +139,9 @@ class SignUpForm extends Component {
                 </div>
               </Col>
             </Row>
-            <p className={styles.loginLink}>Already an emondo member? <a><b>Log in</b></a></p>
+            <p className={styles.loginLink}>
+              Already an emondo member? <a onClick={this.handleLoginClick}><b>Log in</b></a>
+            </p>
           </div>
         </Grid>
       </div>
