@@ -1,0 +1,81 @@
+@import './mixins';
+@import './variables';
+
+.signupWrapper {
+  max-width: 800px;
+  @include media('<sm') {
+    max-width: 340px;
+  }
+  margin: 0 auto;
+  padding: 40px 0;
+  .formTitle {
+    font-family: "roble_alt_boldbold";
+    font-size:25px;
+    text-align: center;
+    margin: 0 0 40px;
+  }
+  input[type='text'], input[type='password'] {
+    background: lighten($grey, 20%);
+    &:focus {
+      background: #fff;
+    }
+  }
+  .signupLeft {
+    @include media('>=sm') { padding-right: 20px; }
+    p {
+      margin: 10px 0;
+      text-align: center;
+      font-size: 12px;
+    }
+  }
+  .signupRight {
+    @include media('>=sm') { padding-left: 20px; }
+    button {
+      height: 46px;
+      span svg {
+        position: absolute;
+        top: 14px;
+        left: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+    p {
+      margin: 28px 0 10px;
+      text-align: center;
+      font-size: 12px;
+    }
+  }
+  .divider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: $grey;
+    @include media('<sm') {
+      position: relative;
+      width: 100%;
+      height: 1px;
+      margin: 40px 0 50px;
+    }
+    .or {
+      font-size: 16px;
+      font-weight: bold;
+      position: absolute;
+      top: 45%;
+      left: -12px;
+      padding: 5px;
+      background: #fff;
+      @include media('<sm') {
+        top: -16px;
+        left: 50%;
+      }
+    }
+  }
+  .loginLink {
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px 0;
+  }
+}
