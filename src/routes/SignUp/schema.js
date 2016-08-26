@@ -10,7 +10,7 @@ const schema = {
     label: 'Password',
     required: true,
     validate: {
-      length: {min:6}
+      length: {min: 6}
     }
   }
 };
