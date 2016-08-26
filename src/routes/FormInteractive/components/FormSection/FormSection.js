@@ -13,7 +13,6 @@ import {
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import FormRow from 'components/Forms/FormRow/FormRow';
 import StepIndicator from 'components/Forms/StepIndicator';
-import LearnMoreSection from '../LearnMoreSection/LearnMoreSection';
 import {
   getContextFromAnswer,
   getFirstQuestionOfGroup,
@@ -259,9 +258,6 @@ class FormSection extends Component {
         {status === 'active' &&
           <div>
             <hr className={styles.hrLine} />
-            <FormRow>
-              <LearnMoreSection isLastSection={step === totalSteps} />
-            </FormRow>
             {step < totalSteps &&
               <FormRow>
                 <h2 className={styles.nextSectionTitle}>Next Sections</h2>

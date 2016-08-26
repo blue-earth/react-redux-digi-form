@@ -2,13 +2,14 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Button } from 'react-bootstrap';
 import Animate from 'rc-animate';
+import classNames from 'classnames';
 import FormHeader from 'components/Headers/FormHeader';
 import FormSection from '../FormSection';
 import SubmitButton from 'components/Buttons/FormEnterButton';
 import FormCompletionSection from '../FormCompletionSection';
 import FormRow from 'components/Forms/FormRow';
+import StackLogo from 'components/Logos/StackLogo';
 import {
   groupFormQuestions,
   SlideAnimation
@@ -234,8 +235,8 @@ class FormInteractive extends Component {
     };
 
     return (
-      <div className="container">
-        <div className={styles.stepsWrapper}>
+      <div className={classNames(styles.contentWrapper, 'container')}>
+        <div className={styles.contentWrapperInner}>
           <Animate exclusive animation={anim}>
             {
               questionGroups.map(function (group, index) {
@@ -253,10 +254,13 @@ class FormInteractive extends Component {
               <div className={styles.submitButtonsArea}>
                 <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
               </div>}
-            <div className={styles.helpButtonWrapper}>
-              <Button bsStyle="danger" block>Help</Button>
-            </div>
           </FormRow>
+          <div className={styles.bottomLogoWrapper}>
+            <span>Powered by</span>
+            <div className={styles.bottomLogo}>
+              <StackLogo logoStyle="darkgrey" width={80} />
+            </div>
+          </div>
         </div>
       </div>
     );

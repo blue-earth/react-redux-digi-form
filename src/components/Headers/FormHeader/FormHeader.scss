@@ -1,9 +1,9 @@
 @import './variables';
 @import './mixins';
 
-$button-text-color:       #848c98;
+$button-text-color:       $frontend-text-color1;
+$header-text-color:       $frontend-text-color1;
 $button-border-color:     #dadce0;
-$header-text-color:       #333c48;
 $mobile-menu-bg-color:    #f4f5f8;
 
 .wrapper {
