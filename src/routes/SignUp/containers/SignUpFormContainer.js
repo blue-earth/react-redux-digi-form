@@ -1,12 +1,12 @@
 import connect from 'redux/utils/connect';
-import { submitLoginForm, INIT_AUTH_STATE } from 'redux/modules/auth';
+import { submitSignupForm, INIT_AUTH_STATE } from 'redux/modules/auth';
 import { goTo } from 'redux/modules/router.js';
 import SignUpFormView from '../components/SignUpFormView';
 import { reduxForm } from 'redux-form';
 import formSchema from '../schema';
-// TODO: this has all been copied from login form, needs updating once a reducer exists
+
 const mapActionCreators = {
-  submitLoginForm,
+  submitSignupForm,
   goTo
 };
 
@@ -14,11 +14,13 @@ const mapStateToProps = (state) => {
   const { auth } = state;
   const {
     authStatus,
-    isAuthenticating
+    isAuthenticating,
+    signUpEmailSent
   } = auth || INIT_AUTH_STATE;
   return {
     authStatus,
-    isAuthenticating
+    isAuthenticating,
+    signUpEmailSent
   };
 };
 

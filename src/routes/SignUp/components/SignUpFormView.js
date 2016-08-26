@@ -33,10 +33,11 @@ const domOnlyProps = ({
 class SignUpForm extends Component {
 
   static propTypes = {
-    submitLoginForm: PropTypes.func.isRequired,
+    submitSignupForm: PropTypes.func.isRequired,
     authStatus: PropTypes.string.isRequired,
     goTo: PropTypes.func.isRequired,
     isAuthenticating: PropTypes.bool.isRequired,
+    signUpEmailSent: PropTypes.bool.isRequired,
     fields: PropTypes.object.isRequired
   };
 
@@ -68,26 +69,28 @@ class SignUpForm extends Component {
   }
 
   handleSubmit = () => {
-    const { fields: {email, password}, authStatus, submitLoginForm } = this.props;
+    const { fields: {email, password}, authStatus, submitSignupForm, signUpEmailSent } = this.props;
     if (email.touched && password.touched) {
-      if (!email.error && !password.error && authStatus === NOT_LOGGED_IN) {
+      if (!email.error && !password.error && authStatus === NOT_LOGGED_IN && signUpEmailSent === false) {
         this.setState({isSubmitting: true});
-        submitLoginForm(email.value, password.value);
+        submitSignupForm(email.value, password.value);
         this.setState({hasSubmitted: true, isSubmitting: false});
       }
     }
   }
 
+  // TODO: create a new Verifier type that returns a message saying wether an email has been sent
   renderVerificationStatus = () => {
     const { authStatus, isAuthenticating } = this.props;
     const { hasSubmitted, isSubmitting } = this.state;
-    if (hasSubmitted && !isSubmitting && !isAuthenticating && authStatus !== 'LOGGING_IN') {
+    if (hasSubmitted && !isSubmitting && !isAuthenticating && authStatus !== 'SIGNING_UP') {
       return (<Verifier type="EmondoAuthenticationService" status={authStatus === LOGGED_IN} />);
     } else {
       return false;
     }
   }
 
+  // TODO: pages for Terms and Privacy Policy
   render() {
     const { fields: {email, password}, authStatus } = this.props;
     return (
@@ -109,7 +112,7 @@ class SignUpForm extends Component {
                       {...domOnlyProps(password)} />
                   </div>
                   {this.renderVerificationStatus()}
-                  <Button className="btn-lg btn-block" style="submitButton"
+                  <Button onClick={this.handleSubmit} className="btn-lg btn-block" style="submitButton"
                     isDisabled={typeof password.error !== 'undefined' || typeof email.error !== 'undefined'}
                     isLoading={authStatus === 'LOGGING_IN'}>
                     Create your emondo account

@@ -15,10 +15,18 @@ export const SET_IS_FETCHING_USER = 'SET_IS_FETCHING_USER';
 
 export const LOGOUT = 'LOGOUT';
 
+// TODO: decide if signup stuff should be here or in it's own module
+export const REQUEST_SIGNUP = 'REQUEST_SIGNUP';
+export const RECEIVE_SIGNUP_STATUS = 'RECEIVE_SIGNUP_STATUS';
+
+export const SIGNING_UP = 'SIGNING_UP';
+// export const SIGNED_UP = 'SIGNED_UP';
+
 export const INIT_AUTH_STATE = {
   authStatus: NOT_LOGGED_IN,
   user: {},
-  isAuthenticating: false
+  isAuthenticating: false,
+  signUpEmailSent: false
 };
 
 // ------------------------------------
@@ -32,9 +40,24 @@ export const submitLoginForm = (email, password) => {
 };
 
 // ------------------------------------
+// Action: submitSignupForm
+// ------------------------------------
+export const submitSignupForm = (email, password) => {
+  return (dispatch, getState) => {
+    dispatch(requestSignup());
+    dispatch(processSignup(email, password));
+  };
+};
+
+// ------------------------------------
 // Action: requestAuth
 // ------------------------------------
 export const requestAuth = createAction(REQUEST_AUTH);
+
+// ------------------------------------
+// Action: requestSignup
+// ------------------------------------
+export const requestSignup = createAction(REQUEST_SIGNUP);
 
 // ------------------------------------
 // Action: processAuth
@@ -56,6 +79,32 @@ export const processAuth = (email, password) => {
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(receiveAuthStatus(false)); // Hide loading spinner
+    };
+  };
+
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+// ------------------------------------
+// Action: processSignup
+// ------------------------------------
+export const processSignup = (email, password) => {
+  const apiURL = `${API_URL}/accounts/api/auth/signup/`;
+  const body = { email, password };
+  const fetchParams = assignDefaults({
+    method: 'POST',
+    body
+  });
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(receiveSignUpStatus(value.emailSent));
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(receiveSignUpStatus(false));
     };
   };
 
@@ -97,6 +146,11 @@ export const fetchUserInfo = () => {
 export const receiveAuthStatus = createAction(RECEIVE_AUTH_STATUS);
 
 // ------------------------------------
+// Action: sign up submitted
+// ------------------------------------
+export const receiveSignUpStatus = createAction(RECEIVE_SIGNUP_STATUS);
+
+// ------------------------------------
 // Action: setUserProfile
 // ------------------------------------
 export const setUserProfile = createAction(SET_USER_PROFILE);
@@ -125,9 +179,17 @@ const authReducer = handleActions({
     Object.assign({}, state, {
       authStatus: LOGGING_IN
     }),
+  REQUEST_SIGNUP: (state, action) =>
+    Object.assign({}, state, {
+      authStatus: SIGNING_UP
+    }),
   RECEIVE_AUTH_STATUS: (state, action) =>
     Object.assign({}, state, {
       authStatus: action.payload ? LOGGED_IN : NOT_LOGGED_IN
+    }),
+  RECEIVE_SIGNUP_STATUS: (state, action) =>
+    Object.assign({}, state, {
+      signUpEmailSent: action.payload
     }),
   SET_USER_PROFILE: (state, action) =>
     Object.assign({}, state, {
