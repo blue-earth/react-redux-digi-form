@@ -5,6 +5,7 @@ import {
   setIsFetchingUserInfo
 } from 'redux/modules/auth';
 import { goTo } from 'redux/modules/router';
+import { loginUrl } from 'helpers/urlHelper';
 
 export default function requiresAuth(Component) {
   class AuthenticatedComponent extends React.Component {
@@ -17,6 +18,7 @@ export default function requiresAuth(Component) {
        * The user dictionary object, includes first_name, last_name, email, and last_login
        */
       user: PropTypes.object.isRequired,
+      authStatus: PropTypes.string.isRequired,
       setIsFetchingUserInfo: PropTypes.func.isRequired,
       fetchUserInfo: PropTypes.func.isRequired,
       goTo: PropTypes.func.isRequired,
@@ -45,9 +47,9 @@ export default function requiresAuth(Component) {
         this.props.location.pathname !== nextProps.location.pathname;
     }
     _checkAndRedirect() {
-      const { isAuthenticating, user, goTo } = this.props;
-      if (!isAuthenticating && Object.keys(user).length === 0) {
-        goTo('/login');
+      const { isAuthenticating, user, authStatus, goTo } = this.props;
+      if (!isAuthenticating && (Object.keys(user).length === 0 || authStatus !== 'LOGGED_IN')) {
+        goTo(loginUrl(''));
       }
     }
     render() {
@@ -67,7 +69,8 @@ export default function requiresAuth(Component) {
   const mapStateToProps = (state) => {
     return {
       isAuthenticating: state.auth.isAuthenticating,
-      user: state.auth.user
+      user: state.auth.user,
+      authStatus: state.auth.authStatus
     };
   };
   const mapActionCreators = {
