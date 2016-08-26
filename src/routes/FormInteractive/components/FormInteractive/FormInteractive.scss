@@ -3,7 +3,6 @@
 
 $frontend-bg-start-color:       #ffffff;
 $frontend-bg-end-color:         #f4f5f8;
-$form-interactive-border-color: #e6e8eb;
 
 $bottom-content-color:          $frontend-text-color3;
 .wrapper {
@@ -21,14 +20,13 @@ $bottom-content-color:          $frontend-text-color3;
   }
 }
 .contentWrapperInner {
-  padding: 15px 0;
   height: 100%;
   position: relative;
   @include media('>=sm') {
     background-color: white;
     @include border-radius(5px);
     @include box-shadow-custom(0 0 15px rgba(0, 0, 0, .03));
-    border: 1px solid $form-interactive-border-color;
+    border: 1px solid $frontend-border-color;
   }
 }
 .bottomLogoWrapper {

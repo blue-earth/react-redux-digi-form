@@ -1,0 +1,54 @@
+@import './mixins';
+@import './variables';
+
+$pt-height:       55px;
+$pt-bar-height:   3px;
+$pt-button-width: 47px;
+
+.wrapper {
+  height: $pt-height;
+  padding: 0 $pt-button-width $pt-bar-height;
+  position: relative;
+}
+
+.prevButtonWrapper,
+.nextButtonWrapper {
+  top: 0;
+  width: $pt-button-width;
+  height: $pt-height - $pt-bar-height;
+  position: absolute;
+}
+
+.prevButtonWrapper {
+  left: 0;
+  border-right: 1px solid $frontend-border-color;
+}
+.nextButtonWrapper {
+  right: 0;
+  border-left: 1px solid $frontend-border-color;
+}
+.progressbar {
+  position: absolute;
+  height: $pt-bar-height;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    opacity: .8;
+  }
+}
+.progressbarValue {
+  background-color: inherit;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 50%;
+}

@@ -6,6 +6,7 @@ import Animate from 'rc-animate';
 import classNames from 'classnames';
 import FormHeader from 'components/Headers/FormHeader';
 import FormSection from '../FormSection';
+import ProgressTracker from '../ProgressTracker';
 import SubmitButton from 'components/Buttons/FormEnterButton';
 import FormCompletionSection from '../FormCompletionSection';
 import FormRow from 'components/Forms/FormRow';
@@ -237,6 +238,7 @@ class FormInteractive extends Component {
     return (
       <div className={classNames(styles.contentWrapper, 'container')}>
         <div className={styles.contentWrapperInner}>
+          <ProgressTracker questions={questions} />
           <Animate exclusive animation={anim}>
             {
               questionGroups.map(function (group, index) {
