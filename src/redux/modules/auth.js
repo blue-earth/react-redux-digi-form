@@ -9,8 +9,11 @@ export const RECEIVE_AUTH_STATUS = 'RECEIVE_AUTH_STATUS';
 export const NOT_LOGGED_IN = 'NOT_LOGGED_IN';
 export const LOGGING_IN = 'LOGGING_IN';
 export const LOGGED_IN = 'LOGGED_IN';
+export const LOGGED_OUT = 'LOGGED_OUT';
 export const SET_USER_PROFILE = 'SET_USER_PROFILE';
 export const SET_IS_FETCHING_USER = 'SET_IS_FETCHING_USER';
+
+export const LOGOUT = 'LOGOUT';
 
 export const INIT_AUTH_STATE = {
   authStatus: NOT_LOGGED_IN,
@@ -99,6 +102,22 @@ export const receiveAuthStatus = createAction(RECEIVE_AUTH_STATUS);
 export const setUserProfile = createAction(SET_USER_PROFILE);
 
 // ------------------------------------
+// Action: handleLogout
+// ------------------------------------
+export const handleLogout = () => {
+  return (dispatch, getState) => {
+    dispatch(logout());
+  };
+};
+
+// ------------------------------------
+// Action: logout
+// ------------------------------------
+// TODO: does logout functionality need to happen on the backend?
+// TODO: does the state need to show logout, or can it just be reset to INIT_AUTH_STATE
+export const logout = createAction(LOGOUT);
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const authReducer = handleActions({
@@ -117,6 +136,10 @@ const authReducer = handleActions({
   SET_IS_FETCHING_USER: (state, action) =>
     Object.assign({}, state, {
       isAuthenticating: action.payload
+    }),
+  LOGOUT: (state, action) =>
+    Object.assign({}, state, {
+      authStatus: LOGGED_OUT
     })
 }, INIT_AUTH_STATE);
 
