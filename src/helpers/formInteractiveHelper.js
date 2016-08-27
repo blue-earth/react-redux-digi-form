@@ -38,7 +38,14 @@ export const groupFormQuestions = (questions) => {
       questions: tempGroup[group.id]
     });
   }
+
   return newGroup;
+};
+
+export const getQuestionGroupTitles = function(questions) {
+  return _.filter(questions, function(question) {
+    return question.type === 'Group';
+  }).map((e) => e.title);
 };
 
 export const getContextFromAnswer = (answers) => {

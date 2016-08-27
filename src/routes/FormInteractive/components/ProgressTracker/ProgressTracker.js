@@ -2,58 +2,59 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import {
-  groupFormQuestions
-} from 'helpers/formInteractiveHelper';
 import ArrowButton from './ArrowButton';
 import styles from './ProgressTracker.scss';
+import classNames from 'classnames';
 
 class ProgressTracker extends Component {
   static propTypes = {
-    questions: PropTypes.object.isRequired
-  }
-
-  static contextTypes = {
-    primaryColor: PropTypes.string,
-    isLastSection: PropTypes.bool
+    sectionTitleList: PropTypes.array,
+    currentSectionIndex: PropTypes.number
+  };
+  static defaultProps = {
+    sectionTitleList: [],
+    currentSectionIndex: 0
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      questionGroups: groupFormQuestions(props.questions)
-    };
-  }
+  static contextTypes = {
+    primaryColor: PropTypes.string
+  };
 
   addHoverClass = () => {
 
   }
 
   render() {
-    const { questionGroups } = this.state;
+    const { sectionTitleList, currentSectionIndex } = this.props;
     const { primaryColor } = this.context;
-    return (
-      <div className={styles.wrapper}>
-        <div className={styles.prevButtonWrapper}>
-          <ArrowButton direction="left" />
+    if (sectionTitleList && sectionTitleList.length) {
+      return (
+        <div className={styles.wrapper}>
+          <div className={styles.prevButtonWrapper}>
+            <ArrowButton direction="left" />
+          </div>
+          <ol className={styles.stepsList}>
+          {
+            sectionTitleList.map((questionGroupTitle, index) => (
+              <li key={index} className={classNames({
+                [styles.stepItem]: true,
+                [styles.active]: index === currentSectionIndex})}>
+                {index+1}. {questionGroupTitle}
+              </li>
+            ))
+          }
+          </ol>
+          <div className={styles.nextButtonWrapper}>
+            <ArrowButton direction="right" />
+          </div>
+          <div className={styles.progressbar} style={{ backgroundColor: primaryColor }}>
+            <div className={styles.progressbarValue} />
+          </div>
         </div>
-        <div className={styles.steps}>
-        {
-          questionGroups.map((questionGroup, index) => (
-            <div className={styles.step}>
-              {questionGroup.title}
-            </div>
-          ))
-        }
-        </div>
-        <div className={styles.nextButtonWrapper}>
-          <ArrowButton direction="right" />
-        </div>
-        <div className={styles.progressbar} style={{ backgroundColor: primaryColor }}>
-          <div className={styles.progressbarValue} />
-        </div>
-      </div>
-    );
+      );
+    } else {
+      return <div></div>;
+    }
   }
 }
 

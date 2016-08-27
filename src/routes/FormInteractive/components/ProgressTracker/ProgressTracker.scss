@@ -9,6 +9,7 @@ $pt-button-width: 47px;
   height: $pt-height;
   padding: 0 $pt-button-width $pt-bar-height;
   position: relative;
+  overflow: hidden;
 }
 
 .prevButtonWrapper,
@@ -17,6 +18,7 @@ $pt-button-width: 47px;
   width: $pt-button-width;
   height: $pt-height - $pt-bar-height;
   position: absolute;
+  background: #FFFFFF;
 }
 
 .prevButtonWrapper {
@@ -51,4 +53,49 @@ $pt-button-width: 47px;
   top: 0;
   height: 100%;
   width: 50%;
+}
+
+.stepsList {
+  width: 1000px;
+  overflow: hidden;
+  display: inline-block;
+  height: 52px;
+  margin: 0;
+  padding: 0;
+}
+.stepItem {
+  display: inline-block;
+  list-style-type: decimal;
+  padding: 0 54px 0 40px;
+  line-height: 52px;
+  cursor: pointer;
+  position: relative;
+  color: #c4c6c8;
+  &:before, &:after {
+    position: absolute;
+    left: -15px;
+    display: block;
+    content: '';
+    background-color: #eee;
+    border-left: 4px solid #FFF;
+    width: 6px;
+    height: 26px;
+  }
+  &:after {
+    top: 0;
+    -moz-transform: skew(30deg);
+    -ms-transform: skew(30deg);
+    -webkit-transform: skew(30deg);
+    transform: skew(30deg);
+  }
+  &:before {
+    bottom: 0;
+    -moz-transform: skew(-30deg);
+    -ms-transform: skew(-30deg);
+    -webkit-transform: skew(-30deg);
+    transform: skew(-30deg);
+  }
+}
+.active {
+  color: #73767b;
 }

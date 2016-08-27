@@ -13,6 +13,7 @@ import FormRow from 'components/Forms/FormRow';
 import StackLogo from 'components/Logos/StackLogo';
 import {
   groupFormQuestions,
+  getQuestionGroupTitles,
   SlideAnimation
 } from 'helpers/formInteractiveHelper';
 import {
@@ -228,6 +229,7 @@ class FormInteractive extends Component {
     const { form: { questions }, currentQuestionId, shouldShowFinalSubmit } = props;
     const that = this;
     const questionGroups = groupFormQuestions(questions);
+    const questionGroupTitles = getQuestionGroupTitles(questions);
 
     var slideAnimation = new SlideAnimation(1000);
     const anim = {
@@ -238,7 +240,7 @@ class FormInteractive extends Component {
     return (
       <div className={classNames(styles.contentWrapper, 'container')}>
         <div className={styles.contentWrapperInner}>
-          <ProgressTracker questions={questions} />
+          <ProgressTracker sectionTitleList={questionGroupTitles} />
           <Animate exclusive animation={anim}>
             {
               questionGroups.map(function (group, index) {
