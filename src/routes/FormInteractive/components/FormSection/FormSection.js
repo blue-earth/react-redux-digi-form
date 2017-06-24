@@ -217,7 +217,6 @@ class FormSection extends Component {
           <div>
             {step > 1 && <hr className={styles.hrLine} />}
             <FormRow>
-              <StepIndicator step={step} totalSteps={totalSteps} status={status} />
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>
                 {this.shouldShowActiveTitle() && questionGroup.title}
@@ -231,7 +230,6 @@ class FormSection extends Component {
         <Collapse in={status === 'pending'} timeout={1000}>
           <div>
             <FormRow>
-              <StepIndicator step={step} totalSteps={totalSteps} status={status} />
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>{questionGroup.title}</h3>
               </div>
@@ -242,7 +240,6 @@ class FormSection extends Component {
         <Collapse in={status === 'completed'} timeout={1000}>
           <div>
             <FormRow>
-              <StepIndicator step={step} totalSteps={totalSteps} status={status} />
               <div className={styles.formSectionInner}>
                 <h3 className={styles.formSectionTitle}>
                   {questionGroup.title}

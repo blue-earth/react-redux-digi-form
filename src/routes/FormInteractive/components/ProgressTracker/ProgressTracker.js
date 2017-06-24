@@ -5,11 +5,13 @@ import React, {
 import ArrowButton from './ArrowButton';
 import styles from './ProgressTracker.scss';
 import classNames from 'classnames';
+import Slider from 'react-slick';
 
 class ProgressTracker extends Component {
   static propTypes = {
     sectionTitleList: PropTypes.array,
-    currentSectionIndex: PropTypes.number
+    currentSectionIndex: PropTypes.number,
+    setActiveStepIndex: PropTypes.func
   };
   static defaultProps = {
     sectionTitleList: [],
@@ -25,28 +27,40 @@ class ProgressTracker extends Component {
   }
 
   render() {
-    const { sectionTitleList, currentSectionIndex } = this.props;
+    const { sectionTitleList, currentSectionIndex, setActiveStepIndex } = this.props;
     const { primaryColor } = this.context;
     if (sectionTitleList && sectionTitleList.length) {
+      let sliderSettings = {
+        dots: false,
+        infinite: false,
+        nextArrow: false,
+        prevArrow: false,
+        arrows: false,
+        autoplay: false,
+        centerMode: false,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        swipe: false,
+        touchMove: false,
+        swipetoSlide: false,
+        adaptiveHeight: true,
+        variableWidth: true
+      };
       return (
         <div className={styles.wrapper}>
-          <div className={styles.prevButtonWrapper}>
-            <ArrowButton direction="left" />
-          </div>
-          <ol className={styles.stepsList}>
-          {
+          <Slider {...sliderSettings}>
+            {
             sectionTitleList.map((questionGroupTitle, index) => (
-              <li key={index} className={classNames({
+              <div key={index} className={classNames({
                 [styles.stepItem]: true,
-                [styles.active]: index === currentSectionIndex})}>
+                [styles.active]: index === currentSectionIndex})}
+                onClick={setActiveStepIndex}>
                 {index+1}. {questionGroupTitle}
-              </li>
+              </div>
             ))
           }
-          </ol>
-          <div className={styles.nextButtonWrapper}>
-            <ArrowButton direction="right" />
-          </div>
+          </Slider>
           <div className={styles.progressbar} style={{ backgroundColor: primaryColor }}>
             <div className={styles.progressbarValue} />
           </div>
