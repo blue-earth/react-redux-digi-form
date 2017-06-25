@@ -171,8 +171,11 @@ const processVerifySubdomain = (subdomain) => {
   };
   const fetchFail = (data) => {
     return (dispatch, getState) => {
-      // Output server error
-      console.log(data);
+      dispatch(receiveVerifySubdomain({
+        displaySubdomainVerified: true,
+        isSubdomainVerified: false,
+        subdomainErrorMessage: 'Service Error'
+      }));
     };
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);

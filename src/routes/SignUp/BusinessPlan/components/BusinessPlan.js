@@ -73,10 +73,10 @@ class BusinessPlan extends Component {
   handleSubdomainChange = (event) => {
     clearTimeout(this.changingSubdomain);
     const subdomain = event.target.value;
-    const { verifySubdomain, setSelectedPlanConfig, isChangingSubdomain } = this.props;    
+    const { verifySubdomain, setSelectedPlanConfig } = this.props;
     setSelectedPlanConfig({subdomain: subdomain});
-    subdomain.length < 4 ? verifySubdomain(subdomain) :
-      this.changingSubdomain = setTimeout(() => verifySubdomain(subdomain), 2000);
+    subdomain.length < 4 ? verifySubdomain(subdomain)
+      :this.changingSubdomain = setTimeout(() => verifySubdomain(subdomain), 2000);
   }
 
   handleSubdomainFocus = (event) => {
@@ -84,6 +84,11 @@ class BusinessPlan extends Component {
   }
   handleSubdomainBlur = (event) => {
     this.props.displaySubdomainHint(true);
+  }
+  handleSubdomainEnter = (event) => {
+    if (event.key === 'Enter') {
+      this.props.verifySubdomain(event.target.value);
+    }
   }
 
   handlePaymentChange = (event) => {
@@ -172,8 +177,12 @@ class BusinessPlan extends Component {
                 <div className={styles.domainInputWrapper}>
                   <div className={styles.domainInputGroup}>
                     <input autoFocus className={styles.domainInput} placeholder="subdomain"
-                      value={subdomain} onChange={this.handleSubdomainChange}
-                      onBlur={this.handleSubdomainBlur} onFocus={this.handleSubdomainFocus} />
+                      value={subdomain}
+                      onChange={this.handleSubdomainChange}
+                      onBlur={this.handleSubdomainBlur}
+                      onFocus={this.handleSubdomainFocus}
+                      onKeyDown={this.handleSubdomainEnter}
+                    />
                     <span className={classNames(
                       styles.validationIndicator,
                       styles.validatorPass,
