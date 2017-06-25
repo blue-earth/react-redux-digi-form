@@ -10,7 +10,6 @@ export const SET_PLANS = 'SET_PLANS';
 export const SET_PAYMENT_METHOD = 'SET_PAYMENT_METHOD';
 export const SET_SELECTED_PLAN_CONFIG = 'SET_SELECTED_PLAN_CONFIG';
 export const SET_EMAIL = 'SET_EMAIL';
-export const SET_DISPLAY_SUBDOMAIN_HINT = 'SET_DISPLAY_SUBDOMAIN_HINT';
 
 export const RECEIVE_VERIFY_SUBDOMAIN = 'RECEIVE_VERIFY_SUBDOMAIN';
 export const RECEIVE_PURCHASE_RESULT = 'RECEIVE_PURCHASE_RESULT';
@@ -19,12 +18,16 @@ const REQUEST_PURCHASE_BUSINESS_PLAN = 'REQUEST_PURCHASE_BUSINESS_PLAN';
 const DONE_FETCHING_PLANS = 'DONE_FETCHING_PLANS';
 const DONE_PURCHASING_BUSINESS_PLAN = 'DONE_PURCHASING_BUSINESS_PLAN';
 
+const DISPLAY_SUBDOMAIN_HINT = 'DISPLAY_SUBDOMAIN_HINT';
+
 export const INIT_BUSINESS_PLAN_STATE = {
   stepIndex: 0,
   currentlySelectedPlan: {
     subdomain: ''
   },
   validations: {
+    displaySubdomainHint: false,
+    displaySubdomainVerified: false,
     isSubdomainVerified: false,
     subdomainErrorMessage: ''
   },
@@ -36,13 +39,11 @@ export const INIT_BUSINESS_PLAN_STATE = {
   },
   plansConfig: [],
   purchaseErrorMessage: '',
-  isPageBusy: true,
-  showSubdomainHint: false
+  isPageBusy: true
 };
 
 export const nextStep = createAction(NEXT_STEP);
 export const previousStep = createAction(PREVIOUS_STEP);
-
 
 export const setPaymentMethod = createAction(SET_PAYMENT_METHOD);
 export const setEmail = createAction(SET_EMAIL);
@@ -53,12 +54,13 @@ export const doneFetchingPlans = createAction(DONE_FETCHING_PLANS);
 export const donePurchasingBusinessPlan = createAction(DONE_PURCHASING_BUSINESS_PLAN);
 export const receiveVerifySubdomain = createAction(RECEIVE_VERIFY_SUBDOMAIN);
 
-export const setDisplaySubdomainHint = createAction(SET_DISPLAY_SUBDOMAIN_HINT);
+export const displaySubdomainHint = createAction(DISPLAY_SUBDOMAIN_HINT);
 
 export const verifySubdomain = (subdomain) => {
   return (dispatch, getState) => {
     if (subdomain.length < 4) {
       dispatch(receiveVerifySubdomain({
+        displaySubdomainVerified: false,
         isSubdomainVerified: false,
         subdomainErrorMessage: 'Subdomain must be longer than four characters'
       }));
@@ -124,7 +126,7 @@ const processFetchPlans = (plan, period) => {
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
 const _setPlansConfig = (plans) => {
-  const cameledPlans = plans.map( plan => 
+  const cameledPlans = plans.map((plan) =>
     Object.assign({}, {
       name: plan.name,
       priceCents: plan.price_cents,
@@ -134,8 +136,8 @@ const _setPlansConfig = (plans) => {
     }));
   return (dispatch, getState) => {
     dispatch(doneFetchingPlans(cameledPlans));
-  }
-}
+  };
+};
 const _setPlanInitialState = (plans, plan, period) => {
   return (dispatch, getState) => {
     for (let i in plans) {
@@ -161,6 +163,7 @@ const processVerifySubdomain = (subdomain) => {
     return (dispatch, getState) => {
       const {result, error} = value;
       dispatch(receiveVerifySubdomain({
+        displaySubdomainVerified: true,
         isSubdomainVerified: result,
         subdomainErrorMessage: error
       }));
@@ -233,7 +236,7 @@ const businessPlanReducer = handleActions({
     }),
   SET_SELECTED_PLAN_CONFIG: (state, action) =>
     Object.assign({}, state, {
-      currentlySelectedPlan: Object.assign({}, state.currentlySelectedPlan,{ ...action.payload })
+      currentlySelectedPlan: Object.assign({}, state.currentlySelectedPlan, { ...action.payload })
     }),
   SET_PLANS_CONFIG: (state, action) =>
     Object.assign({}, state, {
@@ -242,14 +245,16 @@ const businessPlanReducer = handleActions({
   SET_PAYMENT_METHOD: (state, action) =>
     Object.assign({}, state, {
       paymentMethod: Object.assign({}, state.paymentMethod, {...action.payload})
-    }),  
-  SET_DISPLAY_SUBDOMAIN_HINT: (state, action) =>
-    Object.assign({}, state, {
-      showSubdomainHint: action.payload
     }),
   SET_EMAIL: (state, action) =>
     Object.assign({}, state, {
       email: action.payload
+    }),
+  DISPLAY_SUBDOMAIN_HINT: (state, action) =>
+    Object.assign({}, state, {
+      validations: Object.assign({}, state.validations, {
+        displaySubdomainHint: action.payload
+      })
     })
 }, INIT_BUSINESS_PLAN_STATE);
 

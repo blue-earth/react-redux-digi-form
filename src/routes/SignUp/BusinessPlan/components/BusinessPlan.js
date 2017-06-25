@@ -11,7 +11,6 @@ import {
   Row,
   Col,
   Panel,
-
   Button
 } from 'react-bootstrap';
 import { FaLock, FaCreditCardAlt } from 'react-icons/lib/fa';
@@ -34,7 +33,9 @@ class BusinessPlan extends Component {
     }),
     validations: PropTypes.shape({
       isSubdomainVerified: PropTypes.bool,
-      subdomainErrorMessage: PropTypes.string
+      subdomainErrorMessage: PropTypes.string,
+      displaySubdomainHint: PropTypes.bool,
+      displaySubdomainVerified: PropTypes.bool
     }),
     paymentMethod: PropTypes.shape({
       cardNumber: PropTypes.string,
@@ -52,14 +53,12 @@ class BusinessPlan extends Component {
     setEmail: PropTypes.func,
     setSelectedPlanConfig: PropTypes.func,
     setPaymentMethod: PropTypes.func,
-    setDisplaySubdomainHint: PropTypes.func,
-    purchasePlan: PropTypes.func,
-    showSubdomainHint: PropTypes.bool
+    displaySubdomainHint: PropTypes.func,
+    purchasePlan: PropTypes.func
   }
   componentDidMount() {
     this.props.fetchPlans();
   }
-
   isBillingCycleActive = (cycle) => {
     const {currentlySelectedPlan: {billingCycle}} = this.props;
     return billingCycle === cycle;
@@ -72,26 +71,26 @@ class BusinessPlan extends Component {
   }
 
   handleSubdomainChange = (event) => {
+    clearTimeout(this.changingSubdomain);
     const subdomain = event.target.value;
-    const { verifySubdomain, setSelectedPlanConfig } = this.props;
-    if (subdomain.length > 0) {
-      verifySubdomain(subdomain);
-    }
+    const { verifySubdomain, setSelectedPlanConfig, isChangingSubdomain } = this.props;    
     setSelectedPlanConfig({subdomain: subdomain});
+    subdomain.length < 4 ? verifySubdomain(subdomain) :
+      this.changingSubdomain = setTimeout(() => verifySubdomain(subdomain), 2000);
   }
 
   handleSubdomainFocus = (event) => {
-    this.props.setDisplaySubdomainHint(false);
+    this.props.displaySubdomainHint(false);
   }
   handleSubdomainBlur = (event) => {
-    this.props.setDisplaySubdomainHint(true);
+    this.props.displaySubdomainHint(true);
   }
 
   handlePaymentChange = (event) => {
-    let object = {};
+    let payment = {};
     const name = event.target.getAttribute('name');
-    object[name] = event.target.value;
-    this.props.setPaymentMethod(object);
+    payment[name] = event.target.value;
+    this.props.setPaymentMethod(payment);
   }
   handleEmailChange = (event) => {
     this.props.setEmail(event.target.value);
@@ -145,7 +144,7 @@ class BusinessPlan extends Component {
   }
 
   renderConfigurePage() {
-    const { isPageBusy, currentlySelectedPlan, validations, showSubdomainHint } = this.props;
+    const { isPageBusy, currentlySelectedPlan, validations } = this.props;
     if (isPageBusy) {
       return (
         <div className={styles.spinnerWrapper}>
@@ -156,7 +155,7 @@ class BusinessPlan extends Component {
     const { billingCycle, subdomain, numberOfUsers } = currentlySelectedPlan;
     const { maxNumUser, minRequiredNumUser } = this.getPlanConfig(billingCycle);
     const { annually, monthly } = this.getPlanPrices();
-    const { isSubdomainVerified, subdomainErrorMessage } = validations;
+    const { isSubdomainVerified, subdomainErrorMessage, displaySubdomainHint, displaySubdomainVerified } = validations;
     const isActive = (cycle) => {
       return this.isBillingCycleActive(cycle);
     };
@@ -178,9 +177,7 @@ class BusinessPlan extends Component {
                     <span className={classNames(
                       styles.validationIndicator,
                       styles.validatorPass,
-                      {
-                        'hide': !isSubdomainVerified
-                      }
+                      {'hide': !isSubdomainVerified || !displaySubdomainVerified}
                     )}>
                       <IoAndroidDone />
                     </span>
@@ -188,7 +185,7 @@ class BusinessPlan extends Component {
                       styles.validationIndicator,
                       styles.validatorFail,
                       {
-                        'hide': subdomain.length === 0 || isSubdomainVerified
+                        'hide': !displaySubdomainVerified || subdomain.length === 0 || isSubdomainVerified
                       })}>
                       <IoAndroidClose />
                     </span>
@@ -200,7 +197,7 @@ class BusinessPlan extends Component {
                   <div className={classNames(
                     styles.validatorFail,
                     styles.subdomainErrorMessage,
-                    {'hide': !showSubdomainHint}
+                    {'hide': !displaySubdomainHint}
                   )}>{subdomainErrorMessage}</div>
                 </div>
               </div>

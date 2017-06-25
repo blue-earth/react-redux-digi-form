@@ -2,13 +2,13 @@ import connect from 'redux/utils/connect';
 import {
   purchasePlan,
   goToNextStep,
-  fetchPlans,
   goToPreviousStep,
+  fetchPlans,
   verifySubdomain,
   setEmail,
   setSelectedPlanConfig,
   setPaymentMethod,
-  setDisplaySubdomainHint,
+  displaySubdomainHint,
   INIT_BUSINESS_PLAN_STATE
 } from 'redux/modules/businessPlan';
 
@@ -23,7 +23,7 @@ const mapActionCreators = {
   setEmail,
   setSelectedPlanConfig,
   setPaymentMethod,
-  setDisplaySubdomainHint
+  displaySubdomainHint
 };
 
 const mapStateToProps = (state) => {
@@ -35,7 +35,6 @@ const mapStateToProps = (state) => {
     paymentMethod,
     purchaseErrorMessage,
     isPageBusy,
-    showSubdomainHint,
     currentlySelectedPlan
   } = businessPlan || INIT_BUSINESS_PLAN_STATE;
   return {
@@ -45,7 +44,6 @@ const mapStateToProps = (state) => {
     paymentMethod,
     purchaseErrorMessage,
     isPageBusy,
-    showSubdomainHint,
     currentlySelectedPlan
   };
 };
