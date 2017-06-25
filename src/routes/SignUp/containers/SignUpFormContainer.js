@@ -15,12 +15,12 @@ const mapStateToProps = (state) => {
   const {
     authStatus,
     isAuthenticating,
-    signUpEmailSent
+    serverResponse
   } = auth || INIT_AUTH_STATE;
   return {
     authStatus,
     isAuthenticating,
-    signUpEmailSent
+    serverResponse
   };
 };
 

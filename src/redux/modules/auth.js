@@ -18,15 +18,17 @@ export const LOGOUT = 'LOGOUT';
 // TODO: decide if signup stuff should be here or in it's own module
 export const REQUEST_SIGNUP = 'REQUEST_SIGNUP';
 export const RECEIVE_SIGNUP_STATUS = 'RECEIVE_SIGNUP_STATUS';
+export const SET_SERVER_RESPONSE = 'SET_SERVER_RESPONSE';
 
 export const SIGNING_UP = 'SIGNING_UP';
-// export const SIGNED_UP = 'SIGNED_UP';
+export const SIGNED_UP = 'SIGNED_UP';
+export const NOT_SIGNED_UP = 'NOT_SIGNED_UP';
 
 export const INIT_AUTH_STATE = {
   authStatus: NOT_LOGGED_IN,
   user: {},
   isAuthenticating: false,
-  signUpEmailSent: false
+  serverResponse: {}
 };
 
 // ------------------------------------
@@ -88,8 +90,9 @@ export const processAuth = (email, password) => {
 // ------------------------------------
 // Action: processSignup
 // ------------------------------------
-export const processSignup = (email, password) => {
-  const apiURL = `${API_URL}/accounts/api/auth/signup/`;
+export const processSignup = (email, password, type='free-plan') => {
+  // const apiURL = `${API_URL}/accounts/api/sign-up/` + type + '/';
+  const apiURL = `${API_URL}/accounts/api/onboarding-free-plan/`;
   const body = { email, password };
   const fetchParams = assignDefaults({
     method: 'POST',
@@ -97,19 +100,34 @@ export const processSignup = (email, password) => {
   });
 
   const fetchSuccess = ({value}) => {
+    console.log('fetch success');
+    console.log(value);
     return (dispatch, getState) => {
-      dispatch(receiveSignUpStatus(value.emailSent));
+      dispatch(receiveSignUpStatus(true));
     };
   };
 
   const fetchFail = (data) => {
+    console.log('fetch fail');
+    console.log(data.value);
     return (dispatch, getState) => {
+      dispatch(setServerResponse(data.value));
       dispatch(receiveSignUpStatus(false));
     };
   };
 
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
+
+// ------------------------------------
+// Action: sign up submitted
+// ------------------------------------
+export const receiveSignUpStatus = createAction(RECEIVE_SIGNUP_STATUS);
+
+// ------------------------------------
+// Action: server response
+// ------------------------------------
+export const setServerResponse = createAction(SET_SERVER_RESPONSE);
 
 // ------------------------------------
 // Action: setIsFetchingUserInfo
@@ -144,11 +162,6 @@ export const fetchUserInfo = () => {
 // Action: doneAuth
 // ------------------------------------
 export const receiveAuthStatus = createAction(RECEIVE_AUTH_STATUS);
-
-// ------------------------------------
-// Action: sign up submitted
-// ------------------------------------
-export const receiveSignUpStatus = createAction(RECEIVE_SIGNUP_STATUS);
 
 // ------------------------------------
 // Action: setUserProfile
@@ -189,7 +202,11 @@ const authReducer = handleActions({
     }),
   RECEIVE_SIGNUP_STATUS: (state, action) =>
     Object.assign({}, state, {
-      signUpEmailSent: action.payload
+      authStatus: action.payload ? LOGGED_IN : NOT_SIGNED_UP
+    }),
+  SET_SERVER_RESPONSE: (state, action) =>
+    Object.assign({}, state, {
+      serverResponse: {...action.payload}
     }),
   SET_USER_PROFILE: (state, action) =>
     Object.assign({}, state, {

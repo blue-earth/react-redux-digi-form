@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { dashboardUrl, loginUrl } from 'helpers/urlHelper';
-import Verifier from 'components/Verifier/Verifier';
+// import Verifier from 'components/Verifier/Verifier';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import {
   LOGGED_IN,
-  NOT_LOGGED_IN
+  NOT_LOGGED_IN,
+  NOT_SIGNED_UP
 } from 'redux/modules/auth';
 import {
   FaGooglePlusSquare,
@@ -37,7 +38,7 @@ class SignUpForm extends Component {
     authStatus: PropTypes.string.isRequired,
     goTo: PropTypes.func.isRequired,
     isAuthenticating: PropTypes.bool.isRequired,
-    signUpEmailSent: PropTypes.bool.isRequired,
+    serverResponse: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired
   };
 
@@ -69,9 +70,9 @@ class SignUpForm extends Component {
   }
 
   handleSubmit = () => {
-    const { fields: {email, password}, authStatus, submitSignupForm, signUpEmailSent } = this.props;
+    const { fields: {email, password}, authStatus, submitSignupForm } = this.props;
     if (email.touched && password.touched) {
-      if (!email.error && !password.error && authStatus === NOT_LOGGED_IN && signUpEmailSent === false) {
+      if (!email.error && !password.error && (authStatus === NOT_LOGGED_IN || authStatus === NOT_SIGNED_UP)) {
         this.setState({isSubmitting: true});
         submitSignupForm(email.value, password.value);
         this.setState({hasSubmitted: true, isSubmitting: false});
@@ -79,18 +80,22 @@ class SignUpForm extends Component {
     }
   }
 
-  // TODO: create a new Verifier type that returns a message saying wether an email has been sent
+  // TODO: add a link to the email error for password retreival
   renderVerificationStatus = () => {
-    const { authStatus, isAuthenticating } = this.props;
+    const { authStatus, isAuthenticating, serverResponse } = this.props;
     const { hasSubmitted, isSubmitting } = this.state;
-    if (hasSubmitted && !isSubmitting && !isAuthenticating && authStatus !== 'SIGNING_UP') {
-      return (<Verifier type="EmondoAuthenticationService" status={authStatus === LOGGED_IN} />);
+    if (hasSubmitted && !isSubmitting && !isAuthenticating && authStatus === NOT_SIGNED_UP) {
+      if (serverResponse.hasOwnProperty('email') && serverResponse.email[0] === 'Email address already exists') {
+        return (<p className={styles.error}>Sorry, that email address is already in use.</p>);
+      }
+      return (<p className={styles.error}>There was a problem creating your account.</p>);
     } else {
       return false;
     }
   }
 
   // TODO: pages for Terms and Privacy Policy
+  // TODO: social signup
   render() {
     const { fields: {email, password}, authStatus } = this.props;
     return (

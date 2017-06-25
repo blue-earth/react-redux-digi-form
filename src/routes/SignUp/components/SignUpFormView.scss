@@ -79,4 +79,9 @@
     padding: 20px 0;
     a { cursor: pointer; }
   }
+  p.error {
+    color: $red;
+    text-align: left;
+    font-size: 16px;
+  }
 }
