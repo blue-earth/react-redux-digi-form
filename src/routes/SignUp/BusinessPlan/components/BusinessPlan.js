@@ -21,19 +21,13 @@ import CardType from 'components/CardType';
 import PriceTag from 'components/PriceTag';
 import styles from './BusinessPlan.scss';
 import classNames from 'classnames';
+import Spinner from 'components/Spinner';
 
 class BusinessPlan extends Component {
   static propTypes = {
-    plans: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string,
-        priceCents: PropTypes.number,
-        priceCurrency: PropTypes.string,
-        minRequiredNumUser: PropTypes.number,
-        maxNumUser: PropTypes.number
-      })
-    ),
-    planConfig: PropTypes.shape({
+    plansConfig: PropTypes.array,
+    currentlySelectedPlan: PropTypes.shape({
+      name: PropTypes.string,
       subdomain: PropTypes.string,
       numberOfUsers: PropTypes.number,
       billingCycle: PropTypes.oneOf(['annually', 'monthly'])
@@ -43,48 +37,47 @@ class BusinessPlan extends Component {
       subdomainErrorMessage: PropTypes.string
     }),
     paymentMethod: PropTypes.shape({
-      email: PropTypes.string,
       cardNumber: PropTypes.string,
       expiry: PropTypes.string,
       cvc: PropTypes.string
     }),
-    purchaseErrorMessage: PropTypes.string.isRequired,
-    isPurchasing: PropTypes.bool.isRequired,
-    stepIndex: PropTypes.number.isRequired,
-    fetchPlans: PropTypes.func.isRequired,
-    goToNextStep: PropTypes.func.isRequired,
-    goToPreviousStep: PropTypes.func.isRequired,
-    verifySubdomain: PropTypes.func.isRequired,
-    setPlanConfig: PropTypes.func.isRequired,
-    setPaymentMethod: PropTypes.func.isRequired,
-    setDisplaySubdomainHint: PropTypes.func.isRequired,
-    purchasePlan: PropTypes.func.isRequired,
-    showSubdomainHint: PropTypes.bool.isRequired,
-    plan: PropTypes.string.isRequired,
-    period: PropTypes.string.isRequired
+    email: PropTypes.string,
+    purchaseErrorMessage: PropTypes.string,
+    isPageBusy: PropTypes.bool,
+    stepIndex: PropTypes.number,
+    fetchPlans: PropTypes.func,
+    goToNextStep: PropTypes.func,
+    goToPreviousStep: PropTypes.func,
+    verifySubdomain: PropTypes.func,
+    setEmail: PropTypes.func,
+    setSelectedPlanConfig: PropTypes.func,
+    setPaymentMethod: PropTypes.func,
+    setDisplaySubdomainHint: PropTypes.func,
+    purchasePlan: PropTypes.func,
+    showSubdomainHint: PropTypes.bool
   }
   componentDidMount() {
     this.props.fetchPlans();
   }
 
   isBillingCycleActive = (cycle) => {
-    const {planConfig: {billingCycle}} = this.props;
+    const {currentlySelectedPlan: {billingCycle}} = this.props;
     return billingCycle === cycle;
   }
   selectAnnually = () => {
-    this.props.setPlanConfig({billingCycle: 'annually'});
+    this.props.setSelectedPlanConfig({billingCycle: 'annually'});
   }
   selectMonthly = () => {
-    this.props.setPlanConfig({billingCycle: 'monthly'});
+    this.props.setSelectedPlanConfig({billingCycle: 'monthly'});
   }
 
   handleSubdomainChange = (event) => {
     const subdomain = event.target.value;
-    const { verifySubdomain, setPlanConfig } = this.props;
+    const { verifySubdomain, setSelectedPlanConfig } = this.props;
     if (subdomain.length > 0) {
       verifySubdomain(subdomain);
     }
-    setPlanConfig({subdomain: subdomain});
+    setSelectedPlanConfig({subdomain: subdomain});
   }
 
   handleSubdomainFocus = (event) => {
@@ -100,9 +93,12 @@ class BusinessPlan extends Component {
     object[name] = event.target.value;
     this.props.setPaymentMethod(object);
   }
+  handleEmailChange = (event) => {
+    this.props.setEmail(event.target.value);
+  }
 
   handleUsersNumberChange = (number) => {
-    this.props.setPlanConfig({numberOfUsers: number});
+    this.props.setSelectedPlanConfig({numberOfUsers: number});
   }
 
   handleBillingCycleChange = () => {
@@ -115,32 +111,33 @@ class BusinessPlan extends Component {
   }
 
   haveDiscount = () => {
-    return this.props.planConfig.billingCycle === 'annually';
+    return this.props.currentlySelectedPlan.billingCycle === 'annually';
   }
 
-  getPlanDetail = (period) => {
-    const { plan, plans } = this.props;
-    for (let i in plans) {
-      if (plans[i].name === plan + '-' + period) {
-        return plans[i];
+  getPlanConfig = (period) => {
+    const { currentlySelectedPlan, plansConfig } = this.props;
+    const { name } = currentlySelectedPlan;
+    for (let i in plansConfig) {
+      if (plansConfig[i].name === name + '-' + period) {
+        return plansConfig[i];
       }
     }
   }
   getOriginalPrice = () => {
-    return 12 * this.props.planConfig.numberOfUsers * this.getPlanDetail('monthly').priceCents;
+    return 12 * this.props.currentlySelectedPlan.numberOfUsers * this.getPlanConfig('monthly').priceCents;
   }
   getPlanPrices = () => {
-    const annually = this.getPlanDetail('annually').priceCents;
-    const monthly = this.getPlanDetail('monthly').priceCents;
+    const annually = this.getPlanConfig('annually').priceCents;
+    const monthly = this.getPlanConfig('monthly').priceCents;
     return { annually, monthly };
   }
 
   getDiscountMount = () => {
     const { monthly, annually } = this.getPlanPrices();
-    return this.props.planConfig.numberOfUsers * (annually-monthly) * 12;
+    return this.props.currentlySelectedPlan.numberOfUsers * (annually-monthly) * 12;
   }
   getTotalPrice = () => {
-    return this.props.planConfig.numberOfUsers * this.getSinglePrice() * 12;
+    return this.props.currentlySelectedPlan.numberOfUsers * this.getSinglePrice() * 12;
   }
   getSinglePrice = () => {
     const { monthly, annually } = this.getPlanPrices();
@@ -148,10 +145,17 @@ class BusinessPlan extends Component {
   }
 
   renderConfigurePage() {
-    const { period, planConfig, validations, showSubdomainHint } = this.props;
-    const { maxNumUser, minRequiredNumUser } = this.getPlanDetail(period);
+    const { isPageBusy, currentlySelectedPlan, validations, showSubdomainHint } = this.props;
+    if (isPageBusy) {
+      return (
+        <div className={styles.spinnerWrapper}>
+          <Spinner />
+        </div>
+      );
+    }
+    const { billingCycle, subdomain, numberOfUsers } = currentlySelectedPlan;
+    const { maxNumUser, minRequiredNumUser } = this.getPlanConfig(billingCycle);
     const { annually, monthly } = this.getPlanPrices();
-    const { subdomain, numberOfUsers } = planConfig;
     const { isSubdomainVerified, subdomainErrorMessage } = validations;
     const isActive = (cycle) => {
       return this.isBillingCycleActive(cycle);
@@ -267,10 +271,10 @@ class BusinessPlan extends Component {
   }
 
   renderPurchasePage() {
-    const { planConfig, paymentMethod, purchaseErrorMessage, isPurchasing } = this.props;
-    const { numberOfUsers, billingCycle } = planConfig;
+    const { currentlySelectedPlan, paymentMethod, purchaseErrorMessage, isPageBusy } = this.props;
+    const { numberOfUsers, billingCycle } = currentlySelectedPlan;
     const { email, cardNumber, expiry, cvc } = paymentMethod;
-    const { priceCurrency, minRequiredNumUser, maxNumUser } = this.getPlanDetail(billingCycle);
+    const { priceCurrency, minRequiredNumUser, maxNumUser } = this.getPlanConfig(billingCycle);
     return (
       <Grid fluid>
         <div className="text-center">
@@ -314,7 +318,7 @@ class BusinessPlan extends Component {
               </p>
               <input type="email" name="email" placeholder="Email" autoFocus
                 className={classNames(styles.creditCardInput, styles.emailInput)}
-                value={email} onChange={this.handlePaymentChange} />
+                value={email} onChange={this.handleEmailChange} />
               <div className={styles.creditCardInputWrapper}>
                 <MaskedInput mask="1111 1111 1111 1111" name="cardNumber" size="16"
                   className={classNames(styles.creditCardInput, styles.cardNumberInput)}
@@ -332,7 +336,7 @@ class BusinessPlan extends Component {
                   value={cvc} onChange={this.handlePaymentChange} />
               </div>
               <button className={styles.purchaseButton} onClick={this.handlePurchase}>
-                {isPurchasing? 'Processing...' : 'Purchase'}
+                {isPageBusy? 'Processing...' : 'Purchase'}
               </button>
               <Button className={styles.backButton} bsStyle="link" onClick={this.props.goToPreviousStep}>
                 <IoAndroidArrowBack size={14} className={styles.backArrow} style={{verticalAlign: 'bottom'}} />

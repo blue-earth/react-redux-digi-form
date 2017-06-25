@@ -5,7 +5,8 @@ import {
   fetchPlans,
   goToPreviousStep,
   verifySubdomain,
-  setPlanConfig,
+  setEmail,
+  setSelectedPlanConfig,
   setPaymentMethod,
   setDisplaySubdomainHint,
   INIT_BUSINESS_PLAN_STATE
@@ -19,35 +20,33 @@ const mapActionCreators = {
   goToPreviousStep,
   fetchPlans,
   verifySubdomain,
-  setPlanConfig,
+  setEmail,
+  setSelectedPlanConfig,
   setPaymentMethod,
   setDisplaySubdomainHint
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   const { businessPlan } = state;
-  const { plan, period } = ownProps.location.query;
   const {
-    plans,
+    plansConfig,
     stepIndex,
-    planConfig,
     validations,
     paymentMethod,
     purchaseErrorMessage,
-    isPurchasing,
-    showSubdomainHint
+    isPageBusy,
+    showSubdomainHint,
+    currentlySelectedPlan
   } = businessPlan || INIT_BUSINESS_PLAN_STATE;
   return {
-    plans,
+    plansConfig,
     stepIndex,
-    planConfig,
     validations,
     paymentMethod,
     purchaseErrorMessage,
-    isPurchasing,
+    isPageBusy,
     showSubdomainHint,
-    plan,
-    period
+    currentlySelectedPlan
   };
 };
 

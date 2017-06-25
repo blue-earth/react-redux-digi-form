@@ -2,88 +2,57 @@ import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
-import { camelize, decamelize } from 'humps';
 
-export const NEXT_STEP = 'NEXT_STEP';
-export const PREVIOUS_STEP = 'PREVIOUS_STEP';
+const NEXT_STEP = 'NEXT_STEP';
+const PREVIOUS_STEP = 'PREVIOUS_STEP';
 
 export const SET_PLANS = 'SET_PLANS';
 export const SET_PAYMENT_METHOD = 'SET_PAYMENT_METHOD';
-export const SET_PLAN_CONFIG = 'SET_PLAN_CONFIG';
-export const SET_IS_PURCHASING = 'SET_IS_PURCHASING';
+export const SET_SELECTED_PLAN_CONFIG = 'SET_SELECTED_PLAN_CONFIG';
+export const SET_EMAIL = 'SET_EMAIL';
 export const SET_DISPLAY_SUBDOMAIN_HINT = 'SET_DISPLAY_SUBDOMAIN_HINT';
 
 export const RECEIVE_VERIFY_SUBDOMAIN = 'RECEIVE_VERIFY_SUBDOMAIN';
 export const RECEIVE_PURCHASE_RESULT = 'RECEIVE_PURCHASE_RESULT';
 
+const REQUEST_PURCHASE_BUSINESS_PLAN = 'REQUEST_PURCHASE_BUSINESS_PLAN';
+const DONE_FETCHING_PLANS = 'DONE_FETCHING_PLANS';
+const DONE_PURCHASING_BUSINESS_PLAN = 'DONE_PURCHASING_BUSINESS_PLAN';
+
 export const INIT_BUSINESS_PLAN_STATE = {
   stepIndex: 0,
-  plans: [{
-    name: 'global-annually',
-    price_cents: 9983,
-    price_currency: 'AUD',
-    min_required_num_user: 1,
-    max_num_user: null
-  }, {
-    name: 'global-monthly',
-    price_cents: 14900,
-    price_currency: 'AUD',
-    min_required_num_user: 1,
-    max_num_user: null
-  }, {
-    name: 'teams-annually',
-    price_cents: 5293,
-    price_currency: 'AUD',
-    min_required_num_user: 1,
-    max_num_user: null
-  }, {
-    name: 'teams-monthly',
-    price_cents: 7900,
-    price_currency: 'AUD',
-    min_required_num_user: 1,
-    max_num_user: null
-  }, {
-    name: 'professional-annually',
-    price_cents: 2613,
-    price_currency: 'AUD',
-    min_required_num_user: 1,
-    max_num_user: 20
-  }, {
-    name: 'professional-monthly',
-    price_cents: 3900,
-    price_currency: 'AUD',
-    min_required_num_user: 1,
-    max_num_user: null
-  }],
-  planConfig: {
-    name: 'teams',
-    subdomain: '',
-    numberOfUsers: 1,
-    billingCycle: 'annually'
+  currentlySelectedPlan: {
+    subdomain: ''
   },
   validations: {
     isSubdomainVerified: false,
     subdomainErrorMessage: ''
   },
+  email: '',
   paymentMethod: {
-    email: '',
     cardNumber: '',
     expiry: '',
     cvc: ''
   },
+  plansConfig: [],
   purchaseErrorMessage: '',
-  isPurchasing: false,
+  isPageBusy: true,
   showSubdomainHint: false
 };
 
 export const nextStep = createAction(NEXT_STEP);
 export const previousStep = createAction(PREVIOUS_STEP);
-export const setPlanConfig = createAction(SET_PLAN_CONFIG);
+
+
 export const setPaymentMethod = createAction(SET_PAYMENT_METHOD);
-export const setPlans = createAction(SET_PLANS);
+export const setEmail = createAction(SET_EMAIL);
+export const setSelectedPlanConfig = createAction(SET_SELECTED_PLAN_CONFIG);
+
+export const requestPurchaseBusinessPlan = createAction(REQUEST_PURCHASE_BUSINESS_PLAN);
+export const doneFetchingPlans = createAction(DONE_FETCHING_PLANS);
+export const donePurchasingBusinessPlan = createAction(DONE_PURCHASING_BUSINESS_PLAN);
 export const receiveVerifySubdomain = createAction(RECEIVE_VERIFY_SUBDOMAIN);
-export const receivePurchaseResult = createAction(RECEIVE_PURCHASE_RESULT);
-export const setIsPurchasing = createAction(SET_IS_PURCHASING);
+
 export const setDisplaySubdomainHint = createAction(SET_DISPLAY_SUBDOMAIN_HINT);
 
 export const verifySubdomain = (subdomain) => {
@@ -119,21 +88,23 @@ export const fetchPlans = () => {
 
 export const purchasePlan = () => {
   return (dispatch, getState) => {
-    const { planConfig, paymentMethod } = getState().businessPlan;
-    const businessPlan = {
-      planConfig: Object.assign({},
-        ...Object.keys(planConfig).map(key => ({
-          [decamelize(key)]: planConfig[key]
-        }))
-      ),
-      paymentMethod: Object.assign({},
-        ...Object.keys(paymentMethod).map(key => ({
-          [decamelize(key)]: paymentMethod[key]
-        }))
-      )
+    const { currentlySelectedPlan, paymentMethod, email } = getState().businessPlan;
+    const { subdomain, name, billingCycle, numberOfUsers } = currentlySelectedPlan;
+    const { cardNumber, expiry, cvc } = paymentMethod;
+    const plan = {
+      subdomain: subdomain,
+      name: name,
+      number_of_users: numberOfUsers,
+      billing_cycle: billingCycle,
+      email: email,
+      paymentMethod: {
+        card_number: cardNumber,
+        expiry: expiry,
+        cvc: cvc
+      }
     };
-    dispatch(setIsPurchasing(true));
-    dispatch(processPurchase(businessPlan));
+    dispatch(requestPurchaseBusinessPlan());
+    dispatch(processPurchase(plan));
   };
 };
 const processFetchPlans = (plan, period) => {
@@ -143,12 +114,8 @@ const processFetchPlans = (plan, period) => {
   });
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      const newPlan = value.map(item => Object.assign({},
-        ...Object.keys(item).map(key => ({
-          [camelize(key)]: item[key]
-        }))));
-      dispatch(setPlans(newPlan));
-      dispatch(_setPlanConfig(value, plan, period));
+      dispatch(_setPlanInitialState(value, plan, period));
+      dispatch(_setPlansConfig(value));
     };
   };
   const fetchFail = (data) => {
@@ -156,12 +123,25 @@ const processFetchPlans = (plan, period) => {
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
-const _setPlanConfig = (plans, plan, period) => {
+const _setPlansConfig = (plans) => {
+  const cameledPlans = plans.map( plan => 
+    Object.assign({}, {
+      name: plan.name,
+      priceCents: plan.price_cents,
+      priceCurrency: plan.price_currency,
+      minRequiredNumUser: plan.min_required_num_user,
+      maxNumUser: plan.max_num_user
+    }));
+  return (dispatch, getState) => {
+    dispatch(doneFetchingPlans(cameledPlans));
+  }
+}
+const _setPlanInitialState = (plans, plan, period) => {
   return (dispatch, getState) => {
     for (let i in plans) {
       const planDetail = plans[i];
       if (planDetail.name === plan + '-' + period) {
-        return dispatch(setPlanConfig({
+        return dispatch(setSelectedPlanConfig({
           name: plan,
           numberOfUsers: planDetail.min_required_num_user,
           billingCycle: period
@@ -188,15 +168,16 @@ const processVerifySubdomain = (subdomain) => {
   };
   const fetchFail = (data) => {
     return (dispatch, getState) => {
+      // Output server error
       console.log(data);
     };
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
 
-const processPurchase = (businessPlan) => {
+const processPurchase = (plan) => {
   const apiURL = `${API_URL}/accounts/api/subscription/`;
-  const body = { businessPlan };
+  const body = { plan };
   const fetchParams = assignDefaults({
     method: 'POST',
     body
@@ -204,19 +185,16 @@ const processPurchase = (businessPlan) => {
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(setIsPurchasing(false));
       const {result, message} = value;
       if (result === 'rejected') {
-        dispatch(receivePurchaseResult(message));
+        dispatch(donePurchasingBusinessPlan(message));
       }
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
-      dispatch(setIsPurchasing(false));
-      dispatch(receivePurchaseResult('Server Error'));
-      console.log(data);
+      dispatch(donePurchasingBusinessPlan('Server Error'));
     };
   };
 
@@ -235,33 +213,43 @@ const businessPlanReducer = handleActions({
     Object.assign({}, state, {
       stepIndex: 0
     }),
-  SET_PLANS: (state, action) =>
-    Object.assign({}, state, {
-      plans: action.payload
-    }),
   RECEIVE_VERIFY_SUBDOMAIN: (state, action) =>
     Object.assign({}, state, {
       validations: Object.assign({}, state.validations, {...action.payload})
     }),
-  RECEIVE_PURCHASE_RESULT: (state, action) =>
+  REQUEST_PURCHASE_BUSINESS_PLAN: (state, action) =>
     Object.assign({}, state, {
-      purchaseErrorMessage: action.payload
+      isPageBusy: true
     }),
-  SET_PLAN_CONFIG: (state, action) =>
+  DONE_FETCHING_PLANS: (state, action) =>
     Object.assign({}, state, {
-      planConfig: Object.assign({}, state.planConfig, {...action.payload})
+      plansConfig: action.payload,
+      isPageBusy: false
+    }),
+  DONE_PURCHASING_BUSINESS_PLAN: (state, action) =>
+    Object.assign({}, state, {
+      purchaseErrorMessage: action.payload,
+      isPageBusy: false
+    }),
+  SET_SELECTED_PLAN_CONFIG: (state, action) =>
+    Object.assign({}, state, {
+      currentlySelectedPlan: Object.assign({}, state.currentlySelectedPlan,{ ...action.payload })
+    }),
+  SET_PLANS_CONFIG: (state, action) =>
+    Object.assign({}, state, {
+      plansConfig: action.payload
     }),
   SET_PAYMENT_METHOD: (state, action) =>
     Object.assign({}, state, {
       paymentMethod: Object.assign({}, state.paymentMethod, {...action.payload})
-    }),
-  SET_IS_PURCHASING: (state, action) =>
-    Object.assign({}, state, {
-      isPurchasing: action.payload
-    }),
+    }),  
   SET_DISPLAY_SUBDOMAIN_HINT: (state, action) =>
     Object.assign({}, state, {
       showSubdomainHint: action.payload
+    }),
+  SET_EMAIL: (state, action) =>
+    Object.assign({}, state, {
+      email: action.payload
     })
 }, INIT_BUSINESS_PLAN_STATE);
 
