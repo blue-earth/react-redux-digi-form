@@ -1,0 +1,31 @@
+@import './mixins';
+@import './variables';
+
+$button-size:       38px;
+
+
+.button {
+  @include border-radius(4px);
+  border: 0;
+  cursor: pointer;
+  color: $white;
+  text-align: center;
+  font-family: $button-font-family;
+  padding-top: 0;
+  padding-bottom: 0;
+  &:focus {
+    outline: none;
+  }
+}
+.md {
+  height: 36px;
+  padding-left: 16px;
+  padding-right: 16px;
+  line-height: 36px;
+}
+.lg {
+  height: 64px;
+}
+.sm {
+  height: 24px;
+}
