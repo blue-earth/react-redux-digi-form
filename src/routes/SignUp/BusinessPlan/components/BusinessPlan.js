@@ -3,7 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import PlainHeader from 'components/Headers/PlainHeader';
-import BusinessPlanStep from './BusinessPlanStep';
+import StepIndicator from 'components/StepIndicator';
 import NumberInput from 'components/NumberInput';
 import MaskedInput from 'react-maskedinput';
 import {
@@ -440,10 +440,15 @@ class BusinessPlan extends Component {
 
   render() {
     const { stepIndex } = this.props;
+    const steps = [
+      {name: 'Configure', number: 1},
+      {name: 'Purchase', number: 2}
+    ];
     return (
       <div className={styles.businessPlan}>
         <PlainHeader />
-        <BusinessPlanStep step={stepIndex} />
+        <StepIndicator activeStep={stepIndex}
+          steps={steps} />
         <div className={styles.purchasePageContent}>
           { stepIndex === 0 ? this.renderConfigurePage() : this.renderPurchasePage() }
         </div>
