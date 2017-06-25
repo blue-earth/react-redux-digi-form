@@ -50,6 +50,7 @@ class BusinessPlan extends Component {
     goToNextStep: PropTypes.func,
     goToPreviousStep: PropTypes.func,
     verifySubdomain: PropTypes.func,
+    changeSubdomain: PropTypes.func,
     setEmail: PropTypes.func,
     setSelectedPlanConfig: PropTypes.func,
     setPaymentMethod: PropTypes.func,
@@ -73,10 +74,11 @@ class BusinessPlan extends Component {
   handleSubdomainChange = (event) => {
     clearTimeout(this.changingSubdomain);
     const subdomain = event.target.value;
-    const { verifySubdomain, setSelectedPlanConfig } = this.props;
-    setSelectedPlanConfig({subdomain: subdomain});
-    subdomain.length < 4 ? verifySubdomain(subdomain)
-      :this.changingSubdomain = setTimeout(() => verifySubdomain(subdomain), 2000);
+    const { verifySubdomain, changeSubdomain } = this.props;
+    changeSubdomain(subdomain);
+    if (subdomain.length > 3) {
+      this.changingSubdomain = setTimeout(() => verifySubdomain(subdomain), 2000);
+    }
   }
 
   handleSubdomainFocus = (event) => {

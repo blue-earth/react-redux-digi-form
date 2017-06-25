@@ -56,17 +56,26 @@ export const receiveVerifySubdomain = createAction(RECEIVE_VERIFY_SUBDOMAIN);
 
 export const displaySubdomainHint = createAction(DISPLAY_SUBDOMAIN_HINT);
 
-export const verifySubdomain = (subdomain) => {
+export const changeSubdomain = (subdomain) => {
   return (dispatch, getState) => {
+    dispatch(setSelectedPlanConfig({
+      subdomain: subdomain
+    }));
+    dispatch(receiveVerifySubdomain({
+      displaySubdomainVerified: false,
+      isSubdomainVerified: false,
+      subdomainErrorMessage: ''
+    }));
     if (subdomain.length < 4) {
       dispatch(receiveVerifySubdomain({
-        displaySubdomainVerified: false,
-        isSubdomainVerified: false,
         subdomainErrorMessage: 'Subdomain must be longer than four characters'
       }));
-    } else {
-      dispatch(processVerifySubdomain(subdomain));
     }
+  };
+};
+export const verifySubdomain = (subdomain) => {
+  return (dispatch, getState) => {
+    dispatch(processVerifySubdomain(subdomain));
   };
 };
 
