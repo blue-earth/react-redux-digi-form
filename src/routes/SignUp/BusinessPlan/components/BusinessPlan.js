@@ -305,8 +305,7 @@ class BusinessPlan extends Component {
                 'pull-right'
               )} disabled>
                 <h4 className={styles.paymentSelection}>
-                  <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png"
-                    alt="PayPal" />
+                  <img src="/PP_logo_h_100x26.png" alt="paypal" />
                 </h4>
               </Panel>
               <div className={styles.clearFloat}></div>
