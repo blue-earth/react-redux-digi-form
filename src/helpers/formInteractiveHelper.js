@@ -42,10 +42,14 @@ export const groupFormQuestions = (questions) => {
   return newGroup;
 };
 
-export const getQuestionGroupTitles = function(questions) {
-  return _.filter(questions, function(question) {
+export const getQuestionGroups = (questions) => {
+  return _.filter(questions, (question) => {
     return question.type === 'Group';
-  }).map((e) => e.title);
+  });
+};
+
+export const getQuestionGroupTitles = (questions) => {
+  return _.map(getQuestionGroups(questions), (e) => e.title);
 };
 
 export const getContextFromAnswer = (answers) => {
@@ -131,6 +135,17 @@ export const shouldDisableNextButton = (form, questionId) => {
     if (typeof itemFound !== 'undefined') return true;
   }
   return false;
+};
+
+export const getNextQuestionId = (questions, questionId) => {
+  var curIdx, nextIdx;
+  curIdx = nextIdx = _.findIndex(questions, (o) => o.id === questionId);
+  while (nextIdx < questions.length - 1) {
+    var q = questions[++nextIdx];
+    if (q.type !== 'Group') break;
+  }
+  if (questions[nextIdx].type === 'Group') nextIdx = curIdx;
+  return questions[nextIdx].id;
 };
 
 export const getOutcomeWithQuestionId = (state, questionId) => {

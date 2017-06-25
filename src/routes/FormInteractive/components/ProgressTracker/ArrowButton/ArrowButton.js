@@ -7,12 +7,14 @@ import {
   MdChevronLeft,
   MdChevronRight
 } from 'react-icons/lib/md';
+import classNames from 'classnames';
 import styles from './ArrowButton.scss';
 
-class ArrowButton extends Component {
+class ArrowButtonContainer extends Component {
   static propTypes = {
     direction: PropTypes.oneOf(['left', 'right']),
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    children: PropTypes.element
   };
 
   static contextTypes = {
@@ -39,19 +41,38 @@ class ArrowButton extends Component {
   render() {
     const { hover } = this.state;
     const { primaryColor } = this.context;
-    const { direction } = this.props;
+    const { direction, children, onClick } = this.props;
     let optionals = {};
     hover && (optionals['style'] = { color: primaryColor });
+    const buttonClass = classNames(styles.arrowButton, styles[direction]);
     return (
-      <Button className={styles.arrowButton}
+      <Button className={buttonClass}
         onMouseEnter={this.addHoverClass}
         onMouseLeave={this.removeHoverClass}
+        onClick={onClick}
         {...optionals}>
-        {direction === 'left' && <MdChevronLeft size={24} />}
-        {direction === 'right' && <MdChevronRight size={24} />}
+        {children}
       </Button>
     );
   }
 }
 
-export default ArrowButton;
+export class LeftArrowButton extends React.Component {
+  render() {
+    return (
+      <ArrowButtonContainer direction="left" {...this.props}>
+        <MdChevronLeft size={24} />
+      </ArrowButtonContainer>
+    );
+  }
+}
+
+export class RightArrowButton extends React.Component {
+  render() {
+    return (
+      <ArrowButtonContainer direction="right" {...this.props}>
+        <MdChevronRight size={24} />
+      </ArrowButtonContainer>
+    );
+  }
+}

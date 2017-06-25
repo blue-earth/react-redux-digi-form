@@ -7,28 +7,12 @@ $pt-button-width: 47px;
 
 .wrapper {
   height: $pt-height;
-  padding: 0 $pt-button-width $pt-bar-height;
   position: relative;
   overflow: hidden;
+  padding: 0 $pt-button-width $pt-bar-height;
+  height: $pt-height;
 }
 
-.prevButtonWrapper,
-.nextButtonWrapper {
-  top: 0;
-  width: $pt-button-width;
-  height: $pt-height - $pt-bar-height;
-  position: absolute;
-  background: #FFFFFF;
-}
-
-.prevButtonWrapper {
-  left: 0;
-  border-right: 1px solid $frontend-border-color;
-}
-.nextButtonWrapper {
-  right: 0;
-  border-left: 1px solid $frontend-border-color;
-}
 .progressbar {
   position: absolute;
   height: $pt-bar-height;
@@ -55,18 +39,10 @@ $pt-button-width: 47px;
   width: 50%;
 }
 
-.stepsList {
-  width: 1000px;
-  overflow: hidden;
-  display: inline-block;
-  height: 52px;
-  margin: 0;
-  padding: 0;
-}
 .stepItem {
   display: inline-block;
   list-style-type: decimal;
-  padding: 0 50px 0 33px;
+  padding: 0 54px 0 40px;
   line-height: 52px;
   cursor: pointer;
   position: relative;
@@ -96,6 +72,18 @@ $pt-button-width: 47px;
     transform: skew(-30deg);
   }
 }
-.active {
-  color: #73767b;
+
+:global {
+  .slick-list {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border-right: 1px solid $frontend-border-color;
+    border-left: 1px solid $frontend-border-color;
+  }
+  .slick-active {
+    color: #73767b;
+  }
 }

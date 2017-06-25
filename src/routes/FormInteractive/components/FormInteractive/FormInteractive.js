@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import Animate from 'rc-animate';
 import classNames from 'classnames';
+import _ from 'lodash';
 import FormHeader from 'components/Headers/FormHeader';
 import FormSection from '../FormSection';
 import ProgressTracker from '../ProgressTracker';
@@ -13,6 +14,8 @@ import FormRow from 'components/Forms/FormRow';
 import StackLogo from 'components/Logos/StackLogo';
 import {
   groupFormQuestions,
+  getNextQuestionId,
+  getQuestionGroups,
   getQuestionGroupTitles,
   SlideAnimation
 } from 'helpers/formInteractiveHelper';
@@ -224,6 +227,25 @@ class FormInteractive extends Component {
     else return 'completed';
   }
 
+  setActiveGroup = (index) => {
+    const { form: { questions }, goToQuestion, currentQuestionId } = this.props;
+    const groups = getQuestionGroups(questions);
+    const newGroupId = groups[index].id;
+    // const question = _.find(questions, (o) => o.id === currentQuestionId);
+    // if (question.group === newGroupId) return;
+    const newQuestionId = getNextQuestionId(questions, newGroupId);
+    goToQuestion(newQuestionId);
+  }
+
+  get currentSectionIndex() {
+    const { form: { questions }, currentQuestionId } = this.props;
+    if (!questions) return 0;
+    const question = _.find(questions, (o) => o.id === currentQuestionId);
+    const groups = getQuestionGroups(questions);
+    const index = _.findIndex(groups, (o) => o.id === question.group);
+    return index > 0 ? index : 0;
+  }
+
   get renderFormSteps() {
     const props = this.props;
     const { form: { questions }, currentQuestionId, shouldShowFinalSubmit } = props;
@@ -240,7 +262,11 @@ class FormInteractive extends Component {
     return (
       <div className={classNames(styles.contentWrapper, 'container')}>
         <div className={styles.contentWrapperInner}>
-          <ProgressTracker sectionTitleList={questionGroupTitles} />
+          <ProgressTracker
+            sectionTitleList={questionGroupTitles}
+            currentSectionIndex={this.currentSectionIndex}
+            onItemChange={this.setActiveGroup}
+          />
           <Animate exclusive animation={anim}>
             {
               questionGroups.map(function (group, index) {
