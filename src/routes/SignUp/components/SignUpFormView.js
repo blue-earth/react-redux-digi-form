@@ -80,15 +80,22 @@ class SignUpForm extends Component {
     }
   }
 
-  // TODO: add a link to the email error for password retreival
   renderVerificationStatus = () => {
     const { authStatus, isAuthenticating, serverResponse } = this.props;
     const { hasSubmitted, isSubmitting } = this.state;
-    if (hasSubmitted && !isSubmitting && !isAuthenticating && authStatus === NOT_SIGNED_UP) {
-      if (serverResponse.hasOwnProperty('email') && serverResponse.email[0] === 'Email address already exists') {
-        return (<p className={styles.error}>Sorry, that email address is already in use.</p>);
+    if (hasSubmitted && !isSubmitting && !isAuthenticating) {
+      // form has been submitted
+      if (authStatus === NOT_SIGNED_UP) {
+        // there was an error
+        // TODO: add a link to the email error for password retreival
+        if (serverResponse.hasOwnProperty('email') && serverResponse.email[0] === 'Email address already exists') {
+          return (<p className={styles.error}>Sorry, that email address is already in use.</p>);
+        }
+        return (<p className={styles.error}>There was a problem creating your account.</p>);
+      } else {
+        // currently the user should be logged in at this point
+        // TODO: once email verification is implemented, add a message here saying an email has been sent
       }
-      return (<p className={styles.error}>There was a problem creating your account.</p>);
     } else {
       return false;
     }

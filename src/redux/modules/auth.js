@@ -90,9 +90,8 @@ export const processAuth = (email, password) => {
 // ------------------------------------
 // Action: processSignup
 // ------------------------------------
-export const processSignup = (email, password, type='free-plan') => {
-  // const apiURL = `${API_URL}/accounts/api/sign-up/` + type + '/';
-  const apiURL = `${API_URL}/accounts/api/onboarding-free-plan/`;
+export const processSignup = (email, password, type='onboarding-free-plan') => {
+  const apiURL = `${API_URL}/accounts/api/` + type + '/';
   const body = { email, password };
   const fetchParams = assignDefaults({
     method: 'POST',
@@ -100,16 +99,12 @@ export const processSignup = (email, password, type='free-plan') => {
   });
 
   const fetchSuccess = ({value}) => {
-    console.log('fetch success');
-    console.log(value);
     return (dispatch, getState) => {
       dispatch(receiveSignUpStatus(true));
     };
   };
 
   const fetchFail = (data) => {
-    console.log('fetch fail');
-    console.log(data.value);
     return (dispatch, getState) => {
       dispatch(setServerResponse(data.value));
       dispatch(receiveSignUpStatus(false));
