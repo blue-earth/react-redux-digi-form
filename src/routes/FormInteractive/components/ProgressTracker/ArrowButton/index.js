@@ -1,3 +1,3 @@
-import ArrowButton from './ArrowButton';
+import { LeftArrowButton, RightArrowButton } from './ArrowButton';
 
-export default ArrowButton;
+export { LeftArrowButton, RightArrowButton };

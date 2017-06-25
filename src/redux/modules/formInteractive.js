@@ -1,7 +1,7 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { findIndexById, mergeItemIntoArray } from 'helpers/pureFunctions';
-import { getOutcomeWithQuestionId } from 'helpers/formInteractiveHelper';
+import { getNextQuestionId, getOutcomeWithQuestionId } from 'helpers/formInteractiveHelper';
 import { assignDefaults } from 'redux/utils/request';
 import _ from 'lodash';
 
@@ -271,17 +271,6 @@ export const nextQuestion = () => {
     }
     dispatch(goToQuestion(nextId));
   };
-};
-
-const getNextQuestionId = (questions, questionId) => {
-  var curIdx, nextIdx;
-  curIdx = nextIdx = _.findIndex(questions, function (o) { return o.id === questionId; });
-  while (nextIdx < questions.length - 1) {
-    var q = questions[++nextIdx];
-    if (q.type !== 'Group') break;
-  }
-  if (questions[nextIdx].type === 'Group') nextIdx = curIdx;
-  return questions[nextIdx].id;
 };
 
 // ------------------------------------
