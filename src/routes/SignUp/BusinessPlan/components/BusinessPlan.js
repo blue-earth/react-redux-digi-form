@@ -90,6 +90,7 @@ class BusinessPlan extends Component {
   handleSubdomainEnter = (event) => {
     if (event.key === 'Enter') {
       this.props.verifySubdomain(event.target.value);
+      clearTimeout(this.changingSubdomain);
     }
   }
 
@@ -183,7 +184,7 @@ class BusinessPlan extends Component {
                       onChange={this.handleSubdomainChange}
                       onBlur={this.handleSubdomainBlur}
                       onFocus={this.handleSubdomainFocus}
-                      onKeyDown={this.handleSubdomainEnter}
+                      onKeyPress={this.handleSubdomainEnter}
                     />
                     <span className={classNames(
                       styles.validationIndicator,
@@ -280,7 +281,7 @@ class BusinessPlan extends Component {
 
   renderPurchasePage() {
     const { currentlySelectedPlan, paymentMethod, purchaseErrorMessage, isPageBusy } = this.props;
-    const { numberOfUsers, billingCycle } = currentlySelectedPlan;
+    const { name, numberOfUsers, billingCycle } = currentlySelectedPlan;
     const { email, cardNumber, expiry, cvc } = paymentMethod;
     const { priceCurrency, minRequiredNumUser, maxNumUser } = this.getPlanConfig(billingCycle);
     return (
@@ -356,7 +357,9 @@ class BusinessPlan extends Component {
                 <h4>ORDER SUMMARY</h4>
                 <hr className={styles.divideLine} />
                 <p>
-                  <strong className={styles.orderItem}>Business Plan</strong>
+                  <strong className={styles.orderItem}>
+                    {name[0].toUpperCase() + name.slice(1)} Plan
+                  </strong>
                   {' '}
                   <span className={styles.price}>
                     <PriceTag price={this.getOriginalPrice()} currency={priceCurrency} />
