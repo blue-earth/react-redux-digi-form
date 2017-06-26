@@ -85,15 +85,17 @@ class BusinessPlan extends Component {
     this.props.displaySubdomainHint(false);
   }
   handleSubdomainBlur = (event) => {
-    const { displaySubdomainHint, verifySubdomain } = this.props;
-    displaySubdomainHint(true);
-    clearTimeout(this.changingSubdomain);
-    verifySubdomain(event.target.value);
+    const subdomain = event.target.value;
+    const { verifySubdomain, displaySubdomainHint, validations } = this.props;
+    if (subdomain.length > 3 && !validations.displaySubdomainVerified) {
+      clearTimeout(this.changingSubdomain);
+      this.props.verifySubdomain(subdomain);
+    }
+    this.props.displaySubdomainHint(true);
   }
   handleSubdomainEnter = (event) => {
     if (event.key === 'Enter') {
-      this.props.verifySubdomain(event.target.value);
-      clearTimeout(this.changingSubdomain);
+      this.refs.subdomain.blur();
     }
   }
 
@@ -183,6 +185,7 @@ class BusinessPlan extends Component {
                 <div className={styles.domainInputWrapper}>
                   <div className={styles.domainInputGroup}>
                     <input autoFocus className={styles.domainInput} placeholder="subdomain"
+                      ref="subdomain"
                       value={subdomain}
                       onChange={this.handleSubdomainChange}
                       onBlur={this.handleSubdomainBlur}
