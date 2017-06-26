@@ -112,7 +112,7 @@ class SignUpForm extends Component {
           <div className={styles.signupWrapper}>
             <h2 className={styles.formTitle}>Join for Free</h2>
             <Row>
-              <Col xs={12} sm={6}>
+              <Col xs={12} sm={6} smPush={3}>
                 <div className={styles.signupLeft}>
                   <div className={'form-group' + (email.touched && email.error ? ' has-error':'')}>
                     <input type="text" placeholder="Email" className="form-control input-lg"
@@ -132,7 +132,7 @@ class SignUpForm extends Component {
                   <p>By continuing you agree to the <a>Terms &amp; Conditions</a> and <a>Privacy Policy</a></p>
                 </div>
               </Col>
-              <Col xs={12} sm={6}>
+              <Col xs={12} sm={6} className={styles.socialLogin}>
                 <div className={styles.signupRight}>
                   <div className={styles.divider}><span className={styles.or}>OR</span></div>
                   <div className="form-group">

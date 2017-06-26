@@ -21,15 +21,18 @@
     }
   }
   .signupLeft {
-    @include media('>=sm') { padding-right: 20px; }
+    // uncomment when social login is implemented
+    // @include media('>=sm') { padding-right: 20px; }
     p {
       margin: 10px 0;
       text-align: center;
       font-size: 12px;
     }
   }
+  .socialLogin { display: none; }
   .signupRight {
-    @include media('>=sm') { padding-left: 20px; }
+    // uncomment when social login is implemented
+    // @include media('>=sm') { padding-left: 20px; }
     button {
       height: 46px;
       span svg {
