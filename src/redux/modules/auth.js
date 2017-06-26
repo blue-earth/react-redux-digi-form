@@ -166,16 +166,31 @@ export const setUserProfile = createAction(SET_USER_PROFILE);
 // ------------------------------------
 // Action: handleLogout
 // ------------------------------------
-export const handleLogout = () => {
-  return (dispatch, getState) => {
-    dispatch(logout());
+export const processLogout = () => {
+  const apiURL = `${API_URL}/accounts/api/auth/logout/`;
+  const fetchParams = assignDefaults({
+    method: 'POST'
+  });
+
+  const fetchSuccess = () => {
+    return (dispatch, getState) => {
+      dispatch(logout());
+    };
   };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      console.log('Logout failed');
+      // TODO: what should happen if this fails for some reason?
+    };
+  };
+
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
 
 // ------------------------------------
 // Action: logout
 // ------------------------------------
-// TODO: does logout functionality need to happen on the backend?
 // TODO: does the state need to show logout, or can it just be reset to INIT_AUTH_STATE
 export const logout = createAction(LOGOUT);
 
