@@ -85,7 +85,10 @@ class BusinessPlan extends Component {
     this.props.displaySubdomainHint(false);
   }
   handleSubdomainBlur = (event) => {
-    this.props.displaySubdomainHint(true);
+    const { displaySubdomainHint, verifySubdomain } = this.props;
+    displaySubdomainHint(true);
+    clearTimeout(this.changingSubdomain);
+    verifySubdomain(event.target.value);
   }
   handleSubdomainEnter = (event) => {
     if (event.key === 'Enter') {
