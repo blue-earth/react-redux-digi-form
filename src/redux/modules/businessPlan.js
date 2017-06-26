@@ -96,6 +96,9 @@ export const fetchPlans = () => {
     dispatch(processFetchPlans(plan, period));
   };
 };
+const numberFormatter = (cardNumber) => {
+  return cardNumber.replace(/\s+|_/g, '');
+};
 
 export const purchasePlan = () => {
   return (dispatch, getState) => {
@@ -103,15 +106,17 @@ export const purchasePlan = () => {
     const { subdomain, name, billingCycle, numberOfUsers } = currentlySelectedPlan;
     const { cardNumber, expiry, cvc } = paymentMethod;
     const plan = {
-      subdomain: subdomain,
-      name: name,
-      number_of_users: numberOfUsers,
-      billing_cycle: billingCycle,
       email: email,
+      planConfig: {
+        subdomain: subdomain,
+        name: name,
+        number_of_users: numberOfUsers,
+        billing_cycle: billingCycle
+      },
       paymentMethod: {
-        card_number: cardNumber,
-        expiry: expiry,
-        cvc: cvc
+        card_number: numberFormatter(cardNumber),
+        expiry: numberFormatter(expiry),
+        cvc: numberFormatter(cvc)
       }
     };
     dispatch(requestPurchaseBusinessPlan());
