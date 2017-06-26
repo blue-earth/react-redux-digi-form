@@ -14,7 +14,6 @@ class StepIndicator extends Component {
 
   render() {
     const { activeStep, steps } = this.props;
-    console.log(steps);
     return (
       <Grid fluid className={styles.stepWrapper}>
         <h5 className={styles.stepContent}>
