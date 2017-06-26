@@ -56,3 +56,27 @@
 .hide {
   display: none;
 }
+.tooltip{
+  position: absolute;
+}
+.tooltip-inner{
+  max-width: 200px;
+  padding: 0.5em 1em;
+  color: #fff;
+  text-align: center;
+  background-color: $red;
+  border-radius: 4px;
+}
+.bottom{
+  .tooltip-arrow {
+    position: absolute;
+    top: -5px;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    margin-left: -5px;
+    border-width: 0 5px 5px;
+    border-bottom-color: $red;
+  }
+}

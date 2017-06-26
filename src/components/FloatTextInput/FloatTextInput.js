@@ -2,11 +2,12 @@ import React, {
   PropTypes,
   Component
 } from 'react';
-import styles from './TextInput.scss';
+import styles from './FloatTextInput.scss';
 import classNames from 'classnames/bind';
 import { IoAndroidAlert } from 'react-icons/lib/io';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
-class TextInput extends Component {
+class FloatTextInput extends Component {
   static propTypes = {
     placeholder: PropTypes.string,
     value: PropTypes.string,
@@ -14,7 +15,8 @@ class TextInput extends Component {
     onChange: PropTypes.func,
     primaryColour: PropTypes.string,
     error: PropTypes.bool,
-    errorMessage: PropTypes.string
+    errorMessage: PropTypes.string,
+    className: PropTypes.string
   }
 
   constructor(props) {
@@ -63,11 +65,12 @@ class TextInput extends Component {
     }
   }
   render() {
-    const { placeholder, id, error } = this.props;
+    const { placeholder, id, error, errorMessage } = this.props;
     let { focused, active, savedValue } = this.state;
     const cx = classNames.bind(styles);
+    let tooltip = (<Tooltip id="tooltip" bsClass={cx('tooltip')}>{errorMessage}</Tooltip>);
     return (
-      <div className={cx('textInputWrap')}>
+      <div className={cx('textInputWrap', this.props.className)}>
         <label
           htmlFor={id}
           className={cx('textInputLabel', {focused: focused, error: error})}
@@ -87,14 +90,16 @@ class TextInput extends Component {
           onBlur={this.handleBlur}
           style={{ borderColor: this.colour }}
         />
-        <span className={cx('errorIcon')}>
-          <IoAndroidAlert className={cx({
-            hide: !error
-          })} />
-        </span>
+        <OverlayTrigger placement="bottom" overlay={tooltip}>
+          <span className={cx('errorIcon')}>
+            <IoAndroidAlert className={cx({
+              hide: !error
+            })} />
+          </span>
+        </OverlayTrigger>
       </div>
     );
   }
 }
 
-export default TextInput;
+export default FloatTextInput;
