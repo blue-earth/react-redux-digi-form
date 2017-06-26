@@ -1,8 +1,29 @@
+@import './mixins';
+@import './variables';
+
+.numberInputBlock {
+  display: inline-block;
+}
+.inputWrapper {
+  display: inline-block;
+  height: 1em;
+  width: 2em;
+  margin: 0 0.4em;
+  vertical-align: bottom;
+}
 .numberInput{
-  margin: 0 10px;
+  width: 100%;
+  height: 100%;
+  font-size: 0.5em;
   text-align: center;
   border-radius: 6px;
-  border: 1px solid #dce6ed;
-  color: #194a6c;
+  border: 1px solid #DCE6ED;
+  color: $blackblue;;
   font-weight: bolder;
+  vertical-align: top;
+}
+.inputHintWrapper{
+  margin-top: 10px;
+  color: $red;
+  font-size: 14px;
 }
