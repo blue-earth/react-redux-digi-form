@@ -1,16 +1,15 @@
 @import './mixins';
 @import './variables';
 
-$pt-height:       55px;
 $pt-bar-height:   3px;
 $pt-button-width: 47px;
 
 .wrapper {
-  height: $pt-height;
+  height: $frontend-progressbar-height;
   position: relative;
   overflow: hidden;
   padding: 0 $pt-button-width $pt-bar-height;
-  height: $pt-height;
+  height: $frontend-progressbar-height;
 }
 
 .progressbar {

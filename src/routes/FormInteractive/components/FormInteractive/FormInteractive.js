@@ -2,28 +2,25 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import Animate from 'rc-animate';
 import classNames from 'classnames';
 import _ from 'lodash';
 import FormHeader from 'components/Headers/FormHeader';
-import FormSection from '../FormSection';
 import ProgressTracker from '../ProgressTracker';
 import SubmitButton from 'components/Buttons/FormEnterButton';
 import FormCompletionSection from '../FormCompletionSection';
 import FormRow from 'components/Forms/FormRow';
 import StackLogo from 'components/Logos/StackLogo';
 import {
-  groupFormQuestions,
   getNextQuestionId,
   getQuestionGroups,
-  getQuestionGroupTitles,
-  SlideAnimation
+  getQuestionGroupTitles
 } from 'helpers/formInteractiveHelper';
 import {
   FORM_AUTOSAVE,
   FORM_USER_SUBMISSION
 } from 'redux/modules/formInteractive';
 import { findIndexById } from 'helpers/pureFunctions';
+import FormInteractiveView from '../FormInteractiveView';
 import AccessCodeModal from 'components/Forms/AccessCodeModal';
 import SaveForLaterModal from '../SaveForLaterModal';
 import styles from './FormInteractive.scss';
@@ -156,9 +153,9 @@ class FormInteractive extends Component {
     formAccessCode: PropTypes.string.isRequired,
 
     /*
-     * show: Redux modal show
+     * showModal: Redux modal show
      */
-    show: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired,
 
     /*
      * params: Routing params
@@ -197,19 +194,19 @@ class FormInteractive extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { resetFormSubmitStatus, show } = this.props;
+    const { resetFormSubmitStatus, showModal } = this.props;
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION &&
       props.lastFormSubmitStatus.result) {
       if (props.shouldShowFinalSubmit) {
         this.context.router.push(`/forms/${this.props.id}/${this.props.sessionId}/completion`);
       } else {
-        show('saveForLaterModal');
+        showModal('saveForLaterModal');
       }
       resetFormSubmitStatus();
     }
     if (this.props.formAccessStatus !== props.formAccessStatus &&
       props.formAccessStatus === 'fail') {
-      show('accessCodeModal');
+      showModal('accessCodeModal');
     }
   }
 
@@ -228,7 +225,7 @@ class FormInteractive extends Component {
   }
 
   setActiveGroup = (index) => {
-    const { form: { questions }, goToQuestion, currentQuestionId } = this.props;
+    const { form: { questions }, goToQuestion } = this.props;
     const groups = getQuestionGroups(questions);
     const newGroupId = groups[index].id;
     // const question = _.find(questions, (o) => o.id === currentQuestionId);
@@ -246,65 +243,13 @@ class FormInteractive extends Component {
     return index > 0 ? index : 0;
   }
 
-  get renderFormSteps() {
-    const props = this.props;
-    const { form: { questions }, currentQuestionId, shouldShowFinalSubmit } = props;
-    const that = this;
-    const questionGroups = groupFormQuestions(questions);
-    const questionGroupTitles = getQuestionGroupTitles(questions);
-
-    var slideAnimation = new SlideAnimation(1000);
-    const anim = {
-      enter: slideAnimation.enter,
-      leave: slideAnimation.leave
-    };
-
-    return (
-      <div className={classNames(styles.contentWrapper, 'container')}>
-        <div className={styles.contentWrapperInner}>
-          <ProgressTracker
-            sectionTitleList={questionGroupTitles}
-            currentSectionIndex={this.currentSectionIndex}
-            onItemChange={this.setActiveGroup}
-          />
-          <Animate exclusive animation={anim}>
-            {
-              questionGroups.map(function (group, index) {
-                return (
-                  <FormSection key={index} questionGroup={group}
-                    step={index+1} totalSteps={questionGroups.length}
-                    status={that.sectionStatus(questions, currentQuestionId, group)}
-                    {...props} />
-                );
-              })
-            }
-          </Animate>
-          <FormRow>
-            {shouldShowFinalSubmit &&
-              <div className={styles.submitButtonsArea}>
-                <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
-              </div>}
-          </FormRow>
-          <div className={styles.bottomLogoWrapper}>
-            <span>Powered by</span>
-            <div className={styles.bottomLogo}>
-              <StackLogo logoStyle="darkgrey" width={80} />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  get isCompleted() {
+    const { params: { status } } = this.props;
+    return status === 'completion';
   }
 
-  get renderFormCompletionSection() {
-    const props = this.props;
-    return (
-      <div className={styles.stepsWrapper}>
-        <FormCompletionSection
-          {...props} />
-        <FormRow />
-      </div>
-    );
+  get needsAccessCode() {
+    return this.props.formAccessStatus !== 'success';
   }
 
   loadFormSession = () => {
@@ -321,20 +266,63 @@ class FormInteractive extends Component {
     submitAnswer(FORM_USER_SUBMISSION);
   }
 
+  renderFormSteps() {
+    const props = this.props;
+    const { form: { questions }, shouldShowFinalSubmit } = props;
+    const questionGroupTitles = getQuestionGroupTitles(questions);
+
+    return (
+      <div className={classNames(styles.contentWrapper, 'container')}>
+        <div className={styles.contentWrapperInner}>
+          <ProgressTracker
+            sectionTitleList={questionGroupTitles}
+            currentSectionIndex={this.currentSectionIndex}
+            onItemChange={this.setActiveGroup}
+          />
+          <FormInteractiveView {...this.props} />
+          <FormRow>
+            {shouldShowFinalSubmit &&
+              <div className={styles.submitButtonsArea}>
+                <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
+              </div>
+            }
+          </FormRow>
+          <div className={styles.bottomLogoWrapper}>
+            <span>Powered by</span>
+            <div className={styles.bottomLogo}>
+              <StackLogo logoStyle="darkgrey" width={80} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderFormCompletionSection() {
+    const props = this.props;
+    return (
+      <div className={styles.stepsWrapper}>
+        <FormCompletionSection
+          {...props} />
+        <FormRow />
+      </div>
+    );
+  }
+
   render() {
-    const { title, submitAnswer, params: { status }, formAccessStatus,
-      form, id, sessionId } = this.props;
+    const { title, submitAnswer, form, id, sessionId } = this.props;
     return (
       <div className={styles.wrapper}>
         <FormHeader title={title} submitAnswer={submitAnswer} />
-        {status !== 'completion' && form && this.renderFormSteps}
-        {status !== 'completion' &&
+        {!this.isCompleted && !this.needsAccessCode && form &&
+          this.renderFormSteps()
+        }
+        {!this.isCompleted &&
           <SaveForLaterModal formId={id} sessionId={sessionId} />
         }
-        {status === 'completion' && this.renderFormCompletionSection}
-        {formAccessStatus !== 'success' &&
-          <AccessCodeModal onSuccess={this.loadFormSession}
-            {...this.props} />
+        {this.isCompleted && this.renderFormCompletionSection()}
+        {this.needsAccessCode &&
+          <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />
         }
       </div>
     );

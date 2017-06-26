@@ -3,6 +3,7 @@
 
 .interactiveContainer {
   @include clearfix;
+  align-self: center;
   &:after {
     clear:both;
   }
@@ -34,17 +35,6 @@
 .inlineRight {
   display: inline-block;
   vertical-align: middle;
-}
-.activeQuestionContainer {
-  margin: 30px 0;
-}
-
-.neighborInstruction {
-  font-size: 22px;
-  color: $text-light-color;
-  margin: 0;
-  font-weight: 400;
-  opacity: .7;
 }
 
 .validatiorTransition {

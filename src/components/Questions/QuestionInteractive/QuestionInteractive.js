@@ -19,7 +19,6 @@ import Verifier from '../../Verifier/Verifier';
 import validateField from 'helpers/validationHelper';
 import styles from './QuestionInteractive.scss';
 import _ from 'lodash';
-import Hogan from 'hogan.js';
 import { SlideAnimation } from 'helpers/formInteractiveHelper';
 import Animate from 'rc-animate';
 
@@ -29,45 +28,6 @@ import Animate from 'rc-animate';
  */
 
 class QuestionInteractive extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      /*
-       * savedValue: current answer value, it is saved to store when validation passes.
-       */
-      savedValue: props.value,
-
-      /*
-       * inputState: one of 'init', 'focus', 'blur', 'enter'
-       */
-      inputState: 'init',
-
-      /*
-       * ChildComponent: stores the Child Input component class throughout the component life cycle.
-       */
-      ChildComponent: null,
-
-      /*
-       * buttonPosClass: CSS styles for Enter button position
-       */
-      buttonPosClass: '',
-
-      /*
-       * inputPosClass: CSS styles for Input component position
-       */
-      inputPosClass: '',
-
-      /*
-       * extraProps: Component specific extra props.
-       */
-      extraProps: null
-    };
-  };
-
-  static contextTypes = {
-    primaryColor: React.PropTypes.string
-  };
-
   static propTypes = {
 
     /*
@@ -93,20 +53,6 @@ class QuestionInteractive extends Component {
      * validations: Validations required for the question, it is a part of form response.
      */
     validations: PropTypes.array,
-
-    /*
-     * status: Status of current question.
-     *         'current' - current active question that is prompted to answer
-     *         'next' - the question next to current answer for preview
-     *         'prev' - the question prior to current question
-     *         'hidden' - the question that won't be shown
-     */
-    status: PropTypes.oneOf(['current', 'next', 'prev', 'hidden']),
-
-    /*
-     * context: context variable, array of {answer_xxx: 'ANSWERED_VALUE'} for replacement by Hogan.js
-     */
-    context: PropTypes.object,
 
     /*
      * verificationStatus: Redux state that holds the status of verification, ex. EmondoEmailService
@@ -147,14 +93,51 @@ class QuestionInteractive extends Component {
     questionDescription: PropTypes.string
   };
 
+  static contextTypes = {
+    primaryColor: React.PropTypes.string
+  };
+
   static defaultProps = {
     validations: [],
-    status: 'current',
-    context: {},
     isVerifying: false,
     storeAnswer: () => {},
     nextQuestion: () => {},
     handleEnter: () => {}
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      /*
+       * savedValue: current answer value, it is saved to store when validation passes.
+       */
+      savedValue: props.value,
+
+      /*
+       * inputState: one of 'init', 'focus', 'blur', 'enter'
+       */
+      inputState: 'init',
+
+      /*
+       * ChildComponent: stores the Child Input component class throughout the component life cycle.
+       */
+      ChildComponent: null,
+
+      /*
+       * buttonPosClass: CSS styles for Enter button position
+       */
+      buttonPosClass: '',
+
+      /*
+       * inputPosClass: CSS styles for Input component position
+       */
+      inputPosClass: '',
+
+      /*
+       * extraProps: Component specific extra props.
+       */
+      extraProps: null
+    };
   };
 
   componentWillMount() {
@@ -167,7 +150,6 @@ class QuestionInteractive extends Component {
     var inputPosClass = styles.leftColumn;
     var buttonPosClass = styles.rightColumn;
     var extraProps = {};
-
     switch (type) {
       case 'ShortTextField':
       case 'EmailField':
@@ -229,28 +211,11 @@ class QuestionInteractive extends Component {
     });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { inputState } = nextState;
-
-    // If verification status is changed, it should update to enable/disable input components.
-    if (nextProps.isVerifying !== this.props.isVerifying) return true;
-
-    // If it's inactive question with the status unchanged, no need to update.
-    if (nextProps.status === this.props.status && nextProps.value === this.props.value &&
-      nextState.inputState === 'init') {
-      return false;
-    }
-    if (nextProps.type === 'AddressField' && inputState === 'blur') {
-      return false;
-    }
-    // For current question, if the status is not focus, it should update.
-    return inputState !== 'focus';
-  }
-
   componentWillReceiveProps(props) {
+    const { inputState } = this.state;
     this.setState({
       savedValue: props.value,
-      inputState: props.status !== this.props.status ? 'init' : this.state.inputState
+      inputState: this.props.id !== props.id ? 'init' : inputState
     });
   }
 
@@ -310,22 +275,13 @@ class QuestionInteractive extends Component {
     return unavailables.length === 0;
   }
 
-  compileTemplate(template, context) {
-    if (template) {
-      var t = Hogan.compile(template);
-      return t.render(context);
-    } else {
-      return '';
-    }
-  }
-
   renderQuestionDisplay() {
-    const { context, questionInstruction, questionDescription } = this.props;
+    const { questionInstruction, questionDescription } = this.props;
 
     return (
       <QuestionInstruction
-        instruction={this.compileTemplate(questionInstruction, context)}
-        description={this.compileTemplate(questionDescription, context)}
+        instruction={questionInstruction}
+        description={questionDescription}
       />
     );
   }
@@ -394,47 +350,13 @@ class QuestionInteractive extends Component {
     );
   }
 
-  renderActiveQuestion() {
+  render() {
     return (
-      <div className={styles.activeQuestionContainer}>
+      <div className={styles.interactiveContainer}>
         {this.renderQuestionDisplay()}
         {this.renderInteractiveInput()}
       </div>
     );
-  }
-
-  renderNextQuestion() {
-    var { questionInstruction, context } = this.props;
-    return (
-      <div>
-        <h3 className={styles.neighborInstruction}>
-          {this.compileTemplate(questionInstruction, context)}
-        </h3>
-      </div>
-    );
-  }
-
-  renderPrevQuestion() {
-    var { questionInstruction, context } = this.props;
-    return (
-      <div>
-        <h3 className={styles.neighborInstruction}>
-          {this.compileTemplate(questionInstruction, context)}
-        </h3>
-      </div>
-    );
-  }
-
-  render() {
-    const { status } = this.props;
-    if (status === 'current') {
-      return this.renderActiveQuestion();
-    } else if (status === 'next') {
-      return this.renderNextQuestion();
-    } else if (status === 'prev') {
-      return this.renderPrevQuestion();
-    }
-    return false;
   }
 }
 

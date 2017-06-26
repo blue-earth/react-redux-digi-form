@@ -5,13 +5,14 @@
   margin-bottom: 20px;
 }
 .instructionTextWrapper {
-  font-family: 'Open Sans';
-  font-size: 25px;
+  font-family: 'Lato';
+  font-size: 24px;
   font-weight: 600;
 }
 .descriptionTextWrapper {
-  color: #494949;
-  font-size: 19px;
+  color: $frontend-text-color3;
+  font-size: 16px;
+  font-weight: 400;
   > a {
     color: #4DCCEB;
   }

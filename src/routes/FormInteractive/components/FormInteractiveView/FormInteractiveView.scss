@@ -1,0 +1,79 @@
+@import './mixins';
+@import './variables';
+
+.wrapper {
+  padding: 30px;
+  height: calc(100% - #{$frontend-progressbar-height});
+  @include media('>=sm') {
+    padding: 50px;
+  }
+  @include media('>=md') {
+    padding: 65px;
+  }
+}
+.wrapperInner {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  @include media('>=sm') {
+    padding-right: 135px;
+  }
+}
+
+.neighborInstruction {
+  font-size: 24px;
+  color: $frontend-text-color1;
+  margin: 0;
+  font-weight: 400;
+}
+
+.currentQuestionWrapper {
+  display: flex;
+  flex: 1;
+  overflow: auto;
+}
+.prevQuestionWrapper {
+  opacity: .15;
+  @include media('>=md') {
+    padding-bottom: 30px;
+  }
+}
+
+.answerIcon {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  line-height: 1;
+  display: block;
+  @include transform(scaleX(-1));
+}
+.prevQuestionAnswer {
+  padding-left: 30px;
+  position: relative;
+  font-size: 24px;
+  color: inherit;
+}
+
+.nextQuestionWrapper {
+  opacity: .15;
+  @include media('>=md') {
+    padding-top: 30px;
+  }
+}
+
+.navButtonsWrapper {
+  text-align: right;
+  list-style: none;
+  margin: 0;
+  position: absolute;
+  @include vcenter;
+  right: 0;
+  @include clearfix;
+  li {
+    padding-left: 0;
+    &:not(:first-child) {
+      margin-top: -1px;
+    }
+  }
+}

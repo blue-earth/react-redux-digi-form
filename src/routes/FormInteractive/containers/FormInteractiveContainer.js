@@ -27,7 +27,7 @@ const mapActionCreators = {
   handleEnter,
   updateAccessCode,
   resetFormSubmitStatus,
-  show
+  showModal: show
 };
 
 const mapStateToProps = (state) => {

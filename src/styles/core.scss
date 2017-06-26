@@ -25,4 +25,10 @@
   [data-reactroot] > div {
     height: 100%;
   }
+
+  .container {
+    @media screen and (min-width: 1600px) {
+      width: 1570px;
+    }
+  }
 }

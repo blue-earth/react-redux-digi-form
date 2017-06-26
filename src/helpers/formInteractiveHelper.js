@@ -55,9 +55,18 @@ export const getQuestionGroupTitles = (questions) => {
 export const getContextFromAnswer = (answers) => {
   var context = {};
   answers.map(function (answer) {
-    context['answer_' + answer.id] = answer.value;
+    context['answer_' + answer.id] = stringifyAnswerValue(answer);
   });
   return context;
+};
+
+export const stringifyAnswerValue = (answer) => {
+  if (!answer || !answer.value) return '';
+  if (typeof answer.value === 'object') {
+    return `${answer.value.label}. ${answer.value.text}`;
+  } else {
+    return answer.value;
+  }
 };
 
 export const getFirstQuestionOfGroup = (questionGroup) => {

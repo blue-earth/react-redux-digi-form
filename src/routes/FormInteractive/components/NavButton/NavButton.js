@@ -4,15 +4,16 @@ import React, {
 } from 'react';
 import { Button } from 'react-bootstrap';
 import {
-  MdChevronLeft,
-  MdChevronRight
+  MdKeyboardArrowUp,
+  MdKeyboardArrowDown
 } from 'react-icons/lib/md';
 import classNames from 'classnames';
-import styles from './ArrowButton.scss';
+import styles from './NavButton.scss';
 
-class ArrowButtonContainer extends Component {
+class NavButtonContainer extends Component {
   static propTypes = {
-    direction: PropTypes.oneOf(['left', 'right']),
+    isDisabled: PropTypes.bool,
+    direction: PropTypes.oneOf(['up', 'down']),
     onClick: PropTypes.func,
     children: PropTypes.element
   };
@@ -30,6 +31,10 @@ class ArrowButtonContainer extends Component {
     this.state = { hover: false };
   }
 
+  componentWillReceiveProps(props) {
+    props.isDisabled && this.setState({ hover: false });
+  }
+
   addHoverClass = () => {
     this.setState({ hover: true });
   }
@@ -41,15 +46,16 @@ class ArrowButtonContainer extends Component {
   render() {
     const { hover } = this.state;
     const { primaryColor } = this.context;
-    const { direction, children, onClick } = this.props;
+    const { isDisabled, direction, children, onClick } = this.props;
     let optionals = {};
-    hover && (optionals['style'] = { color: primaryColor });
-    const buttonClass = classNames(styles.arrowButton, styles[direction]);
+    hover && !isDisabled && (optionals['style'] = { color: primaryColor });
+    const buttonClass = classNames(styles.navButton, styles[direction]);
     return (
       <Button className={buttonClass}
-        onMouseEnter={this.addHoverClass}
+        onMouseOver={this.addHoverClass}
         onMouseLeave={this.removeHoverClass}
         onClick={onClick}
+        disabled={isDisabled}
         {...optionals}>
         {children}
       </Button>
@@ -57,22 +63,22 @@ class ArrowButtonContainer extends Component {
   }
 }
 
-export class LeftArrowButton extends Component {
+export class LeftNavButton extends Component {
   render() {
     return (
-      <ArrowButtonContainer direction="left" {...this.props}>
-        <MdChevronLeft size={24} />
-      </ArrowButtonContainer>
+      <NavButtonContainer direction="up" {...this.props}>
+        <MdKeyboardArrowUp size={24} />
+      </NavButtonContainer>
     );
   }
 }
 
-export class RightArrowButton extends Component {
+export class RightNavButton extends Component {
   render() {
     return (
-      <ArrowButtonContainer direction="right" {...this.props}>
-        <MdChevronRight size={24} />
-      </ArrowButtonContainer>
+      <NavButtonContainer direction="down" {...this.props}>
+        <MdKeyboardArrowDown size={24} />
+      </NavButtonContainer>
     );
   }
 }
