@@ -223,7 +223,10 @@ class BusinessPlan extends Component {
                 <p className={styles.sectionTitle}>Choose number of users:</p>
                 <NumberInput height={54} className={styles.bigNumberInput}
                   value={numberOfUsers} onChange={this.handleUsersNumberChange}
-                  minValue={minRequiredNumUser} maxValue={maxNumUser} />
+                  minValue={minRequiredNumUser}
+                  maxValue={maxNumUser}
+                  minHint={'The minimun required user number is ' + minRequiredNumUser}
+                  maxHint={'The maximum number of user is ' + maxNumUser} />
               </div>
             </Panel>
             <div className={styles.billingCycleSection}>
