@@ -96,7 +96,7 @@ class NumberInput extends Component {
                 onChange={this.handleChange}
                 onFocus={this.handleOnFocus}
                 onBlur={this.handleOnBlur} />
-              </div>
+            </div>
           </span>
           <CircleOutlineButton buttonLabel="+" hoverColor={"#3993d1"} color={"#DCE6ED"} size={height}
             isDisabled={maxValue && this.props.value === maxValue} onClick={this.handleAddNumber} />

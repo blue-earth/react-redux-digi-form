@@ -89,9 +89,9 @@ class BusinessPlan extends Component {
     const { verifySubdomain, displaySubdomainHint, validations } = this.props;
     if (subdomain.length > 3 && !validations.displaySubdomainVerified) {
       clearTimeout(this.changingSubdomain);
-      this.props.verifySubdomain(subdomain);
+      verifySubdomain(subdomain);
     }
-    this.props.displaySubdomainHint(true);
+    displaySubdomainHint(true);
   }
   handleSubdomainEnter = (event) => {
     if (event.key === 'Enter') {
