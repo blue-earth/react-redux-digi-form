@@ -10,23 +10,35 @@ class FloatTextInput extends Component {
   static propTypes = {
     placeholder: PropTypes.string,
     value: PropTypes.string,
-    id: PropTypes.string,
+    name: PropTypes.string,
     onChange: PropTypes.func,
+    onBlur: PropTypes.func,
     primaryColour: PropTypes.string,
     autoFocus: PropTypes.bool,
-    error: PropTypes.bool,
+    isError: PropTypes.bool,
     errorMessage: PropTypes.string,
     className: PropTypes.string
+  }
+  static defaultProps = {
+    value: '',
+    isError: false
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      savedValue: typeof props.value !== 'undefined' ? props.value : '',
-      focused: props.value,
+      savedValue: props.value,
+      filled: props.value,
+      isError: props.isError,
       active: false,
       displayErrorMessage: false
     };
+  }
+  componentWillReceiveProps(props) {
+    this.setState({
+      isError: props.isError,
+      savedValue: props.value
+    });
   }
 
   handleChange = (event) => {
@@ -42,7 +54,7 @@ class FloatTextInput extends Component {
   handleFocus = (event) => {
     if (this.state.savedValue.length === 0) {
       this.setState({
-        focused: true
+        filled: true
       });
     }
     this.setState({
@@ -52,12 +64,17 @@ class FloatTextInput extends Component {
   handleBlur = (event) => {
     if (this.state.savedValue.length === 0) {
       this.setState({
-        focused: false
+        filled: false
       });
     }
     this.setState({
-      active: false
+      active: false,
+      isError: false
     });
+    const { onBlur } = this.props;
+    if (typeof onBlur === 'function') {
+      onBlur(event);
+    }
   }
   handleErrorOver = (event) => {
     this.setState({
@@ -69,41 +86,51 @@ class FloatTextInput extends Component {
       displayErrorMessage: false 
     });
   }
-  get colour() {
-    const { focused, active} = this.state;
-    if (active) {
-      return this.props.primaryColour;
+  get activeColour() {
+    if (this.state.active) {
+      return {
+        color: this.props.primaryColour
+      };
     }
+    return null;
+  }
+  get activeBorderColour() {
+    if (this.state.active) {
+      return {
+        borderColor: this.props.primaryColour
+      };
+    }
+    return null;
   }
   render() {
-    const { placeholder, id, error, errorMessage, autoFocus } = this.props;
-    let { focused, active, savedValue, displayErrorMessage } = this.state;
+    const { placeholder, name, errorMessage, autoFocus } = this.props;
+    let { filled, active, savedValue, displayErrorMessage, isError } = this.state;
     const cx = classNames.bind(styles);
     return (
       <div className={cx('textInputWrap', this.props.className)}>
         <label
-          htmlFor={id}
-          className={cx('textInputLabel', {focused: focused, error: error})}
-          style={{color: this.colour}}>
+          htmlFor={name}
+          className={cx('textInputLabel', {filled: filled, isError: isError})}
+          style={this.activeColour}>
           {placeholder}
         </label>
         <input
-          id={id}
+          id={name}
           type="text"
           value={savedValue}
           className={cx('textInput', {
-            errorInput: error,
-            filled: active || savedValue.length > 0
+            isErrorInput: isError,
+            filledInput: active || filled
           })}
           onChange={this.handleChange}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
-          style={{ borderColor: this.colour }}
+          style={this.activeBorderColour}
           autoFocus={autoFocus}
         />        
         <div className={cx('errorIconWrapper')} onMouseOver={this.handleErrorOver} onMouseOut={this.handleErrorOut}>
           <IoAndroidAlert className={cx({
-            hide: !error
+            hide: !isError
           })} />
           <div className={cx('errorTip', {
           'hide': !displayErrorMessage
