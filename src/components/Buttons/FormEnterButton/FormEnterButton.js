@@ -3,7 +3,9 @@ import React, {
   PropTypes
 } from 'react';
 import { Button } from 'react-bootstrap';
+import Color from 'color';
 import styles from './FormEnterButton.scss';
+import arrowEnterIcon from './arrow-enter.svg';
 
 class FormEnterButton extends Component {
 
@@ -48,7 +50,8 @@ class FormEnterButton extends Component {
 
   render() {
     const { buttonLabel, isDisabled, autoFocus } = this.props;
-    var { primaryColor } = this.context;
+    const { primaryColor } = this.context;
+    const shadowColor = Color(primaryColor).darken(0.2).rgbString();
     var optionals = {};
 
     if (autoFocus) {
@@ -58,8 +61,8 @@ class FormEnterButton extends Component {
     }
     if (typeof primaryColor !== 'undefined') {
       optionals['style'] = {
-        color: primaryColor,
-        borderColor: primaryColor
+        backgroundColor: primaryColor,
+        boxShadow: `0 3px 1px ${shadowColor}`
       };
     }
 
@@ -71,6 +74,7 @@ class FormEnterButton extends Component {
       <Button type="button" onClick={this.handleClick}
         className={styles.formEnterButton}
         {...optionals}>
+        <img className={styles.btnIcon} src={arrowEnterIcon} alt="" />
         {buttonLabel !== '' ? this.renderButtonLabel() : this.renderDefaultLabel()}
       </Button>
     );

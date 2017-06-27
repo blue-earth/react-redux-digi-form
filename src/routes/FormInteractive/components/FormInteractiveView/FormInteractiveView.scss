@@ -63,12 +63,16 @@
 }
 
 .navButtonsWrapper {
+  height: 130px;
   text-align: right;
-  list-style: none;
-  margin: 0;
   position: absolute;
   @include vcenter;
   right: 0;
+}
+
+.arrowNavs {
+  list-style: none;
+  margin: 0;
   @include clearfix;
   li {
     padding-left: 0;
@@ -76,4 +80,8 @@
       margin-top: -1px;
     }
   }
+}
+
+.enterWrapper {
+  margin-top: 30px;
 }

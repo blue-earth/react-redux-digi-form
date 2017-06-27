@@ -8,6 +8,7 @@ import {
 } from '../NavButton';
 import Hogan from 'hogan.js';
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
+import FormEnterButton from 'components/Buttons/FormEnterButton';
 import { MdKeyboardBackspace } from 'react-icons/lib/md';
 import {
   getContextFromAnswer,
@@ -185,16 +186,22 @@ class FormInteractiveView extends Component {
     const { form, currentQuestionId, isVerifying, goToPrevQuestion, goToNextQuestion } = this.props;
 
     return (
-      <ul className={styles.navButtonsWrapper}>
-        <li>
-          <LeftNavButton className={styles.navButton} onClick={goToPrevQuestion}
-            isDisabled={shouldDisablePrevButton(form, currentQuestionId) || isVerifying} />
-        </li>
-        <li>
-          <RightNavButton className={styles.navButton} onClick={goToNextQuestion}
-            isDisabled={shouldDisableNextButton(form, currentQuestionId) || isVerifying} />
-        </li>
-      </ul>
+      <div className={styles.navButtonsWrapper}>
+        <ul className={styles.arrowNavs}>
+          <li>
+            <LeftNavButton className={styles.navButton} onClick={goToPrevQuestion}
+              isDisabled={shouldDisablePrevButton(form, currentQuestionId) || isVerifying} />
+          </li>
+          <li>
+            <RightNavButton className={styles.navButton} onClick={goToNextQuestion}
+              isDisabled={shouldDisableNextButton(form, currentQuestionId) || isVerifying} />
+          </li>
+        </ul>
+        <div className={styles.enterWrapper}>
+          <FormEnterButton
+            isDisabled={isVerifying} />
+        </div>
+      </div>
     );
   }
 
