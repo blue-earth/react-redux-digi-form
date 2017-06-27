@@ -97,10 +97,10 @@ class AppButton extends Component {
     const { primaryColour, children, isBusy, type } = this.props;
     const cx = classNames.bind(styles);
     let styleOverride = {
-      'background': primaryColour
+      backgroundColor: primaryColour
     };
     if (this.state.hover) {
-      styleOverride['background'] = lightness(primaryColour, -10);
+      styleOverride['backgroundColor'] = lightness(primaryColour, -10);
     }
     if (type !== 'primary') {
       styleOverride = null;
@@ -108,10 +108,10 @@ class AppButton extends Component {
     return (
       <button type="button" style={styleOverride} className={this.getButtonCSSClass()}
         onClick={this.handleClick} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-        <span className={cx('buttonContent', {hidden: isBusy})}>{children}</span>
-        <div className={cx('spinnerWrap')}>
-          { isBusy ? <Spinner /> : null }
-        </div>
+        <span className={cx({hidden: !isBusy}, 'spinnerWrapper')}>
+          <Spinner />
+        </span>
+        <span className={cx({hidden: isBusy})}>{children}</span>
       </button>
     );
   }
