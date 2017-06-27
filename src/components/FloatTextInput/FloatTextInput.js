@@ -5,7 +5,6 @@ import React, {
 import styles from './FloatTextInput.scss';
 import classNames from 'classnames/bind';
 import { IoAndroidAlert } from 'react-icons/lib/io';
-import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 class FloatTextInput extends Component {
   static propTypes = {
@@ -14,6 +13,7 @@ class FloatTextInput extends Component {
     id: PropTypes.string,
     onChange: PropTypes.func,
     primaryColour: PropTypes.string,
+    autoFocus: PropTypes.bool,
     error: PropTypes.bool,
     errorMessage: PropTypes.string,
     className: PropTypes.string
@@ -23,8 +23,9 @@ class FloatTextInput extends Component {
     super(props);
     this.state = {
       savedValue: typeof props.value !== 'undefined' ? props.value : '',
-      focused: false,
-      active: false
+      focused: props.value,
+      active: false,
+      displayErrorMessage: false
     };
   }
 
@@ -58,6 +59,16 @@ class FloatTextInput extends Component {
       active: false
     });
   }
+  handleErrorOver = (event) => {
+    this.setState({
+      displayErrorMessage: true 
+    });
+  }
+  handleErrorOut = (event) => {
+    this.setState({
+      displayErrorMessage: false 
+    });
+  }
   get colour() {
     const { focused, active} = this.state;
     if (active) {
@@ -65,16 +76,15 @@ class FloatTextInput extends Component {
     }
   }
   render() {
-    const { placeholder, id, error, errorMessage } = this.props;
-    let { focused, active, savedValue } = this.state;
+    const { placeholder, id, error, errorMessage, autoFocus } = this.props;
+    let { focused, active, savedValue, displayErrorMessage } = this.state;
     const cx = classNames.bind(styles);
-    let tooltip = (<Tooltip id="tooltip" bsClass={cx('tooltip')}>{errorMessage}</Tooltip>);
     return (
       <div className={cx('textInputWrap', this.props.className)}>
         <label
           htmlFor={id}
           className={cx('textInputLabel', {focused: focused, error: error})}
-          style={{ color: this.colour }}>
+          style={{color: this.colour}}>
           {placeholder}
         </label>
         <input
@@ -82,21 +92,28 @@ class FloatTextInput extends Component {
           type="text"
           value={savedValue}
           className={cx('textInput', {
-            error: error,
+            errorInput: error,
             filled: active || savedValue.length > 0
           })}
           onChange={this.handleChange}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           style={{ borderColor: this.colour }}
-        />
-        <OverlayTrigger placement="bottom" overlay={tooltip}>
-          <span className={cx('errorIcon')}>
-            <IoAndroidAlert className={cx({
-              hide: !error
-            })} />
-          </span>
-        </OverlayTrigger>
+          autoFocus={autoFocus}
+        />        
+        <div className={cx('errorIconWrapper')} onMouseOver={this.handleErrorOver} onMouseOut={this.handleErrorOut}>
+          <IoAndroidAlert className={cx({
+            hide: !error
+          })} />
+          <div className={cx('errorTip', {
+          'hide': !displayErrorMessage
+        })}>
+            <div className={cx('errorTipArrow')}></div>
+            <div className={cx('errorTipInner')}>
+              {errorMessage}
+            </div>
+          </div>
+        </div>          
       </div>
     );
   }
