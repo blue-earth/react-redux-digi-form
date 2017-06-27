@@ -31,6 +31,11 @@ class QuestionInteractive extends Component {
   static propTypes = {
 
     /*
+     * questionId: Current Question ID.
+     */
+    questionId: PropTypes.number,
+
+    /*
      * value: Question answer value
      */
     value: PropTypes.oneOfType([
@@ -39,6 +44,16 @@ class QuestionInteractive extends Component {
       PropTypes.object,
       PropTypes.array
     ]),
+
+    /*
+     * questionInstruction: Question Instruction
+     */
+    questionInstruction: PropTypes.string,
+
+    /*
+     * questionDescription: Question Description
+     */
+    questionDescription: PropTypes.string,
 
     /*
      * buttonLabel: Question button label.
@@ -84,13 +99,10 @@ class QuestionInteractive extends Component {
      */
     show: PropTypes.func,
 
-    allowMultiple: PropTypes.bool,
-
-    id: PropTypes.number,
-
-    questionInstruction: PropTypes.string,
-
-    questionDescription: PropTypes.string
+    /*
+     * allowMultiple: Optional for Multiple Choice, Dropdown
+     */
+    allowMultiple: PropTypes.bool
   };
 
   static contextTypes = {
@@ -215,7 +227,7 @@ class QuestionInteractive extends Component {
     const { inputState } = this.state;
     this.setState({
       savedValue: props.value,
-      inputState: this.props.id !== props.id ? 'init' : inputState
+      inputState: this.props.questionId !== props.questionId ? 'init' : inputState
     });
   }
 
@@ -232,7 +244,7 @@ class QuestionInteractive extends Component {
   }
 
   handleChange(value) {
-    const { storeAnswer, id } = this.props;
+    const { storeAnswer, questionId } = this.props;
 
     this.setState({
       savedValue: value
@@ -240,7 +252,7 @@ class QuestionInteractive extends Component {
 
     if (this.valueIsValid(value)) {
       storeAnswer({
-        id: id,
+        id: questionId,
         value: value
       });
     }
@@ -269,9 +281,12 @@ class QuestionInteractive extends Component {
   }
 
   valueIsVerified() {
-    const { id, verificationStatus, isVerifying } = this.props;
+    const { questionId, verificationStatus, isVerifying } = this.props;
     if (isVerifying) return false;
-    const unavailables = _.filter(verificationStatus, {id: id, status: false});
+    const unavailables = _.filter(verificationStatus, {
+      id: questionId,
+      status: false
+    });
     return unavailables.length === 0;
   }
 
@@ -287,9 +302,8 @@ class QuestionInteractive extends Component {
   }
 
   renderInteractiveInput() {
-    const { id, validations, verificationStatus, isVerifying, buttonLabel } = this.props;
+    const { questionId, validations, verificationStatus, isVerifying, buttonLabel } = this.props;
     const { ChildComponent, inputPosClass, buttonPosClass, inputState, savedValue } = this.state;
-
     if (ChildComponent === null) return false;
 
     var extraProps = _.merge({
@@ -328,7 +342,10 @@ class QuestionInteractive extends Component {
             </Animate>
             <Animate exclusive animation={anim} component="div">
               {
-                _.filter(verificationStatus, {id: id, status: false}).map((verification, index) => {
+                _.filter(verificationStatus, {
+                  id: questionId,
+                  status: false
+                }).map((verification, index) => {
                   return (
                     <Verifier {...verification} key={verification.type} />
                   );

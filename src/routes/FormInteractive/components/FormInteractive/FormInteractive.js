@@ -19,7 +19,6 @@ import {
   FORM_AUTOSAVE,
   FORM_USER_SUBMISSION
 } from 'redux/modules/formInteractive';
-import { findIndexById } from 'helpers/pureFunctions';
 import FormInteractiveView from '../FormInteractiveView';
 import AccessCodeModal from 'components/Forms/AccessCodeModal';
 import SaveForLaterModal from '../SaveForLaterModal';
@@ -38,9 +37,9 @@ class FormInteractive extends Component {
 
   static propTypes = {
     /*
-     * Form ID
+     * formId: Form ID
      */
-    id: PropTypes.number.isRequired,
+    formId: PropTypes.number.isRequired,
 
     /*
      * title: Form title
@@ -198,7 +197,7 @@ class FormInteractive extends Component {
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION &&
       props.lastFormSubmitStatus.result) {
       if (props.shouldShowFinalSubmit) {
-        this.context.router.push(`/forms/${this.props.id}/${this.props.sessionId}/completion`);
+        this.context.router.push(`/forms/${this.props.formId}/${this.props.sessionId}/completion`);
       } else {
         showModal('saveForLaterModal');
       }
@@ -208,20 +207,6 @@ class FormInteractive extends Component {
       props.formAccessStatus === 'fail') {
       showModal('accessCodeModal');
     }
-  }
-
-  sectionStatus(allQuestions, currentQuestionId, questionGroup) {
-    const { shouldShowFinalSubmit } = this.props;
-    const gq = questionGroup.questions;
-    const curQueIdx = findIndexById(allQuestions, currentQuestionId);
-    const firstGroupIdx = findIndexById(allQuestions, gq[0].id);
-    const lastGroupIdx = findIndexById(allQuestions, gq[gq.length - 1].id);
-
-    if (shouldShowFinalSubmit) return 'completed'; // check if it's the final step.
-
-    if (curQueIdx < firstGroupIdx) return 'pending';
-    else if (curQueIdx <= lastGroupIdx) return 'active';
-    else return 'completed';
   }
 
   setActiveGroup = (index) => {
@@ -266,7 +251,7 @@ class FormInteractive extends Component {
     submitAnswer(FORM_USER_SUBMISSION);
   }
 
-  renderFormSteps() {
+  renderFormContent() {
     const props = this.props;
     const { form: { questions }, shouldShowFinalSubmit } = props;
     const questionGroupTitles = getQuestionGroupTitles(questions);
@@ -310,15 +295,15 @@ class FormInteractive extends Component {
   }
 
   render() {
-    const { title, submitAnswer, form, id, sessionId } = this.props;
+    const { title, submitAnswer, form, formId, sessionId } = this.props;
     return (
       <div className={styles.wrapper}>
         <FormHeader title={title} submitAnswer={submitAnswer} />
         {!this.isCompleted && !this.needsAccessCode && form &&
-          this.renderFormSteps()
+          this.renderFormContent()
         }
         {!this.isCompleted &&
-          <SaveForLaterModal formId={id} sessionId={sessionId} />
+          <SaveForLaterModal formId={formId} sessionId={sessionId} />
         }
         {this.isCompleted && this.renderFormCompletionSection()}
         {this.needsAccessCode &&

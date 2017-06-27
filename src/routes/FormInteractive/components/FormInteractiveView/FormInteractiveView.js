@@ -112,9 +112,11 @@ class FormInteractiveView extends Component {
       if (typeof prefill === 'object') optionals['value'] = prefill.value;
     }
     const finalQuestion = _.merge({}, question, {
+      questionId: question.id,
       questionInstruction: this.compileTemplate(question.questionInstruction, context),
       questionDescription: this.compileTemplate(question.questionDescription, context)
     });
+    delete finalQuestion['id']; // Avoid passing id to props.
     return (
       <div className={styles.currentQuestionWrapper}>
         <QuestionInteractive
