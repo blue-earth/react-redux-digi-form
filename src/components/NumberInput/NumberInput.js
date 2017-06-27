@@ -72,12 +72,22 @@ class NumberInput extends Component {
     }
   }
   handleAddNumber = () => {
-    const { value, onChange } = this.props;
-    onChange(value+1);
+    const { maxValue, value, onChange } = this.props;
+    onChange(value + 1);
+    if (value+1 > maxValue) {
+      onChange(value);
+      this.setState({displayMaxHint: true});
+    }
+    this.setState({displayMinHint: false});
   }
   handleReduceNumber = () => {
-    const { value, onChange } = this.props;
-    onChange(value-1);
+    const { minValue, value, onChange } = this.props;
+    onChange(value - 1);
+    if (value-1 < minValue) {
+      onChange(value);
+      this.setState({displayMinHint: true});
+    }
+    this.setState({displayMaxHint: false});
   }
   render() {
     const { height, className, minValue, maxValue, minHint, maxHint } = this.props;
@@ -86,7 +96,7 @@ class NumberInput extends Component {
       <div className={styles.numberInputBlock}>
         <div className={classNames(styles.numberInputWrapper, className)}>
           <CircleOutlineButton buttonLabel="&minus;" hoverColor={"#3993d1"} color={"#DCE6ED"} size={height}
-            onClick={this.handleReduceNumber} isDisabled={minValue && this.props.value === minValue} />
+            onClick={this.handleReduceNumber}  />
           <span style={{fontSize: height+'px'}}>
             <div className={styles.inputWrapper}>
               <input
@@ -99,7 +109,7 @@ class NumberInput extends Component {
             </div>
           </span>
           <CircleOutlineButton buttonLabel="+" hoverColor={"#3993d1"} color={"#DCE6ED"} size={height}
-            isDisabled={maxValue && this.props.value === maxValue} onClick={this.handleAddNumber} />
+            onClick={this.handleAddNumber} />
         </div>
         <div className={styles.inputHintWrapper}>
           <span className={classNames({
