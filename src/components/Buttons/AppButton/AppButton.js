@@ -7,11 +7,8 @@ import styles from './AppButton.scss';
 import Spinner from 'components/Spinner';
 import lightness from 'lightness';
 
-
-
 class AppButton extends Component {
   static propTypes = {
-
     /**
      * onClick handler
      */
@@ -34,13 +31,19 @@ class AppButton extends Component {
      * sm will render the button in 24px height
      */
     size: PropTypes.oneOf(['lg', 'md', 'sm']),
-
+    /**
+     * primary will render the button in primary style
+     * secondary will render the button in secondary style
+     * additional will render the button in additional style
+     */
+    type: PropTypes.oneOf(['primary', 'secondary','additional']),
     primaryColour: PropTypes.string,
     children: PropTypes.node
   };
 
   static defaultProps = {
     size: 'md',
+    type: 'primary',
     primaryColour: '#3893d0',
     extraClass: ''
   };
@@ -71,9 +74,11 @@ class AppButton extends Component {
   };
 
   getButtonCSSClass() {
-    const {isDisabled, size} = this.props;
+    const {isDisabled, size, type, extraClass} = this.props;
     var cx = classNames.bind(styles);
     return cx({
+      [extraClass]: true,
+      [type]: true,
       [size]: true,
       isDisabled: isDisabled,
       button: true
@@ -89,17 +94,24 @@ class AppButton extends Component {
     return optionals;
   }
   render() {
-    const { primaryColour, children } = this.props;
+    const { primaryColour, children, isBusy, type } = this.props;
+    const cx = classNames.bind(styles);
     let styleOverride = {
       'background': primaryColour
     };
     if (this.state.hover) {
       styleOverride['background'] = lightness(primaryColour, -10);
     }
+    if (type !== 'primary') {
+      styleOverride = null;
+    }
     return (
       <button type="button" style={styleOverride} className={this.getButtonCSSClass()}
-        onClick={this.onClick} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-        {children}
+        onClick={this.handleClick} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+        <span className={cx('buttonContent', {hidden: isBusy})}>{children}</span>
+        <div className={cx('spinnerWrap')}>
+          { isBusy ? <Spinner /> : null }
+        </div>
       </button>
     );
   }
