@@ -193,7 +193,7 @@ const processVerifySubdomain = (subdomain) => {
 };
 
 const processPurchase = (plan) => {
-  const apiURL = `${API_URL}/accounts/api/subscription/`;
+  const apiURL = `${API_URL}/billing/api/subscription/`;
   const body = { ...plan };
   const fetchParams = assignDefaults({
     method: 'POST',
