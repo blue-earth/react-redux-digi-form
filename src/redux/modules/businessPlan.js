@@ -107,13 +107,11 @@ export const purchasePlan = () => {
     const { cardNumber, expiry, cvc } = paymentMethod;
     const plan = {
       email: email,
-      planConfig: {
-        subdomain: subdomain,
-        name: name,
-        number_of_users: numberOfUsers,
-        billing_cycle: billingCycle
-      },
-      paymentMethod: {
+      subdomain: subdomain,
+      plan_name: name,
+      number_of_users: numberOfUsers,
+      billing_cycle: billingCycle,
+      payment_method: {
         card_number: numberFormatter(cardNumber),
         expiry: numberFormatter(expiry),
         cvc: numberFormatter(cvc)
@@ -196,7 +194,7 @@ const processVerifySubdomain = (subdomain) => {
 
 const processPurchase = (plan) => {
   const apiURL = `${API_URL}/accounts/api/subscription/`;
-  const body = { plan };
+  const body = { ...plan };
   const fetchParams = assignDefaults({
     method: 'POST',
     body
