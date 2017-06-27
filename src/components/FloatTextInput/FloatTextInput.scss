@@ -2,7 +2,7 @@
 @import './variables';
 
 .textInputWrap {
-  width: 100%;
+  display: inline-block;
   line-height: 1.5em;
   color: $float-input-color;
   position: relative;
