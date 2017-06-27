@@ -21,7 +21,8 @@
     "API_URL": false,
     "FRONTEND_ROOT": false,
     "google": false,
-    "GOOGLE_MAP_API_KEY": false
+    "GOOGLE_MAP_API_KEY": false,
+    "STRIPE_PUBLISHABLE_KEY": false
   },
   "rules": {
     "import/default": 0,
