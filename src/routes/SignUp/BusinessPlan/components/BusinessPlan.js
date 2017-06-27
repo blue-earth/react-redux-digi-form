@@ -65,10 +65,20 @@ class BusinessPlan extends Component {
     return billingCycle === cycle;
   }
   selectAnnually = () => {
-    this.props.setSelectedPlanConfig({billingCycle: 'annually'});
+    const {setSelectedPlanConfig} = this.props;
+    const { minRequiredNumUser } = this.getPlanConfig('annually');
+    setSelectedPlanConfig({
+      billingCycle: 'annually',
+      numberOfUsers: minRequiredNumUser
+    });
   }
   selectMonthly = () => {
-    this.props.setSelectedPlanConfig({billingCycle: 'monthly'});
+    const {setSelectedPlanConfig} = this.props;
+    const { minRequiredNumUser } = this.getPlanConfig('monthly');
+    setSelectedPlanConfig({
+      billingCycle: 'monthly',
+      numberOfUsers: minRequiredNumUser
+    });
   }
 
   handleSubdomainChange = (event) => {

@@ -33,6 +33,26 @@ class NumberInput extends Component {
       savedValue: props.value
     });
   }
+  changeValue = (number) => {
+    const {minValue, maxValue, onChange} = this.props;
+    this.setState({
+      displayMaxHint: false,
+      displayMinHint: false
+    });    
+    if (number > maxValue) {
+      this.setState({
+        displayMaxHint: true
+      });
+      return onChange(maxValue);
+    }
+    if (number < minValue) {
+      this.setState({
+        displayMinHint: true
+      });
+      return onChange(minValue);
+    }
+    onChange(number);
+  }
   handleChange = (event) => {
     const { onChange } = this.props;
     const value = event.target.value;
@@ -43,7 +63,9 @@ class NumberInput extends Component {
       });
     }
     if (number.toString() === value && number > 0) {
-      onChange(number);
+      this.setState({
+        savedValue: number
+      });
     }
   }
   handleOnFocus = () => {
@@ -52,53 +74,27 @@ class NumberInput extends Component {
     });
   }
   handleOnBlur = (event) => {
-    const value = event.target.value;
-    const { minValue, maxValue, onChange } = this.props;
-    this.setState({
-      displayMinHint: false,
-      displayMaxHint: false
-    });
-    if (!value) {
-      this.setState({displayMinHint: true});
-      onChange(minValue);
-    }
-    if (minValue && value < minValue) {
-      onChange(minValue);
-      this.setState({displayMinHint: true});
-    }
-    if (maxValue && value > maxValue) {
-      onChange(maxValue);
-      this.setState({displayMaxHint: true});
-    }
+    const value = this.state.savedValue;
+    this.changeValue(value);
   }
   handleAddNumber = () => {
-    const { maxValue, value, onChange } = this.props;
-    onChange(value + 1);
-    if (value+1 > maxValue) {
-      onChange(value);
-      this.setState({displayMaxHint: true});
-    }
-    this.setState({displayMinHint: false});
+    const value = this.state.savedValue;
+    this.changeValue(value + 1);
   }
   handleReduceNumber = () => {
-    const { minValue, value, onChange } = this.props;
-    onChange(value - 1);
-    if (value-1 < minValue) {
-      onChange(value);
-      this.setState({displayMinHint: true});
-    }
-    this.setState({displayMaxHint: false});
+    const { value } = this.props;
+    this.changeValue(value - 1);
   }
   render() {
-    const { height, className, minValue, maxValue, minHint, maxHint } = this.props;
+    const { height, className, minHint, maxHint } = this.props;
     const { displayMinHint, displayMaxHint } = this.state;
     return (
-      <div className={styles.numberInputBlock}>
-        <div className={classNames(styles.numberInputWrapper, className)}>
+      <span className={styles.numberInputBlock}>
+        <span className={classNames(styles.numberInputWrapper, className)}>
           <CircleOutlineButton buttonLabel="&minus;" hoverColor={"#3993d1"} color={"#DCE6ED"} size={height}
-            onClick={this.handleReduceNumber}  />
+            onClick={this.handleReduceNumber} />
           <span style={{fontSize: height+'px'}}>
-            <div className={styles.inputWrapper}>
+            <span className={styles.inputWrapper}>
               <input
                 type="text"
                 className={styles.numberInput}
@@ -106,20 +102,20 @@ class NumberInput extends Component {
                 onChange={this.handleChange}
                 onFocus={this.handleOnFocus}
                 onBlur={this.handleOnBlur} />
-            </div>
+            </span>
           </span>
           <CircleOutlineButton buttonLabel="+" hoverColor={"#3993d1"} color={"#DCE6ED"} size={height}
             onClick={this.handleAddNumber} />
-        </div>
-        <div className={styles.inputHintWrapper}>
+        </span>
+        <span className={styles.inputHintWrapper}>
           <span className={classNames({
             'hide': !displayMinHint
           })}>{minHint}</span>
           <span className={classNames({
             'hide': !displayMaxHint
           })}>{maxHint}</span>
-        </div>
-      </div>
+        </span>
+      </span>
     );
   }
 }
