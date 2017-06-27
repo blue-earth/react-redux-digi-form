@@ -4,11 +4,9 @@ import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
 import load from 'load-stripe';
 
-
 const NEXT_STEP = 'NEXT_STEP';
 const PREVIOUS_STEP = 'PREVIOUS_STEP';
 
-export const SET_PLANS = 'SET_PLANS';
 export const SET_PAYMENT_METHOD = 'SET_PAYMENT_METHOD';
 export const SET_SELECTED_PLAN_CONFIG = 'SET_SELECTED_PLAN_CONFIG';
 export const SET_EMAIL = 'SET_EMAIL';
@@ -55,7 +53,6 @@ export const requestPurchaseBusinessPlan = createAction(REQUEST_PURCHASE_BUSINES
 export const doneFetchingPlans = createAction(DONE_FETCHING_PLANS);
 export const donePurchasingBusinessPlan = createAction(DONE_PURCHASING_BUSINESS_PLAN);
 export const receiveVerifySubdomain = createAction(RECEIVE_VERIFY_SUBDOMAIN);
-
 
 const requestStripeCardToken = function (number, month, year, cvc, cb) {
   // Async load stripe when you need it.
@@ -107,12 +104,9 @@ export const goToPreviousStep = () => {
 };
 export const fetchPlans = () => {
   return (dispatch, getState) => {
-    const { plan, period } = getState().router.locationBeforeTransitions.query;
-    dispatch(processFetchPlans(plan, period));
+    const { plan } = getState().router.locationBeforeTransitions.query;
+    dispatch(processFetchPlans(plan));
   };
-};
-const numberFormatter = (cardNumber) => {
-  return cardNumber.replace(/\s+|_/g, '');
 };
 
 export const purchasePlan = () => {
@@ -127,7 +121,7 @@ export const purchasePlan = () => {
     const expiryMonth = expiry.slice(0, slashIndex);
     const expiryYear = expiry.slice(slashIndex+1, expiry.length);
 
-    requestStripeCardToken(cardNumber, expiryMonth, expiryYear, cvc, function(responseCode, resp) {
+    requestStripeCardToken(cardNumber, expiryMonth, expiryYear, cvc, function (responseCode, resp) {
       if (responseCode === 200) {
         const card = resp['card'];
         const plan = {
@@ -150,14 +144,14 @@ export const purchasePlan = () => {
     });
   };
 };
-const processFetchPlans = (plan, period) => {
+const processFetchPlans = (plan) => {
   const apiURL = `${API_URL}/billing/api/plan/`;
   const fetchParams = assignDefaults({
     method: 'GET'
   });
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(_setPlanInitialState(value, plan, period));
+      dispatch(_setPlanInitialState(value, plan));
       dispatch(_setPlansConfig(value));
     };
   };
@@ -178,15 +172,15 @@ const _setPlansConfig = (plans) => {
     dispatch(doneFetchingPlans(cameledPlans));
   };
 };
-const _setPlanInitialState = (plans, plan, period) => {
+const _setPlanInitialState = (plans, plan) => {
   return (dispatch, getState) => {
     for (let i in plans) {
       const planDetail = plans[i];
-      if (planDetail.name === plan + '-' + period) {
+      if (planDetail.name === plan) {
         return dispatch(setSelectedPlanConfig({
           name: plan,
           numberOfUsers: planDetail.min_required_num_user,
-          billingCycle: period
+          billingCycle: plan.split('-')[1]
         }));
       }
     }
@@ -280,10 +274,6 @@ const businessPlanReducer = handleActions({
   SET_SELECTED_PLAN_CONFIG: (state, action) =>
     Object.assign({}, state, {
       currentlySelectedPlan: Object.assign({}, state.currentlySelectedPlan, { ...action.payload })
-    }),
-  SET_PLANS_CONFIG: (state, action) =>
-    Object.assign({}, state, {
-      plansConfig: action.payload
     }),
   SET_PAYMENT_METHOD: (state, action) =>
     Object.assign({}, state, {
