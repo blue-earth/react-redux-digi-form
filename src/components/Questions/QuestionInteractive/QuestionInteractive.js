@@ -95,9 +95,9 @@ class QuestionInteractive extends Component {
     handleEnter: PropTypes.func,
 
     /*
-     * show: Redux modal show
+     * showModal: redux-modal action to show modal
      */
-    show: PropTypes.func,
+    showModal: PropTypes.func,
 
     /*
      * allowMultiple: Optional for Multiple Choice, Dropdown

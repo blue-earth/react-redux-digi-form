@@ -20,7 +20,7 @@ class Signature extends Component {
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
-    show: PropTypes.func,
+    showModal: PropTypes.func,
     onEnterKey: PropTypes.func
   };
 
@@ -73,7 +73,7 @@ class Signature extends Component {
   }
 
   render() {
-    const { show, value, isReadOnly, isDisabled, autoFocus } = this.props;
+    const { showModal, value, isReadOnly, isDisabled, autoFocus } = this.props;
     return (
       <div className={styles.signature}>
         {value &&
@@ -86,7 +86,7 @@ class Signature extends Component {
           <FormEnterButton buttonLabel="Sign"
             isDisabled={isDisabled}
             autoFocus={!value && autoFocus}
-            onClick={function () { show('signatureModal'); }} />
+            onClick={function () { showModal('signatureModal'); }} />
         }
         <SignatureModal onSave={this.handleChange} value={value} />
       </div>

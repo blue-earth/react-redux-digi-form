@@ -71,7 +71,7 @@ class FormInteractiveView extends Component {
      */
     prefills: PropTypes.array.isRequired,
     /*
-     * show: Redux modal show
+     * showModal: redux-modal action to show modal
      */
     showModal: PropTypes.func.isRequired,
     /*
@@ -127,7 +127,7 @@ class FormInteractiveView extends Component {
           goToNextQuestion={goToNextQuestion}
           handleEnter={handleEnter}
           isVerifying={isVerifying}
-          show={showModal}
+          showModal={showModal}
           status="current"
           {...optionals}
         />
