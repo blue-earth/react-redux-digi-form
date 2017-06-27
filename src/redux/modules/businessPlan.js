@@ -2,6 +2,8 @@ import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
+import load from 'load-stripe';
+
 
 const NEXT_STEP = 'NEXT_STEP';
 const PREVIOUS_STEP = 'PREVIOUS_STEP';
@@ -54,6 +56,19 @@ export const doneFetchingPlans = createAction(DONE_FETCHING_PLANS);
 export const donePurchasingBusinessPlan = createAction(DONE_PURCHASING_BUSINESS_PLAN);
 export const receiveVerifySubdomain = createAction(RECEIVE_VERIFY_SUBDOMAIN);
 
+
+const requestStripeCardToken = function (number, month, year, cvc, cb) {
+  // Async load stripe when you need it.
+  load(`${STRIPE_PUBLISHABLE_KEY}`).then((stripe) => {
+    stripe.card.createToken({
+      number: number.trim(),
+      exp_month: month,
+      exp_year: year,
+      cvc: cvc
+    }, cb);
+  });
+};
+
 export const displaySubdomainHint = createAction(DISPLAY_SUBDOMAIN_HINT);
 
 export const changeSubdomain = (subdomain) => {
@@ -105,20 +120,34 @@ export const purchasePlan = () => {
     const { currentlySelectedPlan, paymentMethod, email } = getState().businessPlan;
     const { subdomain, name, billingCycle, numberOfUsers } = currentlySelectedPlan;
     const { cardNumber, expiry, cvc } = paymentMethod;
-    const plan = {
-      email: email,
-      subdomain: subdomain,
-      plan_name: name,
-      number_of_users: numberOfUsers,
-      billing_cycle: billingCycle,
-      payment_method: {
-        card_number: numberFormatter(cardNumber),
-        expiry: numberFormatter(expiry),
-        cvc: numberFormatter(cvc)
+    dispatch(requestPurchaseBusinessPlan());  // sets busy state
+
+    // hacky way to split expiry into month and year
+    const slashIndex = expiry.indexOf('/');
+    const expiryMonth = expiry.slice(0, slashIndex);
+    const expiryYear = expiry.slice(slashIndex+1, expiry.length);
+
+    requestStripeCardToken(cardNumber, expiryMonth, expiryYear, cvc, function(responseCode, resp) {
+      if (responseCode === 200) {
+        const card = resp['card'];
+        const plan = {
+          email: email,
+          subdomain: subdomain,
+          plan_name: name,
+          number_of_users: numberOfUsers,
+          billing_cycle: billingCycle,
+          client_ip: resp['client_ip'],
+          stripe_card_id: resp['client_ip'],
+          card_brand: card['brand'],
+          card_country: card['country'],
+          card_last4: card['last4']
+        };
+        dispatch(processPurchase(plan));
+      } else {
+        const errorMessage = resp['error']['message'];
+        dispatch(donePurchasingBusinessPlan(errorMessage));
       }
-    };
-    dispatch(requestPurchaseBusinessPlan());
-    dispatch(processPurchase(plan));
+    });
   };
 };
 const processFetchPlans = (plan, period) => {
