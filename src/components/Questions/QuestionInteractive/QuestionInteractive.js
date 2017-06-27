@@ -70,9 +70,9 @@ class QuestionInteractive extends Component {
     storeAnswer: PropTypes.func,
 
     /*
-     * nextQuestion: Redux action to move to next question when the current answer is qualified.
+     * goToNextQuestion: Redux action to move to next question when the current answer is qualified.
      */
-    nextQuestion: PropTypes.func,
+    goToNextQuestion: PropTypes.func,
 
     /*
      * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
@@ -101,7 +101,7 @@ class QuestionInteractive extends Component {
     validations: [],
     isVerifying: false,
     storeAnswer: () => {},
-    nextQuestion: () => {},
+    goToNextQuestion: () => {},
     handleEnter: () => {}
   };
 

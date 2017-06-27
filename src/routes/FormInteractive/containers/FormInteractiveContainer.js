@@ -2,8 +2,8 @@ import connect from 'redux/utils/connect';
 import { show } from 'redux-modal';
 import {
   INIT_FORM_STATE,
-  prevQuestion,
-  nextQuestion,
+  goToPrevQuestion,
+  goToNextQuestion,
   goToQuestion,
   handleEnter,
   storeAnswer,
@@ -17,8 +17,8 @@ import {
 import FormInteractive from '../components/FormInteractive';
 
 const mapActionCreators = {
-  prevQuestion,
-  nextQuestion,
+  goToPrevQuestion,
+  goToNextQuestion,
   fetchFormIfNeeded,
   storeAnswer,
   fetchAnswers,

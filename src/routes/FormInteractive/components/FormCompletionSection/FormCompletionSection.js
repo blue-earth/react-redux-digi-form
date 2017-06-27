@@ -59,14 +59,14 @@ class FormCompletionSection extends Component {
     prefills: PropTypes.array.isRequired,
 
     /*
-     * prevQuestion: Redux action to move to previous question.
+     * goToPrevQuestion: Redux action to move to previous question.
      */
-    prevQuestion: PropTypes.func.isRequired,
+    goToPrevQuestion: PropTypes.func.isRequired,
 
     /*
-     * nextQuestion: Redux action to move to next question when the current answer is qualified.
+     * goToNextQuestion: Redux action to move to next question when the current answer is qualified.
      */
-    nextQuestion: PropTypes.func.isRequired,
+    goToNextQuestion: PropTypes.func.isRequired,
 
     /*
      * goToQuestion: Redux action to move to specific question by ID.

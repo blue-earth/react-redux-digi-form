@@ -244,9 +244,9 @@ export const goToQuestion = (id) => {
 };
 
 // ------------------------------------
-// Action: nextQuestion
+// Action: goToNextQuestion
 // ------------------------------------
-export const nextQuestion = () => {
+export const goToNextQuestion = () => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
     const { form: { questions }, currentQuestionId } = formInteractive;
@@ -293,9 +293,9 @@ export const showFinalSubmit = () => {
 };
 
 // ------------------------------------
-// Action: prevQuestion
+// Action: goToPrevQuestion
 // ------------------------------------
-export const prevQuestion = () => {
+export const goToPrevQuestion = () => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
     const { form: { questions }, currentQuestionId } = formInteractive;
@@ -468,7 +468,7 @@ export const receiveVerification = (verification) => {
     const idx = findIndexById(questions, currentQuestionId);
     // If all verified as true go to next question.
     if (verifiedStatuses.length === questions[idx].verifications.length) {
-      dispatch(nextQuestion());
+      dispatch(goToNextQuestion());
     }
   };
 };
@@ -494,7 +494,7 @@ export const handleEnter = () => {
       dispatch(nextQuestionAfterVerification());
       // dispatch(verifyEmail(currentQuestionId, answers[currentQuestionId].value));
     } else {
-      dispatch(nextQuestion());
+      dispatch(goToNextQuestion());
     }
   };
 };

@@ -59,13 +59,13 @@ class FormInteractiveView extends Component {
      */
     isVerifying: PropTypes.bool.isRequired,
     /*
-     * nextQuestion: Redux action to move to next question when the current answer is qualified.
+     * goToNextQuestion: Redux action to move to next question when the current answer is qualified.
      */
-    nextQuestion: PropTypes.func.isRequired,
+    goToNextQuestion: PropTypes.func.isRequired,
     /*
-     * prevQuestion: Redux action to move to previous question.
+     * goToPrevQuestion: Redux action to move to previous question.
      */
-    prevQuestion: PropTypes.func.isRequired,
+    goToPrevQuestion: PropTypes.func.isRequired,
     /*
      * prefills: Redux state that stores the array of answer prefills values
      */
@@ -99,7 +99,7 @@ class FormInteractiveView extends Component {
 
   renderCurrentQuestion() {
     const { currentQuestionId, verificationStatus,
-      answers, prefills, storeAnswer, nextQuestion, handleEnter, isVerifying, showModal } = this.props;
+      answers, prefills, storeAnswer, goToNextQuestion, handleEnter, isVerifying, showModal } = this.props;
     const { questions } = this.state;
     const question = findItemById(questions, currentQuestionId);
     const context = getContextFromAnswer(answers);
@@ -122,7 +122,7 @@ class FormInteractiveView extends Component {
           key={question.id}
           verificationStatus={verificationStatus}
           storeAnswer={storeAnswer}
-          nextQuestion={nextQuestion}
+          goToNextQuestion={goToNextQuestion}
           handleEnter={handleEnter}
           isVerifying={isVerifying}
           show={showModal}
@@ -180,16 +180,16 @@ class FormInteractiveView extends Component {
   }
 
   renderNavButtons() {
-    const { form, currentQuestionId, isVerifying, prevQuestion, nextQuestion } = this.props;
+    const { form, currentQuestionId, isVerifying, goToPrevQuestion, goToNextQuestion } = this.props;
 
     return (
       <ul className={styles.navButtonsWrapper}>
         <li>
-          <LeftNavButton className={styles.navButton} onClick={function () { prevQuestion(); }}
+          <LeftNavButton className={styles.navButton} onClick={goToPrevQuestion}
             isDisabled={shouldDisablePrevButton(form, currentQuestionId) || isVerifying} />
         </li>
         <li>
-          <RightNavButton className={styles.navButton} onClick={function () { nextQuestion(); }}
+          <RightNavButton className={styles.navButton} onClick={goToNextQuestion}
             isDisabled={shouldDisableNextButton(form, currentQuestionId) || isVerifying} />
         </li>
       </ul>
