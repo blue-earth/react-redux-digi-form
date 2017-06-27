@@ -41,9 +41,9 @@ export default {
     },
     globals: {
       ...config.globals,
-      API_URL: JSON.stringify('http://api.emondo.co'),
-      FRONTEND_ROOT: JSON.stringify('http://app.emondo.co'),
       GOOGLE_MAP_API_KEY: JSON.stringify('AIzaSyCtwNDvDLxw-JSB8RBvtdMuW2Qjh5AypEk')
+      API_URL: JSON.stringify('https://emondo.co'),
+      FRONTEND_ROOT: JSON.stringify('https://app.emondo.co'),
       // TODO: Switch to production key and do not keep it in git
       STRIPE_PUBLISHABLE_KEY: 'pk_test_PfzV9MnnUTfW58l1erEPX4tI'
     }
