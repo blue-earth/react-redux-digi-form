@@ -345,7 +345,7 @@ class BusinessPlan extends Component {
                 </span>
               </div>
               <div className={styles.creditCardInputWrapper}>
-                <MaskedInput mask="11/11" name="expiry" placeholder="MM/YY"
+                <MaskedInput mask="11/1111" name="expiry" placeholder="MM/YYYY"
                   className={classNames(styles.creditCardInput, styles.expireDateInput)}
                   value={expiry} onChange={this.handlePaymentChange} />
                 <MaskedInput mask="111" name="cvc" placeholder="CVC"
