@@ -135,7 +135,6 @@ const processFetchPlans = (plan, period) => {
     };
   };
   const fetchFail = (data) => {
-    console.log(data);
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
