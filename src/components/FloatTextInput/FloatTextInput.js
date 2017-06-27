@@ -17,7 +17,7 @@ class FloatTextInput extends Component {
     autoFocus: PropTypes.bool,
     isError: PropTypes.bool,
     errorMessage: PropTypes.string,
-    className: PropTypes.string
+    extraClass: PropTypes.string
   }
   static defaultProps = {
     value: '',
@@ -103,11 +103,11 @@ class FloatTextInput extends Component {
     return null;
   }
   render() {
-    const { placeholder, name, errorMessage, autoFocus } = this.props;
+    const { placeholder, name, errorMessage, autoFocus, extraClass } = this.props;
     let { filled, active, savedValue, displayErrorMessage, isError } = this.state;
     const cx = classNames.bind(styles);
     return (
-      <div className={cx('textInputWrap', this.props.className)}>
+      <div className={cx('textInputWrap', extraClass)}>
         <label
           htmlFor={name}
           className={cx('textInputLabel', {filled: filled, isError: isError})}
