@@ -42,12 +42,16 @@
 }
 .error {
   color: $red;
+}
+.errorInput {
   border-color: $red;
 }
 .filled {
   color: $black;
 }
-.errorIcon {
+.errorIconWrapper {
+  display: inline;
+  cursor: pointer;
   color: $red;
   position: absolute;
   right: 1em;
@@ -56,27 +60,32 @@
 .hide {
   display: none;
 }
-.tooltip{
+.errorTip{
   position: absolute;
+  left: 50%;
+  line-height: 1em;
+  font-size: 0.5em;
 }
-.tooltip-inner{
-  max-width: 200px;
-  padding: 0.5em 1em;
+.errorTipInner{
+  position: relative;
+  left: -50%;
+  padding: 1em;
   color: #fff;
   text-align: center;
+  white-space: nowrap;
   background-color: $red;
-  border-radius: 4px;
+  border-radius: 0.4em;
 }
-.bottom{
-  .tooltip-arrow {
-    position: absolute;
-    top: -5px;
-    width: 0;
-    height: 0;
-    border-color: transparent;
-    border-style: solid;
-    margin-left: -5px;
-    border-width: 0 5px 5px;
-    border-bottom-color: $red;
-  }
+.errorTipArrow {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  margin-left: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: $red;
 }
+
