@@ -15,10 +15,10 @@ storiesOf('Input', module)
     }
     return (
       <div>
-        <FloatTextInput name="default" placeholder="Deault state" primaryColour={'#3893d0'} className={cx('default')} />
-        <FloatTextInput name="filled" placeholder="Label" primaryColour={'#3893d0'} value={'Filled state'} className={cx('default')} />
-        <FloatTextInput name="active" placeholder="Label" primaryColour={'#3893d0'} value={'Active state'} autoFocus className={cx('default')} />
-        <FloatTextInput name="error" placeholder="Label" primaryColour={'#3893d0'} className={cx('default')}
+        <FloatTextInput name="default" placeholder="Deault state" primaryColour={'#3893d0'} extraClass={cx('default')} />
+        <FloatTextInput name="filled" placeholder="Label" primaryColour={'#3893d0'} value={'Filled state'} extraClass={cx('default')} />
+        <FloatTextInput name="active" placeholder="Label" primaryColour={'#3893d0'} value={'Active state'} autoFocus extraClass={cx('default')} />
+        <FloatTextInput name="error" placeholder="Label" primaryColour={'#3893d0'} extraClass={cx('default')}
           value={'Error state'} isError={isError} onBlur={onBlur} errorMessage={'Error message here'} />
       </div>
     );
