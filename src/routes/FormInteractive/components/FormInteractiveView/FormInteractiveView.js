@@ -6,6 +6,7 @@ import {
   LeftNavButton,
   RightNavButton
 } from '../NavButton';
+import classNames from 'classnames';
 import Hogan from 'hogan.js';
 import { valueIsValid } from 'helpers/validationHelper';
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
@@ -128,6 +129,27 @@ class FormInteractiveView extends Component {
     if (isValid) handleEnter();
   }
 
+  get enterButtonClass() {
+    const { currentQuestion } = this.props;
+    const { questions } = this.state;
+    const question = findItemById(questions, currentQuestion.id);
+    const { type, allowMultiple } = question;
+    var shouldHideButton = false;
+    switch (type) {
+      case 'MultipleChoice':
+        shouldHideButton = !allowMultiple;
+        break;
+      case 'YesNoChoiceField':
+      case 'DropdownField':
+        shouldHideButton = true;
+        break;
+    }
+    return classNames({
+      [styles.enterWrapper]: true,
+      'hide': shouldHideButton
+    });
+  }
+
   renderCurrentQuestion() {
     const { currentQuestion, verificationStatus, changeCurrentState,
       answers, prefills, storeAnswer, goToNextQuestion, isVerifying, showModal } = this.props;
@@ -228,8 +250,9 @@ class FormInteractiveView extends Component {
               isDisabled={shouldDisableNextButton(form, currentQuestion.id) || isVerifying} />
           </li>
         </ul>
-        <div className={styles.enterWrapper}>
+        <div className={this.enterButtonClass}>
           <FormEnterButton
+            onClick={this.handleEnter}
             isDisabled={isVerifying} />
         </div>
       </div>

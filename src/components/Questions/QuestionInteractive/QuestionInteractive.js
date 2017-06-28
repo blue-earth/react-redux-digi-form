@@ -13,7 +13,6 @@ import DropdownInput from '../../QuestionInputs/DropdownInput/DropdownInput';
 import DateInput from '../../QuestionInputs/DateInput/DateInput';
 import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
 import Signature from '../../QuestionInputs/Signature/Signature';
-import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton';
 import Validator from '../../Validator/Validator';
 import Verifier from '../../Verifier/Verifier';
 import validateField, {
@@ -71,14 +70,10 @@ class QuestionInteractive extends Component {
     questionDescription: PropTypes.string,
 
     /*
-     * buttonLabel: Question button label.
-     */
-    buttonLabel: PropTypes.string,
-
-    /*
      * type: Question type.
      */
     type: PropTypes.string,
+
     /*
      * validations: Validations required for the question, it is a part of form response.
      */
@@ -97,22 +92,22 @@ class QuestionInteractive extends Component {
     /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
-    storeAnswer: PropTypes.func,
+    storeAnswer: PropTypes.func.isRequired,
 
     /*
      * goToNextQuestion: Redux action to move to next question when the current answer is qualified.
      */
-    goToNextQuestion: PropTypes.func,
+    goToNextQuestion: PropTypes.func.isRequired,
 
     /*
      * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
      */
-    handleEnter: PropTypes.func,
+    handleEnter: PropTypes.func.isRequired,
 
     /*
      * showModal: redux-modal action to show modal
      */
-    showModal: PropTypes.func,
+    showModal: PropTypes.func.isRequired,
 
     /*
      * allowMultiple: Optional for Multiple Choice, Dropdown
@@ -126,10 +121,7 @@ class QuestionInteractive extends Component {
 
   static defaultProps = {
     validations: [],
-    isVerifying: false,
-    storeAnswer: () => {},
-    goToNextQuestion: () => {},
-    handleEnter: () => {}
+    isVerifying: false
   };
 
   constructor(props) {
@@ -138,22 +130,7 @@ class QuestionInteractive extends Component {
       /*
        * ChildComponent: stores the Child Input component class throughout the component life cycle.
        */
-      ChildComponent: null,
-
-      /*
-       * buttonPosClass: CSS styles for Enter button position
-       */
-      buttonPosClass: '',
-
-      /*
-       * inputPosClass: CSS styles for Input component position
-       */
-      inputPosClass: '',
-
-      /*
-       * extraProps: Component specific extra props.
-       */
-      extraProps: null
+      ChildComponent: null
     };
   };
 
@@ -163,10 +140,7 @@ class QuestionInteractive extends Component {
 
   _determineChildComponent() {
     var ChildComponent = null;
-    const { type, allowMultiple } = this.props;
-    var inputPosClass = styles.leftColumn;
-    var buttonPosClass = styles.rightColumn;
-    var extraProps = {};
+    const { type } = this.props;
     switch (type) {
       case 'ShortTextField':
       case 'EmailField':
@@ -174,57 +148,39 @@ class QuestionInteractive extends Component {
         break;
       case 'NumberField':
         ChildComponent = ShortTextInput;
-        extraProps['fullWidth'] = false;
-        inputPosClass = styles.inlineLeft;
-        buttonPosClass = styles.inlineRight;
         break;
       case 'MultipleChoice':
         ChildComponent = MultipleChoice;
-        inputPosClass = styles.topColumn;
-        buttonPosClass = allowMultiple ? styles.bottomColumn : styles.noneColumn;
         break;
       case 'YesNoChoiceField':
         ChildComponent = YesNoChoice;
-        inputPosClass = styles.topColumn;
-        buttonPosClass = styles.noneColumn;
         break;
       case 'LongTextField':
         ChildComponent = LongTextInput;
-        inputPosClass = styles.topColumn;
-        buttonPosClass = styles.bottomColumn;
         break;
       case 'StatementField':
         ChildComponent = Statement;
-        inputPosClass = styles.topColumn;
-        buttonPosClass = styles.bottomColumn;
         break;
       case 'PhoneNumberField':
         ChildComponent = PhoneNumberInput;
         break;
       case 'DropdownField':
         ChildComponent = DropdownInput;
-        buttonPosClass = styles.noneColumn;
         break;
       case 'DateField':
         ChildComponent = DateInput;
-        inputPosClass = styles.inlineLeft;
-        buttonPosClass = styles.inlineRight;
         break;
       case 'AddressField':
         ChildComponent = AddressInput;
         break;
       case 'SignatureField':
         ChildComponent = Signature;
-        buttonPosClass = styles.noneColumn;
         break;
       default:
         return false;
     }
     this.setState({
-      ChildComponent,
-      buttonPosClass,
-      inputPosClass,
-      extraProps
+      ChildComponent
     });
   }
 
@@ -279,8 +235,8 @@ class QuestionInteractive extends Component {
 
   renderInteractiveInput() {
     const { questionId, validations, verificationStatus, isVerifying, handleEnter,
-      buttonLabel, value, inputState } = this.props;
-    const { ChildComponent, inputPosClass, buttonPosClass } = this.state;
+      value, inputState } = this.props;
+    const { ChildComponent } = this.state;
     if (ChildComponent === null) return false;
 
     var extraProps = _.merge({
@@ -304,9 +260,9 @@ class QuestionInteractive extends Component {
     });
 
     return (
-      <div className={styles.interactiveContainer}>
+      <div className={styles.inputWrapper}>
         <div className="clearfix">
-          <div className={styles.leftColumn}>
+          <div className={styles.errorsWrapper}>
             <Animate exclusive animation={anim} component="div">
               {this.shouldShowValidation(inputState)
                 ? filteredValidations.map((validation, index) => {
@@ -331,22 +287,14 @@ class QuestionInteractive extends Component {
             </Animate>
           </div>
         </div>
-        <div className={inputPosClass}>
-          <ChildComponent {...this.props} {...extraProps} />
-        </div>
-        <div className={buttonPosClass}>
-          <FormEnterButton
-            onClick={handleEnter}
-            buttonLabel={buttonLabel}
-            isDisabled={isVerifying} />
-        </div>
+        <ChildComponent {...this.props} {...extraProps} />
       </div>
     );
   }
 
   render() {
     return (
-      <div className={styles.interactiveContainer}>
+      <div className={styles.wrapper}>
         {this.renderQuestionDisplay()}
         {this.renderInteractiveInput()}
       </div>
