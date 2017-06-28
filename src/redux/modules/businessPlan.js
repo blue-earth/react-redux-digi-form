@@ -120,7 +120,6 @@ export const purchasePlan = () => {
     const slashIndex = expiry.indexOf('/');
     const expiryMonth = expiry.slice(0, slashIndex);
     const expiryYear = expiry.slice(slashIndex+1, expiry.length);
-    const wholePlanName = name + '-' + billingCycle;
 
     requestStripeCardToken(cardNumber, expiryMonth, expiryYear, cvc, function (responseCode, resp) {
       if (responseCode === 200) {
@@ -128,7 +127,7 @@ export const purchasePlan = () => {
         const plan = {
           email: email,
           subdomain: subdomain,
-          plan_name: wholePlanName,
+          plan_name: name,
           number_of_users: numberOfUsers,
           billing_cycle: billingCycle,
           client_ip: resp['client_ip'],
@@ -180,7 +179,7 @@ const _setPlanInitialState = (plans, plan) => {
       const planDetail = plans[i];
       if (planDetail.name === plan) {
         return dispatch(setSelectedPlanConfig({
-          name: plan.split('-')[0],
+          name: plan,
           numberOfUsers: planDetail.min_required_num_user,
           billingCycle: plan.split('-')[1]
         }));
@@ -284,10 +283,12 @@ const businessPlanReducer = handleActions({
     }),
   SET_PAYMENT_METHOD: (state, action) =>
     Object.assign({}, state, {
+      purchaseErrorMessages: [],
       paymentMethod: Object.assign({}, state.paymentMethod, {...action.payload})
     }),
   SET_EMAIL: (state, action) =>
     Object.assign({}, state, {
+      purchaseErrorMessages: [],
       email: action.payload
     }),
   DISPLAY_SUBDOMAIN_HINT: (state, action) =>

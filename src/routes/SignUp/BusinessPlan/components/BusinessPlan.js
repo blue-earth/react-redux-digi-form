@@ -69,6 +69,7 @@ class BusinessPlan extends Component {
     const {setSelectedPlanConfig} = this.props;
     const { minRequiredNumUser } = this.getPlanConfig('annually');
     setSelectedPlanConfig({
+      name: this.getPlanName() + '-annually',
       billingCycle: 'annually',
       numberOfUsers: minRequiredNumUser
     });
@@ -77,6 +78,7 @@ class BusinessPlan extends Component {
     const {setSelectedPlanConfig} = this.props;
     const { minRequiredNumUser } = this.getPlanConfig('monthly');
     setSelectedPlanConfig({
+      name: this.getPlanName() + '-monthly',
       billingCycle: 'monthly',
       numberOfUsers: minRequiredNumUser
     });
@@ -137,11 +139,13 @@ class BusinessPlan extends Component {
     return this.props.currentlySelectedPlan.billingCycle === 'annually';
   }
 
+  getPlanName = () => {
+    return this.props.currentlySelectedPlan.name.split('-')[0];
+  }
   getPlanConfig = (period) => {
-    const { currentlySelectedPlan, plansConfig } = this.props;
-    const { name } = currentlySelectedPlan;
+    const { plansConfig } = this.props;
     for (let i in plansConfig) {
-      if (plansConfig[i].name === name + '-' + period) {
+      if (plansConfig[i].name === this.getPlanName() + '-' + period) {
         return plansConfig[i];
       }
     }
