@@ -90,7 +90,7 @@ class NumberInput extends Component {
     const { displayMinHint, displayMaxHint } = this.state;
     return (
       <span className={styles.numberInputBlock}>
-        <span className={classNames(styles.numberInputWrapper, className)}>
+        <p className={classNames(styles.numberInputWrapper, className)}>
           <CircleOutlineButton buttonLabel="&minus;" hoverColor={"#3993d1"} color={"#DCE6ED"} size={height}
             onClick={this.handleReduceNumber} />
           <span style={{fontSize: height+'px'}}>
@@ -106,15 +106,15 @@ class NumberInput extends Component {
           </span>
           <CircleOutlineButton buttonLabel="+" hoverColor={"#3993d1"} color={"#DCE6ED"} size={height}
             onClick={this.handleAddNumber} />
-        </span>
-        <span className={styles.inputHintWrapper}>
+        </p>
+        <p className={styles.inputHintWrapper}>
           <span className={classNames({
             'hide': !displayMinHint
           })}>{minHint}</span>
           <span className={classNames({
             'hide': !displayMaxHint
           })}>{maxHint}</span>
-        </span>
+        </p>
       </span>
     );
   }
