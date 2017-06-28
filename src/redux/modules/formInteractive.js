@@ -17,6 +17,8 @@ export const RECEIVE_ANSWERS = 'RECEIVE_ANSWERS';
 export const REQUEST_ANSWERS = 'REQUEST_ANSWERS';
 export const DONE_FETCHING_ANSWERS = 'DONE_FETCHING_ANSWERS';
 
+export const CHANGE_CURRENT_ANSWER = 'CHANGE_CURRENT_ANSWER';
+
 export const GOTO_QUESTION = 'GOTO_QUESTION';
 export const STORE_ANSWER = 'STORE_ANSWER';
 
@@ -42,6 +44,12 @@ export const FORM_USER_SUBMISSION = 'FORM_USER_SUBMISSION';
 export const FORM_AUTOSAVE = 'FORM_AUTOSAVE';
 export const UPDATE_ACCESS_CODE = 'UPDATE_ACCESS_CODE';
 
+export const INIT_CURRENT_QUESTION = {
+  id: 0,
+  answerValue: '',
+  inputState: 'init'
+};
+
 export const INIT_FORM_STATE = {
   id: 0,
   // sessionId,
@@ -61,7 +69,6 @@ export const INIT_FORM_STATE = {
   }, // holds the received form data.
   title: 'Title',
   slug: 'slug',
-  currentQuestionId: 0,
   currentQuestion: INIT_CURRENT_QUESTION,
   answers: [],
   prefills: [],
@@ -71,13 +78,6 @@ export const INIT_FORM_STATE = {
   formAccessStatus: 'init', // can be 'init', 'waiting', 'failed', 'success'
   isAccessCodeProtected: false,
   formAccessCode: ''
-};
-
-export const INIT_CURRENT_QUESTION = {
-  id: 0,
-  answerValue: '',
-  validationStatus: [],
-  verificationStatus: []
 };
 
 // ------------------------------------
@@ -123,10 +123,23 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
   form: data.form_data,
   title: data.title,
   slug: data.slug,
-  lastUpdated: Date.now(),
-  currentQuestionId: _validateQuestionId(data.form_data),
   isAccessCodeProtected: data.is_access_code_protected
 }));
+
+// ------------------------------------
+// Action Handler: _receiveForm
+// ------------------------------------
+const _receiveForm = (state, { payload }) => {
+  const id = _validateQuestionId(payload.form);
+  return Object.assign({}, state, payload, {
+    lastUpdated: Date.now(),
+    currentQuestion: _.merge({}, state.currentQuestion, {
+      id,
+      answerValue: _.defaultTo(findItemById(state.answers, id), {}).value
+    }),
+    formAccessStatus: !payload.form ? (state.formAccessStatus === 'init' ? 'required' : 'fail') : 'success'
+  });
+};
 
 // ------------------------------------
 // Action: doneFetchingForm
@@ -134,7 +147,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
 export const doneFetchingForm = createAction(DONE_FETCHING_FORM);
 
 // ------------------------------------
-// Helper: shouldFetchForm
+// Action Handler: shouldFetchForm
 // ------------------------------------
 const shouldFetchForm = (state, id) => {
   const formInteractive = state.formInteractive;
@@ -191,12 +204,23 @@ export const receiveAnswers = createAction(RECEIVE_ANSWERS, (data) => ({
 }));
 
 // ------------------------------------
+// Action Handler: _receiveAnswers
+// ------------------------------------
+const _receiveAnswers = (state, { payload }) => {
+  return Object.assign({}, state, payload, {
+    currentQuestion: _.merge({}, state.currentQuestion, {
+      answerValue: _.defaultTo(findItemById(payload.answers, state.currentQuestion.id), {}).value
+    })
+  });
+};
+
+// ------------------------------------
 // Action: doneFetchingAnswers
 // ------------------------------------
 export const doneFetchingAnswers = createAction(DONE_FETCHING_ANSWERS);
 
 // ------------------------------------
-// Action Helper: processFetchAnswers
+// Action Action Handler: processFetchAnswers
 // ------------------------------------
 export const processFetchAnswers = (sessionId) => {
   const apiURL = `${API_URL}/form_document/api/form_response/${sessionId}/`;
@@ -220,7 +244,7 @@ export const processFetchAnswers = (sessionId) => {
 };
 
 // ------------------------------------
-// Helper: _validateQuestionId
+// Action Handler: _validateQuestionId
 // ------------------------------------
 const _validateQuestionId = (form) => {
   if (!form) return 0;
@@ -237,21 +261,24 @@ const _validateQuestionId = (form) => {
 export const goToQuestion = createAction(GOTO_QUESTION, (id) => id);
 
 // ------------------------------------
-// Helper: _loadQuestion
+// Action Handler: _loadQuestion
 // ------------------------------------
 const _loadQuestion = (state, action) => {
   const { answers } = state;
   return Object.assign({}, state, {
     currentQuestion: {
       id: action.payload,
-      answerValue: _.defaultTo(findItemById(answers, action.id), {}).value,
-      validationStatus: [],
-      verificationStatus: []
+      answerValue: _.defaultTo(findItemById(answers, action.payload), {}).value,
+      inputState: 'init'
     },
-    currentQuestionId: action.payload,
     shouldShowFinalSubmit: false
   });
 };
+
+// ------------------------------------
+// Action: changeCurrentState
+// ------------------------------------
+export const changeCurrentState = createAction(CHANGE_CURRENT_ANSWER);
 
 // ------------------------------------
 // Action: goToNextQuestion
@@ -259,13 +286,13 @@ const _loadQuestion = (state, action) => {
 export const goToNextQuestion = () => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
-    const { form: { questions }, currentQuestionId } = formInteractive;
-    var nextId = getNextQuestionId(questions, currentQuestionId);
-    if (nextId === currentQuestionId) { // detect the last question
+    const { form: { questions }, currentQuestion } = formInteractive;
+    var nextId = getNextQuestionId(questions, currentQuestion.id);
+    if (nextId === currentQuestion.id) { // detect the last question
       return dispatch(showFinalSubmit());
     }
 
-    const outcome = getOutcomeWithQuestionId(formInteractive, currentQuestionId);
+    const outcome = getOutcomeWithQuestionId(formInteractive, currentQuestion.id);
     if (outcome !== false) {
       for (var item of outcome) {
         // Processes outcome before going to next question
@@ -299,14 +326,14 @@ export const showFinalSubmit = createAction(SHOW_FINAL_SUBMIT);
 export const goToPrevQuestion = () => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
-    const { form: { questions }, currentQuestionId } = formInteractive;
-    const prevId = _getPrevQuestionId(questions, currentQuestionId);
+    const { form: { questions }, currentQuestion } = formInteractive;
+    const prevId = _getPrevQuestionId(questions, currentQuestion.id);
     dispatch(goToQuestion(prevId));
   };
 };
 
 // ------------------------------------
-// Helper: _getPrevQuestionId
+// Action Handler: _getPrevQuestionId
 // ------------------------------------
 const _getPrevQuestionId = (questions, questionId) => {
   var curIdx, prevIdx;
@@ -399,8 +426,8 @@ export const processVerifyEmail = (questionId, email) => {
 // }
 
 const shouldVerify = (formInteractive) => {
-  const { form: { questions }, currentQuestionId } = formInteractive;
-  const idx = findIndexById(questions, currentQuestionId);
+  const { form: { questions }, currentQuestion } = formInteractive;
+  const idx = findIndexById(questions, currentQuestion.id);
   if (typeof questions[idx].verifications !== 'undefined' && questions[idx].verifications.length > 0) {
     return true;
   } else {
@@ -414,14 +441,14 @@ const shouldVerify = (formInteractive) => {
 export const nextQuestionAfterVerification = () => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
-    const { form: { questions }, currentQuestionId, answers } = formInteractive;
-    const idx = findIndexById(questions, currentQuestionId);
+    const { form: { questions }, currentQuestion, answers } = formInteractive;
+    const idx = findIndexById(questions, currentQuestion.id);
 
     dispatch(requestVerification());
     for (var verification of questions[idx].verifications) {
       if (verification === 'EmondoEmailFieldService') {
-        const answerIndex = findIndexById(answers, currentQuestionId);
-        dispatch(verifyEmail(currentQuestionId, answers[answerIndex].value));
+        const answerIndex = findIndexById(answers, currentQuestion.id);
+        dispatch(verifyEmail(currentQuestion.id, answers[answerIndex].value));
       }
     }
   };
@@ -436,9 +463,9 @@ export const receiveVerification = (verification) => {
   return (dispatch, getState) => {
     dispatch(updateVerificationStatus(verification));
     const formInteractive = getState().formInteractive;
-    const { verificationStatus, currentQuestionId, form: { questions } } = formInteractive;
-    const verifiedStatuses = _.filter(verificationStatus, {id: currentQuestionId, status: true});
-    const idx = findIndexById(questions, currentQuestionId);
+    const { verificationStatus, currentQuestion, form: { questions } } = formInteractive;
+    const verifiedStatuses = _.filter(verificationStatus, {id: currentQuestion.id, status: true});
+    const idx = findIndexById(questions, currentQuestion.id);
     // If all verified as true go to next question.
     if (verifiedStatuses.length === questions[idx].verifications.length) {
       dispatch(goToNextQuestion());
@@ -460,7 +487,6 @@ export const handleEnter = () => {
     // check if verification is required.
     if (shouldVerify(formInteractive)) {
       dispatch(nextQuestionAfterVerification());
-      // dispatch(verifyEmail(currentQuestionId, answers[currentQuestionId].value));
     } else {
       dispatch(goToNextQuestion());
     }
@@ -555,9 +581,7 @@ export const resetFormSubmitStatus = (RESET_FORM_SUBMIT_STATUS);
 // ------------------------------------
 const formInteractiveReducer = handleActions({
   RECEIVE_FORM: (state, action) =>
-    Object.assign({}, state, action.payload, {
-      formAccessStatus: !action.payload.form ? (state.formAccessStatus === 'init' ? 'required' : 'fail') : 'success'
-    }),
+    _receiveForm(state, action),
 
   REQUEST_FORM: (state, action) =>
     Object.assign({}, state, {
@@ -571,7 +595,7 @@ const formInteractiveReducer = handleActions({
     }),
 
   RECEIVE_ANSWERS: (state, action) =>
-    Object.assign({}, state, action.payload),
+    _receiveAnswers(state, action),
 
   REQUEST_ANSWERS: (state, action) =>
     Object.assign({}, state, {
@@ -591,6 +615,10 @@ const formInteractiveReducer = handleActions({
       prefills: mergeItemIntoArray(state.prefills, action.payload)
     }),
 
+  CHANGE_CURRENT_ANSWER: (state, action) =>
+    Object.assign({}, state, {
+      currentQuestion: Object.assign({}, state.currentQuestion, action.payload)
+    }),
   STORE_ANSWER: (state, action) =>
     Object.assign({}, state, {
       answers: mergeItemIntoArray(state.answers, action.payload),

@@ -7,6 +7,7 @@ import {
   RightNavButton
 } from '../NavButton';
 import Hogan from 'hogan.js';
+import { valueIsValid } from 'helpers/validationHelper';
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import FormEnterButton from 'components/Buttons/FormEnterButton';
 import { MdKeyboardBackspace } from 'react-icons/lib/md';
@@ -40,9 +41,14 @@ class FormInteractiveView extends Component {
      */
     answers: PropTypes.array.isRequired,
     /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
+     * changeCurrentState: Redux action to change the update the current answer value on change,
+     * input state to redux store.
      */
-    currentQuestionId: PropTypes.number.isRequired,
+    changeCurrentState: PropTypes.func.isRequired,
+    /*
+     * currentQuestion: Redux state that keeps the current active question id and answer.
+     */
+    currentQuestion: PropTypes.object.isRequired,
     /*
      * goToQuestion: Redux action to move to specific question by ID.
      */
@@ -98,16 +104,39 @@ class FormInteractiveView extends Component {
     }
   }
 
-  renderCurrentQuestion() {
-    const { currentQuestionId, verificationStatus,
-      answers, prefills, storeAnswer, goToNextQuestion, handleEnter, isVerifying, showModal } = this.props;
+  valueIsVerified() {
+    const { currentQuestion, verificationStatus, isVerifying } = this.props;
+    if (isVerifying) return false;
+    const unavailables = _.filter(verificationStatus, {
+      id: currentQuestion.id,
+      status: false
+    });
+    return unavailables.length === 0;
+  }
+
+  handleEnter = () => {
+    // We only do validation and verification on enter, onChange submits the answer if valid.
+    const { handleEnter, changeCurrentState, currentQuestion } = this.props;
     const { questions } = this.state;
-    const question = findItemById(questions, currentQuestionId);
+    const question = findItemById(questions, currentQuestion.id);
+    if (!question) return false;
+    const { validations } = question;
+    const isValid = valueIsValid(currentQuestion.answerValue, validations);
+    changeCurrentState({
+      inputState: 'enter'
+    });
+    if (isValid) handleEnter();
+  }
+
+  renderCurrentQuestion() {
+    const { currentQuestion, verificationStatus, changeCurrentState,
+      answers, prefills, storeAnswer, goToNextQuestion, isVerifying, showModal } = this.props;
+    const { questions } = this.state;
+    const question = findItemById(questions, currentQuestion.id);
     const context = getContextFromAnswer(answers);
-    const answer = _.find(answers, {id: question.id});
     var optionals = {};
-    if (typeof answer === 'object') {
-      optionals['value'] = answer.value;
+    if (currentQuestion.answerValue) {
+      optionals['value'] = currentQuestion.answerValue;
     } else {
       const prefill = _.find(prefills, {id: question.id});
       if (typeof prefill === 'object') optionals['value'] = prefill.value;
@@ -123,10 +152,12 @@ class FormInteractiveView extends Component {
         <QuestionInteractive
           {...finalQuestion}
           key={question.id}
+          inputState={currentQuestion.inputState}
           verificationStatus={verificationStatus}
+          changeCurrentState={changeCurrentState}
           storeAnswer={storeAnswer}
           goToNextQuestion={goToNextQuestion}
-          handleEnter={handleEnter}
+          handleEnter={this.handleEnter}
           isVerifying={isVerifying}
           showModal={showModal}
           status="current"
@@ -137,9 +168,9 @@ class FormInteractiveView extends Component {
   }
 
   renderPrevQuestion() {
-    const { answers, currentQuestionId } = this.props;
+    const { answers, currentQuestion } = this.props;
     const { questions } = this.state;
-    const currentQuestionIndex = findIndexById(questions, currentQuestionId);
+    const currentQuestionIndex = findIndexById(questions, currentQuestion.id);
     if (currentQuestionIndex <= 0) return false;
     const prevQuestionIndex = currentQuestionIndex - 1;
     const question = questions[prevQuestionIndex];
@@ -165,10 +196,10 @@ class FormInteractiveView extends Component {
   }
 
   renderNextQuestion() {
-    const { answers, currentQuestionId, form } = this.props;
-    if (shouldDisableNextButton(form, currentQuestionId)) return false;
+    const { answers, currentQuestion, form } = this.props;
+    if (shouldDisableNextButton(form, currentQuestion.id)) return false;
     const { questions } = this.state;
-    const currentQuestionIndex = findIndexById(questions, currentQuestionId);
+    const currentQuestionIndex = findIndexById(questions, currentQuestion.id);
     const prevQuestionIndex = currentQuestionIndex + 1;
     const question = questions[prevQuestionIndex];
     if (question.type === 'Group') return false;
@@ -183,18 +214,18 @@ class FormInteractiveView extends Component {
   }
 
   renderNavButtons() {
-    const { form, currentQuestionId, isVerifying, goToPrevQuestion, goToNextQuestion } = this.props;
+    const { form, currentQuestion, isVerifying, goToPrevQuestion, goToNextQuestion } = this.props;
 
     return (
       <div className={styles.navButtonsWrapper}>
         <ul className={styles.arrowNavs}>
           <li>
             <LeftNavButton className={styles.navButton} onClick={goToPrevQuestion}
-              isDisabled={shouldDisablePrevButton(form, currentQuestionId) || isVerifying} />
+              isDisabled={shouldDisablePrevButton(form, currentQuestion.id) || isVerifying} />
           </li>
           <li>
             <RightNavButton className={styles.navButton} onClick={goToNextQuestion}
-              isDisabled={shouldDisableNextButton(form, currentQuestionId) || isVerifying} />
+              isDisabled={shouldDisableNextButton(form, currentQuestion.id) || isVerifying} />
           </li>
         </ul>
         <div className={styles.enterWrapper}>

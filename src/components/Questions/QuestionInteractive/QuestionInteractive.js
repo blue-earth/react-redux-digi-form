@@ -16,7 +16,9 @@ import Signature from '../../QuestionInputs/Signature/Signature';
 import FormEnterButton from '../../Buttons/FormEnterButton/FormEnterButton';
 import Validator from '../../Validator/Validator';
 import Verifier from '../../Verifier/Verifier';
-import validateField from 'helpers/validationHelper';
+import validateField, {
+  valueIsValid
+} from 'helpers/validationHelper';
 import styles from './QuestionInteractive.scss';
 import _ from 'lodash';
 import { SlideAnimation } from 'helpers/formInteractiveHelper';
@@ -44,6 +46,19 @@ class QuestionInteractive extends Component {
       PropTypes.object,
       PropTypes.array
     ]),
+
+    /*
+     * inputState: Redux state to keep the current input state('init', 'changed', 'focus', 'blur', 'enter').
+     */
+    inputState: PropTypes.oneOf([
+      'init', 'changed', 'focus', 'blur', 'enter'
+    ]).isRequired,
+
+    /*
+     * changeCurrentState: Redux action to change the update the current answer value on change,
+     * input state to redux store.
+     */
+    changeCurrentState: PropTypes.func.isRequired,
 
     /*
      * questionInstruction: Question Instruction
@@ -120,16 +135,6 @@ class QuestionInteractive extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      /*
-       * savedValue: current answer value, it is saved to store when validation passes.
-       */
-      savedValue: props.value,
-
-      /*
-       * inputState: one of 'init', 'focus', 'blur', 'enter'
-       */
-      inputState: 'init',
-
       /*
        * ChildComponent: stores the Child Input component class throughout the component life cycle.
        */
@@ -223,34 +228,29 @@ class QuestionInteractive extends Component {
     });
   }
 
-  componentWillReceiveProps(props) {
-    const { inputState } = this.state;
-    this.setState({
-      savedValue: props.value,
-      inputState: this.props.questionId !== props.questionId ? 'init' : inputState
-    });
-  }
-
-  handleFocus() {
-    this.setState({
+  handleFocus = () => {
+    const { changeCurrentState } = this.props;
+    changeCurrentState({
       inputState: 'focus'
     });
   }
 
-  handleBlur() {
-    this.setState({
+  handleBlur = () => {
+    const { changeCurrentState } = this.props;
+    changeCurrentState({
       inputState: 'blur'
     });
   }
 
-  handleChange(value) {
-    const { storeAnswer, questionId } = this.props;
+  handleChange = (value) => {
+    const { changeCurrentState, storeAnswer, questionId, validations } = this.props;
 
-    this.setState({
-      savedValue: value
+    changeCurrentState({
+      answerValue: value,
+      inputState: 'changed'
     });
 
-    if (this.valueIsValid(value)) {
+    if (valueIsValid(value, validations)) {
       storeAnswer({
         id: questionId,
         value: value
@@ -258,36 +258,12 @@ class QuestionInteractive extends Component {
     }
   }
 
-  handleEnter = () => {
-    // We only do validation and verification on enter, onChange submits the answer if valid.
-    const { savedValue } = this.state;
-    const { handleEnter } = this.props;
-    const isValid = this.valueIsValid(savedValue);
-    if (isValid) handleEnter();
-    this.setState({
-      inputState: 'enter'
-    });
+  shouldFocus(inputState) {
+    return inputState === 'init' || inputState === 'focus' || inputState === 'enter';
   }
 
-  valueIsValid(value) {
-    const { validations } = this.props;
-    var isValid = true;
-    for (var i = 0; i < validations.length; i++) {
-      isValid = validateField(validations[i], value);
-      if (!isValid) break;
-    }
-
-    return isValid;
-  }
-
-  valueIsVerified() {
-    const { questionId, verificationStatus, isVerifying } = this.props;
-    if (isVerifying) return false;
-    const unavailables = _.filter(verificationStatus, {
-      id: questionId,
-      status: false
-    });
-    return unavailables.length === 0;
+  shouldShowValidation(inputState) {
+    return inputState === 'enter';
   }
 
   renderQuestionDisplay() {
@@ -302,18 +278,19 @@ class QuestionInteractive extends Component {
   }
 
   renderInteractiveInput() {
-    const { questionId, validations, verificationStatus, isVerifying, buttonLabel } = this.props;
-    const { ChildComponent, inputPosClass, buttonPosClass, inputState, savedValue } = this.state;
+    const { questionId, validations, verificationStatus, isVerifying, handleEnter,
+      buttonLabel, value, inputState } = this.props;
+    const { ChildComponent, inputPosClass, buttonPosClass } = this.state;
     if (ChildComponent === null) return false;
 
     var extraProps = _.merge({
-      value: savedValue,
+      value,
       isDisabled: isVerifying,
-      autoFocus: inputState === 'init' || inputState === 'focus' || inputState === 'enter',
-      onEnterKey: this.handleEnter.bind(this),
-      onChange: this.handleChange.bind(this),
-      onFocus: this.handleFocus.bind(this),
-      onBlur: this.handleBlur.bind(this)
+      autoFocus: this.shouldFocus(inputState),
+      onEnterKey: handleEnter,
+      onChange: this.handleChange,
+      onFocus: this.handleFocus,
+      onBlur: this.handleBlur
     }, this.state.extraProps);
 
     const slideAnimation = new SlideAnimation(200);
@@ -323,7 +300,7 @@ class QuestionInteractive extends Component {
     };
 
     const filteredValidations = _.filter(validations, function (validation) {
-      return !validateField(validation, savedValue);
+      return !validateField(validation, value);
     });
 
     return (
@@ -331,10 +308,10 @@ class QuestionInteractive extends Component {
         <div className="clearfix">
           <div className={styles.leftColumn}>
             <Animate exclusive animation={anim} component="div">
-              {(inputState === 'enter')
+              {this.shouldShowValidation(inputState)
                 ? filteredValidations.map((validation, index) => {
                   return (
-                    <Validator {...validation} key={validation.type} validateFor={savedValue} />
+                    <Validator {...validation} key={validation.type} validateFor={value} />
                     );
                 })
                 : <div key="null_key"></div>
@@ -359,7 +336,7 @@ class QuestionInteractive extends Component {
         </div>
         <div className={buttonPosClass}>
           <FormEnterButton
-            onClick={this.handleEnter}
+            onClick={handleEnter}
             buttonLabel={buttonLabel}
             isDisabled={isVerifying} />
         </div>

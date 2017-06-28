@@ -72,9 +72,15 @@ class FormInteractive extends Component {
     isVerifying: PropTypes.bool.isRequired,
 
     /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
+     * changeCurrentState: Redux action to change the update the current answer value on change,
+     * input state to redux store.
      */
-    currentQuestionId: PropTypes.number.isRequired,
+    changeCurrentState: PropTypes.func.isRequired,
+
+    /*
+     * currentQuestion: Redux state that keeps the current active question id and answer.
+     */
+    currentQuestion: PropTypes.object.isRequired,
 
     /*
      * Form primary color
@@ -82,7 +88,7 @@ class FormInteractive extends Component {
     primaryColor: PropTypes.string,
 
     /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
+     * verificationStatus: Redux state that keeps the verification status responses.
      */
     verificationStatus: PropTypes.array,
 
@@ -213,16 +219,14 @@ class FormInteractive extends Component {
     const { form: { questions }, goToQuestion } = this.props;
     const groups = getQuestionGroups(questions);
     const newGroupId = groups[index].id;
-    // const question = _.find(questions, (o) => o.id === currentQuestionId);
-    // if (question.group === newGroupId) return;
     const newQuestionId = getNextQuestionId(questions, newGroupId);
     goToQuestion(newQuestionId);
   }
 
   get currentSectionIndex() {
-    const { form: { questions }, currentQuestionId } = this.props;
+    const { form: { questions }, currentQuestion } = this.props;
     if (!questions) return 0;
-    const question = _.find(questions, (o) => o.id === currentQuestionId);
+    const question = _.find(questions, (o) => o.id === currentQuestion.id);
     const groups = getQuestionGroups(questions);
     const index = _.findIndex(groups, (o) => o.id === question.group);
     return index > 0 ? index : 0;

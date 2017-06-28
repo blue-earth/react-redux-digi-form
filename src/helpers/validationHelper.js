@@ -24,6 +24,15 @@ export const validateMaxValue = (value, maxValue) => {
   return value <= maxValue;
 };
 
+export const valueIsValid = (value, validations) => {
+  var isValid = true;
+  for (var i = 0; i < validations.length; i++) {
+    isValid = validateField(validations[i], value);
+    if (!isValid) break;
+  }
+  return isValid;
+};
+
 const validateField = (validation, value) => {
   switch (validation.type) {
     case 'isRequired':

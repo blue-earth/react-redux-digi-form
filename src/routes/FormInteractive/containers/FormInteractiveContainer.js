@@ -2,6 +2,7 @@ import connect from 'redux/utils/connect';
 import { show } from 'redux-modal';
 import {
   INIT_FORM_STATE,
+  changeCurrentState,
   goToPrevQuestion,
   goToNextQuestion,
   goToQuestion,
@@ -17,6 +18,7 @@ import {
 import FormInteractive from '../components/FormInteractive';
 
 const mapActionCreators = {
+  changeCurrentState,
   goToPrevQuestion,
   goToNextQuestion,
   fetchFormIfNeeded,
@@ -37,7 +39,7 @@ const mapStateToProps = (state) => {
     sessionId,
     isFetchingForm,
     isVerifying,
-    currentQuestionId,
+    currentQuestion,
     title,
     form,
     answers,
@@ -55,7 +57,7 @@ const mapStateToProps = (state) => {
     sessionId: parseInt(sessionId, 10),
     isFetchingForm,
     isVerifying,
-    currentQuestionId,
+    currentQuestion,
     title,
     form,
     answers,
