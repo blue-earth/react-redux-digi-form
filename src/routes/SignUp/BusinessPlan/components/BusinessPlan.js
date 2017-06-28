@@ -305,7 +305,8 @@ class BusinessPlan extends Component {
 
   renderPurchasePage() {
     const { currentlySelectedPlan, paymentMethod, purchaseErrorMessages, isPageBusy } = this.props;
-    const { name, numberOfUsers, billingCycle } = currentlySelectedPlan;
+    const { numberOfUsers, billingCycle } = currentlySelectedPlan;
+    const name = this.getPlanName();
     const { email, cardNumber, expiry, cvc } = paymentMethod;
     const { priceCurrency, minRequiredNumUser, maxNumUser } = this.getPlanConfig(billingCycle);
     return (

@@ -165,7 +165,7 @@ const _setPlansConfig = (plans) => {
     Object.assign({}, {
       name: plan.name,
       priceCents: plan.price_cents,
-      priceCurrency: plan.price_currency,
+      priceCurrency: 'AUD',
       minRequiredNumUser: plan.min_required_num_user,
       maxNumUser: plan.max_num_user
     }));
