@@ -140,9 +140,8 @@ class BusinessPlan extends Component {
   getPlanConfig = (period) => {
     const { currentlySelectedPlan, plansConfig } = this.props;
     const { name } = currentlySelectedPlan;
-    const planType = name.split('-')[0];
     for (let i in plansConfig) {
-      if (plansConfig[i].name === planType + '-' + period) {
+      if (plansConfig[i].name === name + '-' + period) {
         return plansConfig[i];
       }
     }

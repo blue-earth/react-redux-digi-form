@@ -120,6 +120,7 @@ export const purchasePlan = () => {
     const slashIndex = expiry.indexOf('/');
     const expiryMonth = expiry.slice(0, slashIndex);
     const expiryYear = expiry.slice(slashIndex+1, expiry.length);
+    const wholePlanName = name + '-' + billingCycle;
 
     requestStripeCardToken(cardNumber, expiryMonth, expiryYear, cvc, function (responseCode, resp) {
       if (responseCode === 200) {
@@ -127,7 +128,7 @@ export const purchasePlan = () => {
         const plan = {
           email: email,
           subdomain: subdomain,
-          plan_name: name,
+          plan_name: wholePlanName,
           number_of_users: numberOfUsers,
           billing_cycle: billingCycle,
           client_ip: resp['client_ip'],
@@ -179,7 +180,7 @@ const _setPlanInitialState = (plans, plan) => {
       const planDetail = plans[i];
       if (planDetail.name === plan) {
         return dispatch(setSelectedPlanConfig({
-          name: plan,
+          name: plan.split('-')[0],
           numberOfUsers: planDetail.min_required_num_user,
           billingCycle: plan.split('-')[1]
         }));
