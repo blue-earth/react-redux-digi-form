@@ -52,9 +52,8 @@ $table-border-color:        #bbb;
 // purchase darken blue
 $grayblue: #ECF0F3;
 $blackblue: darken($blue,26%);
-$lightblue: #E2F0FB;
 $bg-color3: $grayblue;
-$divider-line-color: $lightblue;
+$darker-bg-color3: darken($grayblue,10%);
 
 // Form Fields
 $input-color:               #333;

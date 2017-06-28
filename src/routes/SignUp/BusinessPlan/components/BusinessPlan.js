@@ -333,7 +333,7 @@ class BusinessPlan extends Component {
           </Row>
           <Row>
             <Col sm={6} md={5} mdPush={1} lg={4} lgPush={2} className="text-left">
-              <p>Select your payment method:</p>
+              <p className={styles.paymentMethod}>Select your payment method:</p>
               <Panel className={classNames(
                 styles.activePanel,
                 styles.selectionPanel,
@@ -367,7 +367,7 @@ class BusinessPlan extends Component {
               <div className={styles.creditCardInputWrapper}>
                 <MaskedInput mask="1111 1111 1111 1111" name="cardNumber" size="16"
                   className={classNames(styles.creditCardInput, styles.cardNumberInput)}
-                  value={cardNumber} placeholder="Card number" onChange={this.handlePaymentChange} />
+                  value={cardNumber} placeholder="Card Number" onChange={this.handlePaymentChange} />
                 <span className={styles.creditCardType}>
                   <CardType cardNumber={cardNumber} />
                 </span>

@@ -125,6 +125,9 @@
     cursor: not-allowed;
   }
 }
+.paymentMethod {
+  margin-bottom: 30px;
+}
 .paymentSelection {
   margin: 6px 0;
   line-height: 28px;
@@ -174,8 +177,9 @@
   margin: 10px 0;
   padding: 0 20px;
   @include border-radius(6px);
-  border: 1px solid $bg-color3;
-  color: $blackblue;
+  border: 1px solid $darker-bg-color3;
+  color: $darkblue;
+  font-size: 18px;
   font-weight: bolder;
 }
 .creditCardType {
@@ -235,6 +239,8 @@
   margin: 0;
 }
 .infoPanel{
+  color: $darkblue;
+  border-color: $darker-bg-color3;
   padding: 4px 20px;
   h4{
     font-family: "roble_alt_boldbold";
@@ -244,8 +250,7 @@
   margin-bottom: 24px;
 }
 .featurePanel{
-  background-color: $blue;
-  color: white;
+  background-color: transparent;
 }
 .orderItem{
   font-weight: 800;
@@ -255,8 +260,8 @@
   text-decoration: underline;
 }
 .changeBillingCycle{
+  margin-left: 6px;
   cursor: pointer;
-  color: $blue;
   font-size: 14px;
   text-decoration: underline;
 }
@@ -284,5 +289,5 @@
   font-size: 12px;
 }
 .divideLine{
-  border-color: $divider-line-color;
+  border-color: $darker-bg-color3;
 }
