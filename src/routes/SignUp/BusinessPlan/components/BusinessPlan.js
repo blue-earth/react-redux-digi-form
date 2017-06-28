@@ -375,7 +375,7 @@ class BusinessPlan extends Component {
                   className={classNames(styles.creditCardInput, styles.cvcInput)}
                   value={cvc} onChange={this.handlePaymentChange} />
               </div>
-              <button className={styles.purchaseButton} onClick={this.handlePurchase}>
+              <button disabled={isPageBusy} className={styles.purchaseButton} onClick={this.handlePurchase}>
                 {isPageBusy? 'Processing...' : 'Purchase'}
               </button>
               <Button className={styles.backButton} bsStyle="link" onClick={this.props.goToPreviousStep}>
@@ -397,12 +397,12 @@ class BusinessPlan extends Component {
                     <PriceTag price={this.getOriginalPrice()} currency={priceCurrency} />
                   </span>
                 </p>
-                <p>
+                <div>
                   Users: {' '}
                   <NumberInput height={24} className={styles.smallNumberInput}
                     value={numberOfUsers} onChange={this.handleUsersNumberChange}
                     minValue={minRequiredNumUser} maxValue={maxNumUser} />
-                </p>
+                </div>
                 <p className={styles.orderPanelSection}>
                   <span className={styles.orderItem}>Billed {billingCycle} {this.haveDiscount()?'(save 33%)':''}</span>
                   {' '}

@@ -237,9 +237,9 @@ const processPurchase = (plan) => {
   const fetchFail = ({value}) => {
     return (dispatch, getState) => {
       let messages = [];
-      Object.keys(value).forEach(key=>{
+      Object.keys(value).forEach(key => {
         messages.push(value[key][0]);
-      })
+      });
       dispatch(donePurchasingBusinessPlan(messages));
     };
   };
