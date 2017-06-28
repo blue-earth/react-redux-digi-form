@@ -13,6 +13,10 @@ $mobile-menu-bg-color:    #f4f5f8;
   align-items: center;
   @include media('<sm') {
     height: $frontend-header-height-mobile;
+    background-color: white;
+    margin: 0 -15px;
+    padding: 15px;
+    z-index: 999;
   }
 }
 .logoWrapper {

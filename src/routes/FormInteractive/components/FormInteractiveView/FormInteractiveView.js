@@ -266,8 +266,8 @@ class FormInteractiveView extends Component {
           {this.renderPrevQuestion()}
           {this.renderCurrentQuestion()}
           {this.renderNextQuestion()}
-          {this.renderNavButtons()}
         </div>
+        {this.renderNavButtons()}
       </div>
     );
   }

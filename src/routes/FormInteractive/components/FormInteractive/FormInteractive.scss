@@ -16,6 +16,7 @@ $bottom-content-color:          $frontend-text-color3;
   padding-top:30px;
 }
 .contentWrapper {
+  height: calc(100% - #{$frontend-header-height-mobile});
   @include media('>=sm') {
     height: calc(100% - #{$frontend-header-height + $frontend-footer-height});
   }
@@ -42,6 +43,9 @@ $bottom-content-color:          $frontend-text-color3;
   span {
     display: inline-block;
     vertical-align: middle;
+  }
+  @include media('<sm') {
+    display: none;
   }
 }
 .bottomLogo {

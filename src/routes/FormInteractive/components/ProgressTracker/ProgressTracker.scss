@@ -9,9 +9,18 @@ $pt-button-width: 47px;
   position: relative;
   overflow: hidden;
   padding: 0 $pt-button-width $pt-bar-height;
-  height: $frontend-progressbar-height;
+  @include media('<sm') {
+    margin: 0 -15px;
+    height: $pt-bar-height;
+    @include box-shadow-custom(0 3px 25px rgba(0, 0, 0, .15));
+  }
 }
 
+.slickWrapper {
+  @include media('<sm') {
+    display: none;
+  }
+}
 .progressbar {
   position: absolute;
   height: $pt-bar-height;
