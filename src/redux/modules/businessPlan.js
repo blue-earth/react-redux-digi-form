@@ -38,7 +38,7 @@ export const INIT_BUSINESS_PLAN_STATE = {
     cvc: ''
   },
   plansConfig: [],
-  purchaseErrorMessage: '',
+  purchaseErrorMessages: [],
   isPageBusy: true
 };
 
@@ -139,7 +139,8 @@ export const purchasePlan = () => {
         dispatch(processPurchase(plan));
       } else {
         const errorMessage = resp['error']['message'];
-        dispatch(donePurchasingBusinessPlan(errorMessage));
+        const errorMessages = [errorMessage];
+        dispatch(donePurchasingBusinessPlan(errorMessages));
       }
     });
   };
@@ -224,17 +225,21 @@ const processPurchase = (plan) => {
   });
 
   const fetchSuccess = ({value}) => {
+    const {result, message} = value;
     return (dispatch, getState) => {
-      const {result, message} = value;
       if (result === 'rejected') {
         dispatch(donePurchasingBusinessPlan(message));
       }
     };
   };
 
-  const fetchFail = (data) => {
+  const fetchFail = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(donePurchasingBusinessPlan('Server Error'));
+      let messages = [];
+      Object.keys(value).forEach(key=>{
+        messages.push(value[key][0]);
+      })
+      dispatch(donePurchasingBusinessPlan(messages));
     };
   };
 
@@ -247,7 +252,8 @@ const processPurchase = (plan) => {
 const businessPlanReducer = handleActions({
   NEXT_STEP: (state, action) =>
     Object.assign({}, state, {
-      stepIndex: 1
+      stepIndex: 1,
+      purchaseErrorMessages: []
     }),
   PREVIOUS_STEP: (state, action) =>
     Object.assign({}, state, {
@@ -268,7 +274,7 @@ const businessPlanReducer = handleActions({
     }),
   DONE_PURCHASING_BUSINESS_PLAN: (state, action) =>
     Object.assign({}, state, {
-      purchaseErrorMessage: action.payload,
+      purchaseErrorMessages: action.payload,
       isPageBusy: false
     }),
   SET_SELECTED_PLAN_CONFIG: (state, action) =>

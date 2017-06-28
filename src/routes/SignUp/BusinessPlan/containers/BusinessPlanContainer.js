@@ -35,7 +35,7 @@ const mapStateToProps = (state) => {
     stepIndex,
     validations,
     paymentMethod,
-    purchaseErrorMessage,
+    purchaseErrorMessages,
     isPageBusy,
     currentlySelectedPlan
   } = businessPlan || INIT_BUSINESS_PLAN_STATE;
@@ -44,7 +44,7 @@ const mapStateToProps = (state) => {
     stepIndex,
     validations,
     paymentMethod,
-    purchaseErrorMessage,
+    purchaseErrorMessages,
     isPageBusy,
     currentlySelectedPlan
   };

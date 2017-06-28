@@ -11,7 +11,8 @@ import {
   Row,
   Col,
   Panel,
-  Button
+  Button,
+  Well
 } from 'react-bootstrap';
 import { FaLock, FaCreditCardAlt } from 'react-icons/lib/fa';
 import { IoAndroidDone, IoAndroidClose, IoAndroidArrowBack } from 'react-icons/lib/io';
@@ -43,7 +44,7 @@ class BusinessPlan extends Component {
       cvc: PropTypes.string
     }),
     email: PropTypes.string,
-    purchaseErrorMessage: PropTypes.string,
+    purchaseErrorMessages: PropTypes.array,
     isPageBusy: PropTypes.bool,
     stepIndex: PropTypes.number,
     fetchPlans: PropTypes.func,
@@ -300,7 +301,7 @@ class BusinessPlan extends Component {
   }
 
   renderPurchasePage() {
-    const { currentlySelectedPlan, paymentMethod, purchaseErrorMessage, isPageBusy } = this.props;
+    const { currentlySelectedPlan, paymentMethod, purchaseErrorMessages, isPageBusy } = this.props;
     const { name, numberOfUsers, billingCycle } = currentlySelectedPlan;
     const { email, cardNumber, expiry, cvc } = paymentMethod;
     const { priceCurrency, minRequiredNumUser, maxNumUser } = this.getPlanConfig(billingCycle);
@@ -309,11 +310,23 @@ class BusinessPlan extends Component {
         <div className="text-center">
           <div className={styles.pageTitleWrapper}>
             <h3 className={styles.pageTitle}>Purchase Your Emondo Business Plan</h3>
-            <h4 className={styles.purchaseStatus}>
-              {purchaseErrorMessage.length === 0 ? '' : 'Sorry, your purchase has been declined because of: '}
-              {purchaseErrorMessage}
-            </h4>
           </div>
+          <Row>
+            <Col md={10} mdPush={1} lg={8} lgPush={2}>
+              { purchaseErrorMessages.length >0 &&
+                <Well className={styles.purchaseErrorMessages}>
+                  <h4>
+                    Sorry, your purchase has been declined because of:
+                  </h4>
+                  <ul className={styles.purchaseErrorMessageList}>
+                    {purchaseErrorMessages.map((errorMessage, index) =>
+                      <li key={index}>{errorMessage}</li>
+                    )}
+                  </ul>
+                </Well>
+              }
+            </Col>
+          </Row>
           <Row>
             <Col sm={6} md={5} mdPush={1} lg={4} lgPush={2} className="text-left">
               <p>Select your payment method:</p>

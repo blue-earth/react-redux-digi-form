@@ -224,8 +224,15 @@
   height: 22px;
   vertical-align: bottom;
 }
-.purchaseStatus{
+.purchaseErrorMessages {
+  padding: 10px;
+  margin: 0 0 20px 0;
   color: $red;
+}
+.purchaseErrorMessageList {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
 }
 .infoPanel{
   padding: 4px 20px;
