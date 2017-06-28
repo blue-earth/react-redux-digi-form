@@ -9,14 +9,14 @@ class CircleOutlineButton extends Component {
     onClick: PropTypes.func,
     isDisabled: PropTypes.bool,
     buttonLabel: PropTypes.string,
-    color: PropTypes.string,        // The main line color for the button, eg: 'white', '#333', 'rgba(127,127,127,1)'
+    colour: PropTypes.string,        // The main line colour for the button, eg: 'white', '#333', 'rgba(127,127,127,1)'
     hoverColor: PropTypes.string,
     size: PropTypes.number          // The size of the button
   };
 
   static defaultProps = {
     buttonLabel: '+',
-    color: '#333',
+    colour: '#333',
     hoverColor: 'black',
     size: 30
   };
@@ -55,9 +55,9 @@ class CircleOutlineButton extends Component {
   }
 
   getButtonStyle() {
-    const { isDisabled, color, hoverColor, size } = this.props;
-    let themeColor = this.state.hover ? hoverColor : color;
-    themeColor = isDisabled ? color : themeColor;
+    const { isDisabled, colour, hoverColor, size } = this.props;
+    let themeColor = this.state.hover ? hoverColor : colour;
+    themeColor = isDisabled ? colour : themeColor;
     return {
       width: size + 'px',
       height: size + 'px',
