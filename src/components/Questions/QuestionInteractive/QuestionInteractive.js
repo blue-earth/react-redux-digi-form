@@ -144,8 +144,6 @@ class QuestionInteractive extends Component {
     switch (type) {
       case 'ShortTextField':
       case 'EmailField':
-        ChildComponent = ShortTextInput;
-        break;
       case 'NumberField':
         ChildComponent = ShortTextInput;
         break;

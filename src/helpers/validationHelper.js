@@ -26,9 +26,11 @@ export const validateMaxValue = (value, maxValue) => {
 
 export const valueIsValid = (value, validations) => {
   var isValid = true;
-  for (var i = 0; i < validations.length; i++) {
-    isValid = validateField(validations[i], value);
-    if (!isValid) break;
+  if (validations) {
+    for (var i = 0; i < validations.length; i++) {
+      isValid = validateField(validations[i], value);
+      if (!isValid) break;
+    }
   }
   return isValid;
 };
