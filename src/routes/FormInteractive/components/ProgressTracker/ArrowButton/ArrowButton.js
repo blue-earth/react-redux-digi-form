@@ -18,7 +18,7 @@ class ArrowButtonContainer extends Component {
   };
 
   static contextTypes = {
-    primaryColor: PropTypes.string
+    primaryColour: PropTypes.string
   };
 
   static defaultProps = {
@@ -40,10 +40,10 @@ class ArrowButtonContainer extends Component {
 
   render() {
     const { hover } = this.state;
-    const { primaryColor } = this.context;
+    const { primaryColour } = this.context;
     const { direction, children, onClick } = this.props;
     let optionals = {};
-    hover && (optionals['style'] = { color: primaryColor });
+    hover && (optionals['style'] = { color: primaryColour });
     const buttonClass = classNames(styles.arrowButton, styles[direction]);
     return (
       <Button className={buttonClass}

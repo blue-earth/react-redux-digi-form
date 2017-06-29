@@ -11,11 +11,11 @@ class FormPreview extends Component {
 
   static contextTypes = {
     router: React.PropTypes.object,
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static childContextTypes = {
-    primaryColor: PropTypes.string
+    primaryColour: PropTypes.string
   };
 
   static propTypes = {
@@ -42,7 +42,7 @@ class FormPreview extends Component {
     /*
      * Form primary color
      */
-    primaryColor: PropTypes.string,
+    primaryColour: PropTypes.string,
 
     /*
      * fetchFormIfNeeded: Redux action to fetch form from backend with ID specified by request parameters
@@ -86,7 +86,7 @@ class FormPreview extends Component {
   };
 
   getChildContext() {
-    return { primaryColor: this.props.primaryColor };
+    return { primaryColour: this.props.primaryColour };
   };
 
   componentWillMount() {

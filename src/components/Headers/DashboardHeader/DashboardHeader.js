@@ -16,7 +16,7 @@ import {
 export default class DashboardHeader extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {

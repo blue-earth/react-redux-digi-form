@@ -5,7 +5,7 @@ import classNames from 'classnames';
 class PasswordInput extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {
@@ -90,12 +90,12 @@ class PasswordInput extends Component {
     var toggleMaskIndicator ={'cleartext': 'Hide', 'marked': 'Show'};
     var props = this.props;
     var { autoFocus } = this.props;
-    var { primaryColor } = this.context;
+    var { primaryColour } = this.context;
     var optionals = {};
 
-    if (typeof primaryColor !== 'undefined') {
+    if (typeof primaryColour !== 'undefined') {
       optionals['style'] = {
-        color: primaryColor
+        color: primaryColour
       };
     }
     if (props.placeholderText) {

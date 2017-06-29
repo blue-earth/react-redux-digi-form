@@ -18,7 +18,7 @@ import styles from './FormCompletionSection.scss';
 class FormCompletionSection extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {
@@ -103,7 +103,7 @@ class FormCompletionSection extends Component {
     var imgCoPath = require('./co2.png');
     const { link } = this.props;
     var linkStyle = {
-      color: this.context.primaryColor
+      color: this.context.primaryColour
     };
 
     return (

@@ -19,7 +19,7 @@ class NavButtonContainer extends Component {
   };
 
   static contextTypes = {
-    primaryColor: PropTypes.string
+    primaryColour: PropTypes.string
   };
 
   static defaultProps = {
@@ -45,10 +45,10 @@ class NavButtonContainer extends Component {
 
   render() {
     const { hover } = this.state;
-    const { primaryColor } = this.context;
+    const { primaryColour } = this.context;
     const { isDisabled, direction, children, onClick } = this.props;
     let optionals = {};
-    hover && !isDisabled && (optionals['style'] = { color: primaryColor });
+    hover && !isDisabled && (optionals['style'] = { color: primaryColour });
     const buttonClass = classNames(styles.navButton, styles[direction]);
     return (
       <Button className={buttonClass}

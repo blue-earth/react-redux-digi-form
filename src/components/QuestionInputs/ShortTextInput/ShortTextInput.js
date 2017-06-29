@@ -8,7 +8,7 @@ import classNames from 'classnames';
 class ShortTextInput extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {
@@ -98,12 +98,12 @@ class ShortTextInput extends Component {
   render() {
     var { type, autoFocus, fullWidth, placeholderText,
       isDisabled, isReadOnly } = this.props;
-    var { primaryColor } = this.context;
+    var { primaryColour } = this.context;
     var optionals = {};
 
-    if (typeof primaryColor !== 'undefined') {
+    if (typeof primaryColour !== 'undefined') {
       optionals['style'] = {
-        color: primaryColor
+        color: primaryColour
       };
     }
     if (placeholderText) {

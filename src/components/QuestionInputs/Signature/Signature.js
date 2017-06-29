@@ -9,7 +9,7 @@ import styles from './Signature.scss';
 class Signature extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {

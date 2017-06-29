@@ -28,11 +28,11 @@ class FormInteractive extends Component {
 
   static contextTypes = {
     router: React.PropTypes.object,
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static childContextTypes = {
-    primaryColor: PropTypes.string
+    primaryColour: PropTypes.string
   };
 
   static propTypes = {
@@ -85,7 +85,7 @@ class FormInteractive extends Component {
     /*
      * Form primary color
      */
-    primaryColor: PropTypes.string,
+    primaryColour: PropTypes.string,
 
     /*
      * verificationStatus: Redux state that keeps the verification status responses.
@@ -184,7 +184,7 @@ class FormInteractive extends Component {
   };
 
   getChildContext() {
-    return { primaryColor: this.props.primaryColor };
+    return { primaryColour: this.props.primaryColour };
   };
 
   componentWillMount() {

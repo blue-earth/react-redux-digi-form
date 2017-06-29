@@ -64,9 +64,9 @@ class AccessCodeModal extends Component {
     const showVerificationStatus = accessCodeInputStatus === 'validated';
 
     var optionals = {};
-    if (this.context.primaryColor) {
+    if (this.context.primaryColour) {
       optionals['style'] = {
-        color: this.context.primaryColor
+        color: this.context.primaryColour
       };
     }
     const accessCodeErrorText = 'Access Code must be 4 digits.';

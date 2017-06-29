@@ -12,7 +12,7 @@ import _ from 'lodash';
 class PhoneNumberInput extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {
@@ -64,7 +64,7 @@ class PhoneNumberInput extends Component {
     input.addEventListener('keydown', (event) => that.handleKeyDown(event));
     input.addEventListener('focus', (event) => that.handleFocus(event));
     input.addEventListener('blur', (event) => that.handleBlur(event));
-    input.style = 'color:' + this.context.primaryColor;
+    input.style = 'color:' + this.context.primaryColour;
     if (autoFocus) setTimeout(() => input.focus(), 1);
   }
 

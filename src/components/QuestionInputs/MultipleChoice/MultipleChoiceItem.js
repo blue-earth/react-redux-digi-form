@@ -5,7 +5,7 @@ import classNames from 'classnames';
 class MultipleChoiceItem extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {
@@ -33,7 +33,7 @@ class MultipleChoiceItem extends Component {
 
   render() {
     const { label, text, active, disabled } = this.props;
-    const { primaryColor } = this.context;
+    const { primaryColour } = this.context;
 
     const choiceItemClasses = classNames({
       [styles.choiceItem]: true,
@@ -44,7 +44,7 @@ class MultipleChoiceItem extends Component {
     var optionals = {};
     if (active) {
       optionals['style'] = {
-        borderColor: primaryColor
+        borderColor: primaryColour
       };
     }
     if (!disabled) {

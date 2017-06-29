@@ -14,7 +14,7 @@ class LearnMoreSection extends Component {
   }
 
   static contextTypes = {
-    primaryColor: PropTypes.string,
+    primaryColour: PropTypes.string,
     isLastSection: PropTypes.bool
   };
 
@@ -26,7 +26,7 @@ class LearnMoreSection extends Component {
   render() {
     const { link, isLastSection } = this.props;
     var linkStyle = {
-      color: this.context.primaryColor
+      color: this.context.primaryColour
     };
     const sectionClass = classNames({
       [styles.learnMoreSection]: true,

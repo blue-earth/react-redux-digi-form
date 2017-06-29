@@ -73,7 +73,7 @@ export const INIT_FORM_STATE = {
   answers: [],
   prefills: [],
   verificationStatus: [],
-  primaryColor: '#3191d2',
+  primaryColour: '#3191d2',
   shouldShowFinalSubmit: false, // indicates whether to show final form submit section.
   formAccessStatus: 'init', // can be 'init', 'waiting', 'failed', 'success'
   isAccessCodeProtected: false,

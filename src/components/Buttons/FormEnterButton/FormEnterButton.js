@@ -22,7 +22,7 @@ class FormEnterButton extends Component {
   };
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   handleClick = () => {
@@ -50,8 +50,8 @@ class FormEnterButton extends Component {
 
   render() {
     const { buttonLabel, isDisabled, autoFocus } = this.props;
-    const { primaryColor } = this.context;
-    const shadowColor = Color(primaryColor).darken(0.2).rgbString();
+    const { primaryColour } = this.context;
+    const shadowColor = Color(primaryColour).darken(0.2).rgbString();
     var optionals = {};
 
     if (autoFocus) {
@@ -59,9 +59,9 @@ class FormEnterButton extends Component {
         autoFocus: true
       };
     }
-    if (typeof primaryColor !== 'undefined') {
+    if (typeof primaryColour !== 'undefined') {
       optionals['style'] = {
-        backgroundColor: primaryColor,
+        backgroundColor: primaryColour,
         boxShadow: `0 3px 1px ${shadowColor}`
       };
     }

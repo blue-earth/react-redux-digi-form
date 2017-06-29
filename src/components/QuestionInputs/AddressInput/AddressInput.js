@@ -12,7 +12,7 @@ import styles from './AddressInput.scss';
 class AddressInput extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   constructor(props) {
@@ -220,7 +220,7 @@ class AddressInput extends Component {
 
   render() {
     const { isDisabled, isReadOnly, autoFocus, onFocus, onBlur } = this.props;
-    const { primaryColor } = this.context;
+    const { primaryColour } = this.context;
     const { suburb, state, postcode } = this.state;
     var optionals = {};
 
@@ -232,9 +232,9 @@ class AddressInput extends Component {
       optionals['readOnly'] = true;
     }
 
-    if (typeof primaryColor !== 'undefined') {
+    if (typeof primaryColour !== 'undefined') {
       optionals['style'] = {
-        color: primaryColor
+        color: primaryColour
       };
     }
 

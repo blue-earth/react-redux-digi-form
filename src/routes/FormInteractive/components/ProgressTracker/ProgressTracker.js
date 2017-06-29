@@ -18,7 +18,7 @@ class ProgressTracker extends Component {
   };
 
   static contextTypes = {
-    primaryColor: PropTypes.string
+    primaryColour: PropTypes.string
   };
 
   constructor(props) {
@@ -54,7 +54,7 @@ class ProgressTracker extends Component {
 
   render() {
     const { sectionTitleList } = this.props;
-    const { primaryColor } = this.context;
+    const { primaryColour } = this.context;
     const { currentIndex } = this.state;
     const that = this;
     if (sectionTitleList && sectionTitleList.length) {
@@ -88,7 +88,7 @@ class ProgressTracker extends Component {
             ))
           }
           </Slider>
-          <div className={styles.progressbar} style={{ backgroundColor: primaryColor }}>
+          <div className={styles.progressbar} style={{ backgroundColor: primaryColour }}>
             <div className={styles.progressbarValue} />
           </div>
         </div>
