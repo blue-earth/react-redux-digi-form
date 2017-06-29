@@ -1,9 +1,9 @@
 import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
-import ConfigureTab from './ConfigureTab';
+import PillTab from './PillTab';
 
 storiesOf('Tabs', module)
-  .add('Configure Tab', () => {
+  .add('Pill Tab', () => {
     const tab1 = (<div><h4>Would you like to limit the form access within your organisation?</h4></div>);
     const tab2 = (<div>Submissions access2</div>);
     const tab3 = (<div>Other access3</div>);
@@ -19,7 +19,7 @@ storiesOf('Tabs', module)
     }];
     return (
       <div>
-        <ConfigureTab tabs={tabs}/>
+        <PillTab tabs={tabs}/>
       </div>
     );
   });

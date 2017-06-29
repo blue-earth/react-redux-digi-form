@@ -7,10 +7,10 @@ import {
   Tabs,
   Tab
 } from 'react-bootstrap';
-import styles from './ConfigureTab.scss';
+import styles from './PillTab.scss';
 import classNames from 'classnames/bind';
 
-class ConfigureTab extends Component {
+class PillTab extends Component {
   static porpTypes = {
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
@@ -22,7 +22,7 @@ class ConfigureTab extends Component {
   render() {
     let cx = classNames.bind(styles);
     return (
-      <Tabs className={cx('configureTab')} defaultActiveKey={0} id="test">
+      <Tabs className={cx('pillTab')} defaultActiveKey={0} id="test">
         {this.props.tabs.map((tab, index) => (
           <Tab key={index} eventKey={index} title={tab.title}>{tab.content}</Tab>
         ))}
@@ -30,4 +30,4 @@ class ConfigureTab extends Component {
     );
   }
 }
-export default ConfigureTab;
+export default PillTab;
