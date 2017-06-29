@@ -18,7 +18,7 @@
   padding: 0.5em 1em;
   line-height: 1.5em;
   border: 2px solid $float-input-color;
-  @include border-radius(0.2em);
+  @include border-radius(0.3em);
   background-color: inherit;
   &:focus {
     outline: none;
