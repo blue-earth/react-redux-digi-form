@@ -3,7 +3,8 @@ import React, {
   PropTypes
 } from 'react';
 import QuestionInstruction from '../QuestionInstruction';
-import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput';
+import FloatTextInput from '../../FloatTextInput';
+// import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput';
 import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
 import YesNoChoice from '../../QuestionInputs/YesNoChoice/YesNoChoice';
@@ -145,7 +146,7 @@ class QuestionInteractive extends Component {
       case 'ShortTextField':
       case 'EmailField':
       case 'NumberField':
-        ChildComponent = ShortTextInput;
+        ChildComponent = FloatTextInput;
         break;
       case 'MultipleChoice':
         ChildComponent = MultipleChoice;

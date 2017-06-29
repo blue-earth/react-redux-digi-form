@@ -8,20 +8,23 @@ import { IoAndroidAlert } from 'react-icons/lib/io';
 
 class FloatTextInput extends Component {
   static propTypes = {
-    placeholder: PropTypes.string,
+    placeholderText: PropTypes.string,
     value: PropTypes.string,
     name: PropTypes.string,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
     primaryColour: PropTypes.string,
     autoFocus: PropTypes.bool,
-    isError: PropTypes.bool,
+    hasError: PropTypes.bool,
     errorMessage: PropTypes.string,
-    extraClass: PropTypes.string
+    extraClass: PropTypes.string,
+    type: PropTypes.string
   }
   static defaultProps = {
-    value: '',
-    isError: false
+    hasError: false,
+    placeholderText: 'Label',
+    type: 'text',
+    value: ''
   }
 
   constructor(props) {
@@ -29,18 +32,27 @@ class FloatTextInput extends Component {
     this.state = {
       savedValue: props.value,
       filled: props.value,
-      isError: props.isError,
+      hasError: props.hasError,
       active: false,
       displayErrorMessage: false
     };
   }
   componentWillReceiveProps(props) {
     this.setState({
-      isError: props.isError,
+      hasError: props.hasError,
       savedValue: props.value
     });
   }
-
+  inputType(type) {
+    switch (type) {
+      case 'EmailField':
+        return 'email';
+      case 'NumberField':
+        return 'number';
+      default:
+        return 'text';
+    }
+  }
   handleChange = (event) => {
     const value = event.target.value;
     this.setState({
@@ -69,7 +81,7 @@ class FloatTextInput extends Component {
     }
     this.setState({
       active: false,
-      isError: false
+      hasError: false
     });
     const { onBlur } = this.props;
     if (typeof onBlur === 'function') {
@@ -78,12 +90,12 @@ class FloatTextInput extends Component {
   }
   handleErrorOver = (event) => {
     this.setState({
-      displayErrorMessage: true 
+      displayErrorMessage: true
     });
   }
   handleErrorOut = (event) => {
     this.setState({
-      displayErrorMessage: false 
+      displayErrorMessage: false
     });
   }
   get activeColour() {
@@ -103,23 +115,23 @@ class FloatTextInput extends Component {
     return null;
   }
   render() {
-    const { placeholder, name, errorMessage, autoFocus, extraClass } = this.props;
-    let { filled, active, savedValue, displayErrorMessage, isError } = this.state;
-    const cx = classNames.bind(styles);
+    const { placeholderText, name, errorMessage, autoFocus, extraClass, type } = this.props;
+    let { filled, active, savedValue, displayErrorMessage, hasError } = this.state;
+    const cx = classNames.bind(styles); // eslint-disable-line
     return (
       <div className={cx('textInputWrap', extraClass)}>
         <label
           htmlFor={name}
-          className={cx('textInputLabel', {filled: filled, isError: isError})}
+          className={cx('textInputLabel', { filled: filled, hasError: hasError })}
           style={this.activeColour}>
-          {placeholder}
+          {placeholderText}
         </label>
         <input
           id={name}
-          type="text"
+          type={this.inputType(type)}
           value={savedValue}
           className={cx('textInput', {
-            isErrorInput: isError,
+            isErrorInput: hasError,
             filledInput: active || filled
           })}
           onChange={this.handleChange}
@@ -127,20 +139,20 @@ class FloatTextInput extends Component {
           onBlur={this.handleBlur}
           style={this.activeBorderColour}
           autoFocus={autoFocus}
-        />        
+        />
         <div className={cx('errorIconWrapper')} onMouseOver={this.handleErrorOver} onMouseOut={this.handleErrorOut}>
           <IoAndroidAlert className={cx({
-            hide: !isError
+            hide: !hasError
           })} />
           <div className={cx('errorTip', {
-          'hide': !displayErrorMessage
-        })}>
+            'hide': !displayErrorMessage
+          })}>
             <div className={cx('errorTipArrow')}></div>
             <div className={cx('errorTipInner')}>
               {errorMessage}
             </div>
           </div>
-        </div>          
+        </div>
       </div>
     );
   }

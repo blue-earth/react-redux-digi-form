@@ -574,7 +574,7 @@ export const updateSessionId = createAction(UPDATE_SESSION_ID);
 // ------------------------------------
 // Action: resetFormSubmitStatus
 // ------------------------------------
-export const resetFormSubmitStatus = (RESET_FORM_SUBMIT_STATUS);
+export const resetFormSubmitStatus = createAction(RESET_FORM_SUBMIT_STATUS);
 
 // ------------------------------------
 // Reducer

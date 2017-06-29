@@ -8,18 +8,18 @@ import classNames from 'classnames/bind';
 storiesOf('Input', module)
   .add('Text Input', () => {
     const cx = classNames.bind(styles);
-    let isError = true;
+    let hasError = true;
     let onBlur = (event) => {
       console.log(event.target.value);
-      isError = true;
+      hasError = true;
     }
     return (
       <div>
-        <FloatTextInput name="default" placeholder="Deault state" primaryColour={'#3893d0'} extraClass={cx('default')} />
-        <FloatTextInput name="filled" placeholder="Label" primaryColour={'#3893d0'} value={'Filled state'} extraClass={cx('default')} />
-        <FloatTextInput name="active" placeholder="Label" primaryColour={'#3893d0'} value={'Active state'} autoFocus extraClass={cx('default')} />
-        <FloatTextInput name="error" placeholder="Label" primaryColour={'#3893d0'} extraClass={cx('default')}
-          value={'Error state'} isError={isError} onBlur={onBlur} errorMessage={'Error message here'} />
+        <FloatTextInput name="default" placeholderText="Deault state" primaryColour={'#3893d0'} extraClass={cx('default')} />
+        <FloatTextInput name="filled" placeholderText="Label" primaryColour={'#3893d0'} value={'Filled state'} extraClass={cx('default')} />
+        <FloatTextInput name="active" placeholderText="Label" primaryColour={'#3893d0'} value={'Active state'} autoFocus extraClass={cx('default')} />
+        <FloatTextInput name="error" placeholderText="Label" primaryColour={'#3893d0'} extraClass={cx('default')}
+          value={'Error state'} hasError={hasError} onBlur={onBlur} errorMessage={'Error message here'} />
       </div>
     );
   }

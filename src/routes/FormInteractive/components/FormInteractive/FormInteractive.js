@@ -293,7 +293,6 @@ class FormInteractive extends Component {
       <div className={styles.stepsWrapper}>
         <FormCompletionSection
           {...props} />
-        <FormRow />
       </div>
     );
   }
