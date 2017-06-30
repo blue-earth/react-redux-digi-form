@@ -5,6 +5,7 @@ import Home from './Home';
 import FormInteractiveRoute from './FormInteractive';
 import DashboardRoute from './Dashboard';
 import LoginRoute from './Login';
+import SignUpRoute from './SignUp';
 import { rootPath } from 'helpers/urlHelper';
 
 /*  Note: Instead of using JSX, we recommend using react-router
@@ -17,6 +18,7 @@ export default (store) => ({
   childRoutes: [
     FormInteractiveRoute(store),
     DashboardRoute(store),
-    LoginRoute(store)
+    LoginRoute(store),
+    SignUpRoute(store)
   ]
 });

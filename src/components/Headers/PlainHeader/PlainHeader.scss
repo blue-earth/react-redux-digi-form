@@ -1,0 +1,14 @@
+@import './mixins';
+@import './variables';
+
+.header {
+  padding: 16px 0;
+  background-color: $dashboard-header-bg-color;
+  z-index: 400;
+  position: relative;
+  height: $dashboard-header-height;
+  @include clearfix;
+}
+.logo {
+  float: left;
+}
