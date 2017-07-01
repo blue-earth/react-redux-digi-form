@@ -33,7 +33,7 @@ class Button extends Component {
     notificationCounter: PropTypes.number,
 
     // button style.
-    style: PropTypes.oneOf(['headerButton', 'formButton', 'defaultButton', 'linkButton']),
+    style: PropTypes.oneOf(['headerButton', 'formButton', 'submitButton', 'defaultButton', 'linkButton']),
 
     // removes background and border
     iconOnly: PropTypes.bool,
@@ -160,7 +160,7 @@ class Button extends Component {
         >
           {this.renderNotificationCounter()}
           {this.renderSpinner()}
-          {children}
+          <span className={styles.children}>{children}</span>
         </BootstrapButton>
       );
     }

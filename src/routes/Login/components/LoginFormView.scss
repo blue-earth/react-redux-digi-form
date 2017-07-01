@@ -1,52 +1,34 @@
+@import './mixins';
+@import './variables';
+
 .inputWrapper {
   position:relative;
   width: 400px;
   margin: 0 auto;
-  padding-top:200px;
-  .splitter{
-    width:100%;
-    height:10px;
-  }
-  .submitButtonWrapper{
-    position:absolute;
-    left:103%;
-    top:351px;
-    .btn_submit{
-      background: transparent;
-      color: #70a0ef;
-      border: 1.5px solid darkgrey;
-      height: 64px;
-      text-align: left;
-      line-height: 16px;
-      l{
-        font-size:11px;
-      }
+  padding: 40px 0;
+  input[type='text'], input[type='password'] {
+    background: lighten($grey, 20%);
+    &:focus {
+      background: #fff;
     }
+  }
+  .forgotPass {
+    font-size: 11px;
+    text-align: right;
+    padding: 10px 0;
   }
   h2 {
+    font-family: "roble_alt_boldbold";
     font-size:25px;
-    padding-bottom:20px;
-  }
-  h3 {
-    font-size:11px;
-    color:#4880da;
-    float:right;
+    text-align: center;
+    margin: 0 0 40px;
   }
   h4 {
-    font-size:13px;
     padding-top:40px;
   }
-  h5 {
-    font-size:13px;
-    padding-top: 50px;
-    l{
-      color:#4880da;
-    }
-  }
   .socialIconArea{
-    color:#4880da;
-    position:absolute;
-    left:-4px;
+    color: $blue;
+    margin-left: -4px; // adjust for padding on icon svg
   }
 
 }

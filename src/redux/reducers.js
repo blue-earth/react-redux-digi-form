@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import router from './modules/router';
 import { reducer as modal } from 'redux-modal';
 import authReducer from './modules/auth';
+import {reducer as formReducer} from 'redux-form';
 
 export const makeRootReducer = (asyncReducers) => {
   return combineReducers({
@@ -10,6 +11,7 @@ export const makeRootReducer = (asyncReducers) => {
     auth: authReducer,
     router,
     modal,
+    form: formReducer,
     ...asyncReducers
   });
 };
