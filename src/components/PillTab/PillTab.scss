@@ -1,0 +1,62 @@
+@import './mixins';
+@import './variables';
+
+.pillTab {
+  .nav {
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+    &:after {
+      content: " ";
+      display: table;
+      clear: both;
+    }
+  }
+  .nav-tabs{
+    margin: 16px 0;
+  }
+  .nav-tabs>li {
+    float: left;
+  }
+  .nav-tabs>li>a {
+    @include border-radius(5px);
+    margin-right: 5px;
+    padding: 15px 30px;
+    background-color: #eee;
+    color: #999;
+    text-decoration: none;
+    border: 1px solid transparent;
+    &:active {
+      outline: none;
+    }
+  }
+  .nav-tabs>li.active>a {
+    position: relative;
+    background-color: #999;
+    color: $white;
+    &:after {
+      top: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+      border-color: transparent;
+      border-top-color: #999;
+      border-width: 8px;
+      margin-left: -8px;
+    }
+  }
+  .tab-content {
+    margin-top: 22px;
+    padding: 20px 0;
+  }
+  .tab-content>.tab-pane {
+      display: none;
+  }
+  .tab-content>.active {
+      display: block;
+  }
+}
