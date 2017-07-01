@@ -8,7 +8,7 @@ login
 */
 export const loginPath = 'login';
 
-export const loginUrl = (relativePath) =>
+export const loginUrl = (relativePath='') =>
   formatUrl(`${rootPath}/${loginPath}/${relativePath}`);
 
 /*
