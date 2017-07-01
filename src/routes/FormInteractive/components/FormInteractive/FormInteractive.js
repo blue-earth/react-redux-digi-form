@@ -2,43 +2,49 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import classNames from 'classnames';
+import _ from 'lodash';
 import FormHeader from 'components/Headers/FormHeader';
-import { Button } from 'react-bootstrap';
-import FormSection from '../FormSection/FormSection';
-import SubmitButton from 'components/Buttons/FormEnterButton/FormEnterButton';
-import FlowLine from 'components/Forms/FlowLine/FlowLine';
-import FormCompletionSection from '../FormCompletionSection/FormCompletionSection';
-import FormRow from 'components/Forms/FormRow/FormRow';
+import ProgressTracker from '../ProgressTracker';
+import SubmitButton from 'components/Buttons/FormEnterButton';
+import FormCompletionSection from '../FormCompletionSection';
+import FormRow from 'components/Forms/FormRow';
+import StackLogo from 'components/Logos/StackLogo';
 import {
-  groupFormQuestions,
-  SlideAnimation
+  getNextQuestionId,
+  getQuestionGroups,
+  getQuestionGroupTitles
 } from 'helpers/formInteractiveHelper';
 import {
   FORM_AUTOSAVE,
   FORM_USER_SUBMISSION
 } from 'redux/modules/formInteractive';
-import { findIndexById } from 'helpers/pureFunctions';
-import SaveForLaterModal from '../SaveForLaterModal/SaveForLaterModal';
-import AccessCodeModal from 'components/Forms/AccessCodeModal/AccessCodeModal';
+import FormInteractiveView from '../FormInteractiveView';
+import AccessCodeModal from 'components/Forms/AccessCodeModal';
+import SaveForLaterModal from '../SaveForLaterModal';
 import styles from './FormInteractive.scss';
-import Animate from 'rc-animate';
 
 class FormInteractive extends Component {
 
   static contextTypes = {
     router: React.PropTypes.object,
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static childContextTypes = {
-    primaryColor: PropTypes.string
+    primaryColour: PropTypes.string
   };
 
   static propTypes = {
     /*
-     * Form ID
+     * formId: Form ID
      */
-    id: PropTypes.number.isRequired,
+    formId: PropTypes.number.isRequired,
+
+    /*
+     * title: Form title
+     */
+    title: PropTypes.string,
 
     /*
      * form: form_data of response, consists of questions and logics.
@@ -66,29 +72,35 @@ class FormInteractive extends Component {
     isVerifying: PropTypes.bool.isRequired,
 
     /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
+     * changeCurrentState: Redux action to change the update the current answer value on change,
+     * input state to redux store.
      */
-    currentQuestionId: PropTypes.number.isRequired,
+    changeCurrentState: PropTypes.func.isRequired,
+
+    /*
+     * currentQuestion: Redux state that keeps the current active question id and answer.
+     */
+    currentQuestion: PropTypes.object.isRequired,
 
     /*
      * Form primary color
      */
-    primaryColor: PropTypes.string,
+    primaryColour: PropTypes.string,
 
     /*
-     * currentQuestionId: Redux state that keeps the current active question ID.
+     * verificationStatus: Redux state that keeps the verification status responses.
      */
     verificationStatus: PropTypes.array,
 
     /*
-     * prevQuestion: Redux action to move to previous question.
+     * goToPrevQuestion: Redux action to move to previous question.
      */
-    prevQuestion: PropTypes.func.isRequired,
+    goToPrevQuestion: PropTypes.func.isRequired,
 
     /*
-     * nextQuestion: Redux action to move to next question when the current answer is qualified.
+     * goToNextQuestion: Redux action to move to next question when the current answer is qualified.
      */
-    nextQuestion: PropTypes.func.isRequired,
+    goToNextQuestion: PropTypes.func.isRequired,
 
     /*
      * goToQuestion: Redux action to move to specific question by ID.
@@ -146,9 +158,9 @@ class FormInteractive extends Component {
     formAccessCode: PropTypes.string.isRequired,
 
     /*
-     * show: Redux modal show
+     * showModal: Redux modal show
      */
-    show: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired,
 
     /*
      * params: Routing params
@@ -172,7 +184,7 @@ class FormInteractive extends Component {
   };
 
   getChildContext() {
-    return { primaryColor: this.props.primaryColor };
+    return { primaryColour: this.props.primaryColour };
   };
 
   componentWillMount() {
@@ -187,84 +199,46 @@ class FormInteractive extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { resetFormSubmitStatus, show } = this.props;
+    const { resetFormSubmitStatus, showModal } = this.props;
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION &&
       props.lastFormSubmitStatus.result) {
       if (props.shouldShowFinalSubmit) {
-        this.context.router.push(`/forms/${this.props.id}/${this.props.sessionId}/completion`);
+        this.context.router.push(`/forms/${this.props.formId}/${this.props.sessionId}/completion`);
       } else {
-        show('saveForLaterModal');
+        showModal('saveForLaterModal');
       }
       resetFormSubmitStatus();
     }
     if (this.props.formAccessStatus !== props.formAccessStatus &&
       props.formAccessStatus === 'fail') {
-      show('accessCodeModal');
+      showModal('accessCodeModal');
     }
   }
 
-  sectionStatus(allQuestions, currentQuestionId, questionGroup) {
-    const { shouldShowFinalSubmit } = this.props;
-    const gq = questionGroup.questions;
-    const curQueIdx = findIndexById(allQuestions, currentQuestionId);
-    const firstGroupIdx = findIndexById(allQuestions, gq[0].id);
-    const lastGroupIdx = findIndexById(allQuestions, gq[gq.length - 1].id);
-
-    if (shouldShowFinalSubmit) return 'completed'; // check if it's the final step.
-
-    if (curQueIdx < firstGroupIdx) return 'pending';
-    else if (curQueIdx <= lastGroupIdx) return 'active';
-    else return 'completed';
+  setActiveGroup = (index) => {
+    const { form: { questions }, goToQuestion } = this.props;
+    const groups = getQuestionGroups(questions);
+    const newGroupId = groups[index].id;
+    const newQuestionId = getNextQuestionId(questions, newGroupId);
+    goToQuestion(newQuestionId);
   }
 
-  get renderFormSteps() {
-    const props = this.props;
-    const { form: { questions }, currentQuestionId, shouldShowFinalSubmit } = props;
-    const that = this;
-    const questionGroups = groupFormQuestions(questions);
-
-    var slideAnimation = new SlideAnimation(1000);
-    const anim = {
-      enter: slideAnimation.enter,
-      leave: slideAnimation.leave
-    };
-
-    return (
-      <div className={styles.stepsWrapper}>
-        <Animate exclusive animation={anim}>
-          {
-            questionGroups.map(function (group, index) {
-              return (
-                <FormSection key={index} questionGroup={group}
-                  step={index+1} totalSteps={questionGroups.length}
-                  status={that.sectionStatus(questions, currentQuestionId, group)}
-                  {...props} />
-              );
-            })
-          }
-        </Animate>
-        <FormRow>
-          {shouldShowFinalSubmit &&
-            <div className={styles.submitButtonsArea}>
-              <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
-            </div>}
-          <div className={styles.helpButtonWrapper}>
-            <Button bsStyle="danger" block>Help</Button>
-          </div>
-        </FormRow>
-      </div>
-    );
+  get currentSectionIndex() {
+    const { form: { questions }, currentQuestion } = this.props;
+    if (!questions) return 0;
+    const question = _.find(questions, (o) => o.id === currentQuestion.id);
+    const groups = getQuestionGroups(questions);
+    const index = _.findIndex(groups, (o) => o.id === question.group);
+    return index > 0 ? index : 0;
   }
 
-  get renderFormCompletionSection() {
-    const props = this.props;
-    return (
-      <div className={styles.stepsWrapper}>
-        <FormCompletionSection
-          {...props} />
-        <FormRow />
-      </div>
-    );
+  get isCompleted() {
+    const { params: { status } } = this.props;
+    return status === 'completion';
+  }
+
+  get needsAccessCode() {
+    return this.props.formAccessStatus !== 'success';
   }
 
   loadFormSession = () => {
@@ -281,21 +255,62 @@ class FormInteractive extends Component {
     submitAnswer(FORM_USER_SUBMISSION);
   }
 
-  render() {
-    const { submitAnswer, params: { status }, formAccessStatus,
-      form, id, sessionId } = this.props;
+  renderFormContent() {
+    const props = this.props;
+    const { form: { questions }, shouldShowFinalSubmit } = props;
+    const questionGroupTitles = getQuestionGroupTitles(questions);
+
     return (
-      <div>
-        <FormHeader submitAnswer={submitAnswer} />
-        <FlowLine />
-        {status !== 'completion' && form && this.renderFormSteps}
-        {status !== 'completion' &&
-          <SaveForLaterModal formId={id} sessionId={sessionId} />
+      <div className={classNames(styles.contentWrapper, 'container')}>
+        <div className={styles.contentWrapperInner}>
+          <ProgressTracker
+            sectionTitleList={questionGroupTitles}
+            currentSectionIndex={this.currentSectionIndex}
+            onItemChange={this.setActiveGroup}
+          />
+          <FormInteractiveView {...this.props} />
+          <FormRow>
+            {shouldShowFinalSubmit &&
+              <div className={styles.submitButtonsArea}>
+                <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
+              </div>
+            }
+          </FormRow>
+          <div className={styles.bottomLogoWrapper}>
+            <span>Powered by</span>
+            <div className={styles.bottomLogo}>
+              <StackLogo logoStyle="darkgrey" width={80} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderFormCompletionSection() {
+    const props = this.props;
+    return (
+      <div className={styles.stepsWrapper}>
+        <FormCompletionSection
+          {...props} />
+      </div>
+    );
+  }
+
+  render() {
+    const { title, submitAnswer, form, formId, sessionId } = this.props;
+    return (
+      <div className={styles.wrapper}>
+        <FormHeader title={title} submitAnswer={submitAnswer} />
+        {!this.isCompleted && !this.needsAccessCode && form &&
+          this.renderFormContent()
         }
-        {status === 'completion' && this.renderFormCompletionSection}
-        {formAccessStatus !== 'success' &&
-          <AccessCodeModal onSuccess={this.loadFormSession}
-            {...this.props} />
+        {!this.isCompleted &&
+          <SaveForLaterModal formId={formId} sessionId={sessionId} />
+        }
+        {this.isCompleted && this.renderFormCompletionSection()}
+        {this.needsAccessCode &&
+          <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />
         }
       </div>
     );

@@ -7,7 +7,7 @@ import styles from './LongTextInput.scss';
 class LongTextInput extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {
@@ -82,12 +82,12 @@ class LongTextInput extends Component {
   render() {
     var props = this.props;
     var { autoFocus } = this.props;
-    var { primaryColor } = this.context;
+    var { primaryColour } = this.context;
     var optionals = {};
 
-    if (typeof primaryColor !== 'undefined') {
+    if (typeof primaryColour !== 'undefined') {
       optionals['style'] = {
-        color: primaryColor
+        color: primaryColour
       };
     }
     if (props.placeholderText) {

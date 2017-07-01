@@ -4,7 +4,9 @@ $paleblue: #f3faff;
 $orange: #ff8a00;
 $grey: #c0c3c9;
 $green: #65b82d;
+$white: #FFFFFF;
 $red: #d45644;
+$black: #000000;
 
 $header-bg-color: $blue;
 
@@ -17,7 +19,7 @@ $highlight-color: $orange;
 
 // dashboard layout color
 $dashboard-header-bg-color: $blue;
-$dashboard-bg-color: 		$paleblue;
+$dashboard-bg-color:        $paleblue;
 $dashboard-text-color:      #7b7b7b;
 
 // defaultButton component
@@ -50,6 +52,7 @@ $table-border-color:        #bbb;
 
 // Form Fields
 $input-color:               #333;
+$float-input-color:         #D0D0D0;
 $button-color:              #4DCCEB;
 $headerbutton-bg-color:     #4A9DD5;
 $button-border-color:       #C6EFF8;
@@ -60,11 +63,16 @@ $text-hover-border-color:   #888;
 
 $question-edit-separator-color: #dfdfdf;
 
-$panel-heading-bg-color: #ffffff;
-$panel-body-bg-color: #f0f4f7;
-$panel-border-color: #dbe5ee;
-$panel-heading-text-color: #313e47;
+$panel-heading-bg-color:    #ffffff;
+$panel-body-bg-color:       #f0f4f7;
+$panel-border-color:        #dbe5ee;
+$panel-heading-text-color:  #313e47;
 $panel-text-color1:     #343d46;
 $panel-text-color2:     #404952;
-$panel-text-color3:		#7e8ea5;
+$panel-text-color3:     #7e8ea5;
 $panel-text-color4:     #a5aab0;
+
+$frontend-text-color1:      #333c48;
+$frontend-text-color2:      #7e8186;
+$frontend-text-color3:      #848c98;
+$frontend-border-color:     #e6e8eb;

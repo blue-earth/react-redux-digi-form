@@ -1,0 +1,97 @@
+@import './mixins';
+@import './variables';
+
+$pt-bar-height:   3px;
+$pt-button-width: 47px;
+
+.wrapper {
+  height: $frontend-progressbar-height;
+  position: relative;
+  overflow: hidden;
+  padding: 0 $pt-button-width $pt-bar-height;
+  @include media('<sm') {
+    margin: 0 -15px;
+    height: $pt-bar-height;
+    @include box-shadow-custom(0 3px 25px rgba(0, 0, 0, .15));
+  }
+}
+
+.slickWrapper {
+  @include media('<sm') {
+    display: none;
+  }
+}
+.progressbar {
+  position: absolute;
+  height: $pt-bar-height;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    opacity: .8;
+  }
+}
+.progressbarValue {
+  background-color: inherit;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 50%;
+}
+
+.stepItem {
+  display: inline-block;
+  list-style-type: decimal;
+  padding: 0 54px 0 40px;
+  line-height: 52px;
+  cursor: pointer;
+  position: relative;
+  color: #c4c6c8;
+  &:before, &:after {
+    position: absolute;
+    left: -15px;
+    display: block;
+    content: '';
+    background-color: #eee;
+    border-left: 4px solid #FFF;
+    width: 6px;
+    height: 26px;
+  }
+  &:after {
+    top: 0;
+    -moz-transform: skew(30deg);
+    -ms-transform: skew(30deg);
+    -webkit-transform: skew(30deg);
+    transform: skew(30deg);
+  }
+  &:before {
+    bottom: 0;
+    -moz-transform: skew(-30deg);
+    -ms-transform: skew(-30deg);
+    -webkit-transform: skew(-30deg);
+    transform: skew(-30deg);
+  }
+}
+
+:global {
+  .slick-list {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border-right: 1px solid $frontend-border-color;
+    border-left: 1px solid $frontend-border-color;
+  }
+  .slick-active {
+    color: #73767b;
+  }
+}

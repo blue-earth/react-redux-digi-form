@@ -1,0 +1,25 @@
+@import './mixins';
+@import './variables';
+
+$pt-button-color: #c7ccd1;
+$pt-button-width: 47px;
+
+.arrowButton {
+  border: none !important;
+  background-color: transparent !important;
+  outline: none !important;
+  @include box-shadow-custom(none !important);
+  color: $pt-button-color;
+  height: 100%;
+  width: $pt-button-width;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  &.left {
+    left: 0;
+  }
+  &.right {
+    right: 0;
+  }
+}

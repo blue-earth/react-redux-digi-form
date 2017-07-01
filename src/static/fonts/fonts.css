@@ -38,6 +38,19 @@
 }
 
 @font-face {
+    font-family: 'roble_alt_extrabold';
+    src: url('roblealt_extrabold_macroman/RobleAltExtraBold-webfont.eot');
+    src: url('roblealt_extrabold_macroman/RobleAltExtraBold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('roblealt_extrabold_macroman/RobleAltExtraBold-webfont.woff2') format('woff2'),
+         url('roblealt_extrabold_macroman/RobleAltExtraBold-webfont.woff') format('woff'),
+         url('roblealt_extrabold_macroman/RobleAltExtraBold-webfont.ttf') format('truetype'),
+         url('roblealt_extrabold_macroman/RobleAltExtraBold-webfont.svg#roble_alt_extraboldextrabold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
     font-family: 'roble_alt_bookbook';
     src: url('roblealt_book_macroman/RobleAltBook-webfont.eot');
     src: url('roblealt_book_macroman/RobleAltBook-webfont.eot?#iefix') format('embedded-opentype'),

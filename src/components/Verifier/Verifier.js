@@ -5,7 +5,7 @@ import React, {
 import styles from './Verifier.scss';
 class Verifier extends Component {
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {
@@ -34,7 +34,7 @@ class Verifier extends Component {
     var { type, status } = this.props;
     var output = false;
     var validatorStyle = {
-      backgroundColor: this.context.primaryColor
+      backgroundColor: this.context.primaryColour
     };
 
     if (status === false) {

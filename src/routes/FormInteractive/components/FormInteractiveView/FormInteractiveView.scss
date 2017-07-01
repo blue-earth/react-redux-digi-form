@@ -1,0 +1,119 @@
+@import './mixins';
+@import './variables';
+
+$wrapper-inner-padding-right: 135px;
+
+.wrapper {
+  height: calc(100% - 3px);
+  @include media('>=sm') {
+    padding: 30px;
+    padding: 50px 50px 85px;
+    height: calc(100% - #{$frontend-progressbar-height});
+  }
+  @include media('>=md') {
+    padding: 65px 65px 95px;
+  }
+}
+.wrapperInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  @include media('>=sm') {
+    height: 100%;
+    padding-right: $wrapper-inner-padding-right;
+  }
+  @include media('<sm') {
+    padding: 30px 0;
+    height: calc(100% - #{$frontend-footer-nav-height-mobile});
+  }
+}
+
+.neighborInstruction {
+  font-size: 24px;
+  color: $frontend-text-color1;
+  margin: 0;
+  font-weight: 400;
+}
+
+.currentQuestionWrapper {
+  display: flex;
+  flex: 1;
+  overflow: auto;
+}
+
+.prevQuestionWrapper {
+  opacity: .15;
+  @include media('>=md') {
+    padding-bottom: 30px;
+  }
+}
+
+.answerIcon {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  line-height: 1;
+  display: block;
+  @include transform(scaleX(-1));
+}
+
+.prevQuestionAnswer {
+  padding-left: 30px;
+  position: relative;
+  font-size: 24px;
+  color: inherit;
+}
+
+.nextQuestionWrapper {
+  opacity: .15;
+  @include media('>=md') {
+    padding-top: 30px;
+  }
+}
+
+.navButtonsWrapper {
+  @include media('<sm') {
+    position: absolute;
+    left: -15px;
+    right: -15px;
+    bottom: 0;
+    height: $frontend-footer-nav-height-mobile;
+    padding: 10px 15px;
+    @include box-shadow-custom(0 -3px 25px rgba(0, 0, 0, .15));
+  }
+  @include media('>=sm') {
+    height: 130px;
+    text-align: right;
+    @include vcenter;
+    right: 15px;
+  }
+  @include media('>=md') {
+    right: $wrapper-inner-padding-right;
+  }
+}
+
+.arrowNavs {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+  @include clearfix;
+  li {
+    padding-left: 0;
+    @include media('>=sm') {
+      &:not(:first-child) {
+        margin-top: -1px;
+      }
+    }
+    @include media('<sm') {
+      float: left;
+      margin-right: 10px;
+    }
+  }
+}
+
+.enterWrapper {
+  margin-top: 30px;
+  @include media('<sm') {
+    display: none;
+  }
+}

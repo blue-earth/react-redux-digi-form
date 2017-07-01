@@ -11,7 +11,7 @@ import styles from './DateInput.scss';
 class DateInput extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   constructor(props) {
@@ -50,8 +50,8 @@ class DateInput extends Component {
       var dateInput = findDOMNode(this.refs.dateInput.refs.input);
       const that = this;
       dateInput.addEventListener('keydown', (event) => that.handleKeyDown(event));
-      if (this.context.primaryColor) {
-        dateInput.style = 'color:' + this.context.primaryColor;
+      if (this.context.primaryColour) {
+        dateInput.style = 'color:' + this.context.primaryColour;
       }
     }
   }

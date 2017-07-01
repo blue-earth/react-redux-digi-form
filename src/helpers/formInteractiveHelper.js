@@ -38,15 +38,35 @@ export const groupFormQuestions = (questions) => {
       questions: tempGroup[group.id]
     });
   }
+
   return newGroup;
+};
+
+export const getQuestionGroups = (questions) => {
+  return _.filter(questions, (question) => {
+    return question.type === 'Group';
+  });
+};
+
+export const getQuestionGroupTitles = (questions) => {
+  return _.map(getQuestionGroups(questions), (e) => e.title);
 };
 
 export const getContextFromAnswer = (answers) => {
   var context = {};
   answers.map(function (answer) {
-    context['answer_' + answer.id] = answer.value;
+    context['answer_' + answer.id] = stringifyAnswerValue(answer);
   });
   return context;
+};
+
+export const stringifyAnswerValue = (answer) => {
+  if (!answer || !answer.value) return '';
+  if (typeof answer.value === 'object') {
+    return `${answer.value.label}. ${answer.value.text}`;
+  } else {
+    return answer.value;
+  }
 };
 
 export const getFirstQuestionOfGroup = (questionGroup) => {
@@ -124,6 +144,17 @@ export const shouldDisableNextButton = (form, questionId) => {
     if (typeof itemFound !== 'undefined') return true;
   }
   return false;
+};
+
+export const getNextQuestionId = (questions, questionId) => {
+  var curIdx, nextIdx;
+  curIdx = nextIdx = _.findIndex(questions, (o) => o.id === questionId);
+  while (nextIdx < questions.length - 1) {
+    var q = questions[++nextIdx];
+    if (q.type !== 'Group') break;
+  }
+  if (questions[nextIdx].type === 'Group') nextIdx = curIdx;
+  return questions[nextIdx].id;
 };
 
 export const getOutcomeWithQuestionId = (state, questionId) => {

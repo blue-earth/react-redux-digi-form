@@ -9,7 +9,7 @@ import styles from './Validator.scss';
 class Validator extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {
@@ -60,7 +60,7 @@ class Validator extends Component {
     var output = false;
     var template = false;
     var validatorStyle = {
-      backgroundColor: this.context.primaryColor
+      backgroundColor: this.context.primaryColour
     };
 
     if (result === false) {

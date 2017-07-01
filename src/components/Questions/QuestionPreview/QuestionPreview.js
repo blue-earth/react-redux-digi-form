@@ -18,7 +18,7 @@ import Hogan from 'hogan.js';
 class QuestionPreview extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {

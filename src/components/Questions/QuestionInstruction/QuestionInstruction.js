@@ -17,6 +17,10 @@ class QuestionDisplay extends Component {
     attachment: React.PropTypes.string
   };
 
+  static contextTypes = {
+    primaryColour: React.PropTypes.string
+  };
+
   static defaultProps = {
     instruction: '',
     description: null,
@@ -25,10 +29,12 @@ class QuestionDisplay extends Component {
 
   renderInstruction() {
     const { instruction } = this.props;
+    const { primaryColour } = this.context;
     var ItemTemplate = () => {
       return (
         <div className={styles.instructionTextWrapper}
-          dangerouslySetInnerHTML={{__html: instruction}}>
+          dangerouslySetInnerHTML={{__html: instruction}}
+          style={{ color: primaryColour }}>
         </div>
       );
     };

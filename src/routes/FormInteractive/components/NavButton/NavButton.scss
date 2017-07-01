@@ -1,0 +1,38 @@
+@import './mixins';
+@import './variables';
+
+$nav-button-border-color:       #eaeaea;
+.navButton {
+  text-align: center;
+  @include box-shadow-custom(0 1px 2px rgba(0, 0, 0, .2) !important);
+  outline: none !important;
+  background-color: white !important;
+  border: 1px solid $nav-button-border-color !important;
+  color: $frontend-text-color3;
+  &[disabled] {
+    color: lighten($frontend-text-color3, 35%) !important;
+    opacity: 1;
+    border-color: lighten($nav-button-border-color, 5%) !important;
+  }
+  @include media('>=sm') {
+    width: 45px;
+    height: 65px;
+    padding: 0;
+  }
+  @include media('<sm') {
+    width: $frontend-footer-nav-height-mobile - 20px;
+    height: $frontend-footer-nav-height-mobile - 20px;
+  }
+}
+
+.navButton.up {
+  @include media('>=sm') {
+    @include border-radius-separate(4px, 4px, 0, 0);
+  }
+}
+
+.navButton.down {
+  @include media('>=sm') {
+    @include border-radius-separate(0, 0, 4px, 4px);
+  }
+}

@@ -7,7 +7,7 @@ import styles from './DropdownInput.scss';
 class DropdownInput extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {
@@ -42,16 +42,16 @@ class DropdownInput extends Component {
 
   render() {
     const { isDisabled, isReadOnly, value, choices, includeBlank } = this.props;
-    const { primaryColor } = this.context;
+    const { primaryColour } = this.context;
     var optionals = {};
 
     if (isDisabled || isReadOnly) {
       optionals['disabled'] = 'disabled';
     }
 
-    if (typeof primaryColor !== 'undefined') {
+    if (typeof primaryColour !== 'undefined') {
       optionals['style'] = {
-        color: primaryColor
+        color: primaryColour
       };
     }
 

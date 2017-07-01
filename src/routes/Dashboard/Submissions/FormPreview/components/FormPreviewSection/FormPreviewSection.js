@@ -12,7 +12,7 @@ import styles from './FormPreviewSection.scss';
 class FormSection extends Component {
 
   static contextTypes = {
-    primaryColor: React.PropTypes.string
+    primaryColour: React.PropTypes.string
   };
 
   static propTypes = {

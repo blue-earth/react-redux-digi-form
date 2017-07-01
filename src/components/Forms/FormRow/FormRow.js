@@ -16,15 +16,13 @@ class FormRow extends Component {
 
   render() {
     return (
-      <div className="container">
-        <Row>
-          <Col md={10} mdOffset={2}>
-            <div className={styles.formRow}>
-              {this.props.children}
-            </div>
-          </Col>
-        </Row>
-      </div>
+      <Row>
+        <Col md={10} mdOffset={2}>
+          <div className={styles.formRow}>
+            {this.props.children}
+          </div>
+        </Col>
+      </Row>
     );
   }
 }

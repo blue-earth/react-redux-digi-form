@@ -2,8 +2,9 @@ import connect from 'redux/utils/connect';
 import { show } from 'redux-modal';
 import {
   INIT_FORM_STATE,
-  prevQuestion,
-  nextQuestion,
+  changeCurrentState,
+  goToPrevQuestion,
+  goToNextQuestion,
   goToQuestion,
   handleEnter,
   storeAnswer,
@@ -14,11 +15,12 @@ import {
   resetFormSubmitStatus
 } from 'redux/modules/formInteractive';
 
-import FormInteractive from '../components/FormInteractive/FormInteractive';
+import FormInteractive from '../components/FormInteractive';
 
 const mapActionCreators = {
-  prevQuestion,
-  nextQuestion,
+  changeCurrentState,
+  goToPrevQuestion,
+  goToNextQuestion,
   fetchFormIfNeeded,
   storeAnswer,
   fetchAnswers,
@@ -27,7 +29,7 @@ const mapActionCreators = {
   handleEnter,
   updateAccessCode,
   resetFormSubmitStatus,
-  show
+  showModal: show
 };
 
 const mapStateToProps = (state) => {
@@ -37,12 +39,13 @@ const mapStateToProps = (state) => {
     sessionId,
     isFetchingForm,
     isVerifying,
-    currentQuestionId,
+    currentQuestion,
+    title,
     form,
     answers,
     prefills,
     verificationStatus,
-    primaryColor,
+    primaryColour,
     lastFormSubmitStatus,
     shouldShowFinalSubmit,
     isAccessCodeProtected,
@@ -50,15 +53,16 @@ const mapStateToProps = (state) => {
     formAccessCode
   } = formInteractive || INIT_FORM_STATE;
   return {
-    id: parseInt(id, 10),
+    formId: parseInt(id, 10),
     sessionId: parseInt(sessionId, 10),
     isFetchingForm,
     isVerifying,
-    currentQuestionId,
+    currentQuestion,
+    title,
     form,
     answers,
     prefills,
-    primaryColor,
+    primaryColour,
     verificationStatus,
     lastFormSubmitStatus,
     shouldShowFinalSubmit,

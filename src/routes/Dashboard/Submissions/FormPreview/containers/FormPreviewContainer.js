@@ -24,7 +24,7 @@ const mapStateToProps = (state) => {
     isFetchingForm,
     form,
     answers,
-    primaryColor,
+    primaryColour,
     formAccessStatus,
     formAccessCode
   } = submissionPreview || INIT_FORM_STATE;
@@ -34,7 +34,7 @@ const mapStateToProps = (state) => {
     isFetchingForm,
     form,
     answers,
-    primaryColor,
+    primaryColour,
     formAccessStatus,
     formAccessCode
   };

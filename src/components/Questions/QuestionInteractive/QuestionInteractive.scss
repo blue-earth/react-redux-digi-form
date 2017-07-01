@@ -1,50 +1,27 @@
 @import './mixins';
 @import './variables';
 
-.interactiveContainer {
+.wrapper {
   @include clearfix;
+  align-self: center;
+  width: 100%;
+  @include media('>sm') {
+    padding-right: 60px;
+  }
+  @include media('>md') {
+    padding-right: 90px;
+  }
   &:after {
     clear:both;
   }
 }
 
-.leftColumn {
-  float: left;
-  width: 400px;
-}
-.rightColumn {
-  margin-left: 20px;
-  float: left;
-}
-.topColumn {
-  margin-bottom: 20px;
-  max-width: 600px;
-}
-.bottomColumn {
-  max-width: 600px;
-}
-.noneColumn {
-  display: none;
-}
-.inlineLeft {
-  display: inline-block;
-  margin-right: 10px;
-  vertical-align: middle;
-}
-.inlineRight {
-  display: inline-block;
-  vertical-align: middle;
-}
-.activeQuestionContainer {
-  margin: 30px 0;
+.inputWrapper {
+
 }
 
-.neighborInstruction {
-  font-size: 22px;
-  color: $text-light-color;
-  margin: 0;
-  font-weight: 400;
-  opacity: .7;
+.errorsWrapper {
+  margin: 20px 0;
 }
 
 .validatiorTransition {
