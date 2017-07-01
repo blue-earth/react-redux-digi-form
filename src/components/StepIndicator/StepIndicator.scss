@@ -1,0 +1,31 @@
+@import './mixins';
+@import './variables';
+
+.stepContent{
+  color: #B3B3B3;
+  text-align: center;
+}
+.stepWrapper{
+  font-family: roble_alt_boldbold;
+  padding: 4px;
+}
+.stepIndicatorWrapper{
+  display: inline;
+  line-height: 30px;
+  padding: 0 10px;
+}
+.activeStep{
+  color: $dashboard-header-bg-color;
+}
+.stepIndicator{
+  display: inline-block;
+  width: 30px;
+  color: #B3B3B3;
+  background-color: #F4F4F4;
+  @include border-radius(15px);
+  margin: 0 10px;
+}
+.activeStepIndicator{
+  color: white;
+  background-color: $dashboard-header-bg-color;
+}

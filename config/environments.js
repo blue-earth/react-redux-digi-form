@@ -19,10 +19,10 @@ export default {
     },
     globals: {
       ...config.globals,
-      API_URL: JSON.stringify('http://localdev.emondo.com.au:8000'),
-      //FRONTEND_ROOT: JSON.stringify(`http://${config.server_host}:${config.server_port}`)
+      API_URL: JSON.stringify('http://localdev.emondo.co:8000'),
       FRONTEND_ROOT: JSON.stringify(`http://localhost:${config.server_port}`),
-      GOOGLE_MAP_API_KEY: JSON.stringify('AIzaSyCtwNDvDLxw-JSB8RBvtdMuW2Qjh5AypEk')
+      GOOGLE_MAP_API_KEY: JSON.stringify('AIzaSyCtwNDvDLxw-JSB8RBvtdMuW2Qjh5AypEk'),
+      STRIPE_PUBLISHABLE_KEY: JSON.stringify('pk_test_PfzV9MnnUTfW58l1erEPX4tI')
     }
   }),
 
@@ -41,9 +41,11 @@ export default {
     },
     globals: {
       ...config.globals,
-      API_URL: JSON.stringify('http://api.emondo.co'),
-      FRONTEND_ROOT: JSON.stringify('http://app.emondo.co'),
-      GOOGLE_MAP_API_KEY: JSON.stringify('AIzaSyCtwNDvDLxw-JSB8RBvtdMuW2Qjh5AypEk')
+      API_URL: JSON.stringify('https://emondo.co'),
+      FRONTEND_ROOT: JSON.stringify('https://app.emondo.co'),
+      GOOGLE_MAP_API_KEY: JSON.stringify('AIzaSyCtwNDvDLxw-JSB8RBvtdMuW2Qjh5AypEk'),
+      // TODO: Switch to production key and do not keep it in git
+      STRIPE_PUBLISHABLE_KEY: JSON.stringify('pk_test_PfzV9MnnUTfW58l1erEPX4tI')
     }
   })
-}
+};

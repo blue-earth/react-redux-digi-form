@@ -45,10 +45,17 @@ $table-border-color: #eaeff3;
 $bg-color1:         #fff;
 $bg-color2:         #fafafa;
 
+
 $border-color:              #e6ebed;
 
 $shadow-color:              #bbb;
 $table-border-color:        #bbb;
+
+// purchase darken blue
+$grayblue: #ECF0F3;
+$blackblue: darken($blue,26%);
+$bg-color3: $grayblue;
+$darker-bg-color3: darken($grayblue,10%);
 
 // Form Fields
 $input-color:               #333;

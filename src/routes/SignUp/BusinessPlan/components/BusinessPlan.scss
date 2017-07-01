@@ -1,0 +1,293 @@
+@import './mixins';
+@import './variables';
+
+.businessPlan{
+  height: 100%;
+}
+.spinnerWrapper{
+  padding-top: 200px;
+  text-align: center;
+}
+.purchasePageContent{
+  min-height: 100%;
+  background-color: $bg-color3; 
+}
+.pageTitleWrapper{
+   margin: 50px 0;
+}
+.pageTitle{
+  padding: 10px 0 0 0;
+  color: $blackblue;
+  font-family: "roble_alt_boldbold";
+  font-size: 28px;
+  font-weight: 800;
+}
+.sectionTitle{
+  font-size: 18px;
+}
+.panelWrapper{
+  padding: 30px 10px;
+}
+.domainSection{
+  margin-bottom: 15px;
+}
+.domainInputWrapper{
+  width: 100%;
+}
+.domainInputGroup{
+  display: inline-block;
+  position: relative;
+  min-width: 60%;
+}
+.domainInput{
+  width: 100%;
+  height: 56px;
+  margin: 20px 0;
+  padding: 20px 40px 20px 20px;
+  @include border-radius(6px);
+  border: 1px solid $bg-color3;
+  color: $blackblue;
+  font-weight: 700;
+  font-size: 20px;
+  font-family: 'roble_altregular', sans-serif;
+}
+.rootDomain{
+  padding: 0 20px;
+}
+.subdomainErrorMessage{
+  font-size: 14px;
+}
+.validationIndicator{
+  font-size: 20px;
+  position: absolute;
+  top: 32px;
+  right: 16px;
+  color: $blue;
+}
+.validatorPass{
+  color: $blue;
+}
+.validatorFail{
+  color: $red;
+}
+.bigNumberInput{
+  font-size: 20px;
+}
+.smallNumberInput{
+  font-size: 12px;
+}
+.billingCycleSection {
+  margin: 30px 0;
+}
+.billingCycleTitle{
+  padding: 20px;
+}
+.billingCycleSelectionWrapper{
+  position: relative;
+  width: 100%;
+}
+
+.ribbonWrapper {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.ribbon{
+  text-align: center;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform:    rotate(-45deg);
+  -ms-transform:     rotate(-45deg);
+  -o-transform:      rotate(-45deg);
+  position: relative;
+  top: 18px;
+  left: -28px;
+  width: 120px;
+  line-height: 30px;
+  color: white;
+  background-color: $shadow-color;
+}
+.activeRibbon{
+  background-color: $dashboard-header-bg-color
+}
+.selectionPanel{
+  padding: 12px 8px;
+  width: 48%;
+  cursor: pointer;
+  @include border-radius(5px);
+  border: 3px solid white;
+  &[disabled] {
+    color: white;
+    border-color: $panel-heading-bg-color;
+    background-color: $panel-heading-bg-color;
+    cursor: not-allowed;
+  }
+}
+.paymentMethod {
+  margin-bottom: 30px;
+}
+.paymentSelection {
+  margin: 6px 0;
+  line-height: 28px;
+}
+.selectTitle {
+  font-family: "roble_alt_boldbold";
+}
+.bigPanel{
+  padding: 20px 4px;
+}
+.activePanel{
+  border: 3px solid $dashboard-header-bg-color;
+  @include box-shadow-custom(0px 0px 10px 6px rgba(57,147,209,0.15));
+}
+.smallPanel{
+  padding: 0;
+}
+.clearFloat{
+  clear: both;
+}
+.nextButtonWrapper{
+  margin-top: 40px;
+}
+.nextButton{
+  width: 162px;
+  height: 66px;
+  margin-bottom: 30px;
+  color: white;
+  background-color: $orange;
+  font-size: 20px;
+  font-family: "roble_alt_boldbold";
+  border: none;
+  @include border-radius(5px);
+  &:active{
+    outline: none;
+  }
+  &[disabled]{
+    background-color: $shadow-color;
+  }
+}
+.creditCardInputWrapper{
+  position: relative;
+}
+.creditCardInput{
+  height: 58px;
+  width: 100%;
+  margin: 10px 0;
+  padding: 0 20px;
+  @include border-radius(6px);
+  border: 1px solid $darker-bg-color3;
+  color: $darkblue;
+  font-size: 18px;
+  font-weight: bolder;
+}
+.creditCardType {
+  position: absolute;
+  top: 26px;
+  right: 20px;
+}
+.expireDateInput{
+  width: 48%;
+}
+.cvcInput{
+  float: right;
+  width: 48%;
+}
+.purchaseButton{
+  width: 100%;
+  height: 66px;
+  margin-bottom: 20px;
+  color: white;
+  background-color: $orange;
+  font-size: 20px;
+  font-family: "roble_alt_boldbold";
+  border: none;
+  @include border-radius(5px);
+  &:active{
+    outline: none;
+  }
+}
+.backButton{
+  margin-bottom: 20px;
+  padding: 4px 0;
+  font-size: 14px;
+  line-height: 22px;
+  height: 22px;
+  &:hover {
+    text-decoration: none;
+  }
+  &:focus{
+    outline: none;
+  }
+  &:active {
+    outline: none;
+  }
+}
+.backArrow {
+  height: 22px;
+  vertical-align: bottom;
+}
+.purchaseErrorMessages {
+  padding: 10px;
+  margin: 0 0 20px 0;
+  color: $red;
+}
+.purchaseErrorMessageList {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+}
+.infoPanel{
+  color: $darkblue;
+  border-color: $darker-bg-color3;
+  padding: 4px 20px;
+  h4{
+    font-family: "roble_alt_boldbold";
+  }
+}
+.orderPanelSection{
+  margin-bottom: 24px;
+}
+.featurePanel{
+  background-color: transparent;
+}
+.orderItem{
+  font-weight: 800;
+}
+.upgradePlan{
+  font-size: 14px;
+  text-decoration: underline;
+}
+.changeBillingCycle{
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
+}
+.price{
+  margin: 0;
+  float: right;
+}
+
+.featureList{
+  list-style: none;
+  padding: 0;
+}
+.featureItem{
+  margin: 10px 0;
+}
+.footerLinkListLeft{
+  padding: 0;
+  list-style: none;
+  .footerLink{
+    margin-right: 30px;
+  }
+}
+.footerLink{
+  float: left;
+  font-size: 12px;
+}
+.divideLine{
+  border-color: $darker-bg-color3;
+}
