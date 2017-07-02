@@ -219,7 +219,7 @@ class QuestionInteractive extends Component {
       id: questionId,
       status: false
     });
-    return (this.shouldShowValidation() && failedValidations.length) || failedVerifications.length;
+    return (this.shouldShowValidation() && failedValidations.length > 0) || failedVerifications.length > 0;
   }
 
   shouldFocus() {
