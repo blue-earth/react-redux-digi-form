@@ -30,5 +30,10 @@
     color: $blue;
     margin-left: -4px; // adjust for padding on icon svg
   }
-
+  .submitButtonWrapper {
+    margin: 0 0 20px;
+  }
+  a {
+    cursor: pointer;
+  }
 }

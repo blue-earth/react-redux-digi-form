@@ -2,18 +2,18 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { dashboardUrl } from 'helpers/urlHelper';
+import { dashboardUrl, signupUrl } from 'helpers/urlHelper';
 import Verifier from 'components/Verifier/Verifier';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import {
   LOGGED_IN,
   NOT_LOGGED_IN
 } from 'redux/modules/auth';
-import {
-  FaGooglePlusSquare,
-  FaFacebookSquare,
-  FaLinkedinSquare
-} from 'react-icons/lib/fa';
+// import {
+//   FaGooglePlusSquare,
+//   FaFacebookSquare,
+//   FaLinkedinSquare
+// } from 'react-icons/lib/fa';
 import Header from 'components/Headers/Header';
 import styles from './LoginFormView.scss';
 
@@ -64,14 +64,33 @@ class LoginForm extends Component {
     }
   }
 
+  // https://medium.com/@dschmidt1992/auto-fill-with-redux-forms-9b51ad8ef962#.8ebh8tbg9
+  componentDidMount() {
+    const { email, password } = this.props.fields;
+    email.onChange(this.refs.email.value);
+    password.onChange(this.refs.password.value);
+  }
+
   handleSubmit = () => {
     const { fields: {email, password}, authStatus, submitLoginForm } = this.props;
-    if (email.touched && password.touched) {
+    if (email.dirty && password.dirty) {
       if (!email.error && !password.error && authStatus === NOT_LOGGED_IN) {
         this.setState({isSubmitting: true});
         submitLoginForm(email.value, password.value);
         this.setState({hasSubmitted: true, isSubmitting: false});
       }
+    }
+  }
+
+  handleSignupClick = () => {
+    const { goTo } = this.props;
+    goTo(signupUrl(''));
+  }
+
+  handleKeyDown = (evt) => {
+    const { fields: {email, password} } = this.props;
+    if (evt.which === 13) {
+      this.handleSubmit();
     }
   }
 
@@ -88,17 +107,17 @@ class LoginForm extends Component {
   render() {
     const { fields: {email, password}, authStatus } = this.props;
     return (
-      <div className={styles.loginFormWrapper}>
+      <div className={styles.loginFormWrapper} onKeyDown={this.handleKeyDown}>
         <Header />
         <div className={styles.inputWrapper}>
           <h2>Log in to your account</h2>
           <div className={'form-group' + (email.touched && email.error ? ' has-error':'')}>
-            <input type="text" placeholder="Email" className="form-control input-lg"
+            <input ref="email" type="text" placeholder="Email" className="form-control input-lg"
               {...domOnlyProps(email)} />
             {email.touched && email.error && <div className="help-block">{email.error}</div>}
           </div>
           <div className={'form-group' + (password.touched && password.error ? ' has-error':'')}>
-            <input type="password" placeholder="Password" className="form-control input-lg"
+            <input ref="password" type="password" placeholder="Password" className="form-control input-lg"
               {...domOnlyProps(password)} />
             {password.touched && password.error && <div className="help-block">{password.error}</div>}
           </div>
@@ -110,17 +129,32 @@ class LoginForm extends Component {
               Login
             </Button>
           </div>
-          <p className={styles.forgotPass}><a>Forgot your password?</a></p>
-          <h4>Log in with:</h4>
-          <div className={styles.socialIconArea}>
-            <FaGooglePlusSquare size="45" />
-            <FaFacebookSquare size="45" />
-            <FaLinkedinSquare size="45" />
-          </div>
-          <p>or <a>join for free</a></p>
+          <p>Dont have an account yet? <a onClick={this.handleSignupClick}>Join for free</a></p>
         </div>
       </div>
     );
+    // Old render with password link and social icons
+    // which need to be put back when these features exist.
+    // Some bits removed for brevity.
+    // return (
+    //   <div className={styles.loginFormWrapper}>
+    //     <Header />
+    //     <div className={styles.inputWrapper}>
+    //       <h2>Log in to your account</h2>
+    //       {this.renderVerificationStatus()}
+    //       <div className={styles.submitButtonWrapper}>
+    //       </div>
+    //       <p className={styles.forgotPass}><a>Forgot your password?</a></p>
+    //       <h4>Log in with:</h4>
+    //       <div className={styles.socialIconArea}>
+    //         <FaGooglePlusSquare size="45" />
+    //         <FaFacebookSquare size="45" />
+    //         <FaLinkedinSquare size="45" />
+    //       </div>
+    //       <p>or <a>join for free</a></p>
+    //     </div>
+    //   </div>
+    // );
   }
 }
 
