@@ -88,6 +88,15 @@ class LoginForm extends Component {
     goTo(signupUrl(''));
   }
 
+  handleKeyDown = (evt) => {
+    const { fields: {email, password} } = this.props;
+    if (evt.which === 13) {
+      if (email.touched && password.touched) {
+        this.handleSubmit();
+      }
+    }
+  }
+
   renderVerificationStatus = () => {
     const { authStatus, isAuthenticating } = this.props;
     const { hasSubmitted, isSubmitting } = this.state;
@@ -101,7 +110,7 @@ class LoginForm extends Component {
   render() {
     const { fields: {email, password}, authStatus } = this.props;
     return (
-      <div className={styles.loginFormWrapper}>
+      <div className={styles.loginFormWrapper} onKeyDown={this.handleKeyDown}>
         <Header />
         <div className={styles.inputWrapper}>
           <h2>Log in to your account</h2>
