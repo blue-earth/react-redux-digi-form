@@ -33,9 +33,6 @@ class Verifier extends Component {
   render() {
     var { type, status } = this.props;
     var output = false;
-    var validatorStyle = {
-      backgroundColor: this.context.primaryColour
-    };
 
     if (status === false) {
       switch (type) {
@@ -53,7 +50,7 @@ class Verifier extends Component {
       }
 
       return (
-        <div className={styles.errorField} style={validatorStyle}>
+        <div className={styles.errorField}>
           {output}
         </div>
       );
