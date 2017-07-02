@@ -150,6 +150,11 @@ class FormInteractiveView extends Component {
     });
   }
 
+  shouldPrefillValue() {
+    const { currentQuestion } = this.props;
+    return !currentQuestion.answerValue && currentQuestion.inputState === 'init';
+  }
+
   renderCurrentQuestion() {
     const { currentQuestion, verificationStatus, changeCurrentState,
       answers, prefills, storeAnswer, goToNextQuestion, isVerifying, showModal } = this.props;
@@ -159,7 +164,8 @@ class FormInteractiveView extends Component {
     var optionals = {};
     if (currentQuestion.answerValue) {
       optionals['value'] = currentQuestion.answerValue;
-    } else {
+    }
+    if (this.shouldPrefillValue()) {
       const prefill = _.find(prefills, {id: question.id});
       if (typeof prefill === 'object') optionals['value'] = prefill.value;
     }
