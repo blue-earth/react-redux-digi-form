@@ -47,8 +47,8 @@ export default function requiresAuth(Component) {
         this.props.location.pathname !== nextProps.location.pathname;
     }
     _checkAndRedirect() {
-      const { isAuthenticating, user, authStatus, goTo } = this.props;
-      if (!isAuthenticating && (Object.keys(user).length === 0 || authStatus !== 'LOGGED_IN')) {
+      const { isAuthenticating, user, goTo } = this.props;
+      if (!isAuthenticating && Object.keys(user).length === 0) {
         goTo(loginUrl(''));
       }
     }
