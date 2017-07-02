@@ -65,6 +65,13 @@ class LoginForm extends Component {
     }
   }
 
+  // https://medium.com/@dschmidt1992/auto-fill-with-redux-forms-9b51ad8ef962#.8ebh8tbg9
+  componentDidMount() {
+    const { email, password } = this.props.fields;
+    email.onChange(this.refs.email.value);
+    password.onChange(this.refs.password.value);
+  }
+
   handleSubmit = () => {
     const { fields: {email, password}, authStatus, submitLoginForm } = this.props;
     if (email.touched && password.touched) {
@@ -99,12 +106,12 @@ class LoginForm extends Component {
         <div className={styles.inputWrapper}>
           <h2>Log in to your account</h2>
           <div className={'form-group' + (email.touched && email.error ? ' has-error':'')}>
-            <input type="text" placeholder="Email" className="form-control input-lg"
+            <input ref="email" type="text" placeholder="Email" className="form-control input-lg"
               {...domOnlyProps(email)} />
             {email.touched && email.error && <div className="help-block">{email.error}</div>}
           </div>
           <div className={'form-group' + (password.touched && password.error ? ' has-error':'')}>
-            <input type="password" placeholder="Password" className="form-control input-lg"
+            <input ref="password" type="password" placeholder="Password" className="form-control input-lg"
               {...domOnlyProps(password)} />
             {password.touched && password.error && <div className="help-block">{password.error}</div>}
           </div>
