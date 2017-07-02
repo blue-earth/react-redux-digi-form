@@ -132,7 +132,7 @@ class FloatTextInput extends Component {
       <div className={cx('textInputWrap', extraClass)}>
         <label
           htmlFor={controlId}
-          className={cx('textInputLabel',{
+          className={cx('textInputLabel', {
             filled: filled && placeholder.length === 0,
             hasError: hasError,
             hide: filled && placeholder.length > 0

@@ -5,10 +5,6 @@ import React, {
 import { dashboardUrl, signupUrl } from 'helpers/urlHelper';
 import Verifier from 'components/Verifier/Verifier';
 import Button from 'components/Buttons/DashboardButtons/Button';
-import {
-  LOGGED_IN,
-  NOT_LOGGED_IN
-} from 'redux/modules/auth';
 // import {
 //   FaGooglePlusSquare,
 //   FaFacebookSquare,
