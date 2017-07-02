@@ -25,9 +25,14 @@ import Spinner from 'components/Spinner';
 
 class BusinessPlan extends Component {
   static propTypes = {
-    plansConfig: PropTypes.array,
-    currentlySelectedPlan: PropTypes.shape({
+    planConfig: PropTypes.shape({
       name: PropTypes.string,
+      minRequiredNumUser: PropTypes.number,
+      maxNumUser: PropTypes.number,
+      currency: PropTypes.string,
+      purchaseOptions: PropTypes.array
+    }),
+    currentlySelectedPlan: PropTypes.shape({
       subdomain: PropTypes.string,
       numberOfUsers: PropTypes.number,
       billingCycle: PropTypes.oneOf(['annually', 'monthly'])
@@ -66,21 +71,13 @@ class BusinessPlan extends Component {
     return billingCycle === cycle;
   }
   selectAnnually = () => {
-    const {setSelectedPlanConfig} = this.props;
-    const { minRequiredNumUser } = this.getPlanConfig('annually');
-    setSelectedPlanConfig({
-      name: this.getPlanName() + '-annually',
-      billingCycle: 'annually',
-      numberOfUsers: minRequiredNumUser
+    this.props.setSelectedPlanConfig({
+      billingCycle: 'annually'
     });
   }
   selectMonthly = () => {
-    const {setSelectedPlanConfig} = this.props;
-    const { minRequiredNumUser } = this.getPlanConfig('monthly');
-    setSelectedPlanConfig({
-      name: this.getPlanName() + '-monthly',
-      billingCycle: 'monthly',
-      numberOfUsers: minRequiredNumUser
+    this.props.setSelectedPlanConfig({
+      billingCycle: 'monthly'
     });
   }
 
@@ -131,31 +128,22 @@ class BusinessPlan extends Component {
   }
 
   handlePurchase = () => {
-    const { purchasePlan } = this.props;
-    purchasePlan();
+    this.props.purchasePlan();
   }
 
   haveDiscount = () => {
     return this.props.currentlySelectedPlan.billingCycle === 'annually';
   }
-
-  getPlanName = () => {
-    return this.props.currentlySelectedPlan.name.split('-')[0];
-  }
-  getPlanConfig = (period) => {
-    const { plansConfig } = this.props;
-    for (let i in plansConfig) {
-      if (plansConfig[i].name === this.getPlanName() + '-' + period) {
-        return plansConfig[i];
-      }
-    }
+  getPrice = (billingCycle) => {
+    let period = billingCycle || this.props.currentlySelectedPlan.billingCycle;
+    return this.props.planConfig.purchaseOptions.find((option) => option.recurring_type === period).price_cents;
   }
   getOriginalPrice = () => {
-    return 12 * this.props.currentlySelectedPlan.numberOfUsers * this.getPlanConfig('monthly').priceCents;
+    return 12 * this.props.currentlySelectedPlan.numberOfUsers * this.getPrice('monthly');
   }
   getPlanPrices = () => {
-    const annually = this.getPlanConfig('annually').priceCents;
-    const monthly = this.getPlanConfig('monthly').priceCents;
+    const annually = this.getPrice('annually');
+    const monthly = this.getPrice('monthly');
     return { annually, monthly };
   }
 
@@ -164,15 +152,11 @@ class BusinessPlan extends Component {
     return this.props.currentlySelectedPlan.numberOfUsers * (annually-monthly) * 12;
   }
   getTotalPrice = () => {
-    return this.props.currentlySelectedPlan.numberOfUsers * this.getSinglePrice() * 12;
-  }
-  getSinglePrice = () => {
-    const { monthly, annually } = this.getPlanPrices();
-    return this.haveDiscount() ? annually : monthly;
+    return this.props.currentlySelectedPlan.numberOfUsers * this.getPrice() * 12;
   }
 
   renderConfigurePage() {
-    const { isPageBusy, currentlySelectedPlan, validations } = this.props;
+    const { isPageBusy, currentlySelectedPlan, validations, planConfig } = this.props;
     if (isPageBusy) {
       return (
         <div className={styles.spinnerWrapper}>
@@ -180,8 +164,8 @@ class BusinessPlan extends Component {
         </div>
       );
     }
-    const { billingCycle, subdomain, numberOfUsers } = currentlySelectedPlan;
-    const { maxNumUser, minRequiredNumUser } = this.getPlanConfig(billingCycle);
+    const { subdomain, numberOfUsers } = currentlySelectedPlan;
+    const { maxNumUser, minRequiredNumUser } = planConfig;
     const { annually, monthly } = this.getPlanPrices();
     const { isSubdomainVerified, subdomainErrorMessage, displaySubdomainHint, displaySubdomainVerified } = validations;
     const isActive = (cycle) => {
@@ -304,11 +288,10 @@ class BusinessPlan extends Component {
   }
 
   renderPurchasePage() {
-    const { currentlySelectedPlan, paymentMethod, purchaseErrorMessages, isPageBusy } = this.props;
+    const { currentlySelectedPlan, paymentMethod, purchaseErrorMessages, isPageBusy, planConfig } = this.props;
     const { numberOfUsers, billingCycle } = currentlySelectedPlan;
-    const name = this.getPlanName();
+    const { name, currency, minRequiredNumUser, maxNumUser } = planConfig;
     const { email, cardNumber, expiry, cvc } = paymentMethod;
-    const { priceCurrency, minRequiredNumUser, maxNumUser } = this.getPlanConfig(billingCycle);
     return (
       <Grid fluid>
         <div className="text-center">
@@ -395,11 +378,11 @@ class BusinessPlan extends Component {
                 <hr className={styles.divideLine} />
                 <p>
                   <strong className={styles.orderItem}>
-                    {name[0].toUpperCase() + name.slice(1)} Plan
+                    {name} Plan
                   </strong>
                   {' '}
                   <span className={styles.price}>
-                    <PriceTag price={this.getOriginalPrice()} currency={priceCurrency} />
+                    <PriceTag price={this.getOriginalPrice()} currency={currency} />
                   </span>
                 </p>
                 <div>
@@ -413,21 +396,21 @@ class BusinessPlan extends Component {
                   {' '}
                   <span onClick={this.handleBillingCycleChange} className={styles.changeBillingCycle}>CHANGE</span>
                   <span className={classNames(styles.price, {'hidden': !this.haveDiscount()})}>
-                    <PriceTag price={this.getDiscountMount()} currency={priceCurrency} />
+                    <PriceTag price={this.getDiscountMount()} currency={currency} />
                   </span>
                 </p>
                 <hr className={styles.divideLine} />
                 <p className={styles.orderPanelSection}>
-                  <span>Subtotal (<PriceTag price={this.getSinglePrice()} /> per month)</span>
+                  <span>Subtotal (<PriceTag price={this.getPrice()} /> per month)</span>
                   <span className={styles.price}>
-                    <PriceTag price={this.getSinglePrice() * 12} currency={priceCurrency} />
+                    <PriceTag price={this.getPrice() * 12} currency={currency} />
                   </span>
                 </p>
                 <hr className={styles.divideLine} />
                 <p>
                   <span className={classNames(styles.totalTitle, 'h3')}>Total due</span>
                   <span className={classNames(styles.price, 'h3')}>
-                    <PriceTag price={this.getTotalPrice()} currency={priceCurrency} />
+                    <PriceTag price={this.getTotalPrice()} currency={currency} />
                   </span>
                 </p>
               </Panel>

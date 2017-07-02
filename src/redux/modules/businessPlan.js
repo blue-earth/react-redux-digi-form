@@ -37,7 +37,6 @@ export const INIT_BUSINESS_PLAN_STATE = {
     expiry: '',
     cvc: ''
   },
-  plansConfig: [],
   purchaseErrorMessages: [],
   isPageBusy: true
 };
@@ -104,17 +103,21 @@ export const goToPreviousStep = () => {
 };
 export const fetchPlans = () => {
   return (dispatch, getState) => {
-    const { plan } = getState().router.locationBeforeTransitions.query;
-    dispatch(processFetchPlans(plan));
+    const { plan, period } = getState().router.locationBeforeTransitions.query;
+    dispatch(processFetchPlans(plan, period));
   };
 };
 
 export const purchasePlan = () => {
   return (dispatch, getState) => {
-    const { currentlySelectedPlan, paymentMethod, email } = getState().businessPlan;
-    const { subdomain, name, billingCycle, numberOfUsers } = currentlySelectedPlan;
+    const { currentlySelectedPlan, paymentMethod, email, planConfig } = getState().businessPlan;
+    const { subdomain, billingCycle, numberOfUsers } = currentlySelectedPlan;
     const { cardNumber, expiry, cvc } = paymentMethod;
     dispatch(requestPurchaseBusinessPlan());  // sets busy state
+
+    const pricingId = planConfig.purchaseOptions.find((option) => {
+      return option.recurring_type === billingCycle;
+    }).plan_pricing_id;
 
     // hacky way to split expiry into month and year
     const slashIndex = expiry.indexOf('/');
@@ -127,11 +130,12 @@ export const purchasePlan = () => {
         const plan = {
           email: email,
           subdomain: subdomain,
-          plan_name: name,
+          plan_pricing_id: pricingId,
           number_of_users: numberOfUsers,
-          billing_cycle: billingCycle,
           client_ip: resp['client_ip'],
-          stripe_card_id: resp['client_ip'],
+          stripe_card_id: card['id'],
+          stripe_card_figerprint: '',
+          stripe_card_token: '',
           card_brand: card['brand'],
           card_country: card['country'],
           card_last4: card['last4']
@@ -145,48 +149,33 @@ export const purchasePlan = () => {
     });
   };
 };
-const processFetchPlans = (plan) => {
+const processFetchPlans = (planName, period) => {
   const apiURL = `${API_URL}/billing/api/plan/`;
   const fetchParams = assignDefaults({
     method: 'GET'
   });
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(_setPlanInitialState(value, plan));
-      dispatch(_setPlansConfig(value));
+      const plan = value.find((p) => p.name.toLowerCase() === planName);
+      dispatch(setSelectedPlanConfig({
+        numberOfUsers: plan.min_required_num_user,
+        billingCycle: period
+      }));
+      const cameledPlanConfig = {
+        name: plan.name,
+        minRequiredNumUser: plan.min_required_num_user,
+        purchaseOptions: plan.purchase_options,
+        maxNumUser: plan.max_num_user,
+        currency: plan.currency
+      };
+      dispatch(doneFetchingPlans(cameledPlanConfig));
     };
   };
   const fetchFail = (data) => {
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
-const _setPlansConfig = (plans) => {
-  const cameledPlans = plans.map((plan) =>
-    Object.assign({}, {
-      name: plan.name,
-      priceCents: plan.price_cents,
-      priceCurrency: 'AUD',
-      minRequiredNumUser: plan.min_required_num_user,
-      maxNumUser: plan.max_num_user
-    }));
-  return (dispatch, getState) => {
-    dispatch(doneFetchingPlans(cameledPlans));
-  };
-};
-const _setPlanInitialState = (plans, plan) => {
-  return (dispatch, getState) => {
-    for (let i in plans) {
-      const planDetail = plans[i];
-      if (planDetail.name === plan) {
-        return dispatch(setSelectedPlanConfig({
-          name: plan,
-          numberOfUsers: planDetail.min_required_num_user,
-          billingCycle: plan.split('-')[1]
-        }));
-      }
-    }
-  };
-};
+
 const processVerifySubdomain = (subdomain) => {
   const apiURL = `${API_URL}/accounts/api/subdomain/verify/`;
   const body = {subdomain};
@@ -236,10 +225,14 @@ const processPurchase = (plan) => {
   const fetchFail = ({value}) => {
     return (dispatch, getState) => {
       let messages = [];
-      Object.keys(value).forEach(key => {
-        messages.push(value[key][0]);
-      });
-      dispatch(donePurchasingBusinessPlan(messages));
+      if (typeof value !== 'object') {
+        dispatch(donePurchasingBusinessPlan(['Server Error']));
+      } else {
+        Object.keys(value).forEach(key => {
+          messages.push(value[key][0]);
+        });
+        dispatch(donePurchasingBusinessPlan(messages));
+      }
     };
   };
 
@@ -269,7 +262,7 @@ const businessPlanReducer = handleActions({
     }),
   DONE_FETCHING_PLANS: (state, action) =>
     Object.assign({}, state, {
-      plansConfig: action.payload,
+      planConfig: action.payload,
       isPageBusy: false
     }),
   DONE_PURCHASING_BUSINESS_PLAN: (state, action) =>
