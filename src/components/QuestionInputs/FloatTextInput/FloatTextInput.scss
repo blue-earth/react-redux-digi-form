@@ -1,0 +1,113 @@
+@import './mixins';
+@import './variables';
+
+.textInputWrap {
+  font-size: 24px;
+  line-height: 1.5em;
+  color: $float-input-color;
+  position: relative;
+  padding: 0.5em 0;
+}
+.textInput {
+  width: 100%;
+  box-sizing: border-box;
+  color: $float-input-color;
+  font-size: 1em;
+  line-height: 1.2em;
+  padding: 0.5em 1em;
+  line-height: 1.5em;
+  border: 1px solid $float-input-color;
+  @include box-shadow-custom(0 1px 2px rgba(0, 0, 0, .15));
+  @include border-radius(0.2em);
+  background-color: inherit;
+  &:focus {
+    outline: none;
+  }
+}
+.textInputLabel {
+  position: absolute;
+  top: 1.3em;
+  left: 1em;
+  font-size: 1em;
+  font-weight: 400;
+  padding: 0;
+  line-height: 1;
+  background-color: $white;
+  transition: all .2s ease-in-out;
+}
+.filled {
+  margin-left: -0.5em;
+  padding: 1px 0.5em;
+  top: 0.5em;
+  left: 2em;
+  font-size: 0.5em;
+  line-height: 1em;
+}
+.filled.hasError {
+  color: $red !important;
+}
+.isErrorInput {
+  border-color: $red !important;
+}
+.filledInput {
+  color: $black;
+}
+.errorIconWrapper {
+  display: inline;
+  cursor: pointer;
+  color: $red;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
+.hide {
+  display: none;
+}
+.errorTip {
+  @include hcenter;
+  line-height: 1em;
+  font-size: 0.6em;
+}
+.errorTipInner {
+  position: relative;
+  top: 7px;
+  padding: 1.5em;
+  color: #fff;
+  white-space: nowrap;
+  background-color: $red;
+  @include border-radius(0.4em);
+}
+.errorTipArrow {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  margin-left: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: $red;
+}
+
+:global {
+  .floatTextInputTooltip {
+    font-size: 14px;
+    font-family: 'Lato';
+    .tooltip-arrow {
+      height: 0;
+    }
+    &.bottom .tooltip-arrow {
+      border-bottom-color: $red;
+    }
+    &.tooltip.in {
+      opacity: 1;
+    }
+    .tooltip-inner {
+      text-align: left;
+      background-color: $red;
+      padding: 0.7em 2em;
+      max-width: 300px;
+    }
+  }
+}

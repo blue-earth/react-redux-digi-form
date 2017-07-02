@@ -59,9 +59,6 @@ class Validator extends Component {
     var result = validateField({type, value}, validateFor);
     var output = false;
     var template = false;
-    var validatorStyle = {
-      backgroundColor: this.context.primaryColour
-    };
 
     if (result === false) {
       if (displayText) {
@@ -76,7 +73,7 @@ class Validator extends Component {
       }
 
       return (
-        <div className={styles.errorField} style={validatorStyle}>
+        <div className={styles.errorField}>
           <span>{output}</span>
         </div>
       );

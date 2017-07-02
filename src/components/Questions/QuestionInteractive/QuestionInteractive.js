@@ -3,7 +3,8 @@ import React, {
   PropTypes
 } from 'react';
 import QuestionInstruction from '../QuestionInstruction';
-import FloatTextInput from '../../FloatTextInput';
+import FloatTextInput from '../../QuestionInputs/FloatTextInput';
+import FieldError from '../../QuestionInputs/FieldError';
 // import ShortTextInput from '../../QuestionInputs/ShortTextInput/ShortTextInput';
 import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
@@ -14,15 +15,11 @@ import DropdownInput from '../../QuestionInputs/DropdownInput/DropdownInput';
 import DateInput from '../../QuestionInputs/DateInput/DateInput';
 import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
 import Signature from '../../QuestionInputs/Signature/Signature';
-import Validator from '../../Validator/Validator';
-import Verifier from '../../Verifier/Verifier';
 import validateField, {
   valueIsValid
 } from 'helpers/validationHelper';
 import styles from './QuestionInteractive.scss';
 import _ from 'lodash';
-import { SlideAnimation } from 'helpers/formInteractiveHelper';
-import Animate from 'rc-animate';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -117,7 +114,7 @@ class QuestionInteractive extends Component {
   };
 
   static contextTypes = {
-    primaryColour: React.PropTypes.string
+    primaryColour: PropTypes.string
   };
 
   static defaultProps = {
@@ -140,8 +137,8 @@ class QuestionInteractive extends Component {
   }
 
   _determineChildComponent() {
-    var ChildComponent = null;
     const { type } = this.props;
+    var ChildComponent = null;
     switch (type) {
       case 'ShortTextField':
       case 'EmailField':
@@ -213,12 +210,25 @@ class QuestionInteractive extends Component {
     }
   }
 
-  shouldFocus(inputState) {
+  hasError() {
+    const { validations, verificationStatus, value, questionId } = this.props;
+    const failedValidations = _.filter(validations, function (validation) {
+      return !validateField(validation, value);
+    });
+    const failedVerifications = _.filter(verificationStatus, {
+      id: questionId,
+      status: false
+    });
+    return (this.shouldShowValidation() && failedValidations.length) || failedVerifications.length;
+  }
+
+  shouldFocus() {
+    const { inputState } = this.props;
     return inputState === 'init' || inputState === 'focus' || inputState === 'enter';
   }
 
-  shouldShowValidation(inputState) {
-    return inputState === 'enter';
+  shouldShowValidation() {
+    return this.props.inputState !== 'init';
   }
 
   renderQuestionDisplay() {
@@ -233,59 +243,25 @@ class QuestionInteractive extends Component {
   }
 
   renderInteractiveInput() {
-    const { questionId, validations, verificationStatus, isVerifying, handleEnter,
-      value, inputState } = this.props;
+    const { isVerifying, handleEnter, value } = this.props;
     const { ChildComponent } = this.state;
     if (ChildComponent === null) return false;
 
     var extraProps = _.merge({
       value,
       isDisabled: isVerifying,
-      autoFocus: this.shouldFocus(inputState),
+      autoFocus: this.shouldFocus(),
       onEnterKey: handleEnter,
       onChange: this.handleChange,
       onFocus: this.handleFocus,
-      onBlur: this.handleBlur
+      onBlur: this.handleBlur,
+      hasError: this.hasError(),
+      primaryColour: this.context.primaryColour,
+      errorMessage: <FieldError {...this.props} />
     }, this.state.extraProps);
-
-    const slideAnimation = new SlideAnimation(200);
-    const anim = {
-      enter: slideAnimation.enter,
-      leave: slideAnimation.leave
-    };
-
-    const filteredValidations = _.filter(validations, function (validation) {
-      return !validateField(validation, value);
-    });
 
     return (
       <div className={styles.inputWrapper}>
-        <div className="clearfix">
-          <div className={styles.errorsWrapper}>
-            <Animate exclusive animation={anim} component="div">
-              {this.shouldShowValidation(inputState)
-                ? filteredValidations.map((validation, index) => {
-                  return (
-                    <Validator {...validation} key={validation.type} validateFor={value} />
-                    );
-                })
-                : <div key="null_key"></div>
-              }
-            </Animate>
-            <Animate exclusive animation={anim} component="div">
-              {
-                _.filter(verificationStatus, {
-                  id: questionId,
-                  status: false
-                }).map((verification, index) => {
-                  return (
-                    <Verifier {...verification} key={verification.type} />
-                  );
-                })
-              }
-            </Animate>
-          </div>
-        </div>
         <ChildComponent {...this.props} {...extraProps} />
       </div>
     );
