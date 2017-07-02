@@ -12,7 +12,8 @@ import { IoAndroidAlert } from 'react-icons/lib/io';
 
 class FloatTextInput extends Component {
   static propTypes = {
-    placeholderText: PropTypes.string,
+    placeholder: PropTypes.string,
+    label: PropTypes.string,
     value: PropTypes.string,
     name: PropTypes.string,
     onChange: PropTypes.func,
@@ -27,7 +28,7 @@ class FloatTextInput extends Component {
   }
   static defaultProps = {
     hasError: false,
-    placeholderText: 'Label',
+    placeholder: '',
     type: 'text',
     value: ''
   }
@@ -118,7 +119,7 @@ class FloatTextInput extends Component {
     return null;
   }
   render() {
-    const { placeholderText, name, errorMessage, autoFocus, extraClass, type } = this.props;
+    const { placeholder, label, name, errorMessage, autoFocus, extraClass, type } = this.props;
     let { filled, active, savedValue, hasError, inputId } = this.state;
     const cx = classNames.bind(styles); // eslint-disable-line
     const controlId = name || `floatTextInput_${inputId}`;
@@ -131,9 +132,13 @@ class FloatTextInput extends Component {
       <div className={cx('textInputWrap', extraClass)}>
         <label
           htmlFor={controlId}
-          className={cx('textInputLabel', { filled: filled, hasError: hasError })}
+          className={cx('textInputLabel',{
+            filled: filled && placeholder.length === 0,
+            hasError: hasError,
+            hide: filled && placeholder.length > 0
+          })}
           style={this.activeColour}>
-          {placeholderText}
+          {placeholder || label}
         </label>
         <input
           id={controlId}
