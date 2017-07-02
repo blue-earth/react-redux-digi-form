@@ -36,7 +36,8 @@ class LoginForm extends Component {
 
   static propTypes = {
     submitLoginForm: PropTypes.func.isRequired,
-    authStatus: PropTypes.string.isRequired,
+    authStatus: PropTypes.string,
+    user: PropTypes.object.isRequired,
     goTo: PropTypes.func.isRequired,
     isAuthenticating: PropTypes.bool.isRequired,
     fields: PropTypes.object.isRequired
@@ -55,29 +56,29 @@ class LoginForm extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { authStatus, goTo } = props;
-    if (authStatus === LOGGED_IN) {
+    const { user, goTo } = props;
+    if (Object.keys(user).length > 0) {
       goTo(dashboardUrl(''));
     }
-    if (props.authStatus === NOT_LOGGED_IN && this.props.authStatus !== props.authStatus) {
-      this.setState({ password: '' });
-    }
-  }
-
-  // https://medium.com/@dschmidt1992/auto-fill-with-redux-forms-9b51ad8ef962#.8ebh8tbg9
-  componentDidMount() {
-    const { email, password } = this.props.fields;
-    email.onChange(this.refs.email.value);
-    password.onChange(this.refs.password.value);
   }
 
   handleSubmit = () => {
-    const { fields: {email, password}, authStatus, submitLoginForm } = this.props;
-    if (email.dirty && password.dirty) {
-      if (!email.error && !password.error && authStatus === NOT_LOGGED_IN) {
+    const { fields: {email, password}, submitLoginForm } = this.props;
+    const { isSubmitting } = this.state;
+    if (!isSubmitting && email.dirty) {
+      if (!email.error) {
         this.setState({isSubmitting: true});
-        submitLoginForm(email.value, password.value);
-        this.setState({hasSubmitted: true, isSubmitting: false});
+        // the timeout is here to ensure that the password value is
+        // visible in Chrome after the button or enter key is clicked
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=636425
+        setTimeout(() => {
+          // this is supposed to updated the field.password prop, but doesn't
+          // password.onChange(this.refs.password.value);
+          password.value = this.refs.password.value;
+          // console.log('refs: ' + this.refs.password.value + ' | props: ' + password.value);
+          submitLoginForm(email.value, password.value);
+          this.setState({hasSubmitted: true, isSubmitting: false});
+        }, 200);
       }
     }
   }
@@ -88,24 +89,24 @@ class LoginForm extends Component {
   }
 
   handleKeyDown = (evt) => {
-    const { fields: {email, password} } = this.props;
     if (evt.which === 13) {
       this.handleSubmit();
     }
   }
 
+  // TODO: a server response would be more usefull here, eg. "username not found" or "incorrect passsword"
   renderVerificationStatus = () => {
-    const { authStatus, isAuthenticating } = this.props;
+    const { isAuthenticating, user } = this.props;
     const { hasSubmitted, isSubmitting } = this.state;
-    if (hasSubmitted && !isSubmitting && !isAuthenticating && authStatus !== 'LOGGING_IN') {
-      return (<Verifier type="EmondoAuthenticationService" status={authStatus === LOGGED_IN} />);
+    if (hasSubmitted && !isSubmitting && !isAuthenticating && Object.keys(user).length === 0) {
+      return (<Verifier type="EmondoAuthenticationService" status={false} />);
     } else {
       return false;
     }
   }
 
   render() {
-    const { fields: {email, password}, authStatus } = this.props;
+    const { fields: {email, password} } = this.props;
     return (
       <div className={styles.loginFormWrapper} onKeyDown={this.handleKeyDown}>
         <Header />
@@ -113,7 +114,7 @@ class LoginForm extends Component {
           <h2>Log in to your account</h2>
           <div className={'form-group' + (email.touched && email.error ? ' has-error':'')}>
             <input ref="email" type="text" placeholder="Email" className="form-control input-lg"
-              {...domOnlyProps(email)} />
+              autoFocus {...domOnlyProps(email)} />
             {email.touched && email.error && <div className="help-block">{email.error}</div>}
           </div>
           <div className={'form-group' + (password.touched && password.error ? ' has-error':'')}>
@@ -124,8 +125,8 @@ class LoginForm extends Component {
           {this.renderVerificationStatus()}
           <div className={styles.submitButtonWrapper}>
             <Button onClick={this.handleSubmit} className="btn-lg btn-block" style="submitButton"
-              isDisabled={typeof password.error !== 'undefined' || typeof email.error !== 'undefined'}
-              isLoading={authStatus === 'LOGGING_IN'}>
+              isDisabled={typeof email.error !== 'undefined'}
+              isLoading={this.state.isSubmitting}>
               Login
             </Button>
           </div>
@@ -143,6 +144,11 @@ class LoginForm extends Component {
     //       <h2>Log in to your account</h2>
     //       {this.renderVerificationStatus()}
     //       <div className={styles.submitButtonWrapper}>
+    //         <Button onClick={this.handleSubmit} className="btn-lg btn-block" style="submitButton"
+    //           isDisabled={typeof password.error !== 'undefined' || typeof email.error !== 'undefined'}
+    //           isLoading={authStatus === 'LOGGING_IN'}>
+    //           Login
+    //         </Button>
     //       </div>
     //       <p className={styles.forgotPass}><a>Forgot your password?</a></p>
     //       <h4>Log in with:</h4>
