@@ -17,6 +17,7 @@ class FloatTextInput extends Component {
     name: PropTypes.string,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
+    onEnterKey: PropTypes.func,
     primaryColour: PropTypes.string,
     autoFocus: PropTypes.bool,
     hasError: PropTypes.bool,
@@ -94,6 +95,12 @@ class FloatTextInput extends Component {
       onBlur(event);
     }
   }
+  handleKeyDown = (event) => {
+    const { onEnterKey } = this.props;
+    if (event.keyCode === 13 && typeof onEnterKey === 'function') {
+      onEnterKey();
+    }
+  }
   get activeColour() {
     if (this.state.active) {
       return {
@@ -139,6 +146,7 @@ class FloatTextInput extends Component {
           onChange={this.handleChange}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
+          onKeyDown={this.handleKeyDown}
           style={this.activeBorderColour}
           autoFocus={autoFocus}
         />
