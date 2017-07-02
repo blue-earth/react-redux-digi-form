@@ -31,7 +31,7 @@ const mapActionCreators = {
 const mapStateToProps = (state) => {
   const { businessPlan } = state;
   const {
-    plansConfig,
+    planConfig,
     stepIndex,
     validations,
     paymentMethod,
@@ -40,7 +40,7 @@ const mapStateToProps = (state) => {
     currentlySelectedPlan
   } = businessPlan || INIT_BUSINESS_PLAN_STATE;
   return {
-    plansConfig,
+    planConfig,
     stepIndex,
     validations,
     paymentMethod,
