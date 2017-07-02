@@ -51,18 +51,18 @@ class FieldError extends Component {
 
   getVerificationErrors() {
     const { verificationStatus, questionId } = this.props;
-    _.filter(verificationStatus, {
+    const failedVerifications = _.filter(verificationStatus, {
       id: questionId,
       status: false
-    }).map((verification, index) => {
+    });
+    return failedVerifications.map((verification, index) => {
       return (
-        <Verifier {...verification} key={verification.type} />
+        <Verifier type={verification.type} status={verification.status} key={verification.type} />
       );
     });
   }
 
   render() {
-    console.log(this.getValidationErrors());
     return (
       <div className="fieldErrors">
         {this.getValidationErrors()}
