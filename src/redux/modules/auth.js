@@ -25,7 +25,7 @@ export const SIGNED_UP = 'SIGNED_UP';
 export const NOT_SIGNED_UP = 'NOT_SIGNED_UP';
 
 export const INIT_AUTH_STATE = {
-  authStatus: NOT_LOGGED_IN,
+  authStatus: NOT_LOGGED_IN,    // todo: deprecating this property
   user: {},
   isAuthenticating: false,
   serverResponse: {}
