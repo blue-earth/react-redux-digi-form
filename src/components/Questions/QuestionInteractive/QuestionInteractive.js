@@ -48,7 +48,7 @@ class QuestionInteractive extends Component {
      * inputState: Redux state to keep the current input state('init', 'changed', 'focus', 'blur', 'enter').
      */
     inputState: PropTypes.oneOf([
-      'init', 'changed', 'focus', 'blur', 'enter'
+      'init', 'changed', 'enter'
     ]).isRequired,
 
     /*
@@ -180,20 +180,6 @@ class QuestionInteractive extends Component {
     });
   }
 
-  handleFocus = () => {
-    const { changeCurrentState } = this.props;
-    changeCurrentState({
-      inputState: 'focus'
-    });
-  }
-
-  handleBlur = () => {
-    const { changeCurrentState } = this.props;
-    changeCurrentState({
-      inputState: 'blur'
-    });
-  }
-
   handleChange = (value) => {
     const { changeCurrentState, storeAnswer, questionId, validations } = this.props;
 
@@ -222,13 +208,8 @@ class QuestionInteractive extends Component {
     return (this.shouldShowValidation() && failedValidations.length > 0) || failedVerifications.length > 0;
   }
 
-  shouldFocus() {
-    const { inputState } = this.props;
-    return inputState === 'init' || inputState === 'focus' || inputState === 'enter';
-  }
-
   shouldShowValidation() {
-    return this.props.inputState !== 'init';
+    return this.props.inputState === 'enter';
   }
 
   renderQuestionDisplay() {
@@ -250,11 +231,9 @@ class QuestionInteractive extends Component {
     var extraProps = _.merge({
       value,
       isDisabled: isVerifying,
-      autoFocus: this.shouldFocus(),
+      autoFocus: true,
       onEnterKey: handleEnter,
       onChange: this.handleChange,
-      onFocus: this.handleFocus,
-      onBlur: this.handleBlur,
       hasError: this.hasError(),
       primaryColour: this.context.primaryColour,
       errorMessage: <FieldError {...this.props} />

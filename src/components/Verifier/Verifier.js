@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import _ from 'lodash';
 import styles from './Verifier.scss';
 class Verifier extends Component {
   static contextTypes = {
@@ -12,43 +13,20 @@ class Verifier extends Component {
     type: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired
   };
-  renderEmondoEmailFieldService() {
-    return (
-      <span>This email is unavailable.</span>
-    );
-  }
 
-  renderEmondoAuthenticationService() {
-    return (
-      <span>Incorrect password. Passwords are case sensitive.</span>
-    );
-  }
-
-  renderAccessCodeService() {
-    return (
-      <span>This Access Code is wrong.</span>
-    );
+  static defaultMessages = {
+    'EmondoEmailFieldService': 'This email is unavailable.',
+    'AccessCodeService': 'Incorrect password. Passwords are case sensitive.',
+    'EmondoAuthenticationService': 'This Access Code is wrong.'
   }
 
   render() {
     var { type, status } = this.props;
     var output = false;
+    output = _.defaultTo(Verifier.defaultMessages[type], false);
+    console.log(type, status);
 
     if (status === false) {
-      switch (type) {
-        case 'EmondoEmailFieldService':
-          output = this.renderEmondoEmailFieldService();
-          break;
-        case 'AccessCodeService':
-          output = this.renderAccessCodeService();
-          break;
-        case 'EmondoAuthenticationService':
-          output = this.renderEmondoAuthenticationService();
-          break;
-        default:
-          return false;
-      }
-
       return (
         <div className={styles.errorField}>
           {output}
