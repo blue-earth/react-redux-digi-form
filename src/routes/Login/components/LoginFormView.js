@@ -16,6 +16,7 @@ import {
 } from 'react-icons/lib/fa';
 import Header from 'components/Headers/Header';
 import styles from './LoginFormView.scss';
+import { signupUrl } from 'helpers/urlHelper';
 
 const domOnlyProps = ({
   initialValue,
@@ -75,6 +76,11 @@ class LoginForm extends Component {
     }
   }
 
+  handleSignupClick = () => {
+    const { goTo } = this.props;
+    goTo(signupUrl(''));
+  }
+
   renderVerificationStatus = () => {
     const { authStatus, isAuthenticating } = this.props;
     const { hasSubmitted, isSubmitting } = this.state;
@@ -110,17 +116,32 @@ class LoginForm extends Component {
               Login
             </Button>
           </div>
-          <p className={styles.forgotPass}><a>Forgot your password?</a></p>
-          <h4>Log in with:</h4>
-          <div className={styles.socialIconArea}>
-            <FaGooglePlusSquare size="45" />
-            <FaFacebookSquare size="45" />
-            <FaLinkedinSquare size="45" />
-          </div>
-          <p>or <a>join for free</a></p>
+          <p>Dont have an account yet? <a onClick={this.handleSignupClick}>Join for free</a></p>
         </div>
       </div>
     );
+    // Old render with password link and social icons
+    // which need to be put back when these features exist.
+    // Some bits removed for brevity.
+    // return (
+    //   <div className={styles.loginFormWrapper}>
+    //     <Header />
+    //     <div className={styles.inputWrapper}>
+    //       <h2>Log in to your account</h2>
+    //       {this.renderVerificationStatus()}
+    //       <div className={styles.submitButtonWrapper}>
+    //       </div>
+    //       <p className={styles.forgotPass}><a>Forgot your password?</a></p>
+    //       <h4>Log in with:</h4>
+    //       <div className={styles.socialIconArea}>
+    //         <FaGooglePlusSquare size="45" />
+    //         <FaFacebookSquare size="45" />
+    //         <FaLinkedinSquare size="45" />
+    //       </div>
+    //       <p>or <a>join for free</a></p>
+    //     </div>
+    //   </div>
+    // );
   }
 }
 
