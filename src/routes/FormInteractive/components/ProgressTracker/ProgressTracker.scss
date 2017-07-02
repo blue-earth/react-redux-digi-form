@@ -56,6 +56,7 @@ $pt-button-width: 47px;
   cursor: pointer;
   position: relative;
   color: #c4c6c8;
+  user-select: none;
   &:before, &:after {
     position: absolute;
     left: -15px;
