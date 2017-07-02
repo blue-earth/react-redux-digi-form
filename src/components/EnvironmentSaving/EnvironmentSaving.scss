@@ -1,0 +1,22 @@
+@import './mixins';
+@import './variables';
+
+.envSavingWrap {
+  font-family: 'open-sans';
+  width: 200px;
+  display: inline-block;
+  text-align: center;
+  color: $blackblue;
+}
+.envSavingImage {
+  height: 100%;
+}
+.envSavingNumber {
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.envSavingLabel {
+  margin: 6px;
+  font-size: 12px;
+}
