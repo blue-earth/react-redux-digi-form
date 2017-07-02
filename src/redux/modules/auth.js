@@ -75,6 +75,11 @@ export const processAuth = (email, password) => {
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
       dispatch(receiveAuthStatus(value.authenticated));
+      if(value.authenticated) {
+        dispatch(setIsFetchingUserInfo(true));
+        dispatch(fetchUserInfo());
+        dispatch(setIsFetchingUserInfo(false));
+      }
     };
   };
 
