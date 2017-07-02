@@ -2,21 +2,20 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { dashboardUrl } from 'helpers/urlHelper';
+import { dashboardUrl, signupUrl } from 'helpers/urlHelper';
 import Verifier from 'components/Verifier/Verifier';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import {
   LOGGED_IN,
   NOT_LOGGED_IN
 } from 'redux/modules/auth';
-import {
-  FaGooglePlusSquare,
-  FaFacebookSquare,
-  FaLinkedinSquare
-} from 'react-icons/lib/fa';
+// import {
+//   FaGooglePlusSquare,
+//   FaFacebookSquare,
+//   FaLinkedinSquare
+// } from 'react-icons/lib/fa';
 import Header from 'components/Headers/Header';
 import styles from './LoginFormView.scss';
-import { signupUrl } from 'helpers/urlHelper';
 
 const domOnlyProps = ({
   initialValue,
@@ -74,7 +73,7 @@ class LoginForm extends Component {
 
   handleSubmit = () => {
     const { fields: {email, password}, authStatus, submitLoginForm } = this.props;
-    if (email.touched && password.touched) {
+    if (email.dirty && password.dirty) {
       if (!email.error && !password.error && authStatus === NOT_LOGGED_IN) {
         this.setState({isSubmitting: true});
         submitLoginForm(email.value, password.value);
@@ -91,9 +90,7 @@ class LoginForm extends Component {
   handleKeyDown = (evt) => {
     const { fields: {email, password} } = this.props;
     if (evt.which === 13) {
-      if (email.touched && password.touched) {
-        this.handleSubmit();
-      }
+      this.handleSubmit();
     }
   }
 
