@@ -51,10 +51,12 @@ $pt-button-width: 47px;
   display: inline-block;
   list-style-type: decimal;
   padding: 0 54px 0 40px;
+  white-space: nowrap;
   line-height: 52px;
   cursor: pointer;
   position: relative;
   color: #c4c6c8;
+  user-select: none;
   &:before, &:after {
     position: absolute;
     left: -15px;
