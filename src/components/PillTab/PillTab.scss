@@ -1,6 +1,7 @@
 @import './mixins';
 @import './variables';
 
+// Wrap css in customised class
 .pillTab {
   .nav {
     margin-bottom: 0;
@@ -13,27 +14,33 @@
     }
   }
   .nav-tabs{
-    margin: 16px 0;
+    border: none; // customised
+    margin: 16px 0; // customised
   }
-  .nav-tabs>li {
+  .nav-tabs > li {
     float: left;
+    margin: 0; // customised
   }
-  .nav-tabs>li>a {
+  .nav-tabs > li > a {
     @include border-radius(5px);
-    margin-right: 5px;
-    padding: 15px 30px;
-    background-color: #eee;
-    color: #999;
-    text-decoration: none;
+    margin-right: 5px; // customised
+    padding: 15px 30px; // customised
+    background-color: #eee; // customised
+    color: #999; // customised
+    text-decoration: none; // customised
     border: 1px solid transparent;
     &:active {
-      outline: none;
+      outline: none; // customised
+    }
+    &:focus {
+      text-decoration: none;
     }
   }
-  .nav-tabs>li.active>a {
+  .nav-tabs > li.active > a {
     position: relative;
-    background-color: #999;
-    color: $white;
+    background-color: #999; // customised
+    color: $white; // customised
+    // customised triangle
     &:after {
       top: 100%;
       left: 50%;
@@ -50,13 +57,13 @@
     }
   }
   .tab-content {
-    margin-top: 22px;
-    padding: 20px 0;
+    margin-top: 22px; // customised
+    padding: 20px 0; // customised
   }
-  .tab-content>.tab-pane {
+  .tab-content > .tab-pane {
       display: none;
   }
-  .tab-content>.active {
+  .tab-content > .active {
       display: block;
   }
 }

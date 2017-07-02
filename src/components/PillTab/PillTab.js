@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  Nav,
   Tabs,
   Tab
 } from 'react-bootstrap';
