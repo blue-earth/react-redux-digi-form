@@ -1,0 +1,23 @@
+@import './mixins';
+@import './variables';
+
+$button-color: #3392d4;
+
+.socialShareWrapper {
+  display: inline-block;
+  line-height: 32px;
+  vertical-align: bottom;
+}
+.socialShareButton {
+  display: inline-block;
+  color: $white;
+  background-color: lighten($button-color, 25%);
+  cursor: pointer;
+  margin: 0 10px;
+  width: 24px;
+  height: 24px;
+  @include border-radius(12px);
+  &:hover {
+    background-color: $button-color;
+  }
+}
