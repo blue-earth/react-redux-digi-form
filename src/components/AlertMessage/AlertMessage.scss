@@ -1,0 +1,63 @@
+@import './mixins';
+@import './variables';
+
+.alertWrapper {
+  position: relative;
+  border: 1px solid $border-color;
+  width: 328px;
+  height: 216px;
+  overflow-y: scroll;
+  @include border-radius(5px);
+  &:after {
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(136, 183, 213, 0);
+    border-bottom-color: #88b7d5;
+    border-width: 8px;
+    margin-left: -8px;
+  }
+}
+.messageList {
+  font-family: "Open Sans";
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+}
+.messageItem {
+  box-sizing: border-box;
+  border-bottom: 1px solid $border-color;
+  height: 54px;
+  padding: 16px 0 0 10px;
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+.messageContent {
+  display: inline-block;
+  cursor: pointer;
+  vertical-align: middle;
+  width: 246px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &:hover {
+    color: $blue;
+  }
+}
+.unreadMessage {
+  font-weight: bolder;
+}
+.messageTime {
+  display: inline-block;
+  color: $button-default-bg-color;
+  vertical-align: middle;
+  width: 50px;
+  text-align: right;
+}
