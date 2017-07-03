@@ -9,46 +9,47 @@
   }
 }
 .choicesRow {
-  margin: 0 -5px;
+  margin: 0 -10px;
 }
 .choiceItem {
-  border: 1px solid $text-border-color;
-  background-color: $text-bg-color;
+  border: 1px solid $choice-border-color;
+  @include input-box-shadow;
+  background-color: $choice-bg-color;
   @include border-radius($input-border-radius);
-  padding: 16px;
+  position: relative;
+  padding: 12px 12px 12px 70px;
   cursor: pointer;
   display: inline-block;
-  margin: 0 5px 10px;
-  opacity: .8;
-  @include transition(opacity .15s);
+  margin: 0 10px 20px;
+  @include transition(background-color .1s);
   &:hover, &:focus {
-    opacity: 1;
+    background-color: darken($choice-bg-color, 2%);
     outline: none;
   }
   > .label {
     text-transform: uppercase;
     @include border-radius($input-border-radius);
-    border: 1px solid $text-border-color;
+    @include input-box-shadow;  /* eMonDoHaCk */
+    border: 1px solid $choice-border-color;
     background-color: white;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     display: inline-block;
     text-align: center;
-    line-height: 28px;
-    font-size: 20px;
+    line-height: 38px;
+    font-size: 18px;
     font-weight: 400;
     margin: 0;
-    vertical-align: middle;
+    @include vcenter;
+    left: 12px;
   }
   > .text {
-    margin-left: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    vertical-align: middle;
+    font-size: 24px;
+    font-weight: 400;
+    display: block;
   }
   &.active {
     border-width: 2px;
-    padding: 15px;
   }
   &.disabled {
     cursor: default;
