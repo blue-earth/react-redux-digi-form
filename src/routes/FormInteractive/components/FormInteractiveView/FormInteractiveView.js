@@ -228,9 +228,9 @@ class FormInteractiveView extends Component {
     if (shouldDisableNextButton(form, currentQuestion.id)) return false;
     const { questions } = this.state;
     const currentQuestionIndex = findIndexById(questions, currentQuestion.id);
-    const prevQuestionIndex = currentQuestionIndex + 1;
-    const question = questions[prevQuestionIndex];
-    if (question.type === 'Group') return false;
+    const nextQuestionIndex = currentQuestionIndex + 1;
+    const question = questions[nextQuestionIndex];
+    if (!question || question.type === 'Group') return false;
     const context = getContextFromAnswer(answers);
     return (
       <div className={styles.nextQuestionWrapper}>

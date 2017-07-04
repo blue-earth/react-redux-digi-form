@@ -10,11 +10,13 @@ class ProgressTracker extends Component {
   static propTypes = {
     sectionTitleList: PropTypes.array,
     currentSectionIndex: PropTypes.number,
-    onItemChange: PropTypes.func
+    onItemChange: PropTypes.func,
+    percentage: PropTypes.number
   };
   static defaultProps = {
     sectionTitleList: [],
-    currentSectionIndex: 0
+    currentSectionIndex: 0,
+    percentage: 0
   };
 
   static contextTypes = {
@@ -35,11 +37,13 @@ class ProgressTracker extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.currentSectionIndex !== this.state.currentIndex;
+    return nextProps.currentSectionIndex !== this.state.currentIndex ||
+      nextProps.percentage !== this.props.percentage;
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.refs.progressSlider.slickGoTo(this.state.currentIndex);
+    const { progressSlider } = this.refs;
+    progressSlider && progressSlider.slickGoTo(this.state.currentIndex);
   }
 
   handleItemClick = (index) => {
@@ -53,7 +57,7 @@ class ProgressTracker extends Component {
   }
 
   render() {
-    const { sectionTitleList } = this.props;
+    const { sectionTitleList, percentage } = this.props;
     const { primaryColour } = this.context;
     const { currentIndex } = this.state;
     const that = this;
@@ -78,18 +82,20 @@ class ProgressTracker extends Component {
       };
       return (
         <div className={styles.wrapper}>
-          <Slider {...sliderSettings}>
-            {
-            sectionTitleList.map((questionGroupTitle, index) => (
-              <div key={index} className={styles.stepItem}
-                onClick={function () { that.handleItemClick(index); }}>
-                {index+1}. {questionGroupTitle}
-              </div>
-            ))
+          {percentage < 100 &&
+            <Slider {...sliderSettings}>
+              {
+              sectionTitleList.map((questionGroupTitle, index) => (
+                <div key={index} className={styles.stepItem}
+                  onClick={function () { that.handleItemClick(index); }}>
+                  {index+1}. {questionGroupTitle}
+                </div>
+              ))
+            }
+            </Slider>
           }
-          </Slider>
           <div className={styles.progressbar} style={{ backgroundColor: primaryColour }}>
-            <div className={styles.progressbarValue} />
+            <div className={styles.progressbarValue} style={{ width: `${percentage}%` }} />
           </div>
         </div>
       );
