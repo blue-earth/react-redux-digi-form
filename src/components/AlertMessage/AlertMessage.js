@@ -2,10 +2,10 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import styles from './AlertDropdown.scss';
+import styles from './AlertMessage.scss';
 import classNames from 'classnames/bind';
 
-class AlertDropdown extends Component {
+class AlertMessage extends Component {
   render() {
     const {list} = this.props;
     var cx = classNames.bind(styles);
@@ -23,4 +23,4 @@ class AlertDropdown extends Component {
     );
   }
 }
-export default AlertDropdown;
+export default AlertMessage;
