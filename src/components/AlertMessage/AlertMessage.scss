@@ -53,20 +53,27 @@
   box-sizing: border-box;
   border-bottom: 1px solid $border-color;
   height: 54px;
-  padding: 16px 0 0 10px;
   &:last-child {
     border-bottom: 0;
   }
 }
 .messageContent {
   display: inline-block;
+  box-sizing: border-box;
+  width: 246px;
+  line-height: 54px;
+  padding-left: 16px;
   cursor: pointer;
   vertical-align: middle;
-  width: 246px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.messageLink {
+  text-decoration: none;
+  color: $text-dark-color;
   &:hover {
+    text-decoration: none;
     color: $blue;
   }
 }
@@ -77,6 +84,6 @@
   display: inline-block;
   color: $button-default-bg-color;
   vertical-align: middle;
-  width: 50px;
+  width: 60px;
   text-align: right;
 }

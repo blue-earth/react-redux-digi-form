@@ -2,6 +2,7 @@ import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
 import AlertMessage from './AlertMessage';
 import { FaBell } from 'react-icons/lib/fa';
+
 storiesOf('Dropdown', module)
   .add('Alert Message', () => {
     const list = [{
@@ -38,9 +39,9 @@ storiesOf('Dropdown', module)
     return (
       <div style={{position: 'absolute', top: '100px', left: '300px'}}>
         <AlertMessage list={list}>
-          <span style={{border: '1px solid #333'}}>
+          <button style={{border: '1px solid #333', cursor: 'pointer'}}>
             <FaBell />3
-          </span>
+          </button>
         </AlertMessage>
       </div>
     );
