@@ -8,8 +8,10 @@ import FormHeader from 'components/Headers/FormHeader';
 import ProgressTracker from '../ProgressTracker';
 import SubmitButton from 'components/Buttons/FormEnterButton';
 import FormCompletionSection from '../FormCompletionSection';
-import FormRow from 'components/Forms/FormRow';
 import StackLogo from 'components/Logos/StackLogo';
+import {
+  findIndexById
+} from 'helpers/pureFunctions';
 import {
   getNextQuestionId,
   getQuestionGroups,
@@ -232,6 +234,12 @@ class FormInteractive extends Component {
     return index > 0 ? index : 0;
   }
 
+  get percentage() {
+    const { form: { questions }, shouldShowFinalSubmit, currentQuestion } = this.props;
+    if (shouldShowFinalSubmit) return 100;
+    return findIndexById(questions, currentQuestion.id) * 100 / questions.length;
+  }
+
   get isCompleted() {
     const { params: { status } } = this.props;
     return status === 'completion';
@@ -256,8 +264,7 @@ class FormInteractive extends Component {
   }
 
   renderFormContent() {
-    const props = this.props;
-    const { form: { questions }, shouldShowFinalSubmit } = props;
+    const { form: { questions }, shouldShowFinalSubmit } = this.props;
     const questionGroupTitles = getQuestionGroupTitles(questions);
 
     return (
@@ -267,15 +274,16 @@ class FormInteractive extends Component {
             sectionTitleList={questionGroupTitles}
             currentSectionIndex={this.currentSectionIndex}
             onItemChange={this.setActiveGroup}
+            percentage={this.percentage}
           />
-          <FormInteractiveView {...this.props} />
-          <FormRow>
-            {shouldShowFinalSubmit &&
-              <div className={styles.submitButtonsArea}>
-                <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
-              </div>
-            }
-          </FormRow>
+          {!shouldShowFinalSubmit &&
+            <FormInteractiveView {...this.props} />
+          }
+          {shouldShowFinalSubmit &&
+            <div className={styles.submitButtonsArea}>
+              <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
+            </div>
+          }
           <div className={styles.bottomLogoWrapper}>
             <span>Powered by</span>
             <div className={styles.bottomLogo}>

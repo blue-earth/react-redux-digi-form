@@ -5,28 +5,24 @@ $pt-bar-height:   3px;
 $pt-button-width: 47px;
 
 .wrapper {
-  height: $frontend-progressbar-height;
   position: relative;
   overflow: hidden;
-  padding: 0 $pt-button-width $pt-bar-height;
   @include media('<sm') {
     margin: 0 -15px;
-    height: $pt-bar-height;
     @include box-shadow-custom(0 3px 25px rgba(0, 0, 0, .15));
   }
 }
 
 .slickWrapper {
+  height: $frontend-progressbar-height - $pt-bar-height;
+  margin: 0 $pt-button-width;
   @include media('<sm') {
     display: none;
   }
 }
 .progressbar {
-  position: absolute;
   height: $pt-bar-height;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: relative;
   &:before {
     content: '';
     position: absolute;
@@ -45,6 +41,7 @@ $pt-button-width: 47px;
   top: 0;
   height: 100%;
   width: 50%;
+  @include transition(width .3s);
 }
 
 .stepItem {
