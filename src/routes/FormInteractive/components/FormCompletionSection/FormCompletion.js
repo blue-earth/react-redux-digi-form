@@ -30,7 +30,9 @@ class FormCompletion extends Component {
             <hr />
             <div className={styles.instruction}>By using our electronic forms you saved:</div>
             <div className={styles.envSavingSection}>
-              <EnvironmentSaving trees={0.34} co2={0.56} water={1.56} />
+              <EnvironmentSaving type="trees" value={0.34} />
+              <EnvironmentSaving type="co2" value={0.56} />
+              <EnvironmentSaving type="water" value={1.56} />
             </div>
             <div className={styles.instruction}>
               <Button bsStyle="link" className={styles.learnMoreButton}>Learn more</Button>
