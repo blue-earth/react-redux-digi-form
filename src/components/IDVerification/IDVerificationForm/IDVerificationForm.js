@@ -36,7 +36,7 @@ export default class IDVerificationForm extends Component {
 
   getPassportFields(fields) {
     const body = {
-      'type': fields.type,
+      'type': parseInt(fields.type, 10),
       'verification_data': {
         'passport': {
           'number': fields.passport_number,
