@@ -1,6 +1,7 @@
 $blue: #3993d1;
 $darkblue: #2c3744;
 $paleblue: #f3faff;
+$grayblue: #ECF0F3;
 $orange: #ff8a00;
 $grey: #c0c3c9;
 $green: #65b82d;
@@ -19,7 +20,7 @@ $highlight-color: $orange;
 
 // dashboard layout color
 $dashboard-header-bg-color: $blue;
-$dashboard-bg-color:        $paleblue;
+$dashboard-bg-color:        $grayblue;
 $dashboard-text-color:      #7b7b7b;
 
 // defaultButton component
@@ -52,7 +53,6 @@ $shadow-color:              #bbb;
 $table-border-color:        #bbb;
 
 // purchase darken blue
-$grayblue: #ECF0F3;
 $blackblue: darken($blue,26%);
 $bg-color3: $grayblue;
 $darker-bg-color3: darken($grayblue,10%);

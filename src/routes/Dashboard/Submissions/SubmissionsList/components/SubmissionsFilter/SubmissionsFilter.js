@@ -4,7 +4,8 @@ import React, {
 import Button from 'components/Buttons/DashboardButtons/Button';
 import SelectButton from 'components/Buttons/DashboardButtons/SelectButton';
 import { ButtonToolbar } from 'react-bootstrap';
-import { FaRefresh, FaPlus } from 'react-icons/lib/fa';
+import { IoStatsBars, IoRefresh } from 'react-icons/lib/io';
+import styles from './SubmissionsFilter.scss';
 
 class SubmissionsFilter extends Component {
 
@@ -55,16 +56,25 @@ class SubmissionsFilter extends Component {
 
   render() {
     return (
-      <div className="filter-container">
-        <ButtonToolbar className="left">
-          <Button style="formButton"><FaRefresh /> Refresh</Button>
-          <Button style="formButton"><FaPlus /> Custom Column</Button>
+      <div className={styles.filterContainer}>
+        <ButtonToolbar className="pull-left">
+          <Button style="formButton">
+            <IoRefresh />
+            {' '}
+            Refresh
+          </Button>
+          <Button style="formButton">
+            <IoStatsBars />
+            {' '}
+            Customize
+          </Button>
         </ButtonToolbar>
-        <ButtonToolbar className="right">
+        <ButtonToolbar className="pull-right">
           <SelectButton style="formButton" optionList={this.typeOptions} label="Type" />
           <SelectButton style="formButton" optionList={this.userOptions} label="User" />
           <SelectButton style="formButton" optionList={this.timeOptions} />
         </ButtonToolbar>
+        <div className="clearfix"></div>
       </div>
     );
   }
