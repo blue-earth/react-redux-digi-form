@@ -3,6 +3,7 @@
 import CoreLayout from '../layouts/CoreLayout';
 import FormInteractiveRoute from './FormInteractive';
 import DashboardRoute from './Dashboard';
+import IdentityVerificationRoute from './IdentityVerification';
 import LoginRoute from './Login';
 import SignUpRoute from './SignUp';
 import {
@@ -22,6 +23,7 @@ export default (store) => ({
   childRoutes: [
     FormInteractiveRoute(store),
     DashboardRoute(store),
+    IdentityVerificationRoute(store),
     LoginRoute(store),
     SignUpRoute(store)
   ]
