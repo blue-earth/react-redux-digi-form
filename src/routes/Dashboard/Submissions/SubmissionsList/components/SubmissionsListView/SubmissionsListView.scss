@@ -3,9 +3,12 @@
 $slt-header-bg-color:     	#ECF4FB;
 $slt-header-text-color:     #1C4468;
 $slt-border-color:          rgba(204, 204, 204, .3);
+$slt-border-color2:          #CCD9E3;
 
 .submissionsList {
-  height: 100%;
+  background-color: $white;
+  @include border-radius(5px);
+  border: 1px solid $slt-border-color2;
 }
 .submissionsListInner {
   overflow-y: auto;
