@@ -6,7 +6,7 @@ const idVerificationFormProperties = {
     required: true
   },
   'passport_number': {
-    label: 'Passport no.(incl. letters)',
+    label: 'Passport no.',
     required: true
   },
   'date_of_birth': {
@@ -29,10 +29,6 @@ const idVerificationFormProperties = {
     label: 'Place of birth',
     required: true
   },
-  'email': {
-    label: 'Email',
-    required: true
-  },
   'gender': {
     label: 'Gender',
     required: true
@@ -51,11 +47,11 @@ export const identityConstants = {
 export const genderList = [
   {
     label: 'Male',
-    value: 'M'
+    value: 0
   },
   {
     label: 'Female',
-    value: 'F'
+    value: 1
   }
 ];
 

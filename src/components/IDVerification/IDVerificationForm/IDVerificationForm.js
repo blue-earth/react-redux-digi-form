@@ -6,13 +6,14 @@ import {
   Col,
   ControlLabel as BSControlLabel,
   Form,
-  FormControl,
+  FormControl as BSFormControl,
   FormGroup,
   Nav,
   NavItem,
   Row,
   Tab
 } from 'react-bootstrap';
+import { Link } from 'react-router';
 import {
   genderList,
   identityConstants,
@@ -22,17 +23,25 @@ import FormFieldError from 'components/FormFieldError';
 import styles from './IDVerificationForm.scss';
 
 const ControlLabel = (props) => <BSControlLabel className={styles.label} {...props} />;
+const FormControl = (props) => <BSFormControl className={styles.control} {...props} />;
 
 export default class IDVerificationForm extends Component {
   static propTypes = {
     activeTab: PropTypes.oneOf([
       'online', 'upload'
     ]),
+    align: PropTypes.oneOf([
+      'left', 'center', 'right'
+    ]),
     errors: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     submitIdentity: PropTypes.func.isRequired
   };
+
+  static defaultProps = {
+    align: 'left'
+  }
 
   getPassportFields(fields) {
     const body = {
@@ -49,8 +58,7 @@ export default class IDVerificationForm extends Component {
         'first_name': fields.first_name,
         'last_name': fields.last_name,
         'date_of_birth': fields.date_of_birth,
-        'email': fields.email,
-        'gender': fields.gender
+        'gender': parseInt(fields.gender, 10)
       }
     };
     return body;
@@ -142,9 +150,11 @@ export default class IDVerificationForm extends Component {
         <Row>
           <Col xs={6}>
             <FormGroup>
-              <ControlLabel>Expiry date</ControlLabel>
-              <FormControl type="date" placeholder="Expiry date" {...fields.expiry_date} />
-              <FormFieldError for={fields.expiry_date} />
+              <ControlLabel>Gender</ControlLabel>
+              <FormControl componentClass="select" {...fields.gender}>
+                {genderOptions}
+              </FormControl>
+              <FormFieldError for={fields.gender} />
             </FormGroup>
           </Col>
           <Col xs={6}>
@@ -158,18 +168,9 @@ export default class IDVerificationForm extends Component {
         <Row>
           <Col xs={6}>
             <FormGroup>
-              <ControlLabel>Email</ControlLabel>
-              <FormControl type="email" placeholder="Email" {...fields.email} />
-              <FormFieldError for={fields.email} />
-            </FormGroup>
-          </Col>
-          <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Gender</ControlLabel>
-              <FormControl componentClass="select" {...fields.gender}>
-                {genderOptions}
-              </FormControl>
-              <FormFieldError for={fields.gender} />
+              <ControlLabel>Expiry date</ControlLabel>
+              <FormControl type="date" placeholder="Expiry date" {...fields.expiry_date} />
+              <FormFieldError for={fields.expiry_date} />
             </FormGroup>
           </Col>
         </Row>
@@ -180,18 +181,20 @@ export default class IDVerificationForm extends Component {
   render() {
     const { handleSubmit } = this.props;
     return (
-      <Form onSubmit={handleSubmit(this.handleVerify)} className={styles.wrapper}>
+      <Form onSubmit={handleSubmit(this.handleVerify)} className={styles.idVerificationForm}>
         <Tab.Container id="IDVerificationFormTabs" defaultActiveKey="online">
-          <div>
-            <Nav bsStyle="tabs" className={styles.tabs}>
-              <NavItem eventKey="online">
-                Verify online
-              </NavItem>
-              <NavItem eventKey="upload">
-                Upload ID
-              </NavItem>
-            </Nav>
-            <Tab.Content animation>
+          <div className={styles.tabs}>
+            <div className={styles.navsWrapper}>
+              <Nav bsStyle="tabs" bsClass="idVerification" className={styles.wrapper}>
+                <NavItem eventKey="online">
+                  Verify online
+                </NavItem>
+                <NavItem eventKey="upload">
+                  Upload ID
+                </NavItem>
+              </Nav>
+            </div>
+            <Tab.Content animation className={styles.tabContent}>
               <Tab.Pane eventKey="online">
                 {this.renderVerifyOnline()}
               </Tab.Pane>
@@ -201,14 +204,27 @@ export default class IDVerificationForm extends Component {
             </Tab.Content>
           </div>
         </Tab.Container>
-        <FormGroup>
-          <Checkbox inline>
-            I have read and agree to the terms and conditions.
-          </Checkbox>
-        </FormGroup>
-        <FormGroup className="text-right">
-          <Button bsStyle="primary" type="submit">Verify my ID</Button>
-        </FormGroup>
+        <div className={styles.wrapper}>
+          <FormGroup>
+            <Checkbox inline>
+              I have read and agree to the terms and conditions.
+            </Checkbox>
+          </FormGroup>
+        </div>
+        <div className={styles.footer}>
+          <div className={styles.wrapper}>
+            <Row>
+              <Col xs={6}>
+                <Link to="#" className={styles.cancelLink}>Verify Later</Link>
+              </Col>
+              <Col xs={6} className="text-right">
+                <Button bsStyle="primary" className={styles.submitButton} type="submit">
+                  Verify my ID
+                </Button>
+              </Col>
+            </Row>
+          </div>
+        </div>
       </Form>
     );
   }

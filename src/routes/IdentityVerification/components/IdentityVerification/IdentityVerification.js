@@ -14,11 +14,9 @@ export default class IdentityVerification extends Component {
     return (
       <div className={styles.identityVerification}>
         <FormHeader title={'test title'} submitAnswer={function () {}} />
-        <div className={styles.wrapper}>
-          <div className={styles.content}>
-            <IDVerificationTitle />
-            <IDVerificationForm submitIdentity={submitIdentity} />
-          </div>
+        <div className={styles.content}>
+          <IDVerificationTitle align="center" />
+          <IDVerificationForm submitIdentity={submitIdentity} align="center" />
         </div>
       </div>
     );
