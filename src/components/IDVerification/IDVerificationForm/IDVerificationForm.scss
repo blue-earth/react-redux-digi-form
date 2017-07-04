@@ -5,9 +5,11 @@ $identity-form-width:       360px;
 $identity-submit-btn-color: #3191d2;
 $identity-separator-color:  #e1e1e1;
 $identity-tab-color:        #3893d0;
+$identity-form-text-color:  #949494;
 
 .idVerificationForm {
   font-size: 14px;
+  color: $identity-form-text-color;
 }
 
 .wrapper {
@@ -47,6 +49,18 @@ $identity-tab-color:        #3893d0;
   height: 38px;
 }
 
+.uploadDescription {
+  p {
+    margin-bottom: 20px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  em {
+    font-style: normal;
+    font-weight: 400;
+    color: #252525;
+  }
+}
 .submitButton {
   font-size: 16px;
   background-color: $identity-submit-btn-color;
@@ -69,6 +83,21 @@ $identity-tab-color:        #3893d0;
     text-decoration: none;
     opacity: .7;
   }
+}
+
+.termsLink {
+  color: black;
+  opacity: .6;
+  text-decoration: underline;
+  &:hover, &:focus {
+    opacity: .8;
+    color: black;
+    text-decoration: none;
+  }
+}
+
+.termsConditions {
+  font-size: 11px;
 }
 
 .footer {

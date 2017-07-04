@@ -9,6 +9,8 @@ import { assignDefaults } from 'redux/utils/request';
 export const REQUEST_ID_SUBMIT = 'REQUEST_ID_SUBMIT';
 export const DONE_ID_SUBMIT = 'DONE_ID_SUBMIT';
 
+export const IDENTITY_VERIFICATION_URL = `${API_URL}/identity-verification/api/identity/`;
+
 export const INIT_IDENTITY_STATE = {
   isSubmitting: false
 };
@@ -38,7 +40,7 @@ export const doneSubmitIdentity = createAction(DONE_ID_SUBMIT);
 // ------------------------------------
 export const processSubmitIdentity = (payload) => {
   var method = 'POST';
-  var requestURL = `${API_URL}/identity-verification/api/identity/`;
+  var requestURL = IDENTITY_VERIFICATION_URL;
 
   const fetchParams = assignDefaults({
     method,

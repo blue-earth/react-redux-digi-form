@@ -10,6 +10,8 @@ import {
   FormGroup,
   Nav,
   NavItem,
+  OverlayTrigger,
+  Popover,
   Row,
   Tab
 } from 'react-bootstrap';
@@ -19,11 +21,24 @@ import {
   identityConstants,
   identityDocumentTypesList
 } from 'schemas/idVerificationFormSchema';
+import { IDENTITY_VERIFICATION_URL } from 'redux/modules/identityVerification';
+import IDVerificationTitle from 'components/IDVerification/IDVerificationTitle';
+import XHRUploader from 'components/XHRUploader';
 import FormFieldError from 'components/FormFieldError';
 import styles from './IDVerificationForm.scss';
 
 const ControlLabel = (props) => <BSControlLabel className={styles.label} {...props} />;
 const FormControl = (props) => <BSFormControl className={styles.control} {...props} />;
+const termsConditions = (
+  <Popover id="idVerificationTermsConditions">
+    <div className={styles.termsConditions}>
+      I give my consent for my details to be checked online with DVS Driver License Search.{' '}
+      I confirm that I am utilising Trulioo for an identity check to facilitate the carrying{' '}
+      out of an applicable customer identification procedure under the Anti-Money Laundering{' '}
+      and Counter-Terrorism Financing Act 2006.
+    </div>
+  </Popover>
+);
 
 export default class IDVerificationForm extends Component {
   static propTypes = {
@@ -36,11 +51,22 @@ export default class IDVerificationForm extends Component {
     errors: PropTypes.object.isRequired,
     fields: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
-    submitIdentity: PropTypes.func.isRequired
+    submitIdentity: PropTypes.func.isRequired,
+    requestSubmitIdentity: PropTypes.func,
+    doneSubmitIdentity: PropTypes.func
   };
 
   static defaultProps = {
+    requestSubmitIdentity: () => {},
+    doneSubmitIdentity: () => {},
     align: 'left'
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      notice: 'We require additional information to verify your identification online'
+    };
   }
 
   getPassportFields(fields) {
@@ -91,7 +117,29 @@ export default class IDVerificationForm extends Component {
     }
 
     submitIdentity({
-      body
+      body,
+      success: () => {
+        alert('Identity Verification Success!');
+      },
+      fail: () => {
+        this.setState({
+          notice: 'Failed to verify your identity. Please verify against other type of document.'
+        });
+      }
+    });
+  }
+
+  handleUploadSuccess = (response) => {
+    const { doneSubmitIdentity } = this.props;
+    doneSubmitIdentity();
+    alert('Identity Verification Success!');
+  }
+
+  handleUploadFail = (response) => {
+    const { doneSubmitIdentity } = this.props;
+    doneSubmitIdentity();
+    this.setState({
+      notice: 'Failed to verify your identity. Please verify against other type of document.'
     });
   }
 
@@ -178,10 +226,42 @@ export default class IDVerificationForm extends Component {
     );
   }
 
+  renderUploader() {
+    const { doneSubmitIdentity } = this.props;
+    return (
+      <div>
+        <div className={styles.uploadDescription}>
+          <p>
+            Please make sure all identification is a <em>certified copy</em>.<br />
+            You can also send identification to accounts@cmc.com{' '}
+            or mail to: PO Box 165, Sydney NSW, Australia 2000
+          </p>
+          <p>
+            Documents to upload:<br />
+            <em>Driver’s licence</em> OR <em>Australian Passport</em>
+          </p>
+        </div>
+        <XHRUploader
+          url={IDENTITY_VERIFICATION_URL}
+          fieldName="uploaded_id"
+          method="POST"
+          maxFiles={1}
+          accept="image/*"
+          onStart={this.handleUploadFail}
+          onCancel={doneSubmitIdentity}
+          onSuccess={this.handleUploadSuccess}
+        />
+      </div>
+    );
+  }
+
   render() {
-    const { handleSubmit } = this.props;
+    const { align, handleSubmit } = this.props;
+    const { notice } = this.state;
+
     return (
       <Form onSubmit={handleSubmit(this.handleVerify)} className={styles.idVerificationForm}>
+        <IDVerificationTitle align={align} notice={notice} />
         <Tab.Container id="IDVerificationFormTabs" defaultActiveKey="online">
           <div className={styles.tabs}>
             <div className={styles.navsWrapper}>
@@ -199,7 +279,7 @@ export default class IDVerificationForm extends Component {
                 {this.renderVerifyOnline()}
               </Tab.Pane>
               <Tab.Pane eventKey="upload">
-                Tab 2 content
+                {this.renderUploader()}
               </Tab.Pane>
             </Tab.Content>
           </div>
@@ -207,7 +287,12 @@ export default class IDVerificationForm extends Component {
         <div className={styles.wrapper}>
           <FormGroup>
             <Checkbox inline>
-              I have read and agree to the terms and conditions.
+              I have read and agree to the{' '}
+              <OverlayTrigger trigger="focus" placement="top" overlay={termsConditions}>
+                <a href="javascript:;" className={styles.termsLink}>
+                  terms and conditions.
+                </a>
+              </OverlayTrigger>
             </Checkbox>
           </FormGroup>
         </div>
@@ -215,7 +300,7 @@ export default class IDVerificationForm extends Component {
           <div className={styles.wrapper}>
             <Row>
               <Col xs={6}>
-                <Link to="#" className={styles.cancelLink}>Verify Later</Link>
+                <Link to="javascript:;" className={styles.cancelLink}>Verify Later</Link>
               </Col>
               <Col xs={6} className="text-right">
                 <Button bsStyle="primary" className={styles.submitButton} type="submit">

@@ -12,7 +12,7 @@ export default class IDVerificationTitle extends Component {
 
   static defaultProps = {
     align: 'left',
-    notice: 'We require additional information to verify your identification online'
+    notice: ''
   }
 
   render() {
