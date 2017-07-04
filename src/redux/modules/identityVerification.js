@@ -38,7 +38,7 @@ export const doneSubmitIdentity = createAction(DONE_ID_SUBMIT);
 // ------------------------------------
 export const processSubmitIdentity = (payload) => {
   var method = 'POST';
-  var requestURL = `${API_URL}/verification/api/identity/`;
+  var requestURL = `${API_URL}/identity-verification/api/identity/`;
 
   const fetchParams = assignDefaults({
     method,
