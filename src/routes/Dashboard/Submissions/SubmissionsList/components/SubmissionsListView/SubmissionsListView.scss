@@ -6,16 +6,55 @@ $slt-border-color:          rgba(204, 204, 204, .3);
 $slt-border-color2:          #CCD9E3;
 
 .submissionsList {
+  width: 100%;
 }
 .submissionsListInner {
-  background-color: $white;
-  @include border-radius(5px);
-  border: 1px solid $slt-border-color2;
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
   position: relative;
   font-size: 12px;
+}
+.widgetPanel {
+  width: 100%;
+  border: 1px solid $slt-border-color2;
+  @include border-radius(5px);
+  background-color: $white;
+  float: left;
+  font-size: 12px;
+}
+.panelTitleWrapper {
+  height: 60px;
+  padding: 10px 15px;
+  border-bottom: 1px solid $border-color;
+}
+.panelTitle {
+  font-size: 18px;
+  float: left;
+  font-family: "roble_alt_mediummedium";
+  color: $dashboard-header-bg-color;
+  line-height: 40px;
+}
+.panelContent {
+  position: relative;
+  height: 230px;
+}
+.activitiesSection {
+  width: 40%;
+}
+.analyticsSection {
+  margin: 0 2%;
+  width: 16%;
+}
+.analyticPeriod {
+  padding: 10px 20px;
+}
+.savingsSection {
+  width: 40%;
+  text-align: center;
+}
+.savings {
+  padding-top: 50px;
 }
 
 .columnID {
