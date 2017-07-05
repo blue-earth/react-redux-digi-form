@@ -6,11 +6,11 @@ $slt-border-color:          rgba(204, 204, 204, .3);
 $slt-border-color2:          #CCD9E3;
 
 .submissionsList {
+}
+.submissionsListInner {
   background-color: $white;
   @include border-radius(5px);
   border: 1px solid $slt-border-color2;
-}
-.submissionsListInner {
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;

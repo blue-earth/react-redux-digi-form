@@ -79,15 +79,15 @@ class SubmissionsFilter extends Component {
     return [
       {
         key: 'edit',
-        label: 'edit'
+        label: 'Edit'
       },
       {
         key: 'delete',
-        label: 'delete'
+        label: 'Delete'
       },
       {
-        key: 'delete',
-        label: 'delete'
+        key: 'other action',
+        label: 'Other actions'
       }
     ];
   }
@@ -96,12 +96,12 @@ class SubmissionsFilter extends Component {
       <div className={styles.filterContainer}>
         <ButtonToolbar className="pull-left">
           <Button style="formButton">
-            <IoRefresh />
+            <IoRefresh size={18} />
             {' '}
             Refresh
           </Button>
           <Button style="formButton">
-            <IoStatsBars />
+            <IoStatsBars size={18} />
             {' '}
             Customize
           </Button>

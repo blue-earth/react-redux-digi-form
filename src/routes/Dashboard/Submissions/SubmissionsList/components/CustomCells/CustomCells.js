@@ -161,9 +161,6 @@ export class ActionsCell extends Component {
     const { rowData, metadata: { selectedItems } } = this.props;
     return (
       <div className={styles.actionsCell}>
-        <Link to={submissionsUrl(`/${rowData.form_id}/${rowData.response_id}`)}>
-          View
-        </Link>
         <div className={styles.rightMiddle}>
           <Checkbox onChange={this.handleCheckboxChange}
             checked={_.includes(selectedItems, rowData.response_id)}>
