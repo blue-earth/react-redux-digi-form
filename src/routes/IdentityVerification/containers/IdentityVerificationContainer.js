@@ -1,0 +1,23 @@
+import connect from 'redux/utils/connect';
+import { show } from 'redux-modal';
+import {
+  submitIdentity,
+  requestSubmitIdentity,
+  doneSubmitIdentity
+} from 'redux/modules/identityVerification';
+
+import IdentityVerification from '../components/IdentityVerification';
+
+const mapActionCreators = {
+  showModal: show,
+  submitIdentity,
+  requestSubmitIdentity,
+  doneSubmitIdentity
+};
+
+const mapStateToProps = (state) => {
+  const { identityVerification } = state;
+  return identityVerification;
+};
+
+export default connect(mapStateToProps, mapActionCreators)(IdentityVerification);

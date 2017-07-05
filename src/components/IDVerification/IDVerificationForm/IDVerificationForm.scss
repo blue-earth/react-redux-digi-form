@@ -1,0 +1,138 @@
+@import './mixins';
+@import './variables';
+
+$identity-form-width:       360px;
+$identity-submit-btn-color: #3191d2;
+$identity-separator-color:  #e1e1e1;
+$identity-tab-color:        #3893d0;
+$identity-form-text-color:  #949494;
+
+.idVerificationForm {
+  font-size: 14px;
+  color: $identity-form-text-color;
+}
+
+.wrapper {
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.tabs {
+  margin-top: 25px;
+}
+
+.tabsNav {
+  > li > a {
+    border: none;
+  }
+}
+
+.navsWrapper {
+  border-bottom: 1px solid $identity-separator-color;
+}
+
+.tabContent {
+  padding: 30px 0;
+  margin: 0 auto;
+  max-width: $identity-form-width;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.control {
+  box-shadow: none !important;
+  border-color: rgba(123, 123, 123, .21);
+  padding: 8px 15px;
+  height: 38px;
+}
+
+.uploadDescription {
+  p {
+    margin-bottom: 20px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  em {
+    font-style: normal;
+    font-weight: 400;
+    color: #252525;
+  }
+}
+.submitButton {
+  font-size: 16px;
+  background-color: $identity-submit-btn-color;
+  height: 48px;
+  padding: 10px 25px;
+  border: none;
+  outline: none;
+  @include transition(all .1s);
+}
+
+.cancelLink {
+  margin-top: 10px;
+  text-decoration: underline;
+  color: $frontend-text-color1;
+  opacity: .5;
+  @include transition(all .1s);
+  font-size: 16px;
+  display: inline-block;
+  &:hover {
+    text-decoration: none;
+    opacity: .7;
+  }
+}
+
+.termsLink {
+  color: black;
+  opacity: .6;
+  text-decoration: underline;
+  &:hover, &:focus {
+    opacity: .8;
+    color: black;
+    text-decoration: none;
+  }
+}
+
+.termsConditions {
+  font-size: 11px;
+}
+
+.footer {
+  border-top: 1px solid $identity-separator-color;
+  padding-top: 25px;
+  margin-top: 30px;
+}
+
+:global {
+  .idVerification-tabs {
+    > li {
+      list-style: none;
+      display: inline-block;
+      font-size: 18px;
+      > a {
+        opacity: .5;
+        color: $identity-tab-color;
+        text-decoration: none !important;
+        padding-bottom: 5px;
+        display: inline-block;
+      }
+      &.active > a, 
+      > a:hover, > a:focus {
+        opacity: 1;
+      }
+      &.active > a {
+        border-bottom: 2px solid $identity-tab-color;
+      }
+      &:not(:last-child):after {
+        content: 'or';
+        opacity: .5;
+        color: #8c8c8c;
+        margin: 0 25px;
+        display: inline-block;
+      }
+    }
+  }
+}
