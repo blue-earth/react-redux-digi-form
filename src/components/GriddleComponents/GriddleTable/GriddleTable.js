@@ -5,8 +5,6 @@ import React, {
 import Griddle from 'griddle-react';
 import _ from 'lodash';
 import {
-  FaSortAlphaAsc,
-  FaSortAlphaDesc,
   FaCaretDown,
   FaCaretUp
 } from 'react-icons/lib/fa';
