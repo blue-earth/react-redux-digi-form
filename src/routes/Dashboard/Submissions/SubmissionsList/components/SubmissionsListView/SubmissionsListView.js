@@ -14,6 +14,9 @@ import {
 import SubmissionsFilter from '../SubmissionsFilter';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
+import SelectButton from 'components/Buttons/SelectButton';
+import EnvironmentSaving from 'components/EnvironmentSaving';
+import classNames from 'classnames';
 import styles from './SubmissionsListView.scss';
 import tableStyles from './tableStyles.scss';
 
@@ -184,7 +187,7 @@ class SubmissionsListView extends Component {
         totalCount={totalCount}
         sortColumn={sortColumn}
         sortAscending={sortAscending}
-        Pagination={''}
+        Pagination={Pagination}
         initialSort="response_id"
         isFetching={isFetching}
         showFilter
@@ -201,6 +204,72 @@ class SubmissionsListView extends Component {
   unless there is data in the table
   */
 
+  renderActivityPanel() {
+    const selectOptions = [
+      {
+        key: 'time',
+        label: 'Time'
+      },
+      {
+        key: 'something',
+        label: 'Something'
+      }
+    ];
+    return (
+      <div className={classNames(styles.activitiesSection, styles.widgetPanel)}>
+        <div className={styles.panelTitleWrapper}>
+          <div className={styles.panelTitle}>Activity</div>
+          <SelectButton className="pull-right" label="Arrange by" optionList={selectOptions} value="Time" />
+        </div>
+        <div className={styles.panelContent}>
+        </div>
+      </div>
+    );
+  }
+  renderAnalyticsPanel() {
+    const selectOptions = [
+      {
+        key: 'today',
+        label: 'Today'
+      },
+      {
+        key: 'week',
+        label: 'This week'
+      },
+      {
+        key: 'month',
+        label: 'This month'
+      }
+    ];
+    return (
+      <div className={classNames(styles.analyticsSection, styles.widgetPanel)}>
+        <div className={styles.panelTitleWrapper}>
+          <div className={styles.panelTitle}>Analytics</div>
+        </div>
+        <div className={styles.panelContent}>
+          <SelectButton className={styles.analyticPeriod} optionList={selectOptions} value="Today" />
+        </div>
+      </div>
+    );
+  }
+
+  renderEnvironmentalSavings() {
+    return (
+      <div className={classNames(styles.savingsSection, styles.widgetPanel)}>
+        <div className={styles.panelTitleWrapper}>
+          <div className={styles.panelTitle}>Environmental savings</div>
+        </div>
+        <div className={styles.panelContent}>
+          <div className={styles.savings}>
+            <EnvironmentSaving type="trees" value={12} size="small" />
+            <EnvironmentSaving type="water" value={3850} size="small" />
+            <EnvironmentSaving type="co2" value={120} size="small" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const {
       page,
@@ -209,11 +278,14 @@ class SubmissionsListView extends Component {
     } = this.props;
     return (
       <div className={styles.submissionsList}>
-        <div className={styles.submissionsListInner}>
+        <div className={classNames(styles.widgetPanel, styles.submissionsListInner)}>
           <SubmissionsFilter />
           {this.renderSubmissionsList()}
         </div>
         <Pagination currentPage={page} maxPage={Math.ceil(totalCount/pageSize)} />
+        {this.renderActivityPanel()}
+        {this.renderAnalyticsPanel()}
+        {this.renderEnvironmentalSavings()}
       </div>
     );
   }
