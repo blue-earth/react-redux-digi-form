@@ -30,19 +30,19 @@ class SelectButton extends Component {
       selected: props.value
     };
     this.mounted = true;
+    this.cx = classNames.bind(styles);
   }
 
   componentDidMount() {
     document.addEventListener('click', this.handleDocumentClick, false);
     document.addEventListener('touchend', this.handleDocumentClick, false);
   }
-
   componentWillUnmount() {
     this.mounted = false;
     document.removeEventListener('click', this.handleDocumentClick, false);
     document.removeEventListener('touchend', this.handleDocumentClick, false);
   }
-   componentWillReceiveProps (props) {
+  componentWillReceiveProps(props) {
     if (props.value && props.value !== this.state.selected) {
       this.setState({selected: props.value});
     }
@@ -76,7 +76,7 @@ class SelectButton extends Component {
   render() {
     const { label, staticValue } = this.props;
     const { selected, isOpen } = this.state;
-    var cx = classNames.bind(styles);
+    var cx = this.cx;
     return (
       <div className={this.props.className}>
         <div ref="dropdown" className={cx('selectWrapper', {
