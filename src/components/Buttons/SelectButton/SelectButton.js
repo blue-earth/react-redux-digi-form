@@ -83,7 +83,7 @@ class SelectButton extends Component {
           isOpen: this.state.isOpen
         })}>
           <div className={cx('selectLabel')} onMouseDown={this.toggleOpen}>
-            <div className="pull-left">{label}{label && label.length > 0 ? ':' : ' '}</div>
+            <div className={cx('pullLeft')}>{label}{label && label.length > 0 ? ':' : ' '}</div>
             <div className={cx('selectValue', {invisible: isOpen && !staticValue})}>{selected}</div>
             <div className={cx('selectCaret')}><FaAngleDown /></div>
           </div>

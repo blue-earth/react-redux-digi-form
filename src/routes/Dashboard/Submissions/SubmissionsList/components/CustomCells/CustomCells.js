@@ -8,8 +8,6 @@ import {
   OverlayTrigger,
   Checkbox
 } from 'react-bootstrap';
-import { Link } from 'react-router';
-import { submissionsUrl } from 'helpers/urlHelper';
 import {
   MdEmail,
   MdPhone
