@@ -1,0 +1,95 @@
+@import './mixins';
+@import './variables';
+
+$frontend-bg-start-color:       #ffffff;
+$frontend-bg-end-color:         #f4f5f8;
+$button-color:                  #3392d4;
+
+.wrapper {
+  height: 100%;
+  font-family: 'Open Sans', sans-serif;
+  @include media('>=sm') {
+    @include background-gradient($frontend-bg-start-color, $frontend-bg-end-color);
+  }
+}
+.contentWrapper {
+  position: relative;
+  padding: 30px;
+  background-color: $white;
+  @include border-radius(4px);
+  border: 1px solid $border-color;
+  border-top: 4px solid $button-color;
+  text-align: center;
+}
+.thankMessage {
+  font-family: "Arial Rounded MT Bold", "Helvetica", sans-serif;
+  letter-spacing: 2px;
+  margin-top: 10px;
+  font-size: 14px;
+  color: $button-color;
+}
+.formTitle {
+  margin-bottom: 40px;
+  font-family: "Helvetica", Arial, sans-serif;
+  font-weight: 100;
+  font-size: 32px;
+}
+.instruction {
+  font-size: 14px;
+  padding-top: 10px;
+  margin: 10px;
+}
+.downloadButton {
+  padding: 10px 20px;
+  margin: 20px 0 30px 0;
+  border: none;
+  background-color: $button-color;
+}
+.learnMoreButton {
+  margin: 0 4px;
+  color: $text-dark-color;
+  text-decoration: underline;
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    color: $text-dark-color;
+  }
+}
+.envSavingSection {
+  margin-top: 30px;
+}
+.socialSharingWrapper {
+  display: inline-block;
+  margin-left: 20px;
+}
+.divider {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1px;
+  height: 24px;
+  background-color: $border-color;
+}
+.bottomLogoWrapper {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  opacity: .4;
+  text-align: right;
+  color: $frontend-text-color3;
+  padding: 15px;
+  font-size: 12px;
+  span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  @include media('<sm') {
+    display: none;
+  }
+}
+.bottomLogo {
+  margin-left: 8px;
+  padding-bottom: 3px;
+  vertical-align: middle;
+  display: inline-block;
+}

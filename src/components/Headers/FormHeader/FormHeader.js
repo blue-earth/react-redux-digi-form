@@ -33,7 +33,7 @@ class FormHeader extends Component {
     /*
      * submitAnswer: Redux action to send submit request to server. Here it will be submitted by user's action.
      */
-    submitAnswer: PropTypes.func.isRequired
+    submitAnswer: PropTypes.func
   }
 
   componentDidMount() {
@@ -60,7 +60,7 @@ class FormHeader extends Component {
   }
 
   render() {
-    const { title } = this.props;
+    const { title, submitAnswer } = this.props;
     const mobileMenuClass = classNames({
       [styles.mobileMenu]: true,
       [styles.isOpen]: this.state.isMobileMenuOpen
@@ -72,7 +72,9 @@ class FormHeader extends Component {
             <StackLogo logoStyle="grey" width="auto" height={45} />
           </div>
           <h1 className={styles.title}>{title}</h1>
-          <div className={styles.buttonWrapper}>
+          <div className={classNames(styles.buttonWrapper, {
+            'hide': submitAnswer === undefined
+          })}>
             <Button onClick={this.handleSubmitAnswer} className={styles.saveButton}>
               Save & continue later
             </Button>
