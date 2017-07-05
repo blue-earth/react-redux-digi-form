@@ -118,8 +118,15 @@ export default class IDVerificationForm extends Component {
 
     submitIdentity({
       body,
-      success: () => {
-        alert('Identity Verification Success!');
+      success: (data) => {
+        if (data['value']) {
+          // The success here means the request succeed, does not refer to the verification succeed
+          alert('Identity Verification Success!');
+        } else {
+          this.setState({
+            notice: 'Failed to verify your identity. Please verify against other type of document.'
+          });
+        }
       },
       fail: () => {
         this.setState({
