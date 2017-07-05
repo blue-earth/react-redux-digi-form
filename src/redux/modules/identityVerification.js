@@ -50,7 +50,7 @@ export const processSubmitIdentity = (payload) => {
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitIdentity()); // Hide submitting spinner
-      typeof payload.success === 'function' && payload.success();
+      typeof payload.success === 'function' && payload.success(value);
     };
   };
 
