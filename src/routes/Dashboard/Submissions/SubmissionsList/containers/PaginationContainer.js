@@ -4,7 +4,7 @@ import {
   fetchSubmissions
 } from 'redux/modules/submissionsList';
 
-import Pagination from 'components/GriddleComponents/Pagination/Pagination';
+import PaginationComponent from 'components/GriddleComponents/PaginationComponent/PaginationComponent';
 
 /*  Object of action creators (can also be function that returns object).
     Keys will be passed as props to presentational components. Here we are
@@ -24,4 +24,4 @@ const mapActionCreators = {
   fetchPage: fetchSubmissions
 };
 
-export default connect(mapStateToProps, mapActionCreators)(Pagination);
+export default connect(mapStateToProps, mapActionCreators)(PaginationComponent);

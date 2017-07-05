@@ -15,6 +15,7 @@ import SubmissionsFilter from '../SubmissionsFilter';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import styles from './SubmissionsListView.scss';
+import tableStyles from './tableStyles.scss';
 
 class SubmissionsListView extends Component {
   static propTypes = {
@@ -183,13 +184,14 @@ class SubmissionsListView extends Component {
         totalCount={totalCount}
         sortColumn={sortColumn}
         sortAscending={sortAscending}
-        Pagination={Pagination}
+        Pagination={''}
         initialSort="response_id"
         isFetching={isFetching}
         showFilter
         useCustomFilterComponent
         customFilterComponent={SubmissionsFilter}
         showSettings
+        tableClassName={tableStyles.submissionsTable}
       />
     );
   }
@@ -200,12 +202,18 @@ class SubmissionsListView extends Component {
   */
 
   render() {
+    const {
+      page,
+      pageSize,
+      totalCount
+    } = this.props;
     return (
       <div className={styles.submissionsList}>
         <div className={styles.submissionsListInner}>
           <SubmissionsFilter />
           {this.renderSubmissionsList()}
         </div>
+        <Pagination currentPage={page} maxPage={Math.ceil(totalCount/pageSize)} />
       </div>
     );
   }

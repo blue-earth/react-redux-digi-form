@@ -1,0 +1,52 @@
+@import './mixins';
+@import './variables';
+
+.submissionsTable {
+  background-color: $white;
+  width: 100%;
+  thead {
+    background-color: $table-header-bg-color !important;
+    font-family: 'Open Sans';
+    tr:first-child {
+      th:after {
+        display: block;
+        width: 1px;
+        height: 20px;
+        background: $table-border-color;
+        content: ' ';
+        position: absolute;
+        top: 8px;
+        right: 0px;
+      }
+      th:first-child {
+        @include border-radius-separate(4px, 0, 0, 0);
+      }
+      th:last-child {
+        @include border-radius-separate(0, 4px, 0, 0);
+      }
+    }
+  }
+  th {
+    padding: 10px 15px;
+    word-wrap: break-word;
+    color: $text-light-color !important;
+    border-bottom: none !important;
+    position: relative;
+    font-weight: 600;
+  }
+  td {
+    height: 0;
+    padding: 12px 15px;
+    vertical-align: middle !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    font-weight: 600;
+  }
+  tr {
+    border-bottom: 1px solid $table-border-color;
+  }
+  tbody:last-child tr {
+    display: none;
+    border-bottom: none !important;
+  }
+}
