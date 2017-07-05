@@ -1,6 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import StackLogo from 'components/Logos/StackLogo';
-import { Grid, ButtonToolbar } from 'react-bootstrap';
+import {
+  Grid,
+  ButtonToolbar
+} from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import { FaBell, FaEdit, FaPencil, FaPaperPlane, FaStar } from 'react-icons/lib/fa';
 import styles from './DashboardHeader.scss';
@@ -12,6 +15,7 @@ import {
   usersPath,
   settingsPath
 } from 'helpers/urlHelper';
+import AlertMessage from 'components/AlertMessage';
 
 export default class DashboardHeader extends Component {
 
@@ -64,9 +68,35 @@ export default class DashboardHeader extends Component {
   }
 
   render() {
+    const list = [{
+      highlight: true,
+      message: 'Jordan McCown completed the SMSF tlksdfn sdkfsdfsdfsdfsdfsdf dsf',
+      time: '2m ago',
+      link: '/forms/3'
+    }, {
+      highlight: false,
+      message: 'Lihan Li viewed the Personal Form',
+      time: '5m ago',
+      link: '/forms/3'
+    }, {
+      highlight: false,
+      message: 'Shaun Harvey abandonded the Some thing',
+      time: '1h ago',
+      link: '/forms/3'
+    }, {
+      highlight: false,
+      message: 'Jordan McCown completed the SMSF tlksdfn sdkf',
+      time: '2h ago',
+      link: '/forms/3'
+    }, {
+      highlight: false,
+      message: 'Jordan McCown completed the SMSF tlksdfn sdkf',
+      time: '2h ago',
+      link: '/forms/3'
+    }];
     return (
       <div className={styles.header}>
-        <Grid fluid>
+        <Grid>
           <div className={styles.logo}>
             <StackLogo className={styles.logo} width="auto" height={38} logoStyle="white" />
           </div>
@@ -93,9 +123,11 @@ export default class DashboardHeader extends Component {
               <img src="http://localhost:3000/avatar.jpg" alt="" className={styles.profileImage} />
               <span className={styles.profileName}>{'JM'}</span>
             </Button>
-            <Button style="headerButton" iconOnly notificationCounter={5}>
-              <FaBell size={24} />
-            </Button>
+            <AlertMessage list={list}>
+              <Button style="headerButton" iconOnly notificationCounter={5}>
+                <FaBell size={24} />
+              </Button>
+            </AlertMessage>
           </ButtonToolbar>
         </Grid>
       </div>
