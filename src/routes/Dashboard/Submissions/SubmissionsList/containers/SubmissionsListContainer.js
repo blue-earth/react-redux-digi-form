@@ -3,6 +3,7 @@ import {
   INIT_SUBMISSIONSLIST_STATE,
   fetchSubmissions,
   selectAllItems,
+  selectAnalyticsPeriod,
   toggleSelectItem
 } from 'redux/modules/submissionsList';
 
@@ -23,7 +24,9 @@ const mapStateToProps = (state) => {
     sortColumn,
     sortAscending,
     selectedItems,
-    analyticsPeriod
+    analyticsPeriod,
+    analytics,
+    activities
   } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
   return {
     isFetching,
@@ -34,14 +37,17 @@ const mapStateToProps = (state) => {
     sortColumn,
     sortAscending,
     selectedItems,
-    analyticsPeriod
+    analyticsPeriod,
+    analytics,
+    activities
   };
 };
 
 const mapActionCreators = {
   fetchSubmissions,
   selectAllItems,
-  toggleSelectItem
+  toggleSelectItem,
+  selectAnalyticsPeriod
 };
 
 export default connect(mapStateToProps, mapActionCreators)(SubmissionsListView);
