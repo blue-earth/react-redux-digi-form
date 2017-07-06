@@ -10,7 +10,6 @@ sup {
   width: 200px;
   display: inline-block;
   text-align: center;
-  color: $text-dark-color;
 }
 .envSavingImage {
   height: 100%;
@@ -24,4 +23,12 @@ sup {
 .envSavingLabel {
   margin-bottom: 6px;
   font-size: 12px;
+}
+.roble {
+  &.envSavingNumber {
+    font-family: "roble_alt_extrabold";
+  }
+  &.envSavingLabel {
+    font-family: "roble_alt_mediummedium";
+  }
 }
