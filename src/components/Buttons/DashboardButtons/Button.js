@@ -62,13 +62,17 @@ class Button extends Component {
     pullRight: PropTypes.bool,
 
     // block button
-    block: PropTypes.bool
+    block: PropTypes.bool,
+
+    // Button type (button/submit)
+    type: PropTypes.string
   };
 
   static defaultProps = {
     style: 'defaultButton',
     id: 'id',
-    className: ''
+    className: '',
+    type: 'button'
   };
 
   handleClick = (arg) => {
@@ -131,7 +135,7 @@ class Button extends Component {
   }
 
   render() {
-    const { children, dropDown, id } = this.props;
+    const { children, dropDown, id, type } = this.props;
     if (typeof dropDown !== 'undefined') {
       let title = <span>{this.renderNotificationCounter()} {children}</span>;
       return (
@@ -154,7 +158,7 @@ class Button extends Component {
       );
     } else {
       return (
-        <BootstrapButton type="button" onClick={this.handleClick}
+        <BootstrapButton type={type} onClick={this.handleClick}
           className={this.getWrapperClass()}
           {...this.getOptionalParams()}
         >

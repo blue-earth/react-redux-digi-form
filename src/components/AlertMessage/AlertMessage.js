@@ -33,7 +33,7 @@ class AlertMessage extends Component {
   }
   render() {
     const {children, list} = this.props;
-    var cx = classNames.bind(styles);
+    var cx = classNames.bind(styles); // eslint-disable-line
     return (
       <div className={cx('alertMessageSection')} onFocus={this.open} onBlur={this.close}>
         {children}
