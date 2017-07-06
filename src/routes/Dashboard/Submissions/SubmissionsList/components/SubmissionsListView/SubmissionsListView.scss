@@ -1,14 +1,11 @@
 @import './mixins';
 @import './variables';
-$slt-header-bg-color:     	#ECF4FB;
-$slt-header-text-color:     #1C4468;
-$slt-border-color:          rgba(204, 204, 204, .3);
-$slt-border-color2:          #CCD9E3;
 
 .submissionsList {
   width: 100%;
 }
 .submissionsListInner {
+  min-height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
@@ -17,15 +14,15 @@ $slt-border-color2:          #CCD9E3;
 }
 .widgetPanel {
   width: 100%;
-  border: 1px solid $slt-border-color2;
+  border: 1px solid $table-pagination-button-color;
   @include border-radius(5px);
   background-color: $white;
   float: left;
   font-size: 12px;
 }
 .panelTitleWrapper {
-  height: 60px;
-  padding: 10px 15px;
+  height: 64px;
+  padding: 12px 20px;
   border-bottom: 1px solid $border-color;
 }
 .panelTitle {
@@ -54,7 +51,7 @@ $slt-border-color2:          #CCD9E3;
 .activity {
   line-height: 50px;
   font-weight: 600;
-  padding: 0 15px;
+  padding: 0 20px;
   border-bottom: 1px solid $border-color;
 }
 .activityWrapper {
@@ -74,6 +71,7 @@ $slt-border-color2:          #CCD9E3;
   text-align: right;
   width: 16%;
   float: right;
+  color: $time-text-color;
 }
 
 .analyticsSection {
@@ -81,11 +79,11 @@ $slt-border-color2:          #CCD9E3;
   width: 16%;
 }
 .analyticsPeriod {
-  padding: 10px 15px;
+  padding: 10px 20px;
 }
 .analyticsContent {
-  padding: 10px 15px;
-  color: $blackblue;
+  padding: 10px 20px;
+  color: $submission-text-color;
   text-align: center;
   font-family: "roble_alt_lightlight";
   font-size: 14px;
@@ -99,8 +97,8 @@ $slt-border-color2:          #CCD9E3;
   text-align: center;
 }
 .savings {
-  padding-top: 50px;
-  color: $blackblue;
+  padding: 70px 20px;
+  color: $submission-text-color;
 }
 
 .columnID {
@@ -108,12 +106,14 @@ $slt-border-color2:          #CCD9E3;
 }
 .columnName {
   width: auto;
+  font-weight: 800;
 }
 .columnProgress {
   width: auto;
 }
 .columnPercent {
   width: auto;
+  font-weight: 800;
 }
 .columnAuthor {
   width: auto;
@@ -138,4 +138,5 @@ $slt-border-color2:          #CCD9E3;
 }
 .columnActions {
   width: 60px;
+  border-left: 1px solid $table-border-color;
 }

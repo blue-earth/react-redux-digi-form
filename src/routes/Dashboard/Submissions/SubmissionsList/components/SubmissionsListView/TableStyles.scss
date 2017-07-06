@@ -1,13 +1,19 @@
 @import './mixins';
 @import './variables';
 
+
 .submissionsTable {
   background-color: $white;
   width: 100%;
+  font-weight: 600;
   thead {
-    background-color: $table-header-bg-color !important;
+    color: $table-header-text-color;
+    background-color: $table-header-bg-color;
     font-family: 'Open Sans';
     tr:first-child {
+      th {
+        font-weight: 500;
+      }
       th:after {
         display: block;
         width: 1px;
@@ -18,11 +24,14 @@
         top: 8px;
         right: 0px;
       }
-      th:first-child {
-        @include border-radius-separate(4px, 0, 0, 0);
+      th:nth-last-child(2):after {
+        display: none;
       }
-      th:last-child {
-        @include border-radius-separate(0, 4px, 0, 0);
+      th:last-child:after {
+        display: none;
+      }
+      th:last-child{
+        border-left: 1px solid $table-border-color;
       }
     }
   }
@@ -32,18 +41,30 @@
     color: $text-light-color !important;
     border-bottom: none !important;
     position: relative;
-    font-weight: 600;
   }
   td {
     height: 0;
-    padding: 12px 15px;
+    padding: 20px 15px;
     vertical-align: middle !important;
     border-top: none !important;
     border-bottom: none !important;
-    font-weight: 600;
+    &:first-child {
+      @include border-radius-separate(6px, 0, 6px, 0);
+    }
+    &:last-child {
+      @include border-radius-separate(0, 6px, 0, 6px);
+    }
   }
   tr {
     border-bottom: 1px solid $table-border-color;
+    &:hover {
+      td {
+        background-color: $select-button-hover-color;
+      }
+    }
+  }
+  tbody {
+    color: $table-text-color;
   }
   tbody:last-child tr {
     display: none;
