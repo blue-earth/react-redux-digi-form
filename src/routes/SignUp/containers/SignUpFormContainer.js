@@ -28,6 +28,5 @@ const WrappedSignUpForm = connect(mapStateToProps, mapActionCreators)(SignUpForm
 
 export default reduxForm({
   form: 'signUpForm',
-  fields: formSchema.fields,
   validate: formSchema.validate
 })(WrappedSignUpForm);

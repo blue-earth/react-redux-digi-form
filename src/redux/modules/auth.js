@@ -7,9 +7,11 @@ export const REQUEST_AUTH = 'REQUEST_AUTH';
 export const RECEIVE_AUTH_STATUS = 'RECEIVE_AUTH_STATUS';
 
 export const NOT_LOGGED_IN = 'NOT_LOGGED_IN';
+export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGGING_IN = 'LOGGING_IN';
 export const LOGGED_IN = 'LOGGED_IN';
 export const LOGGED_OUT = 'LOGGED_OUT';
+
 export const SET_USER_PROFILE = 'SET_USER_PROFILE';
 export const SET_IS_FETCHING_USER = 'SET_IS_FETCHING_USER';
 
@@ -25,7 +27,7 @@ export const SIGNED_UP = 'SIGNED_UP';
 export const NOT_SIGNED_UP = 'NOT_SIGNED_UP';
 
 export const INIT_AUTH_STATE = {
-  authStatus: NOT_LOGGED_IN,    // todo: deprecating this property
+  authStatus: NOT_LOGGED_IN,    // !IMPORTANT: required for login failed measurement.
   user: {},
   isAuthenticating: false,
   serverResponse: {}
@@ -213,7 +215,7 @@ const authReducer = handleActions({
     }),
   RECEIVE_AUTH_STATUS: (state, action) =>
     Object.assign({}, state, {
-      authStatus: action.payload ? LOGGED_IN : NOT_LOGGED_IN
+      authStatus: action.payload ? LOGGED_IN : LOGIN_FAILED
     }),
   RECEIVE_SIGNUP_STATUS: (state, action) =>
     Object.assign({}, state, {

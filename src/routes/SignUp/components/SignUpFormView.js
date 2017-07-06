@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { dashboardUrl, loginUrl } from 'helpers/urlHelper';
 // import Verifier from 'components/Verifier/Verifier';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Form, Grid, Row, Col } from 'react-bootstrap';
+import { Field } from 'redux-form';
+import classNames from 'classnames';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import {
   LOGGED_IN,
-  NOT_LOGGED_IN,
   NOT_SIGNED_UP
 } from 'redux/modules/auth';
 import {
@@ -16,20 +17,18 @@ import {
 import Header from 'components/Headers/Header';
 import styles from './SignUpFormView.scss';
 
-const domOnlyProps = ({
-  initialValue,
-  autofill,
-  onUpdate,
-  valid,
-  invalid,
-  dirty,
-  pristine,
-  active,
-  touched,
-  visited,
-  autofilled,
-  error,
-  ...domProps }) => domProps;
+const renderInput = field => (
+  <div className={classNames({
+    'form-group': true,
+    'has-error': field.meta.touched && field.meta.error
+  })}>
+    <input {...field.input} placeholder={field.placeholder} type={field.type}
+      className="form-control input-lg" autoFocus={field.autoFocus} />
+    {field.meta.touched && field.meta.error &&
+      <div className="help-block">{field.meta.error}</div>
+    }
+  </div>
+);
 
 class SignUpForm extends Component {
 
@@ -39,28 +38,19 @@ class SignUpForm extends Component {
     goTo: PropTypes.func.isRequired,
     isAuthenticating: PropTypes.bool.isRequired,
     serverResponse: PropTypes.object.isRequired,
-    fields: PropTypes.object.isRequired
+    pristine: PropTypes.bool.isRequired,
+    submitting: PropTypes.bool.isRequired,
+    handleSubmit: PropTypes.func.isRequired
   };
 
   static contextTypes = {
     router: React.PropTypes.object
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      hasSubmitted: false,
-      isSubmitting: false
-    };
-  }
-
   componentWillReceiveProps(props) {
     const { authStatus, goTo } = props;
     if (authStatus === LOGGED_IN) {
       goTo(dashboardUrl(''));
-    }
-    if (props.authStatus === NOT_LOGGED_IN && this.props.authStatus !== props.authStatus) {
-      this.setState({ password: '' });
     }
   }
 
@@ -69,23 +59,22 @@ class SignUpForm extends Component {
     goTo(loginUrl(''));
   }
 
-  handleSubmit = () => {
-    const { fields: {email, password}, authStatus, submitSignupForm } = this.props;
-    if (email.touched && password.touched) {
-      if (!email.error && !password.error && (authStatus === NOT_LOGGED_IN || authStatus === NOT_SIGNED_UP)) {
-        this.setState({isSubmitting: true});
-        submitSignupForm(email.value, password.value);
-        this.setState({hasSubmitted: true, isSubmitting: false});
-      }
-    }
+  handleSignup = (values) => {
+    const { email, password } = values;
+    const { submitSignupForm } = this.props;
+    submitSignupForm(email, password);
+  }
+
+  get isNotSignedUp() {
+    const { authStatus } = this.props;
+    return authStatus === NOT_SIGNED_UP;
   }
 
   renderVerificationStatus = () => {
-    const { authStatus, isAuthenticating, serverResponse } = this.props;
-    const { hasSubmitted, isSubmitting } = this.state;
-    if (hasSubmitted && !isSubmitting && !isAuthenticating) {
+    const { isAuthenticating, serverResponse, pristine, submitting } = this.props;
+    if (!pristine && !submitting && !isAuthenticating) {
       // form has been submitted
-      if (authStatus === NOT_SIGNED_UP) {
+      if (this.isNotSignedUp) {
         // there was an error
         // TODO: add a link to the email error for password retreival
         if (serverResponse.hasOwnProperty('email') && serverResponse.email[0] === 'Email address already exists') {
@@ -104,7 +93,7 @@ class SignUpForm extends Component {
   // TODO: pages for Terms and Privacy Policy
   // TODO: social signup
   render() {
-    const { fields: {email, password}, authStatus } = this.props;
+    const { pristine, submitting, handleSubmit } = this.props;
     return (
       <div>
         <Header />
@@ -113,24 +102,18 @@ class SignUpForm extends Component {
             <h2 className={styles.formTitle}>Join for Free</h2>
             <Row>
               <Col xs={12} sm={6} smPush={3}>
-                <div className={styles.signupLeft}>
-                  <div className={'form-group' + (email.touched && email.error ? ' has-error':'')}>
-                    <input type="text" placeholder="Email" className="form-control input-lg"
-                      {...domOnlyProps(email)} />
-                    {email.touched && email.error && <div className="help-block">{email.error}</div>}
-                  </div>
-                  <div className={'form-group' + (password.touched && password.error ? ' has-error':'')}>
-                    <input type="password" placeholder="Password" className="form-control input-lg"
-                      {...domOnlyProps(password)} />
-                  </div>
+                <Form className={styles.signupLeft} onSubmit={handleSubmit(this.handleSignup)}>
+                  <Field name="email" component={renderInput} type="email" placeholder="Email" autoFocus />
+                  <Field name="password" component={renderInput} type="password" placeholder="Password" />
                   {this.renderVerificationStatus()}
-                  <Button onClick={this.handleSubmit} className="btn-lg btn-block" style="submitButton"
-                    isDisabled={typeof password.error !== 'undefined' || typeof email.error !== 'undefined'}
-                    isLoading={authStatus === 'LOGGING_IN'}>
+                  <Button onClick={handleSubmit(this.handleSignup)}
+                    className="btn-lg btn-block" style="submitButton" type="submit"
+                    isDisabled={pristine || submitting}
+                    isLoading={submitting}>
                     Create your emondo account
                   </Button>
                   <p>By continuing you agree to the <a>Terms &amp; Conditions</a> and <a>Privacy Policy</a></p>
-                </div>
+                </Form>
               </Col>
               <Col xs={12} sm={6} className={styles.socialLogin}>
                 <div className={styles.signupRight}>

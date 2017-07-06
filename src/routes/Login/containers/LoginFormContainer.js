@@ -28,6 +28,5 @@ const WrappedLoginForm = connect(mapStateToProps, mapActionCreators)(LoginFormVi
 
 export default reduxForm({
   form: 'loginForm',
-  fields: formSchema.fields,
   validate: formSchema.validate
 })(WrappedLoginForm);
