@@ -16,14 +16,14 @@ import {
   Tab
 } from 'react-bootstrap';
 import { Link } from 'react-router';
+import { Field } from 'redux-form';
 import {
   genderList,
   identityConstants,
   identityDocumentTypesList
 } from 'schemas/idVerificationFormSchema';
-import { IDENTITY_ATTACHMENT_URL } from 'redux/modules/identityVerification';
 import IDVerificationTitle from 'components/IDVerification/IDVerificationTitle';
-import XHRUploader from 'components/XHRUploader';
+import UploaderField from 'components/IDVerification/UploaderField';
 import FormFieldError from 'components/FormFieldError';
 import styles from './IDVerificationForm.scss';
 
@@ -40,6 +40,24 @@ const termsConditions = (
   </Popover>
 );
 
+const renderInput = field => (
+  <FormGroup>
+    <ControlLabel>{field.label}</ControlLabel>
+    <FormControl type={field.type} placeholder={field.placeholder} {...field.input} />
+    <FormFieldError for={field} />
+  </FormGroup>
+);
+
+const renderSelect = field => (
+  <FormGroup>
+    <ControlLabel>{field.label}</ControlLabel>
+    <FormControl componentClass="select" {...field.input}>
+      {field.children}
+    </FormControl>
+    <FormFieldError for={field} />
+  </FormGroup>
+);
+
 export default class IDVerificationForm extends Component {
   static propTypes = {
     activeTab: PropTypes.oneOf([
@@ -54,8 +72,9 @@ export default class IDVerificationForm extends Component {
     submitIdentity: PropTypes.func.isRequired,
     requestSubmitIdentity: PropTypes.func,
     doneSubmitIdentity: PropTypes.func,
-    addAttachment: PropTypes.func,
-    removeAttachment: PropTypes.func
+    addAttachment: PropTypes.func.isRequired,
+    removeAttachment: PropTypes.func.isRequired,
+    attachments: PropTypes.array.isRequired
   };
 
   static defaultProps = {
@@ -73,23 +92,26 @@ export default class IDVerificationForm extends Component {
     };
   }
 
-  getPassportFields(fields) {
-    const body = {
-      'type': parseInt(fields.type, 10),
+  getPassportFields(values) {
+    const body = _.merge({
+      'type': identityConstants.DVSPASSPORT,
       'verification_data': {
         'passport': {
-          'number': fields.passport_number,
-          'expiry_date': fields.expiry_date,
-          'place_of_birth': fields.place_of_birth,
           'country': 'AU'
         }
-      },
-      'person': {
-        'first_name': fields.first_name,
-        'last_name': fields.last_name,
-        'date_of_birth': fields.date_of_birth,
-        'gender': parseInt(fields.gender, 10)
       }
+    }, values);
+    return body;
+  }
+
+  getUploadFields(fields) {
+    const { attachments } = this.props;
+    const body = {
+      'type': parseInt(fields.type, 10),
+      'person': {
+        'id': 1
+      },
+      'attachment_ids': attachments
     };
     return body;
   }
@@ -114,7 +136,7 @@ export default class IDVerificationForm extends Component {
         body = this.getPassportFields(fields);
         break;
       case identityConstants.MANUAL_FILE_UPLOAD:
-        body = this.getPassportFields(fields);
+        body = this.getUploadFields(fields);
         break;
       default:
         return;
@@ -183,61 +205,60 @@ export default class IDVerificationForm extends Component {
         </FormGroup>
         <Row>
           <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Passport no.(incl. letters)</ControlLabel>
-              <FormControl type="text" placeholder="Passport no." {...fields.passport_number} />
-              <FormFieldError for={fields.passport_number} />
-            </FormGroup>
+            <Field component={renderInput}
+              name="verification_data.passport.number"
+              type="text"
+              label="Passport no.(incl. letters)"
+              placeholder="Passport no." />
           </Col>
           <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Date of birth</ControlLabel>
-              <FormControl type="date" placeholder="Date of birth" {...fields.date_of_birth} />
-              <FormFieldError for={fields.date_of_birth} />
-            </FormGroup>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>First name</ControlLabel>
-              <FormControl type="text" placeholder="First name" {...fields.first_name} />
-              <FormFieldError for={fields.first_name} />
-            </FormGroup>
-          </Col>
-          <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Last name</ControlLabel>
-              <FormControl type="text" placeholder="Last name" {...fields.last_name} />
-              <FormFieldError for={fields.last_name} />
-            </FormGroup>
+            <Field component={renderInput}
+              name="person.date_of_birth"
+              type="date"
+              label="Date of birth"
+              placeholder="Date of birth" />
           </Col>
         </Row>
         <Row>
           <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Gender</ControlLabel>
-              <FormControl componentClass="select" {...fields.gender}>
-                {genderOptions}
-              </FormControl>
-              <FormFieldError for={fields.gender} />
-            </FormGroup>
+            <Field component={renderInput}
+              name="person.first_name"
+              type="text"
+              label="First name"
+              placeholder="First name" />
           </Col>
           <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Place of birth</ControlLabel>
-              <FormControl type="text" placeholder="Place of birth" {...fields.place_of_birth} />
-              <FormFieldError for={fields.place_of_birth} />
-            </FormGroup>
+            <Field component={renderInput}
+              name="person.last_name"
+              type="text"
+              label="Last name"
+              placeholder="Last name" />
           </Col>
         </Row>
         <Row>
           <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Expiry date</ControlLabel>
-              <FormControl type="date" placeholder="Expiry date" {...fields.expiry_date} />
-              <FormFieldError for={fields.expiry_date} />
-            </FormGroup>
+            <Field component={renderSelect}
+              name="person.gender"
+              label="Gender"
+              placeholder="Gender">
+              {genderOptions}
+            </Field>
+          </Col>
+          <Col xs={6}>
+            <Field component={renderInput}
+              name="person.place_of_birth"
+              type="text"
+              label="Place of birth"
+              placeholder="Place of birth" />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={6}>
+            <Field component={renderInput}
+              name="verification_data.passport.expiry_date"
+              type="date"
+              label="Expiry date"
+              placeholder="Expiry date" />
           </Col>
         </Row>
       </div>
@@ -245,6 +266,7 @@ export default class IDVerificationForm extends Component {
   }
 
   renderUploader() {
+    console.log(Field);
     return (
       <div>
         <div className={styles.uploadDescription}>
@@ -258,16 +280,7 @@ export default class IDVerificationForm extends Component {
             <em>Driver’s licence</em> OR <em>Australian Passport</em>
           </p>
         </div>
-        <XHRUploader
-          url={IDENTITY_ATTACHMENT_URL}
-          fieldName="file"
-          method="POST"
-          maxFiles={1}
-          accept="image/*"
-          onStart={this.handleUploadFail}
-          onCancel={this.handleCancelFile}
-          onSuccess={this.handleUploadSuccess}
-        />
+        <Field name="attachments" component={UploaderField} />
       </div>
     );
   }

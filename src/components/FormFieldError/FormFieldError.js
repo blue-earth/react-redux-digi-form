@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react';
 import _ from 'lodash';
 
-const FormFieldError = ({ for: { error, touched }, afterTouch = true }) => {
+const FormFieldError = ({ for: field }) => {
+  if (!field) return false;
+  const { meta: { error, touched }, afterTouch = true } = field;
   const show = error && (touched || !afterTouch);
   const output = show && _.map(error, (item, index) =>
     <div key={index}>{item}</div>

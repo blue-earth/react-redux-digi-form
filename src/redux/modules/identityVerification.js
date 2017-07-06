@@ -7,99 +7,90 @@ import _ from 'lodash';
 // ------------------------------------
 // Action type Constants
 // ------------------------------------
-export const REQUEST_ID_SUBMIT = 'REQUEST_ID_SUBMIT';
-export const DONE_ID_SUBMIT = 'DONE_ID_SUBMIT';
-export const ADD_ATTACHMENT = 'ADD_ATTACHMENT';
-export const REMOVE_ATTACHMENT = 'REMOVE_ATTACHMENT';
+export const RECEIVE_FORM = 'RECEIVE_FORM';
+export const REQUEST_FORM = 'REQUEST_FORM';
+export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
 
-export const IDENTITY_VERIFICATION_URL = `${API_URL}/identity-verification/api/identity/`;
-export const IDENTITY_ATTACHMENT_URL = `${API_URL}/identity-verification/api/identity-attachment/`;
 export const INIT_IDENTITY_STATE = {
-  isSubmitting: false,
-  attachments: []
+  isFetchingForm: false, // indicates the form request is being processed.
+  isFetchingPerson: false, // indicates the person request is being fetched.
+  form: null,
+  person: null
 };
 
 // ------------------------------------
-// Action: submitIdentity
+// Actions
 // ------------------------------------
-export const submitIdentity = (payload) => {
-  return (dispatch, getState) => {
-    dispatch(requestSubmitIdentity());
-    dispatch(processSubmitIdentity(payload));
-  };
-};
 
 // ------------------------------------
-// Action: requestSubmitIdentity
+// Action: fetchForm
 // ------------------------------------
-export const requestSubmitIdentity = createAction(REQUEST_ID_SUBMIT);
-
-// ------------------------------------
-// Action: doneSubmitIdentity
-// ------------------------------------
-export const doneSubmitIdentity = createAction(DONE_ID_SUBMIT);
-
-// ------------------------------------
-// Action Helper: processSubmitIdentity
-// ------------------------------------
-export const processSubmitIdentity = (payload) => {
-  var method = 'POST';
-  var requestURL = IDENTITY_VERIFICATION_URL;
-
-  const fetchParams = assignDefaults({
-    method,
-    body: payload.body
-  });
+export const processFetchForm = (id) => {
+  var apiURL = `${API_URL}/form_document/api/form/${id}/`;
+  const fetchParams = assignDefaults();
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(doneSubmitIdentity()); // Hide submitting spinner
-      typeof payload.success === 'function' && payload.success(value);
+      dispatch(receiveForm(_.merge(value, {id})));
+      dispatch(doneFetchingForm()); // Hide loading spinner
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
-      dispatch(doneSubmitIdentity()); // Hide submitting spinner
-      typeof payload.fail === 'function' && payload.fail();
+      dispatch(doneFetchingForm()); // Hide loading spinner
     };
   };
 
-  return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
 
 // ------------------------------------
-// Action: addAttachment
+// Action: requestForm
 // ------------------------------------
-export const addAttachment = createAction(ADD_ATTACHMENT);
+export const requestForm = createAction(REQUEST_FORM);
 
 // ------------------------------------
-// Action: removeAttachment
+// Action: receiveForm
 // ------------------------------------
-export const removeAttachment = createAction(REMOVE_ATTACHMENT);
+export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
+  id: data.id,
+  title: data.title,
+  slug: data.slug
+}));
+
+// ------------------------------------
+// Action: doneFetchingForm
+// ------------------------------------
+export const doneFetchingForm = createAction(DONE_FETCHING_FORM);
+
+// ------------------------------------
+// Action: fetchForm
+// ------------------------------------
+export const fetchForm = (id) => {
+  return (dispatch, getState) => {
+    dispatch(requestForm());
+    dispatch(processFetchForm(id));
+  };
+};
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const identityVerificationReducer = handleActions({
-  REQUEST_ID_SUBMIT: (state, action) =>
+  RECEIVE_FORM: (state, { payload }) =>
     Object.assign({}, state, {
-      isSubmitting: true
+      formData: payload
     }),
 
-  DONE_ID_SUBMIT: (state, action) =>
+  REQUEST_FORM: (state, action) =>
     Object.assign({}, state, {
-      isSubmitting: false
+      isFetchingForm: true
     }),
 
-  ADD_ATTACHMENT: (state, action) =>
+  DONE_FETCHING_FORM: (state, action) =>
     Object.assign({}, state, {
-      attachments: _.union(state.attachments, [action.payload])
-    }),
-
-  REMOVE_ATTACHMENT: (state, { payload }) =>
-    Object.assign({}, state, {
-      attachments: payload ? _.without(state.attachments, payload) : []
+      isFetchingForm: false
     })
 
 }, INIT_IDENTITY_STATE);
