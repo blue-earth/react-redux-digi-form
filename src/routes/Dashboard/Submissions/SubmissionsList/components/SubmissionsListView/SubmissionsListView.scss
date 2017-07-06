@@ -42,12 +42,57 @@ $slt-border-color2:          #CCD9E3;
 .activitiesSection {
   width: 40%;
 }
+.activitiesWrapper {
+  height: 100%;
+  overflow-y: auto;
+}
+.activitiesList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.activity {
+  line-height: 50px;
+  font-weight: 600;
+  padding: 0 15px;
+  border-bottom: 1px solid $border-color;
+}
+.activityWrapper {
+  width: 100%;
+}
+.activityContent {
+  float: left;
+  width: 84%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.activityForm {
+  font-weight: bold;
+}
+.activityTime {
+  text-align: right;
+  width: 16%;
+  float: right;
+}
+
 .analyticsSection {
   margin: 0 2%;
   width: 16%;
 }
-.analyticPeriod {
-  padding: 10px 20px;
+.analyticsPeriod {
+  padding: 10px 15px;
+}
+.analyticsContent {
+  padding: 10px 15px;
+  color: $blackblue;
+  text-align: center;
+  font-family: "roble_alt_lightlight";
+  font-size: 14px;
+}
+.analyticNumber {
+  font-family: "roble_alt_boldbold";
+  font-size: 24px;
 }
 .savingsSection {
   width: 40%;
@@ -55,6 +100,7 @@ $slt-border-color2:          #CCD9E3;
 }
 .savings {
   padding-top: 50px;
+  color: $blackblue;
 }
 
 .columnID {

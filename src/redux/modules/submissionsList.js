@@ -20,7 +20,8 @@ export const INIT_SUBMISSIONS_STATE = {
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: 'response_id', // indicates the column name to sort by
   sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
-  selectedItems: [] // holds the selected items id.
+  selectedItems: [], // holds the selected items id.
+  analyticsPeriod: 'today' // indicates the selected period of analytics
 };
 
 // ------------------------------------
