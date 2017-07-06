@@ -1,19 +1,13 @@
 @import './mixins';
 @import './variables';
 
-$frontend-bg-start-color:       #ffffff;
-$frontend-bg-end-color:         #f4f5f8;
-
-div {
-  box-sizing: border-box;
-}
 .pullLeft {
   float: left;
 }
 .selectWrapper {
   position: relative;
   max-width: 200px;
-  color: $text-dark-color;
+  color: $select-button-color;
   font-family: 'Open Sans';
 }
 .selectLabel {
@@ -21,10 +15,10 @@ div {
   padding: 10px;
   width: 100%;
   background-color: #ddd;
-  border: 1px solid $border-color;
+  border: 1px solid $select-button-border-color;
   cursor: pointer;
   @include border-radius(4px);
-  @include background-gradient($frontend-bg-start-color, $frontend-bg-end-color);
+  @include background-gradient($select-button-end-color, $select-button-start-color);
   
 }
 .isOpen .selectLabel {
@@ -53,7 +47,7 @@ div {
   top: 100%;
   left: 0;
   background-color: $white;
-  border: 1px solid $border-color;
+  border: 1px solid $select-button-border-color;
   border-top-width: 0;
   @include border-radius(4px);
   border-top-left-radius: 0;
@@ -70,12 +64,12 @@ div {
 .selectOption {
   height: 40px;
   line-height: 42px;
-  margin: 0 10px;
+  margin: 4px;
   @include border-radius(4px);
   cursor: pointer;
   &:hover {
     color: $blue;
-    background-color: #F9FAFC;
+    background-color: $select-button-hover-color;
   }
 }
 .selectOption.isSelected {
@@ -83,6 +77,7 @@ div {
 }
 .selectOptionContent {
   display: inline-block;
+  padding: 0 6px;
   vertical-align: middle;
   line-height: 14px;
 }

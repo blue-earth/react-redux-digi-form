@@ -91,7 +91,7 @@ class SelectButton extends Component {
         })}>
           <div className={cx('selectLabel')} onMouseDown={this.toggleOpen}>
             <div className={cx('pullLeft')}>{label}{label && label.length > 0 ? ':' : ' '}</div>
-            <div className={cx('selectValue', {invisible: isOpen && !staticValue})}>{selected}</div>
+            <div className={cx('selectValue', {invisible: isOpen && label.length > 0 && !staticValue})}>{selected}</div>
             <div className={cx('selectCaret')}><FaAngleDown /></div>
           </div>
           <div className={cx('selectOptionsWrapper')}>
