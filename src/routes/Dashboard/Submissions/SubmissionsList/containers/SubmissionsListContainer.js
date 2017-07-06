@@ -22,7 +22,8 @@ const mapStateToProps = (state) => {
     pageSize,
     sortColumn,
     sortAscending,
-    selectedItems
+    selectedItems,
+    analyticsPeriod
   } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
   return {
     isFetching,
@@ -32,7 +33,8 @@ const mapStateToProps = (state) => {
     pageSize,
     sortColumn,
     sortAscending,
-    selectedItems
+    selectedItems,
+    analyticsPeriod
   };
 };
 

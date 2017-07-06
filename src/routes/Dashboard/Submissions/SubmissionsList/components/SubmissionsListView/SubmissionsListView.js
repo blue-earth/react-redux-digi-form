@@ -78,7 +78,8 @@ class SubmissionsListView extends Component {
     /*
      * selectedItems: Redux state in array to hold selected item ids.
      */
-    selectedItems: PropTypes.array.isRequired
+    selectedItems: PropTypes.array.isRequired,
+    analyticsPeriod: PropTypes.string.isRequired
   };
 
   get columnMetadata() {
@@ -205,6 +206,32 @@ class SubmissionsListView extends Component {
   */
 
   renderActivityPanel() {
+    const activities = [{
+      name: 'Jordan McCown',
+      action: 'completed',
+      form: 'SMSF Non Corporate CFD',
+      time: '2m ago'
+    }, {
+      name: 'Lihan Li',
+      action: 'viewed',
+      form: 'Personal Form',
+      time: '5m ago'
+    }, {
+      name: 'Shaun Harvey',
+      action: 'viewed',
+      form: 'Personal Form',
+      time: '1h ago'
+    }, {
+      name: 'Andrew Olsen',
+      action: 'completed',
+      form: 'Tonik Employment Form',
+      time: '2h ago'
+    }, {
+      name: 'Someone Else',
+      action: 'deleted',
+      form: 'Something Important Form',
+      time: '5h ago'
+    }];
     const selectOptions = [
       {
         key: 'time',
@@ -222,11 +249,46 @@ class SubmissionsListView extends Component {
           <SelectButton className="pull-right" label="Arrange by" optionList={selectOptions} value="Time" />
         </div>
         <div className={styles.panelContent}>
+          <div className={styles.activitiesWrapper}>
+            <ul className={styles.activitiesList}>
+              {activities.map((activity, index) => (
+                <li key={`activities-${index}`} className={styles.activity}>
+                  <div className={styles.activityWrapper}>
+                    <div className={styles.activityContent}>
+                      {activity.name}{' '}{activity.action}{' the '}
+                      <span className={styles.activityForm}>{activity.form}</span>
+                    </div>
+                    <div className={styles.activityTime}>{activity.time}</div>
+                    <div className="clearfix"></div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     );
   }
+
+  changeAnalytics = (period) => {
+    console.log(period);
+  }
+
   renderAnalyticsPanel() {
+    const analytics = {
+      today: {
+        view: 1235,
+        rate: 0.12
+      },
+      week: {
+        view: 13433,
+        rate: 0.65
+      },
+      month: {
+        view: 923430,
+        rate: 0.78349
+      }
+    };
     const selectOptions = [
       {
         key: 'today',
@@ -241,13 +303,24 @@ class SubmissionsListView extends Component {
         label: 'This month'
       }
     ];
+    const analytic = analytics[this.props.analyticsPeriod];
     return (
       <div className={classNames(styles.analyticsSection, styles.widgetPanel)}>
         <div className={styles.panelTitleWrapper}>
           <div className={styles.panelTitle}>Analytics</div>
         </div>
         <div className={styles.panelContent}>
-          <SelectButton className={styles.analyticPeriod} optionList={selectOptions} value="Today" />
+          <SelectButton
+            className={styles.analyticsPeriod}
+            optionList={selectOptions}
+            value="Today"
+            onChange={this.changeAnalytics} />
+          <div className={styles.analyticsContent}>
+            <div className={styles.analyticNumber}>{analytic.view}</div>
+            <p>Unique form view</p>
+            <div className={styles.analyticNumber}>{analytic.rate * 100}{'%'}</div>
+            <p>Conversion rate</p>
+          </div>
         </div>
       </div>
     );
@@ -261,9 +334,9 @@ class SubmissionsListView extends Component {
         </div>
         <div className={styles.panelContent}>
           <div className={styles.savings}>
-            <EnvironmentSaving type="trees" value={12} size="small" />
-            <EnvironmentSaving type="water" value={3850} size="small" />
-            <EnvironmentSaving type="co2" value={120} size="small" />
+            <EnvironmentSaving type="trees" value={12} size="small" font="roble" />
+            <EnvironmentSaving type="water" value={3850} size="small" font="roble" />
+            <EnvironmentSaving type="co2" value={120} size="small" font="roble" />
           </div>
         </div>
       </div>
