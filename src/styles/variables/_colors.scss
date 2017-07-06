@@ -1,7 +1,7 @@
 $blue: #3993d1;
 $darkblue: #2c3744;
 $paleblue: #f3faff;
-$grayblue: #ECF0F3;
+$grayblue: #eceff2;
 $orange: #ff8a00;
 $grey: #c0c3c9;
 $green: #65b82d;
@@ -40,8 +40,11 @@ $dashtabs-color: $grey;
 $dashtabs-active-color: $blue;
 $dashtabs-active-border-color: $blue;
 
-$table-header-bg-color: #f4f8fb;
-$table-border-color: #eaeff3;
+$table-header-bg-color:         #f5f8fa;
+$table-header-text-color:       #7f8fa4;
+$table-border-color:            #eaeff3;
+$table-text-color:              #333c48;
+$table-pagination-button-color: #b2c4d3;
 
 $bg-color1:         #fff;
 $bg-color2:         #fafafa;
@@ -88,6 +91,15 @@ $dropdown-border-color:     #eaeaea;
 $dropdown-caret-color:      #a2aab3;
 
 $form-completion-title-color: #3191d2;
+
+$select-button-color:         #354052;
+$select-button-start-color:   #f4f5f8;
+$select-button-end-color:     $white;
+$select-button-hover-color:   #f7f9fb;
+$select-button-border-color:  #ced0da;
+
+$submission-text-color:   #073660;
+$time-text-color:              #848c98;
 
 $choice-bg-color:           #f4f5f8;
 $choice-border-color:       #eaeaea;
