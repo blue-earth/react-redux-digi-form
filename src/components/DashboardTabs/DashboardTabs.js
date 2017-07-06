@@ -11,7 +11,6 @@ import {
   dashboardUrl,
   submissionsPath,
   formsPath,
-  documentsPath,
   usersPath,
   settingsPath
 } from 'helpers/urlHelper';
@@ -41,23 +40,23 @@ class DashboardTabs extends Component {
       {
         path: submissionsPath,
         label: 'Submissions',
-        icon: <MdHome size={16} style={{'verticalAlign': 'text-top'}} />
+        icon: <MdHome size={16} style={{'verticalAlign': 'text-top'}} />,
+        position: 'left'
       },
       {
         path: formsPath,
-        label: 'Forms'
-      },
-      {
-        path: documentsPath,
-        label: 'Documents'
-      },
-      {
-        path: usersPath,
-        label: 'Users'
+        label: 'Forms',
+        position: 'left'
       },
       {
         path: settingsPath,
-        label: 'Settings'
+        label: 'Settings',
+        position: 'right'
+      },
+      {
+        path: usersPath,
+        label: 'Users',
+        position: 'right'
       }
     ];
   }
@@ -70,14 +69,25 @@ class DashboardTabs extends Component {
 
   render() {
     return (
-      <Navbar fluid className={styles.dashboardTabs}>
+      <Navbar className={styles.dashboardTabs}>
         <Navbar.Header>
           <Navbar.Toggle />
         </Navbar.Header>
-        <Navbar.Collapse>
+        <Navbar.Collapse className={styles.dashboardTabsWrapper}>
           <Nav onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
             {
-              this.navItems.map((navItem) => {
+              this.navItems.filter(navItem => navItem.position === 'left').map((navItem) => {
+                return (
+                  <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
+                    {navItem.icon} {navItem.label}
+                  </NavItem>
+                );
+              })
+            }
+          </Nav>
+          <Nav pullRight onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
+            {
+              this.navItems.filter(navItem => navItem.position === 'right').map((navItem) => {
                 return (
                   <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
                     {navItem.icon} {navItem.label}
