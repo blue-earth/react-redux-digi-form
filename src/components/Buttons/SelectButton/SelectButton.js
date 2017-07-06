@@ -10,6 +10,7 @@ import { FaAngleDown } from 'react-icons/lib/fa';
 class SelectButton extends Component {
 
   static propTypes = {
+    onChange: PropTypes.func,
     value: PropTypes.string,
     optionList: PropTypes.array,
     label: PropTypes.string,
@@ -56,13 +57,19 @@ class SelectButton extends Component {
     });
   }
   handleSelect = (event) => {
-    if (this.props.staticValue) {
+    const {staticValue, onChange} = this.props;
+    if (staticValue) {
       return this.setState({isOpen: false});
     }
+    const value = event.currentTarget.getAttribute('value');
+    const eventKey = event.currentTarget.getAttribute('data-key');
     this.setState({
-      selected: event.target.getAttribute('value'),
+      selected: value,
       isOpen: false
     });
+    if (typeof onChange === 'function') {
+      onChange(eventKey);
+    }
   }
 
   handleDocumentClick = (event) => {
@@ -93,8 +100,10 @@ class SelectButton extends Component {
                 return (
                   <li key={option.key}
                     className={cx('selectOption', {isSelected: selected === option.label})}
-                    onClick={this.handleSelect} value={option.label}>
-                    <div className={cx('selectOptionContent')} value={option.label}>{option.label}</div>
+                    onClick={this.handleSelect}
+                    value={option.label}
+                    data-key={option.key}>
+                    <div className={cx('selectOptionContent')}>{option.label}</div>
                   </li>
                 );
               })}
