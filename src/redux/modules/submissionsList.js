@@ -11,6 +11,8 @@ export const REQUEST_SUBMISSIONS = 'REQUEST_SUBMISSIONS';
 export const DONE_FETCHING_SUBMISSIONS = 'DONE_FETCHING_SUBMISSIONS';
 export const SELECT_SUBMISSION_ITEMS = 'SELECT_SUBMISSION_ITEMS';
 
+export const SELECT_ANALYTICS_PERIOD = 'SELECT_ANALYTICS_PERIOD';
+
 export const INIT_SUBMISSIONS_STATE = {
   id: 0,
   isFetching: false, // indicates the Submissions is being loaded.
@@ -21,7 +23,49 @@ export const INIT_SUBMISSIONS_STATE = {
   sortColumn: 'response_id', // indicates the column name to sort by
   sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
   selectedItems: [], // holds the selected items id.
-  analyticsPeriod: 'today' // indicates the selected period of analytics
+  analyticsPeriod: 'today', // indicates the selected period of analytics
+  analytics: {
+    today: {
+      view: 1235,
+      rate: 0.12
+    },
+    week: {
+      view: 13433,
+      rate: 0.65
+    },
+    month: {
+      view: 923430,
+      rate: 0.78349
+    }
+  },
+  activities: [
+    {
+      name: 'Jordan McCown',
+      action: 'completed',
+      form: 'SMSF Non Corporate CFD',
+      time: '2m ago'
+    }, {
+      name: 'Lihan Li',
+      action: 'viewed',
+      form: 'Personal Form',
+      time: '5m ago'
+    }, {
+      name: 'Shaun Harvey',
+      action: 'viewed',
+      form: 'Personal Form',
+      time: '1h ago'
+    }, {
+      name: 'Andrew Olsen',
+      action: 'completed',
+      form: 'Tonik Employment Form',
+      time: '2h ago'
+    }, {
+      name: 'Someone Else',
+      action: 'deleted',
+      form: 'Something Important Form',
+      time: '5h ago'
+    }
+  ]
 };
 
 // ------------------------------------
@@ -43,6 +87,8 @@ export const doneFetchingSubmissions = createAction(DONE_FETCHING_SUBMISSIONS);
 // Action: selectItems
 // ------------------------------------
 export const selectItems = createAction(SELECT_SUBMISSION_ITEMS);
+
+export const selectAnalyticsPeriod = createAction(SELECT_ANALYTICS_PERIOD);
 
 // ------------------------------------
 // Action: fetchSubmissions
@@ -173,8 +219,12 @@ const submissionsReducer = handleActions({
   SELECT_SUBMISSION_ITEMS: (state, action) =>
     Object.assign({}, state, {
       selectedItems: action.payload
-    })
+    }),
 
+  SELECT_ANALYTICS_PERIOD: (state, action) =>
+    Object.assign({}, state, {
+      analyticsPeriod: action.payload
+    })
 }, INIT_SUBMISSIONS_STATE);
 
 export default submissionsReducer;

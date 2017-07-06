@@ -75,11 +75,15 @@ class SubmissionsListView extends Component {
      */
     toggleSelectItem: PropTypes.func.isRequired,
 
+    selectAnalyticsPeriod: PropTypes.func.isRequired,
+
     /*
      * selectedItems: Redux state in array to hold selected item ids.
      */
     selectedItems: PropTypes.array.isRequired,
-    analyticsPeriod: PropTypes.string.isRequired
+    analyticsPeriod: PropTypes.string.isRequired,
+    analytics: PropTypes.object,
+    activities: PropTypes.array
   };
 
   get columnMetadata() {
@@ -206,32 +210,6 @@ class SubmissionsListView extends Component {
   */
 
   renderActivityPanel() {
-    const activities = [{
-      name: 'Jordan McCown',
-      action: 'completed',
-      form: 'SMSF Non Corporate CFD',
-      time: '2m ago'
-    }, {
-      name: 'Lihan Li',
-      action: 'viewed',
-      form: 'Personal Form',
-      time: '5m ago'
-    }, {
-      name: 'Shaun Harvey',
-      action: 'viewed',
-      form: 'Personal Form',
-      time: '1h ago'
-    }, {
-      name: 'Andrew Olsen',
-      action: 'completed',
-      form: 'Tonik Employment Form',
-      time: '2h ago'
-    }, {
-      name: 'Someone Else',
-      action: 'deleted',
-      form: 'Something Important Form',
-      time: '5h ago'
-    }];
     const selectOptions = [
       {
         key: 'time',
@@ -251,7 +229,7 @@ class SubmissionsListView extends Component {
         <div className={styles.panelContent}>
           <div className={styles.activitiesWrapper}>
             <ul className={styles.activitiesList}>
-              {activities.map((activity, index) => (
+              {this.props.activities.map((activity, index) => (
                 <li key={`activities-${index}`} className={styles.activity}>
                   <div className={styles.activityWrapper}>
                     <div className={styles.activityContent}>
@@ -270,25 +248,7 @@ class SubmissionsListView extends Component {
     );
   }
 
-  changeAnalytics = (period) => {
-    console.log(period);
-  }
-
   renderAnalyticsPanel() {
-    const analytics = {
-      today: {
-        view: 1235,
-        rate: 0.12
-      },
-      week: {
-        view: 13433,
-        rate: 0.65
-      },
-      month: {
-        view: 923430,
-        rate: 0.78349
-      }
-    };
     const selectOptions = [
       {
         key: 'today',
@@ -303,7 +263,8 @@ class SubmissionsListView extends Component {
         label: 'This month'
       }
     ];
-    const analytic = analytics[this.props.analyticsPeriod];
+    const { analytics, analyticsPeriod, selectAnalyticsPeriod } = this.props;
+    const analytic = analytics[analyticsPeriod];
     return (
       <div className={classNames(styles.analyticsSection, styles.widgetPanel)}>
         <div className={styles.panelTitleWrapper}>
@@ -314,7 +275,7 @@ class SubmissionsListView extends Component {
             className={styles.analyticsPeriod}
             optionList={selectOptions}
             value="Today"
-            onChange={this.changeAnalytics} />
+            onChange={selectAnalyticsPeriod} />
           <div className={styles.analyticsContent}>
             <div className={styles.analyticNumber}>{analytic.view}</div>
             <p>Unique form view</p>
