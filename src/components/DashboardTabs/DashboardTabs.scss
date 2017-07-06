@@ -9,6 +9,12 @@
   height: $dashboard-tabs-height;
   font-size: 13px;
   font-family: "roble_alt_boldbold";
+  > .container {
+    padding: 0;
+  }
+}
+.dashboardTabsWrapper {
+  padding: 0;
 }
 
 :global {
