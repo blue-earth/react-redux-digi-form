@@ -1,22 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import FormHeader from 'components/Headers/FormHeader';
 import IDVerificationForm from 'containers/IDVerificationFormContainer';
-import styles from './IdentityVerification.scss';
+import styles from './IdentityVerificationView.scss';
 
-export default class IdentityVerification extends Component {
+export default class IdentityVerificationView extends Component {
   static propTypes = {
     submitIdentity: PropTypes.func.isRequired,
-    requestSubmitIdentity: PropTypes.func,
-    doneSubmitIdentity: PropTypes.func
+    requestSubmitIdentity: PropTypes.func.isRequired,
+    doneSubmitIdentity: PropTypes.func.isRequired,
+    addAttachment: PropTypes.func.isRequired,
+    removeAttachment: PropTypes.func.isRequired
   };
 
-  static defaultProps = {
-    requestSubmitIdentity: () => {},
-    doneSubmitIdentity: () => {}
-  }
-
   render() {
-    const { submitIdentity, requestSubmitIdentity, doneSubmitIdentity } = this.props;
+    const { submitIdentity, requestSubmitIdentity, doneSubmitIdentity,
+      addAttachment, removeAttachment } = this.props;
     return (
       <div className={styles.identityVerification}>
         <FormHeader title={'test title'} submitAnswer={function () {}} />
@@ -25,6 +23,8 @@ export default class IdentityVerification extends Component {
             submitIdentity={submitIdentity}
             requestSubmitIdentity={requestSubmitIdentity}
             doneSubmitIdentity={doneSubmitIdentity}
+            addAttachment={addAttachment}
+            removeAttachment={removeAttachment}
           />
         </div>
       </div>

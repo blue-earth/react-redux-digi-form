@@ -21,7 +21,7 @@ import {
   identityConstants,
   identityDocumentTypesList
 } from 'schemas/idVerificationFormSchema';
-import { IDENTITY_VERIFICATION_URL } from 'redux/modules/identityVerification';
+import { IDENTITY_ATTACHMENT_URL } from 'redux/modules/identityVerification';
 import IDVerificationTitle from 'components/IDVerification/IDVerificationTitle';
 import XHRUploader from 'components/XHRUploader';
 import FormFieldError from 'components/FormFieldError';
@@ -53,12 +53,16 @@ export default class IDVerificationForm extends Component {
     handleSubmit: PropTypes.func.isRequired,
     submitIdentity: PropTypes.func.isRequired,
     requestSubmitIdentity: PropTypes.func,
-    doneSubmitIdentity: PropTypes.func
+    doneSubmitIdentity: PropTypes.func,
+    addAttachment: PropTypes.func,
+    removeAttachment: PropTypes.func
   };
 
   static defaultProps = {
     requestSubmitIdentity: () => {},
     doneSubmitIdentity: () => {},
+    addAttachment: () => {},
+    removeAttachment: () => {},
     align: 'left'
   }
 
@@ -137,8 +141,9 @@ export default class IDVerificationForm extends Component {
   }
 
   handleUploadSuccess = (response) => {
-    const { doneSubmitIdentity } = this.props;
+    const { doneSubmitIdentity, addAttachment } = this.props;
     doneSubmitIdentity();
+    addAttachment(response.id);
     alert('Identity Verification Success!');
   }
 
@@ -148,6 +153,12 @@ export default class IDVerificationForm extends Component {
     this.setState({
       notice: 'Failed to verify your identity. Please verify against other type of document.'
     });
+  }
+
+  handleCancelFile = () => {
+    const { doneSubmitIdentity, removeAttachment } = this.props;
+    doneSubmitIdentity();
+    removeAttachment();
   }
 
   renderVerifyOnline() {
@@ -234,7 +245,6 @@ export default class IDVerificationForm extends Component {
   }
 
   renderUploader() {
-    const { doneSubmitIdentity } = this.props;
     return (
       <div>
         <div className={styles.uploadDescription}>
@@ -249,13 +259,13 @@ export default class IDVerificationForm extends Component {
           </p>
         </div>
         <XHRUploader
-          url={IDENTITY_VERIFICATION_URL}
-          fieldName="uploaded_id"
+          url={IDENTITY_ATTACHMENT_URL}
+          fieldName="file"
           method="POST"
           maxFiles={1}
           accept="image/*"
           onStart={this.handleUploadFail}
-          onCancel={doneSubmitIdentity}
+          onCancel={this.handleCancelFile}
           onSuccess={this.handleUploadSuccess}
         />
       </div>
