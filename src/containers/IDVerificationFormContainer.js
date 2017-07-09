@@ -1,19 +1,19 @@
 import { reduxForm } from 'redux-form';
 import connect from 'redux/utils/connect';
 import IDVerificationForm from 'components/IDVerification/IDVerificationForm';
-import idVerificationFormSchema, {
-  identityConstants } from 'schemas/idVerificationFormSchema';
 import { show } from 'redux-modal';
 import {
+  setIdType,
   submitIdentity,
   requestSubmitIdentity,
   doneSubmitIdentity,
   addAttachment,
   removeAttachment
-} from 'redux/modules/identityVerification';
+} from 'redux/modules/idVerificationForm';
 
 const mapActionCreators = {
   showModal: show,
+  setIdType,
   submitIdentity,
   requestSubmitIdentity,
   doneSubmitIdentity,
@@ -22,14 +22,8 @@ const mapActionCreators = {
 };
 
 const mapStateToProps = (state) => {
-  const { identityVerification } = state;
-  return identityVerification;
+  const { idVerificationForm } = state;
+  return idVerificationForm;
 };
 
-export default reduxForm({
-  form: 'IDVerificationForm',
-  initialValues: {
-    'type': identityConstants.DVSPASSPORT
-  },
-  ...idVerificationFormSchema
-})(connect(mapStateToProps, mapActionCreators)(IDVerificationForm));
+export default connect(mapStateToProps, mapActionCreators)(IDVerificationForm);

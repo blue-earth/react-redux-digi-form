@@ -2,6 +2,7 @@ import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { createAction, handleActions } from 'redux-actions';
 import { assignDefaults } from 'redux/utils/request';
+import { identityConstants } from 'schemas/idVerificationFormSchema';
 import _ from 'lodash';
 
 // ------------------------------------
@@ -15,9 +16,12 @@ export const REMOVE_ATTACHMENT = 'REMOVE_ATTACHMENT';
 export const IDENTITY_VERIFICATION_URL = `${API_URL}/identity-verification/api/identity/`;
 export const IDENTITY_ATTACHMENT_URL = `${API_URL}/identity-verification/api/identity-attachment/`;
 
+export const SET_ID_TYPE = 'SET_ID_TYPE';
+
 export const INIT_ID_FORM_STATE = {
   isSubmitting: false,
-  attachments: []
+  attachments: [],
+  idType: identityConstants.DVSPASSPORT
 };
 
 // ------------------------------------
@@ -41,6 +45,11 @@ export const requestSubmitIdentity = createAction(REQUEST_ID_SUBMIT);
 export const doneSubmitIdentity = createAction(DONE_ID_SUBMIT);
 
 // ------------------------------------
+// Action: setIdType
+// ------------------------------------
+export const setIdType = createAction(SET_ID_TYPE);
+
+// ------------------------------------
 // Action Helper: processSubmitIdentity
 // ------------------------------------
 export const processSubmitIdentity = (payload) => {
@@ -55,7 +64,7 @@ export const processSubmitIdentity = (payload) => {
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitIdentity()); // Hide submitting spinner
-      typeof payload.success === 'function' && payload.success();
+      typeof payload.success === 'function' && payload.success(value);
     };
   };
 
@@ -101,6 +110,11 @@ const idVerificationFormReducer = handleActions({
   REMOVE_ATTACHMENT: (state, { payload }) =>
     Object.assign({}, state, {
       attachments: payload ? _.without(state.attachments, payload) : []
+    }),
+
+  SET_ID_TYPE: (state, { payload }) =>
+    Object.assign({}, state, {
+      idType: payload
     })
 
 }, INIT_ID_FORM_STATE);

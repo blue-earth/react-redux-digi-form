@@ -80,7 +80,7 @@ export const fetchForm = (id) => {
 const identityVerificationReducer = handleActions({
   RECEIVE_FORM: (state, { payload }) =>
     Object.assign({}, state, {
-      formData: payload
+      form: payload
     }),
 
   REQUEST_FORM: (state, action) =>

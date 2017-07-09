@@ -6,7 +6,7 @@ import styles from './IdentityVerificationView.scss';
 export default class IdentityVerificationView extends Component {
   static propTypes = {
     fetchForm: PropTypes.func.isRequired,
-    form: PropTypes.object.isRequired,
+    form: PropTypes.object,
     params: PropTypes.object.isRequired
   };
 
