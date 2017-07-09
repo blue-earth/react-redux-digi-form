@@ -12,10 +12,12 @@ import {
   MdEmail,
   MdPhone
 } from 'react-icons/lib/md';
+import { FaCircleO } from 'react-icons/lib/fa';
 import _ from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import styles from './CustomCells.scss';
 import { DropdownHeaderCell, DateCell } from 'components/GriddleComponents/CommonCells/CommonCells';
+import classNames from 'classnames';
 
 export { DateCell };
 
@@ -80,6 +82,27 @@ export class ActionsHeaderCell extends Component {
             &nbsp;
           </Checkbox>
         </div>
+      </div>
+    );
+  }
+}
+
+export class statusCell extends Component {
+  static propTypes = {
+    data: PropTypes.string.isRequired
+  };
+  render() {
+    const {data} = this.props;
+    const statusList = ['New', 'Rejected', 'Processing', 'Done'];
+    const status = statusList[data-6];
+    const statusClass = status.toLowerCase();
+    return (
+      <div>
+        <div className={classNames(styles.statusRing, styles[statusClass])}>
+          <FaCircleO style={{verticalAlign: 'baseline'}} />
+        </div>
+        {' '}
+        {status}
       </div>
     );
   }
