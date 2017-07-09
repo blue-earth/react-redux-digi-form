@@ -3,57 +3,61 @@
 
 $frontend-bg-start-color:       #ffffff;
 $frontend-bg-end-color:         #f4f5f8;
-$button-color:                  #3392d4;
 
 .wrapper {
   height: 100%;
-  font-family: 'Open Sans', sans-serif;
+  color: $frontend-text-color1;
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
   @include media('>=sm') {
     @include background-gradient($frontend-bg-start-color, $frontend-bg-end-color);
   }
 }
 .contentWrapper {
   position: relative;
-  padding: 30px;
+  padding: 40px;
   background-color: $white;
   @include border-radius(4px);
   border: 1px solid $border-color;
-  border-top: 4px solid $button-color;
+  border-top: 4px solid $form-completion-title-color;
   text-align: center;
 }
 .thankMessage {
-  font-family: "Arial Rounded MT Bold", "Helvetica", sans-serif;
   letter-spacing: 2px;
-  margin-top: 10px;
+  margin-top: 20px;
+  color: $form-completion-title-color;
   font-size: 14px;
-  color: $button-color;
+  font-weight: 900;
 }
 .formTitle {
-  margin-bottom: 40px;
-  font-family: "Helvetica", Arial, sans-serif;
-  font-weight: 100;
-  font-size: 32px;
+  margin-bottom: 36px;
+  font-weight: 300;
+  font-size: 36px;
 }
 .instruction {
-  font-size: 14px;
   padding-top: 10px;
   margin: 10px;
 }
 .downloadButton {
-  padding: 10px 20px;
+  padding: 12px 28px;
   margin: 20px 0 30px 0;
   border: none;
-  background-color: $button-color;
+  background-color: $form-completion-title-color;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 1px;
 }
 .learnMoreButton {
   margin: 0 4px;
-  color: $text-dark-color;
+  color: $frontend-text-color1;
   text-decoration: underline;
+  font-size: 16px;
   &:focus {
     outline: none;
   }
   &:hover {
-    color: $text-dark-color;
+    color: $frontend-text-color1;
   }
 }
 .envSavingSection {
@@ -61,7 +65,7 @@ $button-color:                  #3392d4;
 }
 .socialSharingWrapper {
   display: inline-block;
-  margin-left: 20px;
+  margin: 0 20px;
 }
 .divider {
   display: inline-block;
