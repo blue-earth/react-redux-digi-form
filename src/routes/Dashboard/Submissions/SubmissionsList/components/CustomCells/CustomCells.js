@@ -94,7 +94,7 @@ export class statusCell extends Component {
   render() {
     const {data} = this.props;
     const statusList = ['New', 'Rejected', 'Processing', 'Done'];
-    const status = statusList[data-6];
+    const status = statusList[data-6]; // WIP change to correct status index
     const statusClass = status.toLowerCase();
     return (
       <div>
