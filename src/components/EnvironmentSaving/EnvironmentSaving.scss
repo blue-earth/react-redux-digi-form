@@ -7,28 +7,30 @@ sup {
 }
 .envSavingWrap {
   font-family: 'Open Sans';
-  width: 200px;
+  width: 33%;
   display: inline-block;
   text-align: center;
+  vertical-align: top;
 }
 .envSavingImage {
   height: 100%;
 }
 .envSavingNumber {
-  margin: 10px 0 5px 0;
+  margin-top: 15px;
   line-height: 24px;
   font-size: 18px;
   font-weight: bold;
 }
 .envSavingLabel {
   margin-bottom: 6px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .roble {
   &.envSavingNumber {
+    font-size: 22px;
     font-family: "roble_alt_extrabold";
   }
   &.envSavingLabel {
-    font-family: "roble_alt_mediummedium";
+    font-family: "roble_alt_lightlight";
   }
 }
