@@ -1,5 +1,6 @@
 import React, {
-  Component
+  Component,
+  PropTypes
 } from 'react';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import SelectButton from 'components/Buttons/SelectButton';
@@ -9,6 +10,10 @@ import styles from './SubmissionsFilter.scss';
 
 class SubmissionsFilter extends Component {
 
+  static propTypes = {
+    pageSize: PropTypes.number,
+    setPageSize: PropTypes.func
+  }
   get typeOptions() {
     return [
       {
@@ -92,6 +97,7 @@ class SubmissionsFilter extends Component {
     ];
   }
   render() {
+    const { pageSize, setPageSize } = this.props;
     return (
       <div className={styles.filterContainer}>
         <ButtonToolbar className="pull-left">
@@ -110,7 +116,8 @@ class SubmissionsFilter extends Component {
           <SelectButton className={styles.formButton} optionList={this.typeOptions} label="Type" value="Form" />
           <SelectButton className={styles.formButton} optionList={this.userOptions} label="User" value="Sales Team" />
           <SelectButton className={styles.formButton} optionList={this.timeOptions} value="This Week" />
-          <SelectButton className={styles.formButton} optionList={this.paginationOptions} label="Show" value="5" />
+          <SelectButton className={styles.formButton} optionList={this.paginationOptions} label="Show"
+            value={pageSize} onChange={setPageSize} />
           <SelectButton className={styles.formButton} optionList={this.actionOptions} value="Actions" staticValue />
         </ButtonToolbar>
         <div className="clearfix"></div>

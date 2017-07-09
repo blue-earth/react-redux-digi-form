@@ -4,7 +4,8 @@ import {
   fetchSubmissions,
   selectAllItems,
   selectAnalyticsPeriod,
-  toggleSelectItem
+  toggleSelectItem,
+  setPageSize
 } from 'redux/modules/submissionsList';
 
 import SubmissionsListView from '../components/SubmissionsListView';
@@ -26,7 +27,8 @@ const mapStateToProps = (state) => {
     selectedItems,
     analyticsPeriod,
     analytics,
-    activities
+    activities,
+    environmentalSavings
   } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
   return {
     isFetching,
@@ -39,7 +41,8 @@ const mapStateToProps = (state) => {
     selectedItems,
     analyticsPeriod,
     analytics,
-    activities
+    activities,
+    environmentalSavings
   };
 };
 
@@ -47,7 +50,8 @@ const mapActionCreators = {
   fetchSubmissions,
   selectAllItems,
   toggleSelectItem,
-  selectAnalyticsPeriod
+  selectAnalyticsPeriod,
+  setPageSize
 };
 
 export default connect(mapStateToProps, mapActionCreators)(SubmissionsListView);

@@ -8,6 +8,7 @@ import {
 } from 'react-icons/lib/fa';
 import {Button} from 'react-bootstrap';
 import styles from './PaginationComponent.scss';
+import classNames from 'classnames';
 
 export default class PaginationComponent extends Component {
   static propTypes = {
@@ -21,8 +22,8 @@ export default class PaginationComponent extends Component {
     const { currentPage, maxPage, previous, next } = this.props;
     return (
       <div className={styles.pagination}>
-        <div className={styles.paginationItem}>
-          <Button className={styles.paginationButton} onClick={previous}>
+        <div className={classNames(styles.paginationItem, {hide: maxPage === 0})}>
+          <Button className={styles.paginationButton} onClick={previous} disabled={currentPage === 0}>
             <FaCaretLeft />
           </Button>
           <span className={styles.paginationIndicator}>
@@ -34,7 +35,7 @@ export default class PaginationComponent extends Component {
             {' '}
             <span>{maxPage}</span>
           </span>
-          <Button className={styles.paginationButton} onClick={next}>
+          <Button className={styles.paginationButton} onClick={next} disabled={currentPage + 1 === maxPage}>
             <FaCaretRight />
           </Button>
         </div>

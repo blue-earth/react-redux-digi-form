@@ -78,13 +78,15 @@ class SubmissionsListView extends Component {
 
     selectAnalyticsPeriod: PropTypes.func.isRequired,
 
+    setPageSize: PropTypes.func.isRequired,
     /*
      * selectedItems: Redux state in array to hold selected item ids.
      */
     selectedItems: PropTypes.array.isRequired,
     analyticsPeriod: PropTypes.string.isRequired,
     analytics: PropTypes.object,
-    activities: PropTypes.array
+    activities: PropTypes.array,
+    environmentalSavings: PropTypes.object
   };
 
   get columnMetadata() {
@@ -118,6 +120,7 @@ class SubmissionsListView extends Component {
         visible: true,
         displayName: 'Status',
         customHeaderComponent: StatusHeaderCell,
+        customComponent: statusCell,
         cssClassName: styles.columnStatus
       },
       {
@@ -289,6 +292,7 @@ class SubmissionsListView extends Component {
   }
 
   renderEnvironmentalSavings() {
+    const { trees, water, co2 } = this.props.environmentalSavings;
     return (
       <div className={classNames(styles.savingsSection, styles.widgetPanel)}>
         <div className={styles.panelTitleWrapper}>
@@ -296,9 +300,9 @@ class SubmissionsListView extends Component {
         </div>
         <div className={styles.panelContent}>
           <div className={styles.savings}>
-            <EnvironmentSaving type="trees" value={12} size="small" font="roble" />
-            <EnvironmentSaving type="water" value={3850} size="small" font="roble" />
-            <EnvironmentSaving type="co2" value={120} size="small" font="roble" />
+            <EnvironmentSaving type="trees" value={trees} size="small" font="roble" />
+            <EnvironmentSaving type="water" value={water} size="small" font="roble" />
+            <EnvironmentSaving type="co2" value={co2} size="small" font="roble" />
           </div>
         </div>
       </div>
@@ -309,12 +313,13 @@ class SubmissionsListView extends Component {
     const {
       page,
       pageSize,
-      totalCount
+      totalCount,
+      setPageSize
     } = this.props;
     return (
       <div className={styles.submissionsList}>
         <div className={classNames(styles.widgetPanel, styles.submissionsListInner)}>
-          <SubmissionsFilter />
+          <SubmissionsFilter setPageSize={setPageSize} pageSize={pageSize} />
           {this.renderSubmissionsList()}
         </div>
         <Pagination currentPage={page} maxPage={Math.ceil(totalCount/pageSize)} />
