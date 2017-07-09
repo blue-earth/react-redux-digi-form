@@ -39,8 +39,8 @@ export const identityConstants = {
   DVSPASSPORT: 0,
   DVSDRIVERLICENSE: 1,
   DVSMEDICARECARD: 2,
-  AUSTRALIAN_ELECTORAL_ROLL: 3,
-  AUSTRALIAN_CREDIT_AGENCY: 4,
+  // AUSTRALIAN_ELECTORAL_ROLL: 3,
+  // AUSTRALIAN_CREDIT_AGENCY: 4,
   MANUAL_FILE_UPLOAD: 5
 };
 
@@ -67,15 +67,15 @@ export const identityDocumentTypesList = [
   {
     label: 'Medicare Card',
     value: identityConstants.DVSMEDICARECARD
-  },
-  {
-    label: 'Australian Electoral Roll',
-    value: identityConstants.AUSTRALIAN_ELECTORAL_ROLL
-  },
-  {
-    label: 'Australian Credit Agency',
-    value: identityConstants.AUSTRALIAN_CREDIT_AGENCY
   }
+  // {
+  //   label: 'Australian Electoral Roll',
+  //   value: identityConstants.AUSTRALIAN_ELECTORAL_ROLL
+  // },
+  // {
+  //   label: 'Australian Credit Agency',
+  //   value: identityConstants.AUSTRALIAN_CREDIT_AGENCY
+  // }
 ];
 
 export const passportFields = [

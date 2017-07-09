@@ -30,9 +30,10 @@ export default (store) => ({
   path: 'identity-verification',
   getChildRoutes(location, cb) {
     require.ensure([], (require) => {
-      const reducer = require('redux/modules/identityVerification').default;
-      injectReducer(store, { key: 'identityVerification', reducer });
-
+      const routeReducer = require('redux/modules/identityVerification').default;
+      const formReducer = require('redux/modules/idVerificationForm').default;
+      injectReducer(store, { key: 'identityVerification', reducer: routeReducer });
+      injectReducer(store, { key: 'idVerificationForm', reducer: formReducer });
       cb(null, routes);
     });
   }

@@ -1,0 +1,7 @@
+@import './mixins';
+@import './variables';
+
+.wrapper {
+  max-width: $identity-form-width;
+  margin: 0 auto;
+}
