@@ -8,6 +8,7 @@ import {
   StatusHeaderCell,
   ActionsHeaderCell,
   // ContactInfoCell,
+  statusCell,
   DateCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
