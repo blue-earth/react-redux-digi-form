@@ -13,6 +13,8 @@ export const SELECT_SUBMISSION_ITEMS = 'SELECT_SUBMISSION_ITEMS';
 
 export const SELECT_ANALYTICS_PERIOD = 'SELECT_ANALYTICS_PERIOD';
 
+export const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
+
 export const INIT_SUBMISSIONS_STATE = {
   id: 0,
   isFetching: false, // indicates the Submissions is being loaded.
@@ -65,7 +67,12 @@ export const INIT_SUBMISSIONS_STATE = {
       form: 'Something Important Form',
       time: '5h ago'
     }
-  ]
+  ],
+  environmentalSavings: {
+    trees: 12,
+    water: 3850,
+    co2: 120
+  }
 };
 
 // ------------------------------------
@@ -150,6 +157,8 @@ export const selectItem = ({id, selected}) => {
   };
 };
 
+export const setPageSize = createAction(SET_PAGE_SIZE);
+
 // ------------------------------------
 // Helper Action: processFetchSubmissions
 // Params
@@ -224,6 +233,11 @@ const submissionsReducer = handleActions({
   SELECT_ANALYTICS_PERIOD: (state, action) =>
     Object.assign({}, state, {
       analyticsPeriod: action.payload
+    }),
+
+  SET_PAGE_SIZE: (state, action) =>
+    Object.assign({}, state, {
+      pageSize: action.payload
     })
 }, INIT_SUBMISSIONS_STATE);
 
