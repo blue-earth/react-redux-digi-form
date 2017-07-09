@@ -79,16 +79,6 @@ export const processSubmitIdentity = (payload) => {
 };
 
 // ------------------------------------
-// Action: addAttachment
-// ------------------------------------
-export const addAttachment = createAction(ADD_ATTACHMENT);
-
-// ------------------------------------
-// Action: removeAttachment
-// ------------------------------------
-export const removeAttachment = createAction(REMOVE_ATTACHMENT);
-
-// ------------------------------------
 // Reducer
 // ------------------------------------
 const idVerificationFormReducer = handleActions({

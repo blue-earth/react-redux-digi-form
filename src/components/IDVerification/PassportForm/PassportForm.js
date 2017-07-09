@@ -1,14 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 import {
-  Button,
-  Checkbox,
   Col,
   Form,
   FormGroup,
   Row
 } from 'react-bootstrap';
-import { Link } from 'react-router';
 import { Field } from 'redux-form';
 import {
   genderList,
@@ -16,27 +13,17 @@ import {
   identityDocumentTypesList
 } from 'schemas/idVerificationFormSchema';
 import { ControlLabel, FormControl, renderInput, renderSelect } from '../helpers';
-import styles from './PassportForm.scss';
+import IDVerificationFormFooter from '../IDVerificationFormFooter';
+import IDVerificationFormWrapper from '../IDVerificationFormWrapper';
 
 export default class PassportForm extends Component {
   static propTypes = {
-    activeTab: PropTypes.oneOf([
-      'online', 'upload'
-    ]),
-    align: PropTypes.oneOf([
-      'left', 'center', 'right'
-    ]),
     handleSubmit: PropTypes.func.isRequired,
+    idType: PropTypes.number.isRequired,
+    setIdType: PropTypes.func.isRequired,
     submitIdentity: PropTypes.func.isRequired,
-    requestSubmitIdentity: PropTypes.func,
-    doneSubmitIdentity: PropTypes.func,
     setNotice: PropTypes.func.isRequired
   };
-
-  static defaultProps = {
-    requestSubmitIdentity: () => {},
-    doneSubmitIdentity: () => {}
-  }
 
   getPassportFields(values) {
     const body = _.merge({
@@ -48,6 +35,11 @@ export default class PassportForm extends Component {
       }
     }, values);
     return body;
+  }
+
+  handleIdTypeChange = (event) => {
+    const { setIdType } = this.props;
+    setIdType(parseInt(event.target.value, 10));
   }
 
   handleSubmitForm = (values) => {
@@ -72,12 +64,19 @@ export default class PassportForm extends Component {
   }
 
   render() {
+    const { handleSubmit, idType } = this.props;
+    const typeOptions = _.map(identityDocumentTypesList, (item, index) => (
+      <option value={item.value} key={index}>{item.label}</option>
+    ));
+    const genderOptions = _.map(genderList, (item, index) => (
+      <option value={item.value} key={index}>{item.label}</option>
+    ));
     return (
-      <Form onSubmit={handleSubmit(this.handleVerify)}>
+      <Form onSubmit={handleSubmit(this.handleSubmitForm)}>
         <IDVerificationFormWrapper>
           <FormGroup>
             <ControlLabel>Identity document type</ControlLabel>
-            <FormControl componentClass="select" onChange={setIdType} value={idType}>
+            <FormControl componentClass="select" onChange={this.handleIdTypeChange} value={idType}>
               {typeOptions}
             </FormControl>
           </FormGroup>

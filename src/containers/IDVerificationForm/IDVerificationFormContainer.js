@@ -1,4 +1,3 @@
-import { reduxForm } from 'redux-form';
 import connect from 'redux/utils/connect';
 import IDVerificationForm from 'components/IDVerification/IDVerificationForm';
 import { show } from 'redux-modal';
@@ -6,9 +5,7 @@ import {
   setIdType,
   submitIdentity,
   requestSubmitIdentity,
-  doneSubmitIdentity,
-  addAttachment,
-  removeAttachment
+  doneSubmitIdentity
 } from 'redux/modules/idVerificationForm';
 
 const mapActionCreators = {
@@ -16,9 +13,7 @@ const mapActionCreators = {
   setIdType,
   submitIdentity,
   requestSubmitIdentity,
-  doneSubmitIdentity,
-  addAttachment,
-  removeAttachment
+  doneSubmitIdentity
 };
 
 const mapStateToProps = (state) => {

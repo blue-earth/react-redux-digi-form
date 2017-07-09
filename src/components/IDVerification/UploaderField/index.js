@@ -5,38 +5,56 @@ import { IDENTITY_ATTACHMENT_URL } from 'redux/modules/idVerificationForm';
 
 export default class UploaderField extends Component {
   static propTypes = {
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.array
+    input: PropTypes.object.isRequired,
+    // onChange: PropTypes.func.isRequired,
+    // value: PropTypes.array,
+    setNotice: PropTypes.func,
+    requestSubmitIdentity: PropTypes.func,
+    doneSubmitIdentity: PropTypes.func
+  };
+
+  static defaultProps = {
+    requestSubmitIdentity: () => {},
+    doneSubmitIdentity: () => {},
+    setNotice: () => {}
   };
 
   handleUploadSuccess = (response) => {
-    const { value, onChange } = this.props;
+    const { doneSubmitIdentity, input: { value, onChange } } = this.props;
+    doneSubmitIdentity();
     const attachments = _.union(value, [response.id]);
     onChange(attachments);
   }
 
   handleUploadFail = (response) => {
+    const { doneSubmitIdentity, setNotice } = this.props;
+    doneSubmitIdentity();
+    setNotice('Failed to upload the file. Please try again abit later.');
+  }
 
+  handleStart = (response) => {
+    const { requestSubmitIdentity } = this.props;
+    requestSubmitIdentity();
   }
 
   handleCancelFile = () => {
-
+    const { doneSubmitIdentity, input: { onChange } } = this.props;
+    doneSubmitIdentity();
+    onChange([]);
   }
 
   render() {
     return (
-      <div>
-        <XHRUploader
-          url={IDENTITY_ATTACHMENT_URL}
-          fieldName="file"
-          method="POST"
-          maxFiles={1}
-          accept="image/*"
-          onStart={this.handleUploadFail}
-          onCancel={this.handleCancelFile}
-          onSuccess={this.handleUploadSuccess}
-        />
-      </div>
+      <XHRUploader
+        url={IDENTITY_ATTACHMENT_URL}
+        fieldName="file"
+        method="POST"
+        maxFiles={1}
+        accept="image/*"
+        onStart={this.handleStart}
+        onCancel={this.handleCancelFile}
+        onSuccess={this.handleUploadSuccess}
+      />
     );
   }
 }

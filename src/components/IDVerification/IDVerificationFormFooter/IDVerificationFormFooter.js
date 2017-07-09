@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import {
   Button,
-  Checkbox,
   Col,
-  FormGroup,
   OverlayTrigger,
   Popover,
   Row
 } from 'react-bootstrap';
+import { Field } from 'redux-form';
 import { Link } from 'react-router';
+import { renderCheckbox } from '../helpers';
 import IDVerificationFormWrapper from 'components/IDVerification/IDVerificationFormWrapper';
 import styles from './IDVerificationFormFooter.scss';
 
@@ -25,19 +25,22 @@ const termsConditions = (
 
 export default class IDVerificationFormFooter extends Component {
   render() {
+    const checkboxLabel = (
+      <span>
+        I have read and agree to the{' '}
+        <OverlayTrigger trigger="focus" placement="top" overlay={termsConditions}>
+          <a href="javascript:;" className={styles.termsLink}>
+            terms and conditions.
+          </a>
+        </OverlayTrigger>
+      </span>
+    );
     return (
       <div className={styles.footerWrapper}>
         <IDVerificationFormWrapper>
-          <FormGroup>
-            <Checkbox inline>
-              I have read and agree to the{' '}
-              <OverlayTrigger trigger="focus" placement="top" overlay={termsConditions}>
-                <a href="javascript:;" className={styles.termsLink}>
-                  terms and conditions.
-                </a>
-              </OverlayTrigger>
-            </Checkbox>
-          </FormGroup>
+          <Field component={renderCheckbox} type="checkbox"
+            label={checkboxLabel}
+            name="terms_conditions" />
         </IDVerificationFormWrapper>
         <div className={styles.footer}>
           <IDVerificationFormWrapper>
