@@ -37,7 +37,7 @@ class EnvironmentSaving extends Component {
       trees: require('./tree.png'),
       water: require('./water.png'),
       co2: require('./co2.png')
-    }
+    };
     return (
       <div className={cx('envSavingWrap', [size])}>
         <img className={cx('envSavingImage')} alt="trees" src={imgPath[type]} />
