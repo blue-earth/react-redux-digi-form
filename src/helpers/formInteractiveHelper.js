@@ -79,7 +79,7 @@ export const getFirstQuestionOfGroup = (questionGroup) => {
 };
 
 export const getSessionURL = (formId, sessionId) => {
-  return `${FRONTEND_ROOT}/forms/${formId}/${sessionId}`;
+  return `${window.location.origin}/forms/${formId}/${sessionId}`;
 };
 
 export function SlideAnimation(duration) {
