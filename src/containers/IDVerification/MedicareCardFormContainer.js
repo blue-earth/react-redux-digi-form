@@ -59,5 +59,6 @@ export default connect(
   })
 )(reduxForm({
   form: 'idMedicareCardForm',
+  enableReinitialize: true,
   validate
 })(MedicareCardForm));

@@ -56,5 +56,6 @@ export default connect(
   })
 )(reduxForm({
   form: 'idPassportForm',
+  enableReinitialize: true,
   validate
 })(PassportForm));
