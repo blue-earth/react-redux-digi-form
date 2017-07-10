@@ -68,8 +68,8 @@
   @include border-radius(4px);
   cursor: pointer;
   &:hover {
-    color: $blue;
-    background-color: $select-button-hover-color;
+    color: $select-button-hover-color;
+    background-color: $select-button-hover-bg-color;
   }
 }
 .selectOption.isSelected {
