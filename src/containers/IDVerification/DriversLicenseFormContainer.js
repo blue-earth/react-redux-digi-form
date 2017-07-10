@@ -56,5 +56,6 @@ export default connect(
   })
 )(reduxForm({
   form: 'idDriversLicenseForm',
+  enableReinitialize: true,
   validate
 })(DriversLicenseForm));

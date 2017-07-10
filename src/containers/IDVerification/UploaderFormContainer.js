@@ -15,5 +15,6 @@ const validate = values => {
 
 export default reduxForm({
   form: 'idUploaderForm',
+  enableReinitialize: true,
   validate
 })(UploaderForm);
