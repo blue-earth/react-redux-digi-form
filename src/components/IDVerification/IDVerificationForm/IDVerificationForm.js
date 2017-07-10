@@ -8,8 +8,10 @@ import {
 import { identityConstants } from 'schemas/idVerificationFormSchema';
 import IDVerificationTitle from '../IDVerificationTitle';
 import IDVerificationFormWrapper from '../IDVerificationFormWrapper';
-import PassportForm from 'containers/IDVerificationForm/PassportFormContainer';
-import UploaderForm from 'containers/IDVerificationForm/UploaderFormContainer';
+import PassportForm from 'containers/IDVerification/PassportFormContainer';
+import DriversLicenseForm from 'containers/IDVerification/DriversLicenseFormContainer';
+import MedicareCardForm from 'containers/IDVerification/MedicareCardFormContainer';
+import UploaderForm from 'containers/IDVerification/UploaderFormContainer';
 import styles from './IDVerificationForm.scss';
 
 export default class IDVerificationForm extends Component {
@@ -21,8 +23,8 @@ export default class IDVerificationForm extends Component {
       'left', 'center', 'right'
     ]),
     submitIdentity: PropTypes.func.isRequired,
-    requestSubmitIdentity: PropTypes.func,
-    doneSubmitIdentity: PropTypes.func,
+    requestUploadIdFile: PropTypes.func,
+    doneUploadIdFile: PropTypes.func,
     idType: PropTypes.number.isRequired,
     setIdType: PropTypes.func.isRequired
   };
@@ -44,22 +46,24 @@ export default class IDVerificationForm extends Component {
 
   renderVerifyOnline() {
     const { idType } = this.props;
-    const props = _.pick(this.props, ['idType', 'setIdType', 'submitIdentity']);
+    const props = _.pick(this.props, ['idType', 'setIdType', 'submitIdentity', 'isSubmitting']);
 
     switch (idType) {
       case identityConstants.DVSPASSPORT:
-        return <PassportForm {...props} setNotice={this.setNotice} key={identityConstants.DVSPASSPORT} />;
+        return <PassportForm {...props} setNotice={this.setNotice} />;
       case identityConstants.DVSDRIVERLICENSE:
-        return <PassportForm {...props} setNotice={this.setNotice} key={identityConstants.DVSDRIVERLICENSE} />;
+        return <DriversLicenseForm {...props} setNotice={this.setNotice} />;
       case identityConstants.DVSMEDICARECARD:
-        return <PassportForm {...props} setNotice={this.setNotice} key={identityConstants.DVSMEDICARECARD} />;
+        return <MedicareCardForm {...props} setNotice={this.setNotice} />;
       default:
         return false;
     }
   }
 
   renderUploader() {
-    const props = _.pick(this.props, ['submitIdentity', 'requestSubmitIdentity', 'doneSubmitIdentity']);
+    const props = _.pick(this.props, [
+      'submitIdentity', 'requestUploadIdFile', 'doneUploadIdFile', 'isSubmitting', 'isUploading'
+    ]);
     return (
       <UploaderForm {...props} setNotice={this.setNotice} />
     );

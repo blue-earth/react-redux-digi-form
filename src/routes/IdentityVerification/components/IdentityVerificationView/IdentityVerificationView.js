@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import FormHeader from 'components/Headers/FormHeader';
-import IDVerificationForm from 'containers/IDVerificationForm/IDVerificationFormContainer';
+import IDVerificationForm from 'containers/IDVerification';
 import styles from './IdentityVerificationView.scss';
 
 export default class IdentityVerificationView extends Component {

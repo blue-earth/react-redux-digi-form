@@ -13,7 +13,7 @@ export const FormControl = (props) => <BSFormControl className={styles.control} 
 
 export const renderInput = field => (
   <FormGroup>
-    <ControlLabel>{field.label}</ControlLabel>
+    {field.label && <ControlLabel>{field.label}</ControlLabel>}
     <FormControl type={field.type} placeholder={field.placeholder} {...field.input} />
     <FormFieldError for={field} />
   </FormGroup>
@@ -21,7 +21,7 @@ export const renderInput = field => (
 
 export const renderSelect = field => (
   <FormGroup>
-    <ControlLabel>{field.label}</ControlLabel>
+    {field.label && <ControlLabel>{field.label}</ControlLabel>}
     <FormControl componentClass="select" {...field.input}>
       {field.children}
     </FormControl>

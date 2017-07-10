@@ -13,8 +13,10 @@ export default class UploaderForm extends Component {
     handleSubmit: PropTypes.func.isRequired,
     submitIdentity: PropTypes.func.isRequired,
     setNotice: PropTypes.func.isRequired,
-    requestSubmitIdentity: PropTypes.func,
-    doneSubmitIdentity: PropTypes.func
+    requestUploadIdFile: PropTypes.func,
+    doneUploadIdFile: PropTypes.func,
+    isSubmitting: PropTypes.bool.isRequired,
+    isUploading: PropTypes.bool.isRequired
   };
 
   getUploadFields(values) {
@@ -50,7 +52,8 @@ export default class UploaderForm extends Component {
   }
 
   render() {
-    const { handleSubmit, setNotice, requestSubmitIdentity, doneSubmitIdentity } = this.props;
+    const { handleSubmit, setNotice, requestUploadIdFile, doneUploadIdFile, isSubmitting, isUploading } = this.props;
+    console.log(this.props);
     return (
       <Form onSubmit={handleSubmit(this.handleSubmitForm)}>
         <IDVerificationFormWrapper>
@@ -66,9 +69,9 @@ export default class UploaderForm extends Component {
             </p>
           </div>
           <Field name="attachment_ids" component={UploaderField} setNotice={setNotice}
-            requestSubmitIdentity={requestSubmitIdentity} doneSubmitIdentity={doneSubmitIdentity} />
+            requestUploadIdFile={requestUploadIdFile} doneUploadIdFile={doneUploadIdFile} />
         </IDVerificationFormWrapper>
-        <IDVerificationFormFooter />
+        <IDVerificationFormFooter submitting={isSubmitting || isUploading} />
       </Form>
     );
   }

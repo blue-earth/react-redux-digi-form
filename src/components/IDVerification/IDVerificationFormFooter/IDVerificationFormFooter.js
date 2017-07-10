@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import {
   Button,
   Col,
@@ -24,7 +24,12 @@ const termsConditions = (
 );
 
 export default class IDVerificationFormFooter extends Component {
+  static propTypes = {
+    submitting: PropTypes.bool.isRequired
+  };
+
   render() {
+    const { submitting } = this.props;
     const checkboxLabel = (
       <span>
         I have read and agree to the{' '}
@@ -49,8 +54,8 @@ export default class IDVerificationFormFooter extends Component {
                 <Link to="javascript:;" className={styles.cancelLink}>Verify Later</Link>
               </Col>
               <Col xs={6} className="text-right">
-                <Button bsStyle="primary" className={styles.submitButton} type="submit">
-                  Verify my ID
+                <Button bsStyle="primary" className={styles.submitButton} type="submit" disabled={submitting}>
+                  {submitting ? 'Submitting...' : 'Verify my ID'}
                 </Button>
               </Col>
             </Row>

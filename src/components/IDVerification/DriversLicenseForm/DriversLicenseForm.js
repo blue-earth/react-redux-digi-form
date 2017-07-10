@@ -8,15 +8,14 @@ import {
 } from 'react-bootstrap';
 import { Field } from 'redux-form';
 import {
-  genderList,
   identityConstants,
   identityDocumentTypesList
 } from 'schemas/idVerificationFormSchema';
-import { ControlLabel, FormControl, renderInput, renderSelect } from '../helpers';
+import { ControlLabel, FormControl, renderInput } from '../helpers';
 import IDVerificationFormFooter from '../IDVerificationFormFooter';
 import IDVerificationFormWrapper from '../IDVerificationFormWrapper';
 
-export default class PassportForm extends Component {
+export default class DriversLicenseForm extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     idType: PropTypes.number.isRequired,
@@ -28,12 +27,7 @@ export default class PassportForm extends Component {
 
   getPassportFields(values) {
     const body = _.merge({
-      'type': identityConstants.DVSPASSPORT,
-      'verification_data': {
-        'passport': {
-          'country': 'AU'
-        }
-      }
+      'type': identityConstants.DVSDRIVERLICENSE
     }, values);
     return body;
   }
@@ -69,9 +63,6 @@ export default class PassportForm extends Component {
     const typeOptions = _.map(identityDocumentTypesList, (item, index) => (
       <option value={item.value} key={index}>{item.label}</option>
     ));
-    const genderOptions = _.map(genderList, (item, index) => (
-      <option value={item.value} key={index}>{item.label}</option>
-    ));
     return (
       <Form onSubmit={handleSubmit(this.handleSubmitForm)}>
         <IDVerificationFormWrapper>
@@ -84,17 +75,17 @@ export default class PassportForm extends Component {
           <Row>
             <Col xs={6}>
               <Field component={renderInput}
-                name="verification_data.passport.number"
+                name="verification_data.driver_license.number"
                 type="text"
-                label="Passport no.(incl. letters)"
+                label="Driver's license no."
                 placeholder="Passport no." />
             </Col>
             <Col xs={6}>
               <Field component={renderInput}
-                name="person.date_of_birth"
-                type="date"
-                label="Date of birth"
-                placeholder="Date of birth" />
+                name="verification_data.driver_license.state"
+                type="text"
+                label="State/Territory"
+                placeholder="ex. NSW" />
             </Col>
           </Row>
           <Row>
@@ -115,25 +106,24 @@ export default class PassportForm extends Component {
           </Row>
           <Row>
             <Col xs={6}>
-              <Field component={renderSelect}
-                name="person.gender"
-                label="Gender"
-                placeholder="Gender">
-                {genderOptions}
-              </Field>
+              <Field component={renderInput}
+                name="person.date_of_birth"
+                type="date"
+                label="Date of birth"
+                placeholder="Date of birth" />
             </Col>
             <Col xs={6}>
               <Field component={renderInput}
-                name="verification_data.passport.place_of_birth"
+                name="verification_data.driver_license.rta_card_number"
                 type="text"
-                label="Place of birth"
-                placeholder="Place of birth" />
+                label="RTA Card Number"
+                placeholder="(NSW only)" />
             </Col>
           </Row>
           <Row>
             <Col xs={6}>
               <Field component={renderInput}
-                name="verification_data.passport.expiry_date"
+                name="verification_data.driver_license.expiry_date"
                 type="date"
                 label="Expiry date"
                 placeholder="Expiry date" />

@@ -9,37 +9,37 @@ export default class UploaderField extends Component {
     // onChange: PropTypes.func.isRequired,
     // value: PropTypes.array,
     setNotice: PropTypes.func,
-    requestSubmitIdentity: PropTypes.func,
-    doneSubmitIdentity: PropTypes.func
+    requestUploadIdFile: PropTypes.func,
+    doneUploadIdFile: PropTypes.func
   };
 
   static defaultProps = {
-    requestSubmitIdentity: () => {},
-    doneSubmitIdentity: () => {},
+    requestUploadIdFile: () => {},
+    doneUploadIdFile: () => {},
     setNotice: () => {}
   };
 
   handleUploadSuccess = (response) => {
-    const { doneSubmitIdentity, input: { value, onChange } } = this.props;
-    doneSubmitIdentity();
+    const { doneUploadIdFile, input: { value, onChange } } = this.props;
+    doneUploadIdFile();
     const attachments = _.union(value, [response.id]);
     onChange(attachments);
   }
 
   handleUploadFail = (response) => {
-    const { doneSubmitIdentity, setNotice } = this.props;
-    doneSubmitIdentity();
+    const { doneUploadIdFile, setNotice } = this.props;
+    doneUploadIdFile();
     setNotice('Failed to upload the file. Please try again abit later.');
   }
 
   handleStart = (response) => {
-    const { requestSubmitIdentity } = this.props;
-    requestSubmitIdentity();
+    const { requestUploadIdFile } = this.props;
+    requestUploadIdFile();
   }
 
   handleCancelFile = () => {
-    const { doneSubmitIdentity, input: { onChange } } = this.props;
-    doneSubmitIdentity();
+    const { doneUploadIdFile, input: { onChange } } = this.props;
+    doneUploadIdFile();
     onChange([]);
   }
 

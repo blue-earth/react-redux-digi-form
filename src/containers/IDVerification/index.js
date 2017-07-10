@@ -4,16 +4,16 @@ import { show } from 'redux-modal';
 import {
   setIdType,
   submitIdentity,
-  requestSubmitIdentity,
-  doneSubmitIdentity
+  requestUploadIdFile,
+  doneUploadIdFile
 } from 'redux/modules/idVerificationForm';
 
 const mapActionCreators = {
   showModal: show,
   setIdType,
   submitIdentity,
-  requestSubmitIdentity,
-  doneSubmitIdentity
+  requestUploadIdFile,
+  doneUploadIdFile
 };
 
 const mapStateToProps = (state) => {
