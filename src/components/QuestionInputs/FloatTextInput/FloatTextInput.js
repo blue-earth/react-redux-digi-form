@@ -45,7 +45,17 @@ class FloatTextInput extends Component {
       inputId: FloatTextInput.counter ++
     };
   }
+  componentDidMount() {
+    if (this.props.hasError) {
+      this.refs.errorMessage.show();
+    }
+  }
   componentWillReceiveProps(props) {
+    if (props.hasError) {
+      this.refs.errorMessage.show();
+    } else {
+      this.refs.errorMessage.hide();
+    }
     this.setState({
       hasError: props.hasError,
       savedValue: props.value
@@ -91,6 +101,7 @@ class FloatTextInput extends Component {
       active: false,
       hasError: false
     });
+    this.refs.errorMessage.hide();
     const { onBlur } = this.props;
     if (typeof onBlur === 'function') {
       onBlur(event);
@@ -155,7 +166,7 @@ class FloatTextInput extends Component {
           style={this.activeBorderColour}
           autoFocus={autoFocus}
         />
-        <OverlayTrigger placement="bottom" overlay={tooltip} trigger={['hover', 'focus']}>
+        <OverlayTrigger ref="errorMessage" placement="bottom" overlay={tooltip} trigger={['hover', 'focus']}>
           <div className={cx('errorIconWrapper')}>
             <IoAndroidAlert className={cx({
               hide: !hasError
