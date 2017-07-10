@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
 import PassportForm from 'components/IDVerification/PassportForm';
@@ -13,10 +14,10 @@ const validate = values => {
   const passport = _.get(values, ['verification_data', 'passport'], {});
 
   if (!person.first_name) {
-    errors.person.first_name = ['First Name is required'];
+    errors.person.first_name = ['First name is required'];
   }
   if (!person.last_name) {
-    errors.person.last_name = ['Last Name is required'];
+    errors.person.last_name = ['Last name is required'];
   }
   if (!person.date_of_birth) {
     errors.person.date_of_birth = ['Date of birth is required'];
@@ -28,13 +29,13 @@ const validate = values => {
     errors.person.gender = ['Gender is required'];
   }
   if (!passport.number) {
-    errors.person.number = ['Passport Number is required'];
+    errors.verification_data.passport.number = ['Passport no. is required'];
   }
   if (!passport.place_of_birth) {
-    errors.person.place_of_birth = ['Place of Birth is required'];
+    errors.verification_data.passport.place_of_birth = ['Place of birth is required'];
   }
   if (!passport.expiry_date) {
-    errors.person.expiry_date = ['Expiry Date is required'];
+    errors.verification_data.passport.expiry_date = ['Expiry date is required'];
   }
   if (!values.terms_conditions) {
     errors.terms_conditions = ['You need to accept our terms and conditions'];
@@ -42,7 +43,18 @@ const validate = values => {
   return errors;
 };
 
-export default reduxForm({
+const selectInitialValues = (state) => {
+  const person = _.get(state, ['identityVerification', 'person'], {});
+  return {
+    person: _.pick(person, ['first_name', 'last_name', 'email', 'date_of_birth', 'gender'])
+  };
+};
+
+export default connect(
+  state => ({
+    initialValues: selectInitialValues(state)
+  })
+)(reduxForm({
   form: 'idPassportForm',
   validate
-})(PassportForm);
+})(PassportForm));

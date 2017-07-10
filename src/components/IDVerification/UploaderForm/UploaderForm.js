@@ -13,15 +13,19 @@ export default class UploaderForm extends Component {
     handleSubmit: PropTypes.func.isRequired,
     submitIdentity: PropTypes.func.isRequired,
     setNotice: PropTypes.func.isRequired,
-    requestSubmitIdentity: PropTypes.func,
-    doneSubmitIdentity: PropTypes.func
+    requestUploadIdFile: PropTypes.func,
+    doneUploadIdFile: PropTypes.func,
+    isSubmitting: PropTypes.bool.isRequired,
+    isUploading: PropTypes.bool.isRequired,
+    person: PropTypes.object
   };
 
   getUploadFields(values) {
+    const { person } = this.props;
     const body = {
       'type': identityConstants.MANUAL_FILE_UPLOAD,
       'person': {
-        'id': 1
+        'id': person && person.id
       },
       'attachment_ids': values.attachment_ids
     };
@@ -38,7 +42,7 @@ export default class UploaderForm extends Component {
       success: (data) => {
         if (data['result']) {
           // The success here means the request succeed, does not refer to the verification succeed
-          alert('Identity Verification Success!');
+          setNotice('Identity Verification Success!');
         } else {
           setNotice('Failed to verify your identity. Please verify against other type of document.');
         }
@@ -50,7 +54,7 @@ export default class UploaderForm extends Component {
   }
 
   render() {
-    const { handleSubmit, setNotice, requestSubmitIdentity, doneSubmitIdentity } = this.props;
+    const { handleSubmit, setNotice, requestUploadIdFile, doneUploadIdFile, isSubmitting, isUploading } = this.props;
     return (
       <Form onSubmit={handleSubmit(this.handleSubmitForm)}>
         <IDVerificationFormWrapper>
@@ -66,9 +70,9 @@ export default class UploaderForm extends Component {
             </p>
           </div>
           <Field name="attachment_ids" component={UploaderField} setNotice={setNotice}
-            requestSubmitIdentity={requestSubmitIdentity} doneSubmitIdentity={doneSubmitIdentity} />
+            requestUploadIdFile={requestUploadIdFile} doneUploadIdFile={doneUploadIdFile} />
         </IDVerificationFormWrapper>
-        <IDVerificationFormFooter />
+        <IDVerificationFormFooter submitting={isSubmitting || isUploading} />
       </Form>
     );
   }

@@ -8,15 +8,15 @@ import {
 } from 'react-bootstrap';
 import { Field } from 'redux-form';
 import {
-  genderList,
   identityConstants,
   identityDocumentTypesList
 } from 'schemas/idVerificationFormSchema';
 import { ControlLabel, FormControl, renderInput, renderSelect } from '../helpers';
 import IDVerificationFormFooter from '../IDVerificationFormFooter';
 import IDVerificationFormWrapper from '../IDVerificationFormWrapper';
+import styles from './MedicareCardForm.scss';
 
-export default class PassportForm extends Component {
+export default class MedicareCardForm extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     idType: PropTypes.number.isRequired,
@@ -28,7 +28,7 @@ export default class PassportForm extends Component {
 
   getPassportFields(values) {
     const body = _.merge({
-      'type': identityConstants.DVSPASSPORT,
+      'type': identityConstants.DVSMEDICARECARD,
       'verification_data': {
         'passport': {
           'country': 'AU'
@@ -64,12 +64,29 @@ export default class PassportForm extends Component {
     });
   }
 
+  get monthNames() {
+    return [
+      { value: '01', label: 'Jan' },
+      { value: '02', label: 'Feb' },
+      { value: '03', label: 'Mar' },
+      { value: '04', label: 'Apr' },
+      { value: '05', label: 'May' },
+      { value: '06', label: 'Jun' },
+      { value: '07', label: 'Jul' },
+      { value: '08', label: 'Aug' },
+      { value: '09', label: 'Sep' },
+      { value: '10', label: 'Oct' },
+      { value: '11', label: 'Nov' },
+      { value: '12', label: 'Dec' }
+    ];
+  }
+
   render() {
     const { handleSubmit, idType, isSubmitting } = this.props;
     const typeOptions = _.map(identityDocumentTypesList, (item, index) => (
       <option value={item.value} key={index}>{item.label}</option>
     ));
-    const genderOptions = _.map(genderList, (item, index) => (
+    const monthOptions = _.map(this.monthNames, (item, index) => (
       <option value={item.value} key={index}>{item.label}</option>
     ));
     return (
@@ -84,17 +101,47 @@ export default class PassportForm extends Component {
           <Row>
             <Col xs={6}>
               <Field component={renderInput}
-                name="verification_data.passport.number"
+                name="verification_data.medicare_card.number"
                 type="text"
-                label="Passport no.(incl. letters)"
+                label="Medicare Card no."
                 placeholder="Passport no." />
             </Col>
             <Col xs={6}>
               <Field component={renderInput}
-                name="person.date_of_birth"
-                type="date"
-                label="Date of birth"
-                placeholder="Date of birth" />
+                name="verification_data.medicare_card.reference_number"
+                type="text"
+                label="Medicare reference"
+                placeholder="ex. 2" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={6}>
+              <ControlLabel>Medicare card expire</ControlLabel>
+              <Row className={styles.narrowRow}>
+                <Col xs={6} className={styles.narrowCol}>
+                  <Field component={renderSelect}
+                    name="verification_data.medicare_card.expiry_date_month"
+                    placeholder="Month">
+                    {monthOptions}
+                  </Field>
+                </Col>
+                <Col xs={6} className={styles.narrowCol}>
+                  <Field component={renderInput}
+                    name="verification_data.medicare_card.expiry_date_year"
+                    type="text"
+                    placeholder="Year" />
+                </Col>
+              </Row>
+            </Col>
+            <Col xs={6}>
+              <Field component={renderSelect}
+                name="verification_data.medicare_card.colour"
+                type="text"
+                label="Medicare colour"
+                placeholder="Medicare Colour">
+                <option value="Green">Green</option>
+                <option value="Blue">Blue</option>
+              </Field>
             </Col>
           </Row>
           <Row>
@@ -115,28 +162,11 @@ export default class PassportForm extends Component {
           </Row>
           <Row>
             <Col xs={6}>
-              <Field component={renderSelect}
-                name="person.gender"
-                label="Gender"
-                placeholder="Gender">
-                {genderOptions}
-              </Field>
-            </Col>
-            <Col xs={6}>
               <Field component={renderInput}
-                name="verification_data.passport.place_of_birth"
-                type="text"
-                label="Place of birth"
-                placeholder="Place of birth" />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={6}>
-              <Field component={renderInput}
-                name="verification_data.passport.expiry_date"
+                name="person.date_of_birth"
                 type="date"
-                label="Expiry date"
-                placeholder="Expiry date" />
+                label="Date of birth"
+                placeholder="Date of birth" />
             </Col>
             <Col xs={6}>
               <Field component={renderInput}

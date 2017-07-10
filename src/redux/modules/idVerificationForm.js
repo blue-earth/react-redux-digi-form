@@ -3,15 +3,14 @@ import { fetch } from 'redux-effects-fetch';
 import { createAction, handleActions } from 'redux-actions';
 import { assignDefaults } from 'redux/utils/request';
 import { identityConstants } from 'schemas/idVerificationFormSchema';
-import _ from 'lodash';
 
 // ------------------------------------
 // Action type Constants
 // ------------------------------------
 export const REQUEST_ID_SUBMIT = 'REQUEST_ID_SUBMIT';
 export const DONE_ID_SUBMIT = 'DONE_ID_SUBMIT';
-export const ADD_ATTACHMENT = 'ADD_ATTACHMENT';
-export const REMOVE_ATTACHMENT = 'REMOVE_ATTACHMENT';
+export const REQUEST_ID_FILE_UPLOAD = 'REQUEST_ID_FILE_UPLOAD';
+export const DONE_ID_FILE_UPLOAD = 'DONE_ID_FILE_UPLOAD';
 
 export const IDENTITY_VERIFICATION_URL = `${API_URL}/identity-verification/api/identity/`;
 export const IDENTITY_ATTACHMENT_URL = `${API_URL}/identity-verification/api/identity-attachment/`;
@@ -20,7 +19,7 @@ export const SET_ID_TYPE = 'SET_ID_TYPE';
 
 export const INIT_ID_FORM_STATE = {
   isSubmitting: false,
-  attachments: [],
+  isUploading: false,
   idType: identityConstants.DVSPASSPORT
 };
 
@@ -43,6 +42,16 @@ export const requestSubmitIdentity = createAction(REQUEST_ID_SUBMIT);
 // Action: doneSubmitIdentity
 // ------------------------------------
 export const doneSubmitIdentity = createAction(DONE_ID_SUBMIT);
+
+// ------------------------------------
+// Action: requestUploadIdFile
+// ------------------------------------
+export const requestUploadIdFile = createAction(REQUEST_ID_FILE_UPLOAD);
+
+// ------------------------------------
+// Action: doneUploadIdFile
+// ------------------------------------
+export const doneUploadIdFile = createAction(DONE_ID_FILE_UPLOAD);
 
 // ------------------------------------
 // Action: setIdType
@@ -92,14 +101,14 @@ const idVerificationFormReducer = handleActions({
       isSubmitting: false
     }),
 
-  ADD_ATTACHMENT: (state, action) =>
+  REQUEST_ID_FILE_UPLOAD: (state, action) =>
     Object.assign({}, state, {
-      attachments: _.union(state.attachments, [action.payload])
+      isUploading: true
     }),
 
-  REMOVE_ATTACHMENT: (state, { payload }) =>
+  DONE_ID_FILE_UPLOAD: (state, action) =>
     Object.assign({}, state, {
-      attachments: payload ? _.without(state.attachments, payload) : []
+      isUploading: false
     }),
 
   SET_ID_TYPE: (state, { payload }) =>
