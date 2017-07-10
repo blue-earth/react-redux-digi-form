@@ -1,12 +1,14 @@
 import connect from 'redux/utils/connect';
 import {
-  fetchForm
+  fetchForm,
+  fetchPerson
 } from 'redux/modules/identityVerification';
 
 import IdentityVerificationView from '../components/IdentityVerificationView';
 
 const mapActionCreators = {
-  fetchForm
+  fetchForm,
+  fetchPerson
 };
 
 const mapStateToProps = (state) => {

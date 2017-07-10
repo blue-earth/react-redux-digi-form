@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
 import MedicareCardForm from 'components/IDVerification/MedicareCardForm';
@@ -45,7 +46,18 @@ const validate = values => {
   return errors;
 };
 
-export default reduxForm({
+const selectInitialValues = (state) => {
+  const person = _.get(state, ['identityVerification', 'person'], {});
+  return {
+    person: _.pick(person, ['first_name', 'last_name', 'email', 'date_of_birth'])
+  };
+};
+
+export default connect(
+  state => ({
+    initialValues: selectInitialValues(state)
+  })
+)(reduxForm({
   form: 'idMedicareCardForm',
   validate
-})(MedicareCardForm);
+})(MedicareCardForm));

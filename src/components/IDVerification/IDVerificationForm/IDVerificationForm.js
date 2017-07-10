@@ -26,7 +26,8 @@ export default class IDVerificationForm extends Component {
     requestUploadIdFile: PropTypes.func,
     doneUploadIdFile: PropTypes.func,
     idType: PropTypes.number.isRequired,
-    setIdType: PropTypes.func.isRequired
+    setIdType: PropTypes.func.isRequired,
+    person: PropTypes.object
   };
 
   static defaultProps = {
@@ -46,7 +47,7 @@ export default class IDVerificationForm extends Component {
 
   renderVerifyOnline() {
     const { idType } = this.props;
-    const props = _.pick(this.props, ['idType', 'setIdType', 'submitIdentity', 'isSubmitting']);
+    const props = _.pick(this.props, ['idType', 'setIdType', 'submitIdentity', 'isSubmitting', 'person']);
 
     switch (idType) {
       case identityConstants.DVSPASSPORT:
@@ -62,7 +63,7 @@ export default class IDVerificationForm extends Component {
 
   renderUploader() {
     const props = _.pick(this.props, [
-      'submitIdentity', 'requestUploadIdFile', 'doneUploadIdFile', 'isSubmitting', 'isUploading'
+      'submitIdentity', 'requestUploadIdFile', 'doneUploadIdFile', 'isSubmitting', 'isUploading', 'person'
     ]);
     return (
       <UploaderForm {...props} setNotice={this.setNotice} />

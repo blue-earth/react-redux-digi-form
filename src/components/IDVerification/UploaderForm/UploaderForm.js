@@ -16,14 +16,16 @@ export default class UploaderForm extends Component {
     requestUploadIdFile: PropTypes.func,
     doneUploadIdFile: PropTypes.func,
     isSubmitting: PropTypes.bool.isRequired,
-    isUploading: PropTypes.bool.isRequired
+    isUploading: PropTypes.bool.isRequired,
+    person: PropTypes.object
   };
 
   getUploadFields(values) {
+    const { person } = this.props;
     const body = {
       'type': identityConstants.MANUAL_FILE_UPLOAD,
       'person': {
-        'id': 1
+        'id': person && person.id
       },
       'attachment_ids': values.attachment_ids
     };
@@ -40,7 +42,7 @@ export default class UploaderForm extends Component {
       success: (data) => {
         if (data['result']) {
           // The success here means the request succeed, does not refer to the verification succeed
-          alert('Identity Verification Success!');
+          setNotice('Identity Verification Success!');
         } else {
           setNotice('Failed to verify your identity. Please verify against other type of document.');
         }
@@ -53,7 +55,6 @@ export default class UploaderForm extends Component {
 
   render() {
     const { handleSubmit, setNotice, requestUploadIdFile, doneUploadIdFile, isSubmitting, isUploading } = this.props;
-    console.log(this.props);
     return (
       <Form onSubmit={handleSubmit(this.handleSubmitForm)}>
         <IDVerificationFormWrapper>

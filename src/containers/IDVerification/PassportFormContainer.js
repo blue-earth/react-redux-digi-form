@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import _ from 'lodash';
 import PassportForm from 'components/IDVerification/PassportForm';
@@ -42,7 +43,18 @@ const validate = values => {
   return errors;
 };
 
-export default reduxForm({
+const selectInitialValues = (state) => {
+  const person = _.get(state, ['identityVerification', 'person'], {});
+  return {
+    person: _.pick(person, ['first_name', 'last_name', 'email', 'date_of_birth', 'gender'])
+  };
+};
+
+export default connect(
+  state => ({
+    initialValues: selectInitialValues(state)
+  })
+)(reduxForm({
   form: 'idPassportForm',
   validate
-})(PassportForm);
+})(PassportForm));

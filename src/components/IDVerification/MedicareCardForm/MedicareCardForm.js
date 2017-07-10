@@ -89,7 +89,6 @@ export default class MedicareCardForm extends Component {
     const monthOptions = _.map(this.monthNames, (item, index) => (
       <option value={item.value} key={index}>{item.label}</option>
     ));
-    console.log(this.props);
     return (
       <Form onSubmit={handleSubmit(this.handleSubmitForm)}>
         <IDVerificationFormWrapper>
