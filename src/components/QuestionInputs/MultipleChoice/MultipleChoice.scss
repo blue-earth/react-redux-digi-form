@@ -9,7 +9,7 @@
   }
 }
 .choicesRow {
-  margin: 0 -10px;
+  // margin: 0 -10px;
 }
 .choiceItem {
   border: 1px solid $choice-border-color;
@@ -20,7 +20,7 @@
   padding: 12px 12px 12px 70px;
   cursor: pointer;
   display: inline-block;
-  margin: 0 10px 20px;
+  margin: 0 18px 20px 2px;
   @include transition(background-color .1s);
   &:hover, &:focus {
     background-color: darken($choice-bg-color, 2%);
@@ -50,6 +50,11 @@
   }
   &.active {
     border-width: 2px;
+    // adjust for increased border width
+    padding: 11px 11px 11px 69px;
+    > .label {
+      left: 11px;
+    }
   }
   &.disabled {
     cursor: default;
