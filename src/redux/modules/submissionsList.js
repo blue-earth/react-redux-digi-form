@@ -14,13 +14,15 @@ export const SELECT_SUBMISSION_ITEMS = 'SELECT_SUBMISSION_ITEMS';
 export const SELECT_ANALYTICS_PERIOD = 'SELECT_ANALYTICS_PERIOD';
 
 export const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
+const NEXT_PAGE = 'NEXT_PAGE';
+const PREVIOUS_PAGE = 'PREVIOUS_PAGE';
 
 export const INIT_SUBMISSIONS_STATE = {
   id: 0,
   isFetching: false, // indicates the Submissions is being loaded.
   submissions: [], // holds the submission data.
-  page: 0, // indicates the current page number submission table page.
-  pageSize: 10, // indicates number of items per page.
+  page: 1, // indicates the current page number submission table page.
+  pageSize: 5, // indicates number of items per page.
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: 'response_id', // indicates the column name to sort by
   sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
@@ -96,6 +98,25 @@ export const doneFetchingSubmissions = createAction(DONE_FETCHING_SUBMISSIONS);
 export const selectItems = createAction(SELECT_SUBMISSION_ITEMS);
 
 export const selectAnalyticsPeriod = createAction(SELECT_ANALYTICS_PERIOD);
+
+const goToNextPage = createAction(NEXT_PAGE);
+const goToPreviousPage = createAction(PREVIOUS_PAGE);
+export const next = () => {
+  return (dispatch, getState) => {
+    dispatch(goToNextPage());
+    dispatch(fetchSubmissions({
+      page: getState().submissionsList.page
+    }));
+  };
+};
+export const previous = () => {
+  return (dispatch, getState) => {
+    dispatch(goToPreviousPage());
+    dispatch(fetchSubmissions({
+      page: getState().submissionsList.page
+    }));
+  };
+};
 
 // ------------------------------------
 // Action: fetchSubmissions
@@ -193,15 +214,18 @@ const processFetchSubmissions = (options) => {
 // ------------------------------------
 const processReceiveSubmissions = (res, options) => {
   const totalCount = res.count;
+  const { next, previous } = res;
   const data = res.data;
   return (dispatch, getState) => {
     dispatch(receiveSubmissions({
-      page: options.page,
+      page: options.page || 1,
       pageSize: options.pageSize,
       sortColumn: options.sortColumn,
       sortAscending: options.sortAscending,
       submissions: data,
       totalCount,
+      next,
+      previous,
       selectedItems: []
     }));
     dispatch(doneFetchingSubmissions()); // Hide loading spinner
@@ -237,7 +261,16 @@ const submissionsReducer = handleActions({
 
   SET_PAGE_SIZE: (state, action) =>
     Object.assign({}, state, {
-      pageSize: action.payload
+      pageSize: parseInt(action.payload),
+      page: 1
+    }),
+  NEXT_PAGE: (state, action) =>
+    Object.assign({}, state, {
+      page: state.page + 1
+    }),
+  PREVIOUS_PAGE: (state, action) =>
+    Object.assign({}, state, {
+      page: state.page - 1
     })
 }, INIT_SUBMISSIONS_STATE);
 
