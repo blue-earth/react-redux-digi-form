@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import FormHeader from 'components/Headers/FormHeader';
 import ProgressTracker from '../ProgressTracker';
-import FormCompletionSection from '../FormCompletionSection';
+import FormCompletion from '../FormCompletion';
 import StackLogo from 'components/Logos/StackLogo';
 import {
   findIndexById
@@ -290,7 +290,7 @@ class FormInteractive extends Component {
             {this.isInProgress && <FormInteractiveView {...this.props} />}
             {this.isInProgress && <SaveForLaterModal formId={formId} sessionId={sessionId} />}
             {shouldShowFinalSubmit && <Summary {...this.props} />}
-            {this.isCompleted && <FormCompletionSection title={title} />}
+            {this.isCompleted && <FormCompletion title={title} />}
             {this.needsAccessCode && <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />}
             <div className={styles.bottomLogoWrapper}>
               <span>Powered by</span>
