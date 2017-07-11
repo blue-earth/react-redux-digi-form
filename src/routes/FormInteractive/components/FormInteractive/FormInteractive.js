@@ -238,15 +238,14 @@ class FormInteractive extends Component {
   get percentage() {
     const { shouldShowFinalSubmit, currentQuestion } = this.props;
     const questions = _.get(this.props, ['form', 'questions'], []);
-    if (shouldShowFinalSubmit) return 100;
-    if (!currentQuestion) return 0;
-    if (questions.legnth === 0) return 0;
+    if (shouldShowFinalSubmit || this.isCompleted) return 100;
+    if (!currentQuestion || questions.legnth === 0) return 0;
     return findIndexById(questions, currentQuestion.id) * 100 / questions.length;
   }
 
   get isCompleted() {
     const { params: { status } } = this.props;
-    return status === 'completion';
+    return status === 'completed';
   }
 
   get isReviewing() {
@@ -272,33 +271,6 @@ class FormInteractive extends Component {
     }
   }
 
-  renderFormContent() {
-    const { form: { questions }, shouldShowFinalSubmit } = this.props;
-    const questionGroupTitles = getQuestionGroupTitles(questions);
-
-    return (
-      <div className={classNames(styles.contentWrapper, 'container')}>
-        <div className={styles.contentWrapperInner}>
-          <ProgressTracker
-            sectionTitleList={questionGroupTitles}
-            currentSectionIndex={this.currentSectionIndex}
-            onItemChange={this.setActiveGroup}
-            percentage={this.percentage}
-          />
-          {!shouldShowFinalSubmit &&
-            <FormInteractiveView {...this.props} />
-          }
-          <div className={styles.bottomLogoWrapper}>
-            <span>Powered by</span>
-            <div className={styles.bottomLogo}>
-              <StackLogo logoStyle="darkgrey" width={80} />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const { title, submitAnswer, formId, sessionId, shouldShowFinalSubmit } = this.props;
     const questions = _.get(this.props, ['form', 'questions'], []);
@@ -306,7 +278,7 @@ class FormInteractive extends Component {
 
     return (
       <div className={styles.wrapper}>
-        <FormHeader title={title} submitAnswer={submitAnswer} />
+        <FormHeader title={title} submitAnswer={submitAnswer} isCompleted={this.isCompleted} />
         <div className={classNames(styles.contentWrapper, 'container')}>
           <div className={styles.contentWrapperInner}>
             <ProgressTracker
@@ -318,7 +290,7 @@ class FormInteractive extends Component {
             {this.isInProgress && <FormInteractiveView {...this.props} />}
             {this.isInProgress && <SaveForLaterModal formId={formId} sessionId={sessionId} />}
             {shouldShowFinalSubmit && <Summary {...this.props} />}
-            {this.isCompleted && <FormCompletionSection {...this.props} />}
+            {this.isCompleted && <FormCompletionSection title={title} />}
             {this.needsAccessCode && <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />}
             <div className={styles.bottomLogoWrapper}>
               <span>Powered by</span>

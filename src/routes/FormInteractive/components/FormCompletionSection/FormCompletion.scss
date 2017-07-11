@@ -4,24 +4,17 @@
 $frontend-bg-start-color:       #ffffff;
 $frontend-bg-end-color:         #f4f5f8;
 
-.wrapper {
-  height: 100%;
-  color: $frontend-text-color1;
-  font-family: "Lato", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  @include media('>=sm') {
-    @include background-gradient($frontend-bg-start-color, $frontend-bg-end-color);
-  }
-}
-.contentWrapper {
+.formCompletion {
   position: relative;
-  padding: 40px;
-  background-color: $white;
-  @include border-radius(4px);
-  border: 1px solid $border-color;
-  border-top: 4px solid $form-completion-title-color;
   text-align: center;
+  flex: 1;
+  @include media('>=sm') {
+    padding: 30px;
+    padding: 40px 40px 85px;
+  }
+  @include media('>=md') {
+    padding: 65px 65px 95px;
+  }
 }
 .thankMessage {
   letter-spacing: 2px;
