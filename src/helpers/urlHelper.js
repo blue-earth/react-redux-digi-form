@@ -1,5 +1,5 @@
 import _ from 'lodash';
-export const formatUrl = (url) => _.replace(url, /\/\//g, '/');
+export const formatUrl = (url) => _.replace(url, /\/\//g, '/').replace(/\/$/, '');
 
 export const rootPath = '/';
 
