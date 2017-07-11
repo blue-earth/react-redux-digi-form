@@ -10,8 +10,12 @@ import { FaAngleDown } from 'react-icons/lib/fa';
 class SelectButton extends Component {
 
   static propTypes = {
+    onClick: PropTypes.func,  // select button without dropdown options click event handler
     onChange: PropTypes.func,
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+    ]),
     optionList: PropTypes.array,
     label: PropTypes.string,
     className: PropTypes.string,
@@ -81,11 +85,11 @@ class SelectButton extends Component {
   }
 
   render() {
-    const { label, staticValue } = this.props;
+    const { label, staticValue, optionList, className, value } = this.props;
     const { selected, isOpen } = this.state;
     var cx = this.cx;
-    return (
-      <div className={this.props.className}>
+    const dropdownButton = (
+      <div className={cx(className)}>
         <div ref="dropdown" className={cx('selectWrapper', {
           isOpen: this.state.isOpen
         })}>
@@ -96,7 +100,7 @@ class SelectButton extends Component {
           </div>
           <div className={cx('selectOptionsWrapper')}>
             <ul className={cx('selectOptions')}>
-              {this.props.optionList.map((option) => {
+              {optionList.map((option) => {
                 return (
                   <li key={option.key}
                     className={cx('selectOption', {isSelected: selected === option.label})}
@@ -112,6 +116,16 @@ class SelectButton extends Component {
         </div>
       </div>
     );
+    const selectButton = (
+      <div className={cx(className)}>
+        <div ref="dropdown" className={cx('selectWrapper')}>
+          <div className={cx('selectLabel')} onMouseDown={this.toggleOpen}>
+            <div className={cx('selectValue')}>{value}</div>
+          </div>
+        </div>
+      </div>
+    );
+    return optionList.length === 0 ? selectButton : dropdownButton;
   }
 }
 

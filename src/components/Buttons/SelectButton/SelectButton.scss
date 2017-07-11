@@ -18,7 +18,7 @@
   border: 1px solid $select-button-border-color;
   cursor: pointer;
   @include border-radius(4px);
-  @include background-gradient($select-button-end-color, $select-button-start-color);
+  @include background-gradient($select-button-start-color, $select-button-end-color);
   
 }
 .isOpen .selectLabel {
