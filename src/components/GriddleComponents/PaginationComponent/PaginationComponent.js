@@ -22,20 +22,23 @@ export default class PaginationComponent extends Component {
     const { currentPage, maxPage, previous, next } = this.props;
     return (
       <div className={styles.pagination}>
-        <div className={classNames(styles.paginationItem, {hide: maxPage === 0})}>
-          <Button className={styles.paginationButton} onClick={previous} disabled={currentPage === 0}>
+        <div className={styles.paginationItem}>
+          <Button className={classNames(styles.paginationButton, {invisible: currentPage === 1})} onClick={previous}>
             <FaCaretLeft />
           </Button>
           <span className={styles.paginationIndicator}>
             Page
             {' '}
-            <span className={styles.currentPage}>{currentPage + 1}</span>
+            <span className={styles.currentPage}>{currentPage}</span>
             {' '}
             of
             {' '}
-            <span>{maxPage}</span>
+            <span>{maxPage || 1}</span>
           </span>
-          <Button className={styles.paginationButton} onClick={next} disabled={currentPage + 1 === maxPage}>
+          <Button className={classNames(
+            styles.paginationButton,
+            {invisible: currentPage + 1 > maxPage}
+          )} onClick={next}>
             <FaCaretRight />
           </Button>
         </div>

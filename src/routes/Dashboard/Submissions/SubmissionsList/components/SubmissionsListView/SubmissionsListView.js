@@ -75,10 +75,11 @@ class SubmissionsListView extends Component {
      * toggleSelectItem: Redux action to select or deselect item by id.
      */
     toggleSelectItem: PropTypes.func.isRequired,
-
     selectAnalyticsPeriod: PropTypes.func.isRequired,
 
     setPageSize: PropTypes.func.isRequired,
+    next: PropTypes.func.isRequired,
+    previous: PropTypes.func.isRequired,
     /*
      * selectedItems: Redux state in array to hold selected item ids.
      */
@@ -261,10 +262,6 @@ class SubmissionsListView extends Component {
       {
         key: 'week',
         label: 'This week'
-      },
-      {
-        key: 'month',
-        label: 'This month'
       }
     ];
     const { analytics, analyticsPeriod, selectAnalyticsPeriod } = this.props;
@@ -309,22 +306,44 @@ class SubmissionsListView extends Component {
     );
   }
 
+  formAction = (action) => {
+    const { selectedItems, submissions } = this.props;
+    switch (action) {
+      case 'edit':
+        selectedItems.map(item => {
+          const formId = submissions.filter(submission => submission.response_id === item)[0].form_id;
+          window.open(`/forms/${formId}/${item}`);
+        });
+        break;
+    }
+  }
+
   render() {
     const {
       page,
       pageSize,
       totalCount,
-      setPageSize
+      setPageSize,
+      selectedItems,
+      next,
+      previous
     } = this.props;
     return (
       <div className={styles.submissionsList}>
         <div className={classNames(styles.widgetPanel, styles.submissionsListInner)}>
-          <SubmissionsFilter setPageSize={setPageSize} pageSize={pageSize} />
+          <SubmissionsFilter
+            setPageSize={setPageSize}
+            pageSize={pageSize}
+            formAction={this.formAction}
+            selectedItems={selectedItems}
+          />
           {this.renderSubmissionsList()}
         </div>
-        <Pagination currentPage={page} maxPage={Math.ceil(totalCount/pageSize)} />
-        {this.renderActivityPanel()}
-        {this.renderAnalyticsPanel()}
+        <Pagination
+          currentPage={page}
+          maxPage={Math.ceil(totalCount / pageSize)}
+          previous={previous}
+          next={next} />
         {this.renderEnvironmentalSavings()}
       </div>
     );

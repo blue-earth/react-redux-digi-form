@@ -5,7 +5,9 @@ import {
   selectAllItems,
   selectAnalyticsPeriod,
   toggleSelectItem,
-  setPageSize
+  setPageSize,
+  next,
+  previous
 } from 'redux/modules/submissionsList';
 
 import SubmissionsListView from '../components/SubmissionsListView';
@@ -51,7 +53,9 @@ const mapActionCreators = {
   selectAllItems,
   toggleSelectItem,
   selectAnalyticsPeriod,
-  setPageSize
+  setPageSize,
+  next,
+  previous
 };
 
 export default connect(mapStateToProps, mapActionCreators)(SubmissionsListView);
