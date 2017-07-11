@@ -3,7 +3,6 @@
 // /forms/id<form_id>/<form_session_id> --> Continue a form session
 
 import { injectReducer } from 'redux/reducers';
-import FormCompletion from './components/FormCompletionSection';
 
 const getComponent = (nextState, cb) => {
   /*  Webpack - use 'require.ensure' to create a split point
@@ -22,10 +21,6 @@ const getComponent = (nextState, cb) => {
 
 const routes = [
   {
-    path: ':id/completed',
-    component: FormCompletion
-  },
-  {
     path: ':id',
     getComponent
   },
@@ -36,7 +31,7 @@ const routes = [
   {
     path: ':id/:sessionId/:status', // status: `completion` | `review`
     getComponent
-  }  
+  }
 ];
 
 export default (store) => ({

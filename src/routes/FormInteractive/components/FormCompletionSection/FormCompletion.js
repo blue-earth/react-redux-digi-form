@@ -2,7 +2,6 @@ import React, {
   Component
 } from 'react';
 import styles from './FormCompletion.scss';
-import FormHeader from 'components/Headers/FormHeader';
 import {
   Grid,
   Col,
@@ -17,7 +16,6 @@ class FormCompletion extends Component {
   render() {
     return (
       <div className={styles.wrapper}>
-        <FormHeader title="Form2" submitAnswer={this.submitAnswer} />
         <Grid className={styles.contentWrapper}>
           <Col md={8} mdPush={2}>
             <h4 className={styles.thankMessage}>THANK YOU FOR COMPLETING</h4>
