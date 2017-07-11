@@ -2,8 +2,9 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import { FaPaperPlane } from 'react-icons/lib/fa';
+import { Button } from 'react-bootstrap';
 import { FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
-import SubmitButton from 'components/Buttons/FormEnterButton';
 import SubmissionReview from 'components/SubmissionReview';
 import styles from './Summary.scss';
 
@@ -51,16 +52,24 @@ export default class Summary extends Component {
   }
 
   render() {
-    const { form: { questions }, answers } = this.props;
+    const { form: { questions }, answers, showModal } = this.props;
+    const { primaryColour } = this.context;
     return (
       <div className={styles.wrapper}>
         <h2 className={styles.summaryTitle}>Summary</h2>
         <div className={styles.innerWrapper}>
           <div className={styles.submissionReviewWrapper}>
-            <SubmissionReview questions={questions} answers={answers} />
+            <SubmissionReview questions={questions} answers={answers} showModal={showModal} />
           </div>
           <div className={styles.submitButtonWrapper}>
-            <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
+            <p className={styles.whenReady} style={{ color: primaryColour }}>
+              When you're ready...
+            </p>
+            <Button onClick={this.handleFinalSubmit} className={styles.submitButton}
+              style={{ backgroundColor: primaryColour }}>
+              <FaPaperPlane size={28} />
+              <span className={styles.buttonLabel}>Submit</span>
+            </Button>
           </div>
         </div>
       </div>

@@ -4,7 +4,12 @@ import React, {
 } from 'react';
 import _ from 'lodash';
 import { Panel } from 'react-bootstrap';
-import { groupFormQuestions } from 'helpers/formInteractiveHelper';
+import { findItemById } from 'helpers/pureFunctions';
+import {
+  getCompiledQuestion,
+  groupFormQuestions,
+  stringifyAnswerValue
+} from 'helpers/formInteractiveHelper';
 import styles from './SubmissionReview.scss';
 
 export default class SubmissionReview extends Component {
@@ -23,7 +28,11 @@ export default class SubmissionReview extends Component {
     /*
      * answers: Redux state that stores the array of answered values
      */
-    answers: PropTypes.array.isRequired
+    answers: PropTypes.array.isRequired,
+    /*
+     * showModal: Redux modal show
+     */
+    showModal: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -33,9 +42,30 @@ export default class SubmissionReview extends Component {
     };
   }
 
+  renderGroupQuestions(groupQuestions) {
+    const { answers } = this.props;
+    return (
+      <ol>
+        {
+          _.map(groupQuestions, function (question, index) {
+            const finalQuestion = getCompiledQuestion(question, answers);
+            console.log(groupQuestions, question);
+            const answer = findItemById(answers, finalQuestion.questionId);
+            return (
+              <li>
+                <div>{finalQuestion.questionInstruction}</div>
+                <div>{stringifyAnswerValue(answer)}</div>
+              </li>
+            );
+          })
+        }
+      </ol>
+    );
+  }
+
   render() {
     const { questionGroups } = this.state;
-
+    const that = this;
     return (
       <div className={styles.submissionReview}>
         {
@@ -43,7 +73,7 @@ export default class SubmissionReview extends Component {
             const isOpen = _.get(questionGroups, [index, 'open']);
             return (
               <Panel key={index} collapsible expanded={isOpen} header={group.title}>
-                {group.questions.length}
+                {that.renderGroupQuestions(group.questions)}
               </Panel>
             );
           })
