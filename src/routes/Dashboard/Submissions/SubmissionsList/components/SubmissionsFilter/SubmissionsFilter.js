@@ -14,52 +14,16 @@ class SubmissionsFilter extends Component {
     pageSize: PropTypes.number,
     setPageSize: PropTypes.func
   }
-  get typeOptions() {
-    return [
-      {
-        key: 'form',
-        eventKey: 'form',
-        label: 'Form'
-      },
-      {
-        key: 'other',
-        eventKey: 'something',
-        label: 'Other type'
-      },
-      {
-        key: 'someOther',
-        eventKey: 'something',
-        label: 'Some other type'
-      }
-    ];
-  }
-
-  get userOptions() {
-    return [
-      {
-        key: 'sales',
-        eventKey: 'sales',
-        label: 'Sales Team'
-      },
-      {
-        key: 'other',
-        eventKey: 'other',
-        label: 'Another user'
-      }
-    ];
-  }
 
   get timeOptions() {
     return [
       {
         key: 'thisweek',
-        eventKey: 'thisweek',
         label: 'This Week'
       },
       {
-        key: 'otherweek',
-        eventKey: 'otherweek',
-        label: 'Some Other Week'
+        key: 'today',
+        label: 'Today'
       }
     ];
   }
@@ -67,16 +31,16 @@ class SubmissionsFilter extends Component {
   get paginationOptions() {
     return [
       {
-        key: '5',
-        label: '5'
+        key: 5,
+        label: 5
       },
       {
-        key: '10',
-        label: '10'
+        key: 10,
+        label: 10
       },
       {
-        key: '20',
-        label: '20'
+        key: 20,
+        label: 20
       }
     ];
   }
@@ -113,8 +77,6 @@ class SubmissionsFilter extends Component {
           </Button>
         </ButtonToolbar>
         <ButtonToolbar className="pull-right">
-          <SelectButton className={styles.formButton} optionList={this.typeOptions} label="Type" value="Form" />
-          <SelectButton className={styles.formButton} optionList={this.userOptions} label="User" value="Sales Team" />
           <SelectButton className={styles.formButton} optionList={this.timeOptions} value="This Week" />
           <SelectButton className={styles.formButton} optionList={this.paginationOptions} label="Show"
             value={pageSize} onChange={setPageSize} />

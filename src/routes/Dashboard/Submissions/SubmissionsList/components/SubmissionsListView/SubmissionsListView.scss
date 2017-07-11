@@ -5,7 +5,7 @@
   width: 100%;
 }
 .submissionsListInner {
-  min-height: 400px;
+  min-height: 398px;
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
@@ -93,6 +93,7 @@
   font-size: 24px;
 }
 .savingsSection {
+  float: right;
   width: 40%;
   text-align: center;
 }
