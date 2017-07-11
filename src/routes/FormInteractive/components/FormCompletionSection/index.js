@@ -1,3 +1,3 @@
-import FormCompletionSection from './FormCompletionSection';
+import FormCompletion from './FormCompletion';
 
-export default FormCompletionSection;
+export default FormCompletion;
