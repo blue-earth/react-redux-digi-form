@@ -33,7 +33,11 @@ class FormHeader extends Component {
     /*
      * submitAnswer: Redux action to send submit request to server. Here it will be submitted by user's action.
      */
-    submitAnswer: PropTypes.func
+    submitAnswer: PropTypes.func,
+    /*
+     * completed: Form completed
+     */
+    isCompleted: PropTypes.bool
   }
 
   componentDidMount() {
@@ -60,7 +64,7 @@ class FormHeader extends Component {
   }
 
   render() {
-    const { title, submitAnswer } = this.props;
+    const { title, submitAnswer, isCompleted } = this.props;
     const mobileMenuClass = classNames({
       [styles.mobileMenu]: true,
       [styles.isOpen]: this.state.isMobileMenuOpen
@@ -73,7 +77,7 @@ class FormHeader extends Component {
           </div>
           <h1 className={styles.title}>{title}</h1>
           <div className={classNames(styles.buttonWrapper, {
-            'hide': submitAnswer === undefined
+            'hide': isCompleted || submitAnswer === undefined
           })}>
             <Button onClick={this.handleSubmitAnswer} className={styles.saveButton}>
               Save & continue later
@@ -100,11 +104,13 @@ class FormHeader extends Component {
                     Footer content
                   </a>
                 </li>
-                <li>
-                  <a href="javascript:;" onClick={this.handleSubmitAnswer}>
-                    Save & continue later
-                  </a>
-                </li>
+                {
+                  !isCompleted && (<li>
+                    <a href="javascript:;" onClick={this.handleSubmitAnswer}>
+                      Save & continue later
+                    </a>
+                  </li>)
+                }
               </ul>
             </div>
           </div>

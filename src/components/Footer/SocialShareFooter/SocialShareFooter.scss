@@ -14,9 +14,9 @@ $button-color: #3392d4;
   background-color: lighten($button-color, 25%);
   cursor: pointer;
   margin: 0 10px;
-  width: 24px;
-  height: 24px;
-  @include border-radius(12px);
+  width: 26px;
+  height: 26px;
+  @include border-radius(14px);
   &:hover {
     background-color: $button-color;
   }

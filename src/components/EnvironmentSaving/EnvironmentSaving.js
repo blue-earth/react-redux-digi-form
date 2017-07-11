@@ -27,7 +27,7 @@ class EnvironmentSaving extends Component {
     const {size, type, value, font} = this.props;
     const trees = <span>trees</span>;
     const water = <span>liters of water</span>;
-    const co2 = <span>kilograms of CO<sup>2</sup></span>
+    const co2 = <span>kilograms of CO<sup>2</sup></span>;
     const content = {
       trees: trees,
       water: water,
@@ -37,7 +37,7 @@ class EnvironmentSaving extends Component {
       trees: require('./tree.png'),
       water: require('./water.png'),
       co2: require('./co2.png')
-    }
+    };
     return (
       <div className={cx('envSavingWrap', [size])}>
         <img className={cx('envSavingImage')} alt="trees" src={imgPath[type]} />

@@ -29,7 +29,7 @@ const routes = [
     getComponent
   },
   {
-    path: ':id/:sessionId/:status', // status: `completion` | `review`
+    path: ':id/:sessionId/:status', // status: `completed` | `review`
     getComponent
   }
 ];
