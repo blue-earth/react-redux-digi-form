@@ -18,7 +18,6 @@ import Pagination from '../../containers/PaginationContainer';
 import SelectButton from 'components/Buttons/SelectButton';
 import EnvironmentSaving from 'components/EnvironmentSaving';
 import classNames from 'classnames';
-import tableStyles from './tableStyles.scss';
 import styles from './SubmissionsListView.scss';
 
 class SubmissionsListView extends Component {
@@ -204,7 +203,6 @@ class SubmissionsListView extends Component {
         useCustomFilterComponent
         customFilterComponent={SubmissionsFilter}
         showSettings
-        tableClassName={tableStyles.submissionsTable}
       />
     );
   }

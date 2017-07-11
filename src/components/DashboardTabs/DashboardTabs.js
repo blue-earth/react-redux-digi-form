@@ -40,7 +40,7 @@ class DashboardTabs extends Component {
       {
         path: submissionsPath,
         label: 'Submissions',
-        icon: <MdHome size={16} style={{'verticalAlign': 'text-top'}} />,
+        icon: <MdHome size={16} style={{'verticalAlign': 'text-top', marginRight: '5px'}} />,
         position: 'left'
       },
       {

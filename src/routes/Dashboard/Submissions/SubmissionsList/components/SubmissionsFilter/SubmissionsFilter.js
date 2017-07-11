@@ -63,16 +63,17 @@ class SubmissionsFilter extends Component {
   }
   render() {
     const { pageSize, setPageSize, formAction } = this.props;
+    const iconStyle = {verticalAlign: 'text-bottom', marginRight: '6px'};
     return (
       <div className={styles.filterContainer}>
         <ButtonToolbar className="pull-left">
           <Button style="formButton">
-            <IoRefresh size={18} />
+            <IoRefresh size={18} style={iconStyle} />
             {' '}
             Refresh
           </Button>
           <Button style="formButton">
-            <IoStatsBars size={18} />
+            <IoStatsBars size={18} style={iconStyle} />
             {' '}
             Customize
           </Button>
