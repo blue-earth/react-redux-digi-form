@@ -1,0 +1,34 @@
+@import './mixins';
+@import './variables';
+
+$summary-title-color:       #b8bbbf;
+.wrapper {
+  position: relative;
+  padding-right: 40%;
+  padding: 60px;
+  height: 100%;
+}
+.summaryTitle {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: $summary-title-color;
+  font-weight: 900;
+  height: 50px;
+  margin: 0;
+}
+.innerWrapper {
+  position: relative;
+  height: calc(100% - 50px);
+}
+.submissionReviewWrapper {
+  width: 60%;
+  height: 100%;
+  overflow: auto;
+}
+.submitButtonWrapper {
+  right: 0;
+  width: 40%;
+  @include vcenter;
+  text-align: center;
+}

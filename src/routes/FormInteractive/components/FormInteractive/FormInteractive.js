@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import FormHeader from 'components/Headers/FormHeader';
 import ProgressTracker from '../ProgressTracker';
-import SubmitButton from 'components/Buttons/FormEnterButton';
 import FormCompletionSection from '../FormCompletionSection';
 import StackLogo from 'components/Logos/StackLogo';
 import {
@@ -24,6 +23,7 @@ import {
 import FormInteractiveView from '../FormInteractiveView';
 import AccessCodeModal from 'components/Forms/AccessCodeModal';
 import SaveForLaterModal from '../SaveForLaterModal';
+import Summary from '../Summary';
 import styles from './FormInteractive.scss';
 
 class FormInteractive extends Component {
@@ -226,8 +226,9 @@ class FormInteractive extends Component {
   }
 
   get currentSectionIndex() {
-    const { form: { questions }, currentQuestion } = this.props;
-    if (!questions) return 0;
+    const { currentQuestion } = this.props;
+    const questions = _.get(this.props, ['form', 'questions'], []);
+    if (!questions || !questions.length) return 0;
     const question = _.find(questions, (o) => o.id === currentQuestion.id);
     const groups = getQuestionGroups(questions);
     const index = _.findIndex(groups, (o) => o.id === question.group);
@@ -235,14 +236,27 @@ class FormInteractive extends Component {
   }
 
   get percentage() {
-    const { form: { questions }, shouldShowFinalSubmit, currentQuestion } = this.props;
+    const { shouldShowFinalSubmit, currentQuestion } = this.props;
+    const questions = _.get(this.props, ['form', 'questions'], []);
     if (shouldShowFinalSubmit) return 100;
+    if (!currentQuestion) return 0;
+    if (questions.legnth === 0) return 0;
     return findIndexById(questions, currentQuestion.id) * 100 / questions.length;
   }
 
   get isCompleted() {
     const { params: { status } } = this.props;
     return status === 'completion';
+  }
+
+  get isReviewing() {
+    const { params: { status } } = this.props;
+    return status === 'review';
+  }
+
+  get isInProgress() {
+    const { params: { status }, form, shouldShowFinalSubmit } = this.props;
+    return typeof status === 'undefined' && !this.needsAccessCode && form && !shouldShowFinalSubmit;
   }
 
   get needsAccessCode() {
@@ -256,11 +270,6 @@ class FormInteractive extends Component {
     if (sessionId) {
       fetchAnswers(sessionId);
     }
-  }
-
-  handleFinalSubmit = () => {
-    const { submitAnswer } = this.props;
-    submitAnswer(FORM_USER_SUBMISSION);
   }
 
   renderFormContent() {
@@ -279,11 +288,6 @@ class FormInteractive extends Component {
           {!shouldShowFinalSubmit &&
             <FormInteractiveView {...this.props} />
           }
-          {shouldShowFinalSubmit &&
-            <div className={styles.submitButtonsArea}>
-              <SubmitButton buttonLabel="SUBMIT APPLICATION" autoFocus onClick={this.handleFinalSubmit} />
-            </div>
-          }
           <div className={styles.bottomLogoWrapper}>
             <span>Powered by</span>
             <div className={styles.bottomLogo}>
@@ -295,31 +299,35 @@ class FormInteractive extends Component {
     );
   }
 
-  renderFormCompletionSection() {
-    const props = this.props;
-    return (
-      <div className={styles.stepsWrapper}>
-        <FormCompletionSection
-          {...props} />
-      </div>
-    );
-  }
-
   render() {
-    const { title, submitAnswer, form, formId, sessionId } = this.props;
+    const { title, submitAnswer, formId, sessionId, shouldShowFinalSubmit } = this.props;
+    const questions = _.get(this.props, ['form', 'questions'], []);
+    const questionGroupTitles = getQuestionGroupTitles(questions);
+
     return (
       <div className={styles.wrapper}>
         <FormHeader title={title} submitAnswer={submitAnswer} />
-        {!this.isCompleted && !this.needsAccessCode && form &&
-          this.renderFormContent()
-        }
-        {!this.isCompleted &&
-          <SaveForLaterModal formId={formId} sessionId={sessionId} />
-        }
-        {this.isCompleted && this.renderFormCompletionSection()}
-        {this.needsAccessCode &&
-          <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />
-        }
+        <div className={classNames(styles.contentWrapper, 'container')}>
+          <div className={styles.contentWrapperInner}>
+            <ProgressTracker
+              sectionTitleList={questionGroupTitles}
+              currentSectionIndex={this.currentSectionIndex}
+              onItemChange={this.setActiveGroup}
+              percentage={this.percentage}
+            />
+            {this.isInProgress && <FormInteractiveView {...this.props} />}
+            {this.isInProgress && <SaveForLaterModal formId={formId} sessionId={sessionId} />}
+            {shouldShowFinalSubmit && <Summary {...this.props} />}
+            {this.isCompleted && <FormCompletionSection {...this.props} />}
+            {this.needsAccessCode && <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />}
+            <div className={styles.bottomLogoWrapper}>
+              <span>Powered by</span>
+              <div className={styles.bottomLogo}>
+                <StackLogo logoStyle="darkgrey" width={80} />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
