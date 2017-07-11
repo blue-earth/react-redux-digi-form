@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import FormHeader from 'components/Headers/FormHeader';
+import IdentityVerificationHeader from 'components/Headers/IdentityVerificationHeader';
 import IDVerificationForm from 'containers/IDVerification';
 import styles from './IdentityVerificationView.scss';
 
@@ -23,7 +23,7 @@ export default class IdentityVerificationView extends Component {
     const title = form ? form.title : 'No form specified';
     return (
       <div className={styles.identityVerification}>
-        <FormHeader title={title} submitAnswer={function () {}} />
+        <IdentityVerificationHeader title={title} />
         <div className={styles.content}>
           <IDVerificationForm align="center" person={person} />
         </div>

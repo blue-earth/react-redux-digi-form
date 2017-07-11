@@ -1,0 +1,31 @@
+@import './variables';
+@import './mixins';
+
+.header {
+  box-shadow: 0 0 25px rgba(0, 0, 0, .05);
+  background-color: white;
+}
+.wrapper {
+  display: flex;
+  height: $frontend-header-height;
+  align-items: center;
+  flex-direction: row;
+  max-width: $identity-form-width;
+  margin: 0 auto;
+}
+.logoWrapper {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 25px;
+}
+.title {
+  vertical-align: middle;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+  display: inline-block;
+  margin: 0;
+  flex: 1;
+  letter-spacing: 1px;
+  color: $frontend-text-color1;
+}
