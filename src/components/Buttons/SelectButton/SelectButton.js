@@ -61,19 +61,22 @@ class SelectButton extends Component {
     });
   }
   handleSelect = (event) => {
-    const {staticValue, onChange} = this.props;
+    const {staticValue, onChange, optionList} = this.props;
+    const value = event.currentTarget.getAttribute('value');
+    const index = event.currentTarget.getAttribute('data-key');
+
+    if (typeof onChange === 'function') {
+      if (!optionList[index].isDisabled) {
+        onChange(optionList[index].key);
+      }
+    }
     if (staticValue) {
       return this.setState({isOpen: false});
     }
-    const value = event.currentTarget.getAttribute('value');
-    const eventKey = event.currentTarget.getAttribute('data-key');
     this.setState({
       selected: value,
       isOpen: false
     });
-    if (typeof onChange === 'function') {
-      onChange(eventKey);
-    }
   }
 
   handleDocumentClick = (event) => {
@@ -100,13 +103,19 @@ class SelectButton extends Component {
           </div>
           <div className={cx('selectOptionsWrapper')}>
             <ul className={cx('selectOptions')}>
-              {optionList.map((option) => {
+              {optionList.map((option, index) => {
                 return (
-                  <li key={option.key}
-                    className={cx('selectOption', {isSelected: selected === option.label})}
+                  <li key={`select-button-${index}`}
+                    className={cx(
+                      'selectOption',
+                      {
+                        isSelected: selected === option.label,
+                        disabled: option.isDisabled
+                      }
+                    )}
                     onClick={this.handleSelect}
                     value={option.label}
-                    data-key={option.key}>
+                    data-key={index}>
                     <div className={cx('selectOptionContent')}>{option.label}</div>
                   </li>
                 );

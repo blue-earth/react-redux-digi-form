@@ -75,6 +75,12 @@
 .selectOption.isSelected {
   font-weight: bold;
 }
+.selectOption.disabled {
+  color: $select-button-border-color;
+  &:hover {
+    cursor: not-allowed;
+  }
+}
 .selectOptionContent {
   display: inline-block;
   padding: 0 6px;

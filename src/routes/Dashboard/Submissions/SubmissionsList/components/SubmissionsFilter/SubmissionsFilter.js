@@ -12,7 +12,9 @@ class SubmissionsFilter extends Component {
 
   static propTypes = {
     pageSize: PropTypes.number,
-    setPageSize: PropTypes.func
+    setPageSize: PropTypes.func,
+    formAction: PropTypes.func,
+    selectedItems: PropTypes.array
   }
 
   get timeOptions() {
@@ -45,23 +47,22 @@ class SubmissionsFilter extends Component {
     ];
   }
   get actionOptions() {
+    const number = this.props.selectedItems.length;
     return [
       {
         key: 'edit',
-        label: 'Edit'
+        label: 'Edit',
+        isDisabled: number !== 1
       },
       {
         key: 'delete',
-        label: 'Delete'
-      },
-      {
-        key: 'other action',
-        label: 'Other actions'
+        label: 'Delete',
+        isDisabled: number === 0
       }
     ];
   }
   render() {
-    const { pageSize, setPageSize } = this.props;
+    const { pageSize, setPageSize, formAction } = this.props;
     return (
       <div className={styles.filterContainer}>
         <ButtonToolbar className="pull-left">
@@ -80,7 +81,8 @@ class SubmissionsFilter extends Component {
           <SelectButton className={styles.formButton} optionList={this.timeOptions} value="This Week" />
           <SelectButton className={styles.formButton} optionList={this.paginationOptions} label="Show"
             value={pageSize} onChange={setPageSize} />
-          <SelectButton className={styles.formButton} optionList={this.actionOptions} value="Actions" staticValue />
+          <SelectButton className={styles.formButton} optionList={this.actionOptions} value="Actions" staticValue
+            onChange={formAction} />
         </ButtonToolbar>
         <div className="clearfix"></div>
       </div>

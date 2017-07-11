@@ -89,20 +89,23 @@ export class ActionsHeaderCell extends Component {
 
 export class statusCell extends Component {
   static propTypes = {
-    data: PropTypes.string.isRequired
+    data: PropTypes.string
   };
   render() {
     const {data} = this.props;
-    const statusList = ['New', 'Rejected', 'Processing', 'Done'];
-    const status = statusList[data-6]; // WIP change to correct status index
-    const statusClass = status.toLowerCase();
+    const classList = ['new', 'rejected', 'processing', 'done'];
+    const statusClass = data.toLowerCase().replace(/ /g, '');
     return (
       <div>
-        <div className={classNames(styles.statusRing, styles[statusClass])}>
+        <div className={classNames(
+          styles.statusRing,
+          styles[statusClass],
+          {hide: classList.indexOf(statusClass) === -1}
+        )}>
           <FaCircleO style={{verticalAlign: 'baseline'}} />
         </div>
         {' '}
-        {status}
+        {data}
       </div>
     );
   }
