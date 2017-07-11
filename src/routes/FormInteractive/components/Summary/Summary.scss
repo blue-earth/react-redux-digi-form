@@ -32,3 +32,34 @@ $summary-title-color:       #b8bbbf;
   @include vcenter;
   text-align: center;
 }
+.whenReady {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.submitButton {
+  font-size: 28px;
+  font-weight: 700;
+  padding: 25px 65px 25px 40px;
+  color: white !important;
+  height: 100px;
+  border: none;
+  position: relative;
+  overflow:hidden;
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0);
+    @include transition(background-color .1s);
+  }
+  &:hover:before {
+    background-color: rgba(255, 255, 255, .1);
+  }
+}
+.buttonLabel {
+  margin-left: 25px;
+  vertical-align: middle;
+}

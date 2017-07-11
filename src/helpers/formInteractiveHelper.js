@@ -1,5 +1,6 @@
 import { underscoreToCamelCase } from 'helpers/pureFunctions.js';
 import _ from 'lodash';
+import Hogan from 'hogan.js';
 import velocity from 'velocity-animate';
 
 export const transformQuestions = (questions) => {
@@ -58,6 +59,25 @@ export const getContextFromAnswer = (answers) => {
     context['answer_' + answer.id] = stringifyAnswerValue(answer);
   });
   return context;
+};
+
+export const compileTemplate = (template, context) => {
+  if (template) {
+    var t = Hogan.compile(template);
+    return t.render(context);
+  } else {
+    return '';
+  }
+};
+
+export const getCompiledQuestion = (question, answers) => {
+  const context = getContextFromAnswer(answers);
+  const finalQuestion = _.merge({}, question, {
+    questionId: question.id,
+    questionInstruction: compileTemplate(question.questionInstruction, context),
+    questionDescription: compileTemplate(question.questionDescription, context)
+  });
+  return _.omit(finalQuestion, ['id']); // Avoid passing id to props.
 };
 
 export const stringifyAnswerValue = (answer) => {
