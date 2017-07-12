@@ -75,7 +75,7 @@ class SubmissionsFilter extends Component {
           <Button style="formButton">
             <IoStatsBars size={18} style={iconStyle} />
             {' '}
-            Customize
+            Customise
           </Button>
         </ButtonToolbar>
         <ButtonToolbar className="pull-right">
