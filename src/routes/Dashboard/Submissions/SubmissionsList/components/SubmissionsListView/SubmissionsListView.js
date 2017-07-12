@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  AuthorHeaderCell,
   // ProgressHeaderCell,
   StatusHeaderCell,
   ActionsHeaderCell,
@@ -137,7 +136,6 @@ class SubmissionsListView extends Component {
         locked: false,
         visible: true,
         displayName: 'Completed by',
-        customHeaderComponent: AuthorHeaderCell,
         cssClassName: styles.columnAuthor
       },
       {
