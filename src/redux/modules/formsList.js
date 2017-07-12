@@ -11,12 +11,16 @@ export const REQUEST_FORMSLIST = 'REQUEST_FORMSLIST';
 export const DONE_FETCHING_FORMSLIST = 'DONE_FETCHING_FORMSLIST';
 export const SELECT_FORM_ITEMS = 'SELECT_FORM_ITEMS';
 
+const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
+const NEXT_PAGE = 'NEXT_PAGE';
+const PREVIOUS_PAGE = 'PREVIOUS_PAGE';
+
 export const INIT_FORMSLIST_STATE = {
   id: 0,
   isFetching: false, // indicates the FormsList is being loaded.
   forms: [],
-  page: 0, // indicates the current page number submission table page.
-  pageSize: 10, // indicates number of items per page.
+  page: 1, // indicates the current page number submission table page.
+  pageSize: 5, // indicates number of items per page.
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: 'id', // indicates the column name to sort by
   sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
@@ -42,6 +46,27 @@ export const doneFetchingFormsList = createAction(DONE_FETCHING_FORMSLIST);
 // Action: selectItems
 // ------------------------------------
 export const selectItems = createAction(SELECT_FORM_ITEMS);
+
+const goToNextPage = createAction(NEXT_PAGE);
+const goToPreviousPage = createAction(PREVIOUS_PAGE);
+
+export const setPageSize = createAction(SET_PAGE_SIZE);
+export const next = () => {
+  return (dispatch, getState) => {
+    dispatch(goToNextPage());
+    dispatch(fetchFormsList({
+      page: getState().submissionsList.page
+    }));
+  };
+};
+export const previous = () => {
+  return (dispatch, getState) => {
+    dispatch(goToPreviousPage());
+    dispatch(fetchFormsList({
+      page: getState().submissionsList.page
+    }));
+  };
+};
 
 // ------------------------------------
 // Action: fetchFormsList
@@ -141,7 +166,7 @@ const processReceiveFormsList = (res, options) => {
 
   return (dispatch, getState) => {
     dispatch(receiveFormsList({
-      page: options.page,
+      page: options.page || 1,
       pageSize: options.pageSize,
       sortColumn: options.sortColumn,
       sortAscending: options.sortAscending,
@@ -173,6 +198,19 @@ const formsListReducer = handleActions({
   SELECT_FORM_ITEMS: (state, action) =>
     Object.assign({}, state, {
       selectedItems: action.payload
+    }),
+  SET_PAGE_SIZE: (state, action) =>
+    Object.assign({}, state, {
+      pageSize: parseInt(action.payload),
+      page: 1
+    }),
+  NEXT_PAGE: (state, action) =>
+    Object.assign({}, state, {
+      page: state.page + 1
+    }),
+  PREVIOUS_PAGE: (state, action) =>
+    Object.assign({}, state, {
+      page: state.page - 1
     })
 }, INIT_FORMSLIST_STATE);
 

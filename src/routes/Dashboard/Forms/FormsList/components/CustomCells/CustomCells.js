@@ -9,7 +9,6 @@ import {
   Checkbox
 } from 'react-bootstrap';
 import {
-  FaSearch,
   FaEdit,
   FaPaperPlaneO
 } from 'react-icons/lib/fa';
@@ -19,7 +18,7 @@ import { DateCell } from 'components/GriddleComponents/CommonCells/CommonCells';
 
 export { DateCell };
 
-export class ActionsHeaderCell extends Component {
+export class SelectionHeaderCell extends Component {
   static propTypes = {
     displayName: PropTypes.string.isRequired,
     columnName: PropTypes.string.isRequired,
@@ -35,7 +34,7 @@ export class ActionsHeaderCell extends Component {
   render() {
     const { isAllSelected } = this.props;
     return (
-      <div className={styles.actionsHeaderCell}>
+      <div className={styles.selectionHeaderCell}>
         <div className={styles.rightMiddle}>
           <Checkbox onChange={this.handleCheckboxChange} checked={isAllSelected}>
             &nbsp;
@@ -45,8 +44,32 @@ export class ActionsHeaderCell extends Component {
     );
   }
 }
-
 export class ActionsCell extends Component {
+  static propTypes = {
+    rowData: PropTypes.object.isRequired
+  };
+  render() {
+    const {rowData} = this.props;
+    return (
+      <ul className={styles.actionsWrapper}>
+        <li>
+          <Link to={formsUrl(`/${rowData.id}/edit`)}>
+            <FaEdit size={16} />
+            <span className={styles.actionText}>Edit</span>
+          </Link>
+        </li>
+        <li>
+          <Link to={formsUrl(`/${rowData.id}/edit`)}>
+            <FaPaperPlaneO size={16} />
+            <span className={styles.actionText}>Send</span>
+          </Link>
+        </li>
+      </ul>
+    );
+  }
+}
+
+export class SelectionCell extends Component {
 
   static propTypes = {
     rowData: PropTypes.object.isRequired,
@@ -61,27 +84,7 @@ export class ActionsCell extends Component {
   render() {
     const { rowData, metadata: { selectedItems } } = this.props;
     return (
-      <div className={styles.actionsCell}>
-        <ul className={styles.actionsWrapper}>
-          <li>
-            <Link to={formsUrl(`/${rowData.id}/edit`)}>
-              <FaSearch size={16} />
-              <span className={styles.actionText}>Analyse</span>
-            </Link>
-          </li>
-          <li>
-            <Link to={formsUrl(`/${rowData.id}/edit`)}>
-              <FaEdit size={16} />
-              <span className={styles.actionText}>Edit</span>
-            </Link>
-          </li>
-          <li>
-            <Link to={formsUrl(`/${rowData.id}/edit`)}>
-              <FaPaperPlaneO size={16} />
-              <span className={styles.actionText}>Send</span>
-            </Link>
-          </li>
-        </ul>
+      <div className={styles.selectionCell}>
         <div className={styles.rightMiddle}>
           <Checkbox onChange={this.handleCheckboxChange}
             checked={_.includes(selectedItems, rowData.id)}>
