@@ -1,5 +1,5 @@
 import connect from 'redux/utils/connect';
-import { submitSignupForm, INIT_AUTH_STATE } from 'redux/modules/auth';
+import { submitSignupForm, processLogout, INIT_AUTH_STATE } from 'redux/modules/auth';
 import { goTo } from 'redux/modules/router.js';
 import SignUpFormView from '../components/SignUpFormView';
 import { reduxForm } from 'redux-form';
@@ -7,7 +7,8 @@ import formSchema from '../schema';
 
 const mapActionCreators = {
   submitSignupForm,
-  goTo
+  goTo,
+  processLogout
 };
 
 const mapStateToProps = (state) => {

@@ -198,7 +198,6 @@ export const processLogout = () => {
 // ------------------------------------
 // Action: logout
 // ------------------------------------
-// TODO: does the state need to show logout, or can it just be reset to INIT_AUTH_STATE
 export const logout = createAction(LOGOUT);
 
 // ------------------------------------
@@ -235,7 +234,8 @@ const authReducer = handleActions({
     }),
   LOGOUT: (state, action) =>
     Object.assign({}, state, {
-      authStatus: LOGGED_OUT
+      authStatus: LOGGED_OUT,
+      user: {}
     })
 }, INIT_AUTH_STATE);
 
