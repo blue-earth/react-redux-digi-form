@@ -4,12 +4,14 @@ import React, {
 } from 'react';
 import _ from 'lodash';
 import { Panel } from 'react-bootstrap';
+import classNames from 'classnames';
 import { findItemById } from 'helpers/pureFunctions';
 import {
   getCompiledQuestion,
-  groupFormQuestions,
-  stringifyAnswerValue
+  groupFormQuestions
 } from 'helpers/formInteractiveHelper';
+import AnswerValue from 'components/AnswerValue';
+import EditButton from './EditButton';
 import styles from './SubmissionReview.scss';
 
 export default class SubmissionReview extends Component {
@@ -42,19 +44,43 @@ export default class SubmissionReview extends Component {
     };
   }
 
+  toggleGroupOpenState(index) {
+    const { questionGroups } = this.state;
+    const isOpen = !_.get(questionGroups, [index, 'open']);
+    _.set(questionGroups, [index, 'open'], isOpen);
+    this.setState({ questionGroups });
+  }
+
+  renderPanelHeader(title, index) {
+    const that = this;
+    return (
+      <div onClick={function () { that.toggleGroupOpenState(index); }}>
+        {title}
+      </div>
+    );
+  }
+
   renderGroupQuestions(groupQuestions) {
     const { answers } = this.props;
     return (
-      <ol>
+      <ol className={styles.questionList}>
         {
           _.map(groupQuestions, function (question, index) {
             const finalQuestion = getCompiledQuestion(question, answers);
-            console.log(groupQuestions, question);
             const answer = findItemById(answers, finalQuestion.questionId);
             return (
-              <li>
-                <div>{finalQuestion.questionInstruction}</div>
-                <div>{stringifyAnswerValue(answer)}</div>
+              <li className={styles.questionListItem}>
+                <div className={styles.questionListItemInner}>
+                  <div className={styles.questionInstruction}>
+                    {finalQuestion.questionInstruction || finalQuestion.instruction}
+                  </div>
+                  <div className={styles.answer}>
+                    {answer && <AnswerValue value={answer.value} question={question} />}
+                  </div>
+                  <div className={styles.editButtonWrapper}>
+                    <EditButton />
+                  </div>
+                </div>
               </li>
             );
           })
@@ -71,8 +97,14 @@ export default class SubmissionReview extends Component {
         {
           questionGroups.map(function (group, index) {
             const isOpen = _.get(questionGroups, [index, 'open']);
+            const panelClass = classNames({
+              [styles.panel]: true,
+              [styles.open]: isOpen
+            });
             return (
-              <Panel key={index} collapsible expanded={isOpen} header={group.title}>
+              <Panel key={index} collapsible expanded={isOpen} className={panelClass}
+                header={that.renderPanelHeader(group.title, index)}
+              >
                 {that.renderGroupQuestions(group.questions)}
               </Panel>
             );

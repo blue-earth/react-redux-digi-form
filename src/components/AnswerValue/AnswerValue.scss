@@ -1,0 +1,30 @@
+@import './mixins';
+@import './variables';
+
+.answer {
+  font-size: inherit;
+  img {
+  	max-width: 100%;
+    max-height: 100px;
+  	height: auto;
+    width: auto;
+  }
+}
+.label {
+  border-width: 1px;
+  border-style: solid;
+  display: inline-block;
+  margin-right: 5px;
+  padding: 2px 3px;
+  font-size: 80%;
+  line-height: 1;
+  text-align: center;
+  @include border-radius(3px);
+  vertical-align: middle;
+}
+.text {
+  vertical-align: middle;
+}
+.choiceItem {
+  margin-bottom: 2px;
+}

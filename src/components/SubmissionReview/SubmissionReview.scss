@@ -1,0 +1,99 @@
+@import './mixins';
+@import './variables';
+
+$submission-group-title-color:    #a7abaf;
+$submission-question-text-color:  #b8bbb8;
+.panel {
+  border: none;
+  box-shadow: none;
+  margin-bottom: 15px;
+  :global {
+    .panel-heading {
+      border: none;
+      background-color: transparent;
+      padding: 0;
+    }
+    .panel-title {
+      font-size: 24px;
+      padding-left: 30px;
+      position: relative;
+      &:before {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -5px;
+        content: '';
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-right: 2px solid $submission-group-title-color;
+        border-bottom: 2px solid $submission-group-title-color;
+        @include transform(rotate(-45deg));
+        @include transition(transform .3s);
+      }
+      > a {
+        cursor: pointer;
+        @include transition(color .1s);
+        color: $submission-group-title-color;
+        text-decoration: none !important;
+        &:hover {
+          color: $frontend-text-color1;
+        }
+      }
+    }
+    .panel-body {
+      padding: 0;
+    }
+  }
+  &.open {
+    :global {
+      .panel-title {
+        &:before {
+          @include transform(rotate(45deg));
+        }
+        > a {
+          color: $frontend-text-color1;
+        }
+      }
+    }
+  }
+}
+
+.questionList {
+  color: $submission-question-text-color;
+  padding-left: 48px;
+  padding-right: 70px;
+  font-weight: 300;
+  margin: 0;
+}
+
+.questionListItem {
+  margin-bottom: 15px;
+  cursor: pointer;
+  &:hover {
+    color: $frontend-text-color1;
+    .editButtonWrapper {
+      opacity: 1;
+    }
+  }
+  &:last-child {
+    margin: 0;
+  }
+}
+
+.questionListItemInner {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+}
+.answer {
+  margin-left: 5px;
+  word-break: break-word;
+}
+.editButtonWrapper {
+  opacity: 0;
+  @include transition(opacity .15s);
+  position: absolute;
+  right: -60px;
+  top: 5px;
+}

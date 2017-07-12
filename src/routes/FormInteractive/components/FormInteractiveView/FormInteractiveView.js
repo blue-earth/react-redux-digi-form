@@ -16,13 +16,13 @@ import {
   getContextFromAnswer,
   shouldDisableNextButton,
   shouldDisablePrevButton,
-  stringifyAnswerValue,
   transformQuestions
 } from 'helpers/formInteractiveHelper';
 import {
   findIndexById,
   findItemById
 } from 'helpers/pureFunctions';
+import AnswerValue from 'components/AnswerValue';
 import styles from './FormInteractiveView.scss';
 import _ from 'lodash';
 
@@ -205,18 +205,17 @@ class FormInteractiveView extends Component {
     const answer = _.find(answers, {id: question.id});
     if (question.type === 'Group') return false;
     const context = getContextFromAnswer(answers);
-    const answerText = stringifyAnswerValue(answer);
     return (
       <div className={styles.prevQuestionWrapper}>
         <h3 className={styles.neighborInstruction}>
           {this.compileTemplate(question.questionInstruction, context)}
         </h3>
-        {answerText &&
+        {answer &&
           <div className={styles.prevQuestionAnswer}>
             <span className={styles.answerIcon}>
               <MdKeyboardBackspace size={24} />
             </span>
-            {answerText}
+            <AnswerValue value={answer.value} question={question} />
           </div>
         }
       </div>
