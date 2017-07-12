@@ -34,6 +34,7 @@ class SignUpForm extends Component {
 
   static propTypes = {
     submitSignupForm: PropTypes.func.isRequired,
+    processLogout: PropTypes.func,
     authStatus: PropTypes.string.isRequired,
     goTo: PropTypes.func.isRequired,
     isAuthenticating: PropTypes.bool.isRequired,
@@ -46,6 +47,10 @@ class SignUpForm extends Component {
   static contextTypes = {
     router: React.PropTypes.object
   };
+
+  componentWillMount() {
+    this.props.processLogout();
+  }
 
   componentWillReceiveProps(props) {
     const { authStatus, goTo } = props;
