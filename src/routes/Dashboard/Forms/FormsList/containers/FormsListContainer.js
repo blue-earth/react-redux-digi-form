@@ -3,7 +3,10 @@ import {
   INIT_FORMSLIST_STATE,
   fetchFormsList,
   selectAllItems,
-  toggleSelectItem
+  toggleSelectItem,
+  setPageSize,
+  next,
+  previous
 } from 'redux/modules/formsList';
 import { goTo } from 'redux/modules/router.js';
 
@@ -41,7 +44,10 @@ const mapActionCreators = {
   fetchFormsList,
   selectAllItems,
   toggleSelectItem,
-  goTo
+  goTo,
+  setPageSize,
+  next,
+  previous
 };
 
 export default connect(mapStateToProps, mapActionCreators)(FormsListView);

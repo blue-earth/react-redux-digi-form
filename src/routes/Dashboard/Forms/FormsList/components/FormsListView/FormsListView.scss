@@ -5,7 +5,6 @@ $slt-header-text-color:     #1C4468;
 $slt-border-color:          rgba(204, 204, 204, .3);
 
 .formsList {
-  padding: 10px;
   height: 100%;
 }
 .formsListInner {
@@ -20,24 +19,38 @@ $slt-border-color:          rgba(204, 204, 204, .3);
   text-align: right;
   margin-bottom: 3px;
 }
-.actionsButton {
-  background-color: $slt-header-bg-color;
-}
 
 .columnID {
-  width: 4%;
+  width: auto;
 }
 .columnName {
-  width: 20%;
+  width: auto;
 }
 .columnCreatedBy {
-  width: 10%;
+  width: auto;
   text-align: center;
 }
 .columnCreated {
-  width: 10%;
+  width: auto;
 }
 .columnStatus {
-  width: 8%;
+  width: auto;
   text-align: center;
+}
+.columnActionsList{
+  width: auto;
+  text-align: right;
+}
+.columnActions {
+  width: 60px;
+  border-left: 1px solid $table-line-color;
+}
+
+.widgetPanel {
+  width: 100%;
+  border: 1px solid $table-border-color;
+  @include border-radius(5px);
+  background-color: $white;
+  float: left;
+  font-size: 12px;
 }
