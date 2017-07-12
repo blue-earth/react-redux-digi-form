@@ -21,20 +21,6 @@ import classNames from 'classnames';
 
 export { DateCell };
 
-export class AuthorHeaderCell extends DropdownHeaderCell {
-
-  get menuItems() {
-    return [
-      { key: '0-9', text: '0 - 9' },
-      { key: 'A-H', text: 'A - H' },
-      { key: 'I-P', text: 'I - P' },
-      { key: 'Q-Z', text: 'Q - Z' },
-      { key: 'other', text: 'Other' }
-    ];
-  }
-
-}
-
 export class ProgressHeaderCell extends DropdownHeaderCell {
 
   get menuItems() {
@@ -53,8 +39,11 @@ export class StatusHeaderCell extends DropdownHeaderCell {
   get menuItems() {
     return [
       { key: 'abandoned', text: 'Abandoned' },
-      { key: 'incomplete', text: 'Incomplete' },
-      { key: 'completed', text: 'Completed' }
+      { key: 'unopen', text: 'Unopen' },
+      { key: 'opened', text: 'Opened' },
+      { key: 'saved', text: 'Saved' },
+      { key: 'submitted', text: 'Submitted' },
+      { key: 'autosave', text: 'Auto Save' }
     ];
   }
 

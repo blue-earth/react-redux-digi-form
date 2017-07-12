@@ -63,6 +63,7 @@ $button-lg-size: 64px;
 }
 
 .formButton {
+  margin-right: 10px;
   @include background-gradient($select-button-start-color, $select-button-end-color);
   color: $button-default-color;
   font-size: 14px;
