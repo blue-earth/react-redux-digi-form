@@ -157,7 +157,7 @@ class FormInteractiveView extends Component {
 
   renderCurrentQuestion() {
     const { currentQuestion, verificationStatus, changeCurrentState,
-      answers, prefills, storeAnswer, goToNextQuestion, isVerifying, showModal } = this.props;
+      answers, prefills, storeAnswer, isVerifying, showModal } = this.props;
     const { questions } = this.state;
     const question = findItemById(questions, currentQuestion.id);
     const context = getContextFromAnswer(answers);
@@ -170,25 +170,22 @@ class FormInteractiveView extends Component {
       if (typeof prefill === 'object') optionals['value'] = prefill.value;
     }
     const finalQuestion = _.merge({}, question, {
-      questionId: question.id,
       questionInstruction: this.compileTemplate(question.questionInstruction, context),
       questionDescription: this.compileTemplate(question.questionDescription, context)
     });
-    delete finalQuestion['id']; // Avoid passing id to props.
+    const filteredVerifications = _.filter(verificationStatus, { id: question.id });
     return (
       <div className={styles.currentQuestionWrapper}>
         <QuestionInteractive
-          {...finalQuestion}
+          question={finalQuestion}
           key={question.id}
           inputState={currentQuestion.inputState}
-          verificationStatus={verificationStatus}
+          verifications={filteredVerifications}
           changeCurrentState={changeCurrentState}
           storeAnswer={storeAnswer}
-          goToNextQuestion={goToNextQuestion}
           handleEnter={this.handleEnter}
           isVerifying={isVerifying}
           showModal={showModal}
-          status="current"
           {...optionals}
         />
       </div>

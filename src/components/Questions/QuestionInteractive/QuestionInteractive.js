@@ -2,24 +2,13 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import _ from 'lodash';
 import QuestionInstruction from '../QuestionInstruction';
-import FloatTextInput from '../../QuestionInputs/FloatTextInput';
-import DropdownInput from '../../QuestionInputs/Dropdown';
-import FieldError from '../../QuestionInputs/FieldError';
-
-import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
-import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
-import YesNoChoice from '../../QuestionInputs/YesNoChoice/YesNoChoice';
-import Statement from '../../QuestionInputs/Statement/Statement';
-import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
-import DateInput from '../../QuestionInputs/DateInput/DateInput';
-import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
-import Signature from '../../QuestionInputs/Signature/Signature';
+import InteractiveInput from '../InteractiveInput';
+import styles from './QuestionInteractive.scss';
 import validateField, {
   valueIsValid
 } from 'helpers/validationHelper';
-import styles from './QuestionInteractive.scss';
-import _ from 'lodash';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -30,9 +19,9 @@ class QuestionInteractive extends Component {
   static propTypes = {
 
     /*
-     * questionId: Current Question ID.
+     * question: Current Question.
      */
-    questionId: PropTypes.number,
+    question: PropTypes.object,
 
     /*
      * value: Question answer value
@@ -58,29 +47,9 @@ class QuestionInteractive extends Component {
     changeCurrentState: PropTypes.func.isRequired,
 
     /*
-     * questionInstruction: Question Instruction
+     * verifications: Array of verifications status for the current question, ex. EmondoEmailService
      */
-    questionInstruction: PropTypes.string,
-
-    /*
-     * questionDescription: Question Description
-     */
-    questionDescription: PropTypes.string,
-
-    /*
-     * type: Question type.
-     */
-    type: PropTypes.string,
-
-    /*
-     * validations: Validations required for the question, it is a part of form response.
-     */
-    validations: PropTypes.array,
-
-    /*
-     * verificationStatus: Redux state that holds the status of verification, ex. EmondoEmailService
-     */
-    verificationStatus: PropTypes.array,
+    verifications: PropTypes.array,
 
     /*
      * isVerifying: Redux state that holds the status whether verification is in prgress
@@ -93,11 +62,6 @@ class QuestionInteractive extends Component {
     storeAnswer: PropTypes.func.isRequired,
 
     /*
-     * goToNextQuestion: Redux action to move to next question when the current answer is qualified.
-     */
-    goToNextQuestion: PropTypes.func.isRequired,
-
-    /*
      * handleEnter: Redux action to handle Enter key or button press, it also handles verification.
      */
     handleEnter: PropTypes.func.isRequired,
@@ -105,83 +69,11 @@ class QuestionInteractive extends Component {
     /*
      * showModal: redux-modal action to show modal
      */
-    showModal: PropTypes.func.isRequired,
-
-    /*
-     * allowMultiple: Optional for Multiple Choice, Dropdown
-     */
-    allowMultiple: PropTypes.bool
+    showModal: PropTypes.func.isRequired
   };
-
-  static contextTypes = {
-    primaryColour: PropTypes.string
-  };
-
-  static defaultProps = {
-    validations: [],
-    isVerifying: false
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      /*
-       * ChildComponent: stores the Child Input component class throughout the component life cycle.
-       */
-      ChildComponent: null
-    };
-  };
-
-  componentWillMount() {
-    this._determineChildComponent();
-  }
-
-  _determineChildComponent() {
-    const { type } = this.props;
-    var ChildComponent = null;
-    switch (type) {
-      case 'ShortTextField':
-      case 'EmailField':
-      case 'NumberField':
-        ChildComponent = FloatTextInput;
-        break;
-      case 'MultipleChoice':
-        ChildComponent = MultipleChoice;
-        break;
-      case 'YesNoChoiceField':
-        ChildComponent = YesNoChoice;
-        break;
-      case 'LongTextField':
-        ChildComponent = LongTextInput;
-        break;
-      case 'StatementField':
-        ChildComponent = Statement;
-        break;
-      case 'PhoneNumberField':
-        ChildComponent = PhoneNumberInput;
-        break;
-      case 'DropdownField':
-        ChildComponent = DropdownInput;
-        break;
-      case 'DateField':
-        ChildComponent = DateInput;
-        break;
-      case 'AddressField':
-        ChildComponent = AddressInput;
-        break;
-      case 'SignatureField':
-        ChildComponent = Signature;
-        break;
-      default:
-        return false;
-    }
-    this.setState({
-      ChildComponent
-    });
-  }
 
   handleChange = (value) => {
-    const { changeCurrentState, storeAnswer, questionId, validations } = this.props;
+    const { changeCurrentState, storeAnswer, question: { id, validations } } = this.props;
 
     changeCurrentState({
       answerValue: value,
@@ -190,58 +82,49 @@ class QuestionInteractive extends Component {
 
     if (valueIsValid(value, validations)) {
       storeAnswer({
-        id: questionId,
-        value: value
+        id,
+        value
       });
     }
-  }
-
-  hasError() {
-    const { validations, verificationStatus, value, questionId } = this.props;
-    const failedValidations = _.filter(validations, function (validation) {
-      return !validateField(validation, value);
-    });
-    const failedVerifications = _.filter(verificationStatus, {
-      id: questionId,
-      status: false
-    });
-    return (this.shouldShowValidation() && failedValidations.length > 0) || failedVerifications.length > 0;
   }
 
   shouldShowValidation() {
     return this.props.inputState === 'enter';
   }
 
+  get hasError() {
+    const { verifications, value, question: { validations } } = this.props;
+    const failedValidations = _.filter(validations, function (validation) {
+      return !validateField(validation, value);
+    });
+    const failedVerifications = _.filter(verifications, { status: false });
+    return (this.shouldShowValidation() && failedValidations.length > 0) || failedVerifications.length > 0;
+  }
+
   renderQuestionDisplay() {
-    const { questionInstruction, questionDescription } = this.props;
+    const { question } = this.props;
 
     return (
       <QuestionInstruction
-        instruction={questionInstruction}
-        description={questionDescription}
+        instruction={question.questionInstruction}
+        description={question.questionDescription}
       />
     );
   }
 
   renderInteractiveInput() {
-    const { isVerifying, handleEnter, value } = this.props;
-    const { ChildComponent } = this.state;
-    if (ChildComponent === null) return false;
-
-    var extraProps = _.merge({
-      value,
-      isDisabled: isVerifying,
-      autoFocus: true,
-      onEnterKey: handleEnter,
-      onChange: this.handleChange,
-      hasError: this.hasError(),
-      primaryColour: this.context.primaryColour,
-      errorMessage: <FieldError {...this.props} />
-    }, this.state.extraProps);
+    const { handleEnter, isVerifying, question, showModal, value, verifications } = this.props;
 
     return (
       <div className={styles.inputWrapper}>
-        <ChildComponent {...this.props} {...extraProps} />
+        <InteractiveInput {..._.omit(question, ['id'])} // Avoid passing id to props.
+          isDisabled={isVerifying}
+          value={value}
+          verifications={verifications}
+          hasError={this.hasError}
+          onChange={this.handleChange}
+          onEnterKey={handleEnter}
+          showModal={showModal} />
       </div>
     );
   }
