@@ -3,18 +3,22 @@
 
 :global {
   .dropdownWrapper {
-    height: 55px;
+    height: 64px;
     overflow-y: hidden;
     outline: none !important;
     &:hover, &:focus, &:active {
       .Dropdown-control {
         background-color: darken($dropdown-bg-color, 2%);
       }
+      .Dropdown-arrow:after {
+        border-top-color: darken($dropdown-bg-color, 2%);
+      }
     }
   }
   .Dropdown-root {
     position: absolute;
-    font-size: 20px;  /* eMonDoHaCk */
+    font-size: 23px;  /* eMonDoHaCk */
+    font-family: "Open Sans"; /* eMonDoHaCk */
     width: 100%; /* eMonDoHaCk */
     @include media('>sm') { /* eMonDoHaCk */
       width: 500px;
@@ -24,6 +28,7 @@
     }
     cursor: pointer;  /* eMonDoHaCk */
   }
+
   .Dropdown-control {
     position: relative;
     overflow: hidden;
@@ -36,7 +41,8 @@
     color: $text-dark-color; /* eMonDoHaCk */
     cursor: pointer;        /* eMonDoHaCk */
     outline: none;
-    padding: 0.6em 52px 0.6em 1em; /* eMonDoHaCk */
+    line-height: 1em; /* eMonDoHaCk */
+    padding: 0.8em 3em 0.8em 1em; /* eMonDoHaCk */
     @include transition(background-color .1s);
     @include input-box-shadow;  /* eMonDoHaCk */
   }
@@ -53,23 +59,33 @@
 
   .Dropdown-arrow {
     /* eMonDoHaCk */
-    border-color: $dropdown-caret-color transparent transparent; 
-    border-style: solid;
-    border-width: 5px 5px 0;
-    content: ' ';
-    display: block;
-    height: 0;
+    
     position: absolute;
-    right: 1em;
+    right: 1.5em;
     @include vcenter; /* eMonDoHaCk */
     width: 0
   }
-
-  .is-open .Dropdown-arrow {
+  .Dropdown-arrow:before {
     /* eMonDoHaCk */
-    border-color: transparent transparent $dropdown-caret-color;
-    border-width: 0 5px 5px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-top: 6px solid $dropdown-caret-color;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
   }
+  .Dropdown-arrow:after {
+    /* eMonDoHaCk */
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0;
+    border-top: 4px solid $dropdown-bg-color;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+  }
+
   /* eMonDoHaCk */
   .is-open .Dropdown-control {
     border-bottom-left-radius: 0;
@@ -84,7 +100,7 @@
     background-color: white;
     border: 1px solid $dropdown-border-color; /* eMonDoHaCk */
     /* eMonDoHaCk */
-    box-shadow: 0px 4px 4px -2px rgba(196,204,210,1); 
+    box-shadow: 0 2px 2px -1px #b4bdc6; /* eMonDoHaCk */
     box-sizing: border-box;
     margin-top: -1px;
     max-height: 215px; /* eMonDoHaCk */
@@ -110,9 +126,10 @@
     color: $text-dark-color; /* eMonDoHaCk */
     cursor: pointer;
     display: block;
-    padding: 0.6em 1em; /* eMonDoHaCk */
-    border-bottom: 1px solid #ebebeb; /* eMonDoHaCk */
-    min-height: 2em; /* eMonDoHaCk */
+    line-height: 1em;     /* eMonDoHaCk */
+    padding: 0.65em 1em;  /* eMonDoHaCk */
+    border-bottom: 1px solid $dropdown-option-border-color; /* eMonDoHaCk */
+    min-height: 2.3em; /* eMonDoHaCk */
   }
 
   .Dropdown-option:last-child {
