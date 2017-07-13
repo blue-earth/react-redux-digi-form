@@ -48,8 +48,8 @@ export default class AnswerValue extends Component {
   renderAddressField(value) {
     const addressArray = [];
     if (value) {
+      value.unit_number && addressArray.push(value.unit_number);
       value.address_line1 && addressArray.push(value.address_line1);
-      value.address_line2 && addressArray.push(value.address_line2);
       value.suburb && addressArray.push(value.suburb);
       value.state && addressArray.push(value.state);
       value.postcode && addressArray.push(value.postcode);

@@ -18,13 +18,15 @@ class FloatTextInput extends Component {
     name: PropTypes.string,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
     onEnterKey: PropTypes.func,
     primaryColour: PropTypes.string,
     autoFocus: PropTypes.bool,
     hasError: PropTypes.bool,
     errorMessage: PropTypes.element,
     extraClass: PropTypes.string,
-    type: PropTypes.string
+    type: PropTypes.string,
+    refName: PropTypes.string
   }
   static defaultProps = {
     hasError: false,
@@ -60,6 +62,11 @@ class FloatTextInput extends Component {
       hasError: props.hasError,
       savedValue: props.value
     });
+    if (!this.state.active) {
+      this.setState({
+        filled: props.value && props.value.length > 0
+      });
+    }
   }
   inputType(type) {
     switch (type) {
@@ -90,6 +97,10 @@ class FloatTextInput extends Component {
     this.setState({
       active: true
     });
+    const { onFocus } = this.props;
+    if (typeof onFocus === 'function') {
+      onFocus(event);
+    }
   }
   handleBlur = (event) => {
     if (this.state.savedValue.length === 0) {
@@ -149,12 +160,13 @@ class FloatTextInput extends Component {
             hide: filled && placeholder.length > 0
           })}
           style={this.activeColour}>
-          {placeholder || label}
+          { label || placeholder }
         </label>
         <input
           id={controlId}
           type={this.inputType(type)}
           value={savedValue}
+          ref="input"
           className={cx('textInput', {
             isErrorInput: hasError,
             filledInput: active || filled
@@ -165,6 +177,7 @@ class FloatTextInput extends Component {
           onKeyDown={this.handleKeyDown}
           style={this.activeBorderColour}
           autoFocus={autoFocus}
+          placeholder=""
         />
         <OverlayTrigger ref="errorMessage" placement="bottom" overlay={tooltip} trigger={['hover', 'focus']}>
           <div className={cx('errorIconWrapper')}>
