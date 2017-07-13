@@ -23,6 +23,7 @@ class FloatTextInput extends Component {
     primaryColour: PropTypes.string,
     autoFocus: PropTypes.bool,
     hasError: PropTypes.bool,
+    isDisabled: PropTypes.bool,
     errorMessage: PropTypes.element,
     extraClass: PropTypes.string,
     type: PropTypes.string,
@@ -30,6 +31,7 @@ class FloatTextInput extends Component {
   }
   static defaultProps = {
     hasError: false,
+    isDisabled: false,
     placeholder: '',
     type: 'text',
     value: ''
@@ -141,7 +143,7 @@ class FloatTextInput extends Component {
     return null;
   }
   render() {
-    const { placeholder, label, name, errorMessage, autoFocus, extraClass, type } = this.props;
+    const { placeholder, label, name, errorMessage, autoFocus, extraClass, type, isDisabled } = this.props;
     let { filled, active, savedValue, hasError, inputId } = this.state;
     const cx = classNames.bind(styles); // eslint-disable-line
     const controlId = name || `floatTextInput_${inputId}`;
@@ -169,8 +171,10 @@ class FloatTextInput extends Component {
           ref="input"
           className={cx('textInput', {
             isErrorInput: hasError,
-            filledInput: active || filled
+            filledInput: active || filled,
+            disabled: isDisabled
           })}
+          disabled={isDisabled}
           onChange={this.handleChange}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
