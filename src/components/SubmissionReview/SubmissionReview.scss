@@ -68,7 +68,7 @@ $submission-question-text-color:  #b8bbb8;
 }
 
 .questionListItem {
-  margin-bottom: 15px;
+  margin: 15px 0;
   cursor: pointer;
   &:hover {
     color: $frontend-text-color1;

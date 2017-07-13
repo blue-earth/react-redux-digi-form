@@ -205,7 +205,7 @@ class FormInteractive extends Component {
     if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION &&
       props.lastFormSubmitStatus.result) {
       if (props.shouldShowFinalSubmit) {
-        this.context.router.push(`/forms/${this.props.formId}/${this.props.sessionId}/completion`);
+        this.context.router.push(`/forms/${this.props.formId}/${this.props.sessionId}/completed`);
       } else {
         showModal('saveForLaterModal');
       }
