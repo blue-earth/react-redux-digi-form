@@ -1,6 +1,15 @@
+@import './mixins';
+@import './variables';
+
 .instruction {
   font-size: 16px;
   max-height: 440px;
   overflow: auto;
-  padding-right: 40px;
+  margin-right: 40px;
+  border: 1px solid $grey;
+  color: $grey;
+  @include border-radius(4px);
+  background-color: $white;
+  padding: 30px;
+  box-sizing: border-box;
 }
