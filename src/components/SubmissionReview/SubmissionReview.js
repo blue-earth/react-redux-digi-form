@@ -11,6 +11,7 @@ import {
   groupFormQuestions
 } from 'helpers/formInteractiveHelper';
 import AnswerValue from 'components/AnswerValue';
+import EditAnswerModal from './EditAnswerModal';
 import EditButton from './EditButton';
 import styles from './SubmissionReview.scss';
 
@@ -61,7 +62,7 @@ export default class SubmissionReview extends Component {
   }
 
   renderGroupQuestions(groupQuestions) {
-    const { answers } = this.props;
+    const { answers, showModal } = this.props;
     return (
       <ol className={styles.questionList}>
         {
@@ -78,7 +79,9 @@ export default class SubmissionReview extends Component {
                     {answer && <AnswerValue value={answer.value} question={question} />}
                   </div>
                   <div className={styles.editButtonWrapper}>
-                    <EditButton />
+                    <EditButton onClick={function () {
+                      showModal('editAnswerModal', { question: finalQuestion, value: answer.value });
+                    }} />
                   </div>
                 </div>
               </li>
@@ -110,6 +113,7 @@ export default class SubmissionReview extends Component {
             );
           })
         }
+        <EditAnswerModal />
       </div>
     );
   }
