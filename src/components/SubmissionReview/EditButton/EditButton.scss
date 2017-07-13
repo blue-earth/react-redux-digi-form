@@ -1,0 +1,18 @@
+@import './mixins';
+@import './variables';
+
+.editButton {
+  height: 27px;
+  font-size: 10px;
+  line-height: 11px;
+  padding: 6px 10px;
+  letter-spacing: 1px;
+  @include transition(all .1s);
+  outline: none !important;
+  &:hover {
+    color: white;
+  }
+  &, &:active, &:focus {
+    background-color: transparent;
+  }
+}

@@ -15,10 +15,6 @@ class FieldError extends Component {
 
   static propTypes = {
     /*
-     * questionId: Current question id.
-     */
-    questionId: PropTypes.number.isRequired,
-    /*
      * value: Value to validate
      */
     value: PropTypes.oneOfType([
@@ -31,9 +27,9 @@ class FieldError extends Component {
      */
     validations: PropTypes.array.isRequired,
     /*
-     * verificationStatus: verification status of the question.
+     * verifications: verification status of the question.
      */
-    verificationStatus: PropTypes.array.isRequired
+    verifications: PropTypes.array.isRequired
   };
 
   getValidationErrors() {
@@ -50,11 +46,8 @@ class FieldError extends Component {
   }
 
   getVerificationErrors() {
-    const { verificationStatus, questionId } = this.props;
-    const failedVerifications = _.filter(verificationStatus, {
-      id: questionId,
-      status: false
-    });
+    const { verifications } = this.props;
+    const failedVerifications = _.filter(verifications, { status: false });
     return failedVerifications.map((verification, index) => {
       return (
         <Verifier type={verification.type} status={verification.status} key={verification.type} />
