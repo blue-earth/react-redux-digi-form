@@ -30,7 +30,7 @@ class LongTextInput extends Component {
   static defaultProps = {
     placeholderText: '',
     fullWidth: false,
-    rows: 4,
+    rows: 6,
     cols: 50
   };
 
@@ -99,6 +99,7 @@ class LongTextInput extends Component {
 
     return (
       <textarea
+        placeholder={props.placeholderText || 'Write here...'}
         className={styles.textInput}
         rows={props.rows}
         cols={props.cols}
