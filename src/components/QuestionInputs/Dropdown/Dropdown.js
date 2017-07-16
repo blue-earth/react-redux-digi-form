@@ -15,10 +15,11 @@ class Dropdown extends Component {
     placeholder: PropTypes.string,
     choices: PropTypes.array.isRequired,
     onChange: PropTypes.func,
-    includeBlank: PropTypes.boolean, // TODO: check includeBlank is necessary.
+    includeBlank: PropTypes.bool, // TODO: check includeBlank is necessary.
     onEnterKey: PropTypes.func
   };
   static defaultProps = {
+    placeholder: 'Select option',
     isDisabled: false,
     isReadOnly: false,
     choices: [],
