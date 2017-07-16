@@ -3,6 +3,8 @@
 
 .textInputWrap {
   font-size: 24px;
+  font-family: 'Lato';
+  font-weight: 400;
   line-height: 1.5em;
   color: $float-input-color;
   position: relative;
@@ -12,7 +14,7 @@
   width: 100%;
   box-sizing: border-box;
   color: $float-input-color;
-  font-size: 1em;
+  font-size: 24px;
   line-height: 1.2em;
   padding: 0.5em 1em;
   line-height: 1.5em;
@@ -24,16 +26,20 @@
     outline: none;
   }
 }
+.textInput.disabled {
+  cursor: not-allowed;
+  color: $float-input-color;
+}
 .textInputLabel {
   position: absolute;
   top: 1.3em;
   left: 1em;
   font-size: 1em;
-  font-weight: 400;
   padding: 0;
   line-height: 1;
   background-color: $white;
   transition: all .2s ease-in-out;
+  cursor: text;
 }
 .filled {
   margin-left: -0.5em;
@@ -42,6 +48,7 @@
   left: 2em;
   font-size: 0.5em;
   line-height: 1em;
+  cursor: default;
 }
 .filled.hasError {
   color: $red !important;

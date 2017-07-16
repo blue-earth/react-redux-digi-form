@@ -7,6 +7,7 @@ import {
   Col
 } from 'react-bootstrap';
 import { loadScript } from 'helpers/pureFunctions';
+import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import styles from './AddressInput.scss';
 
 class AddressInput extends Component {
@@ -35,8 +36,8 @@ class AddressInput extends Component {
   static defaultProps = {
     isDisabled: false,
     value: {
+      unit_number: '',
       address_line1: '',
-      address_line2: '',
       suburb: '',
       state: '',
       postcode: ''
@@ -77,7 +78,7 @@ class AddressInput extends Component {
     // Create the autocomplete object, restricting the search to geographical
     // location types.
     var autocomplete = new google.maps.places.Autocomplete(
-        /** @type {!HTMLInputElement} */this.refs.addressLine1Input,
+        /** @type {!HTMLInputElement} */this.refs.addressLine1Input.refs.input,
         {types: ['geocode']});
 
     // When the user selects an address from the dropdown, populate the address
@@ -88,6 +89,11 @@ class AddressInput extends Component {
 
   fillInAddress = () => {
     const componentForm = {
+      subpremise: {
+        fieldName: 'short_name',
+        ref: 'unitNumberInput',
+        for: 'unit_number'
+      },
       street_number: {
         fieldName: 'short_name',
         ref: 'addressLine1Input',
@@ -108,11 +114,6 @@ class AddressInput extends Component {
         ref: 'stateInput',
         for: 'state'
       },
-      /*
-      country: {
-        fieldName: 'long_name',
-        ref: ''
-      },*/
       postal_code: {
         fieldName: 'short_name',
         ref: 'postcodeInput',
@@ -121,10 +122,15 @@ class AddressInput extends Component {
     };
     const { autocomplete } = this.state;
     var place = autocomplete.getPlace();
-
+    if (!place.place_id) {
+      return this.setState({
+        address_line1: place.name
+      });
+    }
     var newValue = {};
     // Get each component of the address from the place details
     // and fill the corresponding field on the form.
+
     for (var i = 0; i < place.address_components.length; i++) {
       var addressType = place.address_components[i].types[0];
       if (componentForm[addressType]) {
@@ -141,13 +147,13 @@ class AddressInput extends Component {
       }
       newValue['address_line2'] = '';
     }
-
-    for (var prop in componentForm) {
-      var component = componentForm[prop];
-      this.refs[component.ref].value = newValue[component.for] ? newValue[component.for] : '';
+    let newState = {};
+    for (let key of Object.keys(componentForm)) {
+      const component = componentForm[key];
+      newState[component.for] = newValue[component.for] || '';
     }
-
-    this.handleChange();
+    this.setState(newState);
+    this.props.onChange(newState);
   }
 
   // Bias the autocomplete object to the user's geographical location,
@@ -200,11 +206,11 @@ class AddressInput extends Component {
     const { onChange } = this.props;
     if (typeof onChange === 'function') {
       var newValue = {
-        address_line1: this.refs.addressLine1Input.value,
-        address_line2: this.refs.addressLine2Input.value,
-        suburb: this.refs.suburbInput.value,
-        state: this.refs.stateInput.value,
-        postcode: this.refs.postcodeInput.value
+        address_line1: this.refs.addressLine1Input.refs.input.value,
+        unit_number: this.refs.unitNumberInput.refs.input.value,
+        suburb: this.refs.suburbInput.refs.input.value,
+        state: this.refs.stateInput.refs.input.value,
+        postcode: this.refs.postcodeInput.refs.input.value
       };
       this.setState(newValue);
       onChange(newValue);
@@ -240,68 +246,66 @@ class AddressInput extends Component {
 
     return (
       <div className={styles.addressWrapper}>
-        <Row className={styles.addressRow}>
-          <Col sm={6} className={styles.addressCol}>
-            <input className={`${styles.addressInput} ${styles.addressLine1}`}
+        <Row>
+          <Col md={4} sm={6}>
+            <FloatTextInput
+              label="Unit number"
+              onChange={this.handleChange}
+              onBlur={onBlur}
+              value={this.state.unit_number}
+              name="unitNumberInput"
+              primaryColour={primaryColour}
+              ref="unitNumberInput"
+            />
+          </Col>
+          <Col md={8} sm={12}>
+            <FloatTextInput
+              label="Address Line 1"
+              autoFocus={autoFocus}
               onChange={this.handleChange}
               onFocus={this.handleFocusAddressLine1}
               onBlur={onBlur}
-              autoFocus={autoFocus}
-              placeholder="Address Line 1"
               value={this.state.address_line1}
-              data-name="addressLine1Input"
+              name="addressLine1Input"
+              primaryColour={primaryColour}
               ref="addressLine1Input"
-              {...optionals}
-            />
+              refName="addressLine1Input" />
           </Col>
-          <Col sm={6} className={styles.addressCol}>
-            <input className={`${styles.addressInput} ${styles.addressLine2}`}
+        </Row>
+        <Row>
+          <Col sm={6}>
+            <FloatTextInput
+              label="City"
               onChange={this.handleChange}
               onFocus={onFocus}
               onBlur={onBlur}
-              placeholder="Address Line 2"
-              value={this.state.address_line2}
-              data-name="addressLine2Input"
-              ref="addressLine2Input"
-              {...optionals}
+              value={suburb}
+              name="suburbInput"
+              ref="suburbInput"
+            />
+          </Col>
+          <Col sm={6}>
+            <FloatTextInput
+              label="State"
+              onChange={this.handleChange}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              value={state}
+              name="stateInput"
+              ref="stateInput"
             />
           </Col>
         </Row>
-        <Row className={styles.addressRow}>
-          <Col sm={6} className={styles.addressCol}>
-            <input className={`${styles.addressInput} ${styles.suburb}`}
+        <Row>
+          <Col md={4} sm={6}>
+            <FloatTextInput
+              label="Postal Code"
               onChange={this.handleChange}
-              onFocus={onFocus}
               onBlur={onBlur}
-              placeholder="Suburb"
-              value={suburb}
-              data-name="suburbInput"
-              ref="suburbInput"
-              {...optionals}
-            />
-          </Col>
-          <Col sm={3} className={styles.addressCol}>
-            <input className={`${styles.addressInput} ${styles.state}`}
-              onChange={this.handleChange}
-              onFocus={onFocus}
-              onBlur={onBlur}
-              placeholder="State"
-              value={state}
-              data-name="stateInput"
-              ref="stateInput"
-              {...optionals}
-            />
-          </Col>
-          <Col sm={3} className={styles.addressCol}>
-            <input className={`${styles.addressInput} ${styles.postcode}`}
-              onChange={this.handleChange}
-              onFocus={onFocus}
-              onBlur={onBlur}
-              placeholder="Postcode"
               value={postcode}
-              data-name="postcodeInput"
+              name="postcodeInput"
+              primaryColour={primaryColour}
               ref="postcodeInput"
-              {...optionals}
             />
           </Col>
         </Row>

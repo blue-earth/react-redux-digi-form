@@ -18,16 +18,21 @@ class FloatTextInput extends Component {
     name: PropTypes.string,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
     onEnterKey: PropTypes.func,
     primaryColour: PropTypes.string,
     autoFocus: PropTypes.bool,
     hasError: PropTypes.bool,
+    isDisabled: PropTypes.bool,
     errorMessage: PropTypes.element,
     extraClass: PropTypes.string,
-    type: PropTypes.string
+    type: PropTypes.string,
+    refName: PropTypes.string
   }
   static defaultProps = {
+    primaryColour: '#3893d0',
     hasError: false,
+    isDisabled: false,
     placeholder: '',
     type: 'text',
     value: ''
@@ -60,6 +65,11 @@ class FloatTextInput extends Component {
       hasError: props.hasError,
       savedValue: props.value
     });
+    if (!this.state.active) {
+      this.setState({
+        filled: props.value && props.value.length > 0
+      });
+    }
   }
   inputType(type) {
     switch (type) {
@@ -90,6 +100,10 @@ class FloatTextInput extends Component {
     this.setState({
       active: true
     });
+    const { onFocus } = this.props;
+    if (typeof onFocus === 'function') {
+      onFocus(event);
+    }
   }
   handleBlur = (event) => {
     if (this.state.savedValue.length === 0) {
@@ -130,7 +144,7 @@ class FloatTextInput extends Component {
     return null;
   }
   render() {
-    const { placeholder, label, name, errorMessage, autoFocus, extraClass, type } = this.props;
+    const { placeholder, label, name, errorMessage, autoFocus, extraClass, type, isDisabled } = this.props;
     let { filled, active, savedValue, hasError, inputId } = this.state;
     const cx = classNames.bind(styles); // eslint-disable-line
     const controlId = name || `floatTextInput_${inputId}`;
@@ -149,22 +163,26 @@ class FloatTextInput extends Component {
             hide: filled && placeholder.length > 0
           })}
           style={this.activeColour}>
-          {placeholder || label}
+          { label || placeholder }
         </label>
         <input
           id={controlId}
           type={this.inputType(type)}
           value={savedValue}
+          ref="input"
           className={cx('textInput', {
             isErrorInput: hasError,
-            filledInput: active || filled
+            filledInput: active || filled,
+            disabled: isDisabled
           })}
+          disabled={isDisabled}
           onChange={this.handleChange}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onKeyDown={this.handleKeyDown}
           style={this.activeBorderColour}
           autoFocus={autoFocus}
+          placeholder=""
         />
         <OverlayTrigger ref="errorMessage" placement="bottom" overlay={tooltip} trigger={['hover', 'focus']}>
           <div className={cx('errorIconWrapper')}>
