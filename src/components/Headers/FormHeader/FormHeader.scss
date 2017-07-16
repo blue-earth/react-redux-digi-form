@@ -34,6 +34,8 @@ $mobile-menu-bg-color:    #f4f5f8;
   flex: 1;
   letter-spacing: 1px;
   color: $header-text-color;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 .buttonWrapper {
   margin-left: 15px;
