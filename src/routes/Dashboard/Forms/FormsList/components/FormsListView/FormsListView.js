@@ -4,7 +4,8 @@ import React, {
 } from 'react';
 import {
   DateCell,
-  ActionsHeaderCell,
+  SelectionHeaderCell,
+  SelectionCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
 import {
@@ -14,8 +15,9 @@ import {
 import { formsUrl } from 'helpers/urlHelper';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
-
+import FormsFilter from '../FormsFilter';
 import styles from './FormsListView.scss';
+import classNames from 'classnames';
 
 class FormsListView extends Component {
   static propTypes = {
@@ -76,6 +78,10 @@ class FormsListView extends Component {
      * toggleSelectItem: Redux action to select or deselect item by id.
      */
     toggleSelectItem: PropTypes.func.isRequired,
+
+    setPageSize: PropTypes.func.isRequired,
+    next: PropTypes.func.isRequired,
+    previous: PropTypes.func.isRequired,
 
     /*
      * selectedItems: Redux state in array to hold selected item ids.
@@ -138,15 +144,25 @@ class FormsListView extends Component {
         visible: false
       },
       {
-        columnName: 'actions',
+        columnName: 'actionList',
         order: 6,
         locked: true,
         sortable: false,
         displayName: '',
-        customHeaderComponent: ActionsHeaderCell,
         customComponent: ActionsCell,
+        cssClassName: styles.columnActionsList
+      },
+      {
+        columnName: 'actions',
+        order: 7,
+        locked: true,
+        sortable: false,
+        displayName: '',
+        customHeaderComponent: SelectionHeaderCell,
+        customComponent: SelectionCell,
         selectedItems,
         toggleSelectItem,
+        cssClassName: styles.columnActions,
         customHeaderComponentProps: {
           selectAllItems,
           isAllSelected: forms.length === selectedItems.length
@@ -202,12 +218,31 @@ class FormsListView extends Component {
   }
 
   render() {
+    const {
+      page,
+      pageSize,
+      totalCount,
+      setPageSize,
+      selectedItems,
+      next,
+      previous
+    } = this.props;
     return (
       <div className={styles.formsList}>
-        <div className={styles.formsListInner}>
-          {this.renderActions()}
+        <div className={classNames(styles.widgetPanel, styles.formsListInner)}>
+          <FormsFilter
+            setPageSize={setPageSize}
+            pageSize={pageSize}
+            formAction={this.formAction}
+            selectedItems={selectedItems}
+          />
           {this.renderFormsList()}
         </div>
+        <Pagination
+          currentPage={page}
+          maxPage={Math.ceil(totalCount / pageSize)}
+          previous={previous}
+          next={next} />
       </div>
     );
   }
