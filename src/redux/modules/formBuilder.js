@@ -169,7 +169,7 @@ export const submitForm = () => {
 };
 
 // ------------------------------------
-// Action: processSubmitAnswer
+// Action: processSubmitForm
 // ------------------------------------
 export const processSubmitForm = (formData) => {
   var body = {

@@ -21,15 +21,15 @@ const getComponent = (nextState, cb) => {
 
 const routes = [
   {
-    path: ':id',
+    path: ':formIdSlug',
     getComponent
   },
   {
-    path: ':id/:sessionId',
+    path: ':formIdSlug/:sessionId',
     getComponent
   },
   {
-    path: ':id/:sessionId/:status', // status: `completed` | `review`
+    path: ':formIdSlug/:sessionId/:status', // status: `completed` | `review`
     getComponent
   }
 ];

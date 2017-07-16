@@ -59,10 +59,6 @@ export const INIT_FORM_STATE = {
   isVerifying: false, // indicates the verifying request is being processed.
   isModified: false, // indicates the form answer modified after submission.
   lastUpdated: Date.now(), // last form-questions received time.
-  lastFormSubmitStatus: { // holds the status of last form submit response.
-    // result: true / false, form submit result.
-    // requestAction: FORM_USER_SUBMISSION / FORM_AUTOSAVE
-  },
   form: {
     questions: [],
     logics: []
@@ -87,8 +83,8 @@ export const INIT_FORM_STATE = {
 // ------------------------------------
 // Action: fetchForm
 // ------------------------------------
-export const fetchForm = (id, accessCode) => {
-  var apiURL = `${API_URL}/form_document/api/form_retrieval/${id}/`;
+export const fetchForm = (formIdSlug, accessCode) => {
+  var apiURL = `${API_URL}/form_document/api/form_retrieval/${formIdSlug}/`;
   if (accessCode.length > 0) {
     apiURL += `?access_code=${accessCode}`;
   }
@@ -96,7 +92,7 @@ export const fetchForm = (id, accessCode) => {
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(receiveForm(_.merge(value, {id})));
+      dispatch(receiveForm(value));
       dispatch(doneFetchingForm()); // Hide loading spinner
     };
   };
@@ -149,31 +145,28 @@ export const doneFetchingForm = createAction(DONE_FETCHING_FORM);
 // ------------------------------------
 // Action Handler: shouldFetchForm
 // ------------------------------------
-const shouldFetchForm = (state, id) => {
-  const formInteractive = state.formInteractive;
+const shouldFetchForm = (formInteractive, formIdSlug) => {
   /*
    * We should fetch form if
-   * - no form_data has loaded
-   * - it should load another form
    * - if form is not being loaded
+   * - it should load another form
+   * - no form_data has loaded
    */
-  if ((id !== formInteractive.id || !formInteractive.form) &&
-  !formInteractive.isFetchingForm) {
-    return true;
-  } else {
-    return false;
-  }
+  if (formInteractive.isFetchingForm) return false;
+  if (formIdSlug !== formInteractive.id && formIdSlug !== formInteractive.slug) return true;
+  if (!formInteractive.form) return true;
+  return false;
 };
 
 // ------------------------------------
 // Action: fetchFormIfNeeded
 // ------------------------------------
-export const fetchFormIfNeeded = (id) => {
+export const fetchFormIfNeeded = (formIdSlug) => {
   return (dispatch, getState) => {
-    if (shouldFetchForm(getState(), id)) {
-      const formInteractive = getState().formInteractive;
+    const formInteractive = getState().formInteractive;
+    if (shouldFetchForm(formInteractive, formIdSlug)) {
       dispatch(requestForm());
-      dispatch(fetchForm(id, formInteractive.formAccessCode));
+      dispatch(fetchForm(formIdSlug, formInteractive.formAccessCode));
     } else {
       // dispatch(fetchAnswers());
     }
@@ -496,15 +489,15 @@ export const handleEnter = () => {
 // ------------------------------------
 // Action: submitAnswer
 // ------------------------------------
-export const submitAnswer = (requestAction) => {
+export const submitAnswer = (requestAction, onSuccess) => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
     if (requestAction === FORM_USER_SUBMISSION) {
       dispatch(requestSubmitAnswer());
-      dispatch(processSubmitAnswer(requestAction, formInteractive));
+      dispatch(processSubmitAnswer(requestAction, formInteractive, onSuccess));
     }
     if (requestAction === FORM_AUTOSAVE && formInteractive.isModified) {
-      dispatch(processSubmitAnswer(requestAction, formInteractive));
+      dispatch(processSubmitAnswer(requestAction, formInteractive, onSuccess));
     }
   };
 };
@@ -517,7 +510,7 @@ export const requestSubmitAnswer = createAction(REQUEST_SUBMIT);
 // ------------------------------------
 // Action: processSubmitAnswer
 // ------------------------------------
-export const processSubmitAnswer = (requestAction, formInteractive) => {
+export const processSubmitAnswer = (requestAction, formInteractive, onSuccess) => {
   const { id, answers, sessionId } = formInteractive;
   var body = {
     request_action: requestAction,
@@ -546,6 +539,10 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
         result: true,
         requestAction
       })); // Hide submitting spinner
+      onSuccess && onSuccess({
+        sessionId: response_id,
+        requestAction: requestAction
+      });
     };
   };
 
@@ -570,11 +567,6 @@ export const doneSubmitAnswer = createAction(DONE_SUBMIT, (status) => status);
 // Action: updateFormSession
 // ------------------------------------
 export const updateSessionId = createAction(UPDATE_SESSION_ID);
-
-// ------------------------------------
-// Action: resetFormSubmitStatus
-// ------------------------------------
-export const resetFormSubmitStatus = createAction(RESET_FORM_SUBMIT_STATUS);
 
 // ------------------------------------
 // Reducer
@@ -653,8 +645,7 @@ const formInteractiveReducer = handleActions({
   DONE_SUBMIT: (state, action) =>
     Object.assign({}, state, {
       isSubmitting: false,
-      isModified: action.payload.result ? false : state.isModified,
-      lastFormSubmitStatus: action.payload
+      isModified: action.payload.result ? false : state.isModified
     }),
 
   SHOW_FINAL_SUBMIT: (state, action) =>
@@ -665,12 +656,8 @@ const formInteractiveReducer = handleActions({
   UPDATE_ACCESS_CODE: (state, action) =>
     Object.assign({}, state, {
       formAccessCode: action.payload
-    }),
-
-  RESET_FORM_SUBMIT_STATUS: (state, action) =>
-    Object.assign({}, state, {
-      lastFormSubmitStatus: {}
     })
+
 }, INIT_FORM_STATE);
 
 export default formInteractiveReducer;

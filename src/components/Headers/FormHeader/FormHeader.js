@@ -31,6 +31,10 @@ class FormHeader extends Component {
      */
     title: PropTypes.string.isRequired,
     /*
+     * checkRedirectAfterSubmit: Event handler to be executed after form answer submission.
+     */
+    checkRedirectAfterSubmit: PropTypes.func.isRequired,
+    /*
      * submitAnswer: Redux action to send submit request to server. Here it will be submitted by user's action.
      */
     submitAnswer: PropTypes.func,
@@ -59,8 +63,8 @@ class FormHeader extends Component {
   }
 
   handleSubmitAnswer = () => {
-    const { submitAnswer } = this.props;
-    submitAnswer(FORM_USER_SUBMISSION);
+    const { submitAnswer, checkRedirectAfterSubmit } = this.props;
+    submitAnswer(FORM_USER_SUBMISSION, checkRedirectAfterSubmit);
   }
 
   render() {

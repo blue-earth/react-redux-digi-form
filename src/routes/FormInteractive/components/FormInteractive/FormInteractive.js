@@ -135,16 +135,6 @@ class FormInteractive extends Component {
     fetchAnswers: PropTypes.func.isRequired,
 
     /*
-     * resetFormSubmitStatus: Redux action to reset lastFormSubmitStatus.
-     */
-    resetFormSubmitStatus: PropTypes.func.isRequired,
-
-    /*
-     * resetFormSubmitStatus: Redux action to reset lastFormSubmitStatus.
-     */
-    lastFormSubmitStatus: PropTypes.object.isRequired,
-
-    /*
      * shouldShowFinalSubmit: Redux state to check if it's final stage.
      */
     shouldShowFinalSubmit: PropTypes.bool.isRequired,
@@ -182,7 +172,12 @@ class FormInteractive extends Component {
     /*
      * isAccessCodeProtected: Redux state to indicate the form is access code protected.
      */
-    isAccessCodeProtected: PropTypes.bool
+    isAccessCodeProtected: PropTypes.bool,
+
+    /*
+     * goTo: Goes to specific url within page.
+     */
+    goTo: PropTypes.func.isRequired
   };
 
   getChildContext() {
@@ -195,26 +190,29 @@ class FormInteractive extends Component {
 
   componentDidMount() {
     const { submitAnswer } = this.props;
-    setInterval(function () {
-      submitAnswer(FORM_AUTOSAVE);
+    const that = this;
+    this.autosaveIntervalId = setInterval(function () {
+      submitAnswer(FORM_AUTOSAVE, that.checkRedirectAfterSubmit);
     }, 30000);  // todo: Will optimise this later
   }
 
   componentWillReceiveProps(props) {
-    const { resetFormSubmitStatus, showModal } = this.props;
-    if (props.lastFormSubmitStatus.requestAction === FORM_USER_SUBMISSION &&
-      props.lastFormSubmitStatus.result) {
-      if (props.shouldShowFinalSubmit) {
-        this.context.router.push(`/forms/${this.props.formId}/${this.props.sessionId}/completed`);
-      } else {
-        showModal('saveForLaterModal');
-      }
-      resetFormSubmitStatus();
-    }
+    const { showModal } = this.props;
     if (this.props.formAccessStatus !== props.formAccessStatus &&
       props.formAccessStatus === 'fail') {
       showModal('accessCodeModal');
     }
+  }
+
+  componentWillUnmount() {
+    this.autosaveIntervalId && clearInterval(this.autosaveIntervalId);
+  }
+
+  checkRedirectAfterSubmit = ({ sessionId, requestAction }) => {
+    const { goTo, params, showModal } = this.props;
+    const { formIdSlug } = params;
+    params.sessionId !== sessionId && goTo(`/forms/${formIdSlug}/${sessionId}`);
+    requestAction === FORM_USER_SUBMISSION && showModal('saveForLaterModal');
   }
 
   setActiveGroup = (index) => {
@@ -264,8 +262,8 @@ class FormInteractive extends Component {
 
   loadFormSession = () => {
     const { fetchFormIfNeeded, fetchAnswers,
-      params: { id, sessionId } } = this.props;
-    fetchFormIfNeeded(id);
+      params: { formIdSlug, sessionId } } = this.props;
+    fetchFormIfNeeded(formIdSlug);
     if (sessionId) {
       fetchAnswers(sessionId);
     }
@@ -278,7 +276,8 @@ class FormInteractive extends Component {
 
     return (
       <div className={styles.wrapper}>
-        <FormHeader title={title} submitAnswer={submitAnswer} isCompleted={this.isCompleted} />
+        <FormHeader title={title} submitAnswer={submitAnswer} isCompleted={this.isCompleted}
+          checkRedirectAfterSubmit={this.checkRedirectAfterSubmit} />
         <div className={classNames(styles.contentWrapper, 'container')}>
           <div className={styles.contentWrapperInner}>
             <ProgressTracker
@@ -288,10 +287,10 @@ class FormInteractive extends Component {
               percentage={this.percentage}
             />
             {this.isInProgress && <FormInteractiveView {...this.props} />}
-            {this.isInProgress && <SaveForLaterModal formId={formId} sessionId={sessionId} />}
-            {shouldShowFinalSubmit && <Summary {...this.props} />}
+            {shouldShowFinalSubmit && !this.isCompleted && <Summary {...this.props} />}
             {this.isCompleted && <FormCompletion title={title} />}
             {this.needsAccessCode && <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />}
+            <SaveForLaterModal formId={formId} sessionId={sessionId} />
             <div className={styles.bottomLogoWrapper}>
               <span>Powered by</span>
               <div className={styles.bottomLogo}>

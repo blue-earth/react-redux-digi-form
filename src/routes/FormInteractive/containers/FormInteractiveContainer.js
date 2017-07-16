@@ -1,4 +1,5 @@
 import connect from 'redux/utils/connect';
+import { goTo } from 'redux/modules/router';
 import { show } from 'redux-modal';
 import {
   INIT_FORM_STATE,
@@ -11,8 +12,7 @@ import {
   submitAnswer,
   fetchAnswers,
   fetchFormIfNeeded,
-  updateAccessCode,
-  resetFormSubmitStatus
+  updateAccessCode
 } from 'redux/modules/formInteractive';
 
 import FormInteractive from '../components/FormInteractive';
@@ -28,8 +28,8 @@ const mapActionCreators = {
   goToQuestion,
   handleEnter,
   updateAccessCode,
-  resetFormSubmitStatus,
-  showModal: show
+  showModal: show,
+  goTo
 };
 
 const mapStateToProps = (state) => {
@@ -46,7 +46,6 @@ const mapStateToProps = (state) => {
     prefills,
     verificationStatus,
     primaryColour,
-    lastFormSubmitStatus,
     shouldShowFinalSubmit,
     isAccessCodeProtected,
     formAccessStatus,
@@ -64,7 +63,6 @@ const mapStateToProps = (state) => {
     prefills,
     primaryColour,
     verificationStatus,
-    lastFormSubmitStatus,
     shouldShowFinalSubmit,
     isAccessCodeProtected,
     formAccessStatus,
