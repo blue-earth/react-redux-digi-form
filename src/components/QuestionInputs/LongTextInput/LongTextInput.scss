@@ -2,18 +2,21 @@
 @import './variables';
 
 .textInput {
-  padding: 4px 15px;
-  border: 1px solid $text-border-color;
+  padding: 15px 20px;
+  border: 1px solid $float-input-color;
   @include border-radius($input-border-radius);
   font-size: 20px;
-  background: $text-bg-color;
+  background: $white;
   max-width: 100%;
   min-width: 100%;
   color: $text-dark-color;
-  -webkit-text-fill-color: $text-dark-color;
+  resize: none;
+  @include input-box-shadow;
+  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder {
+    color: $text-light-color;
+  }
 }
 
 .textInput:hover, .textInput:active, .textInput:focus {
-  border: 1px solid $text-hover-border-color;
   outline: none;
 }
