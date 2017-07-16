@@ -50,11 +50,16 @@ class FileUpload extends Component {
   }
 
   handleFileSelect = (event) => {
-    const item = {this.refs.fileInput.files[0], progress: 0, status: XHR_INIT};
+    // const item = {this.refs.fileInput.files[0], progress: 0, status: XHR_INIT};
+    const item = this.fileToItem(this.refs.fileInput.files[0]);
     var newItems = this.state.items;
     var newIndex = newItems.push(item) - 1;
     this.setState({ items: newItems });
     this.upload(newIndex);
+  }
+
+  fileToItem(file) {
+    return {file, progress: 0, status: XHR_INIT};
   }
 
   upload(index) {
@@ -146,7 +151,7 @@ class FileUpload extends Component {
 
     return (
       <div className={styles.fileset}>
-        {items.map(item, index) => {
+        {items.map((item, index) => {
           <div key={index}>
             <div className={styles.fileTopSection}>
               <span className={styles.fileIcon}>
@@ -192,7 +197,7 @@ class FileUpload extends Component {
             </div>
             }
           </div>
-        }}
+        })}
       </div>
     );
   }

@@ -106,6 +106,7 @@ class InteractiveInput extends Component {
         break;
       case 'FileUploadField':
         InputComponent = FileUpload;
+        break;
       default:
         return false;
     }
