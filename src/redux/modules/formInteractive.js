@@ -59,10 +59,6 @@ export const INIT_FORM_STATE = {
   isVerifying: false, // indicates the verifying request is being processed.
   isModified: false, // indicates the form answer modified after submission.
   lastUpdated: Date.now(), // last form-questions received time.
-  lastFormSubmitStatus: { // holds the status of last form submit response.
-    // result: true / false, form submit result.
-    // requestAction: FORM_USER_SUBMISSION / FORM_AUTOSAVE
-  },
   form: {
     questions: [],
     logics: []
@@ -496,15 +492,15 @@ export const handleEnter = () => {
 // ------------------------------------
 // Action: submitAnswer
 // ------------------------------------
-export const submitAnswer = (requestAction) => {
+export const submitAnswer = (requestAction, onSuccess) => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
     if (requestAction === FORM_USER_SUBMISSION) {
       dispatch(requestSubmitAnswer());
-      dispatch(processSubmitAnswer(requestAction, formInteractive));
+      dispatch(processSubmitAnswer(requestAction, formInteractive, onSuccess));
     }
     if (requestAction === FORM_AUTOSAVE && formInteractive.isModified) {
-      dispatch(processSubmitAnswer(requestAction, formInteractive));
+      dispatch(processSubmitAnswer(requestAction, formInteractive, onSuccess));
     }
   };
 };
@@ -517,7 +513,7 @@ export const requestSubmitAnswer = createAction(REQUEST_SUBMIT);
 // ------------------------------------
 // Action: processSubmitAnswer
 // ------------------------------------
-export const processSubmitAnswer = (requestAction, formInteractive) => {
+export const processSubmitAnswer = (requestAction, formInteractive, onSuccess) => {
   const { id, answers, sessionId } = formInteractive;
   var body = {
     request_action: requestAction,
@@ -546,6 +542,10 @@ export const processSubmitAnswer = (requestAction, formInteractive) => {
         result: true,
         requestAction
       })); // Hide submitting spinner
+      onSuccess && onSuccess({
+        sessionId: response_id,
+        requestAction: requestAction
+      });
     };
   };
 
@@ -570,11 +570,6 @@ export const doneSubmitAnswer = createAction(DONE_SUBMIT, (status) => status);
 // Action: updateFormSession
 // ------------------------------------
 export const updateSessionId = createAction(UPDATE_SESSION_ID);
-
-// ------------------------------------
-// Action: resetFormSubmitStatus
-// ------------------------------------
-export const resetFormSubmitStatus = createAction(RESET_FORM_SUBMIT_STATUS);
 
 // ------------------------------------
 // Reducer
@@ -653,8 +648,7 @@ const formInteractiveReducer = handleActions({
   DONE_SUBMIT: (state, action) =>
     Object.assign({}, state, {
       isSubmitting: false,
-      isModified: action.payload.result ? false : state.isModified,
-      lastFormSubmitStatus: action.payload
+      isModified: action.payload.result ? false : state.isModified
     }),
 
   SHOW_FINAL_SUBMIT: (state, action) =>
@@ -665,12 +659,8 @@ const formInteractiveReducer = handleActions({
   UPDATE_ACCESS_CODE: (state, action) =>
     Object.assign({}, state, {
       formAccessCode: action.payload
-    }),
-
-  RESET_FORM_SUBMIT_STATUS: (state, action) =>
-    Object.assign({}, state, {
-      lastFormSubmitStatus: {}
     })
+
 }, INIT_FORM_STATE);
 
 export default formInteractiveReducer;

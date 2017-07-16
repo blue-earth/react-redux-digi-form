@@ -16,6 +16,14 @@ export default class Summary extends Component {
 
   static propTypes = {
     /*
+     * formId: Form ID
+     */
+    formId: PropTypes.number.isRequired,
+    /*
+     * sessionId: Session ID to fetch saved answer
+     */
+    sessionId: PropTypes.number,
+    /*
      * form: form_data of response, consists of questions and logics.
      */
     form: PropTypes.object,
@@ -42,13 +50,21 @@ export default class Summary extends Component {
     /*
      * verificationStatus: Redux state that holds the status of verification, ex. EmondoEmailService
      */
-    verificationStatus: PropTypes.array
-
+    verificationStatus: PropTypes.array,
+    /*
+     * goTo: Goes to specific url within page.
+     */
+    goTo: PropTypes.func.isRequired
   };
 
   handleFinalSubmit = () => {
     const { submitAnswer } = this.props;
-    submitAnswer(FORM_USER_SUBMISSION);
+    submitAnswer(FORM_USER_SUBMISSION, this.handleGotoCompletion);
+  }
+
+  handleGotoCompletion = () => {
+    const { goTo, formId, sessionId } = this.props;
+    goTo(`/forms/${formId}/${sessionId}/completed`);
   }
 
   render() {
