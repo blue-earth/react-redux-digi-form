@@ -1,6 +1,16 @@
-.instruction {
+@import './mixins';
+@import './variables';
+
+.statement {
+  font-family: $font_name;
   font-size: 16px;
-  max-height: 440px;
+  max-height: 290px;
   overflow: auto;
-  padding-right: 40px;
+  margin-right: 40px;
+  border: 1px solid $grey;
+  color: $grey;
+  @include border-radius(4px);
+  background-color: $white;
+  padding: 30px;
+  box-sizing: border-box;
 }
