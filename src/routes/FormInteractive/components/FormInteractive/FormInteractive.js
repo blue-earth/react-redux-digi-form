@@ -205,8 +205,9 @@ class FormInteractive extends Component {
   }
 
   checkRedirectAfterSubmit = ({ sessionId, requestAction }) => {
-    const { formId, goTo, params, showModal } = this.props;
-    params.sessionId !== sessionId && goTo(`/forms/${formId}/${sessionId}`);
+    const { goTo, params, showModal } = this.props;
+    const { formIdSlug } = params;
+    params.sessionId !== sessionId && goTo(`/forms/${formIdSlug}/${sessionId}`);
     requestAction === FORM_USER_SUBMISSION && showModal('saveForLaterModal');
   }
 
@@ -257,8 +258,8 @@ class FormInteractive extends Component {
 
   loadFormSession = () => {
     const { fetchFormIfNeeded, fetchAnswers,
-      params: { id, sessionId } } = this.props;
-    fetchFormIfNeeded(id);
+      params: { formIdSlug, sessionId } } = this.props;
+    fetchFormIfNeeded(formIdSlug);
     if (sessionId) {
       fetchAnswers(sessionId);
     }

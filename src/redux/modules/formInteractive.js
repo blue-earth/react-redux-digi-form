@@ -83,8 +83,8 @@ export const INIT_FORM_STATE = {
 // ------------------------------------
 // Action: fetchForm
 // ------------------------------------
-export const fetchForm = (id, accessCode) => {
-  var apiURL = `${API_URL}/form_document/api/form_retrieval/${id}/`;
+export const fetchForm = (formIdSlug, accessCode) => {
+  var apiURL = `${API_URL}/form_document/api/form_retrieval/${formIdSlug}/`;
   if (accessCode.length > 0) {
     apiURL += `?access_code=${accessCode}`;
   }
@@ -92,7 +92,7 @@ export const fetchForm = (id, accessCode) => {
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(receiveForm(_.merge(value, {id})));
+      dispatch(receiveForm(value));
       dispatch(doneFetchingForm()); // Hide loading spinner
     };
   };
@@ -145,31 +145,28 @@ export const doneFetchingForm = createAction(DONE_FETCHING_FORM);
 // ------------------------------------
 // Action Handler: shouldFetchForm
 // ------------------------------------
-const shouldFetchForm = (state, id) => {
-  const formInteractive = state.formInteractive;
+const shouldFetchForm = (formInteractive, formIdSlug) => {
   /*
    * We should fetch form if
-   * - no form_data has loaded
-   * - it should load another form
    * - if form is not being loaded
+   * - it should load another form
+   * - no form_data has loaded
    */
-  if ((id !== formInteractive.id || !formInteractive.form) &&
-  !formInteractive.isFetchingForm) {
-    return true;
-  } else {
-    return false;
-  }
+  if (formInteractive.isFetchingForm) return false;
+  if (formIdSlug !== formInteractive.id && formIdSlug !== formInteractive.slug) return true;
+  if (!formInteractive.form) return true;
+  return false;
 };
 
 // ------------------------------------
 // Action: fetchFormIfNeeded
 // ------------------------------------
-export const fetchFormIfNeeded = (id) => {
+export const fetchFormIfNeeded = (formIdSlug) => {
   return (dispatch, getState) => {
-    if (shouldFetchForm(getState(), id)) {
-      const formInteractive = getState().formInteractive;
+    const formInteractive = getState().formInteractive;
+    if (shouldFetchForm(formInteractive, formIdSlug)) {
       dispatch(requestForm());
-      dispatch(fetchForm(id, formInteractive.formAccessCode));
+      dispatch(fetchForm(formIdSlug, formInteractive.formAccessCode));
     } else {
       // dispatch(fetchAnswers());
     }

@@ -63,8 +63,8 @@ export default class Summary extends Component {
   }
 
   handleGotoCompletion = () => {
-    const { goTo, formId, sessionId } = this.props;
-    goTo(`/forms/${formId}/${sessionId}/completed`);
+    const { goTo, params: { formIdSlug }, sessionId } = this.props;
+    goTo(`/forms/${formIdSlug}/${sessionId}/completed`);
   }
 
   render() {
