@@ -44,7 +44,7 @@ $button-lg-size: 64px;
   letter-spacing: 1px;
   line-height: 1;
   font-family: "roble_alt_boldbold";
-  margin-left: 10px !important;
+  padding-left: 10px !important;
   &:hover, &:focus {
     opacity: 1;
     background-color: darken($button-header-bg-color, 5%);
@@ -63,12 +63,14 @@ $button-lg-size: 64px;
 }
 
 .formButton {
-  @include background-gradient($button-default-bg-start, $button-default-bg-end);
+  margin-right: 10px;
+  @include background-gradient($select-button-start-color, $select-button-end-color);
   color: $button-default-color;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   line-height: 1;
   font-family: "roble_alt_boldbold";
+  border-color: $select-button-border-color;
   &:hover, &:focus {
     background-color: darken($button-default-bg-color, 5%);
   }

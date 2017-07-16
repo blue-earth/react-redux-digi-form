@@ -1,6 +1,7 @@
 $blue: #3993d1;
 $darkblue: #2c3744;
 $paleblue: #f3faff;
+$grayblue: #eceff2;
 $orange: #ff8a00;
 $grey: #c0c3c9;
 $green: #65b82d;
@@ -19,7 +20,7 @@ $highlight-color: $orange;
 
 // dashboard layout color
 $dashboard-header-bg-color: $blue;
-$dashboard-bg-color:        $paleblue;
+$dashboard-bg-color:        $grayblue;
 $dashboard-text-color:      #7b7b7b;
 
 // defaultButton component
@@ -39,8 +40,12 @@ $dashtabs-color: $grey;
 $dashtabs-active-color: $blue;
 $dashtabs-active-border-color: $blue;
 
-$table-header-bg-color: #f4f8fb;
-$table-border-color: #eaeff3;
+$table-header-bg-color:         #f5f8fa;
+$table-header-text-color:       #7f8fa4;
+$table-line-color:              #e7e9ed;
+$table-border-color:            #C6D5E0;
+$table-text-color:              #333c48;
+$table-pagination-button-color: #b2c4d3;
 
 $bg-color1:         #fff;
 $bg-color2:         #fafafa;
@@ -49,10 +54,8 @@ $bg-color2:         #fafafa;
 $border-color:              #e6ebed;
 
 $shadow-color:              #bbb;
-$table-border-color:        #bbb;
 
 // purchase darken blue
-$grayblue: #ECF0F3;
 $blackblue: darken($blue,26%);
 $bg-color3: $grayblue;
 $darker-bg-color3: darken($grayblue,10%);
@@ -90,6 +93,16 @@ $dropdown-border-color:         #eaeaea;
 $dropdown-caret-color:          #a2aab3;
 
 $form-completion-title-color: #3191d2;
+
+$select-button-color:         #354052;
+$select-button-start-color:   $white;
+$select-button-end-color:     #f4f5f8;
+$select-button-hover-color:   #3893d0;
+$select-button-border-color:  #ced0da;
+$select-button-hover-bg-color: #f7f9fb;
+
+$submission-text-color:   #073660;
+$time-text-color:              #848c98;
 
 $choice-bg-color:           #f4f5f8;
 $choice-border-color:       #eaeaea;

@@ -1,18 +1,105 @@
 @import './mixins';
 @import './variables';
-$slt-header-bg-color:     	#ECF4FB;
-$slt-header-text-color:     #1C4468;
-$slt-border-color:          rgba(204, 204, 204, .3);
 
 .submissionsList {
-  height: 100%;
+  width: 100%;
 }
 .submissionsListInner {
+  min-height: 390px;
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
   position: relative;
   font-size: 12px;
+}
+.widgetPanel {
+  width: 100%;
+  border: 1px solid $table-border-color;
+  @include border-radius(5px);
+  background-color: $white;
+  float: left;
+  font-size: 12px;
+}
+.panelTitleWrapper {
+  height: 64px;
+  padding: 12px 20px;
+  border-bottom: 1px solid $table-line-color;
+}
+.panelTitle {
+  font-size: 18px;
+  float: left;
+  font-family: "roble_alt_mediummedium";
+  color: $dashboard-header-bg-color;
+  line-height: 40px;
+}
+.panelContent {
+  position: relative;
+  height: 230px;
+}
+.activitiesSection {
+  width: 40%;
+}
+.activitiesWrapper {
+  height: 100%;
+  overflow-y: auto;
+}
+.activitiesList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.activity {
+  line-height: 50px;
+  font-weight: 600;
+  padding: 0 20px;
+  border-bottom: 1px solid $border-color;
+}
+.activityWrapper {
+  width: 100%;
+}
+.activityContent {
+  float: left;
+  width: 84%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.activityForm {
+  font-weight: bold;
+}
+.activityTime {
+  text-align: right;
+  width: 16%;
+  float: right;
+  color: $time-text-color;
+}
+
+.analyticsSection {
+  margin: 0 2%;
+  width: 16%;
+}
+.analyticsPeriod {
+  padding: 10px 20px;
+}
+.analyticsContent {
+  padding: 10px 20px;
+  color: $submission-text-color;
+  text-align: center;
+  font-family: "roble_alt_lightlight";
+  font-size: 14px;
+}
+.analyticNumber {
+  font-family: "roble_alt_boldbold";
+  font-size: 24px;
+}
+.savingsSection {
+  float: right;
+  width: 40%;
+  text-align: center;
+}
+.savings {
+  padding: 70px 20px;
+  color: $submission-text-color;
 }
 
 .columnID {
@@ -20,12 +107,14 @@ $slt-border-color:          rgba(204, 204, 204, .3);
 }
 .columnName {
   width: auto;
+  font-weight: 800;
 }
 .columnProgress {
   width: auto;
 }
 .columnPercent {
   width: auto;
+  font-weight: 800;
 }
 .columnAuthor {
   width: auto;
@@ -50,4 +139,5 @@ $slt-border-color:          rgba(204, 204, 204, .3);
 }
 .columnActions {
   width: 60px;
+  border-left: 1px solid $table-line-color;
 }

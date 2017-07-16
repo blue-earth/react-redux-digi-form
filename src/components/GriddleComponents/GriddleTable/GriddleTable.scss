@@ -1,36 +1,19 @@
 @import './mixins';
 @import './variables';
-$slt-header-bg-color:       #ECF4FB;
-$slt-header-text-color:     #1C4468;
-$slt-border-color:          rgba(204, 204, 204, .3);
-
 .tableWrapper {
   position: relative;
 }
+
 .resultsTable {
-  background-color: white;
+  background-color: $white;
   width: 100%;
-  @include border-radius(4px);
-  border: 1px solid $table-border-color;
-  border-collapse: separate; // a value of collapse here appears to mess up border-radius
-  thead {
-    background-color: $table-header-bg-color !important;
-    tr:first-child {
-      th:after {
-        display: block;
-        width: 1px;
-        height: 20px;
-        background: $table-border-color;
-        content: ' ';
-        position: absolute;
-        top: 8px;
-        right: 0px;
-      }
-      th:first-child {
-        @include border-radius-separate(4px, 0, 0, 0);
-      }
-      th:last-child {
-        @include border-radius-separate(0, 4px, 0, 0);
+  font-weight: 600;
+  tr {
+    height: 57px;
+    border-bottom: 1px solid $table-line-color;
+    &:hover {
+      td {
+        background-color: $select-button-hover-bg-color;
       }
     }
   }
@@ -42,16 +25,61 @@ $slt-border-color:          rgba(204, 204, 204, .3);
     position: relative;
   }
   td {
-    padding: 12px 15px;
+    height: 0;
+    padding: 18px 15px;
     vertical-align: middle !important;
     border-top: none !important;
     border-bottom: none !important;
+    &:first-child {
+      padding-left: 20px;
+      @include border-radius-separate(6px, 0, 6px, 0);
+    }
+    &:last-child {
+      @include border-radius-separate(0, 6px, 0, 6px);
+    }
   }
-  tr {
-    border-bottom: 1px solid $table-border-color !important;
+  tbody {
+    color: $table-text-color;
   }
   tbody:last-child tr {
+    display: none;
     border-bottom: none !important;
+  }
+  thead {
+    color: $table-header-text-color;
+    background-color: $table-header-bg-color;
+    font-family: 'Open Sans';
+    tr:first-child {
+      height: 39px;
+      th:first-child {
+        padding-left: 20px;
+      }
+      th {
+        font-weight: 600;
+      }
+      th:after {
+        display: block;
+        width: 1px;
+        height: 20px;
+        background: $table-line-color;
+        content: ' ';
+        position: absolute;
+        top: 8px;
+        right: 0px;
+      }
+      th:nth-last-child(2):after {
+        display: none;
+      }
+      th:last-child:after {
+        display: none;
+      }
+      th:last-child{
+        border-left: 1px solid $table-line-color;
+      }
+    }
+    tr {
+      border-bottom: none;
+    }
   }
 }
 

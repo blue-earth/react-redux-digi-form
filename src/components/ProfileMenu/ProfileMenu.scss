@@ -1,0 +1,73 @@
+@import './mixins';
+@import './variables';
+
+.profileMenuSection {
+  position: relative;
+  float: left;
+}
+.profileMenu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -79px;
+  margin-top: 10px;
+  width: 158px;
+  z-index: 1300;
+  background-color: $white;
+  border: 1px solid $select-button-border-color;
+  box-sizing: border-box;
+  @include border-radius(5px);
+}
+.profileMenu:after, .profileMenu:before {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.profileMenu:after {
+  border-bottom-color: $white;
+  border-width: 6px;
+  margin-left: -3px;
+}
+.profileMenu:before {
+  border-bottom-color: $select-button-border-color;
+  border-width: 7px;
+  margin-left: -4px;
+}
+.linkWrapper {
+  width: 100%;
+  padding: 8px 0;
+}
+.linkList {
+  font-family: "Open Sans";
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+}
+.linkItem {
+  padding: 0 10px;
+  box-sizing: border-box;
+  height: 38px;
+  line-height: 38px;
+  font-weight: 600;
+}
+.linkItem.divider {
+  height: 1px;
+  margin: 6px 0;
+  background-color: $select-button-border-color;
+}
+.link {
+  padding: 0 6px;
+  color: $select-button-color;
+  cursor: pointer;
+  &:hover {
+    color: $select-button-hover-color;
+    background-color: $select-button-hover-bg-color;
+    text-decoration: none;
+  }
+}

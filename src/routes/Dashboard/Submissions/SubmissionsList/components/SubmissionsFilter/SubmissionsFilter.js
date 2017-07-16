@@ -1,70 +1,91 @@
 import React, {
-  Component
+  Component,
+  PropTypes
 } from 'react';
 import Button from 'components/Buttons/DashboardButtons/Button';
-import SelectButton from 'components/Buttons/DashboardButtons/SelectButton';
+import SelectButton from 'components/Buttons/SelectButton';
 import { ButtonToolbar } from 'react-bootstrap';
-import { FaRefresh, FaPlus } from 'react-icons/lib/fa';
+import { IoStatsBars, IoRefresh } from 'react-icons/lib/io';
+import styles from './SubmissionsFilter.scss';
 
 class SubmissionsFilter extends Component {
 
-  get typeOptions() {
-    return [
-      {
-        key: 'forms',
-        eventKey: 'forms',
-        label: 'Forms'
-      },
-      {
-        key: 'something',
-        eventKey: 'something',
-        label: 'Something Else'
-      }
-    ];
-  }
-
-  get userOptions() {
-    return [
-      {
-        key: 'sales',
-        eventKey: 'sales',
-        label: 'Sales Team'
-      },
-      {
-        key: 'other',
-        eventKey: 'other',
-        label: 'Another user'
-      }
-    ];
+  static propTypes = {
+    pageSize: PropTypes.number,
+    setPageSize: PropTypes.func,
+    formAction: PropTypes.func,
+    selectedItems: PropTypes.array
   }
 
   get timeOptions() {
     return [
       {
         key: 'thisweek',
-        eventKey: 'thisweek',
         label: 'This Week'
       },
       {
-        key: 'otherweek',
-        eventKey: 'otherweek',
-        label: 'Some Other Week'
+        key: 'today',
+        label: 'Today'
       }
     ];
   }
 
+  get paginationOptions() {
+    return [
+      {
+        key: 5,
+        label: 5
+      },
+      {
+        key: 10,
+        label: 10
+      },
+      {
+        key: 20,
+        label: 20
+      }
+    ];
+  }
+  get actionOptions() {
+    const number = this.props.selectedItems.length;
+    return [
+      {
+        key: 'edit',
+        label: 'Edit',
+        isDisabled: number !== 1
+      },
+      {
+        key: 'delete',
+        label: 'Delete',
+        isDisabled: number === 0
+      }
+    ];
+  }
   render() {
+    const { pageSize, setPageSize, formAction } = this.props;
+    const iconStyle = {verticalAlign: 'text-bottom', marginRight: '6px'};
     return (
-      <div className="filter-container">
-        <ButtonToolbar className="left">
-          <Button style="formButton"><FaRefresh /> Refresh</Button>
-          <Button style="formButton"><FaPlus /> Custom Column</Button>
+      <div className={styles.filterContainer}>
+        <ButtonToolbar className="pull-left">
+          <Button style="formButton">
+            <IoRefresh size={18} style={iconStyle} />
+            {' '}
+            Refresh
+          </Button>
+          <Button style="formButton">
+            <IoStatsBars size={18} style={iconStyle} />
+            {' '}
+            Customise
+          </Button>
         </ButtonToolbar>
-        <ButtonToolbar className="right">
-          <SelectButton style="formButton" optionList={this.typeOptions} label="Type" />
-          <SelectButton style="formButton" optionList={this.userOptions} label="User" />
-          <SelectButton style="formButton" optionList={this.timeOptions} />
+        <ButtonToolbar className="pull-right">
+          <SelectButton className={styles.formButton} optionList={this.timeOptions} value="This Week" />
+          <SelectButton className={styles.formButton} optionList={this.paginationOptions} label="Show"
+            value={pageSize} onChange={setPageSize} />
+          <SelectButton className={styles.formButton} optionList={this.actionOptions} value="Actions" staticValue
+            onChange={formAction} />
         </ButtonToolbar>
+        <div className="clearfix"></div>
       </div>
     );
   }

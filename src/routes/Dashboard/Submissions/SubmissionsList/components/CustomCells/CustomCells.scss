@@ -26,3 +26,20 @@ $contact-icon-color: #1C4468;
   right: 0;
   @include vcenter;
 }
+.statusRing {
+  float: left;
+  padding-right: 4px;
+}
+.new {
+  color: #0EA1D4;
+}
+.rejected {
+  color: #D65B4A;
+}
+.processing {
+  color: #DA932C
+}
+.done {
+  color: #66B92E;
+}
+

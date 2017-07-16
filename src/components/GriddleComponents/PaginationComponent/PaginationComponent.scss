@@ -1,0 +1,40 @@
+@import './mixins';
+@import './variables';
+
+.pagination {
+  line-height: 30px;
+  padding: 10px 0;
+  width: 100%;
+  text-align: center;
+}
+.paginationItem {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 20px;
+  line-height: 1;
+}
+
+.paginationButton {
+  font-size: 16px;
+  width: 38px;
+  height: 38px;
+  color: $table-pagination-button-color;
+  border-color: darken($dashboard-bg-color, 20%);
+  padding: 8px;
+  line-height: 1;
+  vertical-align: middle;
+  text-align: center;
+  @include border-radius(4px);
+  &:focus, &:hover, &:active:focus, &:hover:focus {
+    outline: none;
+  }
+}
+.paginationIndicator {
+  color: $select-button-color;
+  padding: 0 30px;
+  font-weight: lighter;
+  font-size: 12px;
+}
+.currentPage {
+  font-weight: bold;
+}

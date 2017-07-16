@@ -8,32 +8,18 @@ import {
   OverlayTrigger,
   Checkbox
 } from 'react-bootstrap';
-import { Link } from 'react-router';
-import { submissionsUrl } from 'helpers/urlHelper';
 import {
   MdEmail,
   MdPhone
 } from 'react-icons/lib/md';
+import { FaCircleO } from 'react-icons/lib/fa';
 import _ from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import styles from './CustomCells.scss';
 import { DropdownHeaderCell, DateCell } from 'components/GriddleComponents/CommonCells/CommonCells';
+import classNames from 'classnames';
 
 export { DateCell };
-
-export class AuthorHeaderCell extends DropdownHeaderCell {
-
-  get menuItems() {
-    return [
-      { key: '0-9', text: '0 - 9' },
-      { key: 'A-H', text: 'A - H' },
-      { key: 'I-P', text: 'I - P' },
-      { key: 'Q-Z', text: 'Q - Z' },
-      { key: 'other', text: 'Other' }
-    ];
-  }
-
-}
 
 export class ProgressHeaderCell extends DropdownHeaderCell {
 
@@ -53,8 +39,11 @@ export class StatusHeaderCell extends DropdownHeaderCell {
   get menuItems() {
     return [
       { key: 'abandoned', text: 'Abandoned' },
-      { key: 'incomplete', text: 'Incomplete' },
-      { key: 'completed', text: 'Completed' }
+      { key: 'unopen', text: 'Unopen' },
+      { key: 'opened', text: 'Opened' },
+      { key: 'saved', text: 'Saved' },
+      { key: 'submitted', text: 'Submitted' },
+      { key: 'autosave', text: 'Auto Save' }
     ];
   }
 
@@ -82,6 +71,30 @@ export class ActionsHeaderCell extends Component {
             &nbsp;
           </Checkbox>
         </div>
+      </div>
+    );
+  }
+}
+
+export class statusCell extends Component {
+  static propTypes = {
+    data: PropTypes.string
+  };
+  render() {
+    const {data} = this.props;
+    const classList = ['new', 'rejected', 'processing', 'done'];
+    const statusClass = data.toLowerCase().replace(/ /g, '');
+    return (
+      <div>
+        <div className={classNames(
+          styles.statusRing,
+          styles[statusClass],
+          {hide: classList.indexOf(statusClass) === -1}
+        )}>
+          <FaCircleO style={{verticalAlign: 'baseline'}} />
+        </div>
+        {' '}
+        {data}
       </div>
     );
   }
@@ -161,9 +174,6 @@ export class ActionsCell extends Component {
     const { rowData, metadata: { selectedItems } } = this.props;
     return (
       <div className={styles.actionsCell}>
-        <Link to={submissionsUrl(`/${rowData.form_id}/${rowData.response_id}`)}>
-          View
-        </Link>
         <div className={styles.rightMiddle}>
           <Checkbox onChange={this.handleCheckboxChange}
             checked={_.includes(selectedItems, rowData.response_id)}>

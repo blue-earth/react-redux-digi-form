@@ -1,0 +1,90 @@
+@import './mixins';
+@import './variables';
+
+.pullLeft {
+  float: left;
+}
+.selectWrapper {
+  position: relative;
+  height: 39px;
+  max-width: 200px;
+  color: $select-button-color;
+  font-family: 'Open Sans';
+}
+.selectLabel {
+  display: inline-block;
+  padding: 0 10px;
+  width: 100%;
+  background-color: #ddd;
+  border: 1px solid $select-button-border-color;
+  cursor: pointer;
+  @include border-radius(4px);
+  @include background-gradient($select-button-start-color, $select-button-end-color);
+  
+}
+.isOpen .selectLabel {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.selectValue {
+  padding:0 20px 0 4px;
+  font-weight: bold;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.selectCaret {
+  position: absolute;
+  right: 10px;
+  top: 0;
+  line-height: 40px;
+}
+.selectOptionsWrapper {
+  width: 100%;
+  display: none;
+  position: absolute;
+  z-index: 2000;
+  top: 100%;
+  left: 0;
+  background-color: $white;
+  border: 1px solid $select-button-border-color;
+  border-top-width: 0;
+  @include border-radius(4px);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.isOpen .selectOptionsWrapper {
+  display: inline-block;
+}
+.selectOptions {
+  list-style: none;
+  margin: 0;
+  padding: 0
+}
+.selectOption {
+  height: 40px;
+  line-height: 42px;
+  margin: 4px;
+  @include border-radius(4px);
+  cursor: pointer;
+  &:hover {
+    color: $select-button-hover-color;
+    background-color: $select-button-hover-bg-color;
+  }
+}
+.selectOption.isSelected {
+  font-weight: bold;
+}
+.selectOption.disabled {
+  color: $select-button-border-color;
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+.selectOptionContent {
+  display: inline-block;
+  padding: 0 6px;
+  vertical-align: middle;
+  line-height: 14px;
+}

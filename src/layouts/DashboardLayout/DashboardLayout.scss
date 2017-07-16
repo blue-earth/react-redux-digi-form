@@ -2,11 +2,10 @@
 @import './variables';
 
 .dashboard {
-  height: 100%;
   background-color: $dashboard-bg-color;
 }
 
 .contentWrapper {
-  padding: 30px 0 50px;
+  padding: 30px 0 50px 15px;
   height: calc(100% - #{$dashboard-header-height + $dashboard-tabs-height});
 }

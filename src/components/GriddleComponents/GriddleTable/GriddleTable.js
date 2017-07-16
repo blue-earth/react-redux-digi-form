@@ -5,8 +5,8 @@ import React, {
 import Griddle from 'griddle-react';
 import _ from 'lodash';
 import {
-  FaSortAlphaAsc,
-  FaSortAlphaDesc
+  FaCaretDown,
+  FaCaretUp
 } from 'react-icons/lib/fa';
 
 import styles from './GriddleTable.scss';
@@ -72,12 +72,18 @@ class GriddleTable extends Component {
     initialSort: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object
-    ])
+    ]),
+
+    /*
+     * tableClassName: Styling Table Classname
+     */
+    tableClassName: PropTypes.string
   };
 
   static defaultProps = {
     initialSort: null,
-    columnMetadata: []
+    columnMetadata: [],
+    tableClassName: styles.resultsTable
   }
 
   /*
@@ -156,7 +162,7 @@ class GriddleTable extends Component {
   getSortIcon(sortAscending) {
     return (
       <span className={styles.sortIcon}>
-        {sortAscending ? <FaSortAlphaAsc size={16} /> : <FaSortAlphaDesc size={16} />}
+        {sortAscending ? <FaCaretUp size={16} /> : <FaCaretDown size={16} />}
       </span>
     );
   }
@@ -178,7 +184,8 @@ class GriddleTable extends Component {
       sortColumn,
       sortAscending,
       initialSort,
-      Pagination
+      Pagination,
+      tableClassName
     } = this.props;
     return (
       <div className={styles.tableWrapper}>
@@ -202,7 +209,7 @@ class GriddleTable extends Component {
           sortDescendingComponent={this.getSortIcon(false)}
           sortAscendingClassName={styles.sortedCell}
           sortDescendingClassName={styles.sortedCell}
-          tableClassName={styles.resultsTable}
+          tableClassName={tableClassName}
           useCustomPagerComponent
           customPagerComponent={Pagination}
           // externalIsLoading={isFetching}

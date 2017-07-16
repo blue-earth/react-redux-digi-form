@@ -3,17 +3,20 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  AuthorHeaderCell,
   // ProgressHeaderCell,
   StatusHeaderCell,
   ActionsHeaderCell,
   // ContactInfoCell,
+  statusCell,
   DateCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
 import SubmissionsFilter from '../SubmissionsFilter';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
+import SelectButton from 'components/Buttons/SelectButton';
+import EnvironmentSaving from 'components/EnvironmentSaving';
+import classNames from 'classnames';
 import styles from './SubmissionsListView.scss';
 
 class SubmissionsListView extends Component {
@@ -70,11 +73,19 @@ class SubmissionsListView extends Component {
      * toggleSelectItem: Redux action to select or deselect item by id.
      */
     toggleSelectItem: PropTypes.func.isRequired,
+    selectAnalyticsPeriod: PropTypes.func.isRequired,
 
+    setPageSize: PropTypes.func.isRequired,
+    next: PropTypes.func.isRequired,
+    previous: PropTypes.func.isRequired,
     /*
      * selectedItems: Redux state in array to hold selected item ids.
      */
-    selectedItems: PropTypes.array.isRequired
+    selectedItems: PropTypes.array.isRequired,
+    analyticsPeriod: PropTypes.string.isRequired,
+    analytics: PropTypes.object,
+    activities: PropTypes.array,
+    environmentalSavings: PropTypes.object
   };
 
   get columnMetadata() {
@@ -108,6 +119,7 @@ class SubmissionsListView extends Component {
         visible: true,
         displayName: 'Status',
         customHeaderComponent: StatusHeaderCell,
+        customComponent: statusCell,
         cssClassName: styles.columnStatus
       },
       {
@@ -124,7 +136,6 @@ class SubmissionsListView extends Component {
         locked: false,
         visible: true,
         displayName: 'Completed by',
-        customHeaderComponent: AuthorHeaderCell,
         cssClassName: styles.columnAuthor
       },
       {
@@ -199,13 +210,137 @@ class SubmissionsListView extends Component {
   unless there is data in the table
   */
 
+  renderActivityPanel() {
+    const selectOptions = [
+      {
+        key: 'time',
+        label: 'Time'
+      },
+      {
+        key: 'something',
+        label: 'Something'
+      }
+    ];
+    return (
+      <div className={classNames(styles.activitiesSection, styles.widgetPanel)}>
+        <div className={styles.panelTitleWrapper}>
+          <div className={styles.panelTitle}>Activity</div>
+          <SelectButton className="pull-right" label="Arrange by" optionList={selectOptions} value="Time" />
+        </div>
+        <div className={styles.panelContent}>
+          <div className={styles.activitiesWrapper}>
+            <ul className={styles.activitiesList}>
+              {this.props.activities.map((activity, index) => (
+                <li key={`activities-${index}`} className={styles.activity}>
+                  <div className={styles.activityWrapper}>
+                    <div className={styles.activityContent}>
+                      {activity.name}{' '}{activity.action}{' the '}
+                      <span className={styles.activityForm}>{activity.form}</span>
+                    </div>
+                    <div className={styles.activityTime}>{activity.time}</div>
+                    <div className="clearfix"></div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderAnalyticsPanel() {
+    const selectOptions = [
+      {
+        key: 'today',
+        label: 'Today'
+      },
+      {
+        key: 'week',
+        label: 'This week'
+      }
+    ];
+    const { analytics, analyticsPeriod, selectAnalyticsPeriod } = this.props;
+    const analytic = analytics[analyticsPeriod];
+    return (
+      <div className={classNames(styles.analyticsSection, styles.widgetPanel)}>
+        <div className={styles.panelTitleWrapper}>
+          <div className={styles.panelTitle}>Analytics</div>
+        </div>
+        <div className={styles.panelContent}>
+          <SelectButton
+            className={styles.analyticsPeriod}
+            optionList={selectOptions}
+            value="Today"
+            onChange={selectAnalyticsPeriod} />
+          <div className={styles.analyticsContent}>
+            <div className={styles.analyticNumber}>{analytic.view}</div>
+            <p>Unique form view</p>
+            <div className={styles.analyticNumber}>{analytic.rate * 100}{'%'}</div>
+            <p>Conversion rate</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderEnvironmentalSavings() {
+    const { trees, water, co2 } = this.props.environmentalSavings;
+    return (
+      <div className={classNames(styles.savingsSection, styles.widgetPanel)}>
+        <div className={styles.panelTitleWrapper}>
+          <div className={styles.panelTitle}>Environmental savings</div>
+        </div>
+        <div className={styles.panelContent}>
+          <div className={styles.savings}>
+            <EnvironmentSaving type="trees" value={trees} size="small" font="roble" />
+            <EnvironmentSaving type="water" value={water} size="small" font="roble" />
+            <EnvironmentSaving type="co2" value={co2} size="small" font="roble" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  formAction = (action) => {
+    const { selectedItems, submissions } = this.props;
+    switch (action) {
+      case 'edit':
+        selectedItems.map(item => {
+          const formId = submissions.filter(submission => submission.response_id === item)[0].form_id;
+          window.open(`/forms/${formId}/${item}`);
+        });
+        break;
+    }
+  }
+
   render() {
+    const {
+      page,
+      pageSize,
+      totalCount,
+      setPageSize,
+      selectedItems,
+      next,
+      previous
+    } = this.props;
     return (
       <div className={styles.submissionsList}>
-        <div className={styles.submissionsListInner}>
-          <SubmissionsFilter />
+        <div className={classNames(styles.widgetPanel, styles.submissionsListInner)}>
+          <SubmissionsFilter
+            setPageSize={setPageSize}
+            pageSize={pageSize}
+            formAction={this.formAction}
+            selectedItems={selectedItems}
+          />
           {this.renderSubmissionsList()}
         </div>
+        <Pagination
+          currentPage={page}
+          maxPage={Math.ceil(totalCount / pageSize)}
+          previous={previous}
+          next={next} />
+        {this.renderEnvironmentalSavings()}
       </div>
     );
   }
