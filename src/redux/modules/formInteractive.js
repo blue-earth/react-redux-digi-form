@@ -88,7 +88,7 @@ export const INIT_FORM_STATE = {
 // Action: fetchForm
 // ------------------------------------
 export const fetchForm = (id, accessCode) => {
-  var apiURL = `${API_URL}/form_document/api/form/${id}/`;
+  var apiURL = `${API_URL}/form_document/api/form_retrieval/${id}/`;
   if (accessCode.length > 0) {
     apiURL += `?access_code=${accessCode}`;
   }
