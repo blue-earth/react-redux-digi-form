@@ -10,12 +10,13 @@
   max-width: 100%;
   min-width: 100%;
   color: $text-dark-color;
-  -webkit-text-fill-color: $text-dark-color;
   resize: none;
   @include input-box-shadow;
+  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder {
+    color: $text-light-color;
+  }
 }
 
 .textInput:hover, .textInput:active, .textInput:focus {
-  // border: 1px solid $text-hover-border-color;
   outline: none;
 }

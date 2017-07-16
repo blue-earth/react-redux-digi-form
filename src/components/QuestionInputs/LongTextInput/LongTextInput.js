@@ -3,12 +3,17 @@ import React, {
   PropTypes
 } from 'react';
 import styles from './LongTextInput.scss';
+import classNames from 'classnames/bind';
 
 class LongTextInput extends Component {
 
   static contextTypes = {
     primaryColour: React.PropTypes.string
   };
+
+  static defaultContext = {
+    primaryColour: '#333333'
+  }
 
   static propTypes = {
     placeholderText: PropTypes.string,
@@ -23,12 +28,11 @@ class LongTextInput extends Component {
     cols: React.PropTypes.number,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
-    onEnterKey: PropTypes.func
+    onBlur: PropTypes.func
   };
 
   static defaultProps = {
-    placeholderText: '',
+    placeholderText: 'Write here...',
     fullWidth: false,
     rows: 6,
     cols: 50
@@ -72,35 +76,20 @@ class LongTextInput extends Component {
     if (typeof onBlur === 'function') onBlur();
   }
 
-  handleKeyDown = (event) => {
-    const { onEnterKey } = this.props;
-    if (event.keyCode === 13 && typeof onEnterKey === 'function') {
-      onEnterKey();
-    }
-  }
-
   render() {
     var props = this.props;
     var { autoFocus } = this.props;
     var { primaryColour } = this.context;
-    var optionals = {};
-
-    if (typeof primaryColour !== 'undefined') {
-      optionals['style'] = {
-        color: primaryColour
-      };
-    }
-    if (props.placeholderText) {
-      optionals['placeholder'] = props.placeholderText;
-    }
-    if (props.isDisabled) {
-      optionals['disabled'] = 'disabled';
-    }
+    var optionals = {
+      color: primaryColour,
+      disabled: props.isDisabled
+    };
+    var cx = classNames.bind(styles); // eslint-disable-line
 
     return (
       <textarea
-        placeholder={props.placeholderText || 'Write here...'}
-        className={styles.textInput}
+        placeholder={props.placeholderText}
+        className={cx('textInput')}
         rows={props.rows}
         cols={props.cols}
         value={this.state.savedValue}
@@ -108,7 +97,6 @@ class LongTextInput extends Component {
         onBlur={this.handleBlur}
         onFocus={this.handleFocus}
         autoFocus={autoFocus}
-        // onKeyDown={this.handleKeyDown}
         {...optionals}
       />
     );
