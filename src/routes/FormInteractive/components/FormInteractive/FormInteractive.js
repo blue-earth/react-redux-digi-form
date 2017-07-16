@@ -191,7 +191,7 @@ class FormInteractive extends Component {
   componentDidMount() {
     const { submitAnswer } = this.props;
     const that = this;
-    setInterval(function () {
+    this.autosaveIntervalId = setInterval(function () {
       submitAnswer(FORM_AUTOSAVE, that.checkRedirectAfterSubmit);
     }, 30000);  // todo: Will optimise this later
   }
@@ -202,6 +202,10 @@ class FormInteractive extends Component {
       props.formAccessStatus === 'fail') {
       showModal('accessCodeModal');
     }
+  }
+
+  componentWillUnmount() {
+    this.autosaveIntervalId && clearInterval(this.autosaveIntervalId);
   }
 
   checkRedirectAfterSubmit = ({ sessionId, requestAction }) => {

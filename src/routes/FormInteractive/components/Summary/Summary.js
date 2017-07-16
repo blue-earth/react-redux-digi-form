@@ -52,6 +52,10 @@ export default class Summary extends Component {
      */
     verificationStatus: PropTypes.array,
     /*
+     * params: Routing params
+     */
+    params: PropTypes.object,
+    /*
      * goTo: Goes to specific url within page.
      */
     goTo: PropTypes.func.isRequired
