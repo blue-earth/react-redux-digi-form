@@ -5,6 +5,8 @@ import React, {
 import styles from './Statement.scss';
 import classNames from 'classnames/bind';
 
+const cx = classNames.bind(styles);
+
 class Statement extends Component {
 
   static propTypes = {
@@ -17,7 +19,6 @@ class Statement extends Component {
 
   render() {
     const { instruction } = this.props;
-    const cx = classNames.bind(styles);
 
     return (
       <div className={cx('statement')}
