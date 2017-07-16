@@ -30,6 +30,7 @@ class FloatTextInput extends Component {
     refName: PropTypes.string
   }
   static defaultProps = {
+    primaryColour: '#3893d0',
     hasError: false,
     isDisabled: false,
     placeholder: '',
