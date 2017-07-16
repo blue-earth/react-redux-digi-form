@@ -1,42 +1,59 @@
 @import './mixins';
 @import './variables';
 
+$button-bg-color: lighten($grey, 15%);
+$button-border-color: lighten($grey, 10%);
+$file-name-color: #73767b;
 $uploader-border-color:   #e0e2e9;
 $droptarget-border-color: #f0f1f5;
 $uploader-text-color: #d3d3d3;
 $droptarget-active-border-color: #e3e3e3;
 $progressbar-bg-color: #e8e6e7;
 
-.fileset {
-  padding: 10px;
-}
-
-.fileTopSection {
-  @include clearfix;
-}
-.fileDetails {
-  font-size: 12px;
-}
-
-.fileIcon {
-  padding-right: 10px;
-}
-
-.fileName {
-  margin-right: 10px;
-  color: $dashboard-text-color;
-}
-
-.removeButton {
-  float: right;
-  color: $dashboard-text-color;
-  line-height: 1;
-  &:hover, &:active {
-    color: darken($dashboard-text-color, 10%);
+.fileUploadButton {
+  background: $button-bg-color;
+  border: 1px solid $button-border-color;
+  @include border-radius(4px);
+  box-shadow: 0 2px 1px $grey;
+  color: $blue;
+  font-size: 24px;
+  padding: 14px 30px;
+  &:focus, &:active {
+    outline: none;
   }
 }
 
-.fileSize {
+.fileset {
+  padding: 20px 0 0;
+}
+
+.fileWrapper {
+  display: inline-block;
+  margin-right: 20px;
+  .fileTopSection {
+    border: 1px solid $button-border-color;
+    @include border-radius(4px);
+    padding: 5px 10px;
+  }
+  .fileDetails {
+    font-size: 12px;
+    .fileName {
+      margin-right: 10px;
+      color: $file-name-color;
+    }
+    .fileSize {
+      color: $button-border-color;
+    }
+  }
+  .removeButton {
+    float: right;
+    color: $file-name-color;
+    line-height: 18px;
+    padding: 0 0 0 10px;
+    &:hover, &:active {
+      color: darken($file-name-color, 10%);
+    }
+  }
 }
 
 .progressBar {

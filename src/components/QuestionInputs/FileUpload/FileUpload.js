@@ -4,9 +4,20 @@ import React, {
 } from 'react';
 import getCsrfToken from 'redux/utils/csrf';
 import _ from 'lodash';
-import { FaCloudUpload, FaFileTextO, FaClose, FaSpinner } from 'react-icons/lib/fa';
+import { FaCloudUpload, FaClose, FaSpinner } from 'react-icons/lib/fa';
 import styles from './FileUpload.scss';
 // import classNames from 'classnames';
+
+const fileSizeWithUnit = (fileSize) =>
+  fileSize < 1024 * 1000
+  ? `${(fileSize / 1024).toFixed(1)}kb`
+  : `${(fileSize / (1024 * 1024)).toFixed(1)}MB`;
+
+const XHR_INIT = 'XHR_INIT';
+const XHR_SUCCESS = 'XHR_SUCCESS';
+const XHR_UPLOADING = 'XHR_UPLOADING';
+const XHR_WAITING = 'XHR_WAITING';
+const XHR_FAIL = 'XHR_FAIL';
 
 class FileUpload extends Component {
 
@@ -67,12 +78,12 @@ class FileUpload extends Component {
     var requestURL = `${API_URL}/form_document/api/form_response/attachment/`;
     var method = 'POST';
     if (item) {
-      this.setState({ isUploading: true});
+      this.setState({ isUploading: true });
       const file = item.file;
       const formData = new FormData();
       const xhr = new XMLHttpRequest();
       xhr.withCredentials = true;
-      formData.append(file);
+      formData.append('file', file, file.name);
 
       xhr.onload = this.handleUploadResponse;
 
@@ -144,59 +155,57 @@ class FileUpload extends Component {
     if (!items || items.length<1) return false;
     const that = this;
 
-    const file = item.file;
-    const fileSize = fileSizeWithUnit(file.size);
-    const timeLeft = 1; // TODO: calculate time left
-    const fileSizeUploaded = fileSizeWithUnit(file.size * item.progress / 100);
-
     return (
       <div className={styles.fileset}>
         {items.map((item, index) => {
-          <div key={index}>
-            <div className={styles.fileTopSection}>
-              <span className={styles.fileIcon}>
-                <FaFileTextO />
-              </span>
-              <span className={styles.fileDetails}>
-                <span className={styles.fileName}>{file.name}</span>
-                <span className={styles.fileSize}>{fileSize}</span>
-              </span>
-              <a className={styles.removeButton} tabIndex={0}
-                href="javascript:;"
-                onClick={function () { that.cancelFile(index); }}>
-                <FaClose />
-              </a>
-            </div>
-            {item.status === XHR_UPLOADING &&
-            <div>
-              <div className={styles.progressBar}>
-                <div className={styles.progress}
-                  style={{width: `${item.progress}%`}}>
+          const file = item.file;
+          const fileSize = fileSizeWithUnit(file.size);
+          const timeLeft = 1; // TODO: calculate time left
+          const fileSizeUploaded = fileSizeWithUnit(file.size * item.progress / 100);
+          return (
+            <div key={index} className={styles.fileWrapper}>
+              <div className={styles.fileTopSection}>
+                <span className={styles.fileDetails}>
+                  <span className={styles.fileName}>{file.name}</span>
+                  <span className={styles.fileSize}>{fileSize}</span>
+                </span>
+                <a className={styles.removeButton} tabIndex={0}
+                  href="javascript:;"
+                  onClick={function () { that.cancelFile(index); }}>
+                  <FaClose />
+                </a>
+              </div>
+              {item.status === XHR_UPLOADING &&
+                <div>
+                  <div className={styles.progressBar}>
+                    <div className={styles.progress}
+                      style={{width: `${item.progress}%`}}>
+                    </div>
+                  </div>
+                  <div className={styles.fileBottomSection}>
+                    <span className={styles.progressValue}>{Math.round(item.progress)}%</span>
+                    {' '}
+                    completed
+                    {' '}
+                    ({fileSizeUploaded} of {fileSize}).
+                    {' '}
+                    <span className={styles.timeLeft}>{timeLeft} seconds</span>
+                    {' '}
+                    remaining.
+                  </div>
                 </div>
-              </div>
-              <div className={styles.fileBottomSection}>
-                <span className={styles.progressValue}>{Math.round(item.progress)}%</span>
-                {' '}
-                completed
-                {' '}
-                ({fileSizeUploaded} of {fileSize}).
-                {' '}
-                <span className={styles.timeLeft}>{timeLeft} seconds</span>
-                {' '}
-                remaining.
-              </div>
+              }
+              {item.status === XHR_WAITING &&
+                <div className={styles.fileBottomSection}>
+                  <span className={styles.spin}>
+                    <FaSpinner />
+                  </span>
+                  {' '}
+                  Processing uploaded file ...
+                </div>
+              }
             </div>
-            }
-            {item.status === XHR_WAITING &&
-            <div className={styles.fileBottomSection}>
-              <span className={styles.spin}>
-                <FaSpinner />
-              </span>
-              {' '}
-              Processing uploaded file ...
-            </div>
-            }
-          </div>
+          );
         })}
       </div>
     );
@@ -205,7 +214,10 @@ class FileUpload extends Component {
   render() {
     return (
       <div className={styles.fileUpload}>
-        <button type="button" onClick={this.handleClick} disabled={isUploading}>Upload</button>
+        <button type="button" onClick={this.handleClick} disabled={this.state.isUploading}
+          className={styles.fileUploadButton}>
+          <FaCloudUpload /> Upload
+        </button>
         {this.renderFileSet()}
         <input style={{display: 'none'}}
           type="file"
