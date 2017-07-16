@@ -3,6 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import styles from './Statement.scss';
+import classNames from 'classnames/bind';
 
 class Statement extends Component {
 
@@ -16,9 +17,10 @@ class Statement extends Component {
 
   render() {
     const { instruction } = this.props;
+    const cx = classNames.bind(styles);
 
     return (
-      <div className={styles.instruction}
+      <div className={cx('statement')}
         dangerouslySetInnerHTML={{__html: instruction}}>
       </div>
     );

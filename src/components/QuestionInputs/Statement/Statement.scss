@@ -1,7 +1,8 @@
 @import './mixins';
 @import './variables';
 
-.instruction {
+.statement {
+  font-family: $font_name;
   font-size: 16px;
   max-height: 440px;
   overflow: auto;
