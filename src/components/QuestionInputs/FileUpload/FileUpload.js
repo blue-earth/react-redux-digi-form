@@ -4,9 +4,9 @@ import React, {
 } from 'react';
 import getCsrfToken from 'redux/utils/csrf';
 import _ from 'lodash';
-import { FaCloudUpload, FaClose, FaSpinner } from 'react-icons/lib/fa';
+import { FaCloudUpload, FaClose, FaSpinner, FaExclamationTriangle } from 'react-icons/lib/fa';
 import styles from './FileUpload.scss';
-// import classNames from 'classnames';
+import classNames from 'classnames';
 
 const fileSizeWithUnit = (fileSize) =>
   fileSize < 1024 * 1000
@@ -42,10 +42,26 @@ class FileUpload extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [],
-      isUploading: false
+      items: [
+        {file: {name: 'test1'}, progress: 100, status: 'XHR_SUCCESS'},
+        {file: {name: 'test2'}, progress: 60, status: 'XHR_UPLOADING'}
+      ]
     };
     this.xhr = null;
+  }
+
+  hasMaxFiles = () => {
+    const { items } = this.state;
+    // count items that haven't failed
+    // TODO: don't count cancelled/removed items
+    var numFiles = _.reject(items, function (el) {
+      return (el.status === XHR_FAIL);
+    }).length;
+    if (numFiles >= this.props.maxNumberOfFiles) {
+      return true;
+    }
+    // TODO: test total file size
+    return false;
   }
 
   handleKeyDown = (event) => {
@@ -78,7 +94,6 @@ class FileUpload extends Component {
     var requestURL = `${API_URL}/form_document/api/form_response/attachment/`;
     var method = 'POST';
     if (item) {
-      this.setState({ isUploading: true });
       const file = item.file;
       const formData = new FormData();
       const xhr = new XMLHttpRequest();
@@ -120,20 +135,19 @@ class FileUpload extends Component {
       progress: 100,
       status: XHR_WAITING
     });
-    this.setState({items: newItems, isUploading: false});
+    this.setState({items: newItems});
   }
 
   handleUploadResponse = (event) => {
-    // const { onSuccess, onFail } = this.props;
     var index = this.state.items.length - 1;
     const newItems = [...this.state.items];
     if (_.inRange(event.target.status, 200, 206)) {
+      console.log(event.target.response);
+      // TODO: add id, filename, url from response to items[index]
       newItems[index] = Object.assign({}, this.state.items[index], {
         status: XHR_SUCCESS
       });
       this.setState({items: newItems});
-      console.log(event.target.response);
-      // onSuccess(JSON.parse(event.target.response));
     } else {
       newItems[index] = Object.assign({}, this.state.items[index], {
         status: XHR_FAIL
@@ -144,11 +158,19 @@ class FileUpload extends Component {
     }
   }
 
-  // cancelFile() {
-  //   this.xhr.abort();
-  //   this.xhr = null;
-  //   this.setState({ item: null });
-  // }
+  cancelFile() {
+    console.log('TODO: delete function');
+  }
+
+  getFileWrapperClass(status) {
+    return classNames({
+      [styles.fileWrapper]: true,
+      [styles.success]: status === XHR_SUCCESS,
+      [styles.fail]: status === XHR_FAIL,
+      [styles.uploading]: status === XHR_UPLOADING,
+      [styles.waiting]: status === XHR_WAITING
+    });
+  }
 
   renderFileSet() {
     const { items } = this.state;
@@ -160,20 +182,30 @@ class FileUpload extends Component {
         {items.map((item, index) => {
           const file = item.file;
           const fileSize = fileSizeWithUnit(file.size);
-          const timeLeft = 1; // TODO: calculate time left
           const fileSizeUploaded = fileSizeWithUnit(file.size * item.progress / 100);
           return (
-            <div key={index} className={styles.fileWrapper}>
+            <div key={index} className={this.getFileWrapperClass(item.status)}>
               <div className={styles.fileTopSection}>
                 <span className={styles.fileDetails}>
                   <span className={styles.fileName}>{file.name}</span>
                   <span className={styles.fileSize}>{fileSize}</span>
                 </span>
-                <a className={styles.removeButton} tabIndex={0}
-                  href="javascript:;"
-                  onClick={function () { that.cancelFile(index); }}>
-                  <FaClose />
-                </a>
+                {item.status === XHR_SUCCESS &&
+                  <a className={styles.fileStatus} href="javascript:;"
+                    onClick={function () { that.cancelFile(index); }}>
+                    <FaClose style={{verticalAlign: 'text-bottom'}} />
+                  </a>
+                }
+                {item.status === XHR_FAIL &&
+                  <span className={styles.fileStatus}><FaExclamationTriangle /></span>
+                }
+                {item.status === XHR_WAITING &&
+                  <div className={styles.fileStatus}>
+                    <span className={styles.spin}>
+                      <FaSpinner />
+                    </span>
+                  </div>
+                }
               </div>
               {item.status === XHR_UPLOADING &&
                 <div>
@@ -188,20 +220,7 @@ class FileUpload extends Component {
                     completed
                     {' '}
                     ({fileSizeUploaded} of {fileSize}).
-                    {' '}
-                    <span className={styles.timeLeft}>{timeLeft} seconds</span>
-                    {' '}
-                    remaining.
                   </div>
-                </div>
-              }
-              {item.status === XHR_WAITING &&
-                <div className={styles.fileBottomSection}>
-                  <span className={styles.spin}>
-                    <FaSpinner />
-                  </span>
-                  {' '}
-                  Processing uploaded file ...
                 </div>
               }
             </div>
@@ -212,10 +231,11 @@ class FileUpload extends Component {
   }
 
   render() {
+    var disableButton = this.hasMaxFiles();
     return (
       <div className={styles.fileUpload}>
-        <button type="button" onClick={this.handleClick} disabled={this.state.isUploading}
-          className={styles.fileUploadButton}>
+        <button type="button" onClick={this.handleClick} className={styles.fileUploadButton}
+          disabled={disableButton}>
           <FaCloudUpload /> Upload
         </button>
         {this.renderFileSet()}

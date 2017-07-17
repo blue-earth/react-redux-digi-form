@@ -4,11 +4,7 @@
 $button-bg-color: lighten($grey, 15%);
 $button-border-color: lighten($grey, 10%);
 $file-name-color: #73767b;
-$uploader-border-color:   #e0e2e9;
-$droptarget-border-color: #f0f1f5;
-$uploader-text-color: #d3d3d3;
-$droptarget-active-border-color: #e3e3e3;
-$progressbar-bg-color: #e8e6e7;
+$progressbar-bg-color: lighten($grey, 10%);
 
 .fileUploadButton {
   background: $button-bg-color;
@@ -29,7 +25,8 @@ $progressbar-bg-color: #e8e6e7;
 
 .fileWrapper {
   display: inline-block;
-  margin-right: 20px;
+  margin: 0 20px 20px 0;
+  vertical-align: top;
   .fileTopSection {
     border: 1px solid $button-border-color;
     @include border-radius(4px);
@@ -45,13 +42,21 @@ $progressbar-bg-color: #e8e6e7;
       color: $button-border-color;
     }
   }
-  .removeButton {
+  .fileStatus {
     float: right;
     color: $file-name-color;
     line-height: 18px;
     padding: 0 0 0 10px;
     &:hover, &:active {
       color: darken($file-name-color, 10%);
+    }
+  }
+  &.fail {
+    .fileStatus {
+      color: $red;
+    }
+    &:hover, &:active {
+      color: $red;
     }
   }
 }
@@ -73,7 +78,7 @@ $progressbar-bg-color: #e8e6e7;
   bottom: 0;
   width: 0;
   @include border-radius(2px);
-  background-color: $dashboard-text-color;
+  background-color: $file-name-color;
 }
 
 .fileBottomSection {
@@ -85,7 +90,7 @@ $progressbar-bg-color: #e8e6e7;
 .progressValue,
 .timeLeft {
   font-weight: 600;
-  color: $dashboard-text-color;
+  color: $file-name-color;
 }
 
 @-webkit-keyframes spin {
