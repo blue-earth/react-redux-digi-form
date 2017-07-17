@@ -4,9 +4,9 @@
 $wrapper-inner-padding-right: 135px;
 
 .wrapper {
+  display: flex;
   flex: 1;
   @include media('>=sm') {
-    padding: 30px;
     padding: 50px 50px 85px;
   }
   @include media('>=md') {
