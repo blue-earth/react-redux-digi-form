@@ -28,11 +28,15 @@ export default class DashboardHeader extends Component {
 
   static propTypes = {
     location: PropTypes.object,
-    goTo: PropTypes.func
+    goTo: PropTypes.func,
+    processLogout: PropTypes.func
   };
 
   handleNav = (navPath) => {
-    const { goTo } = this.props;
+    const { goTo, processLogout } = this.props;
+    if (navPath === 'logout') {
+      return processLogout();
+    }
     goTo(dashboardUrl(navPath));
   }
 
@@ -90,8 +94,9 @@ export default class DashboardHeader extends Component {
         <div>Log out{'   '}
           <FaPowerOff size={16} color="#9fa9ba"
             style={{marginLeft: '4px', verticalAlign: 'sub'}} />
-        </div>), // WIP logout link
-      key: 3
+        </div>),
+      key: 'logout',
+      url: 'logout'
     }];
     const createUrl = require('./create.svg');
     const sendUrl = require('./send.svg');

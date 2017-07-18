@@ -2,6 +2,8 @@ import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
+import { replace } from './router';
+import { loginUrl } from 'helpers/urlHelper';
 
 export const REQUEST_AUTH = 'REQUEST_AUTH';
 export const RECEIVE_AUTH_STATUS = 'RECEIVE_AUTH_STATUS';
@@ -182,6 +184,7 @@ export const processLogout = () => {
   const fetchSuccess = () => {
     return (dispatch, getState) => {
       dispatch(logout());
+      dispatch(replace(loginUrl()));
     };
   };
 
