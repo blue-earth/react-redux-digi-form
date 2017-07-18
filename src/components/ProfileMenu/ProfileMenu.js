@@ -6,6 +6,8 @@ import styles from './ProfileMenu.scss';
 import classNames from 'classnames/bind';
 import ReactDOM from 'react-dom';
 
+const cx = classNames.bind(styles);
+
 class ProfileMenu extends Component {
   static propTypes = {
     children: PropTypes.node,
@@ -48,7 +50,6 @@ class ProfileMenu extends Component {
   }
   render() {
     const {children, list} = this.props;
-    var cx = classNames.bind(styles); // eslint-disable-line
     return (
       <div className={cx('profileMenuSection')} onMouseDown={this.toggleOpen}>
         {children}
