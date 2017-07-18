@@ -101,7 +101,6 @@ export default class DashboardHeader extends Component {
     const createUrl = require('./create.svg');
     const sendUrl = require('./send.svg');
     const signUrl = require('./sign.svg');
-    const certifyUrl = require('./certify.svg');
     const height = 14;
     return (
       <div className={styles.header}>
@@ -118,9 +117,6 @@ export default class DashboardHeader extends Component {
             </Button>
             <Button defaultWidth={76} style="headerButton">
               <img width="auto" height={height} src={sendUrl} className={styles.dashboardButton} /> Send
-            </Button>
-            <Button defaultWidth={76} style="headerButton">
-              <img width="auto" height={height} src={certifyUrl} className={styles.dashboardButton} /> Certify
             </Button>
           </ButtonToolbar>
           <ButtonToolbar className={styles.rightToolbar}>
