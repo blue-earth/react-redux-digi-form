@@ -59,7 +59,7 @@ class DrawingBoard extends Component {
     /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
      */
-    documentMapping: PropTypes.array.isRequired,
+    documentMapping: PropTypes.object.isRequired,
 
     /*
      * setMappingInfo: Action to update the document mapping info.
@@ -395,6 +395,8 @@ class DrawingBoard extends Component {
   }
 
   renderDocumentMappingComponents() {
+    // todo: Fix this, disable this function temporary to get other parts working
+    return;
     const { activeInputName, documentMapping, currentElement,
       pageZoom, pageNumber } = this.props;
     var boardOptionals = {};
