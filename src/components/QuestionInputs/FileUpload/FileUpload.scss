@@ -6,6 +6,9 @@ $button-border-color: lighten($grey, 10%);
 $file-name-color: #73767b;
 $progressbar-bg-color: lighten($grey, 10%);
 
+.fileUpload {
+}
+
 .fileUploadButton {
   background: $button-bg-color;
   border: 1px solid $button-border-color;
@@ -17,6 +20,14 @@ $progressbar-bg-color: lighten($grey, 10%);
   &:focus, &:active {
     outline: none;
   }
+  &[disabled] {
+    opacity: .5;
+  }
+}
+
+.uploadError {
+  color: $red;
+  margin: 20px 0 0;
 }
 
 .fileset {
@@ -32,16 +43,6 @@ $progressbar-bg-color: lighten($grey, 10%);
     @include border-radius(4px);
     padding: 5px 10px;
   }
-  .fileDetails {
-    font-size: 12px;
-    .fileName {
-      margin-right: 10px;
-      color: $file-name-color;
-    }
-    .fileSize {
-      color: $button-border-color;
-    }
-  }
   .fileStatus {
     float: right;
     color: $file-name-color;
@@ -51,20 +52,28 @@ $progressbar-bg-color: lighten($grey, 10%);
       color: darken($file-name-color, 10%);
     }
   }
-  &.success {}
   &.fail {
     .fileStatus {
       color: $red;
     }
-    &:hover, &:active {
-      color: $red;
-    }
   }
+  &.success {}
   &.uploading {}
   &.waiting {}
   &.removed {
     display: none;
   }
+}
+
+.fileDetails {
+  font-size: 12px;
+}
+.fileName {
+  margin-right: 10px;
+  color: $file-name-color;
+}
+.fileSize {
+  color: $button-border-color;
 }
 
 .progressBar {
@@ -76,7 +85,6 @@ $progressbar-bg-color: lighten($grey, 10%);
   overflow: hidden;
   position: relative;
 }
-
 .progress {
   position: absolute;
   left: 0;
@@ -92,9 +100,7 @@ $progressbar-bg-color: lighten($grey, 10%);
   margin-top: 10px;
   text-align: center;
 }
-
-.progressValue,
-.timeLeft {
+.progressValue {
   font-weight: 600;
   color: $file-name-color;
 }
@@ -124,9 +130,4 @@ $progressbar-bg-color: lighten($grey, 10%);
   animation: spin 2s infinite linear;
   display: inline-block;
   line-height: 1;
-}
-
-.uploadError {
-  color: $red;
-  margin: 20px 0 0;
 }

@@ -6,7 +6,7 @@ import getCsrfToken from 'redux/utils/csrf';
 import _ from 'lodash';
 import { FaCloudUpload, FaClose, FaSpinner, FaExclamationTriangle } from 'react-icons/lib/fa';
 import styles from './FileUpload.scss';
-import classNames from 'classnames';
+import classNames from 'classnames/bind';
 
 const fileSizeWithUnit = (fileSize) =>
   fileSize < 1024 * 1000
@@ -49,7 +49,7 @@ class FileUpload extends Component {
     value: [],
     accept: '*',
     maxNumberOfFiles: 3,
-    maxTotalFileSizeKb: 10000 // 00
+    maxTotalFileSizeKb: 1000000
   };
 
   constructor(props) {
@@ -229,12 +229,13 @@ class FileUpload extends Component {
   }
 
   renderFileSet() {
+    const cx = classNames.bind(styles);
     const { items } = this.state;
     if (!items || items.length<1) return false;
     const that = this;
 
     return (
-      <div className={styles.fileset}>
+      <div className={cx('fileset')}>
         {items.map((item, index) => {
           const file = item.file;
           var fileSize, fileSizeUploaded;
@@ -246,24 +247,32 @@ class FileUpload extends Component {
             fileSizeUploaded = fileSizeWithUnit(file.size * item.progress / 100);
           }
           return (
-            <div key={index} className={this.getFileWrapperClass(item.status)}>
-              <div className={styles.fileTopSection}>
-                <span className={styles.fileDetails}>
-                  <span className={styles.fileName}>{item.file_name || file.name}</span>
-                  <span className={styles.fileSize}>{fileSize}</span>
+            <div key={index}
+              className={cx({
+                fileWrapper: true,
+                success: item.status === XHR_SUCCESS,
+                fail: item.status === XHR_FAIL,
+                uploading: item.status === XHR_UPLOADING,
+                waiting: item.status === XHR_WAITING,
+                removed: item.status === REMOVED
+              })}>
+              <div className={cx('fileTopSection')}>
+                <span className={cx('fileDetails')}>
+                  <span className={cx('fileName')}>{item.file_name || file.name}</span>
+                  <span className={cx('fileSize')}>{fileSize}</span>
                 </span>
                 {item.attachment_id &&
-                  <a className={styles.fileStatus} href="javascript:;"
+                  <a className={cx('fileStatus')} href="javascript:;"
                     onClick={function () { that.removeFile(index); }}>
                     <FaClose style={{verticalAlign: 'text-bottom'}} />
                   </a>
                 }
                 {item.status === XHR_FAIL &&
-                  <span className={styles.fileStatus}><FaExclamationTriangle /></span>
+                  <span className={cx('fileStatus')}><FaExclamationTriangle /></span>
                 }
                 {item.status === XHR_WAITING &&
-                  <div className={styles.fileStatus}>
-                    <span className={styles.spin}>
+                  <div className={cx('fileStatus')}>
+                    <span className={cx('spin')}>
                       <FaSpinner />
                     </span>
                   </div>
@@ -271,13 +280,13 @@ class FileUpload extends Component {
               </div>
               {item.status === XHR_UPLOADING &&
                 <div>
-                  <div className={styles.progressBar}>
-                    <div className={styles.progress}
+                  <div className={cx('progressBar')}>
+                    <div className={cx('progress')}
                       style={{width: `${item.progress}%`}}>
                     </div>
                   </div>
-                  <div className={styles.fileBottomSection}>
-                    <span className={styles.progressValue}>{Math.round(item.progress)}%</span>
+                  <div className={cx('fileBottomSection')}>
+                    <span className={cx('progressValue')}>{Math.round(item.progress)}%</span>
                     {' '}
                     completed
                     {' '}
@@ -293,18 +302,20 @@ class FileUpload extends Component {
   }
 
   renderError() {
+    const cx = classNames.bind(styles);
     if (this.state.uploadError && this.state.uploadError !== null) {
-      return (<div className={styles.uploadError}>{this.state.uploadError}</div>);
+      return (<div className={cx('uploadError')}>{this.state.uploadError}</div>);
     }
     return false;
   }
 
   render() {
+    const cx = classNames.bind(styles); // eslint-disable-line
     var disableButton = this.hasMaxFiles();
     return (
-      <div className={styles.fileUpload}>
-        <button type="button" onClick={this.handleClick} className={styles.fileUploadButton}
-          disabled={disableButton}>
+      <div className={cx('fileUpload')}>
+        <button type="button" onClick={this.handleClick} disabled={disableButton}
+          className={cx('fileUploadButton')}>
           <FaCloudUpload /> Upload
         </button>
         {this.renderError()}
