@@ -51,6 +51,7 @@ $progressbar-bg-color: lighten($grey, 10%);
       color: darken($file-name-color, 10%);
     }
   }
+  &.success {}
   &.fail {
     .fileStatus {
       color: $red;
@@ -58,6 +59,11 @@ $progressbar-bg-color: lighten($grey, 10%);
     &:hover, &:active {
       color: $red;
     }
+  }
+  &.uploading {}
+  &.waiting {}
+  &.removed {
+    display: none;
   }
 }
 
