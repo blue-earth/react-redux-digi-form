@@ -125,3 +125,8 @@ $progressbar-bg-color: lighten($grey, 10%);
   display: inline-block;
   line-height: 1;
 }
+
+.uploadError {
+  color: $red;
+  margin: 20px 0 0;
+}

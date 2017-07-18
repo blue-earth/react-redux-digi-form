@@ -49,13 +49,14 @@ class FileUpload extends Component {
     value: [],
     accept: '*',
     maxNumberOfFiles: 3,
-    maxTotalFileSizeKb: 10000
+    maxTotalFileSizeKb: 10000 // 00
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      items: this.props.value
+      items: this.props.value,
+      uploadError: null
     };
     // this.xhr = null;
   }
@@ -70,7 +71,7 @@ class FileUpload extends Component {
     var numFiles = 0;
     var totalFileSize = additionalFileSize;
     _.forEach(items, function (value) {
-      if((value.attachment_id && value.status !== REMOVED) || value.status !== XHR_FAIL) {
+      if ((value.attachment_id && value.status !== REMOVED) || value.status !== XHR_FAIL) {
         numFiles += 1;
         var s = value.file_size || value.file.size;
         totalFileSize += s;
@@ -106,18 +107,25 @@ class FileUpload extends Component {
 
   handleClick = () => {
     this.refs.fileInput.click();
+    this.setState({ uploadError: null }); // remove error message
   }
 
   handleFileSelect = (event) => {
+    const { maxTotalFileSizeKb } = this.props;
     const item = this.fileToItem(this.refs.fileInput.files[0]);
-    // check file size
-    if (this.hasMaxFiles(item.file.size)) {
-      return false;
-    } else {
-      var newItems = this.state.items;
-      var newIndex = newItems.push(item) - 1;
-      this.setState({ items: newItems });
-      this.upload(newIndex);
+    if (item.file) {
+      // check file size
+      if (this.hasMaxFiles(item.file.size)) {
+        this.setState({
+          uploadError: 'The maximum total file size allowed is ' + maxTotalFileSizeKb + 'Kb'
+        });
+        return false;
+      } else {
+        var newItems = this.state.items;
+        var newIndex = newItems.push(item) - 1;
+        this.setState({ items: newItems });
+        this.upload(newIndex);
+      }
     }
   }
 
@@ -204,7 +212,7 @@ class FileUpload extends Component {
     newItems[index] = Object.assign({}, this.state.items[index], {
       status: REMOVED
     });
-    this.setState({items: newItems}, function () {
+    this.setState({items: newItems, uploadError: null}, function () {
       this.handleChange();
     });
   }
@@ -284,6 +292,13 @@ class FileUpload extends Component {
     );
   }
 
+  renderError() {
+    if (this.state.uploadError && this.state.uploadError !== null) {
+      return (<div className={styles.uploadError}>{this.state.uploadError}</div>);
+    }
+    return false;
+  }
+
   render() {
     var disableButton = this.hasMaxFiles();
     return (
@@ -292,6 +307,7 @@ class FileUpload extends Component {
           disabled={disableButton}>
           <FaCloudUpload /> Upload
         </button>
+        {this.renderError()}
         {this.renderFileSet()}
         <input style={{display: 'none'}}
           type="file"
