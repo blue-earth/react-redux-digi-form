@@ -1,19 +1,9 @@
+const STANDARD = 'standard';
+
 export const questionInputGroups = [
   {
-    name: 'standard',
+    name: STANDARD,
     displayText: 'Standard'
-  },
-  {
-    name: 'advanced',
-    displayText: 'Advanced'
-  },
-  {
-    name: 'signature',
-    displayText: 'Signature'
-  },
-  {
-    name: 'pricing',
-    displayText: 'Pricing'
   }
 ];
 
@@ -36,7 +26,7 @@ const questionInputs = {
       'contains',
       'does_not_contain'
     ],
-    group: 'standard'
+    group: STANDARD
   },
 
   'NumberField': {
@@ -57,7 +47,7 @@ const questionInputs = {
       'less_than_equal_to',
       'greater_than_equal_to'
     ],
-    group: 'standard'
+    group: STANDARD
   },
 
   'EmailField': {
@@ -77,7 +67,7 @@ const questionInputs = {
       'less_than_equal_to',
       'greater_than_equal_to'
     ],
-    group: 'standard'
+    group: STANDARD
   },
 
   'LongTextField': {
@@ -97,7 +87,7 @@ const questionInputs = {
       'contains',
       'does_not_contain'
     ],
-    group: 'standard'
+    group: STANDARD
   },
 
   'MultipleChoice': {
@@ -111,7 +101,7 @@ const questionInputs = {
       'is',
       'not'
     ],
-    group: 'standard'
+    group: STANDARD
   },
 
   'DropdownField': {
@@ -125,7 +115,7 @@ const questionInputs = {
       'is',
       'not'
     ],
-    group: 'standard'
+    group: STANDARD
   },
 
   'YesNoChoice': {
@@ -139,7 +129,7 @@ const questionInputs = {
       'is',
       'not'
     ],
-    group: 'standard'
+    group: STANDARD
   },
 
   'StatementField': {
@@ -148,7 +138,7 @@ const questionInputs = {
     displayText: 'Statement',
     validations: [],
     logicOperations: [],
-    group: 'pricing'
+    group: STANDARD
   },
 
   'AddressField': {
@@ -159,7 +149,7 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
-    group: 'advanced'
+    group: STANDARD
   },
 
   'DateField': {
@@ -178,7 +168,7 @@ const questionInputs = {
       'before_on',
       'after_on'
     ],
-    group: 'advanced'
+    group: STANDARD
   },
 
   'PhoneNumberField': {
@@ -189,7 +179,7 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
-    group: 'advanced'
+    group: STANDARD
   },
 
   'SignatureField': {
@@ -200,7 +190,7 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
-    group: 'signature'
+    group: STANDARD
   }
 };
 
