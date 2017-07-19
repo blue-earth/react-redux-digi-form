@@ -85,7 +85,7 @@ export default class ElementsListPanel extends Component {
         {
           elements.map((element, index) => {
             return (
-              <Col sm={6} className={styles.panelCol} key={index}>
+              <Col xs={6} className={styles.panelCol} key={index}>
                 <Button block active={activeInputName === element.name}
                   onClick={function (e) { that.handleElementClick(e, element.name); }}>
                   <span className={styles.inputTypeLabel}>
