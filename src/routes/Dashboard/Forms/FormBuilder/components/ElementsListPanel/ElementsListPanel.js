@@ -60,7 +60,7 @@ export default class ElementsListPanel extends Component {
 
   }
 
-  handleHeaderClick = (key) => {
+  handleQuestionTypePanelClick = (key) => {
     const { panels } = this.state;
     const newValue = !_.defaultTo(panels[key], false);
     this.setState({
@@ -110,7 +110,7 @@ export default class ElementsListPanel extends Component {
       });
       return (
         <div key={index} className={styles.panelWrapper}>
-          <div className={headerClass} onClick={function () { that.handleHeaderClick(index); }}>
+          <div className={headerClass} onClick={function () { that.handleQuestionTypePanelClick(index); }}>
             {group.displayText}
             <span className={styles.headerArrow}><FaChevronDown size={12} /></span>
           </div>
