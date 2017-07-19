@@ -7,6 +7,8 @@ import styles from './AppButton.scss';
 import Spinner from 'components/Spinner';
 import lightness from 'lightness';
 
+const cx = classNames.bind(styles);
+
 class AppButton extends Component {
   static propTypes = {
     /**
@@ -74,13 +76,13 @@ class AppButton extends Component {
   };
 
   getButtonCSSClass() {
-    const {isDisabled, size, type, extraClass} = this.props;
-    var cx = classNames.bind(styles);
+    const {isDisabled,isBusy, size, type, extraClass} = this.props;
     return cx({
       [extraClass]: true,
       [type]: true,
       [size]: true,
       isDisabled: isDisabled,
+      isBusy: isBusy,
       button: true
     });
   }
@@ -94,23 +96,25 @@ class AppButton extends Component {
     return optionals;
   }
   render() {
-    const { primaryColour, children, isBusy, type } = this.props;
-    const cx = classNames.bind(styles);
-    let styleOverride = {
-      backgroundColor: primaryColour
-    };
+    const { primaryColour, children, isBusy, type, size } = this.props;
+    let backgroundColor = primaryColour;
     if (this.state.hover) {
-      styleOverride['backgroundColor'] = lightness(primaryColour, -10);
+      backgroundColor = lightness(primaryColour, -10);
     }
+    let styleOverride = {
+      backgroundColor: backgroundColor
+    };
+    
     if (type !== 'primary') {
       styleOverride = null;
+      backgroundColor = null;
     }
     return (
       <button type="button" style={styleOverride} className={this.getButtonCSSClass()}
         onClick={this.handleClick} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-        <span className={cx({hidden: !isBusy}, 'spinnerWrapper')}>
-          <Spinner />
-        </span>
+        {
+          isBusy && <Spinner primaryColour={backgroundColor} size={size} />
+        }
         <span className={cx({hidden: isBusy})}>{children}</span>
       </button>
     );
