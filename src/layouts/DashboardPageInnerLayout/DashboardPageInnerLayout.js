@@ -1,4 +1,4 @@
-import styles from './DashboardPageLayout.scss';
+import styles from './DashboardPageInnerLayout.scss';
 import React, {PropTypes} from 'react';
 
 const DashboardPageInnerLayout = ({children}) => (

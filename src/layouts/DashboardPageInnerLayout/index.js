@@ -1,3 +1,3 @@
-import DashboardPageInnerLayout from './DashboardPageLayout';
+import DashboardPageInnerLayout from './DashboardPageInnerLayout';
 
 export default DashboardPageInnerLayout;
