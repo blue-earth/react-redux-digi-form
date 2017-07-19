@@ -7,6 +7,11 @@ export const questionInputGroups = [
   }
 ];
 
+/**
+ * ``name`` is used as identifier, change carefully!
+ * ``displayText`` is used to display on the QuestionTypePanel
+ */
+
 const questionInputs = {
   'ShortTextField': {
     name: 'ShortTextField',
