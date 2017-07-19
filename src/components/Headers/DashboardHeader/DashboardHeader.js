@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import StackLogo from 'components/Logos/StackLogo';
 import {
-  Grid,
   ButtonToolbar
 } from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
@@ -19,6 +18,7 @@ import {
 } from 'helpers/urlHelper';
 import AlertMessage from 'components/AlertMessage';
 import ProfileMenu from 'components/ProfileMenu';
+import DashboardPageInnerLayout from 'layouts/DashboardPageInnerLayout';
 
 export default class DashboardHeader extends Component {
 
@@ -104,7 +104,7 @@ export default class DashboardHeader extends Component {
     const height = 14;
     return (
       <div className={styles.header}>
-        <Grid>
+        <DashboardPageInnerLayout>
           <div className={styles.logo}>
             <StackLogo className={styles.logo} width="auto" height={32} logoStyle="white" />
           </div>
@@ -132,7 +132,7 @@ export default class DashboardHeader extends Component {
               </Button>
             </AlertMessage>
           </ButtonToolbar>
-        </Grid>
+        </DashboardPageInnerLayout>
       </div>
     );
   }
