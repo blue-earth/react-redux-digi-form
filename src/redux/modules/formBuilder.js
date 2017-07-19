@@ -30,7 +30,7 @@ export const UPDATE_FORM_ID = 'UPDATE_FORM_ID';
 export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
-export const SET_CURRENT_STEP = 'SET_CURRENT_STEP'
+export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
 
 export const INIT_BUILDER_STATE = {
   id: 0,
@@ -537,7 +537,7 @@ const formBuilderReducer = handleActions({
     Object.assign({}, state, {
       currentStep: action.payload
     }),
-    
+
   SET_QUESTION_EDIT_MODE: (state, action) =>
     _setQuestionEditMode(state, action)
 }, INIT_BUILDER_STATE);
