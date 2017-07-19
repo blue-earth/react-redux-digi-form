@@ -23,6 +23,7 @@ $button-size:       38px;
   font-size: 12px;
   height: 24px;
   line-height: 24px;
+
 }
 .md {
   min-width: 72px;
@@ -37,8 +38,40 @@ $button-size:       38px;
   border-width: 3px;
   font-size: 20px;
   line-height: 64px;
+  .spinnerWrapper {
+    font-size: 40px;
+  }
 }
-
+.primary {
+  .loader {
+    text-indent: -9999em;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    background: #838b97;
+    background: -moz-linear-gradient(left, $white 10%, rgba(131,139,151, 0) 42%);
+    background: -webkit-linear-gradient(left, $white 10%, rgba(131,139,151, 0) 42%);
+    background: -o-linear-gradient(left, $white 10%, rgba(131,139,151, 0) 42%);
+    background: -ms-linear-gradient(left, $white 10%, rgba(131,139,151, 0) 42%);
+    background: linear-gradient(to right, $white 10%, rgba(131,139,151, 0) 42%);
+    position: relative;
+    -webkit-animation: load3 1.4s infinite linear;
+    animation: load3 1.4s infinite linear;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  .loader:before {
+    width: 50%;
+    height: 50%;
+    background: $white;
+    border-radius: 100% 0 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+  }
+}
 .secondary {
   border-color: #d1d4d9;
   color: #848c98;
@@ -46,6 +79,9 @@ $button-size:       38px;
   &:hover {
     border-color: #b3b6be;
     background-color: #d1d4d9;
+    .loader-after {
+      background-color: #d1d4d9;
+    }
   }
 }
 .additional {
@@ -54,6 +90,9 @@ $button-size:       38px;
   background-color: $white;
   &:hover {
     background-color: #ecf1f5;
+    .loader-after {
+      background-color: #ecf1f5;
+    }
   }
 }
 .hidden {
@@ -61,7 +100,71 @@ $button-size:       38px;
 }
 .spinnerWrapper {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0.5em;
+  left: 50%;
+  top: 50%;
+  margin-left: -0.5em;
+  margin-top: -0.5em;
 }
+
+.loader {
+  text-indent: -9999em;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  background: #838b97;
+  background: -moz-linear-gradient(left, #ccc 30%, rgba(131,139,151, 0) 72%);
+  background: -webkit-linear-gradient(left, #ccc 30%, rgba(131,139,151, 0) 72%);
+  background: -o-linear-gradient(left, #ccc 30%, rgba(131,139,151, 0) 72%);
+  background: -ms-linear-gradient(left, #ccc 30%, rgba(131,139,151, 0) 72%);
+  background: linear-gradient(to right, #ccc 30%, rgba(131,139,151, 0) 72%);
+  position: relative;
+  -webkit-animation: load3 1.4s infinite linear;
+  animation: load3 1.4s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.loader:before {
+  width: 50%;
+  height: 50%;
+  background: #ccc;
+  border-radius: 100% 0 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+}
+.loader-after {
+  background: $white;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+@-webkit-keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+

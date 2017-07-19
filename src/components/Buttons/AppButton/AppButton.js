@@ -7,6 +7,8 @@ import styles from './AppButton.scss';
 import Spinner from 'components/Spinner';
 import lightness from 'lightness';
 
+const cx = classNames.bind(styles);
+
 class AppButton extends Component {
   static propTypes = {
     /**
@@ -75,7 +77,6 @@ class AppButton extends Component {
 
   getButtonCSSClass() {
     const {isDisabled, size, type, extraClass} = this.props;
-    var cx = classNames.bind(styles);
     return cx({
       [extraClass]: true,
       [type]: true,
@@ -95,7 +96,6 @@ class AppButton extends Component {
   }
   render() {
     const { primaryColour, children, isBusy, type } = this.props;
-    const cx = classNames.bind(styles);
     let styleOverride = {
       backgroundColor: primaryColour
     };
@@ -109,7 +109,10 @@ class AppButton extends Component {
       <button type="button" style={styleOverride} className={this.getButtonCSSClass()}
         onClick={this.handleClick} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
         <span className={cx({hidden: !isBusy}, 'spinnerWrapper')}>
-          <Spinner />
+          <div className={cx('loader')}>
+            <div className={cx('loader-after')} style={styleOverride}>
+            </div>
+          </div>
         </span>
         <span className={cx({hidden: isBusy})}>{children}</span>
       </button>
