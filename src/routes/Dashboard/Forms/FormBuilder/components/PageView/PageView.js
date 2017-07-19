@@ -31,7 +31,7 @@ class PageView extends Component {
     /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
      */
-    documentMapping: PropTypes.array.isRequired,
+    documentMapping: PropTypes.object.isRequired,
 
     /*
      * setMappingInfo: Action to update the document mapping info.

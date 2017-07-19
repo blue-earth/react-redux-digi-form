@@ -2,10 +2,6 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import {
-  Row,
-  Col
-} from 'react-bootstrap';
 import { formsUrl } from 'helpers/urlHelper';
 import classNames from 'classnames';
 import ElementsListPanel from '../ElementsListPanel';
@@ -41,7 +37,7 @@ class FormBuilder extends Component {
     /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
      */
-    documentMapping: PropTypes.array.isRequired,
+    documentMapping: PropTypes.object.isRequired,
 
     /*
      * isFetching: Redux state that indicates whether the requested form is being fetched from backend
@@ -214,21 +210,21 @@ class FormBuilder extends Component {
       [styles.open]: questionEditMode
     });
     return (
-      <Row className={styles.formBuilderContainer}>
-        <Col sm={4} className={leftPanelClass}>
+      <div className={styles.formBuilderContainer}>
+        <div className={leftPanelClass}>
           {questionEditMode
             ? <QuestionEditPanel {...this.props} />
             : <ElementsListPanel {...this.props} />
           }
-        </Col>
-        <Col sm={8} className={rightPanelClass}>
+        </div>
+        <div className={rightPanelClass}>
           <PageView {...this.props} />
-        </Col>
+        </div>
         <UploadModal {...this.props} />
         <CancelConfirmModal
           saveElement={saveElement}
           setQuestionEditMode={setQuestionEditMode} />
-      </Row>
+      </div>
     );
   }
 }

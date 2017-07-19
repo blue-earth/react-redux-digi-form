@@ -2,17 +2,24 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Grid } from 'react-bootstrap';
 import DashboardHeader from 'containers/Headers/DashboardHeaderContainer';
 import DashboardTabs from 'containers/DashboardTabsContainer';
 import styles from './DashboardLayout.scss';
+import DashboardPageInnerLayout from 'layouts/DashboardPageInnerLayout';
+
+const innerWrapperStyle = {
+  'position': 'absolute',
+  'top': 0,
+  'left': 0,
+  'right': 0,
+  'bottom': 0
+};
 
 class DashboardLayout extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
     location: PropTypes.object
   };
-
   render() {
     const {
       children,
@@ -22,9 +29,11 @@ class DashboardLayout extends Component {
       <div className={styles.dashboard}>
         <DashboardHeader />
         <DashboardTabs location={location} />
-        <Grid className={styles.contentWrapper}>
-          {children}
-        </Grid>
+        <div className={styles.contentWrapper}>
+          <DashboardPageInnerLayout extraStyle={innerWrapperStyle}>
+            {children}
+          </DashboardPageInnerLayout>
+        </div>
       </div>
     );
   }
