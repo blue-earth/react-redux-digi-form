@@ -49,7 +49,7 @@ class FileUpload extends Component {
     value: [],
     accept: '*',
     maxNumberOfFiles: 3,
-    maxBytesPerFile: 50000000
+    maxBytesPerFile: 52428800
   };
 
   constructor(props) {
