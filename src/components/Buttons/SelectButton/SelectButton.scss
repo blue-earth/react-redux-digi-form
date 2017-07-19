@@ -13,7 +13,9 @@
 }
 .selectLabel {
   display: inline-block;
+  vertical-align: top;
   padding: 0 10px;
+  line-height: 37px;
   width: 100%;
   background-color: #ddd;
   border: 1px solid $select-button-border-color;
