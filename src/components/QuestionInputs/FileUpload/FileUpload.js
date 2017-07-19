@@ -38,7 +38,7 @@ class FileUpload extends Component {
     */
     accept: PropTypes.string,
     maxNumberOfFiles: PropTypes.number,
-    maxTotalFileSizeKb: PropTypes.number,
+    maxBytesPerFile: PropTypes.number,
     onChange: PropTypes.func,
     onEnterKey: PropTypes.func,
     formId: PropTypes.number,
@@ -49,7 +49,7 @@ class FileUpload extends Component {
     value: [],
     accept: '*',
     maxNumberOfFiles: 3,
-    maxTotalFileSizeKb: 1000000
+    maxBytesPerFile: 50000000
   };
 
   constructor(props) {
@@ -61,24 +61,16 @@ class FileUpload extends Component {
     // this.xhr = null;
   }
 
-  hasMaxFiles = (additionalFileSize = 0) => {
-    /*
-    argument additionalFileSize is used when a file is selected for upload
-    to check if it will go over the max total file size
-    */
+  hasMaxFiles = () => {
     const { items } = this.state;
-    // count items ((has attachment_id && status not REMOVED) or status not XHR_FAIL)
+    // count items where (has attachment_id && status not REMOVED) or status not XHR_FAIL
     var numFiles = 0;
-    var totalFileSize = additionalFileSize;
     _.forEach(items, function (value) {
       if ((value.attachment_id && value.status !== REMOVED) || value.status !== XHR_FAIL) {
         numFiles += 1;
-        var s = value.file_size || value.file.size;
-        totalFileSize += s;
       }
     });
-    if (numFiles >= this.props.maxNumberOfFiles ||
-      (totalFileSize / 1024) >= this.props.maxTotalFileSizeKb) {
+    if (numFiles >= this.props.maxNumberOfFiles) {
       return true;
     }
     return false;
@@ -111,13 +103,14 @@ class FileUpload extends Component {
   }
 
   handleFileSelect = (event) => {
-    const { maxTotalFileSizeKb } = this.props;
+    const { maxBytesPerFile } = this.props;
+    const maxFileSize = fileSizeWithUnit(maxBytesPerFile);
     const item = this.fileToItem(this.refs.fileInput.files[0]);
     if (item.file) {
       // check file size
-      if (this.hasMaxFiles(item.file.size)) {
+      if (item.file.size > maxBytesPerFile) {
         this.setState({
-          uploadError: 'The maximum total file size allowed is ' + maxTotalFileSizeKb + 'Kb'
+          uploadError: 'The maximum file size allowed is ' + maxFileSize
         });
         return false;
       } else {
@@ -250,10 +243,7 @@ class FileUpload extends Component {
             <div key={index}
               className={cx({
                 fileWrapper: true,
-                success: item.status === XHR_SUCCESS,
                 fail: item.status === XHR_FAIL,
-                uploading: item.status === XHR_UPLOADING,
-                waiting: item.status === XHR_WAITING,
                 removed: item.status === REMOVED
               })}>
               <div className={cx('fileTopSection')}>
@@ -311,11 +301,19 @@ class FileUpload extends Component {
 
   render() {
     const cx = classNames.bind(styles); // eslint-disable-line
-    var disableButton = this.hasMaxFiles();
+    const { primaryColour } = this.context;
+    var optionals = {};
+    if (this.hasMaxFiles()) {
+      optionals['disabled'] = 'disabled';
+    }
+    if (typeof primaryColour !== 'undefined') {
+      optionals['style'] = {
+        color: primaryColour
+      };
+    }
     return (
       <div className={cx('fileUpload')}>
-        <button type="button" onClick={this.handleClick} disabled={disableButton}
-          className={cx('fileUploadButton')}>
+        <button type="button" onClick={this.handleClick} className={cx('fileUploadButton')} {...optionals}>
           <FaCloudUpload /> Upload
         </button>
         {this.renderError()}
