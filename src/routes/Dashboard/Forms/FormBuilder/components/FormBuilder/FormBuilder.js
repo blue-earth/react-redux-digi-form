@@ -41,7 +41,7 @@ class FormBuilder extends Component {
     /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
      */
-    documentMapping: PropTypes.array.isRequired,
+    documentMapping: PropTypes.object.isRequired,
 
     /*
      * isFetching: Redux state that indicates whether the requested form is being fetched from backend

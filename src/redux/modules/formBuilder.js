@@ -52,7 +52,7 @@ export const INIT_BUILDER_STATE = {
     // }
   ],
   formConfig: {},
-  documentMapping: [],
+  documentMapping: {},
   activeInputName: '',
   currentElement: null, // holds the current element state being added or edited.
   lastQuestionId: 0, // indicates lastly added question id
