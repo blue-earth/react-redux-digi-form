@@ -44,7 +44,9 @@ export default class ElementsListPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      panels: { 0: true }
+      panels: {
+        0: true   // 0 is the index, true means the panel is opened
+      }
     };
   }
 
