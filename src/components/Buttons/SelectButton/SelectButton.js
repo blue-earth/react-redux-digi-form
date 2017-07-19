@@ -7,6 +7,8 @@ import styles from './SelectButton.scss';
 import classNames from 'classnames/bind';
 import { FaAngleDown } from 'react-icons/lib/fa';
 
+const cx = classNames.bind(styles);
+
 class SelectButton extends Component {
 
   static propTypes = {
@@ -17,15 +19,20 @@ class SelectButton extends Component {
       PropTypes.number
     ]),
     optionList: PropTypes.array,
-    label: PropTypes.string,
+    label: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.node
+    ]),
     className: PropTypes.string,
-    staticValue: PropTypes.bool
+    staticValue: PropTypes.bool,
+    displayValue: PropTypes.bool
   }
   static defaultProps = {
     value: '',
     optionList: [],
     label: '',
-    staticValue: false
+    staticValue: false,
+    displayValue: true
   }
 
   constructor(props) {
@@ -35,7 +42,6 @@ class SelectButton extends Component {
       selected: props.value
     };
     this.mounted = true;
-    this.cx = classNames.bind(styles);
   }
 
   componentDidMount() {
@@ -62,19 +68,20 @@ class SelectButton extends Component {
   }
   handleSelect = (event) => {
     const {staticValue, onChange, optionList} = this.props;
-    const value = event.currentTarget.getAttribute('value');
     const index = event.currentTarget.getAttribute('data-key');
-
+    const option = optionList[index];
     if (typeof onChange === 'function') {
       if (!optionList[index].isDisabled) {
-        onChange(optionList[index].key);
+        onChange(option.key);
       }
     }
     if (staticValue) {
-      return this.setState({isOpen: false});
+      return this.setState({
+        isOpen: false
+      });
     }
     this.setState({
-      selected: value,
+      selected: option.value || option.label,
       isOpen: false
     });
   }
@@ -88,17 +95,20 @@ class SelectButton extends Component {
   }
 
   render() {
-    const { label, staticValue, optionList, className, value } = this.props;
+    const { label, staticValue, optionList, className, value, displayValue } = this.props;
     const { selected, isOpen } = this.state;
-    var cx = this.cx;
     const dropdownButton = (
       <div className={cx(className)}>
         <div ref="dropdown" className={cx('selectWrapper', {
           isOpen: this.state.isOpen
         })}>
           <div className={cx('selectLabel')} onMouseDown={this.toggleOpen}>
-            <div className={cx('pullLeft')}>{label}{label && label.length > 0 ? ':' : ' '}</div>
-            <div className={cx('selectValue', {invisible: isOpen && label.length > 0 && !staticValue})}>{selected}</div>
+            <div className={cx('pullLeft')}>
+              {label}
+              {label && label.length > 0 ? ':' : ' '}</div>
+            <div className={cx('selectValue', {invisible: isOpen && label.length > 0 && !staticValue})}>
+              {displayValue && selected}
+            </div>
             <div className={cx('selectCaret')}><FaAngleDown /></div>
           </div>
           <div className={cx('selectOptionsWrapper')}>
@@ -109,12 +119,11 @@ class SelectButton extends Component {
                     className={cx(
                       'selectOption',
                       {
-                        isSelected: selected === option.label,
+                        isSelected: selected === (option.value || option.label),
                         disabled: option.isDisabled
                       }
                     )}
                     onClick={this.handleSelect}
-                    value={option.label}
                     data-key={index}>
                     <div className={cx('selectOptionContent')}>{option.label}</div>
                   </li>
