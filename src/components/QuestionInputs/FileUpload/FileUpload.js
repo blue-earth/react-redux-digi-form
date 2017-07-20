@@ -192,9 +192,9 @@ class FileUpload extends Component {
         this.handleChange();
       });
     } else {
-      var error = "Sorry, we could not upload this file.";
+      var error = 'Sorry, we could not upload this file.';
       if (response.file[0] === 'File name exceeds 100 characters') {
-        error = "File names may not exceed 100 characters."
+        error = 'File names may not exceed 100 characters.';
       }
       newItems[index] = Object.assign({}, this.state.items[index], {
         status: XHR_FAIL,
@@ -219,7 +219,7 @@ class FileUpload extends Component {
     const limit = 20;
     const filler = '...';
     // trucate if it's more than 1 char over the limit
-    if(fileString.length > limit + 1) {
+    if (fileString.length > limit + 1) {
       var s1 = fileString.substr(0, limit - 6);
       var s2 = fileString.substring(fileString.length - 6, fileString.length);
       var truncString = s1 + filler + s2;
@@ -342,6 +342,8 @@ class FileUpload extends Component {
         <button type="button" onClick={this.handleClick} className={cx('fileUploadButton')} {...optionals}>
           <FaCloudUpload /> Upload
         </button>
+        <span className={cx('limits')}>max. {this.props.maxNumberOfFiles} files,
+          up to {fileSizeWithUnit(this.props.maxBytesPerFile)} each</span>
         {this.renderError()}
         {this.renderFileSet()}
         <input style={{display: 'none'}}

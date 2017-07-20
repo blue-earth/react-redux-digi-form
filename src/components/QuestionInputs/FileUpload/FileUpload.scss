@@ -24,6 +24,12 @@ $progressbar-bg-color: lighten($grey, 10%);
     opacity: .5;
   }
 }
+.limits {
+  vertical-align: bottom;
+  font-size: 11px;
+  color: $grey;
+  margin-left: 20px;
+}
 
 .uploadError {
   color: $red;
