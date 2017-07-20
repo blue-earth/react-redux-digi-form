@@ -25,7 +25,7 @@ storiesOf('File upload field', module)
   })
   .add('file failed to upload', () => {
     var val = [
-      {file: {name: 'file1.txt', size: 10200}, status: 'XHR_FAIL'}
+      {file: {name: 'file1.txt', size: 10200}, status: 'XHR_FAIL', error: 'Sorry, we could not upload this file.'}
     ];
     return (
       <div>

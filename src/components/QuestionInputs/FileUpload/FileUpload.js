@@ -181,8 +181,8 @@ class FileUpload extends Component {
   handleUploadResponse = (event) => {
     var index = this.state.items.length - 1;
     const newItems = [...this.state.items];
+    var response = JSON.parse(event.target.response);
     if (_.inRange(event.target.status, 200, 206)) {
-      var response = JSON.parse(event.target.response);
       newItems[index] = Object.assign({}, this.state.items[index], {
         status: XHR_SUCCESS,
         file_name: response.file_name,
@@ -192,8 +192,13 @@ class FileUpload extends Component {
         this.handleChange();
       });
     } else {
+      var error = "Sorry, we could not upload this file.";
+      if (response.file[0] === 'File name exceeds 100 characters') {
+        error = "File names may not exceed 100 characters."
+      }
       newItems[index] = Object.assign({}, this.state.items[index], {
-        status: XHR_FAIL
+        status: XHR_FAIL,
+        error: error
       });
       this.setState({items: newItems});
       // onFail(JSON.parse(event.target.response));
@@ -208,6 +213,19 @@ class FileUpload extends Component {
     this.setState({items: newItems, uploadError: null}, function () {
       this.handleChange();
     });
+  }
+
+  truncateFileName(fileString) {
+    const limit = 20;
+    const filler = '...';
+    // trucate if it's more than 1 char over the limit
+    if(fileString.length > limit + 1) {
+      var s1 = fileString.substr(0, limit - 6);
+      var s2 = fileString.substring(fileString.length - 6, fileString.length);
+      var truncString = s1 + filler + s2;
+      return truncString;
+    }
+    return fileString;
   }
 
   getFileWrapperClass(status) {
@@ -248,7 +266,9 @@ class FileUpload extends Component {
               })}>
               <div className={cx('fileTopSection')}>
                 <span className={cx('fileDetails')}>
-                  <span className={cx('fileName')}>{item.file_name || file.name}</span>
+                  <span className={cx('fileName')}>
+                    {item.file_name ? that.truncateFileName(item.file_name) : that.truncateFileName(file.name)}
+                  </span>
                   <span className={cx('fileSize')}>{fileSize}</span>
                 </span>
                 {(item.status === XHR_SUCCESS || item.status === XHR_FAIL || item.attachment_id) &&
@@ -286,7 +306,7 @@ class FileUpload extends Component {
                 {item.status === XHR_FAIL &&
                   <div>
                     <span className={cx('statusIcon')}><FaExclamationTriangle /></span>
-                    File failed to upload.
+                    {item.error}
                   </div>
                 }
               </div>
