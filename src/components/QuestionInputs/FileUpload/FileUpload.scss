@@ -35,15 +35,15 @@ $progressbar-bg-color: lighten($grey, 10%);
 }
 
 .fileWrapper {
-  display: inline-block;
-  margin: 0 20px 20px 0;
+  display: block;
+  margin: 0 0 10px;
   vertical-align: top;
+  border: 1px solid $button-border-color;
+  @include border-radius(4px);
+  padding: 5px 10px;
   .fileTopSection {
-    border: 1px solid $button-border-color;
-    @include border-radius(4px);
-    padding: 5px 10px;
   }
-  .fileStatus {
+  .removeButton {
     float: right;
     color: $file-name-color;
     line-height: 18px;
@@ -51,6 +51,12 @@ $progressbar-bg-color: lighten($grey, 10%);
     &:hover, &:active {
       color: darken($file-name-color, 10%);
     }
+  }
+  .fileStatus {
+    margin-top: 5px;
+  }
+  .statusIcon {
+    margin-right: 10px;
   }
   &.fail {
     .fileStatus {

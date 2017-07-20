@@ -251,39 +251,45 @@ class FileUpload extends Component {
                   <span className={cx('fileName')}>{item.file_name || file.name}</span>
                   <span className={cx('fileSize')}>{fileSize}</span>
                 </span>
-                {item.attachment_id &&
-                  <a className={cx('fileStatus')} href="javascript:;"
+                {(item.status === XHR_SUCCESS || item.status === XHR_FAIL || item.attachment_id) &&
+                  <a className={cx('removeButton')} href="javascript:;"
                     onClick={function () { that.removeFile(index); }}>
                     <FaClose style={{verticalAlign: 'text-bottom'}} />
                   </a>
                 }
-                {item.status === XHR_FAIL &&
-                  <span className={cx('fileStatus')}><FaExclamationTriangle /></span>
+              </div>
+              <div className={cx('fileStatus')}>
+                {item.status === XHR_UPLOADING &&
+                  <div>
+                    <div className={cx('progressBar')}>
+                      <div className={cx('progress')}
+                        style={{width: `${item.progress}%`}}>
+                      </div>
+                    </div>
+                    <div className={cx('fileBottomSection')}>
+                      <span className={cx('progressValue')}>{Math.round(item.progress)}%</span>
+                      {' '}
+                      completed
+                      {' '}
+                      ({fileSizeUploaded} of {fileSize}).
+                    </div>
+                  </div>
                 }
                 {item.status === XHR_WAITING &&
-                  <div className={cx('fileStatus')}>
-                    <span className={cx('spin')}>
-                      <FaSpinner />
+                  <div>
+                    <span className={cx('statusIcon')}>
+                      <span className={cx('spin')}><FaSpinner /></span>
                     </span>
+                    Processing file
+                  </div>
+                }
+                {item.status === XHR_FAIL &&
+                  <div>
+                    <span className={cx('statusIcon')}><FaExclamationTriangle /></span>
+                    File failed to upload.
                   </div>
                 }
               </div>
-              {item.status === XHR_UPLOADING &&
-                <div>
-                  <div className={cx('progressBar')}>
-                    <div className={cx('progress')}
-                      style={{width: `${item.progress}%`}}>
-                    </div>
-                  </div>
-                  <div className={cx('fileBottomSection')}>
-                    <span className={cx('progressValue')}>{Math.round(item.progress)}%</span>
-                    {' '}
-                    completed
-                    {' '}
-                    ({fileSizeUploaded} of {fileSize}).
-                  </div>
-                </div>
-              }
             </div>
           );
         })}
