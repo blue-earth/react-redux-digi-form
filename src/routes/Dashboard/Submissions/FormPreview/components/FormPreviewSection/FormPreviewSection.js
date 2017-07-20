@@ -93,7 +93,7 @@ class FormSection extends Component {
         <StepIndicator step={step} totalSteps={totalSteps} status="preview" />
         <div className={styles.formSectionInner}>
           <h3 className={styles.formSectionTitle}>
-          {questionGroup.title}
+            {questionGroup.title}
           </h3>
           {this.renderAllQuestions}
         </div>

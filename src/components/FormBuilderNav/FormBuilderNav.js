@@ -5,14 +5,18 @@ import React, {
 import {
   dashboardUrl,
   submissionsPath
-  // formsPath,
-  // usersPath,
-  // settingsPath
 } from 'helpers/urlHelper';
 import styles from './FormBuilderNav.scss';
 import AppButton from 'components/Buttons/AppButton/AppButton';
-import { MdHome, MdArrowBack, MdArrowForward } from 'react-icons/lib/md';
-import { FaAngleDoubleRight, FaFloppyO } from 'react-icons/lib/fa';
+import {
+  MdHome,
+  MdArrowBack,
+  MdArrowForward
+} from 'react-icons/lib/md';
+import {
+  FaAngleDoubleRight,
+  FaFloppyO
+} from 'react-icons/lib/fa';
 import _ from 'lodash';
 
 class FormBuilderNav extends Component {
@@ -20,13 +24,16 @@ class FormBuilderNav extends Component {
   static propTypes = {
     location: PropTypes.object,
     goTo: PropTypes.func.isRequired,
+    /**
+     * Document title
+     * todo: rename it to documentTitle
+     */
     title: PropTypes.string.isRequired,
     currentStep: PropTypes.string,
     setCurrentStep: PropTypes.func.isRequired
   };
 
   handleStepClick = (stepKey) => {
-    // console.log('handleStepClick: ', stepKey);
     this.props.setCurrentStep(stepKey);
   }
   handleNextClick = () => {
