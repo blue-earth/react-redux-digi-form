@@ -136,7 +136,7 @@ class ImageUpload extends Component {
           <div className={styles.fileNameSection}>
             <FaFileTextO size={16} style={{verticalAlign: 'bottom'}} />
             {' '}
-            <span className={styles.fileName}>{item.name}</span>
+            <div className={styles.fileName}>{item.name}</div>
             {' '}
             {Math.round(item.size / 1024) + 'kb'}
             <div className={styles.deleteFile} onClick={this.handleFileDelete}>

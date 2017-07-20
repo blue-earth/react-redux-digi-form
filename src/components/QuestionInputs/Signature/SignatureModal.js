@@ -7,169 +7,351 @@ import {
   Button,
   Tabs,
   Tab,
-  FormGroup,
-  ControlLabel,
   Row,
   Col
 } from 'react-bootstrap';
-import ShortTextInput from 'components/QuestionInputs/ShortTextInput/ShortTextInput';
-import DropdownInput from 'components/QuestionInputs/DropdownInput/DropdownInput';
+import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import SignaturePad from 'react-signature-pad';
+import ImageUpload from 'components/ImageUpload';
 import { connectModal } from 'redux-modal';
 import styles from './Signature.scss';
+import classNames from 'classnames';
 
 const signatureFonts = [
-  'MayQueen',
-  'ArtySignature',
-  'MonsieurLaDoulaise'
+  {
+    name: 'swift',
+    size: 110
+  }, {
+    name: 'lincoln',
+    size: 120
+  }, {
+    name: 'steve',
+    size: 80
+  }, {
+    name: 'MayQueen',
+    size: 100
+  }, {
+    name: 'ArtySignature',
+    size: 100
+  }, {
+    name: 'MonsieurLaDoulaise',
+    size: 70
+  }
 ];
+
+const BLUE = 'blue';
+const RED = 'red';
+const BLACK = 'black';
+const WRITE = 'write';
+const DRAW = 'draw';
+const UPLOAD = 'upload';
+
+const colours = {
+  blue: '#3993d1',
+  red: '#d45644',
+  black: '#000000'
+};
 
 class SignatureModal extends Component {
   static propTypes = {
-    handleHide: PropTypes.func.isRequired,
-    show: PropTypes.bool,
+    handleHide: PropTypes.func.isRequired, // Modal hide function
+    show: PropTypes.bool,                 // Modal display status
     value: PropTypes.string,
-    onSave: PropTypes.func
+    commitValue: PropTypes.func
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      activeTabKey: 'draw',
-      /*
-       * typeValue: type value.
-       */
-      typeValue: '',
-      typeFont: signatureFonts[0]
+      activeTabName: WRITE,
+      signatureName: '',
+      signatureStyle: signatureFonts[0].name,
+      writeSignatureColour: BLACK,
+      isConsented: false
     };
   };
 
   componentDidMount() {
-    window.addEventListener('resize', this.handleTypeCanvasResize);
+    window.addEventListener('resize', this.handleWriteCanvasesResize);
+    this.handleWriteCanvasesResize(); // Initializer for write canvases.
   }
 
-  handleAccept = () => {
-    const { handleHide, onSave } = this.props;
-    const { activeTabKey } = this.state;
-    if (activeTabKey === 'type') {
-      var canvas = this.refs.typeSignaturePad;
-      onSave(canvas.toDataURL());
-    } else {
-      var signature = this.refs.signature;
+  handleTabSelect = (activeTabName) => {
+    this.setState({ activeTabName });
+  }
+
+  handleSubmit = () => {
+    const { handleHide, commitValue } = this.props;
+    const { activeTabName, signatureStyle } = this.state;
+    if (activeTabName === WRITE) {
+      var canvas = this.refs[`writeSignature-${signatureStyle}`];
+      commitValue(canvas.toDataURL());
+    }
+    if (activeTabName === DRAW) {
+      var signature = this.refs.signatureCanvas;
       if (signature.isEmpty()) {
-        onSave('');
+        commitValue('');
       } else {
-        onSave(signature.toDataURL());
+        commitValue(signature.toDataURL());
+      }
+    }
+    if (activeTabName === UPLOAD) {
+      var signatureFile = this.refs.signatureFile.file();
+      if (!signatureFile || signatureFile.length === 0) {
+        commitValue('');
+      } else {
+        let reader = new FileReader();
+        reader.readAsDataURL(signatureFile);
+        reader.onload = (e) => {
+          commitValue(e.target.result);
+        };
       }
     }
     handleHide();
   }
 
-  handleTypeCanvasResize = () => {
-    const { activeTabKey } = this.state;
-    if (activeTabKey === 'type') {
-      var canvas = this.refs.typeSignaturePad;
-      canvas.width = canvas.parentElement.offsetWidth;
+  handleWriteCanvasesResize = () => {
+    const { activeTabName } = this.state;
+    let update = false;
+    if (activeTabName === 'write') {
+      signatureFonts.map((font) => {
+        var writeCanvas = this.refs[`writeSignature-${font.name}`];
+        if (writeCanvas) {
+          update = true;
+          writeCanvas.width = writeCanvas.parentElement.offsetWidth;
+        }
+      });
+      update && this.updateWriteSignatureCanvases(); // Bug solution for not found canvas
     }
   }
 
-  handleTypeChange = (value) => {
+  handleNameChange = (value) => {
     this.setState({
-      typeValue: value
-    }, this.updateCanvas);
+      signatureName: value
+    }, this.updateWriteSignatureCanvases);
   }
 
-  handleFontChange = (value) => {
+  handleSignatureStyleChange = (value) => {
     this.setState({
-      typeFont: value
-    }, this.updateCanvas);
+      signatureStyle: value
+    }, this.updateWriteSignatureCanvases);
   }
-
-  updateCanvas = () => {
-    const { typeValue, typeFont } = this.state;
-    var canvas = this.refs.typeSignaturePad;
-    var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = '100px ' + typeFont;
-    ctx.textBaseline = 'middle';
-    ctx.fillText(typeValue, 20, canvas.height / 2);
-  }
-
-  handleTabSelect = (activeTabKey) => {
-    this.setState({ activeTabKey });
-  }
-
   handleKeyDown = (event) => {
     if (event.keyCode === 13) this.handleAccept();
+  }
+  handleSelectActiveColour = (event) => {
+    this.setState({
+      writeSignatureColour: event.target.dataset.colour
+    }, this.updateWriteSignatureCanvases);
+  }
+
+  handleToggleConsent = (event) => {
+    this.setState({
+      isConsented: !this.state.isConsented
+    });
+  }
+
+  updateWriteSignatureCanvases = () => {
+    const { signatureName, writeSignatureColour } = this.state;
+    signatureFonts.map((font) => {
+      const signatureStyle = font.name;
+      const canvas = this.refs[`writeSignature-${font.name}`];
+      let ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      ctx.clearRect(0, 0, width, height);
+      let adjustedHeight = font.size;
+      ctx.font = `${adjustedHeight}px ${signatureStyle}`;
+      let textWidth = ctx.measureText(signatureName).width;
+      if (textWidth > width - 40) {
+        adjustedHeight = parseInt(adjustedHeight * (width - 40) / textWidth);
+      }
+      ctx.font = `${adjustedHeight}px ${signatureStyle}`;
+      textWidth = ctx.measureText(signatureName).width;
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = colours[writeSignatureColour];
+      ctx.fillText(signatureName, (width-textWidth) / 2, canvas.height * 0.5);
+    });
+  }
+
+  updateSignaturePad = () => {
+    var signatureCanvas = this.refs.signatureCanvas.refs.cv;
+    if (signatureCanvas.width !== signatureCanvas.clientWidth) {
+      signatureCanvas.width = signatureCanvas.clientWidth;
+      signatureCanvas.height = signatureCanvas.clientHeight;
+    }
   }
 
   render() {
     const { handleHide, show } = this.props;
-    const { typeValue, typeFont, activeTabKey } = this.state;
-    var preloadFonts = signatureFonts.map((fontName, index) => {
-      return <div className={`signature-font-preload preload-${fontName}`} key={index}>font</div>;
+    const { signatureName, signatureStyle, activeTabName, writeSignatureColour, isConsented } = this.state;
+    var preloadFonts = signatureFonts.map((font, index) => {
+      return <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>;
     });
+    const writeLogo = require('./Write.svg');
+    const drawLogo = require('./Draw.svg');
+    const uploadLogo = require('./Upload.svg');
+    const writeSignatureColourSelection = (
+      <div className={styles.signaturePadColourSelection}>
+        <span
+          onClick={this.handleSelectActiveColour}
+          data-colour={BLACK}
+          className={classNames(styles.colourSelection, styles.colourBlack, {
+            [styles.activeColour]: writeSignatureColour === BLACK
+          })}>
+        </span>
+        <span
+          onClick={this.handleSelectActiveColour}
+          data-colour={BLUE}
+          className={classNames(styles.colourSelection, styles.colourBlue, {
+            [styles.activeColour]: writeSignatureColour === BLUE
+          })}>
+        </span>
+        <span
+          onClick={this.handleSelectActiveColour}
+          data-colour={RED}
+          className={classNames(styles.colourSelection, styles.colourRed, {
+            [styles.activeColour]: writeSignatureColour === RED
+          })}></span>
+      </div>
+    );
     return (
-      <Modal show={show} onHide={handleHide}
+      <Modal show={show} onHide={handleHide} className={styles.signatureModal}
         aria-labelledby="ModalHeader">
-        <Modal.Header closeButton>
-          <Modal.Title>Signature</Modal.Title>
+        <Modal.Header>
+          <Modal.Title bsClass={styles.signatureModalTitle}>
+            YOUR SIGNATURE
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Tabs activeKey={activeTabKey} id="SignatureTabs"
-            onSelect={this.handleTabSelect}>
-            <Tab eventKey="draw" title="Draw">
-              <div className={styles.signaturePadWrapper}
-                onKeyDown={this.handleKeyDown} tabIndex={0}>
-                <SignaturePad clearButton="true" ref="signature" />
+        <Modal.Body bsClass={styles.signatureModalWrapper}>
+          <Row className={styles.infoSection}>
+            <Col xs={6}>
+              <div>Full name</div>
+              <FloatTextInput
+                extraClass={styles.signatureInput}
+                autoFocus
+                value={signatureName}
+                placeholder="Enter full name"
+                onChange={this.handleNameChange}
+                onEnterKey={this.handleAccept}
+              />
+            </Col>
+            <Col xs={3} xsPush={3}>
+              <div>Date</div>
+              <span className={styles.info}>{'05/05/2016'}</span>
+            </Col>
+          </Row>
+          <Tabs activeKey={activeTabName} id="SignatureTabs"
+            onSelect={this.handleTabSelect}
+            className={classNames(
+              {'activeTab': activeTabName === 'write'})
+            }>
+            <Tab eventKey="write" title={
+              <div>
+                <img className={styles.tabIcon} src={writeLogo} />
+                <span>
+                  {' '}
+                  Write
+                </span>
+              </div>
+            }>
+              <div className={classNames(styles.tabPanelWrapper, styles.writePanelWrapper)}>
+                <div className={styles.tabPanelTitle}>Like a celebrity</div>
+                {preloadFonts}
+                { signatureFonts.map((font, index) => (
+                  <Col key={`signature-panel-${index}`} xs={6} className={classNames(
+                    styles.signaturePanelWrapper,
+                    {
+                      [styles.signaturePanelLeft]: index % 2 === 0,
+                      [styles.signaturePanelRight]: index % 2 === 1
+                    }
+                  )}>
+                    <div className={classNames(
+                      styles.signaturePanel,
+                      {
+                        [styles.activeSignature]: font.name === signatureStyle
+                      }
+                    )} onClick={() => { this.handleSignatureStyleChange(font.name); }}>
+                      <div>
+                        <canvas ref={`writeSignature-${font.name}`} height="130">
+                        </canvas>
+                      </div>
+                      {writeSignatureColourSelection}
+                    </div>
+                    <div className={styles.signatureTypeLabel}>
+                      {font.name}
+                    </div>
+                  </Col>
+                  ))
+                }
+                <div className="clearfix"></div>
               </div>
             </Tab>
-            <Tab eventKey="type" title="Type">
-              <div className={styles.typeWrapper}>
-                {preloadFonts}
-                <Row>
-                  <Col xs={8}>
-                    <FormGroup controlId="formTypeFullname">
-                      <ControlLabel>Signature</ControlLabel>
-                      <ShortTextInput
-                        type="text"
-                        autoFocus
-                        value={typeValue}
-                        placeholder="Enter full name"
-                        onChange={this.handleTypeChange}
-                        onEnterKey={this.handleAccept}
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col xs={4}>
-                    <FormGroup controlId="formFontName">
-                      <ControlLabel>Style</ControlLabel>
-                      <DropdownInput
-                        value={typeFont}
-                        choices={signatureFonts}
-                        onChange={this.handleFontChange}
-                        includeBlank={false}
-                      />
-                    </FormGroup>
-                  </Col>
-                </Row>
-                <FormGroup controlId="formTypeFullname">
-                  <ControlLabel>Preview</ControlLabel>
-                  <div className={styles.typeSignatureWrapper}>
-                    <canvas ref="typeSignaturePad" height="150" width="566">
-                    </canvas>
-                  </div>
-                </FormGroup>
+            <Tab
+              onEntered={this.updateSignaturePad}
+              eventKey="draw" title={
+                <span>
+                  <img className={styles.tabIcon} src={drawLogo} />
+                  {' '}
+                  Draw
+                </span>
+            }>
+              <div className={classNames(styles.tabPanelWrapper, styles.drawPanelWrapper)}
+                onKeyDown={this.handleKeyDown} tabIndex={0}>
+                <div className={styles.drawPanelButtons}>
+                  <Button className="pull-right">color select</Button>
+                  <Button className="pull-right">R</Button>
+                  <div className="clearfix"></div>
+                </div>
+                <SignaturePad ref="signatureCanvas" />
+              </div>
+            </Tab>
+            <Tab eventKey="upload" title={
+              <span>
+                <img className={styles.tabIcon} src={uploadLogo} />
+                {' '}
+                Upload photo
+              </span>
+            }>
+              <div className={styles.tabPanelWrapper}>
+                <div className={styles.fileUploadSection}>
+                  <ImageUpload ref="signatureFile" />
+                </div>
               </div>
             </Tab>
           </Tabs>
         </Modal.Body>
-        <Modal.Footer>
-          <Button bsStyle="primary" onClick={this.handleAccept}>
-            Accept & Witness
-          </Button>
-          <Button onClick={handleHide}>
+        <div className={classNames(
+          styles.signatureModalConsent,
+          styles.signatureModalWrapper
+        )}>
+          <div className={styles.consentTitle}>
+            <div style={{width: '30px', float: 'left'}}>
+              <input type="checkbox" className={styles.checkbox}
+                checked={isConsented} onChange={this.handleToggleConsent} />
+            </div>
+            <div>I consent to the following</div>
+          </div>
+          <div style={{marginLeft: '30px'}}>
+            <p className={styles.consentStatement}>
+              Lorem ipsum Occaecat proident.
+              irure proident nisi ea eiusmod mollit ex cillum.
+              dolor consequat et voluptate officia velit in cupidatat ad do sed aute voluptate.
+              ullamco nostrud sit eu ad labore elit cillum in officia sunt aliquip reprehenderit.
+              in labore qui in voluptate Duis do Duis deserunt anim Duis Excepteur commodo fugiat.
+              esse do id nostrud aute tempor reprehenderit laborum in sint culpa velit elit velit.
+            </p>
+          </div>
+        </div>
+        <Modal.Footer className={classNames(
+          styles.signatureModalFooter,
+          styles.signatureModalWrapper
+        )}>
+          <Button onClick={handleHide} bsStyle="link" className={styles.cancelButton}>
             Cancel
+          </Button>
+          <Button bsStyle="primary" onClick={this.handleSubmit} disabled={!isConsented}>
+            Accept & Witness
           </Button>
         </Modal.Footer>
       </Modal>
