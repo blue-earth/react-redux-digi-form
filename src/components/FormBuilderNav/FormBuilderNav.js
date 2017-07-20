@@ -8,8 +8,15 @@ import {
 } from 'helpers/urlHelper';
 import styles from './FormBuilderNav.scss';
 import AppButton from 'components/Buttons/AppButton/AppButton';
-import { MdHome, MdArrowBack, MdArrowForward } from 'react-icons/lib/md';
-import { FaAngleDoubleRight, FaFloppyO } from 'react-icons/lib/fa';
+import {
+  MdHome,
+  MdArrowBack,
+  MdArrowForward
+} from 'react-icons/lib/md';
+import {
+  FaAngleDoubleRight,
+  FaFloppyO
+} from 'react-icons/lib/fa';
 import _ from 'lodash';
 
 class FormBuilderNav extends Component {
