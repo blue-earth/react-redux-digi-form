@@ -17,6 +17,10 @@ class FormBuilderNav extends Component {
   static propTypes = {
     location: PropTypes.object,
     goTo: PropTypes.func.isRequired,
+    /**
+     * Document title
+     * todo: rename it to documentTitle
+     */
     title: PropTypes.string.isRequired,
     currentStep: PropTypes.string,
     setCurrentStep: PropTypes.func.isRequired
