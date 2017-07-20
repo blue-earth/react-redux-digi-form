@@ -66,7 +66,7 @@ class FileUpload extends Component {
     // count items where (has attachment_id && status not REMOVED) or status not XHR_FAIL
     var numFiles = 0;
     _.forEach(items, function (value) {
-      if ((value.attachment_id && value.status !== REMOVED) || value.status !== XHR_FAIL) {
+      if ((value.attachment_id && value.status !== REMOVED) && value.status !== XHR_FAIL) {
         numFiles += 1;
       }
     });
