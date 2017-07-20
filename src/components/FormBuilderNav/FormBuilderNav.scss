@@ -13,12 +13,32 @@
 .breadcrumbs {
   float: left;
   width: 25%;
+  min-width: 280px;
+  color: $grey;
+}
+.crumbDivider {
+  margin: 0 5px;
+}
+.homeLink {
+  color: $grey;
+  cursor: pointer;
+}
+.formTitle {
+  color: #848c98;
+  vertical-align: middle;
 }
 
 .actions {
   float: right;
   text-align: right;
   width: 25%;
+  min-width: 280px;
+  button {
+    margin-left: 10px;
+  }
+  button:first-of-type {
+    margin-left: 0;
+  }
 }
 
 .formStepsNav {

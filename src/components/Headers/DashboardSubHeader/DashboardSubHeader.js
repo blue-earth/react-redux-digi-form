@@ -10,11 +10,15 @@ class DashboardSubHeader extends Component {
 
   displayComponent = () => {
     const { location: { pathname } } = this.props;
+    // TODO: is there a better way to figure out where we are?
     var pathArray = pathname.split('/');
     pathArray = pathArray.filter(function (n) { return n !== ''; });
     // determine if we are in form builder or somewhere else
     var path = 'default';
     if (pathArray[1] === 'forms' && pathArray[3] === 'edit') {
+      path = 'formBuilder';
+    }
+    if (pathArray[1] === 'forms' && pathArray[2] === 'new') {
       path = 'formBuilder';
     }
     switch (path) {
