@@ -396,7 +396,6 @@ class DrawingBoard extends Component {
 
   renderDocumentMappingComponents() {
     // todo: Fix this, disable this function temporary to get other parts working
-    return;
     const { activeInputName, documentMapping, currentElement,
       pageZoom, pageNumber } = this.props;
     var boardOptionals = {};
@@ -512,7 +511,7 @@ class DrawingBoard extends Component {
         ref="board"
         {...boardOptionals}>
 
-        {this.renderDocumentMappingComponents()}
+        {/* {this.renderDocumentMappingComponents()}*/}
         {this.renderCurrentElement()}
         {isDrawing &&
           <div className={styles.newBoxDraw}
