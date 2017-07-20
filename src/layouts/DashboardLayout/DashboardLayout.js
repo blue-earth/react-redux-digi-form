@@ -3,7 +3,8 @@ import React, {
   PropTypes
 } from 'react';
 import DashboardHeader from 'containers/Headers/DashboardHeaderContainer';
-import DashboardTabs from 'containers/DashboardTabsContainer';
+// import DashboardTabs from 'containers/DashboardTabsContainer';
+import DashboardSubHeader from 'components/Headers/DashboardSubHeader';
 import styles from './DashboardLayout.scss';
 import DashboardPageInnerLayout from 'layouts/DashboardPageInnerLayout';
 
@@ -28,7 +29,7 @@ class DashboardLayout extends Component {
     return (
       <div className={styles.dashboard}>
         <DashboardHeader />
-        <DashboardTabs location={location} />
+        <DashboardSubHeader location={location} />
         <div className={styles.contentWrapper}>
           <DashboardPageInnerLayout extraStyle={innerWrapperStyle}>
             {children}

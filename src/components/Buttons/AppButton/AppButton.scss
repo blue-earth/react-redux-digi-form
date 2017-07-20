@@ -1,43 +1,42 @@
 @import './mixins';
 @import './variables';
 
-$button-size:       38px;
-
 .button {
   position: relative;
   @include border-radius(5px);
   border: 1px solid transparent;
-  padding: 0 1em;
   cursor: pointer;
   color: $white;
+  background-color: $blue;
   font-family: $button-font-family;
   padding-top: 0;
   padding-bottom: 0;
   &:focus {
     outline: none;
   }
+  &.isDisabled {
+    cursor: not-allowed;
+  }
 }
 .sm {
-  min-width: 48px;
-  height: 24px;
+  padding: 0 10px;
+  height: $button-height-sm;
+  line-height: $button-height-sm;
   font-size: 12px;
-  height: 24px;
-  line-height: 24px;
-
 }
 .md {
-  min-width: 72px;
-  height: 36px;
+  padding: 0 16px;
+  height: $button-height-md;
+  line-height: $button-height-md;
   border-width: 2px;
-  line-height: 36px;
   font-size: 14px;
 }
 .lg {
-  min-width: 128px;
-  height: 64px;
+  padding: 0 22px;
+  height: $button-height-lg;
+  line-height: $button-height-lg;
   border-width: 3px;
   font-size: 20px;
-  line-height: 64px;
 }
 .primary {
   .loader {
@@ -52,12 +51,11 @@ $button-size:       38px;
   }
 }
 .secondary {
-  border-color: #d1d4d9;
+  border-color: #dadce0;
   color: #848c98;
   background-color: $white;
   &:hover {
-    border-color: #b3b6be;
-    background-color: #d1d4d9;
+    background-color: #dadce0;
   }
 }
 .additional {
@@ -74,7 +72,7 @@ $button-size:       38px;
 }
 
 .hidden {
-  visibility: hidden;
+  display: none;
 }
 
 .loader {
@@ -123,4 +121,3 @@ $button-size:       38px;
     @include rotate(360);
   }
 }
-

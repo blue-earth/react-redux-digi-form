@@ -38,7 +38,7 @@ class AppButton extends Component {
      * secondary will render the button in secondary style
      * additional will render the button in additional style
      */
-    type: PropTypes.oneOf(['primary', 'secondary','additional']),
+    type: PropTypes.oneOf(['primary', 'secondary', 'additional']),
     primaryColour: PropTypes.string,
     children: PropTypes.node
   };
@@ -58,8 +58,8 @@ class AppButton extends Component {
   }
 
   handleClick = (e) => {
-    const { onClick, isBusy } = this.props;
-    if (isBusy) {
+    const { onClick, isBusy, isDisabled } = this.props;
+    if (isBusy || isDisabled) {
       e.preventDefault();
     } else {
       onClick.apply(this, arguments);
@@ -67,7 +67,6 @@ class AppButton extends Component {
   };
 
   mouseOver = () => {
-
     this.setState({hover: true});
   };
 
@@ -76,7 +75,7 @@ class AppButton extends Component {
   };
 
   getButtonCSSClass() {
-    const {isDisabled,isBusy, size, type, extraClass} = this.props;
+    const {isDisabled, isBusy, size, type, extraClass} = this.props;
     return cx({
       [extraClass]: true,
       [type]: true,
@@ -98,20 +97,22 @@ class AppButton extends Component {
   render() {
     const { primaryColour, children, isBusy, type, size } = this.props;
     let backgroundColor = primaryColour;
+    const cx = classNames.bind(styles); // eslint-disable-line
+    var optionals = this.getOptionalAttributes;
     if (this.state.hover) {
       backgroundColor = lightness(primaryColour, -10);
     }
     let styleOverride = {
       backgroundColor: backgroundColor
     };
-    
+
     if (type !== 'primary') {
       styleOverride = null;
       backgroundColor = null;
     }
     return (
       <button type="button" style={styleOverride} className={this.getButtonCSSClass()}
-        onClick={this.handleClick} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+        onClick={this.handleClick} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut} {...optionals}>
         {
           isBusy && <Spinner primaryColour={backgroundColor} size={size} />
         }

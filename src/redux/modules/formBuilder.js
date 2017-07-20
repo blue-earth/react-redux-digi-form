@@ -30,6 +30,8 @@ export const UPDATE_FORM_ID = 'UPDATE_FORM_ID';
 export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
+export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
+
 export const INIT_BUILDER_STATE = {
   id: 0,
   isFetching: false, // indicates the form is being loaded.
@@ -57,7 +59,8 @@ export const INIT_BUILDER_STATE = {
   currentElement: null, // holds the current element state being added or edited.
   lastQuestionId: 0, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
-  questionEditMode: false
+  questionEditMode: false,
+  currentStep: 'select' // select, arrange, configure or send
 };
 
 export const INIT_QUESTION_STATE = {
@@ -455,6 +458,11 @@ const _setQuestionEditMode = (state, action) => {
 };
 
 // ------------------------------------
+// Action: setCurrentStep
+// ------------------------------------
+export const setCurrentStep = createAction(SET_CURRENT_STEP);
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const formBuilderReducer = handleActions({
@@ -523,6 +531,11 @@ const formBuilderReducer = handleActions({
   SET_PAGE_ZOOM: (state, action) =>
     Object.assign({}, state, {
       pageZoom: action.payload
+    }),
+
+  SET_CURRENT_STEP: (state, action) =>
+    Object.assign({}, state, {
+      currentStep: action.payload
     }),
 
   SET_QUESTION_EDIT_MODE: (state, action) =>
