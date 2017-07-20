@@ -71,9 +71,7 @@ class FormBuilderSteps extends Component {
   render() {
     var StepComponent = this.currentStepComponent;
     return (
-      <div>
-        {<StepComponent />}
-      </div>
+      <StepComponent />
     );
   }
 }
