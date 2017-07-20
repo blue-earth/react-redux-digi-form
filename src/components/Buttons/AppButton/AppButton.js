@@ -75,7 +75,7 @@ class AppButton extends Component {
   };
 
   getButtonCSSClass() {
-    const {isDisabled,isBusy, size, type, extraClass} = this.props;
+    const {isDisabled, isBusy, size, type, extraClass} = this.props;
     return cx({
       [extraClass]: true,
       [type]: true,
@@ -95,7 +95,6 @@ class AppButton extends Component {
     return optionals;
   }
   render() {
-
     const { primaryColour, children, isBusy, type, size } = this.props;
     let backgroundColor = primaryColour;
     const cx = classNames.bind(styles); // eslint-disable-line

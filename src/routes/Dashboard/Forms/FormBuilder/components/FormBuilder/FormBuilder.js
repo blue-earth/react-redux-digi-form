@@ -2,7 +2,6 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { formsUrl } from 'helpers/urlHelper';
 import classNames from 'classnames';
 import ElementsListPanel from '../ElementsListPanel';
 import PageView from '../PageView';

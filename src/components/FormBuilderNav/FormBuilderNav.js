@@ -31,12 +31,12 @@ class FormBuilderNav extends Component {
   }
   handleNextClick = () => {
     const { currentStep } = this.props;
-    var i = _.findIndex(this.builderSteps, function(o) { return o.stepKey === currentStep; });
+    var i = _.findIndex(this.builderSteps, function (o) { return o.stepKey === currentStep; });
     this.props.setCurrentStep(this.builderSteps[i + 1].stepKey);
   }
   handlePrevClick = () => {
     const { currentStep } = this.props;
-    var i = _.findIndex(this.builderSteps, function(o) { return o.stepKey === currentStep; });
+    var i = _.findIndex(this.builderSteps, function (o) { return o.stepKey === currentStep; });
     this.props.setCurrentStep(this.builderSteps[i - 1].stepKey);
   }
 
