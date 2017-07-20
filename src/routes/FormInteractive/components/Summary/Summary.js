@@ -5,6 +5,7 @@ import React, {
 import { FaPaperPlane } from 'react-icons/lib/fa';
 import { Button } from 'react-bootstrap';
 import { FORM_USER_SUBMISSION } from 'redux/modules/formInteractive';
+import IDVerificationModal from '../IDVerificationModal';
 import SubmissionReview from 'components/SubmissionReview';
 import styles from './Summary.scss';
 
@@ -27,6 +28,10 @@ export default class Summary extends Component {
      * form: form_data of response, consists of questions and logics.
      */
     form: PropTypes.object,
+    /*
+     * formConfig: form configuration data.
+     */
+    formConfig: PropTypes.object,
     /*
      * answers: Redux state that stores the array of answered values
      */
@@ -58,15 +63,29 @@ export default class Summary extends Component {
     /*
      * goTo: Goes to specific url within page.
      */
-    goTo: PropTypes.func.isRequired
+    goTo: PropTypes.func.isRequired,
+
+    /*
+     * setIDVerifyStatus: Set ID verification related data and status
+     */
+    setIDVerifyStatus: PropTypes.func.isRequired
   };
 
   handleFinalSubmit = () => {
     const { submitAnswer } = this.props;
-    submitAnswer(FORM_USER_SUBMISSION, this.handleGotoCompletion);
+    submitAnswer(FORM_USER_SUBMISSION, this.handlePostSubmit);
   }
 
-  handleGotoCompletion = () => {
+  handlePostSubmit = () => {
+    const { formConfig: { idVerification }, showModal } = this.props;
+    if (idVerification.isRequired) {
+      showModal('idVerificationModal');
+    } else {
+      this.gotoCompletion();
+    }
+  }
+
+  gotoCompletion = () => {
     const { goTo, params: { formIdSlug }, sessionId } = this.props;
     goTo(`/forms/${formIdSlug}/${sessionId}/completed`);
   }
@@ -92,6 +111,7 @@ export default class Summary extends Component {
             </Button>
           </div>
         </div>
+        <IDVerificationModal {...this.props} onLinkClick={this.gotoCompletion} />
       </div>
     );
   }

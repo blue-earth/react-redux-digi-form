@@ -177,7 +177,12 @@ class FormInteractive extends Component {
     /*
      * goTo: Goes to specific url within page.
      */
-    goTo: PropTypes.func.isRequired
+    goTo: PropTypes.func.isRequired,
+
+    /*
+     * setPeople: Set people data for ID verification
+     */
+    setIDVerifyStatus: PropTypes.func.isRequired
   };
 
   getChildContext() {

@@ -22,7 +22,8 @@ export default class DriversLicenseForm extends Component {
     setIdType: PropTypes.func.isRequired,
     submitIdentity: PropTypes.func.isRequired,
     setNotice: PropTypes.func.isRequired,
-    isSubmitting: PropTypes.bool.isRequired
+    isSubmitting: PropTypes.bool.isRequired,
+    onLinkClick: PropTypes.func
   };
 
   getPassportFields(values) {
@@ -59,7 +60,7 @@ export default class DriversLicenseForm extends Component {
   }
 
   render() {
-    const { handleSubmit, idType, isSubmitting } = this.props;
+    const { handleSubmit, idType, isSubmitting, onLinkClick } = this.props;
     const typeOptions = _.map(identityDocumentTypesList, (item, index) => (
       <option value={item.value} key={index}>{item.label}</option>
     ));
@@ -137,7 +138,7 @@ export default class DriversLicenseForm extends Component {
             </Col>
           </Row>
         </IDVerificationFormWrapper>
-        <IDVerificationFormFooter submitting={isSubmitting} />
+        <IDVerificationFormFooter submitting={isSubmitting} onLinkClick={onLinkClick} />
       </Form>
     );
   }

@@ -26,7 +26,7 @@ export default class SubmissionReview extends Component {
     /*
      * questions: form questions.
      */
-    questions: PropTypes.object,
+    questions: PropTypes.array,
 
     /*
      * answers: Redux state that stores the array of answered values
@@ -70,7 +70,7 @@ export default class SubmissionReview extends Component {
             const finalQuestion = getCompiledQuestion(question, answers);
             const answer = findItemById(answers, finalQuestion.questionId);
             return (
-              <li className={styles.questionListItem}>
+              <li className={styles.questionListItem} key={index}>
                 <div className={styles.questionListItemInner}>
                   <div className={styles.questionInstruction}>
                     {finalQuestion.questionInstruction || finalQuestion.instruction}

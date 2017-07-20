@@ -12,7 +12,8 @@ import {
   submitAnswer,
   fetchAnswers,
   fetchFormIfNeeded,
-  updateAccessCode
+  updateAccessCode,
+  setIDVerifyStatus
 } from 'redux/modules/formInteractive';
 
 import FormInteractive from '../components/FormInteractive';
@@ -28,6 +29,7 @@ const mapActionCreators = {
   goToQuestion,
   handleEnter,
   updateAccessCode,
+  setIDVerifyStatus,
   showModal: show,
   goTo
 };
@@ -42,6 +44,7 @@ const mapStateToProps = (state) => {
     currentQuestion,
     title,
     form,
+    formConfig,
     answers,
     prefills,
     verificationStatus,
@@ -49,7 +52,8 @@ const mapStateToProps = (state) => {
     shouldShowFinalSubmit,
     isAccessCodeProtected,
     formAccessStatus,
-    formAccessCode
+    formAccessCode,
+    idVerifyStatus
   } = formInteractive || INIT_FORM_STATE;
   return {
     formId: parseInt(id, 10),
@@ -59,6 +63,7 @@ const mapStateToProps = (state) => {
     currentQuestion,
     title,
     form,
+    formConfig,
     answers,
     prefills,
     primaryColour,
@@ -66,7 +71,8 @@ const mapStateToProps = (state) => {
     shouldShowFinalSubmit,
     isAccessCodeProtected,
     formAccessStatus,
-    formAccessCode
+    formAccessCode,
+    idVerifyStatus
   };
 };
 

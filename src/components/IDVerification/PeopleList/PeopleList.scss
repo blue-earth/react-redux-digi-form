@@ -1,0 +1,59 @@
+@import './mixins';
+@import './variables';
+
+$status-success-color: #62ca2f;
+$status-warning-color: #ffc000;
+
+.peopleList {
+  border-top: 1px solid $identity-separator-color;
+  padding-top: 20px;
+}
+
+.headline {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
+  margin-top: 0;
+}
+
+.description {
+  font-size: 11px;
+  color: $id-verification-text-color;
+}
+
+.personItem {
+  @include border-radius(10px);
+  border: 1px solid $identity-separator-color;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  &.verified {
+    background-color: $identity-separator-color;
+  }
+}
+
+.warningIcon {
+  color: $status-warning-color;
+}
+
+.successIcon {
+  color: $status-success-color;
+}
+
+.statusText {
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.emailField {
+  :global .form-group {
+    padding-top: 10px;
+    margin-bottom: 0;
+  }
+}
+
+.footerWrapper {
+  background-color: $bg-color2;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}

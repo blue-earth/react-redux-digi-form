@@ -39,8 +39,9 @@ export default (store) => ({
   getChildRoutes(location, cb) {
     require.ensure([], (require) => {
       const reducer = require('redux/modules/formInteractive').default;
+      const formReducer = require('redux/modules/idVerificationForm').default;
       injectReducer(store, { key: 'formInteractive', reducer });
-
+      injectReducer(store, { key: 'idVerificationForm', reducer: formReducer });
       cb(null, routes);
     });
   }
