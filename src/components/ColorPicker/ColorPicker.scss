@@ -1,0 +1,40 @@
+@import './mixins';
+@import './variables';
+
+.cover {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.colorButtonWrapper {
+  display: inline-block;
+}
+.colorPickerWrapper {
+  position: absolute;
+  z-index: 10;
+}
+.colorPickerButton {
+  position: relative;
+  cursor: pointer;
+  padding: 0 0 0 $btn-size;
+  height: $btn-size;
+  width: $btn-size * 2;
+  box-sizing: border-box;
+  border: 1px solid $grey;
+  background: $grey;
+  font-size: 13px;
+  @include border-radius(4px);
+  &:focus {
+    outline: none;
+  }
+  .colorBox {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: $btn-size - 1;
+    height: $btn-size - 2;
+    @include border-radius(3px 0 0 3px);
+  }
+}
