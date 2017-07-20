@@ -5,9 +5,6 @@ import React, {
 import {
   dashboardUrl,
   submissionsPath
-  // formsPath,
-  // usersPath,
-  // settingsPath
 } from 'helpers/urlHelper';
 import styles from './FormBuilderNav.scss';
 import AppButton from 'components/Buttons/AppButton/AppButton';
@@ -26,7 +23,6 @@ class FormBuilderNav extends Component {
   };
 
   handleStepClick = (stepKey) => {
-    // console.log('handleStepClick: ', stepKey);
     this.props.setCurrentStep(stepKey);
   }
   handleNextClick = () => {
