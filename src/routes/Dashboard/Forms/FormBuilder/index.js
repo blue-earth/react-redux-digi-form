@@ -4,7 +4,7 @@ const getComponent = (nextState, cb) => {
   require.ensure([], (require) => {
     /*  Webpack - use require callback to define
      dependencies for bundling   */
-    const FormBuilder = require('./containers/FormBuilderContainer').default;
+    const FormBuilder = require('./containers/FormBuilderStepsContainer').default;
 
     /*  Return getComponent   */
     cb(null, FormBuilder);
