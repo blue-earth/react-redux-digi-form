@@ -1,0 +1,65 @@
+@import './mixins';
+@import './variables';
+
+.uploadWrapper.active {
+  color: #7C7C7C;
+  border-color: $button-default-bg-color;
+}
+.uploadWrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border: 3px dashed lighten($button-default-bg-color, 10%);
+  @include border-radius(5px);
+  text-align: center;
+  color: lighten(#7c7c7c, 10%);
+  cursor: default;
+}
+.previewWrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border: 1px solid $button-default-bg-color;
+  @include border-radius(5px);
+  background-color: $white;
+  text-align: center;
+  padding: 10px;
+}
+.imageWrapper {
+  height: calc(100% - 30px);
+  width: 100%;
+  border: 1px solid $button-default-bg-color;
+  @include border-radius(5px);
+}
+.previewImage {
+  height: 100%;
+}
+.fileNameSection {
+  padding: 1em 0;
+  text-align: left;
+  color: #d3d3d3;
+  font-weight: lighter;
+  font-size: 12px;
+}
+.fileName {
+  color: $dashboard-text-color;
+  margin-right: 10px;
+}
+.deleteFile {
+  float: right;
+  color: $dashboard-text-color;
+  cursor: pointer;
+}
+
+.browseButton {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.uploadInstructionWrapper {  
+  @include vcenter;
+  width: 100%;
+}
+.fileInput {
+  display: none;
+}
+
