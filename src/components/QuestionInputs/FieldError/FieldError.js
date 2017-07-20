@@ -20,7 +20,8 @@ class FieldError extends Component {
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
-      PropTypes.object
+      PropTypes.object,
+      PropTypes.array
     ]),
     /*
      * validations: validations to apply to the question.
