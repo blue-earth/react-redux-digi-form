@@ -44,7 +44,9 @@ export default class ElementsListPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      panels: { 0: true }
+      panels: {
+        0: true   // 0 is the index, true means the panel is opened
+      }
     };
   }
 
@@ -60,7 +62,7 @@ export default class ElementsListPanel extends Component {
 
   }
 
-  handleHeaderClick = (key) => {
+  handleQuestionTypePanelClick = (key) => {
     const { panels } = this.state;
     const newValue = !_.defaultTo(panels[key], false);
     this.setState({
@@ -85,7 +87,7 @@ export default class ElementsListPanel extends Component {
         {
           elements.map((element, index) => {
             return (
-              <Col sm={6} className={styles.panelCol} key={index}>
+              <Col xs={6} className={styles.panelCol} key={index}>
                 <Button block active={activeInputName === element.name}
                   onClick={function (e) { that.handleElementClick(e, element.name); }}>
                   <span className={styles.inputTypeLabel}>
@@ -110,7 +112,7 @@ export default class ElementsListPanel extends Component {
       });
       return (
         <div key={index} className={styles.panelWrapper}>
-          <div className={headerClass} onClick={function () { that.handleHeaderClick(index); }}>
+          <div className={headerClass} onClick={function () { that.handleQuestionTypePanelClick(index); }}>
             {group.displayText}
             <span className={styles.headerArrow}><FaChevronDown size={12} /></span>
           </div>

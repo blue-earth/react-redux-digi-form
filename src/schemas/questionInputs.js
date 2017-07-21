@@ -1,21 +1,16 @@
+const STANDARD = 'standard';
+
 export const questionInputGroups = [
   {
-    name: 'standard',
+    name: STANDARD,
     displayText: 'Standard'
-  },
-  {
-    name: 'advanced',
-    displayText: 'Advanced'
-  },
-  {
-    name: 'signature',
-    displayText: 'Signature'
-  },
-  {
-    name: 'pricing',
-    displayText: 'Pricing'
   }
 ];
+
+/**
+ * ``name`` is used as identifier, change carefully!
+ * ``displayText`` is used to display on the QuestionTypePanel
+ */
 
 const questionInputs = {
   'ShortTextField': {
@@ -36,9 +31,60 @@ const questionInputs = {
       'contains',
       'does_not_contain'
     ],
-    group: 'standard'
+    group: STANDARD
   },
-
+  'EmailField': {
+    name: 'EmailField',
+    componentName: 'ShortTextInput',
+    displayText: 'Email',
+    inputType: 'email',
+    validations: [
+      'is_required',
+      'is_email'
+    ],
+    logicOperations: [
+      'equal_to',
+      'not_equal_to',
+      'less_than',
+      'greater_than',
+      'less_than_equal_to',
+      'greater_than_equal_to'
+    ],
+    group: STANDARD
+  },
+  'PhoneNumberField': {
+    name: 'PhoneNumberField',
+    componentName: 'PhoneNumberInput',
+    displayText: 'Phone Number',
+    validations: [
+      'is_required'
+    ],
+    logicOperations: [],
+    group: STANDARD
+  },
+  'AddressField': {
+    name: 'AddressField',
+    componentName: 'AddressInput',
+    displayText: 'Address',
+    validations: [
+      'is_required'
+    ],
+    logicOperations: [],
+    group: STANDARD
+  },
+  'MultipleChoice': {
+    name: 'MultipleChoice',
+    componentName: 'MultipleChoice',
+    displayText: 'Multiple Choice',
+    validations: [
+      'is_required'
+    ],
+    logicOperations: [
+      'is',
+      'not'
+    ],
+    group: STANDARD
+  },
   'NumberField': {
     name: 'NumberField',
     componentName: 'ShortTextInput',
@@ -57,111 +103,8 @@ const questionInputs = {
       'less_than_equal_to',
       'greater_than_equal_to'
     ],
-    group: 'standard'
+    group: STANDARD
   },
-
-  'EmailField': {
-    name: 'EmailField',
-    componentName: 'ShortTextInput',
-    displayText: 'Email',
-    inputType: 'email',
-    validations: [
-      'is_required',
-      'is_email'
-    ],
-    logicOperations: [
-      'equal_to',
-      'not_equal_to',
-      'less_than',
-      'greater_than',
-      'less_than_equal_to',
-      'greater_than_equal_to'
-    ],
-    group: 'standard'
-  },
-
-  'LongTextField': {
-    name: 'LongTextField',
-    componentName: 'LongTextInput',
-    displayText: 'Long Text',
-    validations: [
-      'is_required',
-      'minimum',
-      'maximum'
-    ],
-    logicOperations: [
-      'equal_to',
-      'not_equal_to',
-      'begins_with',
-      'ends_with',
-      'contains',
-      'does_not_contain'
-    ],
-    group: 'standard'
-  },
-
-  'MultipleChoice': {
-    name: 'MultipleChoice',
-    componentName: 'MultipleChoice',
-    displayText: 'Multiple Choice',
-    validations: [
-      'is_required'
-    ],
-    logicOperations: [
-      'is',
-      'not'
-    ],
-    group: 'standard'
-  },
-
-  'DropdownField': {
-    name: 'DropdownField',
-    componentName: 'DropdownInput',
-    displayText: 'Dropdown',
-    validations: [
-      'is_required'
-    ],
-    logicOperations: [
-      'is',
-      'not'
-    ],
-    group: 'standard'
-  },
-
-  'YesNoChoice': {
-    name: 'YesNoChoice',
-    componentName: 'YesNoChoice',
-    displayText: 'Yes / No',
-    validations: [
-      'is_required'
-    ],
-    logicOperations: [
-      'is',
-      'not'
-    ],
-    group: 'standard'
-  },
-
-  'StatementField': {
-    name: 'StatementField',
-    componentName: 'Statement',
-    displayText: 'Statement',
-    validations: [],
-    logicOperations: [],
-    group: 'pricing'
-  },
-
-  'AddressField': {
-    name: 'AddressField',
-    componentName: 'AddressInput',
-    displayText: 'Address',
-    validations: [
-      'is_required'
-    ],
-    logicOperations: [],
-    group: 'advanced'
-  },
-
   'DateField': {
     name: 'DateField',
     componentName: 'DateInput',
@@ -178,20 +121,61 @@ const questionInputs = {
       'before_on',
       'after_on'
     ],
-    group: 'advanced'
+    group: STANDARD
   },
-
-  'PhoneNumberField': {
-    name: 'PhoneNumberField',
-    componentName: 'PhoneNumberInput',
-    displayText: 'Phone Number',
+  'LongTextField': {
+    name: 'LongTextField',
+    componentName: 'LongTextInput',
+    displayText: 'Paragraph',
+    validations: [
+      'is_required',
+      'minimum',
+      'maximum'
+    ],
+    logicOperations: [
+      'equal_to',
+      'not_equal_to',
+      'begins_with',
+      'ends_with',
+      'contains',
+      'does_not_contain'
+    ],
+    group: STANDARD
+  },
+  'DropdownField': {
+    name: 'DropdownField',
+    componentName: 'DropdownInput',
+    displayText: 'Dropdown',
     validations: [
       'is_required'
     ],
-    logicOperations: [],
-    group: 'advanced'
+    logicOperations: [
+      'is',
+      'not'
+    ],
+    group: STANDARD
   },
-
+  'StatementField': {
+    name: 'StatementField',
+    componentName: 'Statement',
+    displayText: 'Legal',
+    validations: [],
+    logicOperations: [],
+    group: STANDARD
+  },
+  'YesNoChoice': {
+    name: 'YesNoChoice',
+    componentName: 'YesNoChoice',
+    displayText: 'Yes / No',
+    validations: [
+      'is_required'
+    ],
+    logicOperations: [
+      'is',
+      'not'
+    ],
+    group: STANDARD
+  },
   'SignatureField': {
     name: 'SignatureField',
     componentName: 'Signature',
@@ -200,7 +184,7 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
-    group: 'signature'
+    group: STANDARD
   }
 };
 
