@@ -126,7 +126,7 @@ const questionInputs = {
   'LongTextField': {
     name: 'LongTextField',
     componentName: 'LongTextInput',
-    displayText: 'Long Text',
+    displayText: 'Paragraph',
     validations: [
       'is_required',
       'minimum',
@@ -158,7 +158,7 @@ const questionInputs = {
   'StatementField': {
     name: 'StatementField',
     componentName: 'Statement',
-    displayText: 'Statement',
+    displayText: 'Legal',
     validations: [],
     logicOperations: [],
     group: STANDARD
