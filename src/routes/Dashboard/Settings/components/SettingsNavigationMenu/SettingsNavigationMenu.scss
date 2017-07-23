@@ -1,14 +1,38 @@
-.settingsNavMenu {
+@import './mixins';
+@import './variables';
 
+.settingsNavMenu {
+  margin-left: 40px;
+  font-family: 'roble_altregular';
   > .menuList {
+    background-color: $white;
+    padding: 0;
     list-style: none;
-    > .menuListItem > a {
-      font-size: 14px;
-      padding: 8px 0;
-      opacity: 0.35;
-    }
-    .menuListItemAcitve {
-      opacity: 1 !important;
+    border: 1px solid $table-border-color;
+    @include border-radius(4px);
+    > .menuListItem {
+      padding-left: 20px;
+      border-bottom: 1px solid $table-border-color;
+      &:last-child{
+        border-bottom: none;
+      }
+      a {
+        color: $dropdown-caret-color;
+        display: block;
+        height: 50px;
+        @include border-radius-separate(4px, 4px, 0, 0);
+        text-decoration: none;        
+        > span{
+          padding: 0 0 0 20px;
+          line-height: 50px;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      }
+      a.menuListItemActive {      
+        border-right: 4px solid $blue;
+        color: $blue;
+      }
     }
   }
 }

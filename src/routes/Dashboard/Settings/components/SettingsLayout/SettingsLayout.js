@@ -3,27 +3,27 @@ import React, {
   PropTypes
 } from 'react';
 import SettingsNavigationMenu from '../SettingsNavigationMenu/SettingsNavigationMenu';
-import classes from './SettingsLayout.scss';
-import classNames from 'classnames';
+import styles from './SettingsLayout.scss';
+import {
+  Row,
+  Col
+} from 'react-bootstrap';
 
 class SettingsLayout extends Component {
   static propTypes = {
     children: PropTypes.node
   };
-  static defaultProps = {
-
-  };
 
   render() {
     return (
-      <div className={classes.settingsContainer}>
-        <div className={classNames(classes.fullHeightContainer, classes.leftNavContainer)}>
+      <Row className={styles.settingsContainer}>
+        <Col sm={4} xs={12} className={styles.sideNavContainer}>
           <SettingsNavigationMenu />
-        </div>
-        <div className={classNames(classes.fullHeightContainer, classes.childContentsContainer)}>
+        </Col>
+        <Col sm={8} xs={12} className={styles.childContentsContainer}>
           {this.props.children}
-        </div>
-      </div>
+        </Col>
+      </Row>
     );
   }
 }

@@ -1,6 +1,6 @@
 // import { injectReducer } from 'redux/reducers';
 import SettingsLayoutContainer from './containers/SettingsContainer';
-import ProfileSettings from './components/ProfileSettings/ProfileSettings';
+import ProfileSettings from './containers/ProfileSettingsContainer';
 import NotificationSettings from './components/NotificationSettings/NotificationSettings';
 import { settingsPath, settingsUrl } from 'helpers/urlHelper';
 
