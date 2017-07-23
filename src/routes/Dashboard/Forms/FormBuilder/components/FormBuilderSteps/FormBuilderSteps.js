@@ -62,16 +62,50 @@ class FormBuilderSteps extends Component {
       case 'send':
         return TempStepSend;
       default:
-        return FormBuilderContainer;
+        return {
+          Component: FormBuilder,
+          props: {
+            id: props.id,
+            questions: props.questions,
+            logics: props.logics,
+            documents: props.documents,
+            documentMapping: props.documentMapping,
+            isFetching: props.isFetching,
+            isSubmitting: props.isSubmitting,
+            isModified: props.isModified,
+            activeInputName: props.activeInputName,
+            setActiveInputName: props.setActiveInputName,
+            saveElement: props.saveElement,
+            saveForm: props.saveForm,
+            currentElement: props.currentElement,
+            setQuestionInfo: props.setQuestionInfo,
+            resetQuestionInfo: props.resetQuestionInfo,
+            setValidationInfo: props.setValidationInfo,
+            resetValidationInfo: props.resetValidationInfo,
+            setMappingInfo: props.setMappingInfo,
+            setMappingPositionInfo: props.setMappingPositionInfo,
+            resetMappingInfo: props.resetMappingInfo,
+            pageZoom: props.pageZoom,
+            setPageZoom: props.setPageZoom,
+            questionEditMode: props.questionEditMode,
+            setQuestionEditMode: props.setQuestionEditMode,
+            newForm: props.newForm,
+            fetchForm: props.fetchForm,
+            params: props.params,
+            show: props.show,
+            goTo: props.goTo
+
+          }
+        };
     }
   }
 
   // TODO: the horizontal navbar with all the step links could probably go in here
 
   render() {
-    var StepComponent = this.currentStepComponent;
+    const { Component, props } = this.currentStepComponent;
     return (
-      <StepComponent />
+      <Component {...props} />
     );
   }
 }
