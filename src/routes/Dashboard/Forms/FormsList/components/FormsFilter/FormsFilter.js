@@ -61,9 +61,15 @@ class FormsFilter extends Component {
           </Button>
         </ButtonToolbar>
         <ButtonToolbar className="pull-right">
-          <SelectButton className={styles.formButton} optionList={this.paginationOptions} label="Show"
-            value={pageSize} onChange={setPageSize} />
-          <SelectButton className={styles.formButton} optionList={this.actionOptions} value="Quick Actions" staticValue
+          <SelectButton className={styles.formButton}
+            optionsList={this.paginationOptions}
+            label="Show"
+            value={pageSize}
+            onChange={setPageSize} />
+          <SelectButton className={styles.formButton}
+            optionsList={this.actionOptions}
+            value="Quick Actions"
+            isStaticValue
             onChange={formAction} />
         </ButtonToolbar>
         <div className="clearfix"></div>

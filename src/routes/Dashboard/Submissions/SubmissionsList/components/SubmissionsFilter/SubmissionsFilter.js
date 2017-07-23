@@ -79,10 +79,10 @@ class SubmissionsFilter extends Component {
           </Button>
         </ButtonToolbar>
         <ButtonToolbar className="pull-right">
-          <SelectButton className={styles.formButton} optionList={this.timeOptions} value="This Week" />
-          <SelectButton className={styles.formButton} optionList={this.paginationOptions} label="Show"
+          <SelectButton className={styles.formButton} optionsList={this.timeOptions} value="This Week" />
+          <SelectButton className={styles.formButton} optionsList={this.paginationOptions} label="Show"
             value={pageSize} onChange={setPageSize} />
-          <SelectButton className={styles.formButton} optionList={this.actionOptions} value="Actions" staticValue
+          <SelectButton className={styles.formButton} optionsList={this.actionOptions} value="Actions" isStaticValue
             onChange={formAction} />
         </ButtonToolbar>
         <div className="clearfix"></div>
