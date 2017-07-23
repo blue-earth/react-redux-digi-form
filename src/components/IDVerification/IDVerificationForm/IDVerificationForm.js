@@ -23,19 +23,22 @@ export default class IDVerificationForm extends Component {
     doneUploadIdFile: PropTypes.func,
     idType: PropTypes.number.isRequired,
     setIdType: PropTypes.func.isRequired,
-    setNotice: PropTypes.func.isRequired,
     person: PropTypes.object,
-    onLinkClick: PropTypes.func
+    onLinkClick: PropTypes.func,
+    onSuccess: PropTypes.func.isRequired,
+    onFail: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    defaultActiveTab: 'online'
+    defaultActiveTab: 'online',
+    onSuccess: () => {},
+    onFail: () => {}
   };
 
   renderVerifyOnline() {
     const { idType } = this.props;
     const props = _.pick(this.props, [
-      'idType', 'setIdType', 'submitIdentity', 'isSubmitting', 'person', 'setNotice', 'onLinkClick'
+      'idType', 'setIdType', 'submitIdentity', 'isSubmitting', 'person', 'onLinkClick', 'onSuccess', 'onFail'
     ]);
 
     switch (idType) {
@@ -53,7 +56,7 @@ export default class IDVerificationForm extends Component {
   renderUploader() {
     const props = _.pick(this.props, [
       'submitIdentity', 'requestUploadIdFile', 'doneUploadIdFile', 'isSubmitting',
-      'isUploading', 'person', 'setNotice', 'onLinkClick'
+      'isUploading', 'person', 'onLinkClick', 'onSuccess', 'onFail'
     ]);
     return (
       <UploaderForm {...props} />

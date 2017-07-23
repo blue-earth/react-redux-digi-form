@@ -30,6 +30,19 @@ export default class IdentityVerificationView extends Component {
     this.setState({ notice });
   }
 
+  handleSuccess = (data) => {
+    if (data['result']) {
+      // The success here means the request succeed, does not refer to the verification succeed
+      this.setNotice('Identity Verification Success!');
+    } else {
+      this.setNotice('Failed to verify your identity. Please verify against other type of document.');
+    }
+  }
+
+  handleFail = (data) => {
+    this.setNotice('Failed to verify your identity. Please verify against other type of document.');
+  }
+
   render() {
     const { form, person } = this.props;
     const { notice } = this.state;
@@ -39,7 +52,7 @@ export default class IdentityVerificationView extends Component {
         <IdentityVerificationHeader title={title} />
         <div className={styles.content}>
           <IDVerificationTitle align="center" notice={notice} />
-          <IDVerificationForm person={person} setNotice={this.setNotice} />
+          <IDVerificationForm person={person} onSuccess={this.handleSuccess} onFail={this.handleFail} />
         </div>
       </div>
     );

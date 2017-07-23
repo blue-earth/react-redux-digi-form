@@ -45,7 +45,6 @@ const validate = values => {
 
 const selectInitialValues = (props) => {
   const person = _.get(props, 'person', {});
-  console.log(props);
   return {
     person: _.pick(person, ['first_name', 'last_name', 'email', 'date_of_birth', 'gender'])
   };

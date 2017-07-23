@@ -43,14 +43,14 @@ export default class PeopleList extends Component {
           <div>
             {
               _.map(pendingPeople, (person, index) => (
-                <PersonItem person={person} index={index} />
+                <PersonItem person={person} index={index} key={index} />
               ))
             }
           </div>
           <div>
             {
               _.map(verifiedPeople, (person, index) => (
-                <PersonItem person={person} index={index} />
+                <PersonItem person={person} index={index} key={index} />
               ))
             }
           </div>

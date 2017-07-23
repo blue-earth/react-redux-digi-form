@@ -21,9 +21,10 @@ export default class DriversLicenseForm extends Component {
     idType: PropTypes.number.isRequired,
     setIdType: PropTypes.func.isRequired,
     submitIdentity: PropTypes.func.isRequired,
-    setNotice: PropTypes.func.isRequired,
     isSubmitting: PropTypes.bool.isRequired,
-    onLinkClick: PropTypes.func
+    onLinkClick: PropTypes.func,
+    onSuccess: PropTypes.func.isRequired,
+    onFail: PropTypes.func.isRequired
   };
 
   getPassportFields(values) {
@@ -39,23 +40,14 @@ export default class DriversLicenseForm extends Component {
   }
 
   handleSubmitForm = (values) => {
-    const { submitIdentity, setNotice } = this.props;
+    const { submitIdentity, onFail, onSuccess } = this.props;
     let body = {};
     body = this.getPassportFields(values);
 
     submitIdentity({
       body,
-      success: (data) => {
-        if (data['result']) {
-          // The success here means the request succeed, does not refer to the verification succeed
-          setNotice('Identity Verification Success!');
-        } else {
-          setNotice('Failed to verify your identity. Please verify against other type of document.');
-        }
-      },
-      fail: () => {
-        setNotice('Failed to verify your identity. Please verify against other type of document.');
-      }
+      success: onSuccess,
+      fail: onFail
     });
   }
 

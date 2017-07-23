@@ -119,8 +119,8 @@ export default class SelectMethod extends Component {
     const { primaryColour } = this.context;
     const that = this;
     const rightButtonClickHandler = person.selected
-      ? function () { that.handleVerifyOnlineClick(index); }
-      : function () { that.handleSendEmailClick(index); };
+      ? this.handleSendEmailClick
+      : this.handleVerifyOnlineClick;
     const tooltopRightButton = person.selected
       ? this.tooltipSendEmail
       : this.tooltipVerifyOnline;
@@ -141,10 +141,10 @@ export default class SelectMethod extends Component {
             <span style={{color: primaryColour}}><MdCloudUpload /> Upload</span>
           </AppButton>
           <span className={styles.textOR}>or</span>
-          <AppButton primaryColour={primaryColour} onClick={rightButtonClickHandler}>
+          <AppButton primaryColour={primaryColour} onClick={function () { rightButtonClickHandler(index); }}>
             {rightButtonLabel}
           </AppButton>
-          <OverlayTrigger trigger={['focus', 'hover']} placement="right" overlay={tooltopRightButton}>
+          <OverlayTrigger trigger={['focus', 'hover']} placement="left" overlay={tooltopRightButton}>
             <a href="javascript:;" className={styles.tooltipText}>
               <MdHelp size={16} />
             </a>
@@ -162,10 +162,11 @@ export default class SelectMethod extends Component {
           <div className={styles.peopleWrapper}>
             {
               _.map(people, (person, index) => (
-                <div className={styles.personItem}>
-                  {this.renderPersonalInfo(person)}
-                  {this.renderMethods(person, index)}
-                </div>
+                person.status === 'PENDING' &&
+                  <div className={styles.personItem} key={index}>
+                    {this.renderPersonalInfo(person)}
+                    {this.renderMethods(person, index)}
+                  </div>
               ))
             }
           </div>

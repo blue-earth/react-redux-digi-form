@@ -12,13 +12,14 @@ export default class UploaderForm extends Component {
   static propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     submitIdentity: PropTypes.func.isRequired,
-    setNotice: PropTypes.func.isRequired,
     requestUploadIdFile: PropTypes.func,
     doneUploadIdFile: PropTypes.func,
     isSubmitting: PropTypes.bool.isRequired,
     isUploading: PropTypes.bool.isRequired,
     person: PropTypes.object,
-    onLinkClick: PropTypes.func
+    onLinkClick: PropTypes.func,
+    onSuccess: PropTypes.func.isRequired,
+    onFail: PropTypes.func.isRequired
   };
 
   getUploadFields(values) {
@@ -34,28 +35,19 @@ export default class UploaderForm extends Component {
   }
 
   handleSubmitForm = (values) => {
-    const { submitIdentity, setNotice } = this.props;
+    const { submitIdentity, onSuccess, onFail } = this.props;
     let body = {};
     body = this.getUploadFields(values);
 
     submitIdentity({
       body,
-      success: (data) => {
-        if (data['result']) {
-          // The success here means the request succeed, does not refer to the verification succeed
-          setNotice('Identity Verification Success!');
-        } else {
-          setNotice('Failed to verify your identity. Please verify against other type of document.');
-        }
-      },
-      fail: () => {
-        setNotice('Failed to verify your identity. Please verify against other type of document.');
-      }
+      success: onSuccess,
+      fail: onFail
     });
   }
 
   render() {
-    const { handleSubmit, setNotice, requestUploadIdFile, doneUploadIdFile, isSubmitting,
+    const { handleSubmit, onFail, requestUploadIdFile, doneUploadIdFile, isSubmitting,
       onLinkClick, isUploading } = this.props;
     return (
       <Form onSubmit={handleSubmit(this.handleSubmitForm)}>
@@ -71,7 +63,7 @@ export default class UploaderForm extends Component {
               <em>Driver’s licence</em> OR <em>Australian Passport</em>
             </p>
           </div>
-          <Field name="attachment_ids" component={UploaderField} setNotice={setNotice}
+          <Field name="attachment_ids" component={UploaderField} onUploadFail={onFail}
             requestUploadIdFile={requestUploadIdFile} doneUploadIdFile={doneUploadIdFile} />
         </IDVerificationFormWrapper>
         <IDVerificationFormFooter submitting={isSubmitting || isUploading} onLinkClick={onLinkClick} />

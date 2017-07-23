@@ -36,6 +36,35 @@ class IDVerificationModal extends Component {
     this.setState({ notice });
   }
 
+  postVerify() {
+    const { idVerifyStatus: { index, people }, onLinkClick, setIDVerifyStatus } = this.props;
+    people[index].status = 'VERIFIED';
+    const newIndex = _.findIndex(people, { status: 'PENDING' });
+    if (newIndex >= 0) { // we still have pending verification
+      setIDVerifyStatus({
+        step: 'SELECT_METHOD',
+        people,
+        index: newIndex
+      });
+    } else { // all done, go to completed page
+      onLinkClick();
+    }
+  }
+
+  handleSuccess = (data) => {
+    if (data['result']) {
+      // The success here means the request succeed, does not refer to the verification succeed
+      this.setNotice('Identity Verification Success!');
+      this.postVerify();
+    } else {
+      this.setNotice('Failed to verify your identity. Please verify against other type of document.');
+    }
+  }
+
+  handleFail = (data) => {
+    this.setNotice('Failed to verify your identity. Please verify against other type of document.');
+  }
+
   renderForm() {
     const { idVerifyStatus: { index, people, activeTab }, onLinkClick } = this.props;
     const person = _.defaultTo(people[index], {});
@@ -46,8 +75,8 @@ class IDVerificationModal extends Component {
           {`${person.first_name} ${person.last_name}`}
           </IDVerificationFormWrapper>
         </div>
-        <IDVerificationForm setNotice={this.setNotice} onLinkClick={onLinkClick} person={person}
-          defaultActiveTab={activeTab} />
+        <IDVerificationForm defaultActiveTab={activeTab} person={person}
+          onLinkClick={onLinkClick} onSuccess={this.handleSuccess} onFail={this.handleFail} />
       </div>
     );
   }

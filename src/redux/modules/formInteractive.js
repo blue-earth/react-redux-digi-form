@@ -65,21 +65,21 @@ const TEST_PEOPLE_DATA = [
     first_name: 'Jordan',
     last_name: 'McCown',
     status: 'PENDING',
-    id: 1,
+    id: '9b6a957c-85ad-45dd-9c5f-6873ffea8d15', // TODO: implement how to get this id required for Upload
     selected: false
   },
   {
     first_name: 'George',
     last_name: 'Gregory',
     status: 'PENDING',
-    id: 2,
+    id: '9b6a957c-85ad-45dd-9c5f-6873ffea8d15', // TODO: implement how to get this id required for Upload
     selected: false
   },
   {
     first_name: 'Lihan',
     last_name: 'Li',
     status: 'VERIFIED',
-    id: 3,
+    id: '9b6a957c-85ad-45dd-9c5f-6873ffea8d15', // TODO: implement how to get this id required for Upload
     selected: false
   }
 ];
