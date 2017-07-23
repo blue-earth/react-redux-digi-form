@@ -14,6 +14,8 @@ import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import SignaturePad from 'react-signature-pad';
 import ImageUpload from 'components/ImageUpload';
 import { connectModal } from 'redux-modal';
+import { IoReply } from 'react-icons/lib/io';
+import ColorPicker from 'components/ColorPicker/ColorPicker';
 import styles from './Signature.scss';
 import classNames from 'classnames';
 
@@ -67,13 +69,19 @@ class SignatureModal extends Component {
       signatureName: '',
       signatureStyle: signatureFonts[0].name,
       writeSignatureColour: BLACK,
+      drawSignatureColour: colours[BLACK],
       isConsented: false
     };
+    this.drawSignatures = [];
   };
 
   componentDidMount() {
     window.addEventListener('resize', this.handleWriteCanvasesResize);
     this.handleWriteCanvasesResize(); // Initializer for write canvases.
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWriteCanvasesResize);
   }
 
   handleTabSelect = (activeTabName) => {
@@ -144,6 +152,19 @@ class SignatureModal extends Component {
       writeSignatureColour: event.target.dataset.colour
     }, this.updateWriteSignatureCanvases);
   }
+  handleColourChange = (colour) => {
+    this.setState({
+      drawSignatureColour: colour
+    });
+    this.refs.signatureCanvas.penColor = colour;
+  }
+  handleRevert = () => {
+    this.refs.signatureCanvas.clear();
+    this.refs.signatureCanvas.fromDataURL(this.drawSignatures.pop());
+  }
+  onStrokeStart = (event) => {
+    this.drawSignatures.push(this.refs.signatureCanvas.toDataURL());
+  }
 
   handleToggleConsent = (event) => {
     this.setState({
@@ -184,7 +205,14 @@ class SignatureModal extends Component {
 
   render() {
     const { handleHide, show } = this.props;
-    const { signatureName, signatureStyle, activeTabName, writeSignatureColour, isConsented } = this.state;
+    const {
+      signatureName,
+      signatureStyle,
+      activeTabName,
+      writeSignatureColour,
+      drawSignatureColour,
+      isConsented
+    } = this.state;
     var preloadFonts = signatureFonts.map((font, index) => {
       return <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>;
     });
@@ -299,11 +327,22 @@ class SignatureModal extends Component {
               <div className={classNames(styles.tabPanelWrapper, styles.drawPanelWrapper)}
                 onKeyDown={this.handleKeyDown} tabIndex={0}>
                 <div className={styles.drawPanelButtons}>
-                  <Button className="pull-right">color select</Button>
-                  <Button className="pull-right">R</Button>
+                  <div className="pull-right">
+                    <ColorPicker
+                      type="github"
+                      value={drawSignatureColour}
+                      customSwatches={Object.keys(colours).map((key) => colours[key])}
+                      buttonClassName={styles.colorPickerButton}
+                      onChange={this.handleColourChange}
+                    />
+                  </div>
+                  <button className={styles.revertButton} onClick={this.handleRevert}>
+                    <IoReply />
+                  </button>
                   <div className="clearfix"></div>
                 </div>
-                <SignaturePad ref="signatureCanvas" />
+                <SignaturePad ref="signatureCanvas" penColor={drawSignatureColour}
+                  onBegin={this.onStrokeStart} />
               </div>
             </Tab>
             <Tab eventKey="upload" title={

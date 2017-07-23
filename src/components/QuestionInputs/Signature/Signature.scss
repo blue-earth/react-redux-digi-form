@@ -84,7 +84,7 @@
   padding: 10px 16px;
 }
 .drawPanelButtons {
-  margin-bottom: 0px;
+  margin-bottom: 10px;
 }
 .tabPanelTitle {
   margin-bottom: 12px;
@@ -144,6 +144,22 @@
       border-color: #97CAE9;
     }
   }
+}
+.revertButton {
+  float: right;
+  height: 36px;
+  width: 36px;
+  margin: 0 4px;
+  background-color: #fff;
+  border: 1px solid $grey;
+  font-size: 20px;
+  line-height: 20px;
+  color: $text-dark-color;
+  @include border-radius(5px);
+  @include input-box-shadow;
+}
+.colorPickerButton {
+  @include background-gradient($select-button-start-color, $select-button-end-color);
 }
 .fileUploadSection {
   width: 100%;
@@ -237,7 +253,7 @@
   .m-signature-pad {
     position: relative;
     font-size: 10px;
-    height: 218px;
+    height: 208px;
     border-radius: 4px;
     background-color: $white;
     border: 1px solid $signature-modal-border-color;
