@@ -12,27 +12,48 @@ const cx = classNames.bind(styles);
 class SelectButton extends Component {
 
   static propTypes = {
-    onClick: PropTypes.func,  // select button without dropdown options click event handler
+    /*
+     * Dropdown option click event handler
+     */
     onChange: PropTypes.func,
+    /*
+     * The value of selected item and display in bold after label
+     */
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]),
-    optionList: PropTypes.array,
+    /*
+     * The label content for the selection. If it's a string, place a `:` after
+     */
     label: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.node
     ]),
+    /*
+     * Selection items list
+     */
+    optionsList: PropTypes.array,
+    /*
+     * Classname for the out wrapper
+     */
     className: PropTypes.string,
-    staticValue: PropTypes.bool,
-    displayValue: PropTypes.bool
+    /*
+     * Do not change current default value while selected.
+     */
+    isStaticValue: PropTypes.bool,
+    /*
+     * Hide value display.
+     */
+    isValueHidden: PropTypes.bool
   }
   static defaultProps = {
     value: '',
-    optionList: [],
+    optionsList: [],
     label: '',
-    staticValue: false,
-    displayValue: true
+    isStaticValue: false,
+    isValueHidden: false,
+    onChange: () => {}
   }
 
   constructor(props) {
@@ -41,17 +62,17 @@ class SelectButton extends Component {
       isOpen: false,
       selected: props.value
     };
-    this.mounted = true;
   }
 
   componentDidMount() {
+    // Event listener for closing dropdown.
     document.addEventListener('click', this.handleDocumentClick, false);
-    document.addEventListener('touchend', this.handleDocumentClick, false);
+    document.addEventListener('touch', this.handleDocumentClick, false);
   }
   componentWillUnmount() {
-    this.mounted = false;
+    // Remove Event listener for closing dropdown.
     document.removeEventListener('click', this.handleDocumentClick, false);
-    document.removeEventListener('touchend', this.handleDocumentClick, false);
+    document.removeEventListener('touch', this.handleDocumentClick, false);
   }
   componentWillReceiveProps(props) {
     if (props.value && props.value !== this.state.selected) {
@@ -66,36 +87,31 @@ class SelectButton extends Component {
       isOpen: !this.state.isOpen
     });
   }
-  handleSelect = (event) => {
-    const {staticValue, onChange, optionList} = this.props;
-    const index = event.currentTarget.getAttribute('data-key');
-    const option = optionList[index];
-    if (typeof onChange === 'function') {
-      if (!optionList[index].isDisabled) {
-        onChange(option.key);
-      }
+  handleSelect = (index) => {
+    const {isStaticValue, onChange, optionsList} = this.props;
+    const option = optionsList[index];
+    if (!optionsList[index].isDisabled) {
+      onChange(option.key);
     }
-    if (staticValue) {
+    if (isStaticValue) {
       return this.setState({
         isOpen: false
       });
     }
     this.setState({
-      selected: option.value || option.label,
+      selected: option.value || option.label, // Use value first, incase label is not a string or number
       isOpen: false
     });
   }
 
   handleDocumentClick = (event) => {
-    if (this.mounted) {
-      if (!ReactDOM.findDOMNode(this).contains(event.target)) {
-        this.setState({ isOpen: false });
-      }
+    if (!ReactDOM.findDOMNode(this).contains(event.target)) {
+      this.setState({ isOpen: false });
     }
   }
 
   render() {
-    const { label, staticValue, optionList, className, value, displayValue } = this.props;
+    const { label, isStaticValue, optionsList, className, value, isValueHidden } = this.props;
     const { selected, isOpen } = this.state;
     const dropdownButton = (
       <div className={cx(className)}>
@@ -106,14 +122,15 @@ class SelectButton extends Component {
             <div className={cx('pullLeft')}>
               {label}
               {label && label.length > 0 ? ':' : ' '}</div>
-            <div className={cx('selectValue', {invisible: isOpen && label.length > 0 && !staticValue})}>
-              {displayValue && selected}
+            <div className={cx('selectValue', {invisible: isOpen && label.length > 0 && !isStaticValue})}>
+              {!isValueHidden && selected}
             </div>
             <div className={cx('selectCaret')}><FaAngleDown /></div>
           </div>
           <div className={cx('selectOptionsWrapper')}>
             <ul className={cx('selectOptions')}>
-              {optionList.map((option, index) => {
+              {optionsList.map((option, index) => {
+                const handleSelect = this.handleSelect.bind(this, index);
                 return (
                   <li key={`select-button-${index}`}
                     className={cx(
@@ -123,8 +140,7 @@ class SelectButton extends Component {
                         disabled: option.isDisabled
                       }
                     )}
-                    onClick={this.handleSelect}
-                    data-key={index}>
+                    onClick={handleSelect}>
                     <div className={cx('selectOptionContent')}>{option.label}</div>
                   </li>
                 );
@@ -143,7 +159,7 @@ class SelectButton extends Component {
         </div>
       </div>
     );
-    return optionList.length === 0 ? selectButton : dropdownButton;
+    return optionsList.length === 0 ? selectButton : dropdownButton;
   }
 }
 
