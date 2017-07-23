@@ -25,7 +25,18 @@ class DashboardTabs extends Component {
     goTo: PropTypes.func
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeKey: 'submissions'
+    };
+  }
+
   handleSelect = (navPath) => {
+    event.preventDefault();
+    this.setState({
+      activeKey: navPath
+    });
     const { goTo } = this.props;
     goTo(dashboardUrl(navPath));
   }
@@ -74,7 +85,7 @@ class DashboardTabs extends Component {
           <Navbar.Toggle />
         </Navbar.Header>
         <Navbar.Collapse className={styles.dashboardTabsWrapper}>
-          <Nav onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
+          <Nav onSelect={this.handleSelect} activeKey={this.state.activeKey}>
             {
               this.navItems.filter(navItem => navItem.position === 'left').map((navItem) => {
                 return (
