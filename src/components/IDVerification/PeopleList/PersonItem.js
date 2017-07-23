@@ -9,8 +9,8 @@ import {
   renderInput,
   renderCheckbox
 } from '../helpers';
-import { MdInfo, MdCheckCircle } from 'react-icons/lib/md';
 import classNames from 'classnames';
+import StatusLabel from '../StatusLabel';
 import styles from './PeopleList.scss';
 
 export default class PersonItem extends Component {
@@ -22,24 +22,6 @@ export default class PersonItem extends Component {
   get fullName() {
     const { person } = this.props;
     return `${person.first_name} ${person.last_name}`;
-  }
-
-  renderStatusSuccess() {
-    return (
-      <span>
-        <MdCheckCircle className={styles.successIcon} size={18} />
-        <span className={styles.statusText}>Verified</span>
-      </span>
-    );
-  }
-
-  renderStatusWarning() {
-    return (
-      <span>
-        <MdInfo className={styles.warningIcon} size={18} />
-        <span className={styles.statusText}>Pending</span>
-      </span>
-    );
   }
 
   renderPendingField() {
@@ -54,7 +36,7 @@ export default class PersonItem extends Component {
               name={`people[${index}].selected`} />
           </Col>
           <Col xs={4} className="text-right">
-            {this.renderStatusWarning()}
+            <StatusLabel status={person.status} />
           </Col>
         </Row>
         <Collapse in={person.selected}>
@@ -71,13 +53,14 @@ export default class PersonItem extends Component {
   }
 
   renderVerifiedField() {
+    const { person } = this.props;
     return (
       <Row>
         <Col xs={8}>
           {this.fullName}
         </Col>
         <Col xs={4} className="text-right">
-          {this.renderStatusSuccess()}
+          <StatusLabel status={person.status} />
         </Col>
       </Row>
     );

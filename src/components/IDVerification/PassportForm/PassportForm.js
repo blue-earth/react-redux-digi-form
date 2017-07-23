@@ -87,8 +87,8 @@ export default class PassportForm extends Component {
               <Field component={renderInput}
                 name="verification_data.passport.number"
                 type="text"
-                label="Passport no.(incl. letters)"
-                placeholder="Passport no." />
+                label="Passport no."
+                placeholder="(incl. letters)" />
             </Col>
             <Col xs={6}>
               <Field component={renderInput}

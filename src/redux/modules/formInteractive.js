@@ -111,7 +111,8 @@ export const INIT_FORM_STATE = {
   formAccessCode: '',
   idVerifyStatus: {
     people: TEST_PEOPLE_DATA, // people data
-    step: 'SELECT_PEOPLE' // can be 'SELECT_PEOPLE', 'SELECT_METHOD', 'VERIFY'
+    step: 'SELECT_PEOPLE', // can be 'SELECT_PEOPLE', 'SELECT_METHOD', 'VERIFY'
+    index: 0 // index of people field, used in step 'VERIFY'
   }
 };
 

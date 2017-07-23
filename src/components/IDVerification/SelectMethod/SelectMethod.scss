@@ -1,0 +1,61 @@
+@import './mixins';
+@import './variables';
+
+.selectMethodWrapper {
+  font-size: 14px;
+}
+
+.peopleWrapper {
+  margin: 0 -5px 20px -5px;
+  padding: 0 5px;
+  max-height: 450px;
+  overflow: auto;
+}
+
+.personItem {
+  border-radius: 6px;
+  border: 1px solid $identity-separator-color;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.personalInfo {
+  padding: 10px 20px;
+}
+
+.fieldLabel {
+  font-size: 10px;
+  font-weight: 300;
+  color: $identity-form-text-color;
+}
+
+.methodsWrapper {
+  border-top: 1px solid $identity-separator-color;
+  background-color: $identity-methods-bg-color;
+  padding: 20px;
+}
+
+.methodLabel {
+  color: $identity-form-text-color;
+  text-transform: uppercase;
+  font-size: 12px;
+  text-align: center;
+}
+
+.methods {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tooltipText {
+  color: $identity-form-text-color;
+}
+
+.footerWrapper {
+  background-color: $bg-color2;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}

@@ -6,9 +6,12 @@ import {
   Modal
 } from 'react-bootstrap';
 import { connectModal } from 'redux-modal';
+import _ from 'lodash';
 import IDVerificationTitle from 'components/IDVerification/IDVerificationTitle';
 import IDVerificationForm from 'containers/IDVerification';
+import IDVerificationFormWrapper from 'components/IDVerification/IDVerificationFormWrapper';
 import PeopleList from 'containers/IDVerification/PeopleListContainer';
+import SelectMethod from 'components/IDVerification/SelectMethod';
 import styles from './IDVerificationModal.scss';
 
 class IDVerificationModal extends Component {
@@ -33,6 +36,22 @@ class IDVerificationModal extends Component {
     this.setState({ notice });
   }
 
+  renderForm() {
+    const { idVerifyStatus: { index, people, activeTab }, onLinkClick } = this.props;
+    const person = _.defaultTo(people[index], {});
+    return (
+      <div>
+        <div className={styles.personName}>
+          <IDVerificationFormWrapper>
+          {`${person.first_name} ${person.last_name}`}
+          </IDVerificationFormWrapper>
+        </div>
+        <IDVerificationForm setNotice={this.setNotice} onLinkClick={onLinkClick} person={person}
+          defaultActiveTab={activeTab} />
+      </div>
+    );
+  }
+
   render() {
     const { show, handleHide, idVerifyStatus, setIDVerifyStatus, onLinkClick } = this.props;
     const { notice } = this.state;
@@ -46,8 +65,11 @@ class IDVerificationModal extends Component {
             <PeopleList people={idVerifyStatus.people} setIDVerifyStatus={setIDVerifyStatus}
               onLinkClick={onLinkClick} />
           }
-          {idVerifyStatus.step === 'VERIFY' &&
-            <IDVerificationForm setNotice={this.setNotice} onLinkClick={onLinkClick} />}
+          {idVerifyStatus.step === 'SELECT_METHOD' &&
+            <SelectMethod idVerifyStatus={idVerifyStatus} setIDVerifyStatus={setIDVerifyStatus}
+              onLinkClick={onLinkClick} />
+          }
+          {idVerifyStatus.step === 'VERIFY' && this.renderForm()}
         </Modal.Body>
       </Modal>
     );

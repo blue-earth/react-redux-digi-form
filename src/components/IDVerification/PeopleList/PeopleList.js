@@ -25,7 +25,7 @@ export default class PeopleList extends Component {
     const { setIDVerifyStatus } = this.props;
     setIDVerifyStatus({
       people: values.people,
-      step: 'VERIFY' // TODO: should be 'SELECT_METHOD' when this component is implemented
+      step: 'SELECT_METHOD'
     });
   }
 
@@ -41,18 +41,18 @@ export default class PeopleList extends Component {
             You may need to send them an email to verify their ID
           </p>
           <div>
-          {
-            _.map(pendingPeople, (person, index) => (
-              <PersonItem person={person} index={index} />
-            ))
-          }
+            {
+              _.map(pendingPeople, (person, index) => (
+                <PersonItem person={person} index={index} />
+              ))
+            }
           </div>
           <div>
-          {
-            _.map(verifiedPeople, (person, index) => (
-              <PersonItem person={person} index={index} />
-            ))
-          }
+            {
+              _.map(verifiedPeople, (person, index) => (
+                <PersonItem person={person} index={index} />
+              ))
+            }
           </div>
         </IDVerificationFormWrapper>
         <div className={styles.footerWrapper}>

@@ -1,9 +1,6 @@
 @import './mixins';
 @import './variables';
 
-$status-success-color: #62ca2f;
-$status-warning-color: #ffc000;
-
 .peopleList {
   border-top: 1px solid $identity-separator-color;
   padding-top: 20px;
@@ -22,7 +19,7 @@ $status-warning-color: #ffc000;
 }
 
 .personItem {
-  @include border-radius(10px);
+  border-radius: 10px;
   border: 1px solid $identity-separator-color;
   padding: 10px;
   margin-bottom: 15px;
@@ -30,19 +27,6 @@ $status-warning-color: #ffc000;
   &.verified {
     background-color: $identity-separator-color;
   }
-}
-
-.warningIcon {
-  color: $status-warning-color;
-}
-
-.successIcon {
-  color: $status-success-color;
-}
-
-.statusText {
-  margin-left: 5px;
-  vertical-align: middle;
 }
 
 .emailField {

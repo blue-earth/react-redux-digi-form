@@ -15,9 +15,9 @@ import styles from './IDVerificationForm.scss';
 
 export default class IDVerificationForm extends Component {
   static propTypes = {
-    // activeTab: PropTypes.oneOf([
-    //   'online', 'upload'
-    // ]),
+    defaultActiveTab: PropTypes.oneOf([
+      'online', 'upload'
+    ]),
     submitIdentity: PropTypes.func.isRequired,
     requestUploadIdFile: PropTypes.func,
     doneUploadIdFile: PropTypes.func,
@@ -26,6 +26,10 @@ export default class IDVerificationForm extends Component {
     setNotice: PropTypes.func.isRequired,
     person: PropTypes.object,
     onLinkClick: PropTypes.func
+  };
+
+  static defaultProps = {
+    defaultActiveTab: 'online'
   };
 
   renderVerifyOnline() {
@@ -57,9 +61,10 @@ export default class IDVerificationForm extends Component {
   }
 
   render() {
+    const { defaultActiveTab } = this.props;
     return (
       <div className={styles.idVerificationForm}>
-        <Tab.Container id="IDVerificationFormTabs" defaultActiveKey="online">
+        <Tab.Container id="IDVerificationFormTabs" defaultActiveKey={defaultActiveTab}>
           <div className={styles.tabs}>
             <div className={styles.navsWrapper}>
               <IDVerificationFormWrapper>

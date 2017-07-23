@@ -26,6 +26,7 @@ export default class IDVerificationFormFooter extends Component {
   static propTypes = {
     submitting: PropTypes.bool,
     onLinkClick: PropTypes.func,
+    onButtonClick: PropTypes.func,
     submitLabel: PropTypes.string,
     includeTerms: PropTypes.bool
   };
@@ -38,7 +39,7 @@ export default class IDVerificationFormFooter extends Component {
   };
 
   render() {
-    const { includeTerms, onLinkClick, submitting, submitLabel } = this.props;
+    const { includeTerms, onLinkClick, submitting, submitLabel, onButtonClick } = this.props;
     const checkboxLabel = (
       <span>
         I have read and agree to the{' '}
@@ -70,9 +71,16 @@ export default class IDVerificationFormFooter extends Component {
                 </a>
               </Col>
               <Col xs={6} className="text-right">
-                <Button bsStyle="primary" className={styles.submitButton} type="submit" disabled={submitting}>
-                  {submitting ? 'Submitting...' : submitLabel}
-                </Button>
+                {onButtonClick
+                  ? <Button bsStyle="primary" className={styles.submitButton}
+                    onClick={onButtonClick} disabled={submitting}>
+                    {submitting ? 'Submitting...' : submitLabel}
+                  </Button>
+                  : <Button bsStyle="primary" className={styles.submitButton}
+                    type="submit" disabled={submitting}>
+                    {submitting ? 'Submitting...' : submitLabel}
+                  </Button>
+                }
               </Col>
             </Row>
           </IDVerificationFormWrapper>
