@@ -8,6 +8,7 @@ import PageView from '../PageView';
 import QuestionEditPanel from '../QuestionEditPanel';
 import CancelConfirmModal from '../CancelConfirmModal';
 import UploadModal from '../UploadModal';
+import { formsUrl } from 'helpers/urlHelper';
 import styles from './FormBuilder.scss';
 
 class FormBuilder extends Component {
@@ -161,25 +162,23 @@ class FormBuilder extends Component {
     goTo: PropTypes.func.isRequired
   };
 
-  componentWillMount() {
-  }
+  componentDidUpdate(prevProps, prevState) {
+    const { id, goTo, params, fetchForm } = this.props;
+    // If it was redirected from forms/new, fetchForm again.
+    params.id && !prevProps.params.id && !id && fetchForm(params.id);
 
-  componentWillReceiveProps(props) {
-
-  }
+    // If it was in forms/new and received id from Upload modal, redirects to {:formId}/edit
+    // TODO: test this
+    id && !params.id && goTo(formsUrl(`/${id}/edit`));
+  };
 
   componentDidMount() {
-    const { id, show } = this.props;
-    if (!id) {
+    const { params, fetchForm } = this.props;
+    if (params.id) {
+      fetchForm(params.id);
+    } else {
+      const { show } = this.props;
       show('uploadModal');
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { id, documents, show } = this.props;
-    // If no document image loaded, show Upload modal.
-    if (id && documents.length === 0) {
-      show('uploadModal', { formId: id });
     }
   }
 
