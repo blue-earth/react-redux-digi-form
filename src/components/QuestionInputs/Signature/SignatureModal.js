@@ -139,7 +139,8 @@ class SignatureModal extends Component {
     }, this.updateWriteSignatureCanvases);
   }
 
-  handleSignatureStyleChange = (value) => {
+  handleSignatureStyleChange = (event) => {
+    const value = event.currentTarget.dataset.signature;
     this.setState({
       signatureStyle: value
     }, this.updateWriteSignatureCanvases);
@@ -299,7 +300,9 @@ class SignatureModal extends Component {
                       {
                         [styles.activeSignature]: font.name === signatureStyle
                       }
-                    )} onClick={() => { this.handleSignatureStyleChange(font.name); }}>
+                    )}
+                      onClick={this.handleSignatureStyleChange}
+                      data-signature={font.name}>
                       <div>
                         <canvas ref={`writeSignature-${font.name}`} height="130">
                         </canvas>

@@ -11,7 +11,7 @@ class ColorPicker extends Component {
 
   static propTypes = {
     value: PropTypes.string,
-    type: PropTypes.oneOf('compact', 'block', 'github'),
+    type: PropTypes.oneOf(['compact', 'block', 'github']),
     onChange: PropTypes.func,
     /*
     customSwatches - limits the picker to specific colours
