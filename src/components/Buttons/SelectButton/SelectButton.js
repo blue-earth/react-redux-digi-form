@@ -12,44 +12,70 @@ const cx = classNames.bind(styles);
 class SelectButton extends Component {
 
   static propTypes = {
-    /*
+    /**
      * Dropdown option click event handler
      */
     onChange: PropTypes.func,
-    /*
+    /**
      * The value of selected item and display in bold after label
      */
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number
     ]),
-    /*
+    /**
      * The label content for the selection. If it's a string, place a `:` after
      */
     label: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.node
     ]),
-    /*
+    /**
      * Selection items list
      */
-    optionsList: PropTypes.array,
-    /*
+    optionsList: PropTypes.arrayOf(
+      PropTypes.shape({
+        /**
+         * Label for dropdown item display
+         */
+        label: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.node,
+          PropTypes.number
+        ]),
+        /**
+         * substitute value if label is node
+         */
+        value: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.number
+        ]),
+        /**
+         * OnChange calling value
+         */
+        key: PropTypes.oneOfType([
+          PropTypes.string,
+          PropTypes.number
+        ])
+      })
+    ),
+    /**
      * Classname for the out wrapper
      */
     className: PropTypes.string,
-    /*
+    /**
      * Do not change current default value while selected.
      */
     isStaticValue: PropTypes.bool,
-    /*
+    /**
      * Hide value display.
      */
     isValueHidden: PropTypes.bool
-  }
+  };
+
   static defaultProps = {
     value: '',
-    optionsList: [],
+    optionsList: [], // optionslist consist of the following structor
     label: '',
     isStaticValue: false,
     isValueHidden: false,
@@ -65,15 +91,22 @@ class SelectButton extends Component {
   }
 
   componentDidMount() {
-    // Event listener for closing dropdown.
+    /**
+     * Event listener for closing dropdown.
+     */
     document.addEventListener('click', this.handleDocumentClick, false);
     document.addEventListener('touch', this.handleDocumentClick, false);
   }
   componentWillUnmount() {
-    // Remove Event listener for closing dropdown.
+    /**
+     * Remove event listener for closing dropdown.
+     */
     document.removeEventListener('click', this.handleDocumentClick, false);
     document.removeEventListener('touch', this.handleDocumentClick, false);
   }
+  /**
+   * When value props updated change selected item
+   */
   componentWillReceiveProps(props) {
     if (props.value && props.value !== this.state.selected) {
       this.setState({selected: props.value});

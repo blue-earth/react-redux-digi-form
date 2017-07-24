@@ -37,7 +37,7 @@ storiesOf('Button', module)
 
     return (
       <div>
-        <div>
+        <div style={{width: '200px'}}>
           <SelectButton label="Type" optionsList={optionsList} value="Form" />
         </div>
         <p>general</p>
