@@ -20,8 +20,10 @@ class ProfileSettings extends Component {
   };
   constructor(props) {
     super(props);
+    this.activeDrag = 0;
     this.state = {
-      avatar: props.data.avatar
+      avatar: props.data.avatar,
+      isDragging: false
     };
   }
   componentDidMount() {
@@ -35,18 +37,21 @@ class ProfileSettings extends Component {
   selectImage = () => {
     this.refs.imageInput.click();
   }
+
+  previewImage = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+      this.setState({
+        avatar: e.target.result
+      })
+    }
+  }
+
   imageSelected = (event) => {
     let files = event.target.files;
     let image = files.length ? files[0] : '';
-    let reader = new FileReader();
-    if (image) {
-      reader.readAsDataURL(image);
-      reader.onload = (e) => {
-        this.setState({
-          avatar: e.target.result
-        });
-      };
-    }
+    image && this.previewImage(image);
   }
   deleteAvatar = () => {
     this.refs.imageInput.value = '';
@@ -55,6 +60,31 @@ class ProfileSettings extends Component {
     });
   }
 
+  handleDragEnter = (event) => {
+    event.preventDefault();
+    this.activeDrag += 1;
+    this.setState({isDragging: this.activeDrag > 0});
+  }
+  handleDragOver = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+  }
+  handleDragLeave = (event) => {
+    event.preventDefault();
+    this.activeDrag -= 1;
+    if (this.activeDrag === 0) {
+      this.setState({isDragging: false});
+    }
+  }
+  handleFileDrop = (event) => {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.previewImage(file);
+    }
+  } 
+
   renderAvatarSection() {
     return (
       <section>
@@ -62,7 +92,11 @@ class ProfileSettings extends Component {
         <div className="clearfix"></div>
         <div className={styles.rowWrapper}>
           <div className="pull-left">
-            <div className={styles.imageWrapper}>
+            <div className={styles.imageWrapper}
+              onDragEnter={this.handleDragEnter}
+              onDragOver={this.handleDragOver}
+              onDragLeave={this.handleDragLeave}
+              onDrop={this.handleFileDrop}>
               <Image rounded
                 className={styles.avatarImage} src={this.state.avatar} />
             </div>
