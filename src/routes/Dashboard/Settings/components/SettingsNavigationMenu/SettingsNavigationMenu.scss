@@ -10,7 +10,9 @@
     list-style: none;
     border: 1px solid $table-border-color;
     @include border-radius(4px);
+    overflow: hidden;
     > .menuListItem {
+      white-space: nowrap;
       padding-left: 20px;
       border-bottom: 1px solid $table-border-color;
       &:last-child{
@@ -20,7 +22,6 @@
         color: $dropdown-caret-color;
         display: block;
         height: 50px;
-        @include border-radius-separate(4px, 4px, 0, 0);
         text-decoration: none;        
         > span{
           padding: 0 0 0 20px;
