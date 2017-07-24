@@ -1,3 +1,66 @@
-.profileSettingsContainer {
+@import './mixins';
+@import './variables';
 
+.profileSettingForm {
+  margin-left: 10%;
+  width: 80%;
+}
+.sectionTitle {
+  float: left;
+  font-size: 16px;
+  font-family: "roble_alt_boldbold";
+}
+.imageWrapper {
+  width: 100px;
+  height: 100px;
+  background-color: $table-border-color;
+  @include border-radius(5px);
+}
+.avatarImage {
+  max-width: 100px;
+  max-height: 100px;
+  top: 50%;
+  position: relative;
+  @include transform(translateY(-50%));
+}
+.rowWrapper {
+  padding: 10px 0;
+  @include clearfix;
+}
+.hrLine {
+  border-color: #DCE7ED;
+}
+
+.linkButton {
+  font-size: 12px;
+  margin-top: 10px;
+  color: $darkblue;
+  text-decoration: underline;
+}
+.formInput {
+  width: 48%;
+  margin: 4px 0;
+  padding: 0 15px;
+  line-height: 37px;
+  font-size: 14px;
+  @include border-radius(4px);
+  border: 1px solid $table-border-color;
+}
+.initialInput {
+  width: 20%;
+}
+.instructionsSection {
+  margin: 15px;
+  margin-left: 120px;
+}
+.instructions {
+  color: $darkblue;
+  font-size: 12px;
+  font-weight: normal;
+}
+.deleteWrapper {
+  text-align: center;
+}
+.timezoneSelection {
+  font-size: 14px;
 }
