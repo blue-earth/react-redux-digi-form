@@ -18,6 +18,7 @@ import { IoReply } from 'react-icons/lib/io';
 import ColorPicker from 'components/ColorPicker/ColorPicker';
 import styles from './Signature.scss';
 import classNames from 'classnames';
+import moment from 'moment';
 
 const signatureFonts = [
   {
@@ -244,6 +245,7 @@ class SignatureModal extends Component {
           })}></span>
       </div>
     );
+    moment.locale('en-au');
     return (
       <Modal show={show} onHide={handleHide} className={styles.signatureModal}
         aria-labelledby="ModalHeader">
@@ -267,7 +269,7 @@ class SignatureModal extends Component {
             </Col>
             <Col xs={3} xsPush={3}>
               <div>Date</div>
-              <span className={styles.info}>{'05/05/2016'}</span>
+              <span className={styles.info}>{moment().format('L')}</span>
             </Col>
           </Row>
           <Tabs activeKey={activeTabName} id="SignatureTabs"
