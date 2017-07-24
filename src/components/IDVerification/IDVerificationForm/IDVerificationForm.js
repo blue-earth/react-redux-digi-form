@@ -6,7 +6,6 @@ import {
   Tab
 } from 'react-bootstrap';
 import { identityConstants } from 'schemas/idVerificationFormSchema';
-import IDVerificationTitle from '../IDVerificationTitle';
 import IDVerificationFormWrapper from '../IDVerificationFormWrapper';
 import PassportForm from 'containers/IDVerification/PassportFormContainer';
 import DriversLicenseForm from 'containers/IDVerification/DriversLicenseFormContainer';
@@ -16,46 +15,39 @@ import styles from './IDVerificationForm.scss';
 
 export default class IDVerificationForm extends Component {
   static propTypes = {
-    // activeTab: PropTypes.oneOf([
-    //   'online', 'upload'
-    // ]),
-    align: PropTypes.oneOf([
-      'left', 'center', 'right'
+    defaultActiveTab: PropTypes.oneOf([
+      'online', 'upload'
     ]),
     submitIdentity: PropTypes.func.isRequired,
     requestUploadIdFile: PropTypes.func,
     doneUploadIdFile: PropTypes.func,
     idType: PropTypes.number.isRequired,
     setIdType: PropTypes.func.isRequired,
-    person: PropTypes.object
+    person: PropTypes.object,
+    onLinkClick: PropTypes.func,
+    onSuccess: PropTypes.func.isRequired,
+    onFail: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    align: 'left'
+    defaultActiveTab: 'online',
+    onSuccess: () => {},
+    onFail: () => {}
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      notice: 'We require additional information to verify your identification online'
-    };
-  }
-
-  setNotice = (notice) => {
-    this.setState({ notice });
-  }
 
   renderVerifyOnline() {
     const { idType } = this.props;
-    const props = _.pick(this.props, ['idType', 'setIdType', 'submitIdentity', 'isSubmitting', 'person']);
+    const props = _.pick(this.props, [
+      'idType', 'setIdType', 'submitIdentity', 'isSubmitting', 'person', 'onLinkClick', 'onSuccess', 'onFail'
+    ]);
 
     switch (idType) {
       case identityConstants.DVSPASSPORT:
-        return <PassportForm {...props} setNotice={this.setNotice} />;
+        return <PassportForm {...props} />;
       case identityConstants.DVSDRIVERLICENSE:
-        return <DriversLicenseForm {...props} setNotice={this.setNotice} />;
+        return <DriversLicenseForm {...props} />;
       case identityConstants.DVSMEDICARECARD:
-        return <MedicareCardForm {...props} setNotice={this.setNotice} />;
+        return <MedicareCardForm {...props} />;
       default:
         return false;
     }
@@ -63,21 +55,19 @@ export default class IDVerificationForm extends Component {
 
   renderUploader() {
     const props = _.pick(this.props, [
-      'submitIdentity', 'requestUploadIdFile', 'doneUploadIdFile', 'isSubmitting', 'isUploading', 'person'
+      'submitIdentity', 'requestUploadIdFile', 'doneUploadIdFile', 'isSubmitting',
+      'isUploading', 'person', 'onLinkClick', 'onSuccess', 'onFail'
     ]);
     return (
-      <UploaderForm {...props} setNotice={this.setNotice} />
+      <UploaderForm {...props} />
     );
   }
 
   render() {
-    const { align } = this.props;
-    const { notice } = this.state;
-
+    const { defaultActiveTab } = this.props;
     return (
       <div className={styles.idVerificationForm}>
-        <IDVerificationTitle align={align} notice={notice} />
-        <Tab.Container id="IDVerificationFormTabs" defaultActiveKey="online">
+        <Tab.Container id="IDVerificationFormTabs" defaultActiveKey={defaultActiveTab}>
           <div className={styles.tabs}>
             <div className={styles.navsWrapper}>
               <IDVerificationFormWrapper>

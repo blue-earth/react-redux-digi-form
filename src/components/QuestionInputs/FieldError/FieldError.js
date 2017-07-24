@@ -33,6 +33,11 @@ class FieldError extends Component {
     verifications: PropTypes.array.isRequired
   };
 
+  static defaultProps = {
+    validations: [],
+    verifications: []
+  }
+
   getValidationErrors() {
     const { validations, value } = this.props;
     const failedValidations = _.filter(validations, function (validation) {

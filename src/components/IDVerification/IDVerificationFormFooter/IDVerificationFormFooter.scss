@@ -2,8 +2,11 @@
 @import './variables';
 
 .footerWrapper {
-  margin-top: 20px;
+  &:not(:first-child) {
+    margin-top: 20px;
+  }
 }
+
 .submitButton {
   font-size: 16px;
   background-color: $identity-submit-btn-color;
@@ -43,8 +46,10 @@
   font-size: 11px;
 }
 
+.termsSection {
+  padding-bottom: 20px;
+  border-bottom: 1px solid $identity-separator-color;
+}
 .footer {
-  border-top: 1px solid $identity-separator-color;
-  padding-top: 25px;
-  margin-top: 30px;
+  padding: 25px 0;
 }

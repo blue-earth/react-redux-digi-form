@@ -22,8 +22,10 @@ export default class PassportForm extends Component {
     idType: PropTypes.number.isRequired,
     setIdType: PropTypes.func.isRequired,
     submitIdentity: PropTypes.func.isRequired,
-    setNotice: PropTypes.func.isRequired,
-    isSubmitting: PropTypes.bool.isRequired
+    isSubmitting: PropTypes.bool.isRequired,
+    onLinkClick: PropTypes.func,
+    onSuccess: PropTypes.func.isRequired,
+    onFail: PropTypes.func.isRequired
   };
 
   getPassportFields(values) {
@@ -44,28 +46,19 @@ export default class PassportForm extends Component {
   }
 
   handleSubmitForm = (values) => {
-    const { submitIdentity, setNotice } = this.props;
+    const { submitIdentity, onFail, onSuccess } = this.props;
     let body = {};
     body = this.getPassportFields(values);
 
     submitIdentity({
       body,
-      success: (data) => {
-        if (data['result']) {
-          // The success here means the request succeed, does not refer to the verification succeed
-          setNotice('Identity Verification Success!');
-        } else {
-          setNotice('Failed to verify your identity. Please verify against other type of document.');
-        }
-      },
-      fail: () => {
-        setNotice('Failed to verify your identity. Please verify against other type of document.');
-      }
+      success: onSuccess,
+      fail: onFail
     });
   }
 
   render() {
-    const { handleSubmit, idType, isSubmitting } = this.props;
+    const { handleSubmit, idType, isSubmitting, onLinkClick } = this.props;
     const typeOptions = _.map(identityDocumentTypesList, (item, index) => (
       <option value={item.value} key={index}>{item.label}</option>
     ));
@@ -86,8 +79,8 @@ export default class PassportForm extends Component {
               <Field component={renderInput}
                 name="verification_data.passport.number"
                 type="text"
-                label="Passport no.(incl. letters)"
-                placeholder="Passport no." />
+                label="Passport no."
+                placeholder="(incl. letters)" />
             </Col>
             <Col xs={6}>
               <Field component={renderInput}
@@ -147,7 +140,7 @@ export default class PassportForm extends Component {
             </Col>
           </Row>
         </IDVerificationFormWrapper>
-        <IDVerificationFormFooter submitting={isSubmitting} />
+        <IDVerificationFormFooter submitting={isSubmitting} onLinkClick={onLinkClick} />
       </Form>
     );
   }

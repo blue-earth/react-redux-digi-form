@@ -30,7 +30,12 @@ export const renderSelect = field => (
 );
 
 export const renderCheckbox = field => (
-  <FormGroup className="checkbox">
+  field.inline
+  ? <label className="checkbox-inline">
+    <Field component="input" type="checkbox" {...field.input} />
+    {field.label}
+  </label>
+  : <FormGroup className="checkbox">
     <label>
       <Field component="input" type="checkbox" {...field.input} />
       {field.label}

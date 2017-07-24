@@ -37,6 +37,8 @@ export const SHOW_FINAL_SUBMIT = 'SHOW_FINAL_SUBMIT';
 
 export const RESET_FORM_SUBMIT_STATUS = 'RESET_FORM_SUBMIT_STATUS';
 
+export const SET_ID_VERIFY_STATUS = 'SET_ID_VERIFY_STATUS';
+
 // ------------------------------------
 // Form submit request action Constants
 // ------------------------------------
@@ -49,6 +51,38 @@ export const INIT_CURRENT_QUESTION = {
   answerValue: '',
   inputState: 'init'
 };
+
+// TODO: Implement the structure of form_config field.
+const INIT_FORM_CONFIG = {
+  idVerification: {
+    isRequired: true
+  }
+};
+
+// TODO: Implement how to get people data.
+const TEST_PEOPLE_DATA = [
+  {
+    first_name: 'Jordan',
+    last_name: 'McCown',
+    status: 'PENDING',
+    id: '9b6a957c-85ad-45dd-9c5f-6873ffea8d15', // TODO: implement how to get this id required for Upload
+    selected: false
+  },
+  {
+    first_name: 'George',
+    last_name: 'Gregory',
+    status: 'PENDING',
+    id: '9b6a957c-85ad-45dd-9c5f-6873ffea8d15', // TODO: implement how to get this id required for Upload
+    selected: false
+  },
+  {
+    first_name: 'Lihan',
+    last_name: 'Li',
+    status: 'VERIFIED',
+    id: '9b6a957c-85ad-45dd-9c5f-6873ffea8d15', // TODO: implement how to get this id required for Upload
+    selected: false
+  }
+];
 
 export const INIT_FORM_STATE = {
   id: 0,
@@ -63,6 +97,7 @@ export const INIT_FORM_STATE = {
     questions: [],
     logics: []
   }, // holds the received form data.
+  formConfig: INIT_FORM_CONFIG,
   title: 'Title',
   slug: 'slug',
   currentQuestion: INIT_CURRENT_QUESTION,
@@ -73,7 +108,12 @@ export const INIT_FORM_STATE = {
   shouldShowFinalSubmit: false, // indicates whether to show final form submit section.
   formAccessStatus: 'init', // can be 'init', 'waiting', 'failed', 'success'
   isAccessCodeProtected: false,
-  formAccessCode: ''
+  formAccessCode: '',
+  idVerifyStatus: {
+    people: TEST_PEOPLE_DATA, // people data
+    step: 'SELECT_PEOPLE', // can be 'SELECT_PEOPLE', 'SELECT_METHOD', 'VERIFY'
+    index: 0 // index of people field, used in step 'VERIFY'
+  }
 };
 
 // ------------------------------------
@@ -569,6 +609,11 @@ export const doneSubmitAnswer = createAction(DONE_SUBMIT, (status) => status);
 export const updateSessionId = createAction(UPDATE_SESSION_ID);
 
 // ------------------------------------
+// Action: setIDVerifyStatus
+// ------------------------------------
+export const setIDVerifyStatus = createAction(SET_ID_VERIFY_STATUS);
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const formInteractiveReducer = handleActions({
@@ -656,6 +701,11 @@ const formInteractiveReducer = handleActions({
   UPDATE_ACCESS_CODE: (state, action) =>
     Object.assign({}, state, {
       formAccessCode: action.payload
+    }),
+
+  SET_ID_VERIFY_STATUS: (state, action) =>
+    Object.assign({}, state, {
+      idVerifyStatus: Object.assign({}, state.idVerifyStatus, action.payload)
     })
 
 }, INIT_FORM_STATE);

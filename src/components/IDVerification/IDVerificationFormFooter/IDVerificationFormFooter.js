@@ -7,7 +7,6 @@ import {
   Row
 } from 'react-bootstrap';
 import { Field } from 'redux-form';
-import { Link } from 'react-router';
 import { renderCheckbox } from '../helpers';
 import IDVerificationFormWrapper from 'components/IDVerification/IDVerificationFormWrapper';
 import styles from './IDVerificationFormFooter.scss';
@@ -25,11 +24,22 @@ const termsConditions = (
 
 export default class IDVerificationFormFooter extends Component {
   static propTypes = {
-    submitting: PropTypes.bool.isRequired
+    submitting: PropTypes.bool,
+    onLinkClick: PropTypes.func,
+    onButtonClick: PropTypes.func,
+    submitLabel: PropTypes.string,
+    includeTerms: PropTypes.bool
+  };
+
+  static defaultProps = {
+    submitting: false,
+    onLinkClick: () => {},
+    submitLabel: 'Verify my ID',
+    includeTerms: true
   };
 
   render() {
-    const { submitting } = this.props;
+    const { includeTerms, onLinkClick, submitting, submitLabel, onButtonClick } = this.props;
     const checkboxLabel = (
       <span>
         I have read and agree to the{' '}
@@ -42,21 +52,35 @@ export default class IDVerificationFormFooter extends Component {
     );
     return (
       <div className={styles.footerWrapper}>
-        <IDVerificationFormWrapper>
-          <Field component={renderCheckbox} type="checkbox"
-            label={checkboxLabel}
-            name="terms_conditions" />
-        </IDVerificationFormWrapper>
+        {includeTerms &&
+          <div className={styles.termsSection}>
+            <IDVerificationFormWrapper>
+              <Field component={renderCheckbox} type="checkbox"
+                label={checkboxLabel}
+                name="terms_conditions" />
+            </IDVerificationFormWrapper>
+          </div>
+        }
         <div className={styles.footer}>
           <IDVerificationFormWrapper>
             <Row>
               <Col xs={6}>
-                <Link to="javascript:;" className={styles.cancelLink}>Verify Later</Link>
+                <a href="javascript:;" className={styles.cancelLink}
+                  onClick={onLinkClick}>
+                  Verify Later
+                </a>
               </Col>
               <Col xs={6} className="text-right">
-                <Button bsStyle="primary" className={styles.submitButton} type="submit" disabled={submitting}>
-                  {submitting ? 'Submitting...' : 'Verify my ID'}
-                </Button>
+                {onButtonClick
+                  ? <Button bsStyle="primary" className={styles.submitButton}
+                    onClick={onButtonClick} disabled={submitting}>
+                    {submitting ? 'Submitting...' : submitLabel}
+                  </Button>
+                  : <Button bsStyle="primary" className={styles.submitButton}
+                    type="submit" disabled={submitting}>
+                    {submitting ? 'Submitting...' : submitLabel}
+                  </Button>
+                }
               </Col>
             </Row>
           </IDVerificationFormWrapper>

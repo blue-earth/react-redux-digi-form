@@ -8,7 +8,7 @@ export default class UploaderField extends Component {
     input: PropTypes.object.isRequired,
     // onChange: PropTypes.func.isRequired,
     // value: PropTypes.array,
-    setNotice: PropTypes.func,
+    onUploadFail: PropTypes.func,
     requestUploadIdFile: PropTypes.func,
     doneUploadIdFile: PropTypes.func
   };
@@ -16,7 +16,7 @@ export default class UploaderField extends Component {
   static defaultProps = {
     requestUploadIdFile: () => {},
     doneUploadIdFile: () => {},
-    setNotice: () => {}
+    onUploadFail: () => {}
   };
 
   handleUploadSuccess = (response) => {
@@ -27,9 +27,9 @@ export default class UploaderField extends Component {
   }
 
   handleUploadFail = (response) => {
-    const { doneUploadIdFile, setNotice } = this.props;
+    const { doneUploadIdFile, onUploadFail } = this.props;
     doneUploadIdFile();
-    setNotice('Failed to upload the file. Please try again abit later.');
+    onUploadFail(response);
   }
 
   handleStart = (response) => {

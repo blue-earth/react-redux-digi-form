@@ -43,16 +43,16 @@ const validate = values => {
   return errors;
 };
 
-const selectInitialValues = (state) => {
-  const person = _.get(state, ['identityVerification', 'person'], {});
+const selectInitialValues = (props) => {
+  const person = _.get(props, 'person', {});
   return {
     person: _.pick(person, ['first_name', 'last_name', 'email', 'date_of_birth', 'gender'])
   };
 };
 
 export default connect(
-  state => ({
-    initialValues: selectInitialValues(state)
+  (state, props) => ({
+    initialValues: selectInitialValues(props)
   })
 )(reduxForm({
   form: 'idPassportForm',

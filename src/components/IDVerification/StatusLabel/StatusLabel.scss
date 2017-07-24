@@ -1,0 +1,15 @@
+@import './mixins';
+@import './variables';
+
+.warningIcon {
+  color: $identity-status-warning-color;
+}
+
+.successIcon {
+  color: $identity-status-success-color;
+}
+
+.statusText {
+  margin-left: 5px;
+  vertical-align: middle;
+}
