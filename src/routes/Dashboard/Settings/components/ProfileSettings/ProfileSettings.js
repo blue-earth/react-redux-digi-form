@@ -140,11 +140,6 @@ class ProfileSettings extends Component {
               </a>
               &nbsp;for file. Upload at least 256 &times; 256px PNG or JPG.
             </p>
-            <input style={{display: 'none'}}
-              type="file"
-              accept="image/png, image/jpg"
-              ref="imageInput"
-              onChange={this.imageSelected} />
           </div>
         </div>
         <hr className={styles.hrLine} />
