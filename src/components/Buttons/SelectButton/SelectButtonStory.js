@@ -4,7 +4,7 @@ import SelectButton from './SelectButton';
 
 const svg = (
   <svg xmlns="http://www.w3.org/2000/svg" width="30" height="13" viewBox="0 0 13 13" fill="currentColor">
-    <path id="checkbox" class="cls-1"
+    <path id="checkbox"
       d="M450.787,2705.13a0.555,0.555,0,0,0-.794.09l-6.665,8.45-2.379-2.43a0.549,0.549,0,0,0-.8,0,0.58,0.58,
         0,0,0,0,.81l2.824,2.89a0.56,0.56,0,0,0,.839-0.04l7.058-8.96A0.583,0.583,0,0,0,450.787,2705.13Zm-2.049,
         5.36a0.573,0.573,0,0,0-.565.58v5.77h-9.035v-9.24h6.776a0.573,0.573,0,0,0,.565-0.58,0.564,0.564,0,0,
@@ -37,6 +37,10 @@ storiesOf('Button', module)
 
     return (
       <div>
+        <div style={{width: '200px'}}>
+          <SelectButton label="Type" />
+        </div>
+        <p>Button</p>
         <div style={{width: '200px'}}>
           <SelectButton label="Type" optionsList={optionsList} value="Form" />
         </div>

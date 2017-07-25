@@ -13,6 +13,10 @@ class SelectButton extends Component {
 
   static propTypes = {
     /**
+     * Button click event handler when no options
+     */
+    onClick: PropTypes.func,
+    /**
      * Dropdown option click event handler
      */
     onChange: PropTypes.func,
@@ -144,21 +148,24 @@ class SelectButton extends Component {
   }
 
   render() {
-    const { label, isStaticValue, optionsList, className, value, isValueHidden } = this.props;
+    const { label, isStaticValue, optionsList, className, isValueHidden } = this.props;
     const { selected, isOpen } = this.state;
     const dropdownButton = (
       <div className={cx(className)}>
         <div ref="dropdown" className={cx('selectWrapper', {
           isOpen: this.state.isOpen
         })}>
-          <div className={cx('selectLabel')} onMouseDown={this.toggleOpen}>
+          <div className={cx('selectLabel')} onClick={this.toggleOpen}>
             <div className={cx('pullLeft')}>
               {label}
-              {label && label.length > 0 ? ':' : ' '}</div>
+              {label && label.length > 0 ? ':' : ' '}
+            </div>
             <div className={cx('selectValue', {invisible: isOpen && label.length > 0 && !isStaticValue})}>
               {!isValueHidden && selected}
             </div>
-            <div className={cx('selectCaret')}><FaAngleDown /></div>
+            <div className={cx('selectCaret')}>
+              <FaAngleDown />
+            </div>
           </div>
           <div className={cx('selectOptionsWrapper')}>
             <ul className={cx('selectOptions')}>
@@ -185,9 +192,9 @@ class SelectButton extends Component {
     );
     const selectButton = (
       <div className={cx(className)}>
-        <div ref="dropdown" className={cx('selectWrapper')}>
+        <div ref="dropdown" className={cx('selectWrapper')} onClick={this.props.onClick}>
           <div className={cx('selectLabel')} onMouseDown={this.toggleOpen}>
-            <div className={cx('selectValue')}>{value}</div>
+            {label}
           </div>
         </div>
       </div>
