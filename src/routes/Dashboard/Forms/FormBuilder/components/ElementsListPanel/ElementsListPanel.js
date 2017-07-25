@@ -92,7 +92,7 @@ export default class ElementsListPanel extends Component {
                   className={styles.inputType}
                   label={<span>
                     {element.displayIcon && <Icon name={element.displayIcon}
-                      style={{verticalAlign: 'baseline', height: '12px', width: '30px'}} />}
+                      style={{verticalAlign: 'middle', height: '12px', width: '30px'}} />}
                     {element.displayText}
                   </span>}
                   onClick={function (e) { that.handleElementClick(e, element.name); }} />
