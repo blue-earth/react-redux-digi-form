@@ -30,13 +30,21 @@ export const submitProfileSettings = (data) => {
   formData.append('first_name', data.firstName);
   formData.append('last_name', data.lastName);
   formData.append('timezone', data.timezone);
-  formData.append('avatar', data.avatar);
-  // todo: Should only use multipart/form-data
-  // if the formData contains a file
-  const fetchParams = assignDefaults({
+  if (data.avatar instanceof File) {
+    formData.append('avatar', data.avatar);
+  }
+  let fetchParams = assignDefaults({
     method: 'PUT',
     body: formData
-  }, {'Content-Type': 'multipart/form-data'});
+  });
+
+  // why?
+  // The content type should be multipart/form-data
+  // But it should not set here
+  // Because it will not generate correct boundary
+  // Removing Content-Type will force browser send
+  // correct content-type
+  delete fetchParams['headers']['Content-Type'];
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
