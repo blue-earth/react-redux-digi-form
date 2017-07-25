@@ -9,7 +9,8 @@ import {
   Collapse
 } from 'react-bootstrap';
 import { FaChevronDown } from 'react-icons/lib/fa';
-import Button from 'components/Buttons/DashboardButtons/Button';
+import SelectButton from 'components/Buttons/SelectButton';
+import Icon from 'components/Icon';
 import _ from 'lodash';
 import classNames from 'classnames';
 import questionInputs, {
@@ -80,7 +81,6 @@ export default class ElementsListPanel extends Component {
   }
 
   renderPanelContent(elements) {
-    const { activeInputName } = this.props;
     const that = this;
     return (
       <Row className={styles.panelRow}>
@@ -88,12 +88,14 @@ export default class ElementsListPanel extends Component {
           elements.map((element, index) => {
             return (
               <Col xs={6} className={styles.panelCol} key={index}>
-                <Button block active={activeInputName === element.name}
-                  onClick={function (e) { that.handleElementClick(e, element.name); }}>
-                  <span className={styles.inputTypeLabel}>
+                <SelectButton
+                  className={styles.inputType}
+                  label={<span>
+                    {element.displayIcon && <Icon name={element.displayIcon}
+                      style={{verticalAlign: 'baseline', height: '12px', width: '30px'}} />}
                     {element.displayText}
-                  </span>
-                </Button>
+                  </span>}
+                  onClick={function (e) { that.handleElementClick(e, element.name); }} />
               </Col>
             );
           })

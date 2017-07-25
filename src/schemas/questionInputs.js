@@ -17,6 +17,7 @@ const questionInputs = {
     name: 'ShortTextField',
     componentName: 'ShortTextInput',
     displayText: 'Short Text',
+    displayIcon: 'ShortText',
     inputType: 'text',
     validations: [
       'is_required',
@@ -37,6 +38,7 @@ const questionInputs = {
     name: 'EmailField',
     componentName: 'ShortTextInput',
     displayText: 'Email',
+    displayIcon: 'Email',
     inputType: 'email',
     validations: [
       'is_required',
@@ -56,6 +58,7 @@ const questionInputs = {
     name: 'PhoneNumberField',
     componentName: 'PhoneNumberInput',
     displayText: 'Phone Number',
+    displayIcon: 'Phone',
     validations: [
       'is_required'
     ],
@@ -66,16 +69,51 @@ const questionInputs = {
     name: 'AddressField',
     componentName: 'AddressInput',
     displayText: 'Address',
+    displayIcon: 'Address',
     validations: [
       'is_required'
     ],
     logicOperations: [],
     group: STANDARD
   },
+  'YesNoChoice': {
+    name: 'YesNoChoice',
+    componentName: 'YesNoChoice',
+    displayText: 'Checkbox',
+    displayIcon: 'Checkbox',
+    validations: [
+      'is_required'
+    ],
+    logicOperations: [
+      'is',
+      'not'
+    ],
+    group: STANDARD
+  },
+  'DateField': {
+    name: 'DateField',
+    componentName: 'DateInput',
+    displayText: 'Date',
+    displayIcon: 'Date',
+    defaultDateFormat: 'YYYY/MM/DD',
+    validations: [
+      'is_required'
+    ],
+    logicOperations: [
+      'on',
+      'not_on',
+      'before',
+      'after',
+      'before_on',
+      'after_on'
+    ],
+    group: STANDARD
+  },
   'MultipleChoice': {
     name: 'MultipleChoice',
     componentName: 'MultipleChoice',
     displayText: 'Multiple Choice',
+    displayIcon: 'List',
     validations: [
       'is_required'
     ],
@@ -89,6 +127,7 @@ const questionInputs = {
     name: 'NumberField',
     componentName: 'ShortTextInput',
     displayText: 'Number',
+    displayIcon: 'Number',
     inputType: 'number',
     validations: [
       'is_required',
@@ -105,28 +144,11 @@ const questionInputs = {
     ],
     group: STANDARD
   },
-  'DateField': {
-    name: 'DateField',
-    componentName: 'DateInput',
-    displayText: 'Date',
-    defaultDateFormat: 'YYYY/MM/DD',
-    validations: [
-      'is_required'
-    ],
-    logicOperations: [
-      'on',
-      'not_on',
-      'before',
-      'after',
-      'before_on',
-      'after_on'
-    ],
-    group: STANDARD
-  },
   'LongTextField': {
     name: 'LongTextField',
     componentName: 'LongTextInput',
     displayText: 'Paragraph',
+    displayIcon: 'Paragraph',
     validations: [
       'is_required',
       'minimum',
@@ -146,6 +168,7 @@ const questionInputs = {
     name: 'DropdownField',
     componentName: 'DropdownInput',
     displayText: 'Dropdown',
+    displayIcon: 'Dropdown',
     validations: [
       'is_required'
     ],
@@ -159,27 +182,27 @@ const questionInputs = {
     name: 'StatementField',
     componentName: 'Statement',
     displayText: 'Legal',
+    displayIcon: 'Legal',
     validations: [],
     logicOperations: [],
     group: STANDARD
   },
-  'YesNoChoice': {
-    name: 'YesNoChoice',
-    componentName: 'YesNoChoice',
-    displayText: 'Yes / No',
+  'UploadField': {
+    name: 'UploadField',
+    componentName: 'FileUpload',
+    displayText: 'Upload',
+    displayIcon: 'Upload',
     validations: [
       'is_required'
     ],
-    logicOperations: [
-      'is',
-      'not'
-    ],
+    logicOperations: [],
     group: STANDARD
   },
   'SignatureField': {
     name: 'SignatureField',
     componentName: 'Signature',
     displayText: 'Signature',
+    displayIcon: 'Signature',
     validations: [
       'is_required'
     ],

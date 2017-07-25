@@ -36,6 +36,7 @@
   cursor: pointer;
   position: relative;
   text-decoration: none !important;
+  color: $darkblue;
   background-color: $panel-heading-bg-color;
   border-bottom: 1px solid $panel-border-color;
   &:hover {
@@ -64,6 +65,7 @@
   }
 }
 
-.inputTypeLabel {
+.inputType {
   font-family: 'Open Sans';
+  font-size: 13px;
 }
