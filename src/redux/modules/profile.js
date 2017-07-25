@@ -62,7 +62,8 @@ export const fetchProfileSettings = () => {
         avatar: value.avatar,
         firstName: value.first_name,
         lastName: value.last_name,
-        email: value.email
+        email: value.email,
+        timezone: value.timezone
       }));
       dispatch(doneFetchingProfileSettings());
     };
