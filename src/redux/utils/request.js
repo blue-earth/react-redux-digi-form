@@ -2,18 +2,19 @@ import _ from 'lodash';
 import getCsrfToken from './csrf';
 
 export const assignDefaults = request => {
-  if (typeof request === 'undefined') request = {};
-  const headers = request.method === 'DELETE' ? request.headers || {} : _.merge({
+  if (!request) {
+    request = {};
+  }
+  const headers = request.method === 'DELETE' ? request.headers : Object.assign({}, {
     Accept: 'application/json',
-    'Content-Type': 'application/json',
-    Cookie: document.cookie
-  }, request.headers || {});
+    'Content-Type': 'application/json'
+  }, request.headers);
 
   var body = null;
   if (_.includes(['POST', 'PUT'], request.method)) {
-    if (request.body) {
+    headers['X-CSRFToken'] = getCsrfToken();
+    if (request.body && !request.body instanceof FormData) {
       body = JSON.stringify(request.body);
-      headers['X-CSRFToken'] = getCsrfToken();
     } else {
       body = request.body;
     }
