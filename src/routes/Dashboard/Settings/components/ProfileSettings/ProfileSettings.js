@@ -9,6 +9,39 @@ import SelectButton from 'components/Buttons/SelectButton';
 import AppButton from 'components/Buttons/AppButton/AppButton';
 import classNames from 'classnames';
 import ChangePasswordModal from './ChangePasswordModal';
+import Dropzone from 'react-dropzone';
+
+class AvatarDropZoneFileInput extends Component {
+  constructor(props) {
+    super(props);
+    this.onDrop = this.onDrop.bind(this);
+  }
+  static propTypes = {
+    input: PropTypes.object.isRequired
+  };
+
+  onDrop(files) {
+    const { input } = this.props;
+    input.onChange(files[0]);
+  }
+
+  render() {
+    const dropZoneStyle = {
+      width: '100%',
+      height: '100%',
+      borderWidth: 2,
+      borderColor: '#666',
+      borderStyle: 'dashed',
+      borderRadius: 5
+    };
+    return (
+      <div className={styles.imageWrapper}>
+        <Dropzone onDrop={this.onDrop} accept="image/*" maxSize={1024*1024} multiple={false} style={dropZoneStyle}>
+        </Dropzone>
+      </div>
+    );
+  };
+}
 
 class ProfileSettings extends Component {
   static propTypes = {
@@ -92,14 +125,7 @@ class ProfileSettings extends Component {
         <div className="clearfix"></div>
         <div className={styles.rowWrapper}>
           <div className="pull-left">
-            <div className={styles.imageWrapper}
-              onDragEnter={this.handleDragEnter}
-              onDragOver={this.handleDragOver}
-              onDragLeave={this.handleDragLeave}
-              onDrop={this.handleFileDrop}>
-              <Image rounded
-                className={styles.avatarImage} src={this.state.avatar} />
-            </div>
+            <Field name="avatar" component={AvatarDropZoneFileInput} />
             <div className={styles.deleteWrapper}>
               <a href="javascript:;" className={styles.linkButton} onClick={this.deleteAvatar}>
                 Delete
