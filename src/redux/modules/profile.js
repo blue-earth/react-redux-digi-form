@@ -24,15 +24,19 @@ export const doneFetchingProfileSettings = createAction(DONE_FETCHING_PROFILE_SE
 // ------------------------------------
 // Action: saveProfile
 // ------------------------------------
-export const submitProfileSettings = (formData) => {
+export const submitProfileSettings = (data) => {
   const apiURL = `${API_URL}/accounts/api/user/`;
+  var formData = new FormData();
+  formData.append('first_name', data.firstName);
+  formData.append('last_name', data.lastName);
+  formData.append('timezone', data.timezone);
+  formData.append('avatar', data.avatar);
+  // todo: Should only use multipart/form-data
+  // if the formData contains a file
   const fetchParams = assignDefaults({
     method: 'PUT',
-    body: {
-      first_name: formData.firstName,
-      last_name: formData.lastName
-    }
-  });
+    body: formData
+  }, {'Content-Type': 'multipart/form-data'});
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
