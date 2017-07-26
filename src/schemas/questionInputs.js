@@ -32,6 +32,10 @@ const questionInputs = {
       'contains',
       'does_not_contain'
     ],
+    selectionType: [
+      'standard',
+      'block'
+    ],
     group: STANDARD
   },
   'EmailField': {
@@ -52,6 +56,10 @@ const questionInputs = {
       'less_than_equal_to',
       'greater_than_equal_to'
     ],
+    selectionType: [
+      'standard',
+      'block'
+    ],
     group: STANDARD
   },
   'PhoneNumberField': {
@@ -63,6 +71,10 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
+    selectionType: [
+      'standard',
+      'block'
+    ],
     group: STANDARD
   },
   'AddressField': {
@@ -74,6 +86,10 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
+    selectionType: [
+      'standard',
+      'block'
+    ],
     group: STANDARD
   },
   'YesNoChoice': {
@@ -87,6 +103,9 @@ const questionInputs = {
     logicOperations: [
       'is',
       'not'
+    ],
+    selectionType: [
+      'block'
     ],
     group: STANDARD
   },
@@ -107,6 +126,10 @@ const questionInputs = {
       'before_on',
       'after_on'
     ],
+    selectionType: [
+      'standard',
+      'block'
+    ],
     group: STANDARD
   },
   'MultipleChoice': {
@@ -120,6 +143,9 @@ const questionInputs = {
     logicOperations: [
       'is',
       'not'
+    ],
+    selectionType: [
+      'standard'
     ],
     group: STANDARD
   },
@@ -142,6 +168,10 @@ const questionInputs = {
       'less_than_equal_to',
       'greater_than_equal_to'
     ],
+    selectionType: [
+      'standard',
+      'block'
+    ],
     group: STANDARD
   },
   'LongTextField': {
@@ -162,6 +192,9 @@ const questionInputs = {
       'contains',
       'does_not_contain'
     ],
+    selectionType: [
+      'standard'
+    ],
     group: STANDARD
   },
   'DropdownField': {
@@ -176,6 +209,9 @@ const questionInputs = {
       'is',
       'not'
     ],
+    selectionType: [
+      'standard'
+    ],
     group: STANDARD
   },
   'StatementField': {
@@ -185,6 +221,9 @@ const questionInputs = {
     displayIcon: 'Legal',
     validations: [],
     logicOperations: [],
+    selectionType: [
+      'standard'
+    ],
     group: STANDARD
   },
   'UploadField': {
@@ -196,6 +235,7 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
+    selectionType: [],
     group: STANDARD
   },
   'SignatureField': {
@@ -207,6 +247,9 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
+    selectionType: [
+      'standard'
+    ],
     group: STANDARD
   }
 };

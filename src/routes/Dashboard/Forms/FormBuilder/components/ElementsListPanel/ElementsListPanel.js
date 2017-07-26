@@ -80,12 +80,40 @@ export default class ElementsListPanel extends Component {
     });
   }
 
+  handleElementOptClick = (key) => {
+    const { setQuestionEditMode } = this.props;
+    var splitKey = key.split('|');
+    var inputType = splitKey[0];
+    var selectionType = splitKey[1];
+    console.log(selectionType);
+    // TODO: pass selectionType to the reducer to do something with it
+    setQuestionEditMode({
+      mode: true,
+      inputType
+    });
+  }
+
   renderPanelContent(elements) {
     const that = this;
     return (
       <Row className={styles.panelRow}>
         {
           elements.map((element, index) => {
+            var opts = [];
+            if (element.selectionType.length) {
+              var elName = element.name;
+              _.forEach(element.selectionType, function (value) {
+                var labelNode = value;
+                var elKey = elName + '|' + value;
+                if (value === 'standard') {
+                  labelNode = (<span>Standard</span>);
+                }
+                if (value === 'block') {
+                  labelNode = (<span>Block</span>);
+                }
+                opts.push({'label': labelNode, 'value': value, 'key': elKey});
+              });
+            }
             return (
               <Col xs={6} className={styles.panelCol} key={index}>
                 <SelectButton
@@ -95,7 +123,9 @@ export default class ElementsListPanel extends Component {
                       style={{verticalAlign: 'middle', height: '12px', width: '30px'}} />}
                     {element.displayText}
                   </span>}
-                  onClick={function (e) { that.handleElementClick(e, element.name); }} />
+                  optionsList={opts}
+                  onClick={function (e) { that.handleElementClick(e, element.name); }}
+                  onChange={that.handleElementOptClick} />
               </Col>
             );
           })
