@@ -17,6 +17,7 @@ export const INIT_PROFILE_SETTINGS_STATE = {
 // ------------------------------------
 // Actions with reducer
 // ------------------------------------
+export const requestSubmitProfileSettings = createAction(REQUEST_SUBMIT_PROFILE_SETTINGS);
 export const requestFetchProfileSettings = createAction(REQUEST_FETCH_PROFILE_SETTINGS);
 export const receiveServerUserProfileSettings = createAction(RECEIVE_USER_PROFILE_SETTINGS);
 export const doneFetchingProfileSettings = createAction(DONE_FETCHING_PROFILE_SETTINGS);
@@ -24,14 +25,17 @@ export const doneFetchingProfileSettings = createAction(DONE_FETCHING_PROFILE_SE
 // ------------------------------------
 // Action: saveProfile
 // ------------------------------------
-export const submitProfileSettings = (data) => {
+export const processSubmitProfileSettings = (data) => {
   const apiURL = `${API_URL}/accounts/api/user/`;
   var formData = new FormData();
   formData.append('first_name', data.firstName);
   formData.append('last_name', data.lastName);
-  formData.append('timezone', data.timezone);
+  // formData.append('timezone', data.timezone);
   if (data.avatar instanceof File) {
     formData.append('avatar', data.avatar);
+  }
+  if (data.avatar === '') {
+    formData.append('avatar', '');
   }
   let fetchParams = assignDefaults({
     method: 'PUT',
@@ -59,6 +63,41 @@ export const submitProfileSettings = (data) => {
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
+// ------------------------------------
+// Action: savePassword
+// ------------------------------------
+export const processSubmitPassword = (data) => {
+  const apiURL = `${API_URL}/accounts/api/user/`;
+  var formData = new FormData();
+  formData.append('old_password', data.old_password);
+  formData.append('new_password1', data.new_password1);
+  formData.append('new_password2', data.new_password2);
+  let fetchParams = assignDefaults({
+    method: 'PUT',
+    body: formData
+  });
+  delete fetchParams['headers']['Content-Type'];
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(doneFetchingProfileSettings());
+    };
+  };
+
+  const fetchFail = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(doneFetchingProfileSettings());
+      if (value) {
+        let error = {};
+        Object.keys(value).map((key) => {
+          error[key] = value[key][0];
+        });
+        return new SubmissionError(error);
+      }
+      
+    };
+  };
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+}
 
 export const fetchProfileSettings = () => {
   const fetchParams = assignDefaults({
@@ -85,12 +124,20 @@ export const fetchProfileSettings = () => {
   return bind(fetch(`${API_URL}/accounts/api/user/`, fetchParams), fetchSuccess, fetchFail);
 };
 
-export const requestSubmitProfileSettings = () => {
+export const submitProfileSettings = () => {
   return (dispatch, getState) => {
+    dispatch(requestSubmitProfileSettings());
     const formState = getState().form.profileSettingForm.values;
-    dispatch(submitProfileSettings(formState));
+    dispatch(processSubmitProfileSettings(formState));
   };
 };
+export const submitPasswordSettings = () => {
+  return (dispatch, getState) => {
+    dispatch(requestSubmitProfileSettings());
+    const formState = getState().form.profileSettingForm.values;
+    dispatch(processSubmitPassword(formState));
+  }
+}
 
 // ------------------------------------
 // Reducer
@@ -109,7 +156,6 @@ const profileReducer = handleActions({
       data: action.payload
     }),
   REQUEST_SUBMIT_PROFILE_SETTINGS: (state, action) => {
-    submitProfileSettings(state.formData);
     return Object.assign({}, state, {
       isPageBusy: true
     });

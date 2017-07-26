@@ -1,6 +1,7 @@
 import connect from 'redux/utils/connect';
 import {
-  requestSubmitProfileSettings,
+  submitProfileSettings,
+  submitPasswordSettings,
   fetchProfileSettings
 } from 'redux/modules/profile';
 import ProfileSettings from '../components/ProfileSettings';
@@ -8,7 +9,8 @@ import { show } from 'redux-modal';
 import { reduxForm } from 'redux-form';
 
 const mapActionCreators = {
-  requestSubmitProfileSettings,
+  submitProfileSettings,
+  submitPasswordSettings,
   fetchProfileSettings,
   show
 };

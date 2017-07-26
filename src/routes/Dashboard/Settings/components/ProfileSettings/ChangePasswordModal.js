@@ -8,7 +8,6 @@ import {
 import { Field } from 'redux-form';
 import { connectModal } from 'redux-modal';
 import AppButton from 'components/Buttons/AppButton';
-
 import styles from './ChangePasswordModal.scss';
 
 class ChangePasswordModal extends Component {
@@ -16,6 +15,9 @@ class ChangePasswordModal extends Component {
     handleHide: PropTypes.func.isRequired,
     show: PropTypes.bool
   };
+  handleSubmit = () => {
+    this.props.handleSubmit();
+  }
   render() {
     const { show, handleHide } = this.props;
     return (
@@ -30,12 +32,12 @@ class ChangePasswordModal extends Component {
           </h3>
           <div className={styles.contentWrapper}>
             <Field component="input" type="password"
-              name="oldPassword" className={styles.emailInput} placeholder="Old password" />
+              name="old_password" className={styles.emailInput} placeholder="Old password" />
             <Field component="input" type="password"
-              name="newPassword" className={styles.emailInput} placeholder="New password" />
+              name="new_password1" className={styles.emailInput} placeholder="New password" />
             <Field component="input" type="password"
-              name="repeatPassword" className={styles.emailInput} placeholder="Repeat new password" />
-            <AppButton extraClass={styles.sendButton}>
+              name="new_password2" className={styles.emailInput} placeholder="Repeat new password" />
+            <AppButton extraClass={styles.sendButton} onClick={this.handleSubmit}>
               Change password
             </AppButton>
           </div>
