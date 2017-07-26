@@ -106,10 +106,10 @@ export default class ElementsListPanel extends Component {
                 var labelNode = value;
                 var elKey = elName + '|' + value;
                 if (value === 'standard') {
-                  labelNode = (<span>Standard</span>);
+                  labelNode = (<span>Standard style</span>);
                 }
                 if (value === 'block') {
-                  labelNode = (<span>Block</span>);
+                  labelNode = (<span>Block style</span>);
                 }
                 opts.push({'label': labelNode, 'value': value, 'key': elKey});
               });
