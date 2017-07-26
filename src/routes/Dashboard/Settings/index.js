@@ -1,7 +1,7 @@
 import { injectReducer } from 'redux/reducers';
 import SettingsLayoutContainer from './containers/SettingsContainer';
 import ProfileSettings from './containers/ProfileSettingsContainer';
-import NotificationSettings from './components/NotificationSettings/NotificationSettings';
+import BillingSettings from './components/BillingSettings/BillingSettings';
 import { settingsPath, settingsUrl } from 'helpers/urlHelper';
 // import { combineReducers } from 'redux';
 export default (store) => ({
@@ -18,8 +18,8 @@ export default (store) => ({
           component: ProfileSettings
         },
         {
-          path: 'notifications',
-          component: NotificationSettings
+          path: 'billing',
+          component: BillingSettings
         }
       ]);
     });

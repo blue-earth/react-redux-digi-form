@@ -15,34 +15,9 @@ class SettingsNavigationMenu extends Component {
         icon: <FaUser />
       },
       {
-        url: settingsUrl('notifications'),
-        text: 'Notifications',
-        icon: <FaBell />
-      },
-      {
-        url: settingsUrl('custom-branding'),
-        text: 'Custom branding & themes',
-        icon: <FaCoffee />
-      },
-      {
-        url: settingsUrl('security'),
-        text: 'Security',
-        icon: <FaLock />
-      },
-      {
         url: settingsUrl('billing'),
         text: 'My plan & billing',
         icon: <FaMoney />
-      },
-      {
-        url: settingsUrl('signature'),
-        text: 'My signature',
-        icon: <FaPencil />
-      },
-      {
-        url: settingsUrl('custom-columns'),
-        text: 'Custome columns',
-        icon: <FaColumns />
       }
     ];
   }
