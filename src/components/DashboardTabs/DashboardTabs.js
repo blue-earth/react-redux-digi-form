@@ -28,7 +28,7 @@ class DashboardTabs extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeKey: 'submissions'
+      activeKey: this.getActiveKey()
     };
   }
 
@@ -96,7 +96,7 @@ class DashboardTabs extends Component {
               })
             }
           </Nav>
-          <Nav pullRight onSelect={this.handleSelect} activeKey={this.getActiveKey()}>
+          <Nav pullRight onSelect={this.handleSelect} activeKey={this.state.activeKey}>
             {
               this.navItems.filter(navItem => navItem.position === 'right').map((navItem) => {
                 return (
