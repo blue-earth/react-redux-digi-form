@@ -13,8 +13,10 @@
 .imageWrapper {
   width: 100px;
   height: 100px;
-  background-color: $table-border-color;
   @include border-radius(5px);
+}
+.noAvatar {
+  background-color: $table-border-color;
 }
 .avatarImage {
   max-width: 100px;
@@ -45,6 +47,9 @@
   font-size: 14px;
   @include border-radius(4px);
   border: 1px solid $table-border-color;
+}
+.formInput.disabledInput {
+  background-color: darken($white, 10%);
 }
 .initialInput {
   width: 20%;

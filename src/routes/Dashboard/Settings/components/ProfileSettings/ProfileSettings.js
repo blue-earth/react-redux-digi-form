@@ -14,29 +14,60 @@ import Dropzone from 'react-dropzone';
 class AvatarDropZoneFileInput extends Component {
   constructor(props) {
     super(props);
-    this.onDrop = this.onDrop.bind(this);
+    this.state = {
+      avatar: props.input.value
+    };
+    props.input.value = '';
+  }
+  componentWillReceiveProps(nextProps) {
+    const avatar = nextProps.input.value;
+    if (typeof avatar === 'string') {
+      this.setState({
+        avatar: avatar
+      });
+    }
+    else {
+      this.setState({
+        avatar: avatar.preview
+      });
+    }
   }
   static propTypes = {
     input: PropTypes.object.isRequired
   };
 
-  onDrop(files) {
+  onDrop = (files) => {
     const { input } = this.props;
     input.onChange(files[0]);
+  }
+
+  onSelectImage = () => {
+    this.refs.dropzone.open();
+  }
+  onDeleteAvatar = () => {
+    this.props.input.onChange('');
   }
 
   render() {
     const dropZoneStyle = {
       width: '100%',
       height: '100%',
-      borderWidth: 2,
-      borderColor: '#666',
-      borderStyle: 'dashed',
+      borderWidth: 0,
       borderRadius: 5
     };
+    const { avatar } = this.state;
     return (
-      <div className={styles.imageWrapper}>
-        <Dropzone onDrop={this.onDrop} accept="image/*" maxSize={1024*1024} multiple={false} style={dropZoneStyle}>
+      <div className={classNames(styles.imageWrapper, {[styles.noAvatar]: avatar.length === 0})}>
+        <Dropzone
+          onDrop={this.onDrop}
+          ref="dropzone" // used for browse click
+          accept="image/*"
+          multiple={false}
+          style={dropZoneStyle}
+          disableClick={true}
+          minSize={25*1024}
+          maxSize={1024*1024}>
+          <Image rounded responsive={true} src={avatar} style={{maxHeight: '100px'}} />
         </Dropzone>
       </div>
     );
@@ -47,18 +78,15 @@ class ProfileSettings extends Component {
   static propTypes = {
     show: PropTypes.func.isRequired,
     fetchProfileSettings: PropTypes.func.isRequired,
-    requestSubmitProfileSettings: PropTypes.func.isRequired,
+    submitProfileSettings: PropTypes.func.isRequired,
+    submitPasswordSettings: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
     isPageBusy: PropTypes.bool.isRequired
   };
   constructor(props) {
     super(props);
-    this.activeDrag = 0;
-    this.state = {
-      avatar: props.data.avatar,
-      isDragging: false
-    };
   }
+
   componentDidMount() {
     this.props.fetchProfileSettings();
   }
@@ -68,55 +96,12 @@ class ProfileSettings extends Component {
   }
 
   selectImage = () => {
-    this.refs.imageInput.click();
+    this.refs.dropzone.getRenderedComponent().onSelectImage();
   }
 
-  previewImage = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (e) => {
-      this.setState({
-        avatar: e.target.result
-      })
-    }
-  }
-
-  imageSelected = (event) => {
-    let files = event.target.files;
-    let image = files.length ? files[0] : '';
-    image && this.previewImage(image);
-  }
   deleteAvatar = () => {
-    this.refs.imageInput.value = '';
-    this.setState({
-      avatar: null
-    });
+    this.refs.dropzone.getRenderedComponent().onDeleteAvatar();
   }
-
-  handleDragEnter = (event) => {
-    event.preventDefault();
-    this.activeDrag += 1;
-    this.setState({isDragging: this.activeDrag > 0});
-  }
-  handleDragOver = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    return false;
-  }
-  handleDragLeave = (event) => {
-    event.preventDefault();
-    this.activeDrag -= 1;
-    if (this.activeDrag === 0) {
-      this.setState({isDragging: false});
-    }
-  }
-  handleFileDrop = (event) => {
-    event.preventDefault();
-    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
-      const file = event.dataTransfer.files[0];
-      this.previewImage(file);
-    }
-  } 
 
   renderAvatarSection() {
     return (
@@ -125,7 +110,7 @@ class ProfileSettings extends Component {
         <div className="clearfix"></div>
         <div className={styles.rowWrapper}>
           <div className="pull-left">
-            <Field name="avatar" component={AvatarDropZoneFileInput} />
+            <Field name="avatar" ref="dropzone" withRef component={AvatarDropZoneFileInput} />
             <div className={styles.deleteWrapper}>
               <a href="javascript:;" className={styles.linkButton} onClick={this.deleteAvatar}>
                 Delete
@@ -169,7 +154,7 @@ class ProfileSettings extends Component {
           Change password
         </a>
         <div className="clearfix"></div>
-        <Field name="email" component="input" type="text" disabled className={styles.formInput} />
+        <Field name="email" component="input" type="text" disabled className={classNames(styles.formInput, styles.disabledInput)} />
         <p className={styles.instructions}>
           <i>Added on {'1st July 2016'}. You appear as <strong>{'Jordan from emondo'}</strong>.</i>
         </p>
@@ -208,21 +193,17 @@ class ProfileSettings extends Component {
       </section>
     );
   }
-  submitForm = () => {
-    // e.preventDefault();
-    this.props.requestSubmitProfileSettings();
-  };
 
   render() {
-    const { isPageBusy } = this.props;
+    const { isPageBusy, handleSubmit, submitPasswordSettings, submitProfileSettings } = this.props;
     return (
       <form onSubmit={this.submitForm} className={styles.profileSettingForm}>
         {this.renderAvatarSection()}
         {this.renderNameSection()}
         {this.renderCredentialsSection()}
         {this.renderTimezoneSection()}
-        <AppButton disabled={isPageBusy} primaryColour="#ff8a00" onClick={this.submitForm}>Save</AppButton>
-        <ChangePasswordModal />
+        <AppButton disabled={isPageBusy} isBusy={isPageBusy} primaryColour="#ff8a00" onClick={handleSubmit(submitProfileSettings)}>Save</AppButton>
+        <ChangePasswordModal handleSubmit={handleSubmit(submitPasswordSettings)} />
       </form>
     );
   }
