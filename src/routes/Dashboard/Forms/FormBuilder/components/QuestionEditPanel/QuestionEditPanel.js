@@ -177,7 +177,7 @@ export default class QuestionEditPanel extends Component {
       inputSchema: this.inputSchema
     });
     return (
-      <Tab.Container defaultActiveKey="general">
+      <Tab.Container defaultActiveKey="general" id="question-edit-panel">
         <div className={styles.questionEditView}>
           {this.renderViewHeader()}
           <Tab.Content animation>
@@ -202,4 +202,3 @@ export default class QuestionEditPanel extends Component {
     );
   }
 }
-
