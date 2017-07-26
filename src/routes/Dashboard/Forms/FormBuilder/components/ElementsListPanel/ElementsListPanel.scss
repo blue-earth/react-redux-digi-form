@@ -71,3 +71,15 @@
   font-family: 'Open Sans';
   font-size: 12px;
 }
+
+.svgWrapper {
+  svg[name='Dropdown'] {
+    margin-top: -3px;
+  }
+  svg[name='Legal'] {
+    margin-top: -3px;
+  }
+  svg[name='Paragraph'] {
+    margin-top: -4px;
+  }
+}

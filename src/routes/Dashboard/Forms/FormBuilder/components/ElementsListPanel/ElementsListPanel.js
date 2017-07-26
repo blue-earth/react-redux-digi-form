@@ -90,7 +90,7 @@ export default class ElementsListPanel extends Component {
               <Col xs={6} className={styles.panelCol} key={index}>
                 <SelectButton
                   className={styles.inputType}
-                  label={<span>
+                  label={<span className={styles.svgWrapper}>
                     {element.displayIcon && <Icon name={element.displayIcon}
                       style={{verticalAlign: 'middle', height: '12px', width: '30px'}} />}
                     {element.displayText}
