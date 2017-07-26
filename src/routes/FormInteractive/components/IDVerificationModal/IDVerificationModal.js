@@ -72,7 +72,7 @@ class IDVerificationModal extends Component {
       <div>
         <div className={styles.personName}>
           <IDVerificationFormWrapper>
-          {`${person.first_name} ${person.last_name}`}
+            {`${person.first_name} ${person.last_name}`}
           </IDVerificationFormWrapper>
         </div>
         <IDVerificationForm defaultActiveTab={activeTab} person={person}
