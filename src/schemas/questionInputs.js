@@ -32,7 +32,7 @@ const questionInputs = {
       'contains',
       'does_not_contain'
     ],
-    selectionType: [
+    selectionTypes: [
       'standard',
       'block'
     ],
@@ -56,7 +56,7 @@ const questionInputs = {
       'less_than_equal_to',
       'greater_than_equal_to'
     ],
-    selectionType: [
+    selectionTypes: [
       'standard',
       'block'
     ],
@@ -71,7 +71,7 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
-    selectionType: [
+    selectionTypes: [
       'standard',
       'block'
     ],
@@ -86,7 +86,7 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
-    selectionType: [
+    selectionTypes: [
       'standard',
       'block'
     ],
@@ -104,7 +104,7 @@ const questionInputs = {
       'is',
       'not'
     ],
-    selectionType: [
+    selectionTypes: [
       'block'
     ],
     group: STANDARD
@@ -126,7 +126,7 @@ const questionInputs = {
       'before_on',
       'after_on'
     ],
-    selectionType: [
+    selectionTypes: [
       'standard',
       'block'
     ],
@@ -144,7 +144,7 @@ const questionInputs = {
       'is',
       'not'
     ],
-    selectionType: [
+    selectionTypes: [
       'standard'
     ],
     group: STANDARD
@@ -168,7 +168,7 @@ const questionInputs = {
       'less_than_equal_to',
       'greater_than_equal_to'
     ],
-    selectionType: [
+    selectionTypes: [
       'standard',
       'block'
     ],
@@ -192,7 +192,7 @@ const questionInputs = {
       'contains',
       'does_not_contain'
     ],
-    selectionType: [
+    selectionTypes: [
       'standard'
     ],
     group: STANDARD
@@ -209,7 +209,7 @@ const questionInputs = {
       'is',
       'not'
     ],
-    selectionType: [
+    selectionTypes: [
       'standard'
     ],
     group: STANDARD
@@ -221,7 +221,7 @@ const questionInputs = {
     displayIcon: 'Legal',
     validations: [],
     logicOperations: [],
-    selectionType: [
+    selectionTypes: [
       'standard'
     ],
     group: STANDARD
@@ -235,7 +235,7 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
-    selectionType: [],
+    selectionTypes: [],
     group: STANDARD
   },
   'SignatureField': {
@@ -247,7 +247,7 @@ const questionInputs = {
       'is_required'
     ],
     logicOperations: [],
-    selectionType: [
+    selectionTypes: [
       'standard'
     ],
     group: STANDARD

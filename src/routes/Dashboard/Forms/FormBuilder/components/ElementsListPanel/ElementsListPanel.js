@@ -100,9 +100,9 @@ export default class ElementsListPanel extends Component {
         {
           elements.map((element, index) => {
             var opts = [];
-            if (element.selectionType.length) {
+            if (element.selectionTypes.length) {
               var elName = element.name;
-              _.forEach(element.selectionType, function (value) {
+              _.forEach(element.selectionTypes, function (value) {
                 var labelNode = value;
                 var elKey = elName + '|' + value;
                 if (value === 'standard') {
