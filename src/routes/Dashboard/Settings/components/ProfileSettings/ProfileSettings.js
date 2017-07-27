@@ -23,13 +23,14 @@ const timezoneList = () => {
     });
   });
   return list;
-}
+};
 
 class AvatarDropZoneFileInput extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      avatar: props.input.value
+      avatar: props.input.value,
+      errorMessage: ''
     };
     props.input.value = '';
   }
@@ -39,10 +40,10 @@ class AvatarDropZoneFileInput extends Component {
       this.setState({
         avatar: avatar
       });
-    }
-    else {
+    } else {
       this.setState({
-        avatar: avatar.preview
+        avatar: avatar.preview,
+        errorMessage: ''
       });
     }
   }
@@ -53,13 +54,22 @@ class AvatarDropZoneFileInput extends Component {
   onDrop = (files) => {
     const { input } = this.props;
     input.onChange(files[0]);
+    this.setState({errorMessage: ''});
   }
 
-  onSelectImage = () => {
+  selectImage = () => {
     this.refs.dropzone.open();
   }
-  onDeleteAvatar = () => {
+  deleteAvatar = () => {
     this.props.input.onChange('');
+  }
+
+  onDropRejected = (files) => {
+    if (files[0] && files[0].size > 1024*1024) {
+      this.setState({
+        errorMessage: 'Sorry, the image you selected is too large.'
+      });
+    }
   }
 
   render() {
@@ -69,20 +79,41 @@ class AvatarDropZoneFileInput extends Component {
       borderWidth: 0,
       borderRadius: 5
     };
-    const { avatar } = this.state;
+    const { avatar, errorMessage } = this.state;
     return (
-      <div className={classNames(styles.imageWrapper, {[styles.noAvatar]: avatar.length === 0})}>
-        <Dropzone
-          onDrop={this.onDrop}
-          ref="dropzone" // used for browse click
-          accept="image/*"
-          multiple={false}
-          style={dropZoneStyle}
-          disableClick={true}
-          minSize={25*1024}
-          maxSize={1024*1024}>
-          <Image rounded responsive={true} src={avatar} style={{maxHeight: '100px'}} />
-        </Dropzone>
+      <div className={styles.rowWrapper}>
+        <div className="pull-left">
+          <div className={styles.imageWrapper}>
+            <Dropzone
+              onDrop={this.onDrop}
+              onDropRejected={this.onDropRejected}
+              ref="dropzone"
+              accept="image/*"
+              multiple={false}
+              style={dropZoneStyle}
+              disableClick
+              maxSize={1024*1024}>
+              <Image rounded responsive src={avatar} style={{maxHeight: '100px'}} />
+            </Dropzone>
+          </div>
+          <div className={styles.deleteWrapper}>
+            <a href="javascript:;" className={styles.linkButton} onClick={this.deleteAvatar}>
+              Delete
+            </a>
+          </div>
+        </div>
+        <div className={styles.instructionsSection}>
+          <p className={classNames(styles.instructions, styles.errorMessage)}>
+            {errorMessage}
+          </p>
+          <p className={styles.instructions}>
+            Drop your file to the field on the left or &nbsp;
+            <a href="javascript:;" className={styles.linkButton} onClick={this.selectImage}>
+              browser your disk
+            </a>
+            &nbsp;for file. Upload at least 256 &times; 256px PNG or JPG.
+          </p>
+        </div>
       </div>
     );
   };
@@ -90,6 +121,7 @@ class AvatarDropZoneFileInput extends Component {
 
 class ProfileSettings extends Component {
   static propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
     show: PropTypes.func.isRequired,
     fetchProfileSettings: PropTypes.func.isRequired,
     submitProfileSettings: PropTypes.func.isRequired,
@@ -97,9 +129,6 @@ class ProfileSettings extends Component {
     data: PropTypes.object.isRequired,
     isPageBusy: PropTypes.bool.isRequired
   };
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     this.props.fetchProfileSettings();
@@ -109,38 +138,12 @@ class ProfileSettings extends Component {
     this.props.show('changePasswordModal');
   }
 
-  selectImage = () => {
-    this.refs.dropzone.getRenderedComponent().onSelectImage();
-  }
-
-  deleteAvatar = () => {
-    this.refs.dropzone.getRenderedComponent().onDeleteAvatar();
-  }
-
   renderAvatarSection() {
     return (
       <section>
         <h4 className={styles.sectionTitle}>Avatar</h4>
         <div className="clearfix"></div>
-        <div className={styles.rowWrapper}>
-          <div className="pull-left">
-            <Field name="avatar" ref="dropzone" withRef component={AvatarDropZoneFileInput} />
-            <div className={styles.deleteWrapper}>
-              <a href="javascript:;" className={styles.linkButton} onClick={this.deleteAvatar}>
-                Delete
-              </a>
-            </div>
-          </div>
-          <div className={styles.instructionsSection}>
-            <p className={styles.instructions}>
-              Drop your file to the field on the left or &nbsp;
-              <a href="javascript:;" className={styles.linkButton} onClick={this.selectImage}>
-                browser your disk
-              </a>
-              &nbsp;for file. Upload at least 256 &times; 256px PNG or JPG.
-            </p>
-          </div>
-        </div>
+        <Field name="avatar" ref="dropzone" withRef component={AvatarDropZoneFileInput} />
         <hr className={styles.hrLine} />
       </section>
     );
@@ -168,7 +171,8 @@ class ProfileSettings extends Component {
           Change password
         </a>
         <div className="clearfix"></div>
-        <Field name="email" component="input" type="text" disabled className={classNames(styles.formInput, styles.disabledInput)} />
+        <Field name="email" component="input" type="text" disabled
+          className={classNames(styles.formInput, styles.disabledInput)} />
         <p className={styles.instructions}>
           <i>Added on {'1st July 2016'}. You appear as <strong>{'Jordan from emondo'}</strong>.</i>
         </p>
@@ -209,7 +213,10 @@ class ProfileSettings extends Component {
         {this.renderNameSection()}
         {this.renderCredentialsSection()}
         {this.renderTimezoneSection()}
-        <AppButton disabled={isPageBusy} isBusy={isPageBusy} primaryColour="#ff8a00" onClick={handleSubmit(submitProfileSettings)}>Save</AppButton>
+        <AppButton disabled={isPageBusy}isBusy={isPageBusy} primaryColour="#ff8a00"
+          onClick={handleSubmit(submitProfileSettings)}>
+          Save
+        </AppButton>
         <ChangePasswordModal handleSubmit={handleSubmit(submitPasswordSettings)} />
       </form>
     );

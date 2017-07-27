@@ -12,6 +12,7 @@ import styles from './ChangePasswordModal.scss';
 
 class ChangePasswordModal extends Component {
   static propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
     handleHide: PropTypes.func.isRequired,
     show: PropTypes.bool
   };

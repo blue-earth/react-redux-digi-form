@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { Link } from 'react-router';
 import { settingsUrl } from 'helpers/urlHelper';
-import { FaUser, FaBell, FaLock, FaColumns, FaPencil, FaMoney, FaCoffee } from 'react-icons/lib/fa';
+import { FaUser, FaMoney } from 'react-icons/lib/fa';
 import classes from './SettingsNavigationMenu.scss';
 
 class SettingsNavigationMenu extends Component {

@@ -14,8 +14,6 @@
   width: 100px;
   height: 100px;
   @include border-radius(5px);
-}
-.noAvatar {
   background-color: $table-border-color;
 }
 .avatarImage {
@@ -62,6 +60,9 @@
   color: $darkblue;
   font-size: 12px;
   font-weight: normal;
+}
+.errorMessage {
+  color: $red;
 }
 .deleteWrapper {
   text-align: center;

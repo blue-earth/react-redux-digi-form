@@ -2,6 +2,7 @@ import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
+import { SubmissionError } from 'redux-form';
 
 // Fetch profile settings status
 export const REQUEST_FETCH_PROFILE_SETTINGS = 'REQUEST_FETCH_PROFILE_SETTINGS';
@@ -82,7 +83,6 @@ export const processSubmitPassword = (data) => {
       dispatch(doneFetchingProfileSettings());
     };
   };
-
   const fetchFail = ({value}) => {
     return (dispatch, getState) => {
       dispatch(doneFetchingProfileSettings());
@@ -93,11 +93,10 @@ export const processSubmitPassword = (data) => {
         });
         return new SubmissionError(error);
       }
-      
     };
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
-}
+};
 
 export const fetchProfileSettings = () => {
   const fetchParams = assignDefaults({
@@ -136,8 +135,8 @@ export const submitPasswordSettings = () => {
     dispatch(requestSubmitProfileSettings());
     const formState = getState().form.profileSettingForm.values;
     dispatch(processSubmitPassword(formState));
-  }
-}
+  };
+};
 
 // ------------------------------------
 // Reducer
