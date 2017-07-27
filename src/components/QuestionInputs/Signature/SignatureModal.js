@@ -22,37 +22,34 @@ import moment from 'moment';
 
 const signatureFonts = [
   {
-    name: 'swift',
-    size: 110
+    name: 'Swift',
+    size: 220
   }, {
-    name: 'lincoln',
-    size: 120
+    name: 'Lincoln',
+    size: 240
   }, {
-    name: 'steve',
-    size: 80
+    name: 'Steve',
+    size: 160
   }, {
     name: 'MayQueen',
-    size: 100
+    size: 200
   }, {
     name: 'ArtySignature',
-    size: 100
+    size: 200
   }, {
     name: 'MonsieurLaDoulaise',
-    size: 70
+    size: 140
   }
 ];
 
-const BLUE = 'blue';
-const RED = 'red';
-const BLACK = 'black';
 const WRITE = 'write';
 const DRAW = 'draw';
 const UPLOAD = 'upload';
 
 const colours = {
+  black: '#000000',
   blue: '#3993d1',
-  red: '#d45644',
-  black: '#000000'
+  red: '#d45644'
 };
 
 class SignatureModal extends Component {
@@ -60,7 +57,8 @@ class SignatureModal extends Component {
     handleHide: PropTypes.func.isRequired, // Modal hide function
     show: PropTypes.bool,                 // Modal display status
     value: PropTypes.string,
-    commitValue: PropTypes.func
+    commitValue: PropTypes.func,
+    isConsented: PropTypes.bool
   };
 
   constructor(props) {
@@ -69,9 +67,9 @@ class SignatureModal extends Component {
       activeTabName: WRITE,
       signatureName: '',
       signatureStyle: signatureFonts[0].name,
-      writeSignatureColour: BLACK,
-      drawSignatureColour: colours[BLACK],
-      isConsented: false
+      writeSignatureColour: 'black',
+      drawSignatureColour: colours['black'],
+      isConsented: props.isConsented
     };
     this.drawSignatures = [];
   };
@@ -121,16 +119,12 @@ class SignatureModal extends Component {
 
   handleWriteCanvasesResize = () => {
     const { activeTabName } = this.state;
-    let update = false;
     if (activeTabName === 'write') {
       signatureFonts.map((font) => {
         var writeCanvas = this.refs[`writeSignature-${font.name}`];
-        if (writeCanvas) {
-          update = true;
-          writeCanvas.width = writeCanvas.parentElement.offsetWidth;
-        }
+        writeCanvas.width = writeCanvas.parentElement.offsetWidth * 2;
       });
-      update && this.updateWriteSignatureCanvases(); // Bug solution for not found canvas
+      this.updateWriteSignatureCanvases(); // Bug solution for not found canvas
     }
   }
 
@@ -147,11 +141,13 @@ class SignatureModal extends Component {
     }, this.updateWriteSignatureCanvases);
   }
   handleKeyDown = (event) => {
-    if (event.keyCode === 13) this.handleAccept();
+    if (event.keyCode === 13) {
+      this.handleAccept();
+    }
   }
-  handleSelectActiveColour = (event) => {
+  handleSelectActiveColour = (colour) => {
     this.setState({
-      writeSignatureColour: event.target.dataset.colour
+      writeSignatureColour: colour
     }, this.updateWriteSignatureCanvases);
   }
   handleColourChange = (colour) => {
@@ -174,6 +170,9 @@ class SignatureModal extends Component {
     });
   }
 
+  /**
+  * Redraw write signature panel canvas according to updated params (textWidth, color, canvasSize etc.).
+  */
   updateWriteSignatureCanvases = () => {
     const { signatureName, writeSignatureColour } = this.state;
     signatureFonts.map((font) => {
@@ -197,7 +196,10 @@ class SignatureModal extends Component {
     });
   }
 
-  updateSignaturePad = () => {
+  /**
+  * Resize drawing signature canvas size when draw tab loading.
+  */
+  resizeSignaturePad = () => {
     var signatureCanvas = this.refs.signatureCanvas.refs.cv;
     if (signatureCanvas.width !== signatureCanvas.clientWidth) {
       signatureCanvas.width = signatureCanvas.clientWidth;
@@ -222,28 +224,22 @@ class SignatureModal extends Component {
     const drawLogo = require('./Draw.svg');
     const uploadLogo = require('./Upload.svg');
     const writeSignatureColourSelection = (
-      <div className={styles.signaturePadColourSelection}>
-        <span
-          onClick={this.handleSelectActiveColour}
-          data-colour={BLACK}
-          className={classNames(styles.colourSelection, styles.colourBlack, {
-            [styles.activeColour]: writeSignatureColour === BLACK
-          })}>
-        </span>
-        <span
-          onClick={this.handleSelectActiveColour}
-          data-colour={BLUE}
-          className={classNames(styles.colourSelection, styles.colourBlue, {
-            [styles.activeColour]: writeSignatureColour === BLUE
-          })}>
-        </span>
-        <span
-          onClick={this.handleSelectActiveColour}
-          data-colour={RED}
-          className={classNames(styles.colourSelection, styles.colourRed, {
-            [styles.activeColour]: writeSignatureColour === RED
-          })}></span>
-      </div>
+      <ul className={styles.signaturePadColourSelection}>
+        {Object.keys(colours).map((colourName, index) => {
+          const colour = colours[colourName];
+          let boundSelectActiveColour = this.handleSelectActiveColour.bind(this, colourName); // eslint-disable-line
+          return (
+            <li
+              key={`colour-${index}`}
+              onClick={boundSelectActiveColour}
+              className={classNames(styles.colourSelection, {
+                [styles.activeColour]: writeSignatureColour === colourName
+              })}
+              style={{backgroundColor: colour}}>
+            </li>
+          );
+        })}
+      </ul>
     );
     moment.locale('en-au');
     return (
@@ -306,7 +302,8 @@ class SignatureModal extends Component {
                       onClick={this.handleSignatureStyleChange}
                       data-signature={font.name}>
                       <div>
-                        <canvas ref={`writeSignature-${font.name}`} height="130">
+                        <canvas className={styles.signaturePanelCanvas}
+                          ref={`writeSignature-${font.name}`} height="252">
                         </canvas>
                       </div>
                       {writeSignatureColourSelection}
@@ -321,7 +318,7 @@ class SignatureModal extends Component {
               </div>
             </Tab>
             <Tab
-              onEntered={this.updateSignaturePad}
+              onEntered={this.resizeSignaturePad}
               eventKey="draw" title={
                 <span>
                   <img className={styles.tabIcon} src={drawLogo} />
@@ -334,6 +331,10 @@ class SignatureModal extends Component {
                 <div className={styles.drawPanelButtons}>
                   <div className="pull-right">
                     <ColorPicker
+                      /**
+                        * Use github style for color picker.
+                        * See list of styles at https://casesandberg.github.io/react-color/
+                        */
                       type="github"
                       value={drawSignatureColour}
                       customSwatches={Object.keys(colours).map((key) => colours[key])}

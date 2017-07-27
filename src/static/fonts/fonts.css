@@ -17,19 +17,19 @@
 }
 
 @font-face {
-    font-family: 'swift';
+    font-family: 'Swift';
     src: url('MsSwift6.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
-    font-family: 'lincoln';
+    font-family: 'Lincoln';
     src: url('Lincoln8.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
-    font-family: 'steve';
+    font-family: 'Steve';
     src: url('SteveJobsFin6.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;

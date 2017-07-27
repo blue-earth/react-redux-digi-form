@@ -109,6 +109,10 @@
   cursor: pointer;
   background-color: $white;
 }
+.signaturePanelCanvas {
+  width: 100%;
+  height: 100%;
+}
 .activeSignature {
   border: 2px solid $dashboard-header-bg-color;
   .signaturePadColourSelection {
@@ -122,6 +126,8 @@
 .signaturePadColourSelection {
   position: absolute;
   visibility: hidden;
+  padding: 0;
+  margin: 0;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -134,10 +140,10 @@
     background-color: $black;
     @include border-radius(20px);
     border: 3px solid $white;
-    &.colourRed {
+    &.colour-red {
       background-color: $red;
     }
-    &.colourBlue {
+    &.colour-blue {
       background-color: $blue;
     }
     &.activeColour {
