@@ -12,7 +12,7 @@ import {
 } from 'react-bootstrap';
 import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import SignaturePad from 'react-signature-pad';
-import ImageUpload from 'components/ImageUpload';
+import SignatureWidgetImageUploader from 'components/SignatureWidgetImageUploader';
 import { connectModal } from 'redux-modal';
 import { IoReply } from 'react-icons/lib/io';
 import ColorPicker from 'components/ColorPicker/ColorPicker';
@@ -359,7 +359,7 @@ class SignatureModal extends Component {
             }>
               <div className={styles.tabPanelWrapper}>
                 <div className={styles.fileUploadSection}>
-                  <ImageUpload ref="signatureFile" />
+                  <SignatureWidgetImageUploader ref="signatureFile" />
                 </div>
               </div>
             </Tab>

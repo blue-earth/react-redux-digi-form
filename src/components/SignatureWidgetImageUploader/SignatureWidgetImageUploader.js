@@ -1,8 +1,7 @@
 import React, {
-  Component,
-  PropTypes
+  Component
 } from 'react';
-import styles from './ImageUpload.scss';
+import styles from './SignatureWidgetImageUploader.scss';
 import classNames from 'classnames/bind';
 import { FaCloudUpload, FaFileTextO, FaClose } from 'react-icons/lib/fa';
 
@@ -11,15 +10,7 @@ const acceptTypes = {
   image: 'image/*'
 };
 
-class ImageUpload extends Component {
-  static propTypes = {
-    type: PropTypes.string,
-    preview: PropTypes.bool
-  };
-  static defaultProps = {
-    type: 'image',
-    preview: false
-  }
+class SignatureWidgetImageUploader extends Component {
   constructor(props) {
     super(props);
     this.activeDrag = 0;
@@ -60,7 +51,6 @@ class ImageUpload extends Component {
       this.setState({
         item: file
       });
-      console.log(file);
       this.preview(file);
     }
   }
@@ -69,7 +59,6 @@ class ImageUpload extends Component {
     this.setState({
       item: file
     });
-    console.log(file);
     this.preview(file);
   }
   handleFileDelete = (event) => {
@@ -91,7 +80,6 @@ class ImageUpload extends Component {
   }
 
   renderUpload = () => {
-    const {type} = this.props;
     const {isDragging, item} = this.state;
     return (
       <div
@@ -106,7 +94,7 @@ class ImageUpload extends Component {
         <input
           ref="fileInput"
           name="pic"
-          accept={acceptTypes[type]}
+          accept={acceptTypes['image']}
           type="file"
           className={cx('fileInput')}
           style={{display: 'none'}}
@@ -115,10 +103,10 @@ class ImageUpload extends Component {
         <div className={cx('uploadInstructionWrapper')}>
           <FaCloudUpload size={40} />
           <div>
-            Drag an {type} here or <span className={cx('browseButton')} onClick={this.handleBrowse}>browse</span>
+            Drag an image here or <span className={cx('browseButton')} onClick={this.handleBrowse}>browse</span>
           </div>
           <div>
-            for an {type} to upload
+            for an image to upload
           </div>
         </div>
       </div>
@@ -153,4 +141,4 @@ class ImageUpload extends Component {
   }
 }
 
-export default ImageUpload;
+export default SignatureWidgetImageUploader;
