@@ -101,25 +101,25 @@ export default class ElementsListPanel extends Component {
           elements.map((element, index) => {
             var opts = [];
             if (element.selectionTypes.length) {
-              var elName = element.name;
-              _.forEach(element.selectionTypes, function (value) {
-                var labelNode = value;
-                var elKey = elName + '|' + value;
-                if (value === 'standard') {
-                  labelNode = (<span>
+              var elementName = element.name;
+              _.forEach(element.selectionTypes, function (selectionType) {
+                var selectionTypeLabel = selectionType;
+                var selectionTypeKey = elementName + '|' + selectionType;
+                if (selectionType === 'standard') {
+                  selectionTypeLabel = (<span>
                     <span className={styles.svgWrapper}>
                       <Icon name="StandardInput" />
                     </span>
                     Standard style</span>);
                 }
-                if (value === 'block') {
-                  labelNode = (<span>
+                if (selectionType === 'block') {
+                  selectionTypeLabel = (<span>
                     <span className={styles.svgWrapper}>
                       <Icon name="BlockInput" />
                     </span>
                     Block style</span>);
                 }
-                opts.push({'label': labelNode, 'value': value, 'key': elKey});
+                opts.push({'label': selectionTypeLabel, 'value': selectionType, 'key': selectionTypeKey});
               });
             }
             return (
