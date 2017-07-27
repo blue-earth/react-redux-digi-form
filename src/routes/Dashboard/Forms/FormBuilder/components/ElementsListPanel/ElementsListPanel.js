@@ -106,10 +106,18 @@ export default class ElementsListPanel extends Component {
                 var labelNode = value;
                 var elKey = elName + '|' + value;
                 if (value === 'standard') {
-                  labelNode = (<span>Standard style</span>);
+                  labelNode = (<span>
+                    <span className={styles.svgWrapper}>
+                      <Icon name="StandardInput" />
+                    </span>
+                    Standard style</span>);
                 }
                 if (value === 'block') {
-                  labelNode = (<span>Block style</span>);
+                  labelNode = (<span>
+                    <span className={styles.svgWrapper}>
+                      <Icon name="BlockInput" />
+                    </span>
+                    Block style</span>);
                 }
                 opts.push({'label': labelNode, 'value': value, 'key': elKey});
               });
@@ -119,8 +127,7 @@ export default class ElementsListPanel extends Component {
                 <SelectButton
                   className={styles.inputType}
                   label={<span className={styles.svgWrapper}>
-                    {element.displayIcon && <Icon name={element.displayIcon}
-                      style={{verticalAlign: 'middle', height: '12px', width: '30px'}} />}
+                    {element.displayIcon && <Icon name={element.displayIcon} />}
                     {element.displayText}
                   </span>}
                   optionsList={opts}

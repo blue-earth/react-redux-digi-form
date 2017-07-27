@@ -16,6 +16,8 @@ import ShortText from './ShortText';
 import Signature from './Signature';
 import Statement from './Statement';
 import Upload from './Upload';
+import StandardInput from './StandardInput';
+import BlockInput from './BlockInput';
 
 export default class Icon extends Component {
 
@@ -40,7 +42,9 @@ export default class Icon extends Component {
       ShortText: <ShortText />,
       Signature: <Signature />,
       Statement: <Statement />,
-      Upload: <Upload />
+      Upload: <Upload />,
+      StandardInput: <StandardInput />,
+      BlockInput: <BlockInput />
     };
     return (
       <BaseIcon {...this.props}>

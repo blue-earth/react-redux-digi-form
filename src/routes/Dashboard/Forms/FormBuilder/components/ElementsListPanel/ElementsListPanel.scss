@@ -74,6 +74,11 @@
 }
 
 .svgWrapper {
+  svg {
+    vertical-align: middle;
+    width: 30px;
+    height: 12px;
+  }
   svg[name='Dropdown'] {
     margin-top: -3px;
   }
@@ -82,5 +87,8 @@
   }
   svg[name='Paragraph'] {
     margin-top: -4px;
+  }
+  svg[name='StandardInput'] {
+    margin-top: 4px;
   }
 }
