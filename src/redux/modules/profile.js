@@ -30,7 +30,7 @@ export const processSubmitProfileSettings = (data) => {
   var formData = new FormData();
   formData.append('first_name', data.firstName);
   formData.append('last_name', data.lastName);
-  // formData.append('timezone', data.timezone);
+  formData.append('timezone', data.timezone);
   if (data.avatar instanceof File) {
     formData.append('avatar', data.avatar);
   }

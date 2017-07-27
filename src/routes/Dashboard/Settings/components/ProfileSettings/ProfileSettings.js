@@ -10,6 +10,20 @@ import AppButton from 'components/Buttons/AppButton/AppButton';
 import classNames from 'classnames';
 import ChangePasswordModal from './ChangePasswordModal';
 import Dropzone from 'react-dropzone';
+import TimezoneList from 'schemas/timezoneList';
+
+const timezoneList = () => {
+  let list = [];
+  TimezoneList.map((group) => {
+    group.zones.map((timezone) => {
+      list.push({
+        key: timezone.value,
+        label: timezone.value
+      });
+    });
+  });
+  return list;
+}
 
 class AvatarDropZoneFileInput extends Component {
   constructor(props) {
@@ -163,21 +177,14 @@ class ProfileSettings extends Component {
     );
   }
   renderTimezoneSection() {
-    const optionsList = [{
-      key: '+1000',
-      label: '(UTC+10:00) Sydney'
-    }, {
-      key: '+800',
-      label: '(UTC+08:00) Perth'
-    }
-    ];
     const renderSelectField = ({ input, optionsList, ...custom }) => {
-      const handleChange = (event, index, value) => input.onChange(value);
+      const handleChange = (value) => input.onChange(value);
       return (
         <SelectButton
+          optionsList={optionsList}
           {...input}
           {...custom}
-          onChange={handleChange} value="(UTC+10:00) Sydney" />
+          onChange={handleChange} />
       );
     };
     return (
@@ -187,7 +194,7 @@ class ProfileSettings extends Component {
         <Field
           name="timezone"
           component={renderSelectField}
-          optionList={optionsList}
+          optionsList={timezoneList()}
           className={styles.timezoneSelection} />
         <hr className={styles.hrLine} />
       </section>
