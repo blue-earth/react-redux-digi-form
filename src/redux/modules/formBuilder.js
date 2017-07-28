@@ -59,7 +59,7 @@ export const INIT_BUILDER_STATE = {
   currentElement: null, // holds the current element state being added or edited.
   lastQuestionId: 0, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
-  questionEditMode: false,
+  questionEditMode: 'question_type_list',  // question_box_mapping, question_type_list, or question_type_detail
   currentStep: 'select' // select, arrange, configure or send
 };
 
@@ -204,14 +204,14 @@ export const processSubmitForm = (formData) => {
       const { id } = value;
       id && dispatch(updateFormId(id));
       dispatch(doneSubmitForm()); // Hide submitting spinner
-      dispatch(setQuestionEditMode({ mode: false }));
+      dispatch(setQuestionEditMode({ mode: 'question_type_list' }));
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitForm()); // Hide submitting spinner
-      dispatch(setQuestionEditMode({ mode: false }));
+      dispatch(setQuestionEditMode({ mode: 'question_type_list' }));
     };
   };
 
