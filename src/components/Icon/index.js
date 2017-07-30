@@ -4,7 +4,7 @@ import React, {
 } from 'react';
 import BaseIcon from './BaseIcon';
 import Checkbox from './Checkbox';
-import Dropdown from './Dropdown';
+import Dropdown from './DropDown';
 import Email from './Email';
 import Date from './Date';
 import List from './List';
