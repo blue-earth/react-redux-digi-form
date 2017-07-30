@@ -54,7 +54,7 @@ export const INIT_BUILDER_STATE = {
     // }
   ],
   formConfig: {},
-  documentMapping: {},
+  documentMapping: [],
   activeInputName: '',
   currentElement: null, // holds the current element state being added or edited.
   lastQuestionId: 0, // indicates lastly added question id
@@ -126,7 +126,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
     questions,
     logics,
     documents: data.assets_urls ? data.assets_urls : [],
-    documentMapping: data.document_mapping ? data.document_mapping : [],
+    // documentMapping: data.document_mapping ? data.document_mapping : [],
     formConfig: data.form_config,
     title: data.title,
     slug: data.slug,

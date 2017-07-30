@@ -1,0 +1,17 @@
+@import './mixins';
+@import './variables';
+
+.saveButton {
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.removeButton {
+  padding: 2px 3px;
+  line-height: 1;
+  height: 24px;
+  border: none;
+  background-color: transparent;
+  margin-left: 5px;
+  vertical-align: middle;
+}

@@ -1,0 +1,56 @@
+@import './mixins';
+@import './variables';
+
+$mapping-toolbar-border-color: #dae1e7;
+$mapping-toolbar-bg-color: #f1f5f8;
+$arrow-size: 6px;
+
+.toolbar {
+  border: 1px solid $mapping-toolbar-border-color;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+  background-color: $mapping-toolbar-bg-color;
+  min-width: 300px;
+  min-height: 38px;
+  bottom: 0;
+  @include hcenter;
+}
+
+.arrow {
+  border-width: $arrow-size;
+  border-color: transparent;
+  border-style: solid;
+  border-bottom-width: 0;
+  border-top-color: $mapping-toolbar-border-color;
+  bottom: -$arrow-size;
+  @include hcenter;
+
+  &:after {
+    content: ' ';
+    display: block;
+    width: 0;
+    height: 0;
+    bottom: 1px;
+    border-color: transparent;
+    border-style: solid;
+    border-bottom-width: 0;
+    border-top-color: $mapping-toolbar-bg-color;
+    border-width: $arrow-size - 1;
+    @include hcenter;
+  }
+}
+
+.toolbarRow {
+  white-space: nowrap;
+  &:not(:first-child) {
+    border-top: 1px solid $mapping-toolbar-border-color;
+  }
+}
+
+.toolbarCol {
+  padding: 5px 12px;
+  display: inline-block;
+  &:not(:first-child) {
+    border-left: 1px solid $mapping-toolbar-border-color;
+  }
+}

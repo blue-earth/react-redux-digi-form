@@ -35,7 +35,8 @@ class InteractWrapper extends Component {
     resizeSnapTargets: PropTypes.array,
     dragSnapTargets: PropTypes.array, // array of target positions {id, type, x or y}, id: question id.
     snapRange: PropTypes.number,
-    className: PropTypes.string
+    className: PropTypes.string,
+    toolbar: PropTypes.node
   };
 
   static defaultProps = {
@@ -96,6 +97,10 @@ class InteractWrapper extends Component {
       .on('resizeend', this.handleResizeEnd);
 
     interactable.styleCursor(false);
+  }
+
+  setToolbarPosition() {
+    console.log(this.refs.interactWrapper.offsetHeight);
   }
 
   getMousePos(event) {
@@ -286,7 +291,7 @@ class InteractWrapper extends Component {
   }
 
   render() {
-    const { zIndex, active, metaData, className } = this.props;
+    const { zIndex, active, metaData, className, toolbar } = this.props;
     const { x, y, width, height } = this.state;
     var style = {};
     var optionals = {};
@@ -310,6 +315,11 @@ class InteractWrapper extends Component {
         onDoubleClick={this.handleDoubleClick}
         ref="interactWrapper"
         {...optionals}>
+        {toolbar &&
+          <div className={styles.toolbar} style={{ bottom: height + 10 }}>
+            {toolbar}
+          </div>
+        }
         <div className={styles.innerContent}>
           {this.props.children}
         </div>

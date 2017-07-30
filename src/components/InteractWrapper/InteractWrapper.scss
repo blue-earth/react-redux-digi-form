@@ -27,7 +27,6 @@ $handle-size: 12px;
   bottom: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
   cursor: pointer;
 }
 .active {
@@ -99,4 +98,11 @@ $handle-size: 12px;
     right: -($handle-size / 3);
     cursor: nwse-resize;
   }
+}
+
+.toolbar {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0px;
 }

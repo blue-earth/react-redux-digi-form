@@ -19,6 +19,7 @@ import {
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 // import classNames from 'classnames';
 import InteractWrapper from 'components/InteractWrapper';
+import SimpleMappingToolbar from 'components/Toolbars/SimpleMappingToolbar';
 import _ from 'lodash';
 import interact from 'interact.js';
 import styles from './DrawingBoard.scss';
@@ -385,6 +386,13 @@ class DrawingBoard extends Component {
     });
   }
 
+  handleToolbarValueChange = (values) => {
+    const { setMappingPositionInfo } = this.props;
+    setMappingPositionInfo({
+      'bounding_box': values
+    });
+  }
+
   getBoxLabel(elementId, boxIndex) {
     const { questions, currentElement } = this.props;
     const question = isCurrentElementId(elementId, currentElement)
@@ -485,6 +493,7 @@ class DrawingBoard extends Component {
         }}
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}
+        toolbar={<SimpleMappingToolbar values={boundingBox} onChange={this.handleToolbarValueChange} />}
       >
         <div className={styles.boxLabel}>
           {this.getBoxLabel(currentElement.id, activeBoxIndex)}
