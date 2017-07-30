@@ -9,7 +9,8 @@ import {
   Collapse
 } from 'react-bootstrap';
 import { FaChevronDown } from 'react-icons/lib/fa';
-import Button from 'components/Buttons/DashboardButtons/Button';
+import SelectButton from 'components/Buttons/SelectButton';
+import Icon from 'components/Icon';
 import _ from 'lodash';
 import classNames from 'classnames';
 import questionInputs, {
@@ -79,21 +80,59 @@ export default class ElementsListPanel extends Component {
     });
   }
 
+  handleElementOptClick = (key) => {
+    const { setQuestionEditMode } = this.props;
+    var splitKey = key.split('|');
+    var inputType = splitKey[0];
+    var selectionType = splitKey[1];
+    console.log(selectionType);
+    // TODO: pass selectionType to the reducer to do something with it
+    setQuestionEditMode({
+      mode: true,
+      inputType
+    });
+  }
+
   renderPanelContent(elements) {
-    const { activeInputName } = this.props;
     const that = this;
     return (
       <Row className={styles.panelRow}>
         {
           elements.map((element, index) => {
+            var opts = [];
+            if (element.selectionTypes.length) {
+              var elementName = element.name;
+              _.forEach(element.selectionTypes, function (selectionType) {
+                var selectionTypeLabel = selectionType;
+                var selectionTypeKey = elementName + '|' + selectionType;
+                if (selectionType === 'standard') {
+                  selectionTypeLabel = (<span>
+                    <span className={styles.svgWrapper}>
+                      <Icon name="StandardInput" />
+                    </span>
+                    Standard style</span>);
+                }
+                if (selectionType === 'block') {
+                  selectionTypeLabel = (<span>
+                    <span className={styles.svgWrapper}>
+                      <Icon name="BlockInput" />
+                    </span>
+                    Block style</span>);
+                }
+                opts.push({'label': selectionTypeLabel, 'value': selectionType, 'key': selectionTypeKey});
+              });
+            }
             return (
               <Col xs={6} className={styles.panelCol} key={index}>
-                <Button block active={activeInputName === element.name}
-                  onClick={function (e) { that.handleElementClick(e, element.name); }}>
-                  <span className={styles.inputTypeLabel}>
+                <SelectButton
+                  className={styles.inputType}
+                  label={<span className={styles.svgWrapper}>
+                    {element.displayIcon && <Icon name={element.displayIcon} />}
                     {element.displayText}
-                  </span>
-                </Button>
+                  </span>}
+                  optionsList={opts}
+                  onClick={function (e) { that.handleElementClick(e, element.name); }}
+                  onChange={that.handleElementOptClick} />
               </Col>
             );
           })

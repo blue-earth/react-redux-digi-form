@@ -3,13 +3,14 @@
 
 .elementsListView {
   height: 100%;
+  margin-left: 3px;
 }
 .elementsListViewInner {
-  overflow: auto;
-  background-color: $panel-body-bg-color;
+  // overflow: auto;
+  background-color: $panel-heading-bg-color;
   @include border-radius(4px);
   border: 1px solid $panel-border-color;
-  @include box-shadow-custom(0 3px 5px rgba(0, 0, 0, .1));
+  @include box-shadow-custom(0px 3px 3px 0px rgba(25,58,79,0.2));
 }
 .panelRow {
   margin-left: -5px;
@@ -20,7 +21,7 @@
 }
 
 .panelWrapper {
-  overflow: hidden;
+  overflow: visible;
   &:first-child {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -36,10 +37,14 @@
   cursor: pointer;
   position: relative;
   text-decoration: none !important;
-  background-color: $panel-heading-bg-color;
+  font-weight: 800;
+  font-size: 14px;
+  color: $darkblue;
+  background-color: $panel-body-bg-color;
   border-bottom: 1px solid $panel-border-color;
+  @include border-radius(3px 3px 0 0);
   &:hover {
-    background-color: darken($panel-heading-bg-color, 2%);
+    background-color: darken($panel-body-bg-color, 2%);
   }
   &.expanded {
     .headerArrow svg {
@@ -49,11 +54,10 @@
 }
 
 .panel {
-  background-color: $panel-body-bg-color;
+  background-color: $panel-heading-bg-color;
   margin: 0 !important;
   border: none !important;
-  @include border-radius(0);
-  border-bottom: 1px solid $panel-border-color !important;
+  @include border-radius(0 0 3px 3px);
 }
 
 .headerArrow {
@@ -64,6 +68,27 @@
   }
 }
 
-.inputTypeLabel {
+.inputType {
   font-family: 'Open Sans';
+  font-size: 12px;
+}
+
+.svgWrapper {
+  svg {
+    vertical-align: middle;
+    width: 30px;
+    height: 12px;
+  }
+  svg[name='Dropdown'] {
+    margin-top: -3px;
+  }
+  svg[name='Legal'] {
+    margin-top: -3px;
+  }
+  svg[name='Paragraph'] {
+    margin-top: -4px;
+  }
+  svg[name='StandardInput'] {
+    margin-top: 4px;
+  }
 }
