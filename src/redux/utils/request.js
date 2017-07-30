@@ -13,7 +13,7 @@ export const assignDefaults = request => {
   var body = null;
   if (_.includes(['POST', 'PUT'], request.method)) {
     headers['X-CSRFToken'] = getCsrfToken();
-    if (request.body && !request.body instanceof FormData) {
+    if (request.body && !(request.body instanceof FormData)) {
       body = JSON.stringify(request.body);
     } else {
       body = request.body;
