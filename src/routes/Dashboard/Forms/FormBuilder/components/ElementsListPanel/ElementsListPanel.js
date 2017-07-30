@@ -110,14 +110,14 @@ export default class ElementsListPanel extends Component {
                     <span className={styles.svgWrapper}>
                       <Icon name="StandardInput" />
                     </span>
-                    Standard style</span>);
+                  Standard style</span>);
                 }
                 if (selectionType === 'block') {
                   selectionTypeLabel = (<span>
                     <span className={styles.svgWrapper}>
                       <Icon name="BlockInput" />
                     </span>
-                    Block style</span>);
+                  Block style</span>);
                 }
                 opts.push({'label': selectionTypeLabel, 'value': selectionType, 'key': selectionTypeKey});
               });
