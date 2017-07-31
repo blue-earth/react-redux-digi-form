@@ -1,5 +1,9 @@
 import { findItemById } from 'helpers/pureFunctions';
 import _ from 'lodash';
+import {
+  INIT_MAPPING_INFO_STATE,
+  INIT_QUESTION_STATE
+} from 'redux/modules/formBuilder';
 
 export const getImageDimension = (url, callback) => {
   var img = new Image();
@@ -258,3 +262,17 @@ export const pageZoomPercent = (pageZoom) =>
 
 export const getChoiceLabelByIndex = (index) =>
   String.fromCharCode('A'.charCodeAt(0) + index);
+
+
+export const createEmptyQuestionElement = function (questionTypeName, boxMappingType) {
+  const id = undefined;
+  const question = Object.assign({}, INIT_QUESTION_STATE, {
+    type: questionTypeName
+  });
+  return {
+    id,
+    question,
+    isModified: false,
+    mappingInfo: Object.assign({}, INIT_MAPPING_INFO_STATE)
+  };
+};
