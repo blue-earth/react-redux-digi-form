@@ -129,6 +129,7 @@ class FormBuilder extends Component {
      * One of formBuilderSelectMode
      */
     questionEditMode: PropTypes.number.isRequired,
+    setCurrentEditingQuestion: PropTypes.func.isRequired,
 
     /*
      * setQuestionEditMode: Redux action to set question edit mode.

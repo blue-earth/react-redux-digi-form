@@ -130,7 +130,10 @@ class FormBuilderSteps extends Component {
      * If id is not specified, enters into new question edit mode.
      */
     setQuestionEditMode: PropTypes.func.isRequired,
-
+    /**
+     * Set current Element
+     */
+    setCurrentEditingQuestion: PropTypes.func.isRequired,
     /*
      * newForm: Redux action to reset form with initial state for new form
      */
@@ -193,6 +196,7 @@ class FormBuilderSteps extends Component {
             saveElement: props.saveElement,
             saveForm: props.saveForm,
             currentElement: props.currentElement,
+            setCurrentEditingQuestion: props.setCurrentEditingQuestion,
             setQuestionInfo: props.setQuestionInfo,
             resetQuestionInfo: props.resetQuestionInfo,
             setValidationInfo: props.setValidationInfo,
