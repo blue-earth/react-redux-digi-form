@@ -3,6 +3,7 @@ import { fetch } from 'redux-effects-fetch';
 import { mergeItemIntoArray, findItemById } from 'helpers/pureFunctions';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
+import { formBuilderSelectMode } from 'constants/formBuilder';
 import _ from 'lodash';
 
 export const NEW_FORM = 'NEW_FORM';
@@ -59,7 +60,7 @@ export const INIT_BUILDER_STATE = {
   currentElement: null, // holds the current element state being added or edited.
   lastQuestionId: 0, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
-  questionEditMode: 'question_type_list',  // question_box_mapping, question_type_list, or question_type_detail
+  questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
   currentStep: 'select' // select, arrange, configure or send
 };
 
