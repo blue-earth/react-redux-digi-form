@@ -540,7 +540,9 @@ const formBuilderReducer = handleActions({
     }),
 
   SET_QUESTION_EDIT_MODE: (state, action) =>
-    _setQuestionEditMode(state, action)
+    Object.assign({}, state, {
+      questionEditMode: action.payload
+    }),
 }, INIT_BUILDER_STATE);
 
 export default formBuilderReducer;
