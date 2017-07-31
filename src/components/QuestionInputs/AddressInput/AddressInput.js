@@ -127,7 +127,7 @@ class AddressInput extends Component {
         address_line1: place.name
       });
     }
-    var newValue = {};
+    let newValue = {};
     // Get each component of the address from the place details
     // and fill the corresponding field on the form.
 
@@ -145,12 +145,15 @@ class AddressInput extends Component {
       } else {
         newValue['address_line1'] = newValue['address_line2'];
       }
-      newValue['address_line2'] = '';
+      delete newValue['address_line2']; // remove addressline2
     }
     let newState = {};
+    
     for (let key of Object.keys(componentForm)) {
       const component = componentForm[key];
-      newState[component.for] = newValue[component.for] || '';
+      if (newValue[component.for] && newValue[component.for].length > 0) {
+        newState[component.for] = newValue[component.for];
+      }
     }
     this.setState(newState);
     this.props.onChange(newState);
@@ -180,26 +183,6 @@ class AddressInput extends Component {
     const { onFocus } = this.props;
     this.geolocate();
     onFocus();
-  }
-
-  handleChangeAddressLine1 = (event) => {
-
-  }
-
-  handleChangeAddressLine2 = (event) => {
-
-  }
-
-  handleChangeSuburb = (event) => {
-
-  }
-
-  handleChangeState = (event) => {
-
-  }
-
-  handleChangePostcode = (event) => {
-
   }
 
   handleChange = (event) => {
