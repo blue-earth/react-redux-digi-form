@@ -1,0 +1,100 @@
+@import './mixins';
+@import './variables';
+
+.writePanelWrapper {
+  overflow-y: auto;
+  padding-bottom: 0;
+}
+.tabPanelTitle {
+  margin-bottom: 12px;
+}
+
+.signaturePanelWrapper {
+  margin-bottom: 10px;
+  padding: 0;
+}
+.signaturePanelLeft {
+  padding-right: 5px;
+}
+.signaturePanelRight {
+  padding-left: 5px;
+}
+.signaturePanel {
+  position: relative;
+  height: 126px;
+  box-shadow: inset 0px 0px 24px 10px $white;
+  @include border-radius(4px);
+  @include input-box-shadow;
+  border: 1px solid $border-color;
+  cursor: pointer;
+  background-color: $white;
+}
+.signaturePanelCanvas {
+  width: 100%;
+  height: 100%;
+}
+
+.signatureTypeLabel {
+  text-align: center;
+  padding: 8px 0;
+}
+.signaturePadColourSelection {
+  position: absolute;
+  visibility: hidden;
+  padding: 0;
+  margin: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  .colourSelection {
+    display: inline-block;
+    height: 26px;
+    width: 26px;
+    margin: 4px;
+    background-color: $black;
+    @include border-radius(20px);
+    border: 3px solid $white;
+    &.colour-red {
+      background-color: $red;
+    }
+    &.colour-blue {
+      background-color: $blue;
+    }
+    &.activeColour {
+      border-color: #97CAE9;
+    }
+  }
+}
+.activeSignature {
+  border: 2px solid $dashboard-header-bg-color;
+  .signaturePadColourSelection {
+    visibility: visible;
+  }
+}
+
+:global {
+  .signature-font-preload {
+    visibility: hidden;
+    font-size: 0;
+    line-height: 0;
+  }
+  .preload-Steve {
+    font-family: 'Steve';
+  }
+  .preload-Lincoln {
+    font-family: 'Lincoln';
+  }
+  .preload-Swift {
+    font-family: 'Swift';
+  }
+  .preload-MayQueen {
+    font-family: 'MayQueen';
+  }
+  .preload-ArtySignature {
+    font-family: 'ArtySignature';
+  }
+  .preload-MonsieurLaDoulaise {
+    font-family: 'MonsieurLaDoulaise';
+  }
+}

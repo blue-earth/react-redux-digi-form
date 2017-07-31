@@ -1,0 +1,58 @@
+@import './mixins';
+@import './variables';
+
+.tabPanelWrapper {
+  height: 275px;
+  &:focus {
+    outline: none;
+  }
+}
+.drawPanelWrapper {
+  padding: 10px 16px;
+}
+.signatureWrapper {
+  height: calc(100% - 50px);
+}
+.revertButton {
+  float: right;
+  height: 36px;
+  width: 36px;
+  margin: 0 4px;
+  background-color: #fff;
+  border: 1px solid $grey;
+  font-size: 20px;
+  line-height: 20px;
+  color: $text-dark-color;
+  @include border-radius(5px);
+  @include input-box-shadow;
+}
+.colorPickerButton {
+  @include background-gradient($select-button-start-color, $select-button-end-color);
+}
+
+:global {
+  .m-signature-pad {
+    position: relative;
+    height: 100%;
+    font-size: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    background-color: $white;
+    border: 1px solid $signature-modal-border-color;
+  }
+  .m-signature-pad--body {
+    width: 100%;
+    height: 100%;
+  }
+  .m-signature-pad--body
+    canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      &:active {
+        cursor: pointer;
+      }
+    }
+}

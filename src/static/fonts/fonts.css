@@ -16,6 +16,25 @@
   src: url(signature-fonts/MonsieurLaDoulaise-Regular.ttf) format("opentype");
 }
 
+@font-face {
+    font-family: 'Swift';
+    src: url('MsSwift6.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Lincoln';
+    src: url('Lincoln8.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Steve';
+    src: url('SteveJobsFin6.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /*
  * Web Fonts from fontspring.com
  *

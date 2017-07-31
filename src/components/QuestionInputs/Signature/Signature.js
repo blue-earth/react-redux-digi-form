@@ -88,7 +88,7 @@ class Signature extends Component {
             autoFocus={!value && autoFocus}
             onClick={function () { showModal('signatureModal'); }} />
         }
-        <SignatureModal onSave={this.handleChange} value={value} />
+        <SignatureModal commitValue={this.handleChange} signatureImage={value} />
       </div>
     );
   }
