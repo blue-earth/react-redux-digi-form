@@ -16,6 +16,8 @@ import styles from './SimpleMappingToolbar.scss';
 export default class SimpleMappingToolbar extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
+    placement: PropTypes.oneOf(['top', 'bottom']),
+    offset: PropTypes.number,
     values: PropTypes.object.isRequired
   };
 
@@ -49,9 +51,10 @@ export default class SimpleMappingToolbar extends Component {
   }
 
   render() {
+    const { offset, placement } = this.props;
     const { values: { width, height } } = this.state;
     return (
-      <MappingToolbarLayout>
+      <MappingToolbarLayout placement={placement} offset={offset}>
         <ToolbarRow>
           <ToolbarCol>
             <SpinEdit label="W:" value={width} onChange={this.handleWidthChange} />

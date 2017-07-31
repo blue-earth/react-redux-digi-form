@@ -11,12 +11,6 @@ import _ from 'lodash';
 import { pageZoomPercent } from 'helpers/formBuilderHelper';
 
 class PageView extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {isDrawing: false};
-  };
-
   static propTypes = {
     /*
      * documents: Redux state to hold document image urls.
@@ -69,11 +63,28 @@ class PageView extends Component {
     currentElement: PropTypes.object
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDrawing: false,
+      viewportWidth: 0
+    };
+    window.addEventListener('resize', this.getViewportSize);
+  };
+
   componentWillMount() {
 
   }
 
   componentDidMount() {
+    this.getViewportSize();
+  }
+
+  getViewportSize = () => {
+    this.setState({
+      viewportWidth: this.refs.spacer.offsetWidth,
+      viewportHeight: this.refs.pagesWrapper.offsetHeight
+    });
   }
 
   handleElementClick = (metaData) => {
@@ -112,6 +123,7 @@ class PageView extends Component {
 
   renderDocuments() {
     const { documents, pageZoom } = this.props;
+    const { viewportWidth, viewportHeight } = this.state;
     return documents
       ? documents.map((document, index) => {
         const zoomedWidth = document.width * pageZoom;
@@ -124,7 +136,9 @@ class PageView extends Component {
             <img src={document.url} alt={`Page Image ${pageNumber}`}
               className={styles.pageImage} ref={`pageImage${pageNumber}`} />
             <DrawingBoard {...this.props} pageNumber={pageNumber}
+              viewportWidth={viewportWidth} viewportHeight={viewportHeight}
               getPageDOM={this.getPageDOM} containerId="clientArea" />
+            }
           </div>
         );
       })

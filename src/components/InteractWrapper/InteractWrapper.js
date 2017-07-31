@@ -36,7 +36,10 @@ class InteractWrapper extends Component {
     dragSnapTargets: PropTypes.array, // array of target positions {id, type, x or y}, id: question id.
     snapRange: PropTypes.number,
     className: PropTypes.string,
-    toolbar: PropTypes.node
+    onToolbarUpdate: PropTypes.func,
+    toolbar: PropTypes.node,
+    viewportWidth: PropTypes.number,
+    viewportHeight: PropTypes.number
   };
 
   static defaultProps = {
@@ -48,12 +51,15 @@ class InteractWrapper extends Component {
     onDragEnd: () => {},
     onClick: () => {},
     onDoubleClick: () => {},
+    onToolbarUpdate: () => {},
     x: 0,
     y: 0,
     minWidth: 0,
     minHeight: 0,
     active: false,
-    snapRange: 5
+    snapRange: 5,
+    viewportWidth: 0,
+    viewportHeight: 0
   };
 
   constructor(props) {
@@ -62,13 +68,27 @@ class InteractWrapper extends Component {
       x: props.x,
       y: props.y,
       width: props.width,
-      height: props.height
+      height: props.height,
+      toolbarSize: {
+        width: 0,
+        height: 0
+      }
     };
   }
 
   componentDidMount() {
+    const { onToolbarUpdate } = this.props;
+    const { toolbar } = this.refs;
     if (this.props.active) {
       this.initInteract();
+      toolbar && this.setState({
+        toolbarSize: {
+          width: toolbar.offsetWidth,
+          height: toolbar.offsetHeight
+        }
+      }, () => {
+        onToolbarUpdate(this.toolbarPlacement, this.toolbarOffset);
+      });
     }
   }
 
@@ -97,10 +117,6 @@ class InteractWrapper extends Component {
       .on('resizeend', this.handleResizeEnd);
 
     interactable.styleCursor(false);
-  }
-
-  setToolbarPosition() {
-    console.log(this.refs.interactWrapper.offsetHeight);
   }
 
   getMousePos(event) {
@@ -218,7 +234,7 @@ class InteractWrapper extends Component {
   }
 
   handleDragEnd = (event) => {
-    const { onDragEnd } = this.props;
+    const { onDragEnd, onToolbarUpdate } = this.props;
     const { width, height } = this.state;
     const element = this.refs.interactWrapper;
     var target = event.target;
@@ -230,6 +246,7 @@ class InteractWrapper extends Component {
     });
     var metaData = JSON.parse(element.dataset.meta);
     onDragEnd({ left: x, top: y, width, height }, metaData);
+    onToolbarUpdate(this.toolbarPlacement, this.toolbarOffset);
   }
 
   handleResizeStart = (event) => {
@@ -265,7 +282,7 @@ class InteractWrapper extends Component {
   }
 
   handleResizeEnd = (event) => {
-    const { onResizeEnd, metaData } = this.props;
+    const { onResizeEnd, metaData, onToolbarUpdate } = this.props;
     var target = event.target;
     var x = (parseFloat(target.getAttribute('data-x')) || 0);
     var y = (parseFloat(target.getAttribute('data-y')) || 0);
@@ -278,6 +295,7 @@ class InteractWrapper extends Component {
       height: h
     });
     onResizeEnd({ left: x, top: y, width: w, height: h }, metaData);
+    onToolbarUpdate(this.toolbarPlacement, this.toolbarOffset);
   }
 
   handleClick = (event) => {
@@ -288,6 +306,39 @@ class InteractWrapper extends Component {
   handleDoubleClick = (event) => {
     const { onDoubleClick, metaData } = this.props;
     onDoubleClick(metaData);
+  }
+
+  get toolbarPlacement() {
+    const { y, toolbarSize } = this.state;
+    return y >= toolbarSize.height ? 'top' : 'bottom';
+  }
+
+  get toolbarOffset() {
+    const { x, width, toolbarSize } = this.state;
+    const { viewportWidth } = this.props;
+    const offsetLeft = (width - toolbarSize.width) / 2;
+    const left0 = Math.max(offsetLeft, -x);
+    const left = Math.min(left0, viewportWidth - toolbarSize.width - x) - 2; // 2 is border width
+    return left - offsetLeft;
+  }
+
+  get toolbarCoordinates() {
+    const { x, width, height, toolbarSize } = this.state;
+    const { viewportWidth } = this.props;
+    const offsetLeft = (width - toolbarSize.width) / 2;
+    const left0 = Math.max(offsetLeft, -x);
+    const left = Math.min(left0, viewportWidth - toolbarSize.width - x) - 2; // 2 is border width
+    if (this.toolbarPlacement === 'top') {
+      return {
+        bottom: height + 10,
+        left
+      };
+    } else {
+      return {
+        top: height + 10,
+        left
+      };
+    }
   }
 
   render() {
@@ -307,7 +358,6 @@ class InteractWrapper extends Component {
       [styles.interactWrapper]: true,
       [styles.active]: active
     });
-
     return (
       <div className={wrapperClass}
         onMouseDown={this.handleMouseDown}
@@ -316,7 +366,7 @@ class InteractWrapper extends Component {
         ref="interactWrapper"
         {...optionals}>
         {toolbar &&
-          <div className={styles.toolbar} style={{ bottom: height + 10 }}>
+          <div className={styles.toolbar} ref="toolbar" style={this.toolbarCoordinates}>
             {toolbar}
           </div>
         }

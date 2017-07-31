@@ -25,12 +25,6 @@ import interact from 'interact.js';
 import styles from './DrawingBoard.scss';
 
 class DrawingBoard extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = { isDrawing: false };
-  };
-
   static propTypes = {
     /*
      * documents: Redux state to hold document image urls.
@@ -110,7 +104,28 @@ class DrawingBoard extends Component {
     /*
      * show: Redux modal show
      */
-    show: PropTypes.func.isRequired
+    show: PropTypes.func.isRequired,
+
+    /*
+     * viewportHeight: Page viewport height
+     */
+    viewportHeight: PropTypes.number.isRequired,
+
+    /*
+     * viewportWidth: Page viewport width
+     */
+    viewportWidth: PropTypes.number.isRequired
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDrawing: false,
+      isDragging: false,
+      isResizing: false,
+      toolbarPos: 'top',
+      toolbarOffset: 0
+    };
   };
 
   componentDidMount() {
@@ -225,6 +240,7 @@ class DrawingBoard extends Component {
   }
 
   handleResizeStart = (metaData) => {
+    this.setState({ isResizing: true });
   }
 
   handleResizeMove = (rect, metaData, isSnapping) => {
@@ -240,6 +256,7 @@ class DrawingBoard extends Component {
 
   handleResizeEnd = (rect, metaData) => {
     const { setMappingPositionInfo, pageZoom } = this.props;
+    this.setState({ isResizing: false });
     const newBoundingBox = {
       left: rect.left / pageZoom,
       top: rect.top / pageZoom,
@@ -256,6 +273,7 @@ class DrawingBoard extends Component {
   }
 
   handleDragStart = (metaData) => {
+    this.setState({ isDragging: true });
   }
 
   handleDragMove = (rect, metaData, isSnapping) => {
@@ -271,7 +289,7 @@ class DrawingBoard extends Component {
 
   handleDragEnd = (rect, metaData) => {
     const { setMappingPositionInfo, pageZoom, pageNumber, getPageDOM } = this.props;
-
+    this.setState({ isDragging: false });
     var newRect = rect;
     const { destPageNumber } = metaData;
     if (destPageNumber) {
@@ -393,6 +411,10 @@ class DrawingBoard extends Component {
     });
   }
 
+  handleToolbarUpdate = (toolbarPos, toolbarOffset) => {
+    this.setState({ toolbarPos, toolbarOffset });
+  }
+
   getBoxLabel(elementId, boxIndex) {
     const { questions, currentElement } = this.props;
     const question = isCurrentElementId(elementId, currentElement)
@@ -404,8 +426,8 @@ class DrawingBoard extends Component {
 
   renderDocumentMappingComponents() {
     // todo: Fix this, disable this function temporary to get other parts working
-    const { activeInputName, documentMapping, currentElement,
-      pageZoom, pageNumber } = this.props;
+    const { activeInputName, documentMapping, currentElement, pageZoom, pageNumber,
+      viewportWidth, viewportHeight } = this.props;
     var boardOptionals = {};
     if (activeInputName) {
       boardOptionals['style'] = _.merge(boardOptionals['style'], {
@@ -444,6 +466,8 @@ class DrawingBoard extends Component {
               id: mappingInfo.id,
               boxIndex: index
             }}
+            viewportWidth={viewportWidth}
+            viewportHeight={viewportHeight}
           >
             <div className={styles.boxLabel}>{this.getBoxLabel(mappingInfo.id, index)}</div>
           </InteractWrapper>
@@ -453,9 +477,9 @@ class DrawingBoard extends Component {
   }
 
   renderCurrentElement() {
-    const { documentMapping, pageNumber,
-      pageZoom, currentElement } = this.props;
-
+    const { documentMapping, pageNumber, pageZoom, currentElement,
+      viewportWidth, viewportHeight } = this.props;
+    const { isDragging, isResizing, toolbarOffset, toolbarPos } = this.state;
     if (!currentElement) return false;
 
     const activeBoxIndex = getActiveBoxIndex(currentElement);
@@ -491,9 +515,15 @@ class DrawingBoard extends Component {
         metaData={{
           boxIndex: activeBoxIndex
         }}
+        viewportWidth={viewportWidth}
+        viewportHeight={viewportHeight}
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}
-        toolbar={<SimpleMappingToolbar values={boundingBox} onChange={this.handleToolbarValueChange} />}
+        toolbar={!isDragging && !isResizing &&
+          <SimpleMappingToolbar values={boundingBox} onChange={this.handleToolbarValueChange}
+            placement={toolbarPos} offset={toolbarOffset} />
+        }
+        onToolbarUpdate={this.handleToolbarUpdate}
       >
         <div className={styles.boxLabel}>
           {this.getBoxLabel(currentElement.id, activeBoxIndex)}

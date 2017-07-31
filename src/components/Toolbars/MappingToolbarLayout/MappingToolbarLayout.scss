@@ -12,17 +12,12 @@ $arrow-size: 6px;
   background-color: $mapping-toolbar-bg-color;
   min-width: 300px;
   min-height: 38px;
-  bottom: 0;
-  @include hcenter;
 }
 
 .arrow {
   border-width: $arrow-size;
   border-color: transparent;
   border-style: solid;
-  border-bottom-width: 0;
-  border-top-color: $mapping-toolbar-border-color;
-  bottom: -$arrow-size;
   @include hcenter;
 
   &:after {
@@ -30,13 +25,36 @@ $arrow-size: 6px;
     display: block;
     width: 0;
     height: 0;
-    bottom: 1px;
     border-color: transparent;
     border-style: solid;
-    border-bottom-width: 0;
-    border-top-color: $mapping-toolbar-bg-color;
     border-width: $arrow-size - 1;
     @include hcenter;
+  }
+}
+
+.top {
+  .arrow {
+    border-bottom-width: 0;
+    border-top-color: $mapping-toolbar-border-color;
+    bottom: -$arrow-size + 1;
+    &:after {
+      bottom: 1px;
+      border-bottom-width: 0;
+      border-top-color: $mapping-toolbar-bg-color;
+    }
+  }
+}
+
+.bottom {
+  .arrow {
+    border-top-width: 0;
+    border-bottom-color: $mapping-toolbar-border-color;
+    top: -$arrow-size + 1;
+    &:after {
+      top: 1px;
+      border-top-width: 0;
+      border-bottom-color: $mapping-toolbar-bg-color;
+    }
   }
 }
 

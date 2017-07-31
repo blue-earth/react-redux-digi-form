@@ -26,17 +26,17 @@ export default class SpinEdit extends Component {
 
   handleDecreaseClick = () => {
     const { onChange, value } = this.props;
-    onChange(value - 1);
+    onChange(parseInt(value, 10) - 1);
   }
 
   handleIncraseClick = () => {
     const { onChange, value } = this.props;
-    onChange(value + 1);
+    onChange(parseInt(value, 10) + 1);
   }
 
   handleValueChange = (event) => {
     const { onChange } = this.props;
-    onChange(event.target.value);
+    onChange(parseInt(event.target.value, 10));
   }
 
   render() {
