@@ -29,6 +29,7 @@ export const SET_MAPPING_POSITION_INFO = 'SET_MAPPING_POSITION_INFO';
 
 export const UPDATE_FORM_ID = 'UPDATE_FORM_ID';
 export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
+export const SET_CURRENT_EDITTING_QUESTION = 'SET_CURRENT_EDITTING_QUESTION';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
@@ -543,6 +544,10 @@ const formBuilderReducer = handleActions({
     Object.assign({}, state, {
       questionEditMode: action.payload
     }),
+  SET_CURRENT_EDITTING_QUESTION: (state, action) =>
+    Object.assign({}, state, {
+      currentElement: action.payload
+    })
 }, INIT_BUILDER_STATE);
 
 export default formBuilderReducer;
