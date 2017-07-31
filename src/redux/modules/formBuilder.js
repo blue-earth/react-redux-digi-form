@@ -3,7 +3,10 @@ import { fetch } from 'redux-effects-fetch';
 import { mergeItemIntoArray, findItemById } from 'helpers/pureFunctions';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
-import { formBuilderSelectMode } from 'constants/formBuilder';
+import {
+  formBuilderSelectMode,
+  formBuilderBoxMappingType
+} from 'constants/formBuilder';
 import _ from 'lodash';
 
 export const NEW_FORM = 'NEW_FORM';
@@ -206,14 +209,14 @@ export const processSubmitForm = (formData) => {
       const { id } = value;
       id && dispatch(updateFormId(id));
       dispatch(doneSubmitForm()); // Hide submitting spinner
-      dispatch(setQuestionEditMode({ mode: 'question_type_list' }));
+      dispatch(setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW));
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitForm()); // Hide submitting spinner
-      dispatch(setQuestionEditMode({ mode: 'question_type_list' }));
+      dispatch(setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW));
     };
   };
 

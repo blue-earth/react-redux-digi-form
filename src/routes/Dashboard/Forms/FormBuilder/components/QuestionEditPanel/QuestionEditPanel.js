@@ -17,6 +17,7 @@ import MultipleSelection from 'components/QuestionEditFields/MultipleSelection';
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
 import 'rc-switch/assets/index.css';
+import { formBuilderSelectMode } from 'constants/formBuilder';
 import styles from './QuestionEditPanel.scss';
 
 export default class QuestionEditPanel extends Component {
@@ -95,7 +96,7 @@ export default class QuestionEditPanel extends Component {
 
   constructor(props) {
     super(props);
-    this.setSchema(props.activeInputName);
+    this.setSchema(props.currentElement.question.type);
   }
 
   componentWillMount() {
@@ -103,7 +104,7 @@ export default class QuestionEditPanel extends Component {
   }
 
   componentWillReceiveProps(props) {
-    this.setSchema(props.activeInputName);
+    this.setSchema(props.currentElement.question.type);
   }
 
   componentDidMount() {
@@ -132,9 +133,9 @@ export default class QuestionEditPanel extends Component {
     if (currentElement.isModified) {
       show('cancelConfirmModal');
     } else {
-      setQuestionEditMode({
-        mode: false
-      });
+      // todo: Reset currentElement
+      // todo: Reset activeInputName
+      setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
     }
   }
 

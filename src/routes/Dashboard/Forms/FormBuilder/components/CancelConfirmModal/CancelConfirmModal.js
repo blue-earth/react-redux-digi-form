@@ -7,6 +7,7 @@ import {
   Button
 } from 'react-bootstrap';
 import { connectModal } from 'redux-modal';
+import { formBuilderSelectMode } from 'constants/formBuilder';
 
 class CancelConfirmModal extends Component {
   static propTypes = {
@@ -19,13 +20,13 @@ class CancelConfirmModal extends Component {
   handleYes = () => {
     const { handleHide, setQuestionEditMode, saveElement } = this.props;
     saveElement();
-    setQuestionEditMode({ mode: false });
+    setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
     handleHide();
   }
 
   handleNo = () => {
     const { handleHide, setQuestionEditMode } = this.props;
-    setQuestionEditMode({ mode: false });
+    setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
     handleHide();
   }
 

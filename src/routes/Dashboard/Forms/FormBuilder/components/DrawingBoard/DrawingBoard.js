@@ -347,15 +347,15 @@ class DrawingBoard extends Component {
     if (isCurrentElementId(metaData.id, currentElement)) {
       setMappingInfo({ activeIndex: metaData.boxIndex });
     } else {
-      isModified && currentElement
-      ? show('cancelConfirmModal')
-      : setQuestionEditMode({
-        id: metaData.id,
-        activeBoxIndex: metaData.boxIndex,
-        mode: true
-      });
+      if (isModified && currentElement) {
+        show('cancelConfirmModal');
+      } else {
+        setQuestionEditMode(formBuilderSelectMode.QUESTION_DETAIL_VIEW);
+        // todo: Set questionID
+        // todo: setActiveBoxIndex
+      }
     }
-  }
+  };
 
   handleKeyDown = (event) => {
     const { currentElement, pageZoom, setMappingPositionInfo } = this.props;
