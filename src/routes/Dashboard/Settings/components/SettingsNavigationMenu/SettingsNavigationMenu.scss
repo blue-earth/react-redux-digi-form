@@ -2,7 +2,10 @@
 @import './variables';
 
 .settingsNavMenu {
-  margin-left: 40px;
+  float: right;
+  min-width: 240px;
+  max-width: 300px;
+  margin: 0 auto;
   font-family: 'roble_altregular';
   > .menuList {
     background-color: $white;
@@ -23,7 +26,7 @@
         display: block;
         height: 50px;
         text-decoration: none;        
-        > span{
+      > span{
           padding: 0 0 0 20px;
           line-height: 50px;
           font-size: 14px;
@@ -35,5 +38,14 @@
         color: $blue;
       }
     }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .settingsNavMenu {
+    float: none;
+    margin-left: 5%;
+    width: 90%;
+    max-width: none;
   }
 }

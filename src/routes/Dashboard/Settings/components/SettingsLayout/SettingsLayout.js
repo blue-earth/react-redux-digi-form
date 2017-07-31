@@ -20,8 +20,10 @@ class SettingsLayout extends Component {
         <Col sm={4} xs={12} className={styles.sideNavContainer}>
           <SettingsNavigationMenu />
         </Col>
-        <Col sm={8} xs={12} className={styles.childContentsContainer}>
-          {this.props.children}
+        <Col sm={8} xs={12}>
+          <div className={styles.childContentsContainer}>
+            {this.props.children}
+          </div>
         </Col>
       </Row>
     );
