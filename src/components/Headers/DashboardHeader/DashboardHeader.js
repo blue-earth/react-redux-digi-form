@@ -29,7 +29,8 @@ export default class DashboardHeader extends Component {
   static propTypes = {
     location: PropTypes.object,
     goTo: PropTypes.func,
-    processLogout: PropTypes.func
+    processLogout: PropTypes.func,
+    user: PropTypes.object.isRequired
   };
 
   handleNav = (navPath) => {
@@ -102,6 +103,7 @@ export default class DashboardHeader extends Component {
     const sendUrl = require('./send.svg');
     const signUrl = require('./sign.svg');
     const height = 14;
+    const { user } = this.props;
     return (
       <div className={styles.header}>
         <DashboardPageInnerLayout>
@@ -122,8 +124,13 @@ export default class DashboardHeader extends Component {
           <ButtonToolbar className={styles.rightToolbar}>
             <ProfileMenu list={profileMenus} onClick={this.handleNav}>
               <Button style="headerButton" iconOnly pullRight id="peofile-menu">
-                <img src="http://localhost:3000/avatar.jpg" alt="" className={styles.profileImage} />
-                <span className={styles.profileName}>{'Jordan McCown'}</span>
+                { user.avata
+                  ? (<img src={user.avatar} alt="" className={styles.profileImage} />)
+                  : <span className={styles.noAvatar}>
+                    {user.first_name.substring(0, 1)}{user.last_name.substring(0, 1)}
+                  </span>
+                }
+                <span className={styles.profileName}>{user.first_name} {user.last_name}</span>
               </Button>
             </ProfileMenu>
             <AlertMessage list={list}>
