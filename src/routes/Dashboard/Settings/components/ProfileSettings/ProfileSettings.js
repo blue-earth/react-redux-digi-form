@@ -4,7 +4,6 @@ import React, {
 } from 'react';
 import { Field } from 'redux-form';
 import styles from './ProfileSettings.scss';
-import { Image } from 'react-bootstrap';
 import SelectButton from 'components/Buttons/SelectButton';
 import AppButton from 'components/Buttons/AppButton/AppButton';
 import classNames from 'classnames';
@@ -69,11 +68,16 @@ class AvatarDropZoneFileInput extends Component {
       this.setState({
         errorMessage: 'Sorry, the image you selected is too large.'
       });
+    } else {
+      this.setState({
+        errorMessage: 'Sorry, the file you selected is not an image.'
+      });
     }
   }
 
   render() {
     const dropZoneStyle = {
+      overflow: 'hidden',
       width: '100%',
       height: '100%',
       borderWidth: 0,
@@ -93,7 +97,12 @@ class AvatarDropZoneFileInput extends Component {
               style={dropZoneStyle}
               disableClick
               maxSize={1024*1024}>
-              <Image rounded responsive src={avatar} style={{maxHeight: '100px'}} />
+              <div className={styles.avatarWrapper}>
+                <img
+                  className={styles.avatarImage}
+                  src={avatar}
+                />
+              </div>
             </Dropzone>
           </div>
           <div className={styles.deleteWrapper}>
@@ -175,7 +184,7 @@ class ProfileSettings extends Component {
         <div className="clearfix"></div>
         <Field name="email" component="input" type="text" disabled
           className={classNames(styles.formInput, styles.disabledInput)} />
-        <p className={styles.instructions}>
+        <p className={classNames('hide', styles.instructions)}>
           <i>Added on {'1st July 2016'}. You appear as <strong>{'Jordan from emondo'}</strong>.</i>
         </p>
         <hr className={styles.hrLine} />

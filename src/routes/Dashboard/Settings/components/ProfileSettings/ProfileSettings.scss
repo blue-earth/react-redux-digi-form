@@ -1,9 +1,11 @@
 @import './mixins';
 @import './variables';
 
-.profileSettingForm {
-  margin-left: 10%;
-  width: 80%;
+@media screen and (min-width: 768px) {
+  .profileSettingForm {
+    margin-left: 10%;
+    width: 60%;
+  }
 }
 .sectionTitle {
   float: left;
@@ -16,12 +18,23 @@
   @include border-radius(5px);
   background-color: $table-border-color;
 }
+.avatarWrapper {
+  float: left;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  &:before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+  }
+}
 .avatarImage {
-  max-width: 100px;
-  max-height: 100px;
-  top: 50%;
-  position: relative;
-  @include transform(translateY(-50%));
+  display: inline-block;
+  vertical-align: middle;
+  max-height: 100%;
+  max-width: 100%;
 }
 .rowWrapper {
   padding: 10px 0;

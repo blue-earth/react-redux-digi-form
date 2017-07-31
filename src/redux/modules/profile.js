@@ -55,6 +55,13 @@ export const processSubmitProfileSettings = (data) => {
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
+      dispatch(receiveServerUserProfileSettings({
+        avatar: value.avatar,
+        firstName: value.first_name,
+        lastName: value.last_name,
+        email: value.email,
+        timezone: value.timezone
+      }));
       dispatch(doneFetchingProfileSettings());
     };
   };
@@ -82,7 +89,7 @@ export const processSubmitPassword = (data) => {
   delete fetchParams['headers']['Content-Type'];
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(doneFetchingProfileSettings({}));
+      dispatch(doneFetchingProfileSettings());
     };
   };
   const fetchFail = ({value}) => {
@@ -106,12 +113,12 @@ export const fetchProfileSettings = () => {
         email: value.email,
         timezone: value.timezone
       }));
-      dispatch(doneFetchingProfileSettings({}));
+      dispatch(doneFetchingProfileSettings());
     };
   };
   const fetchFail = (data) => {
     return (dispatch, getState) => {
-      dispatch(doneFetchingProfileSettings({}));
+      dispatch(doneFetchingProfileSettings());
     };
   };
 
@@ -148,7 +155,7 @@ const profileReducer = handleActions({
   DONE_FETCHING_PROFILE_SETTINGS: (state, action) =>
     Object.assign({}, state, {
       isPageBusy: false,
-      errorMessages: action.payload
+      errorMessages: action.payload || {}
     }),
   RECEIVE_USER_PROFILE_SETTINGS: (state, action) =>
     Object.assign({}, state, {
