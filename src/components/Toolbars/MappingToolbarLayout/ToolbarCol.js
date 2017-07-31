@@ -2,7 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import styles from './MappingToolbar.scss';
+import styles from './MappingToolbarLayout.scss';
 
 export default class ToolbarCol extends Component {
   static propTypes = {

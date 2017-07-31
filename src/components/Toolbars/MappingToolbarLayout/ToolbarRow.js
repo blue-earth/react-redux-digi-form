@@ -2,9 +2,9 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import styles from './MappingToolbar.scss';
+import styles from './MappingToolbarLayout.scss';
 
-export default class MappingToolbar extends Component {
+export default class ToolbarRow extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired
   };
@@ -12,9 +12,8 @@ export default class MappingToolbar extends Component {
   render() {
     const { children } = this.props;
     return (
-      <div className={styles.toolbar}>
+      <div className={styles.toolbarRow}>
         {children}
-        <div className={styles.arrow} />
       </div>
     );
   }

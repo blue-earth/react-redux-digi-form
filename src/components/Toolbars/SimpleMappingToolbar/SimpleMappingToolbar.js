@@ -5,10 +5,10 @@ import React, {
 import { Button } from 'react-bootstrap';
 import _ from 'lodash';
 import AppButton from 'components/Buttons/AppButton';
-import MappingToolbar, {
+import MappingToolbarLayout, {
   ToolbarCol,
   ToolbarRow
-} from '../MappingToolbar';
+} from '../MappingToolbarLayout';
 import { MdCheck, MdDelete } from 'react-icons/lib/md';
 import SpinEdit from '../SpinEdit';
 import styles from './SimpleMappingToolbar.scss';
@@ -51,7 +51,7 @@ export default class SimpleMappingToolbar extends Component {
   render() {
     const { values: { width, height } } = this.state;
     return (
-      <MappingToolbar>
+      <MappingToolbarLayout>
         <ToolbarRow>
           <ToolbarCol>
             <SpinEdit label="W:" value={width} onChange={this.handleWidthChange} />
@@ -69,7 +69,7 @@ export default class SimpleMappingToolbar extends Component {
             <Button className={styles.removeButton}><MdDelete size={18} /></Button>
           </ToolbarCol>
         </ToolbarRow>
-      </MappingToolbar>
+      </MappingToolbarLayout>
     );
   }
 }
