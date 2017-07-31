@@ -2,22 +2,24 @@ import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
-import { SubmissionError } from 'redux-form';
 
 // Fetch profile settings status
 export const REQUEST_FETCH_PROFILE_SETTINGS = 'REQUEST_FETCH_PROFILE_SETTINGS';
 export const RECEIVE_USER_PROFILE_SETTINGS = 'RECEIVE_USER_PROFILE_SETTINGS';
 export const DONE_FETCHING_PROFILE_SETTINGS = 'DONE_FETCHING_PROFILE_SETTINGS';
 export const REQUEST_SUBMIT_PROFILE_SETTINGS = 'REQUEST_SUBMIT_PROFILE_SETTINGS';
+export const RESET_ERROR_MESSAGES = 'RESET_ERROR_MESSAGES';
 
 export const INIT_PROFILE_SETTINGS_STATE = {
   isPageBusy: false,
-  data: {}
+  data: {},
+  errorMessages: {}
 };
 
 // ------------------------------------
 // Actions with reducer
 // ------------------------------------
+export const resetErrorMessages = createAction(RESET_ERROR_MESSAGES);
 export const requestSubmitProfileSettings = createAction(REQUEST_SUBMIT_PROFILE_SETTINGS);
 export const requestFetchProfileSettings = createAction(REQUEST_FETCH_PROFILE_SETTINGS);
 export const receiveServerUserProfileSettings = createAction(RECEIVE_USER_PROFILE_SETTINGS);
@@ -80,19 +82,12 @@ export const processSubmitPassword = (data) => {
   delete fetchParams['headers']['Content-Type'];
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(doneFetchingProfileSettings());
+      dispatch(doneFetchingProfileSettings({}));
     };
   };
   const fetchFail = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(doneFetchingProfileSettings());
-      if (value) {
-        let error = {};
-        Object.keys(value).map((key) => {
-          error[key] = value[key][0];
-        });
-        return new SubmissionError(error);
-      }
+      dispatch(doneFetchingProfileSettings(value));
     };
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
@@ -111,12 +106,12 @@ export const fetchProfileSettings = () => {
         email: value.email,
         timezone: value.timezone
       }));
-      dispatch(doneFetchingProfileSettings());
+      dispatch(doneFetchingProfileSettings({}));
     };
   };
   const fetchFail = (data) => {
     return (dispatch, getState) => {
-      dispatch(doneFetchingProfileSettings());
+      dispatch(doneFetchingProfileSettings({}));
     };
   };
 
@@ -133,7 +128,7 @@ export const submitProfileSettings = () => {
 export const submitPasswordSettings = () => {
   return (dispatch, getState) => {
     dispatch(requestSubmitProfileSettings());
-    const formState = getState().form.profileSettingForm.values;
+    const formState = getState().form.passwordForm.values;
     dispatch(processSubmitPassword(formState));
   };
 };
@@ -142,13 +137,18 @@ export const submitPasswordSettings = () => {
 // Reducer
 // ------------------------------------
 const profileReducer = handleActions({
+  RESET_ERROR_MESSAGES: (state, action) =>
+    Object.assign({}, state, {
+      errorMessages: {}
+    }),
   REQUEST_FETCH_PROFILE_SETTINGS: (state, action) =>
     Object.assign({}, state, {
       isPageBusy: true
     }),
   DONE_FETCHING_PROFILE_SETTINGS: (state, action) =>
     Object.assign({}, state, {
-      isPageBusy: false
+      isPageBusy: false,
+      errorMessages: action.payload
     }),
   RECEIVE_USER_PROFILE_SETTINGS: (state, action) =>
     Object.assign({}, state, {

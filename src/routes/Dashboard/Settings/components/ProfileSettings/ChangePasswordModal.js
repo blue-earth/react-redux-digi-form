@@ -5,24 +5,66 @@ import React, {
 import {
   Modal
 } from 'react-bootstrap';
-import { Field } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import { connectModal } from 'redux-modal';
+import connect from 'redux/utils/connect';
 import AppButton from 'components/Buttons/AppButton';
 import styles from './ChangePasswordModal.scss';
 
-class ChangePasswordModal extends Component {
+class PasswordInput extends Component {
   static propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
-    handleHide: PropTypes.func.isRequired,
-    show: PropTypes.bool
+    input: PropTypes.array,
+    label: PropTypes.string,
+    type: PropTypes.string,
+    error: PropTypes.array,
+    resetError: PropTypes.func
   };
-  handleSubmit = () => {
-    this.props.handleSubmit();
+
+  handleFocus = (event) => {
+    this.props.resetError();
   }
   render() {
-    const { show, handleHide } = this.props;
+    const {input, label, type, error} = this.props;
+    const errorMessage = error && error.length > 0 ? error[0] : '';
     return (
-      <Modal show={show} onHide={handleHide}
+      <div>
+        {errorMessage && <span className={styles.errorMessage}>{errorMessage}</span>}
+        <input
+          {...input}
+          onFocus={this.handleFocus}
+          className={styles.emailInput}
+          value={input.value}
+          placeholder={label}
+          type={type} />
+      </div>
+    );
+  }
+}
+
+class ChangePasswordModal extends Component {
+
+  static propTypes = {
+    reset: PropTypes.func,
+    resetErrorMessages: PropTypes.func,
+    onSubmit: PropTypes.func,
+    handleSubmit: PropTypes.func,
+    handleHide: PropTypes.func,
+    show: PropTypes.bool,
+    isPageBusy: PropTypes.bool,
+    errorMessages: PropTypes.object
+  };
+
+  handleHide = () => {
+    const {resetErrorMessages, reset, handleHide} = this.props;
+    resetErrorMessages();
+    reset();
+    handleHide();
+  }
+
+  render() {
+    const { show, handleSubmit, onSubmit, errorMessages, isPageBusy, resetErrorMessages } = this.props;
+    return (
+      <Modal show={show} onHide={this.handleHide}
         className={styles.changePasswordModal}
         dialogClassName={styles.changePasswordModalDialog}
       >
@@ -32,13 +74,24 @@ class ChangePasswordModal extends Component {
             Change password
           </h3>
           <div className={styles.contentWrapper}>
-            <Field component="input" type="password"
-              name="old_password" className={styles.emailInput} placeholder="Old password" />
-            <Field component="input" type="password"
-              name="new_password1" className={styles.emailInput} placeholder="New password" />
-            <Field component="input" type="password"
-              name="new_password2" className={styles.emailInput} placeholder="Repeat new password" />
-            <AppButton extraClass={styles.sendButton} onClick={this.handleSubmit}>
+            <Field component={PasswordInput} type="password"
+              name="old_password"
+              label="Old password"
+              error={errorMessages.old_password}
+              resetError={resetErrorMessages} />
+            <Field component={PasswordInput} type="password"
+              name="new_password1"
+              label="New password"
+              error={errorMessages.new_password1}
+              resetError={resetErrorMessages} />
+            <Field component={PasswordInput} type="password"
+              name="new_password2"
+              label="Repeat new password"
+              error={errorMessages.new_password2}
+              resetError={resetErrorMessages} />
+            <AppButton extraClass={styles.sendButton}
+              onClick={handleSubmit(onSubmit)}
+              isBusy={isPageBusy}>
               Change password
             </AppButton>
           </div>
@@ -48,4 +101,13 @@ class ChangePasswordModal extends Component {
   }
 }
 
-export default connectModal({ name: 'changePasswordModal' })(ChangePasswordModal);
+const modal = connectModal({ name: 'changePasswordModal' })(ChangePasswordModal);
+
+export default connect(
+  state => ({
+    initialValues: {}
+  })
+)(reduxForm({
+  form: 'passwordForm',
+  enableReinitialize: true
+})(modal));

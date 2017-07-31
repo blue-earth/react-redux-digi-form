@@ -126,8 +126,10 @@ class ProfileSettings extends Component {
     fetchProfileSettings: PropTypes.func.isRequired,
     submitProfileSettings: PropTypes.func.isRequired,
     submitPasswordSettings: PropTypes.func.isRequired,
+    resetErrorMessages: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
-    isPageBusy: PropTypes.bool.isRequired
+    errorMessages: PropTypes.object,
+    isPageBusy: PropTypes.bool
   };
 
   componentDidMount() {
@@ -206,7 +208,14 @@ class ProfileSettings extends Component {
   }
 
   render() {
-    const { isPageBusy, handleSubmit, submitPasswordSettings, submitProfileSettings } = this.props;
+    const {
+      isPageBusy,
+      handleSubmit,
+      submitPasswordSettings,
+      submitProfileSettings,
+      errorMessages,
+      resetErrorMessages
+    } = this.props;
     return (
       <form onSubmit={this.submitForm} className={styles.profileSettingForm}>
         {this.renderAvatarSection()}
@@ -217,7 +226,12 @@ class ProfileSettings extends Component {
           onClick={handleSubmit(submitProfileSettings)}>
           Save
         </AppButton>
-        <ChangePasswordModal handleSubmit={handleSubmit(submitPasswordSettings)} />
+        <ChangePasswordModal
+          resetErrorMessages={resetErrorMessages}
+          onSubmit={submitPasswordSettings}
+          errorMessages={errorMessages}
+          isPageBusy={isPageBusy}
+        />
       </form>
     );
   }
