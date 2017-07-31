@@ -23,6 +23,7 @@ import SimpleMappingToolbar from 'components/Toolbars/SimpleMappingToolbar';
 import _ from 'lodash';
 import interact from 'interact.js';
 import styles from './DrawingBoard.scss';
+import { formBuilderSelectMode } from 'constants/formBuilder';
 
 class DrawingBoard extends Component {
   static propTypes = {
