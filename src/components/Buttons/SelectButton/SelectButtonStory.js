@@ -20,7 +20,31 @@ storiesOf('Button', module)
     }, {
       key: 'other',
       label: 'Other type'
-    },  {
+    }, {
+      key: 'some',
+      label: 'Some type'
+    }, {
+      key: 'some',
+      label: 'Some type'
+    }, {
+      key: 'some',
+      label: 'Some type'
+    }, {
+      key: 'some',
+      label: 'Some type'
+    }, {
+      key: 'some',
+      label: 'Some type'
+    }, {
+      key: 'some',
+      label: 'Some type'
+    }, {
+      key: 'some',
+      label: 'Some type'
+    }, {
+      key: 'some',
+      label: 'Some type'
+    }, {
       key: 'some',
       label: 'Some type'
     }

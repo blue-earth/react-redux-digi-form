@@ -1,14 +1,51 @@
-.settingsNavMenu {
+@import './mixins';
+@import './variables';
 
+.settingsNavMenu {
+  float: right;
+  min-width: 240px;
+  max-width: 300px;
+  margin: 0 auto;
+  font-family: 'roble_altregular';
   > .menuList {
+    background-color: $white;
+    padding: 0;
     list-style: none;
-    > .menuListItem > a {
-      font-size: 14px;
-      padding: 8px 0;
-      opacity: 0.35;
+    border: 1px solid $table-border-color;
+    @include border-radius(4px);
+    overflow: hidden;
+    > .menuListItem {
+      white-space: nowrap;
+      padding-left: 20px;
+      border-bottom: 1px solid $table-border-color;
+      &:last-child{
+        border-bottom: none;
+      }
+      a {
+        color: $dropdown-caret-color;
+        display: block;
+        height: 50px;
+        text-decoration: none;        
+      > span{
+          padding: 0 0 0 20px;
+          line-height: 50px;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      }
+      a.menuListItemActive {      
+        border-right: 4px solid $blue;
+        color: $blue;
+      }
     }
-    .menuListItemAcitve {
-      opacity: 1 !important;
-    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .settingsNavMenu {
+    float: none;
+    margin-left: 5%;
+    width: 90%;
+    max-width: none;
   }
 }

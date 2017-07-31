@@ -1,17 +1,15 @@
+@import './mixins';
+@import './variables';
+
 .settingsContainer {
-  display: table;
+  margin-top: 30px;
+}
+.childContentsContainer {
   width: 100%;
-  height: 100%;
-  > .fullHeightContainer {
-    display: table-cell;
-    vertical-align: top;
-    &.leftNavContainer {
-      width: 273px;
-      padding-top: 40px;
-      background: #ECF4FB;
-    }
-    &.childContentsContainer {
-      display: table-cell;
-    }
+}
+@media screen and (max-width: 768px) {
+  .childContentsContainer {
+    margin-left: 5%;
+    width: 90%;
   }
 }

@@ -3,54 +3,35 @@ import React, {
 } from 'react';
 import { Link } from 'react-router';
 import { settingsUrl } from 'helpers/urlHelper';
+import { FaUser, FaMoney } from 'react-icons/lib/fa';
 import classes from './SettingsNavigationMenu.scss';
 
 class SettingsNavigationMenu extends Component {
-  static propTypes = {
-
-  };
-  static defaultProps = {
-
-  };
-
-  constructor(props) {
-    super(props);
-    this.renderSettingMenuItems = this.renderSettingMenuItems.bind(this);
-  }
-
   get settingMenuItems() {
     return [
       {
         url: settingsUrl('profile'),
-        text: 'Profile'
-      },
-      {
-        url: settingsUrl('notifications'),
-        text: 'Notifications'
-      },
-      {
-        url: settingsUrl('custom-branding'),
-        text: 'Custom branding'
+        text: 'Profile',
+        icon: <FaUser />
       },
       {
         url: settingsUrl('billing'),
-        text: 'My plan & billing'
-      },
-      {
-        url: settingsUrl('security'),
-        text: 'Security'
+        text: 'My plan & billing',
+        icon: <FaMoney />
       }
     ];
   }
 
-  renderSettingMenuItems() {
+  renderSettingMenuItems = () => {
     return this.settingMenuItems.map(menuItem => (
       <li className={classes.menuListItem} key={menuItem.url}>
         <Link
-          style={{'color': 'black'}}
           className={classes.menuListItem}
-          activeClassName={classes.menuListItemAcitve}
-          to={menuItem.url}>{menuItem.text}</Link>
+          activeClassName={classes.menuListItemActive}
+          to={menuItem.url}>
+          {menuItem.icon}
+          <span>{menuItem.text}</span>
+        </Link>
       </li>
     ));
   }

@@ -60,6 +60,8 @@
   display: inline-block;
 }
 .selectOptions {
+  max-height: 178px;
+  overflow-y: auto;
   list-style: none;
   margin: 0;
   padding: 0

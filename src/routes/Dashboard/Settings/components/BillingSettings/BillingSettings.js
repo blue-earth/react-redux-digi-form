@@ -4,7 +4,7 @@ class NotificationsSettings extends React.Component {
 
   render() {
     return (
-      <p>Notification settings</p>
+      <p>Billing settings</p>
     );
   }
 }

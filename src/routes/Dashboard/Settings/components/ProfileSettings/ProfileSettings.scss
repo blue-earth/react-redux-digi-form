@@ -1,3 +1,86 @@
-.profileSettingsContainer {
+@import './mixins';
+@import './variables';
 
+@media screen and (min-width: 768px) {
+  .profileSettingForm {
+    margin-left: 10%;
+    width: 60%;
+  }
+}
+.sectionTitle {
+  float: left;
+  font-size: 16px;
+  font-family: "roble_alt_boldbold";
+}
+.imageWrapper {
+  width: 100px;
+  height: 100px;
+  @include border-radius(5px);
+  background-color: $table-border-color;
+}
+.avatarWrapper {
+  float: left;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  &:before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+  }
+}
+.avatarImage {
+  display: inline-block;
+  vertical-align: middle;
+  max-height: 100%;
+  max-width: 100%;
+}
+.rowWrapper {
+  padding: 10px 0;
+  @include clearfix;
+}
+.hrLine {
+  border-color: #DCE7ED;
+}
+
+.linkButton {
+  font-size: 12px;
+  margin-top: 10px;
+  color: $darkblue;
+  text-decoration: underline;
+}
+.formInput {
+  width: 48%;
+  margin: 4px 0;
+  padding: 0 15px;
+  line-height: 37px;
+  font-size: 14px;
+  @include border-radius(4px);
+  border: 1px solid $table-border-color;
+}
+.formInput.disabledInput {
+  background-color: darken($white, 10%);
+}
+.initialInput {
+  width: 20%;
+}
+.instructionsSection {
+  margin: 15px;
+  margin-left: 120px;
+}
+.instructions {
+  color: $darkblue;
+  font-size: 12px;
+  font-weight: normal;
+}
+.errorMessage {
+  color: $red;
+}
+.deleteWrapper {
+  text-align: center;
+}
+.timezoneSelection {
+  font-size: 14px;
+  width: 48%;
 }
