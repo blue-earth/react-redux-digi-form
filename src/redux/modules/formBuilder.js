@@ -81,7 +81,7 @@ export const INIT_QUESTION_STATE = {
 };
 
 export const INIT_MAPPING_INFO_STATE = {
-  type: 'Standard',
+  type: formBuilderBoxMappingType.STANDARD,
   positions: [],
   activeIndex: 0
 };
