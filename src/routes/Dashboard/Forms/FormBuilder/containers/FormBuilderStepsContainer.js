@@ -17,7 +17,8 @@ import {
   setMappingPositionInfo,
   setPageZoom,
   saveElement,
-  deleteElement
+  deleteElement,
+  setCurrentEditingQuestion
 } from 'redux/modules/formBuilder';
 
 import FormBuilderSteps from '../components/FormBuilderSteps';
@@ -39,7 +40,8 @@ const mapActionCreators = {
   setPageZoom,
   saveElement,
   deleteElement,
-  show
+  show,
+  setCurrentEditingQuestion
 };
 
 const mapStateToProps = (state) => {
