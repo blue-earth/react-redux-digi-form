@@ -81,33 +81,28 @@ class DashboardTabs extends Component {
   render() {
     return (
       <Navbar className={styles.dashboardTabs}>
-        <Navbar.Header>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse className={styles.dashboardTabsWrapper}>
-          <Nav onSelect={this.handleSelect} activeKey={this.state.activeKey}>
-            {
-              this.navItems.filter(navItem => navItem.position === 'left').map((navItem) => {
-                return (
-                  <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
-                    {navItem.icon} {navItem.label}
-                  </NavItem>
-                );
-              })
-            }
-          </Nav>
-          <Nav pullRight onSelect={this.handleSelect} activeKey={this.state.activeKey}>
-            {
-              this.navItems.filter(navItem => navItem.position === 'right').map((navItem) => {
-                return (
-                  <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
-                    {navItem.icon} {navItem.label}
-                  </NavItem>
-                );
-              })
-            }
-          </Nav>
-        </Navbar.Collapse>
+        <Nav className={styles.leftTabs} onSelect={this.handleSelect} activeKey={this.state.activeKey}>
+          {
+            this.navItems.filter(navItem => navItem.position === 'left').map((navItem) => {
+              return (
+                <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
+                  {navItem.icon} {navItem.label}
+                </NavItem>
+              );
+            })
+          }
+        </Nav>
+        <Nav className={styles.rightTabs} pullRight onSelect={this.handleSelect} activeKey={this.state.activeKey}>
+          {
+            this.navItems.filter(navItem => navItem.position === 'right').map((navItem) => {
+              return (
+                <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
+                  {navItem.icon} {navItem.label}
+                </NavItem>
+              );
+            })
+          }
+        </Nav>
       </Navbar>
     );
   }
