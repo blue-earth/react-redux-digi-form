@@ -16,10 +16,6 @@
 .signatureModalWrapper {
   padding: 20px 40px;
 }
-.header {
-  padding: 20px 35px;
-  font-weight: 600;
-}
 .infoSection {
   margin-bottom: 18px;
 }
@@ -76,97 +72,7 @@
     outline: none;
   }
 }
-.writePanelWrapper {
-  overflow-y: auto;
-  padding-bottom: 0;
-}
-.drawPanelWrapper {
-  padding: 10px 16px;
-}
-.drawPanelButtons {
-  margin-bottom: 10px;
-}
-.tabPanelTitle {
-  margin-bottom: 12px;
-}
-.signaturePanelWrapper {
-  margin-bottom: 10px;
-  padding: 0;
-}
-.signaturePanelLeft {
-  padding-right: 5px;
-}
-.signaturePanelRight {
-  padding-left: 5px;
-}
-.signaturePanel {
-  position: relative;
-  height: 126px;
-  box-shadow: inset 0px 0px 24px 10px $white;
-  @include border-radius(4px);
-  @include input-box-shadow;
-  border: 1px solid $border-color;
-  cursor: pointer;
-  background-color: $white;
-}
-.signaturePanelCanvas {
-  width: 100%;
-  height: 100%;
-}
-.activeSignature {
-  border: 2px solid $dashboard-header-bg-color;
-  .signaturePadColourSelection {
-    visibility: visible;
-  }
-}
-.signatureTypeLabel {
-  text-align: center;
-  padding: 8px 0;
-}
-.signaturePadColourSelection {
-  position: absolute;
-  visibility: hidden;
-  padding: 0;
-  margin: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  .colourSelection {
-    display: inline-block;
-    height: 26px;
-    width: 26px;
-    margin: 4px;
-    background-color: $black;
-    @include border-radius(20px);
-    border: 3px solid $white;
-    &.colour-red {
-      background-color: $red;
-    }
-    &.colour-blue {
-      background-color: $blue;
-    }
-    &.activeColour {
-      border-color: #97CAE9;
-    }
-  }
-}
-.revertButton {
-  float: right;
-  height: 36px;
-  width: 36px;
-  margin: 0 4px;
-  background-color: #fff;
-  border: 1px solid $grey;
-  font-size: 20px;
-  line-height: 20px;
-  color: $text-dark-color;
-  @include border-radius(5px);
-  @include input-box-shadow;
-}
-.colorPickerButton {
-  @include background-gradient($select-button-start-color, $select-button-end-color);
-}
+
 .fileUploadSection {
   width: 100%;
   height: 100%;
@@ -231,82 +137,5 @@
   }
   .activeTab .tab-content{
     @include border-radius-separate(0px);
-  }
-  .signature-font-preload {
-    visibility: hidden;
-    font-size: 0;
-    line-height: 0;
-  }
-  .preload-steve {
-    font-family: steve;
-  }
-  .preload-lincoln {
-    font-family: lincoln;
-  }
-  .preload-swift {
-    font-family: swift;
-  }
-  .preload-MayQueen {
-    font-family: MayQueen;
-  }
-  .preload-ArtySignature {
-    font-family: ArtySignature;
-  }
-  .preload-MonsieurLaDoulaise {
-    font-family: MonsieurLaDoulaise;
-  }
-
-  .m-signature-pad {
-    position: relative;
-    font-size: 10px;
-    height: 208px;
-    border-radius: 4px;
-    background-color: $white;
-    border: 1px solid $signature-modal-border-color;
-  }
-
-
-  .m-signature-pad--body {
-    width: 100%;
-    height: 100%;
-  }
-
-  .m-signature-pad--body
-    canvas {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-  @media screen and (max-width: 1024px) {
-
-  }
-
-  @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-    .m-signature-pad {
-      margin: 10%;
-    }
-  }
-
-  @media screen and (max-height: 320px) {
-    .m-signature-pad--body {
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 32px;
-    }
-    .m-signature-pad--footer {
-      left: 20px;
-      right: 20px;
-      bottom: 4px;
-      height: 28px;
-    }
-    .m-signature-pad--footer
-      .description {
-        font-size: 1em;
-        margin-top: 1em;
-      }
   }
 }
