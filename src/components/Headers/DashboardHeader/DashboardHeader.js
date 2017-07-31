@@ -124,8 +124,12 @@ export default class DashboardHeader extends Component {
           <ButtonToolbar className={styles.rightToolbar}>
             <ProfileMenu list={profileMenus} onClick={this.handleNav}>
               <Button style="headerButton" iconOnly pullRight id="peofile-menu">
-                {user.avatar ?
-                  (<img src={user.avatar} alt="" className={styles.profileImage} />) : <span className={styles.noAvatar} />}
+                { user.avata
+                  ? (<img src={user.avatar} alt="" className={styles.profileImage} />)
+                  : <span className={styles.noAvatar}>
+                    {user.first_name.substring(0, 1)}{user.last_name.substring(0, 1)}
+                  </span>
+                }
                 <span className={styles.profileName}>{user.first_name} {user.last_name}</span>
               </Button>
             </ProfileMenu>

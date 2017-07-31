@@ -15,7 +15,7 @@ const mapStateToProps = (state) => {
   const { auth } = state;
   const {
     user
-  } = auth || INIT_BUILDER_STATE;
+  } = auth || INIT_AUTH_STATE;
   return {
     user
   };
