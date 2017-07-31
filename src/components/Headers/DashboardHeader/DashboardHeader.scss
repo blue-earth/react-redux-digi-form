@@ -29,6 +29,14 @@
   @include border-radius(50%);
   height: 100%;
 }
+.noAvatar {
+  @include border-radius(50%);
+  height: $button-height-md;
+  width: $button-height-md;
+  background: $button-header-bg-color;
+  display: inline-block;
+  vertical-align: middle;
+}
 .profileName {
   padding-left: 5px;
   padding-right: 10px;
