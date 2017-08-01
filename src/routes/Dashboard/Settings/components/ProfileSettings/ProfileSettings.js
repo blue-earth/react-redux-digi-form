@@ -164,9 +164,9 @@ class ProfileSettings extends Component {
       <div>
         <h4 className={styles.sectionTitle}>Name</h4>
         <div className="clearfix"></div>
-        <Field name="firstName" component="input" placeholder="First name"
+        <Field name="first_name" component="input" placeholder="First name"
           type="text" className={styles.formInput} />
-        <Field name="lastName" component="input" placeholder="Last name"
+        <Field name="last_name" component="input" placeholder="Last name"
           type="text" className={classNames('pull-right', styles.formInput)} />
         <hr className={styles.hrLine} />
       </div>

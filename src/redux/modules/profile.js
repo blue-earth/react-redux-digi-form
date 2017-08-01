@@ -2,6 +2,7 @@ import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
+import { setUserProfile } from './auth';
 
 // Fetch profile settings status
 export const REQUEST_FETCH_PROFILE_SETTINGS = 'REQUEST_FETCH_PROFILE_SETTINGS';
@@ -31,8 +32,8 @@ export const doneFetchingProfileSettings = createAction(DONE_FETCHING_PROFILE_SE
 export const processSubmitProfileSettings = (data) => {
   const apiURL = `${API_URL}/accounts/api/user/`;
   var formData = new FormData();
-  formData.append('first_name', data.firstName);
-  formData.append('last_name', data.lastName);
+  formData.append('first_name', data.first_name);
+  formData.append('last_name', data.last_name);
   formData.append('timezone', data.timezone);
   if (data.avatar instanceof File) {
     formData.append('avatar', data.avatar);
@@ -55,13 +56,8 @@ export const processSubmitProfileSettings = (data) => {
 
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(receiveServerUserProfileSettings({
-        avatar: value.avatar,
-        firstName: value.first_name,
-        lastName: value.last_name,
-        email: value.email,
-        timezone: value.timezone
-      }));
+      dispatch(receiveServerUserProfileSettings(value));
+      dispatch(setUserProfile(value));
       dispatch(doneFetchingProfileSettings());
     };
   };
@@ -106,13 +102,7 @@ export const fetchProfileSettings = () => {
   });
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(receiveServerUserProfileSettings({
-        avatar: value.avatar,
-        firstName: value.first_name,
-        lastName: value.last_name,
-        email: value.email,
-        timezone: value.timezone
-      }));
+      dispatch(receiveServerUserProfileSettings(value));
       dispatch(doneFetchingProfileSettings());
     };
   };

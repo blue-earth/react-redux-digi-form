@@ -28,6 +28,8 @@
 .profileImage {
   @include border-radius(50%);
   height: 100%;
+  max-width: $button-height-md;
+  max-height: $button-height-md;
 }
 .noAvatar {
   @include border-radius(50%);
