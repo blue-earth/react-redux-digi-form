@@ -18,7 +18,9 @@ class DocumentFieldsSelectionHeader extends Component {
     shortDescription: PropTypes.string,
     backLinkClickHandler: PropTypes.func,
     saveAndContinueClickHandler: PropTypes.func,
-    deleteClickHandler: PropTypes.func
+    deleteClickHandler: PropTypes.func,
+    style: PropTypes.object,
+    className: PropTypes.string
   };
   static defaultProps = {
     backLinkClickHandler: noop,
@@ -55,10 +57,16 @@ class DocumentFieldsSelectionHeader extends Component {
   render() {
     const {
       backLinkClickHandler,
-      availableFields
+      availableFields,
+      style,
+      className
     } = this.props;
+    const containerClassNames = cx({
+      [className]: Boolean(className),
+      'headerContainer': true
+    });
     return (
-      <section className={cx('headerContainer')}>
+      <section className={containerClassNames} style={style}>
         <div className={cx('headerContainerRow')}>
           <div className={cx('left')}>
             <a className={cx('backLink')} href="javascript:;" onClick={backLinkClickHandler}>
