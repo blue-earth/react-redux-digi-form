@@ -263,7 +263,6 @@ export const pageZoomPercent = (pageZoom) =>
 export const getChoiceLabelByIndex = (index) =>
   String.fromCharCode('A'.charCodeAt(0) + index);
 
-
 export const createEmptyQuestionElement = function (questionTypeName, boxMappingType) {
   const id = undefined;
   const question = Object.assign({}, INIT_QUESTION_STATE, {
