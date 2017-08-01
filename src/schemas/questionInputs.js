@@ -36,7 +36,16 @@ const questionInputs = {
       'standard',
       'block'
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'ShortText',
+          'maxSelection': 10,
+          'minSelection': 1
+        }
+      ]
+    ]
   },
   'EmailField': {
     name: 'EmailField',
@@ -60,7 +69,16 @@ const questionInputs = {
       'standard',
       'block'
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'Email',
+          'maxSelection': 1,
+          'minSelection': 1
+        }
+      ]
+    ]
   },
   'PhoneNumberField': {
     name: 'PhoneNumberField',
@@ -75,7 +93,16 @@ const questionInputs = {
       'standard',
       'block'
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'Phone Number',
+          'maxSelection': 1,
+          'minSelection': 1
+        }
+      ]
+    ]
   },
   'AddressField': {
     name: 'AddressField',
@@ -130,7 +157,48 @@ const questionInputs = {
       'standard',
       'block'
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'Day',
+          'key': 'day',
+          'group': 'Separate'
+        },
+        {
+          'displayName': 'Month',
+          'key': 'month',
+          'group': 'Separate'
+        },
+        {
+          'displayName': 'Year',
+          'key': 'year',
+          'group': 'Separate'
+        }
+      ],
+      [
+        {
+          'displayName': 'Month/Year',
+          'key': 'month/year',
+          'group': 'Combined'
+        },
+        {
+          'displayName': 'Year/Month/Day',
+          'key': 'year/month/day',
+          'group': 'Combined'
+        },
+        {
+          'displayName': 'Day/Month/Year',
+          'key': 'day/month/year',
+          'group': 'Combined'
+        },
+        {
+          'displayName': 'Month/Day/Year',
+          'key': 'month/day/year',
+          'group': 'Combined'
+        }
+      ]
+    ]
   },
   'MultipleChoice': {
     name: 'MultipleChoice',

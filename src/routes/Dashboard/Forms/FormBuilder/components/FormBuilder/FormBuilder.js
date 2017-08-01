@@ -10,6 +10,12 @@ import CancelConfirmModal from '../CancelConfirmModal';
 import UploadModal from '../UploadModal';
 import { formsUrl } from 'helpers/urlHelper';
 import styles from './FormBuilder.scss';
+import DocumentFieldsSelectionHeader from 'components/FormBuilder/DocumentFieldsSelectionHeader';
+import {
+  formBuilderSelectMode,
+  formBuilderBoxMappingType
+} from 'constants/formBuilder';
+import questionInputs from 'schemas/questionInputs';
 
 class FormBuilder extends Component {
 
@@ -189,6 +195,17 @@ class FormBuilder extends Component {
     setActiveInputName('');
   }
 
+  goToQuestionTypeListView = () => {
+    this.props.setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
+  }
+
+  getAvailableSelectionFields = () => {
+    const questionTypeName = this.props.currentElement.question.type;
+    var result = questionInputs[questionTypeName]['availableFields'];
+    console.log('availableFields', result);
+    return result;
+  }
+
   render() {
     const { saveElement, setQuestionEditMode, questionEditMode } = this.props;
     const leftPanelClass = classNames({
@@ -199,8 +216,19 @@ class FormBuilder extends Component {
       [styles.rightPanel]: true,
       [styles.open]: questionEditMode
     });
+
+    var DocumentHeaderElement = null;
+    if (questionEditMode === formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW) {
+      DocumentHeaderElement = <DocumentFieldsSelectionHeader
+        backLinkClickHandler={this.goToQuestionTypeListView}
+        availableFields={this.getAvailableSelectionFields()}
+        className={styles.fieldsSelectorHeader}>
+      </DocumentFieldsSelectionHeader>;
+    }
+
     return (
       <div className={styles.formBuilderContainer}>
+        {DocumentHeaderElement}
         <div className={leftPanelClass}>
           {questionEditMode
             ? <QuestionEditPanel {...this.props} />
