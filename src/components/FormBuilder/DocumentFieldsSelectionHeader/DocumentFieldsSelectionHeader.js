@@ -84,7 +84,7 @@ class DocumentFieldsSelectionHeader extends Component {
           </div>
         </div>
         <div className={cx('headerContainerRow', 'centerAlign')}>
-          {availableFields.map(
+          {availableFields && availableFields.map(
             (fieldsGroup, i) => <div key={i}>{this.renderTagGroup(fieldsGroup)}</div>
           )}
         </div>
