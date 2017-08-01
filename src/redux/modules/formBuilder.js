@@ -438,6 +438,7 @@ export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
 export const setCurrentEditingQuestion = createAction(SET_CURRENT_EDITTING_QUESTION);
 
 const _setQuestionEditMode = (state, action) => {
+  // todo: Remove this
   const { currentElement } = state;
   const { id, mode, inputType, activeBoxIndex } = action.payload;
   const question = id
