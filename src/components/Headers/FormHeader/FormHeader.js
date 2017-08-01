@@ -3,8 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  Button,
-  Grid
+  Button
 } from 'react-bootstrap';
 import { MdClose, MdMenu } from 'react-icons/lib/md';
 import StackLogo from 'components/Logos/StackLogo';
@@ -74,52 +73,50 @@ class FormHeader extends Component {
       [styles.isOpen]: this.state.isMobileMenuOpen
     });
     return (
-      <Grid>
-        <div className={styles.wrapper}>
-          <div className={styles.logoWrapper}>
-            <StackLogo logoStyle="grey" width="auto" height={45} />
-          </div>
-          <h1 className={styles.title}>{title}</h1>
-          <div className={classNames(styles.buttonWrapper, {
-            'hide': isCompleted || submitAnswer === undefined
-          })}>
-            <Button onClick={this.handleSubmitAnswer} className={styles.saveButton}>
-              Save & continue later
-            </Button>
-            <Button onClick={this.showMobileMenu}
-              className={styles.mobileToggleMenu}>
-              <MdMenu size={40} />
-            </Button>
-            <div className={mobileMenuClass} onClick={function (e) { e.stopPropagation(); }}>
-              <div className={styles.mobileMenuTop}>
-                <Button onClick={this.hideMobileMenu}
-                  className={styles.mobileToggleMenu}>
-                  <MdClose size={40} />
-                </Button>
-              </div>
-              <ul className={styles.navMenu}>
-                <li>
-                  <a href="javascript:;">
-                    Change section
-                  </a>
-                </li>
-                <li>
-                  <a href="javascript:;">
-                    Footer content
-                  </a>
-                </li>
-                {
-                  !isCompleted && (<li>
-                    <a href="javascript:;" onClick={this.handleSubmitAnswer}>
-                      Save & continue later
-                    </a>
-                  </li>)
-                }
-              </ul>
+      <div className={styles.wrapper}>
+        <div className={styles.logoWrapper}>
+          <StackLogo logoStyle="grey" width="auto" height={45} />
+        </div>
+        <h1 className={styles.title}>{title}</h1>
+        <div className={classNames(styles.buttonWrapper, {
+          'hide': isCompleted || submitAnswer === undefined
+        })}>
+          <Button onClick={this.handleSubmitAnswer} className={styles.saveButton}>
+            Save & continue later
+          </Button>
+          <Button onClick={this.showMobileMenu}
+            className={styles.mobileToggleMenu}>
+            <MdMenu size={40} />
+          </Button>
+          <div className={mobileMenuClass} onClick={function (e) { e.stopPropagation(); }}>
+            <div className={styles.mobileMenuTop}>
+              <Button onClick={this.hideMobileMenu}
+                className={styles.mobileToggleMenu}>
+                <MdClose size={40} />
+              </Button>
             </div>
+            <ul className={styles.navMenu}>
+              <li>
+                <a href="javascript:;">
+                  Change section
+                </a>
+              </li>
+              <li>
+                <a href="javascript:;">
+                  Footer content
+                </a>
+              </li>
+              {
+                !isCompleted && (<li>
+                  <a href="javascript:;" onClick={this.handleSubmitAnswer}>
+                    Save & continue later
+                  </a>
+                </li>)
+              }
+            </ul>
           </div>
         </div>
-      </Grid>
+      </div>
     );
   }
 }
