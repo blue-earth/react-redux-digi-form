@@ -281,9 +281,9 @@ class FormInteractive extends Component {
 
     return (
       <div className={styles.wrapper}>
-        <FormHeader title={title} submitAnswer={submitAnswer} isCompleted={this.isCompleted}
-          checkRedirectAfterSubmit={this.checkRedirectAfterSubmit} />
         <div className={classNames(styles.contentWrapper, 'container')}>
+          <FormHeader title={title} submitAnswer={submitAnswer} isCompleted={this.isCompleted}
+            checkRedirectAfterSubmit={this.checkRedirectAfterSubmit} />
           <div className={styles.contentWrapperInner}>
             <ProgressTracker
               sectionTitleList={questionGroupTitles}

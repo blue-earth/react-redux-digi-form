@@ -19,6 +19,7 @@ $bottom-content-color:          $frontend-text-color3;
   height: calc(100% - #{$frontend-header-height-mobile});
   @include media('>=sm') {
     height: calc(100% - #{$frontend-header-height + $frontend-footer-height});
+    max-width: 1200px;
   }
 }
 .contentWrapperInner {
