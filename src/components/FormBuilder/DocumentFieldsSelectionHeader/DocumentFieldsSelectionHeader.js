@@ -20,8 +20,9 @@ class DocumentFieldsSelectionHeader extends Component {
     saveAndContinueClickHandler: PropTypes.func,
     deleteClickHandler: PropTypes.func
   };
-  static defaultValue = {
-    backLinkClickHandler: noop
+  static defaultProps = {
+    backLinkClickHandler: noop,
+    style: {}
   };
 
   renderTagGroup = (labels) => {
