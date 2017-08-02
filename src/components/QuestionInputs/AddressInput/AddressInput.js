@@ -148,7 +148,6 @@ class AddressInput extends Component {
       delete newValue['address_line2']; // remove addressline2
     }
     let newState = {};
-    
     for (let key of Object.keys(componentForm)) {
       const component = componentForm[key];
       if (newValue[component.for] && newValue[component.for].length > 0) {
@@ -156,7 +155,7 @@ class AddressInput extends Component {
       }
     }
     this.setState(newState);
-    this.props.onChange(newState);
+    this.handleChange();
   }
 
   // Bias the autocomplete object to the user's geographical location,
@@ -234,6 +233,7 @@ class AddressInput extends Component {
             <FloatTextInput
               label="Unit number"
               onChange={this.handleChange}
+              onFocus={onFocus}
               onBlur={onBlur}
               value={this.state.unit_number}
               name="unitNumberInput"
