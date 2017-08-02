@@ -27,9 +27,50 @@ class DocumentFieldsSelectionHeader extends Component {
     style: {}
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedLabel: ''
+    };
+  }
+
+  labelSelectHandler = (name) => {
+    var label = '';
+    // if selecting an existing selected button,
+    // toggle the selection off
+    if (name !== this.state.selectedLabel) {
+      label = name;
+    }
+    this.setState({
+      selectedLabel: label
+    });
+  };
+  isLabelSelected = (labelName) => {
+    return labelName === this.state.selectedLabel;
+  };
+
+  get currentSelectedGroup() {
+    var selectedLabel = this.state.selectedLabel;
+    var selectedGroup = null;
+    for (let labelGroupArray of this.props.availableFields) {
+      var results = labelGroupArray.filter((labelObj) => labelObj.key === selectedLabel);
+      if (results.length) {
+        selectedGroup = results[0]['group'];
+        break;
+      }
+    }
+    return selectedGroup;
+  }
+
   renderTagGroup = (labels) => {
     var labelRow;
-    if (labels[0]['group']) {
+    var groupName = labels[0]['group'];
+    console.log('this.currentSelectedGroup', this.currentSelectedGroup);
+    if (this.currentSelectedGroup && this.currentSelectedGroup !== groupName) {
+      return null;
+    }
+
+    if (groupName) {
       const style = {
         'color': '#71828b',
         'fontSize': '11px'
@@ -45,7 +86,12 @@ class DocumentFieldsSelectionHeader extends Component {
         {labelRow}
         <div>
           {labels.map((label, i) => {
-            return <SelectableOutlineButton style={buttonStyleModifier} key={i}>
+            return <SelectableOutlineButton
+              isSelectable={false}
+              isSelected={this.isLabelSelected(label['key'])}
+              onClick={this.labelSelectHandler}
+              name={label['key']}
+              style={buttonStyleModifier} key={i}>
               {label['displayName']}
             </SelectableOutlineButton>;
           })}
