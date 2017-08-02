@@ -51,8 +51,14 @@ class FloatTextInput extends Component {
     };
   }
   componentDidMount() {
-    if (this.props.hasError) {
+    const { hasError, autoFocus } = this.props;
+    const input = this.refs.input;
+    if (hasError) {
       this.refs.errorMessage.show();
+    }
+    input.blur();
+    if (autoFocus) {
+      setTimeout(() => input.focus(), 10);
     }
   }
   componentWillReceiveProps(props) {
@@ -144,7 +150,7 @@ class FloatTextInput extends Component {
     return null;
   }
   render() {
-    const { placeholder, label, name, errorMessage, autoFocus, extraClass, type, isDisabled } = this.props;
+    const { placeholder, label, name, errorMessage, extraClass, type, isDisabled } = this.props;
     let { filled, active, savedValue, hasError, inputId } = this.state;
     const cx = classNames.bind(styles); // eslint-disable-line
     const controlId = name || `floatTextInput_${inputId}`;
@@ -181,7 +187,6 @@ class FloatTextInput extends Component {
           onBlur={this.handleBlur}
           onKeyDown={this.handleKeyDown}
           style={this.activeBorderColour}
-          autoFocus={autoFocus}
           placeholder=""
         />
         <OverlayTrigger ref="errorMessage" placement="bottom" overlay={tooltip} trigger={['hover', 'focus']}>

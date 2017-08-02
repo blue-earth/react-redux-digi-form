@@ -244,7 +244,7 @@ class AddressInput extends Component {
           <Col md={8} sm={12}>
             <FloatTextInput
               label="Address Line 1"
-              autoFocus={autoFocus}
+              autoFocus={autoFocus && this.state.address_line1.length === 0}
               onChange={this.handleChange}
               onFocus={this.handleFocusAddressLine1}
               onBlur={onBlur}
