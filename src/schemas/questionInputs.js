@@ -41,6 +41,8 @@ const questionInputs = {
       [
         {
           'displayName': 'ShortText',
+          'key': 'short_text',
+          'group': 'Standard',
           'maxSelection': 10,
           'minSelection': 1
         }
@@ -74,6 +76,8 @@ const questionInputs = {
       [
         {
           'displayName': 'Email',
+          'key': 'email',
+          'group': 'Standard',
           'maxSelection': 1,
           'minSelection': 1
         }
@@ -98,6 +102,8 @@ const questionInputs = {
       [
         {
           'displayName': 'Phone Number',
+          'key': 'phone',
+          'group': 'Standard',
           'maxSelection': 1,
           'minSelection': 1
         }

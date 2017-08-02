@@ -65,7 +65,6 @@ class DocumentFieldsSelectionHeader extends Component {
   renderTagGroup = (labels) => {
     var labelRow;
     var groupName = labels[0]['group'];
-    console.log('this.currentSelectedGroup', this.currentSelectedGroup);
     if (this.currentSelectedGroup && this.currentSelectedGroup !== groupName) {
       return null;
     }
