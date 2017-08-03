@@ -1,6 +1,5 @@
 import connect from 'redux/utils/connect';
 import {
-  resetErrorMessages,
   submitProfileSettings,
   submitPasswordSettings,
   fetchProfileSettings
@@ -10,7 +9,6 @@ import { show } from 'redux-modal';
 import { reduxForm } from 'redux-form';
 
 const mapActionCreators = {
-  resetErrorMessages,
   submitProfileSettings,
   submitPasswordSettings,
   fetchProfileSettings,
@@ -18,8 +16,8 @@ const mapActionCreators = {
 };
 
 const mapStateToProps = (state) => {
-  const { isPageBusy, data, errorMessages } = state.profile;
-  return { isPageBusy, data, errorMessages };
+  const { isPageBusy, data } = state.profile;
+  return { isPageBusy, data };
 };
 
 const WrappedSignUpForm = connect(mapStateToProps, mapActionCreators)(ProfileSettings);

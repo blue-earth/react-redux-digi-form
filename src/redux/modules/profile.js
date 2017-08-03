@@ -3,24 +3,22 @@ import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
 import { setUserProfile } from './auth';
+import { startSubmit, stopSubmit } from 'redux-form';
 
 // Fetch profile settings status
 export const REQUEST_FETCH_PROFILE_SETTINGS = 'REQUEST_FETCH_PROFILE_SETTINGS';
 export const RECEIVE_USER_PROFILE_SETTINGS = 'RECEIVE_USER_PROFILE_SETTINGS';
 export const DONE_FETCHING_PROFILE_SETTINGS = 'DONE_FETCHING_PROFILE_SETTINGS';
 export const REQUEST_SUBMIT_PROFILE_SETTINGS = 'REQUEST_SUBMIT_PROFILE_SETTINGS';
-export const RESET_ERROR_MESSAGES = 'RESET_ERROR_MESSAGES';
 
 export const INIT_PROFILE_SETTINGS_STATE = {
   isPageBusy: false,
-  data: {},
-  errorMessages: {}
+  data: {}
 };
 
 // ------------------------------------
 // Actions with reducer
 // ------------------------------------
-export const resetErrorMessages = createAction(RESET_ERROR_MESSAGES);
 export const requestSubmitProfileSettings = createAction(REQUEST_SUBMIT_PROFILE_SETTINGS);
 export const requestFetchProfileSettings = createAction(REQUEST_FETCH_PROFILE_SETTINGS);
 export const receiveServerUserProfileSettings = createAction(RECEIVE_USER_PROFILE_SETTINGS);
@@ -91,6 +89,7 @@ export const processSubmitPassword = (data) => {
   const fetchFail = ({value}) => {
     return (dispatch, getState) => {
       dispatch(doneFetchingProfileSettings(value));
+      dispatch(stopSubmit('passwordForm', value));
     };
   };
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
@@ -124,8 +123,8 @@ export const submitProfileSettings = () => {
 };
 export const submitPasswordSettings = () => {
   return (dispatch, getState) => {
-    dispatch(requestSubmitProfileSettings());
     const formState = getState().form.passwordForm.values;
+    dispatch(startSubmit('passwordForm'));
     dispatch(processSubmitPassword(formState));
   };
 };
@@ -134,18 +133,13 @@ export const submitPasswordSettings = () => {
 // Reducer
 // ------------------------------------
 const profileReducer = handleActions({
-  RESET_ERROR_MESSAGES: (state, action) =>
-    Object.assign({}, state, {
-      errorMessages: {}
-    }),
   REQUEST_FETCH_PROFILE_SETTINGS: (state, action) =>
     Object.assign({}, state, {
       isPageBusy: true
     }),
   DONE_FETCHING_PROFILE_SETTINGS: (state, action) =>
     Object.assign({}, state, {
-      isPageBusy: false,
-      errorMessages: action.payload || {}
+      isPageBusy: false
     }),
   RECEIVE_USER_PROFILE_SETTINGS: (state, action) =>
     Object.assign({}, state, {
