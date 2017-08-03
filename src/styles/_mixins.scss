@@ -1,6 +1,7 @@
 /* Mixins */
 @import 'mixins/_sass-css3-mixins.scss';
 @import 'mixins/_include-media.scss';
+@import 'mixins/_media-height.scss';
 
 @mixin clearfix {
   &:after {
@@ -34,7 +35,7 @@
   user-select: $value;
 }
 @mixin user-drag($value) {
-  user-drag: $value; 
+  user-drag: $value;
   user-select: $value;
   -moz-user-select: $value;
   -webkit-user-drag: $value;

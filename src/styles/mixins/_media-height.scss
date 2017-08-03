@@ -1,0 +1,23 @@
+// This mixin was added to hide the prev and next questions
+// on the interactive form when displayed on a short screen.
+// Screen height is not the most reliable, so use this sparingly.
+//
+// example usage:
+//
+// .prevQuestionRow,
+// .nextQuestionRow {
+//   display: table-row;
+//   @include mediaheight('sm') {
+//     display: none;
+//   }
+// }
+
+@mixin mediaheight($point) {
+
+  $sm: "(max-height: 768px)"; // about the height of a landscape tablet
+
+  @if $point == sm {
+    @media #{$sm} { @content; }
+  }
+
+}

@@ -1,13 +1,16 @@
 @import './mixins';
 @import './variables';
 
-$wrapper-inner-padding-right: 135px;
+$wrapper-inner-padding-right: 150px;
 
 .wrapper {
-  display: flex;
-  flex: 1;
+  display: block; // flex;
+  position: relative;
+  height: 100%;
+  // flex: 1;
   @include media('>=sm') {
     padding: 50px 50px 85px;
+    height: calc(100% - #{$frontend-progressbar-height});
   }
   @include media('>=md') {
     padding: 65px 65px 95px;
@@ -15,10 +18,10 @@ $wrapper-inner-padding-right: 135px;
 }
 .wrapperInner {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: table;
   @include media('>=sm') {
     height: 100%;
+    width: 100%;
     padding-right: $wrapper-inner-padding-right;
   }
   @include media('<sm') {
@@ -34,19 +37,35 @@ $wrapper-inner-padding-right: 135px;
   font-weight: 400;
 }
 
-.currentQuestionWrapper {
-  display: flex;
-  flex: 1;
-  overflow: auto;
+.prevQuestionRow,
+.nextQuestionRow {
+  display: table-row;
+  // hide when media height is < 800px
+  @include mediaheight('sm') {
+    display: none;
+  }
+}
+.prevQuestionCell,
+.nextQuestionCell {
+  display: table-cell;
+  vertical-align: middle;
 }
 
-.prevQuestionWrapper {
+.currentQuestionRow {
+  display: table-row;
+}
+.currentQuestionCell {
+  display: table-cell;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.prevQuestionRow {
   opacity: .15;
   @include media('>=md') {
     padding-bottom: 30px;
   }
 }
-
 .answerIcon {
   position: absolute;
   left: 0;
@@ -55,7 +74,6 @@ $wrapper-inner-padding-right: 135px;
   display: block;
   @include transform(scaleX(-1));
 }
-
 .prevQuestionAnswer {
   padding-left: 30px;
   position: relative;
@@ -63,7 +81,7 @@ $wrapper-inner-padding-right: 135px;
   color: inherit;
 }
 
-.nextQuestionWrapper {
+.nextQuestionRow {
   opacity: .15;
   @include media('>=md') {
     padding-top: 30px;
@@ -87,7 +105,7 @@ $wrapper-inner-padding-right: 135px;
     right: 15px;
   }
   @include media('>=md') {
-    right: $wrapper-inner-padding-right;
+    right: 65px; // $wrapper-inner-padding-right;
   }
 }
 

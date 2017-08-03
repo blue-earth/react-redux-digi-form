@@ -175,19 +175,21 @@ class FormInteractiveView extends Component {
     });
     const filteredVerifications = _.filter(verificationStatus, { id: question.id });
     return (
-      <div className={styles.currentQuestionWrapper}>
-        <QuestionInteractive
-          question={finalQuestion}
-          key={question.id}
-          inputState={currentQuestion.inputState}
-          verifications={filteredVerifications}
-          changeCurrentState={changeCurrentState}
-          storeAnswer={storeAnswer}
-          handleEnter={this.handleEnter}
-          isVerifying={isVerifying}
-          showModal={showModal}
-          {...optionals}
-        />
+      <div className={styles.currentQuestionRow}>
+        <div className={styles.currentQuestionCell}>
+          <QuestionInteractive
+            question={finalQuestion}
+            key={question.id}
+            inputState={currentQuestion.inputState}
+            verifications={filteredVerifications}
+            changeCurrentState={changeCurrentState}
+            storeAnswer={storeAnswer}
+            handleEnter={this.handleEnter}
+            isVerifying={isVerifying}
+            showModal={showModal}
+            {...optionals}
+          />
+        </div>
       </div>
     );
   }
@@ -203,18 +205,20 @@ class FormInteractiveView extends Component {
     if (question.type === 'Group') return false;
     const context = getContextFromAnswer(answers);
     return (
-      <div className={styles.prevQuestionWrapper}>
-        <h3 className={styles.neighborInstruction}>
-          {this.compileTemplate(question.questionInstruction, context)}
-        </h3>
-        {answer &&
-          <div className={styles.prevQuestionAnswer}>
-            <span className={styles.answerIcon}>
-              <MdKeyboardBackspace size={24} />
-            </span>
-            <AnswerValue value={answer.value} question={question} />
-          </div>
-        }
+      <div className={styles.prevQuestionRow}>
+        <div className={styles.prevQuestionCell}>
+          <h3 className={styles.neighborInstruction}>
+            {this.compileTemplate(question.questionInstruction, context)}
+          </h3>
+          {answer &&
+            <div className={styles.prevQuestionAnswer}>
+              <span className={styles.answerIcon}>
+                <MdKeyboardBackspace size={24} />
+              </span>
+              <AnswerValue value={answer.value} question={question} />
+            </div>
+          }
+        </div>
       </div>
     );
   }
@@ -229,10 +233,12 @@ class FormInteractiveView extends Component {
     if (!question || question.type === 'Group') return false;
     const context = getContextFromAnswer(answers);
     return (
-      <div className={styles.nextQuestionWrapper}>
-        <h3 className={styles.neighborInstruction}>
-          {this.compileTemplate(question.questionInstruction, context)}
-        </h3>
+      <div className={styles.nextQuestionRow}>
+        <div className={styles.nextQuestionCell}>
+          <h3 className={styles.neighborInstruction}>
+            {this.compileTemplate(question.questionInstruction, context)}
+          </h3>
+        </div>
       </div>
     );
   }

@@ -3,17 +3,7 @@
 
 .wrapper {
   @include clearfix;
-  align-self: center;
   width: 100%;
-  @include media('>sm') {
-    padding-right: 60px;
-  }
-  @include media('>md') {
-    padding-right: 90px;
-  }
-  &:after {
-    clear:both;
-  }
 }
 
 .inputWrapper {

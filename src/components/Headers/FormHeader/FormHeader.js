@@ -74,6 +74,7 @@ class FormHeader extends Component {
     });
     return (
       <div className={styles.wrapper}>
+        <span className={styles.alignmentHelper} />
         <div className={styles.logoWrapper}>
           <StackLogo logoStyle="grey" width="auto" height={45} />
         </div>

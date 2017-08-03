@@ -7,8 +7,7 @@
   @include border-radius($input-border-radius);
   font-size: 20px;
   background: $white;
-  max-width: 100%;
-  min-width: 100%;
+  width: 100%;
   color: $text-dark-color;
   resize: none;
   @include input-box-shadow;

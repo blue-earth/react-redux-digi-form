@@ -16,18 +16,17 @@ $bottom-content-color:          $frontend-text-color3;
   padding-top:30px;
 }
 .contentWrapper {
-  height: calc(100% - #{$frontend-header-height-mobile});
+  height: 100%;
   @include media('>=sm') {
-    height: calc(100% - #{$frontend-header-height + $frontend-footer-height});
     max-width: 1200px;
   }
 }
 .contentWrapperInner {
-  height: 100%;
+  height: calc(100% - #{$frontend-header-height-mobile});
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: block;
   @include media('>=sm') {
+    height: calc(100% - #{$frontend-header-height + $frontend-footer-height});
     background-color: white;
     @include border-radius(5px);
     @include box-shadow-custom(0 0 15px rgba(0, 0, 0, .03));
