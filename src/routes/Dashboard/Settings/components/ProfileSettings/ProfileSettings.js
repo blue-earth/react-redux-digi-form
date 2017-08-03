@@ -135,9 +135,7 @@ class ProfileSettings extends Component {
     fetchProfileSettings: PropTypes.func.isRequired,
     submitProfileSettings: PropTypes.func.isRequired,
     submitPasswordSettings: PropTypes.func.isRequired,
-    resetErrorMessages: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
-    errorMessages: PropTypes.object,
     isPageBusy: PropTypes.bool
   };
 
@@ -221,9 +219,7 @@ class ProfileSettings extends Component {
       isPageBusy,
       handleSubmit,
       submitPasswordSettings,
-      submitProfileSettings,
-      errorMessages,
-      resetErrorMessages
+      submitProfileSettings
     } = this.props;
     return (
       <form onSubmit={this.submitForm} className={styles.profileSettingForm}>
@@ -236,10 +232,7 @@ class ProfileSettings extends Component {
           Save
         </AppButton>
         <ChangePasswordModal
-          resetErrorMessages={resetErrorMessages}
           onSubmit={submitPasswordSettings}
-          errorMessages={errorMessages}
-          isPageBusy={isPageBusy}
         />
       </form>
     );

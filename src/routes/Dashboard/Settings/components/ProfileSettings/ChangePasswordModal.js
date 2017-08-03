@@ -16,15 +16,11 @@ class PasswordInput extends Component {
     input: PropTypes.array,
     label: PropTypes.string,
     type: PropTypes.string,
-    error: PropTypes.array,
-    resetError: PropTypes.func
+    meta: PropTypes.object
   };
 
-  handleFocus = (event) => {
-    this.props.resetError();
-  }
   render() {
-    const {input, label, type, error} = this.props;
+    const { input, label, type, meta: {error} } = this.props;
     const errorMessage = error && error.length > 0 ? error[0] : '';
     return (
       <div>
@@ -45,24 +41,21 @@ class ChangePasswordModal extends Component {
 
   static propTypes = {
     reset: PropTypes.func,
-    resetErrorMessages: PropTypes.func,
     onSubmit: PropTypes.func,
     handleSubmit: PropTypes.func,
     handleHide: PropTypes.func,
     show: PropTypes.bool,
-    isPageBusy: PropTypes.bool,
-    errorMessages: PropTypes.object
+    submitting: PropTypes.bool
   };
 
   handleHide = () => {
-    const {resetErrorMessages, reset, handleHide} = this.props;
-    resetErrorMessages();
+    const {reset, handleHide} = this.props;
     reset();
     handleHide();
   }
 
   render() {
-    const { show, handleSubmit, onSubmit, errorMessages, isPageBusy, resetErrorMessages } = this.props;
+    const { show, handleSubmit, onSubmit, submitting } = this.props;
     return (
       <Modal show={show} onHide={this.handleHide}
         className={styles.changePasswordModal}
@@ -77,21 +70,18 @@ class ChangePasswordModal extends Component {
             <Field component={PasswordInput} type="password"
               name="old_password"
               label="Old password"
-              error={errorMessages.old_password}
-              resetError={resetErrorMessages} />
+              />
             <Field component={PasswordInput} type="password"
               name="new_password1"
               label="New password"
-              error={errorMessages.new_password1}
-              resetError={resetErrorMessages} />
+              />
             <Field component={PasswordInput} type="password"
               name="new_password2"
               label="Repeat new password"
-              error={errorMessages.new_password2}
-              resetError={resetErrorMessages} />
+              />
             <AppButton extraClass={styles.sendButton}
               onClick={handleSubmit(onSubmit)}
-              isBusy={isPageBusy}>
+              isBusy={submitting}>
               Change password
             </AppButton>
           </div>
