@@ -9,20 +9,37 @@ $mobile-menu-bg-color:    #f4f5f8;
 .wrapper {
   height: $frontend-header-height;
   position: relative;
-  display: flex;
-  align-items: center;
+  display: block; // flex;
+  padding: 15px 0;
   @include media('<sm') {
     height: $frontend-header-height-mobile;
     background-color: white;
     margin: 0 -15px;
-    padding: 15px;
+    padding: 15px 65px 15px 175px;
     z-index: 999;
   }
 }
+
+.alignmentHelper {
+  width: 0;
+  height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+  @include media('>=sm') {
+    display: none;
+  }
+}
+
 .logoWrapper {
   display: inline-block;
   vertical-align: middle;
   margin-right: 25px;
+  // padding: 15px 0;
+  @include media('<sm') {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+  }
 }
 .title {
   vertical-align: middle;
@@ -31,13 +48,13 @@ $mobile-menu-bg-color:    #f4f5f8;
   line-height: 1.2;
   display: inline-block;
   margin: 0;
-  flex: 1;
   letter-spacing: 1px;
   color: $header-text-color;
-  overflow-x: auto;
-  white-space: nowrap;
+  max-height: 100%;
+  overflow: hidden;
 }
 .buttonWrapper {
+  float: right;
   margin-left: 15px;
 }
 .saveButton {
@@ -54,13 +71,16 @@ $mobile-menu-bg-color:    #f4f5f8;
   border: none !important;
   padding: 10px;
   color: $header-text-color;
-  background-color: transparent;
+  background-color: $white;
   cursor: pointer;
+  position: absolute;
+  top: 5px;
+  right: 5px;
   @include media('>=sm') {
     display: none;
   }
   &:focus {
-    background-color: transparent;
+    background-color: $white;
     outline: none !important;
   }
 }
@@ -87,7 +107,11 @@ $mobile-menu-bg-color:    #f4f5f8;
 }
 .mobileMenuTop {
   text-align: right;
-  padding: 5px 5px 15px;
+  padding: 5px 5px 5px;
+  .mobileToggleMenu {
+    position: relative !important;
+    background-color: transparent !important;
+  }
 }
 
 .navMenu {
