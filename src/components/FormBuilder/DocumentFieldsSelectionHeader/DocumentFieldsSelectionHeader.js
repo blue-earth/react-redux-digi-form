@@ -20,8 +20,11 @@ class DocumentFieldsSelectionHeader extends Component {
     saveAndContinueClickHandler: PropTypes.func,
     deleteClickHandler: PropTypes.func,
     style: PropTypes.object,
-    className: PropTypes.string
+    className: PropTypes.string,
+    setActiveLabel: PropTypes.func.isRequired,
+    activeLabel: PropTypes.string.isRequired
   };
+
   static defaultProps = {
     backLinkClickHandler: noop,
     style: {}
@@ -35,6 +38,7 @@ class DocumentFieldsSelectionHeader extends Component {
   }
 
   labelSelectHandler = (name) => {
+    const { setActiveLabel } = this.props;
     var label = '';
     // if selecting an existing selected button,
     // toggle the selection off
@@ -44,10 +48,13 @@ class DocumentFieldsSelectionHeader extends Component {
     this.setState({
       selectedLabel: label
     });
-  };
+    console.log(setActiveLabel);
+    setActiveLabel(label);
+  }
+
   isLabelSelected = (labelName) => {
     return labelName === this.state.selectedLabel;
-  };
+  }
 
   get currentSelectedGroup() {
     var selectedLabel = this.state.selectedLabel;

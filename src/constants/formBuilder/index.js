@@ -9,3 +9,9 @@ export const formBuilderBoxMappingType = {
   STANDARD: 'STANDARD',
   BLOCK: 'BLOCK'
 };
+
+export const formBuilderPathIndex = {
+  LABEL: 0,
+  POSITIONS: 1,
+  INDEX: 2
+};

@@ -11,7 +11,6 @@ import {
   getDragSnappingHelpersRect,
   getResizeSnappingHelpersPos,
   getActiveBoxIndex,
-  isActiveBox,
   isCurrentElementId,
   zoomValue,
   getChoiceLabelByIndex
@@ -46,11 +45,6 @@ class DrawingBoard extends Component {
      * saveElement: Redux action to save the current element being edited.
      */
     saveElement: PropTypes.func.isRequired,
-
-    /*
-     * activeInputName: Redux state to indicate the active input element name.
-     */
-    activeInputName: PropTypes.string.isRequired,
 
     /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
@@ -182,8 +176,8 @@ class DrawingBoard extends Component {
   }
 
   handleBoardMouseDown = (event) => {
-    const { activeInputName } = this.props;
-    if (!activeInputName || event.button !== 0) return; // mouse left button
+    const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
+    if (!activeBox || event.button !== 0) return; // mouse left button
     const board = this.refs.board;
     const orgPos = this.getElementPos(board);
     const mousePos = this.getMousePos(event);
@@ -428,10 +422,11 @@ class DrawingBoard extends Component {
 
   renderDocumentMappingComponents() {
     // todo: Fix this, disable this function temporary to get other parts working
-    const { activeInputName, documentMapping, currentElement, pageZoom, pageNumber,
+    const { documentMapping, currentElement, pageZoom, pageNumber,
       viewportWidth, viewportHeight } = this.props;
+    const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
     var boardOptionals = {};
-    if (activeInputName) {
+    if (activeBox) {
       boardOptionals['style'] = _.merge(boardOptionals['style'], {
         cursor: 'crosshair'
       });
@@ -440,40 +435,43 @@ class DrawingBoard extends Component {
     const belongsToPage = (position) =>
       position && position.page_number === pageNumber;
 
-    return documentMapping.map(mappingInfo => {
-      let finalMappingInfo = currentElement && mappingInfo.id === currentElement.id
+    return Object.keys(documentMapping).map(key => {
+      const mappingInfo = documentMapping[key];
+      let finalMappingInfo = currentElement && key === currentElement.id
         ? currentElement.mappingInfo
         : mappingInfo;
-      return finalMappingInfo.positions.map((position, index) => {
-        const isActive = isCurrentElementId(mappingInfo.id, currentElement) &&
-          isActiveBox(currentElement, index);
-        if (isActive) return false;
-        if (!belongsToPage(position)) return false;
+      return Object.keys(finalMappingInfo).map((key) => {
+        const positions = finalMappingInfo[key].positions;
 
-        const boundingBox = position.bounding_box;
-        const zIndex = isActive ? 101 : 100;
-        return (
-          <InteractWrapper
-            x={zoomValue(boundingBox.left, pageZoom)}
-            y={zoomValue(boundingBox.top, pageZoom)}
-            zIndex={zIndex}
-            active={isActive}
-            className="interactWrapper"
-            width={zoomValue(boundingBox.width, pageZoom)}
-            height={zoomValue(boundingBox.height, pageZoom)}
-            minWidth={10}
-            minHeight={10}
-            onClick={this.handleBoxClick}
-            metaData={{
-              id: mappingInfo.id,
-              boxIndex: index
-            }}
-            viewportWidth={viewportWidth}
-            viewportHeight={viewportHeight}
-          >
-            <div className={styles.boxLabel}>{this.getBoxLabel(mappingInfo.id, index)}</div>
-          </InteractWrapper>
-        );
+        return Object.keys(positions).map((key) => {
+          const position = positions[key];
+          if (!belongsToPage(position)) return false;
+          // TODO: Implement drawing of elements
+          const isActive = false;
+          const boundingBox = position.bounding_box;
+          const zIndex = isActive ? 101 : 100;
+          return (
+            <InteractWrapper
+              x={zoomValue(boundingBox.left, pageZoom)}
+              y={zoomValue(boundingBox.top, pageZoom)}
+              zIndex={zIndex}
+              active={isActive}
+              className="interactWrapper"
+              width={zoomValue(boundingBox.width, pageZoom)}
+              height={zoomValue(boundingBox.height, pageZoom)}
+              minWidth={10}
+              minHeight={10}
+              onClick={this.handleBoxClick}
+              metaData={{
+                id: mappingInfo.id
+              }}
+              viewportWidth={viewportWidth}
+              viewportHeight={viewportHeight}
+            >
+              <div className={styles.boxLabel}>{this.getBoxLabel(mappingInfo.id, 0)}</div>
+            </InteractWrapper>
+          );
+        });
       });
     });
   }
@@ -535,10 +533,10 @@ class DrawingBoard extends Component {
   }
 
   render() {
-    const { activeInputName } = this.props;
+    const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
     const { isDrawing, startX, startY, endX, endY } = this.state;
     var boardOptionals = {};
-    if (activeInputName) {
+    if (activeBox) {
       boardOptionals['style'] = _.merge(boardOptionals['style'], {
         cursor: 'crosshair'
       });

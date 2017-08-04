@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import _ from 'lodash';
 import classNames from 'classnames';
 import ElementsListPanel from '../ElementsListPanel';
 import PageView from '../PageView';
@@ -13,7 +14,7 @@ import styles from './FormBuilder.scss';
 import DocumentFieldsSelectionHeader from 'components/FormBuilder/DocumentFieldsSelectionHeader';
 import {
   formBuilderSelectMode,
-  formBuilderBoxMappingType
+  formBuilderPathIndex
 } from 'constants/formBuilder';
 import questionInputs from 'schemas/questionInputs';
 
@@ -59,16 +60,6 @@ class FormBuilder extends Component {
      * isModified: Redux state that indicates whether the form is modified since last save or load.
      */
     isModified: PropTypes.bool.isRequired,
-
-    /*
-     * activeInputName: Redux state to indicate the active input element name.
-     */
-    activeInputName: PropTypes.string.isRequired,
-
-    /*
-     * setActiveInputName: Action to set active input element selected, and enables to draw on the right
-     */
-    setActiveInputName: PropTypes.func.isRequired,
 
     /*
      * saveElement: Redux action to save the current element being edited.
@@ -145,6 +136,16 @@ class FormBuilder extends Component {
     setQuestionEditMode: PropTypes.func.isRequired,
 
     /*
+     * activeBox: Redux state to activeBox path.
+     */
+    activeBox: PropTypes.string.isRequired,
+
+    /*
+     * setActiveBox: Redux action to set activeBox path.
+     */
+    setActiveBox: PropTypes.func.isRequired,
+
+    /*
      * newForm: Redux action to reset form with initial state for new form
      */
     newForm: PropTypes.func.isRequired,
@@ -190,11 +191,6 @@ class FormBuilder extends Component {
     }
   }
 
-  resetActiveInputName = () => {
-    const { setActiveInputName } = this.props;
-    setActiveInputName('');
-  }
-
   goToQuestionTypeListView = () => {
     this.props.setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
   }
@@ -204,6 +200,18 @@ class FormBuilder extends Component {
     var result = questionInputs[questionTypeName]['availableFields'];
     console.log('availableFields', result);
     return result;
+  }
+
+  get activeLabel() {
+    const { activeBox } = this.props;
+    const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
+    return pathArray[formBuilderPathIndex.LABEL];
+  }
+
+  setActiveLabel = (label) => {
+    const { setActiveBox } = this.props;
+    const index = 0;
+    setActiveBox(_.join([label, 'positions', index], '.'));
   }
 
   render() {
@@ -222,8 +230,8 @@ class FormBuilder extends Component {
       DocumentHeaderElement = <DocumentFieldsSelectionHeader
         backLinkClickHandler={this.goToQuestionTypeListView}
         availableFields={this.getAvailableSelectionFields()}
-        className={styles.fieldsSelectorHeader}>
-      </DocumentFieldsSelectionHeader>;
+        className={styles.fieldsSelectorHeader}
+        activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel} />;
     }
 
     return (

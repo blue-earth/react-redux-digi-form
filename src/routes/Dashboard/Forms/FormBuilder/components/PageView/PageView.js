@@ -18,11 +18,6 @@ class PageView extends Component {
     documents: PropTypes.array.isRequired,
 
     /*
-     * activeInputName: Redux state to indicate the active input element name.
-     */
-    activeInputName: PropTypes.string.isRequired,
-
-    /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
      */
     documentMapping: PropTypes.object.isRequired,

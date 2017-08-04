@@ -84,11 +84,6 @@ export default class QuestionEditPanel extends Component {
     isModified: PropTypes.bool.isRequired,
 
     /*
-     * activeInputName: Redux state to indicate the active input element name.
-     */
-    activeInputName: PropTypes.string.isRequired,
-
-    /*
      * show: Redux modal show
      */
     show: PropTypes.func.isRequired
