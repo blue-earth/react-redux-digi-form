@@ -84,6 +84,11 @@
     border-color: darken($blue, 5%);
     color: $white;
   }
+  &[disabled] {
+    background-color: darken($blue, 5%) !important;
+    border-color: darken($blue, 5%) !important;
+    color: $white !important;
+  }
 }
 .copyButton {
   text-transform: uppercase;

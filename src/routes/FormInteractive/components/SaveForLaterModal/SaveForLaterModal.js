@@ -29,7 +29,8 @@ class SaveForLaterModal extends Component {
     super(props);
     this.state = {
       urlCopied: false,
-      emailSent: ''
+      emailSent: '',
+      isSendingEmail: false
     };
   };
 
@@ -38,7 +39,7 @@ class SaveForLaterModal extends Component {
   }
 
   handleSend = () => {
-    this.setState({emailSent: ''});
+    this.setState({isSendingEmail: true});
     const { sessionId } = this.props;
     var requestURL = `${API_URL}/form_document/api/form_response/send_resume_link/`;
     var method = 'POST';
@@ -57,9 +58,9 @@ class SaveForLaterModal extends Component {
   handleSendResponse = (event) => {
     // var response = JSON.parse(event.target.response);
     if (event.target.status >= 200 && event.target.status <= 206) {
-      this.setState({emailSent: 'success'});
+      this.setState({emailSent: 'success', isSendingEmail: false});
     } else {
-      this.setState({emailSent: 'fail'});
+      this.setState({emailSent: 'fail', isSendingEmail: false});
     }
   }
 
@@ -101,7 +102,11 @@ class SaveForLaterModal extends Component {
           </div>
           {this.state.urlCopied
             ? <p className={cx('urlCopied')}><FaCheck /> URL copied to clipboard.</p> : null}
-          <Button className={cx('sendButton')} block onClick={this.handleSend}>Send</Button>
+          <Button className={cx('sendButton')} block
+            disabled={this.state.isSendingEmail}
+            onClick={this.handleSend}>
+            Send
+          </Button>
           {this.renderSendResponse()}
           <p><a onClick={handleHide}>Go back</a></p>
         </Modal.Body>
