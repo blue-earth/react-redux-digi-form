@@ -53,6 +53,16 @@ class PageView extends Component {
     setQuestionEditMode: PropTypes.func.isRequired,
 
     /*
+     * setCurrentElement: Redux action to set/load currentElement
+     */
+    setCurrentElement: PropTypes.func.isRequired,
+
+    /*
+     * setActiveBox: Redux action to set activeBox path.
+     */
+    setActiveBox: PropTypes.func.isRequired,
+
+    /*
      * currentElement: Redux state to hold the element currently being edited.
      */
     currentElement: PropTypes.object
@@ -133,7 +143,6 @@ class PageView extends Component {
             <DrawingBoard {...this.props} pageNumber={pageNumber}
               viewportWidth={viewportWidth} viewportHeight={viewportHeight}
               getPageDOM={this.getPageDOM} containerId="clientArea" />
-            }
           </div>
         );
       })

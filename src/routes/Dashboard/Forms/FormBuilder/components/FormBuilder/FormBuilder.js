@@ -126,7 +126,11 @@ class FormBuilder extends Component {
      * One of formBuilderSelectMode
      */
     questionEditMode: PropTypes.number.isRequired,
-    setCurrentEditingQuestion: PropTypes.func.isRequired,
+
+    /*
+     * setCurrentElement: Redux action to set/load currentElement
+     */
+    setCurrentElement: PropTypes.func.isRequired,
 
     /*
      * setQuestionEditMode: Redux action to set question edit mode.
@@ -134,11 +138,6 @@ class FormBuilder extends Component {
      * If id is not specified, enters into new question edit mode.
      */
     setQuestionEditMode: PropTypes.func.isRequired,
-
-    /*
-     * activeBox: Redux state to activeBox path.
-     */
-    activeBox: PropTypes.string.isRequired,
 
     /*
      * setActiveBox: Redux action to set activeBox path.
@@ -203,7 +202,7 @@ class FormBuilder extends Component {
   }
 
   get activeLabel() {
-    const { activeBox } = this.props;
+    const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
     const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
     return pathArray[formBuilderPathIndex.LABEL];
   }

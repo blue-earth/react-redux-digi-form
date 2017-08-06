@@ -18,7 +18,7 @@ import {
   saveElement,
   setActiveBox,
   deleteElement,
-  setCurrentEditingQuestion
+  setCurrentElement
 } from 'redux/modules/formBuilder';
 
 import FormBuilder from '../components/FormBuilder';
@@ -41,7 +41,7 @@ const mapActionCreators = {
   setActiveBox,
   deleteElement,
   show,
-  setCurrentEditingQuestion
+  setCurrentElement
 };
 
 const mapStateToProps = (state) => {

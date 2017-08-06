@@ -49,6 +49,11 @@ export default class QuestionEditPanel extends Component {
     setQuestionEditMode: PropTypes.func.isRequired,
 
     /*
+     * setCurrentElement: Redux action to set/load currentElement
+     */
+    setCurrentElement: PropTypes.func.isRequired,
+
+    /*
      * currentElement: Redux state to store the state of the element being edited currently.
      */
     currentElement: PropTypes.object.isRequired,
@@ -124,13 +129,12 @@ export default class QuestionEditPanel extends Component {
   }
 
   handleCancel = () => {
-    const { setQuestionEditMode, show, currentElement } = this.props;
+    const { setCurrentElement, setQuestionEditMode, show, currentElement } = this.props;
     if (currentElement.isModified) {
       show('cancelConfirmModal');
     } else {
-      // todo: Reset currentElement
-      // todo: Reset activeInputName
       setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
+      setCurrentElement(null);
     }
   }
 

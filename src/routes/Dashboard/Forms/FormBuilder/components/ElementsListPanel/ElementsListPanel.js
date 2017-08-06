@@ -30,7 +30,7 @@ export default class ElementsListPanel extends Component {
     /**
      * Set current Element
      */
-    setCurrentEditingQuestion: PropTypes.func.isRequired
+    setCurrentElement: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -57,12 +57,12 @@ export default class ElementsListPanel extends Component {
   createEmptyQuestion = (questionTypeName, boxMappingType=null) => {
     const {
       setQuestionEditMode,
-      setCurrentEditingQuestion
+      setCurrentElement
     } = this.props;
     // 1. Create empty question object based on questionTypeName
     const newQuestion = createEmptyQuestionElement(questionTypeName, boxMappingType);
     // 2. Set current element to this new question object
-    setCurrentEditingQuestion(newQuestion);
+    setCurrentElement(newQuestion);
     // 3. Enter box mapping mode (Hide left side bar)
     setQuestionEditMode(formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW);
   };

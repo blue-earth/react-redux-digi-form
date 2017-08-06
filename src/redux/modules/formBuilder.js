@@ -1,6 +1,6 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { mergeItemIntoArray } from 'helpers/pureFunctions';
+import { findItemById, mergeItemIntoArray } from 'helpers/pureFunctions';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
 import {
@@ -33,7 +33,7 @@ export const SET_MAPPING_POSITION_INFO = 'SET_MAPPING_POSITION_INFO';
 
 export const UPDATE_FORM_ID = 'UPDATE_FORM_ID';
 export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
-export const SET_CURRENT_EDITTING_QUESTION = 'SET_CURRENT_EDITTING_QUESTION';
+export const SET_CURRENT_ELEMENT = 'SET_CURRENT_ELEMENT';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
 export const SET_ACTIVE_BOX = 'SET_ACTIVE_BOX';
@@ -62,7 +62,7 @@ export const INIT_BUILDER_STATE = {
     // }
   ],
   formConfig: {},
-  documentMapping: [],
+  documentMapping: {},
   currentElement: null, // holds the current element state being added or edited.
   lastQuestionId: 0, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
@@ -132,7 +132,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
     questions,
     logics,
     documents: data.assets_urls ? data.assets_urls : [],
-    // documentMapping: data.document_mapping ? data.document_mapping : [],
+    documentMapping: data.document_mapping ? data.document_mapping : [],
     formConfig: data.form_config,
     title: data.title,
     slug: data.slug,
@@ -183,7 +183,7 @@ export const submitForm = () => {
 export const processSubmitForm = (formData) => {
   var body = {
     'title': formData.title,
-    'slug': formData.slug,
+    // 'slug': formData.slug,
     'form_data': {
       'logics': formData.logics,
       'questions': formData.questions
@@ -252,11 +252,10 @@ const _saveElement = (state, action) => {
   const id = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
   var question = _.merge({}, INIT_QUESTION_STATE, currentElement.question, { id });
   // TODO: Update mappingInfo assignment
-  var mappingInfo = _.merge({}, INIT_MAPPING_INFO_STATE, currentElement.mappingInfo, { id });
   var isModified = state.isModified || currentElement.isModified;
   return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
-    documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo),
+    documentMapping: _.merge({}, state.documentMapping, { [id]: currentElement.mappingInfo }),
     lastQuestionId: id,
     currentElement: _.merge({}, currentElement, { id }),
     isModified
@@ -398,13 +397,12 @@ const _setMappingPositionInfo = (state, action) => {
   const currentElement = _.assign({}, _.get(state, ['currentElement']));
   const { activeBox } = currentElement;
   const activePathArray = _.defaultTo(_.split(activeBox, '.'), []);
-  console.log(activePathArray);
   const positionPathArray = _.concat(['mappingInfo'], activePathArray);
 
   const position = _.get(currentElement, positionPathArray, {});
 
   const newPosition = _.merge({}, position, _.pick(action.payload, [
-    'page_number', 'bounding_box', 'font_size'
+    'page', 'box', 'font_size'
   ]));
 
   _.set(currentElement, positionPathArray, newPosition);
@@ -435,7 +433,7 @@ export const setPageZoom = createAction(SET_PAGE_ZOOM);
 // ------------------------------------
 export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
 
-export const setCurrentEditingQuestion = createAction(SET_CURRENT_EDITTING_QUESTION);
+export const setCurrentElement = createAction(SET_CURRENT_ELEMENT);
 
 export const setActiveBox = createAction(SET_ACTIVE_BOX);
 
@@ -487,6 +485,25 @@ const _setActiveBox = (state, action) => {
 // Action: setCurrentStep
 // ------------------------------------
 export const setCurrentStep = createAction(SET_CURRENT_STEP);
+
+const _setCurrentElement = (state, action) => {
+  const id = _.get(action, ['payload', 'id']);
+  if (_.isNil(id)) { // If it's for creating a new question and mapping.
+    return Object.assign({}, state, {
+      currentElement: action.payload
+    });
+  } else { // If it's for loading from existing questions & mappings.
+    return Object.assign({}, state, {
+      currentElement: {
+        id: action.payload.id,
+        question: findItemById(state.questions, id),
+        mappingInfo: state.documentMapping[id],
+        activeBox: action.payload.activeBox,
+        isModified: false
+      }
+    });
+  }
+};
 
 // ------------------------------------
 // Reducer
@@ -566,10 +583,8 @@ const formBuilderReducer = handleActions({
       questionEditMode: action.payload
     }),
 
-  SET_CURRENT_EDITTING_QUESTION: (state, action) =>
-    Object.assign({}, state, {
-      currentElement: action.payload
-    }),
+  SET_CURRENT_ELEMENT: (state, action) =>
+    _setCurrentElement(state, action),
 
   SET_ACTIVE_BOX: (state, action) =>
     _setActiveBox(state, action)
