@@ -100,3 +100,9 @@
   font-family: $button-font-family;
   margin: 0 0 20px;
 }
+.sendSuccess {
+  color: $green;
+}
+.sendError {
+  color: $red;
+}
