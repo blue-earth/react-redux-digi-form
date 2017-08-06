@@ -13,7 +13,7 @@ import {
 import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import ImageUploader from 'components/SignatureWidget/ImageUploader';
 import { connectModal } from 'redux-modal';
-import styles from './signatureModal.scss';
+import styles from './SignatureModal.scss';
 import classNames from 'classnames';
 import moment from 'moment';
 import DrawSignature from 'components/SignatureWidget/DrawSignature';

@@ -26,7 +26,7 @@ class CompletionModal extends Component {
   }
 
   render() {
-    const { show, handleHide, email } = this.props;
+    const { show, handleHide } = this.props;
     return (
       <Modal backdrop="static" show={show} onHide={handleHide}
         className={styles.completionModal} dialogClassName={styles.modalWrapper}>
