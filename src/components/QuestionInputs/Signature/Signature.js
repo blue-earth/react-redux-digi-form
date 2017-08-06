@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import FormEnterButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import SignatureModal from './SignatureModal';
+import CompletionModal from './CompletionModal';
 import styles from './Signature.scss';
 
 class Signature extends Component {
@@ -88,7 +89,9 @@ class Signature extends Component {
             autoFocus={!value && autoFocus}
             onClick={function () { showModal('signatureModal'); }} />
         }
-        <SignatureModal commitValue={this.handleChange} signatureImage={value} />
+        <SignatureModal finishModal={function () { showModal('signatureCompletionModal'); }}
+          commitValue={this.handleChange} signatureImage={value} />
+        <CompletionModal cancelModal={function () { showModal('signatureModal'); }} />
       </div>
     );
   }

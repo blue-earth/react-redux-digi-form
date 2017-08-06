@@ -13,7 +13,7 @@ import {
 import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import ImageUploader from 'components/SignatureWidget/ImageUploader';
 import { connectModal } from 'redux-modal';
-import styles from './Signature.scss';
+import styles from './signatureModal.scss';
 import classNames from 'classnames';
 import moment from 'moment';
 import DrawSignature from 'components/SignatureWidget/DrawSignature';
@@ -27,6 +27,7 @@ class SignatureModal extends Component {
   static propTypes = {
     handleHide: PropTypes.func.isRequired, // Modal hide function
     show: PropTypes.bool,                 // Modal display status
+    finishModal: PropTypes.func,
     value: PropTypes.string,
     commitValue: PropTypes.func,
     isConsented: PropTypes.bool
@@ -46,7 +47,7 @@ class SignatureModal extends Component {
   }
 
   handleSubmit = () => {
-    const { handleHide, commitValue } = this.props;
+    const { handleHide, commitValue, finishModal } = this.props;
     const { activeTabName } = this.state;
     if (activeTabName === WRITE) {
       commitValue(this.refs.write.dataUrl);
@@ -66,6 +67,7 @@ class SignatureModal extends Component {
         };
       }
     }
+    finishModal();
     handleHide();
   }
 
