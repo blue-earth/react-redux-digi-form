@@ -182,7 +182,11 @@ class FormInteractive extends Component {
     /*
      * setPeople: Set people data for ID verification
      */
-    setIDVerifyStatus: PropTypes.func.isRequired
+    setIDVerifyStatus: PropTypes.func.isRequired,
+
+    sendContinueLink: PropTypes.func.isRequired,
+    isSendingContinueLink: PropTypes.bool,
+    sendContinueLinkResponse: PropTypes.any
   };
 
   getChildContext() {
@@ -295,7 +299,10 @@ class FormInteractive extends Component {
             {shouldShowFinalSubmit && !this.isCompleted && <Summary {...this.props} />}
             {this.isCompleted && <FormCompletion title={title} />}
             {this.needsAccessCode && <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />}
-            <SaveForLaterModal formId={formId} sessionId={sessionId} />
+            <SaveForLaterModal formId={formId} sessionId={sessionId}
+              sendContinueLink={this.props.sendContinueLink}
+              isSendingContinueLink={this.props.isSendingContinueLink}
+              sendContinueLinkResponse={this.props.sendContinueLinkResponse} />
             <div className={styles.bottomLogoWrapper}>
               <span>Powered by</span>
               <div className={styles.bottomLogo}>

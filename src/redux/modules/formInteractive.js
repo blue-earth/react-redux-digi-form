@@ -39,6 +39,10 @@ export const RESET_FORM_SUBMIT_STATUS = 'RESET_FORM_SUBMIT_STATUS';
 
 export const SET_ID_VERIFY_STATUS = 'SET_ID_VERIFY_STATUS';
 
+export const SEND_CONTINUE_LINK = 'SEND_CONTINUE_LINK';
+export const REQUEST_SEND_CONTINUE_LINK = 'REQUEST_SEND_CONTINUE_LINK';
+export const DONE_SENDING_CONTINUE_LINK = 'DONE_SENDING_CONTINUE_LINK';
+
 // ------------------------------------
 // Form submit request action Constants
 // ------------------------------------
@@ -93,6 +97,8 @@ export const INIT_FORM_STATE = {
   isVerifying: false, // indicates the verifying request is being processed.
   isModified: false, // indicates the form answer modified after submission.
   lastUpdated: Date.now(), // last form-questions received time.
+  isSendingContinueLink: false,
+  sendContinueLinkResponse: null,
   form: {
     questions: [],
     logics: []
@@ -614,6 +620,53 @@ export const updateSessionId = createAction(UPDATE_SESSION_ID);
 export const setIDVerifyStatus = createAction(SET_ID_VERIFY_STATUS);
 
 // ------------------------------------
+// Action: sendContinueLink
+// ------------------------------------
+export const sendContinueLink = (sessionId, email, formContinueUrl) => {
+  return (dispatch, getState) => {
+    dispatch(requestSendContinueLink());
+    dispatch(processSendContinueLink(sessionId, email, formContinueUrl));
+  };
+};
+// ------------------------------------
+// Actions: requestSendContinueLink, doneSendingContinueLink
+// ------------------------------------
+export const requestSendContinueLink = createAction(REQUEST_SEND_CONTINUE_LINK);
+export const doneSendingContinueLink = createAction(DONE_SENDING_CONTINUE_LINK);
+// ------------------------------------
+// Action Action Handler: processSendContinueLink
+// ------------------------------------
+export const processSendContinueLink = (sessionId, email, formContinueUrl) => {
+  const apiURL = `${API_URL}/form_document/api/form_response/send_resume_link/`;
+
+  var method = 'POST';
+  var body = {
+    response_id: sessionId,
+    email: email,
+    form_continue_url: formContinueUrl
+  };
+  const fetchParams = assignDefaults({
+    method,
+    body
+  });
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      // dispatch(receiveAnswers(value));
+      dispatch(doneSendingContinueLink(value));
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(doneSendingContinueLink('fail'));
+    };
+  };
+
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const formInteractiveReducer = handleActions({
@@ -706,6 +759,18 @@ const formInteractiveReducer = handleActions({
   SET_ID_VERIFY_STATUS: (state, action) =>
     Object.assign({}, state, {
       idVerifyStatus: Object.assign({}, state.idVerifyStatus, action.payload)
+    }),
+
+  REQUEST_SEND_CONTINUE_LINK: (state, action) =>
+    Object.assign({}, state, {
+      isSendingContinueLink: true,
+      sendContinueLinkResponse: null
+    }),
+
+  DONE_SENDING_CONTINUE_LINK: (state, action) =>
+    Object.assign({}, state, {
+      isSendingContinueLink: false,
+      sendContinueLinkResponse: action.payload
     })
 
 }, INIT_FORM_STATE);

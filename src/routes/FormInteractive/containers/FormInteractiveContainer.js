@@ -13,7 +13,8 @@ import {
   fetchAnswers,
   fetchFormIfNeeded,
   updateAccessCode,
-  setIDVerifyStatus
+  setIDVerifyStatus,
+  sendContinueLink
 } from 'redux/modules/formInteractive';
 
 import FormInteractive from '../components/FormInteractive';
@@ -30,6 +31,7 @@ const mapActionCreators = {
   handleEnter,
   updateAccessCode,
   setIDVerifyStatus,
+  sendContinueLink,
   showModal: show,
   goTo
 };
@@ -53,7 +55,9 @@ const mapStateToProps = (state) => {
     isAccessCodeProtected,
     formAccessStatus,
     formAccessCode,
-    idVerifyStatus
+    idVerifyStatus,
+    isSendingContinueLink,
+    sendContinueLinkResponse
   } = formInteractive || INIT_FORM_STATE;
   return {
     formId: parseInt(id, 10),
@@ -72,7 +76,9 @@ const mapStateToProps = (state) => {
     isAccessCodeProtected,
     formAccessStatus,
     formAccessCode,
-    idVerifyStatus
+    idVerifyStatus,
+    isSendingContinueLink,
+    sendContinueLinkResponse
   };
 };
 
