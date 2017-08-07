@@ -448,21 +448,28 @@ class DrawingBoard extends Component {
     const belongsToPage = (position) =>
       position && position.page === pageNumber;
 
-    return Object.keys(documentMapping).map(id => {
-      const mappingInfo = documentMapping[id];
-      let finalMappingInfo = currentElement && id === currentElement.id
-        ? currentElement.mappingInfo
-        : mappingInfo;
-      return Object.keys(finalMappingInfo).map((label) => {
-        const positions = finalMappingInfo[label].positions;
-        return Object.keys(positions).map((positionKey) => {
+    const finalMapping = currentElement
+      ? _.assign({}, documentMapping, {
+        [currentElement.id || 0]: currentElement.mappingInfo
+      })
+      : documentMapping;
+
+    return Object.keys(finalMapping).map(id => {
+      const mappingInfo = finalMapping[id];
+      return mappingInfo && Object.keys(mappingInfo).map((label) => {
+        const positions = mappingInfo[label].positions;
+        return positions && Object.keys(positions).map((positionKey) => {
           const position = positions[positionKey];
-          if (!belongsToPage(position)) return false;
+          if (!belongsToPage(position)) {
+            return false; // skip if the mapping is not for this page
+          }
           const isActive = false;
           const boundingBox = position.box;
           const zIndex = isActive ? 101 : 100;
           const path = _.join([label, 'positions', positionKey], '.');
-          if (_.isEqual(path, activeBox)) return false; // skip & let draw active box in below function.
+          if (isCurrentElementId(id, currentElement) && _.isEqual(path, activeBox)) {
+            return false; // skip & let draw active box in below function.
+          }
           return (
             <InteractWrapper
               x={zoomValue(boundingBox.left, pageZoom)}
