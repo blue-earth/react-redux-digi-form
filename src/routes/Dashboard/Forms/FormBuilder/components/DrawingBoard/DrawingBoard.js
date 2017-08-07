@@ -18,11 +18,15 @@ import {
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 // import classNames from 'classnames';
 import InteractWrapper from 'components/InteractWrapper';
-import SimpleMappingToolbar from 'components/Toolbars/SimpleMappingToolbar';
+import BlockMappingToolbar from 'components/Toolbars/BlockMappingToolbar';
+import StandardMappingToolbar from 'components/Toolbars/StandardMappingToolbar';
 import _ from 'lodash';
 import interact from 'interact.js';
 import styles from './DrawingBoard.scss';
-import { formBuilderSelectMode } from 'constants/formBuilder';
+import {
+  formBuilderSelectMode,
+  formBuilderBoxMappingType
+} from 'constants/formBuilder';
 
 class DrawingBoard extends Component {
   static propTypes = {
@@ -494,10 +498,29 @@ class DrawingBoard extends Component {
     });
   }
 
+  renderToolbar(boundingBox) {
+    const { isDragging, isResizing, toolbarOffset, toolbarPos } = this.state;
+    const { currentElement } = this.props;
+    const toolbarProps = {
+      values: boundingBox,
+      onChange: this.handleToolbarValueChange,
+      placement: toolbarPos,
+      offset: toolbarOffset
+    };
+
+    if (!currentElement || isDragging || isResizing) return false;
+    if (_.isEqual(currentElement.defaultMappingType, formBuilderBoxMappingType.STANDARD)) {
+      return <StandardMappingToolbar {...toolbarProps} />;
+    } else if (_.isEqual(currentElement.defaultMappingType, formBuilderBoxMappingType.BLOCK)) {
+      return <BlockMappingToolbar {...toolbarProps} />;
+    } else {
+      return false;
+    }
+  }
+
   renderActiveBox() {
     const { documentMapping, pageNumber, pageZoom, currentElement,
       viewportWidth, viewportHeight } = this.props;
-    const { isDragging, isResizing, toolbarOffset, toolbarPos } = this.state;
     if (!currentElement) return false;
     const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
 
@@ -532,10 +555,7 @@ class DrawingBoard extends Component {
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}
         metaData={{ id: currentElement.id, path: activeBox }}
-        toolbar={!isDragging && !isResizing &&
-          <SimpleMappingToolbar values={boundingBox} onChange={this.handleToolbarValueChange}
-            placement={toolbarPos} offset={toolbarOffset} />
-        }
+        toolbar={this.renderToolbar(boundingBox)}
         onToolbarUpdate={this.handleToolbarUpdate}
       >
         <div className={styles.boxLabel}>{'D'}</div>

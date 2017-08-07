@@ -48,7 +48,6 @@ class DocumentFieldsSelectionHeader extends Component {
     this.setState({
       selectedLabel: label
     });
-    console.log(setActiveLabel);
     setActiveLabel(label);
   }
 

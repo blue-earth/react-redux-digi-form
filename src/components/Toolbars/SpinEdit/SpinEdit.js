@@ -10,6 +10,7 @@ import {
   MdAdd,
   MdRemove
 } from 'react-icons/lib/md';
+import Label from '../Label';
 import styles from './SpinEdit.scss';
 
 export default class SpinEdit extends Component {
@@ -44,7 +45,7 @@ export default class SpinEdit extends Component {
     return (
       <ul className={styles.spinEdit}>
         {label &&
-          <li className={styles.label}>{label}</li>
+          <li><Label>{label}</Label></li>
         }
         <li>
           <Button className={styles.circleButton} onClick={this.handleDecreaseClick}>

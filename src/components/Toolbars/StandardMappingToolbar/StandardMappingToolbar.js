@@ -9,11 +9,12 @@ import MappingToolbarLayout, {
   ToolbarCol,
   ToolbarRow
 } from '../MappingToolbarLayout';
-import { MdCheck, MdDelete } from 'react-icons/lib/md';
+import { MdCheck } from 'react-icons/lib/md';
+import { GoTrashcan } from 'react-icons/lib/go';
 import SpinEdit from '../SpinEdit';
-import styles from './SimpleMappingToolbar.scss';
+import styles from './StandardMappingToolbar.scss';
 
-export default class SimpleMappingToolbar extends Component {
+export default class StandardMappingToolbar extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     placement: PropTypes.oneOf(['top', 'bottom']),
@@ -69,7 +70,7 @@ export default class SimpleMappingToolbar extends Component {
             <AppButton size="sm" extraClass={styles.saveButton} onClick={this.handleSaveClick}>
               <MdCheck size={16} />
             </AppButton>
-            <Button className={styles.removeButton}><MdDelete size={18} /></Button>
+            <Button className={styles.removeButton}><GoTrashcan size={18} /></Button>
           </ToolbarCol>
         </ToolbarRow>
       </MappingToolbarLayout>

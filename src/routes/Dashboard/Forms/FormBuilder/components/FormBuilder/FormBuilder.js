@@ -197,7 +197,6 @@ class FormBuilder extends Component {
   getAvailableSelectionFields = () => {
     const questionTypeName = this.props.currentElement.question.type;
     var result = questionInputs[questionTypeName]['availableFields'];
-    console.log('availableFields', result);
     return result;
   }
 
