@@ -301,6 +301,7 @@ export const createEmptyQuestionElement = function (questionTypeName, boxMapping
     question,
     mappingInfo: {},
     activeBox,
-    isModified: false
+    isModified: false,
+    defaultMappingType: boxMappingType
   };
 };

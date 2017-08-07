@@ -444,11 +444,15 @@ const _setActiveBox = (state, action) => {
   const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
   const label = pathArray[formBuilderPathIndex.LABEL];
 
+  const intialMappingState = _.merge({}, INIT_MAPPING_INFO_STATE, {
+    type: currentElement.defaultMappingType
+  });
+
   return Object.assign({}, state, {
     currentElement: _.merge({}, state.currentElement, {
       activeBox,
       mappingInfo: _.merge({
-        [label]: INIT_MAPPING_INFO_STATE
+        [label]: intialMappingState
       }, mappingInfo)
     })
   });
@@ -493,13 +497,18 @@ const _setCurrentElement = (state, action) => {
       currentElement: action.payload
     });
   } else { // If it's for loading from existing questions & mappings.
+    const activeBox = action.payload.activeBox;
+    const mappingInfo = state.documentMapping[id];
+    const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
+    const label = pathArray[formBuilderPathIndex.LABEL];
     return Object.assign({}, state, {
       currentElement: {
         id: action.payload.id,
         question: findItemById(state.questions, id),
-        mappingInfo: state.documentMapping[id],
-        activeBox: action.payload.activeBox,
-        isModified: false
+        mappingInfo,
+        activeBox,
+        isModified: false,
+        defaultMappingType: mappingInfo[label].type
       }
     });
   }
