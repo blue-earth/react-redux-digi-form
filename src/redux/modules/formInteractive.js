@@ -650,16 +650,15 @@ export const processSendContinueLink = (sessionId, email, formContinueUrl) => {
     body
   });
 
-  const fetchSuccess = ({value}) => {
+  const fetchSuccess = (data) => {
     return (dispatch, getState) => {
-      // dispatch(receiveAnswers(value));
-      dispatch(doneSendingContinueLink(value));
+      dispatch(doneSendingContinueLink(data.value));
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
-      dispatch(doneSendingContinueLink('fail'));
+      dispatch(doneSendingContinueLink(data.value));
     };
   };
 

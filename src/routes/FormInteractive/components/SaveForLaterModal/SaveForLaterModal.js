@@ -53,17 +53,20 @@ class SaveForLaterModal extends Component {
     const { sendContinueLinkResponse } = this.props;
     const { emailSent } = this.state;
     if (emailSent) {
-      if (sendContinueLinkResponse === 'fail') {
+      if (sendContinueLinkResponse.form_continue_url) {
+        // success
+        return (<p className={cx('sendSuccess')}><FaCheck /> A resume link has been sent.</p>);
+      } else if (sendContinueLinkResponse.email === 'Enter a valid email address.') {
+        // bad email
+        return (<p className={cx('sendError')}>Please enter a valid email address.</p>);
+      } else {
+        // fallback error message
         return (
           <p className={cx('sendError')}>
             There was a problem sending the resume link.
             Please use the Copy Link button above to copy the link to your clipboard.
           </p>
         );
-      } else if (sendContinueLinkResponse !== null) {
-        // console.log(sendContinueLinkResponse);
-        // TODO: check for server-side errors in the return value
-        return (<p className={cx('sendSuccess')}><FaCheck /> A resume link has been sent.</p>);
       }
     }
     return false;
