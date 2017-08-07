@@ -49,7 +49,6 @@ class SaveForLaterModal extends Component {
 
   renderSendResponse() {
     const { sendContinueLinkResponse } = this.props;
-    console.log(sendContinueLinkResponse);
     if (sendContinueLinkResponse === 'fail') {
       return (
         <p className={cx('sendError')}>
@@ -58,6 +57,8 @@ class SaveForLaterModal extends Component {
         </p>
       );
     } else if (sendContinueLinkResponse !== null) {
+      // console.log(sendContinueLinkResponse);
+      // TODO: check for server-side errors in the return value
       return (<p className={cx('sendSuccess')}><FaCheck /> A resume link has been sent.</p>);
     }
     return false;
