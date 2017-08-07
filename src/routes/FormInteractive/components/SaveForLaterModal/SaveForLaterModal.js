@@ -30,7 +30,8 @@ class SaveForLaterModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      urlCopied: false
+      urlCopied: false,
+      emailSent: false
     };
   };
 
@@ -42,6 +43,7 @@ class SaveForLaterModal extends Component {
     const emailAddress = this.refs.email.value;
     const { sessionId, formId, sendContinueLink } = this.props;
     if (emailAddress) {
+      this.setState({emailSent: true});
       var url = getSessionURL(formId, sessionId);
       sendContinueLink(sessionId, emailAddress, url);
     }
@@ -49,17 +51,20 @@ class SaveForLaterModal extends Component {
 
   renderSendResponse() {
     const { sendContinueLinkResponse } = this.props;
-    if (sendContinueLinkResponse === 'fail') {
-      return (
-        <p className={cx('sendError')}>
-          There was a problem sending the resume link.
-          Please use the Copy Link button above to copy the link to your clipboard.
-        </p>
-      );
-    } else if (sendContinueLinkResponse !== null) {
-      // console.log(sendContinueLinkResponse);
-      // TODO: check for server-side errors in the return value
-      return (<p className={cx('sendSuccess')}><FaCheck /> A resume link has been sent.</p>);
+    const { emailSent } = this.state;
+    if (emailSent) {
+      if (sendContinueLinkResponse === 'fail') {
+        return (
+          <p className={cx('sendError')}>
+            There was a problem sending the resume link.
+            Please use the Copy Link button above to copy the link to your clipboard.
+          </p>
+        );
+      } else if (sendContinueLinkResponse !== null) {
+        // console.log(sendContinueLinkResponse);
+        // TODO: check for server-side errors in the return value
+        return (<p className={cx('sendSuccess')}><FaCheck /> A resume link has been sent.</p>);
+      }
     }
     return false;
   }
