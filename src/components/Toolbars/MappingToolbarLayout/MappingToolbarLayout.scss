@@ -12,6 +12,9 @@ $arrow-size: 6px;
   background-color: $mapping-toolbar-bg-color;
   min-width: 300px;
   min-height: 38px;
+  position: absolute;
+  z-index: 999;
+  cursor: default;
 }
 
 .arrow {

@@ -132,9 +132,7 @@ class DrawingBoard extends Component {
     this.state = {
       isDrawing: false,
       isDragging: false,
-      isResizing: false,
-      toolbarPos: 'top',
-      toolbarOffset: 0
+      isResizing: false
     };
   };
 
@@ -417,17 +415,6 @@ class DrawingBoard extends Component {
     });
   }
 
-  handleToolbarValueChange = (values) => {
-    const { setMappingPositionInfo } = this.props;
-    setMappingPositionInfo({
-      'box': values
-    });
-  }
-
-  handleToolbarUpdate = (toolbarPos, toolbarOffset) => {
-    this.setState({ toolbarPos, toolbarOffset });
-  }
-
   getBoxLabel(elementId, boxIndex) {
     const { questions, currentElement } = this.props;
     const question = isCurrentElementId(elementId, currentElement)
@@ -437,9 +424,14 @@ class DrawingBoard extends Component {
     return choices ? _.get(choices, [boxIndex, 'label'], getChoiceLabelByIndex(choices.length)) : type;
   }
 
+  belongsToPage(position) {
+    const { pageNumber } = this.props;
+    return position && position.page === pageNumber;
+  }
+
   renderDocumentMappingComponents() {
     // todo: Fix this, disable this function temporary to get other parts working
-    const { documentMapping, currentElement, pageZoom, pageNumber,
+    const { documentMapping, currentElement, pageZoom,
       viewportWidth, viewportHeight } = this.props;
     const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
     var boardOptionals = {};
@@ -448,9 +440,6 @@ class DrawingBoard extends Component {
         cursor: 'crosshair'
       });
     }
-
-    const belongsToPage = (position) =>
-      position && position.page === pageNumber;
 
     const finalMapping = currentElement
       ? _.assign({}, documentMapping, {
@@ -464,14 +453,13 @@ class DrawingBoard extends Component {
         const positions = mappingInfo[label].positions;
         return positions && Object.keys(positions).map((positionKey) => {
           const position = positions[positionKey];
-          if (!belongsToPage(position)) {
+          if (!this.belongsToPage(position)) {
             return false; // skip if the mapping is not for this page
           }
           const isActive = false;
           const boundingBox = position.box;
           const zIndex = isActive ? 101 : 100;
           const path = _.join([label, 'positions', positionKey], '.');
-          console.log(id, currentElement, path);
           if (isCurrentElementId(id, currentElement) && _.isEqual(path, activeBox)) {
             return false; // skip & let draw active box in below function.
           }
@@ -499,15 +487,23 @@ class DrawingBoard extends Component {
     });
   }
 
-  renderToolbar(position) {
-    const { setMappingPositionInfo } = this.props;
-    const { isDragging, isResizing, toolbarOffset, toolbarPos } = this.state;
-    const { currentElement } = this.props;
+  renderToolbar() {
+    const { currentElement, pageZoom, setMappingPositionInfo,
+      viewportWidth, viewportHeight } = this.props;
+    const { isDragging, isResizing } = this.state;
+
+    if (!currentElement) return false;
+    const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
+
+    const position = _.get(currentElement.mappingInfo, activeBox);
+    if (!this.belongsToPage(position)) return false;
+
     const toolbarProps = {
       values: position,
       onChange: setMappingPositionInfo,
-      placement: toolbarPos,
-      offset: toolbarOffset
+      pageZoom,
+      viewportWidth,
+      viewportHeight
     };
 
     if (!currentElement || isDragging || isResizing) return false;
@@ -521,16 +517,13 @@ class DrawingBoard extends Component {
   }
 
   renderActiveBox() {
-    const { documentMapping, pageNumber, pageZoom, currentElement,
+    const { documentMapping, pageZoom, currentElement,
       viewportWidth, viewportHeight } = this.props;
     if (!currentElement) return false;
     const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
 
-    const belongsToPage = (position) =>
-      position && position.page === pageNumber;
-
     const position = _.get(currentElement.mappingInfo, activeBox);
-    if (!belongsToPage(position)) return false;
+    if (!this.belongsToPage(position)) return false;
     const isActive = true;
     const boundingBox = position.box;
     const zIndex = isActive ? 101 : 100;
@@ -557,8 +550,6 @@ class DrawingBoard extends Component {
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}
         metaData={{ id: currentElement.id, path: activeBox }}
-        toolbar={this.renderToolbar(position)}
-        onToolbarUpdate={this.handleToolbarUpdate}
       >
         <div className={styles.boxLabel}>{'D'}</div>
       </InteractWrapper>
@@ -585,6 +576,7 @@ class DrawingBoard extends Component {
 
         {this.renderDocumentMappingComponents()}
         {this.renderActiveBox()}
+        {this.renderToolbar()}
         {isDrawing &&
           <div className={styles.newBoxDraw}
             style={{

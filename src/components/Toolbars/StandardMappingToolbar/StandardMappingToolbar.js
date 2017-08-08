@@ -17,55 +17,56 @@ import styles from './StandardMappingToolbar.scss';
 export default class StandardMappingToolbar extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
-    placement: PropTypes.oneOf(['top', 'bottom']),
-    offset: PropTypes.number,
-    values: PropTypes.object.isRequired
+    pageZoom: PropTypes.number.isRequired,
+    values: PropTypes.object.isRequired,
+    viewportHeight: PropTypes.number.isRequired,
+    viewportWidth: PropTypes.number.isRequired
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      values: props.values
+      box: props.values.box,
+      fontSize: props.values.font_size
     };
   }
 
   componentWillReceiveProps(nextProps) {
     const { values } = nextProps;
-    this.setState({ values });
+    this.setState({
+      box: values.box,
+      fontSize: values.font_size
+    });
   }
 
-  handleWidthChange = (value) => {
-    let values = _.assign({}, this.state.values);
-    _.set(values, ['box', 'width'], value);
-    this.setState({ values });
+  handleWidthChange = (width) => {
+    this.setState({ box: _.assign({}, this.state.box, { width }) });
   }
 
-  handleHeightChange = (value) => {
-    let values = _.assign({}, this.state.values);
-    _.set(values, ['box', 'height'], value);
-    this.setState({ values });
+  handleHeightChange = (height) => {
+    this.setState({ box: _.assign({}, this.state.box, { height }) });
   }
 
-  handleFontSizeChange = (value) => {
-    let values = _.assign({}, this.state.values);
-    _.set(values, ['box', 'font_size'], value);
-    this.setState({ values });
+  handleFontSizeChange = (fontSize) => {
+    this.setState({ fontSize });
   }
 
   handleSaveClick = () => {
     const { onChange } = this.props;
-    onChange(this.state.values);
+    const { box, fontSize } = this.state;
+    onChange({
+      'box': box,
+      'font_size': fontSize
+    });
   }
 
   render() {
-    const { offset, placement } = this.props;
-    const { values } = this.state;
-    const width = _.get(values, ['box', 'width']);
-    const height = _.get(values, ['box', 'height']);
-    const fontSize = _.get(values, ['box', 'font_size']);
+    const { pageZoom, values, viewportWidth, viewportHeight } = this.props;
+    const { box: { width, height }, fontSize } = this.state;
 
     return (
-      <MappingToolbarLayout placement={placement} offset={offset}>
+      <MappingToolbarLayout box={values.box} pageZoom={pageZoom}
+        viewportWidth={viewportWidth} viewportHeight={viewportHeight}>
         <ToolbarRow>
           <ToolbarCol>
             <SpinEdit label="W:" value={width} onChange={this.handleWidthChange} />
