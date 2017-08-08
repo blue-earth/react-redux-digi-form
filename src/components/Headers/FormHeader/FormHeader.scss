@@ -15,7 +15,7 @@ $mobile-menu-bg-color:    #f4f5f8;
     height: $frontend-header-height-mobile;
     background-color: white;
     margin: 0 -15px;
-    padding: 15px 65px 15px 175px;
+    padding: 0 65px 0 15px;
     z-index: 999;
   }
 }
@@ -36,9 +36,7 @@ $mobile-menu-bg-color:    #f4f5f8;
   margin-right: 25px;
   // padding: 15px 0;
   @include media('<sm') {
-    position: absolute;
-    top: 15px;
-    left: 15px;
+    display: none;
   }
 }
 .title {
@@ -52,6 +50,10 @@ $mobile-menu-bg-color:    #f4f5f8;
   color: $header-text-color;
   max-height: 100%;
   overflow: hidden;
+  width: 50%;
+  @include media('<sm') {
+    width: 100%;
+  }
 }
 .buttonWrapper {
   float: right;
