@@ -27,19 +27,29 @@ class PhoneNumberInput extends Component {
   };
 
   static defaultProps = {
-    placeholderText: '',
     value: '',
     isDisabled: false,
-    isReadOnly: false
+    isReadOnly: false,
+    onChange: () => {},
+    onFocus: () => {},
+    onEnterKey: () => {},
+    onBlur: () => {}
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      number: props.value || ''
+    };
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.value !== this.props.value;
   }
 
   componentDidMount() {
+    const { autoFocus, isDisabled, isReadOnly, value, onFocus, onBlur } = this.props;
     // finds the input dom node to bind event handler.
-    const { autoFocus, isDisabled, isReadOnly, value } = this.props;
     var intlTelInput = this.refs.intlTelInput;
     var input = findDOMNode(intlTelInput.refs.telInput);
     const that = this;
@@ -62,59 +72,38 @@ class PhoneNumberInput extends Component {
     }
 
     input.addEventListener('keydown', (event) => that.handleKeyDown(event));
-    input.addEventListener('focus', (event) => that.handleFocus(event));
-    input.addEventListener('blur', (event) => that.handleBlur(event));
+    input.addEventListener('focus', (event) => onFocus(event));
+    input.addEventListener('blur', (event) => onBlur(event));
     input.style = 'color:' + this.context.primaryColour;
-    if (autoFocus) setTimeout(() => input.focus(), 1);
+    if (autoFocus) {
+      setTimeout(() => input.focus(), 1);
+    }
   }
 
-  changeHandler = (isValid, newValue, countryData, newNumber) => {
-    const { onChange, value } = this.props;
-    if (newNumber === '') newNumber = '+' + countryData.dialCode;
-    if (value !== newNumber && typeof onChange === 'function') {
-      onChange(newNumber);
+  handleChange = (isValid, newValue, countryData, newNumber) => {
+    const { onChange } = this.props;
+    if (newValue === '') {
+      return onChange('');
     }
+    onChange(newNumber);
   }
 
   handleKeyDown = (event) => {
     const { onEnterKey } = this.props;
-    if (typeof onEnterKey === 'function' && event.keyCode === 13) {
+    if (event.keyCode === 13) {
       onEnterKey();
     }
   }
 
-  handleFocus = (event) => {
-    const { onFocus } = this.props;
-    if (typeof onFocus === 'function') {
-      onFocus();
-    }
-  }
-
-  handleBlur = (event) => {
-    if (typeof onBlur === 'function') {
-      if (typeof this.refs.intlTelInput !== 'undefined') {
-        var flagDropDown = findDOMNode(this.refs.intlTelInput.refs.flagDropDown);
-        var selectedFlag = flagDropDown.querySelector('.selected-flag');
-        // clicking on dropdown shouldn't fire blur
-        if (event.relatedTarget === selectedFlag) return;
-      }
-      const { onBlur } = this.props;
-      onBlur();
-    }
-  }
-
   render() {
-    const { value } = this.props;
-
     return (
       <IntlTelInput preferredCountries={[]}
         onlyCountries={['au', 'sg']}
         ref="intlTelInput"
         defaultCountry={'au'}
         css={['intl-tel-input phoneNumberInputWrapper', 'phoneNumberInput']}
-        nationalMode={false}
-        value={value}
-        onPhoneNumberChange={this.changeHandler}
+        value={this.state.number}
+        onPhoneNumberChange={this.handleChange}
         utilsScript={'libphonenumber.js'}
         />
     );
