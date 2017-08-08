@@ -3,6 +3,12 @@
 
 $wrapper-inner-padding-right: 150px;
 
+:global {
+  body {
+    min-height: 610px;
+  }
+}
+
 .wrapper {
   display: block; // flex;
   position: relative;
