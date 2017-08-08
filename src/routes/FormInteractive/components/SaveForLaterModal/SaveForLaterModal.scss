@@ -1,0 +1,113 @@
+@import './mixins';
+@import './variables';
+
+.saveModal {
+  font-family: 'Lato', sans-serif;
+  text-align: center;
+  @include media('>=sm') {
+    :global {
+      .modal-dialog {
+        width:590px;
+        max-width: 90%;
+      }
+      .modal-body {
+        padding: 50px;
+      }
+    }
+  }
+  h3{
+    margin: 0 0 30px;
+    font-weight: bold;
+    font-family: $button-font-family;
+  }
+  a {
+    text-decoration: underline;
+    cursor: pointer;
+    color: $grey;
+    &:hover {
+      color: darken($grey, 5%);
+    }
+  }
+}
+
+.dialogDescription {
+  margin: 0 auto 30px;
+}
+
+.urlField,
+.emailField {
+  width: 100%;
+  text-align: left;
+  margin: 0 0 20px;
+  border: 1px solid $text-border-color;
+  @include border-radius($input-border-radius);
+  // height: $button-height-lg;
+  line-height: $button-height-lg;
+  background: $text-bg-color;
+  display: block;
+  color: $text-dark-color;
+  position: relative;
+}
+.emailField {
+  padding: 0 15px;
+}
+.urlField {
+  padding: 0 120px 0 15px;
+  .urlFieldInner {
+    background: transparent;
+    border: none;
+    width: 100%;
+    height: $button-height-lg;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+.urlCopied {
+  color: $green;
+  margin: -10px 0 20px;
+}
+
+.copyButton,
+.sendButton {
+  background: $blue;
+  border-color: $blue;
+  color: $white;
+  font-size: 0.8em;
+  padding: 0 10px;
+  text-align: center;
+  @include border-radius($input-border-radius);
+  cursor: pointer;
+  &:hover, &:active, &:focus {
+    outline: none;
+    background-color: darken($blue, 5%);
+    border-color: darken($blue, 5%);
+    color: $white;
+  }
+  &[disabled] {
+    background-color: darken($blue, 5%) !important;
+    border-color: darken($blue, 5%) !important;
+    color: $white !important;
+  }
+}
+.copyButton {
+  text-transform: uppercase;
+  height: $button-height-md;
+  line-height: $button-height-md;
+  position: absolute;
+  top: 12px;
+  right: 15px;
+}
+.sendButton {
+  height: $button-height-lg;
+  line-height: $button-height-lg;
+  font-size: 22px;
+  font-family: $button-font-family;
+  margin: 0 0 20px;
+}
+.sendSuccess {
+  color: $green;
+}
+.sendError {
+  color: $red;
+}
