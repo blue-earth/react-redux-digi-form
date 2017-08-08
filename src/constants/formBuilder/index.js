@@ -15,3 +15,5 @@ export const formBuilderPathIndex = {
   POSITIONS: 1,
   INDEX: 2
 };
+
+export const formBuilderFontSize = 12;

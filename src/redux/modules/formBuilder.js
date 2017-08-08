@@ -4,9 +4,10 @@ import { findItemById, mergeItemIntoArray } from 'helpers/pureFunctions';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
 import {
-  formBuilderSelectMode,
   formBuilderBoxMappingType,
-  formBuilderPathIndex
+  formBuilderFontSize,
+  formBuilderPathIndex,
+  formBuilderSelectMode
 } from 'constants/formBuilder';
 import _ from 'lodash';
 
@@ -401,10 +402,13 @@ const _setMappingPositionInfo = (state, action) => {
 
   const position = _.get(currentElement, positionPathArray, {});
 
-  const newPosition = _.merge({}, position, _.pick(action.payload, [
-    'page', 'box', 'font_size'
-  ]));
-
+  const newPosition = _.merge(
+    { 'font_size': formBuilderFontSize },
+    position,
+    _.pick(action.payload, [
+      'page', 'box', 'font_size'
+    ])
+  );
   _.set(currentElement, positionPathArray, newPosition);
 
   return _.assign({}, state, {

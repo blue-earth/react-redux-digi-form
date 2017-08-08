@@ -471,6 +471,7 @@ class DrawingBoard extends Component {
           const boundingBox = position.box;
           const zIndex = isActive ? 101 : 100;
           const path = _.join([label, 'positions', positionKey], '.');
+          console.log(id, currentElement, path);
           if (isCurrentElementId(id, currentElement) && _.isEqual(path, activeBox)) {
             return false; // skip & let draw active box in below function.
           }
@@ -498,12 +499,13 @@ class DrawingBoard extends Component {
     });
   }
 
-  renderToolbar(boundingBox) {
+  renderToolbar(position) {
+    const { setMappingPositionInfo } = this.props;
     const { isDragging, isResizing, toolbarOffset, toolbarPos } = this.state;
     const { currentElement } = this.props;
     const toolbarProps = {
-      values: boundingBox,
-      onChange: this.handleToolbarValueChange,
+      values: position,
+      onChange: setMappingPositionInfo,
       placement: toolbarPos,
       offset: toolbarOffset
     };
@@ -555,7 +557,7 @@ class DrawingBoard extends Component {
         dragSnapTargets={getDragSnappingTargets(documentMapping, currentElement, pageZoom)}
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}
         metaData={{ id: currentElement.id, path: activeBox }}
-        toolbar={this.renderToolbar(boundingBox)}
+        toolbar={this.renderToolbar(position)}
         onToolbarUpdate={this.handleToolbarUpdate}
       >
         <div className={styles.boxLabel}>{'D'}</div>

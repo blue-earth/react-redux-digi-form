@@ -35,15 +35,21 @@ export default class StandardMappingToolbar extends Component {
   }
 
   handleWidthChange = (value) => {
-    this.setState({
-      values: _.assign({}, this.state.values, { width: value })
-    });
+    let values = _.assign({}, this.state.values);
+    _.set(values, ['box', 'width'], value);
+    this.setState({ values });
   }
 
   handleHeightChange = (value) => {
-    this.setState({
-      values: _.assign({}, this.state.values, { height: value })
-    });
+    let values = _.assign({}, this.state.values);
+    _.set(values, ['box', 'height'], value);
+    this.setState({ values });
+  }
+
+  handleFontSizeChange = (value) => {
+    let values = _.assign({}, this.state.values);
+    _.set(values, ['box', 'font_size'], value);
+    this.setState({ values });
   }
 
   handleSaveClick = () => {
@@ -53,7 +59,11 @@ export default class StandardMappingToolbar extends Component {
 
   render() {
     const { offset, placement } = this.props;
-    const { values: { width, height } } = this.state;
+    const { values } = this.state;
+    const width = _.get(values, ['box', 'width']);
+    const height = _.get(values, ['box', 'height']);
+    const fontSize = _.get(values, ['box', 'font_size']);
+
     return (
       <MappingToolbarLayout placement={placement} offset={offset}>
         <ToolbarRow>
@@ -64,7 +74,7 @@ export default class StandardMappingToolbar extends Component {
             <SpinEdit label="H:" value={height} onChange={this.handleHeightChange} />
           </ToolbarCol>
           <ToolbarCol>
-            <SpinEdit label="Font:" />
+            <SpinEdit label="Font:" value={fontSize} onChange={this.handleFontSizeChange} />
           </ToolbarCol>
           <ToolbarCol>
             <AppButton size="sm" extraClass={styles.saveButton} onClick={this.handleSaveClick}>

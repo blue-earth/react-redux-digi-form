@@ -15,7 +15,7 @@ export const getImageDimension = (url, callback) => {
 };
 
 export const isCurrentElementId = (id, currentElement) =>
-  (currentElement && id === currentElement.id) || parseInt(id, 10) === 0;
+  (currentElement && _.isEqual(parseInt(id, 10), currentElement.id)) || _.isEqual(parseInt(id, 10), 0);
 
 export const getActiveBoxIndex = (currentElement) =>
   _.get(currentElement, ['mappingInfo', 'activeIndex'], false);
