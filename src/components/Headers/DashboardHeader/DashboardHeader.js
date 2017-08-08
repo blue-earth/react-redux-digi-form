@@ -104,6 +104,8 @@ export default class DashboardHeader extends Component {
     const signUrl = require('./sign.svg');
     const height = 14;
     const { user } = this.props;
+    const firstName = user.first_name;
+    const lastName = user.last_name;
     return (
       <div className={styles.header}>
         <DashboardPageInnerLayout>
@@ -127,10 +129,10 @@ export default class DashboardHeader extends Component {
                 { user.avatar
                   ? (<img src={user.avatar} alt="" className={styles.profileImage} />)
                   : <span className={styles.noAvatar}>
-                    {user.first_name.substring(0, 1)}{user.last_name.substring(0, 1)}
+                    {firstName.substring(0, 1)}{lastName.substring(0, 1)}
                   </span>
                 }
-                <span className={styles.profileName}>{user.first_name} {user.last_name}</span>
+                <span className={styles.profileName}>{firstName} {lastName}</span>
               </Button>
             </ProfileMenu>
             <AlertMessage list={list}>

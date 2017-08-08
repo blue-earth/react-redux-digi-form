@@ -4,6 +4,7 @@ import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
 import { replace } from './router';
 import { loginUrl } from 'helpers/urlHelper';
+import { reset } from 'redux-form';
 
 export const REQUEST_AUTH = 'REQUEST_AUTH';
 export const RECEIVE_AUTH_STATUS = 'RECEIVE_AUTH_STATUS';
@@ -30,7 +31,10 @@ export const NOT_SIGNED_UP = 'NOT_SIGNED_UP';
 
 export const INIT_AUTH_STATE = {
   authStatus: NOT_LOGGED_IN,    // !IMPORTANT: required for login failed measurement.
-  user: {},
+  user: {
+    first_name: '',
+    last_name: ''
+  },
   isAuthenticating: false,
   serverResponse: {}
 };
@@ -80,6 +84,7 @@ export const processAuth = (email, password) => {
     return (dispatch, getState) => {
       dispatch(receiveAuthStatus(value.authenticated));
       if (value.authenticated) {
+        dispatch(reset('loginForm'));
         dispatch(setIsFetchingUserInfo(true));
         dispatch(fetchUserInfo());
         dispatch(setIsFetchingUserInfo(false));
@@ -148,6 +153,7 @@ export const fetchUserInfo = () => {
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
       dispatch(setUserProfile(value));
+      dispatch(receiveAuthStatus(true)); // Set user auth status to LOGGED_IN
       dispatch(setIsFetchingUserInfo(false));
     };
   };
@@ -238,7 +244,7 @@ const authReducer = handleActions({
   LOGOUT: (state, action) =>
     Object.assign({}, state, {
       authStatus: LOGGED_OUT,
-      user: {}
+      user: INIT_AUTH_STATE.user // Clear user info after logout
     })
 }, INIT_AUTH_STATE);
 
