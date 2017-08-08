@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import connect from 'redux/utils/connect';
 import {
   fetchUserInfo,
-  setIsFetchingUserInfo
+  LOGGED_IN
 } from 'redux/modules/auth';
 import { goTo } from 'redux/modules/router';
 import { loginUrl } from 'helpers/urlHelper';
@@ -14,11 +14,7 @@ export default function requiresAuth(Component) {
        * Indicates whether the request to fetch user is running
        */
       isAuthenticating: PropTypes.bool.isRequired,
-      /**
-       * The user dictionary object, includes first_name, last_name, email, and last_login
-       */
-      user: PropTypes.object.isRequired,
-      setIsFetchingUserInfo: PropTypes.func.isRequired,
+      authStatus: PropTypes.string.isRequired,
       fetchUserInfo: PropTypes.func.isRequired,
       goTo: PropTypes.func.isRequired,
       location: PropTypes.object
@@ -32,7 +28,6 @@ export default function requiresAuth(Component) {
       };
     }
     componentDidMount() {
-      this.props.setIsFetchingUserInfo(true);
       this.props.fetchUserInfo();
       this.setState({
         willAuthenticate: false
@@ -46,8 +41,8 @@ export default function requiresAuth(Component) {
         this.props.location.pathname !== nextProps.location.pathname;
     }
     _checkAndRedirect() {
-      const { isAuthenticating, user, goTo } = this.props;
-      if (!isAuthenticating && Object.keys(user).length === 0) {
+      const { isAuthenticating, goTo, authStatus } = this.props;
+      if (!isAuthenticating && authStatus !== LOGGED_IN) {
         goTo(loginUrl(''));
       }
     }
@@ -67,13 +62,12 @@ export default function requiresAuth(Component) {
 
   const mapStateToProps = (state) => {
     return {
-      isAuthenticating: state.auth.isAuthenticating,
-      user: state.auth.user
+      authStatus: state.auth.authStatus,
+      isAuthenticating: state.auth.isAuthenticating
     };
   };
   const mapActionCreators = {
     fetchUserInfo,
-    setIsFetchingUserInfo,
     goTo
   };
 
