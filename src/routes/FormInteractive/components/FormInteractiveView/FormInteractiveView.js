@@ -11,6 +11,7 @@ import Hogan from 'hogan.js';
 import { valueIsValid } from 'helpers/validationHelper';
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import FormEnterButton from 'components/Buttons/FormEnterButton';
+import StackLogo from 'components/Logos/StackLogo';
 import { MdKeyboardBackspace } from 'react-icons/lib/md';
 import {
   getContextFromAnswer,
@@ -256,6 +257,9 @@ class FormInteractiveView extends Component {
           <li>
             <RightNavButton className={styles.navButton} onClick={goToNextQuestion}
               isDisabled={shouldDisableNextButton(form, currentQuestion.id) || isVerifying} />
+          </li>
+          <li className={styles.bottomLogo}>
+            <StackLogo logoStyle="darkgrey" width={80} height={55} />
           </li>
         </ul>
         <div className={this.enterButtonClass}>

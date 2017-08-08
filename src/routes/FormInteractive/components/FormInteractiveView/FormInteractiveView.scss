@@ -125,6 +125,13 @@ $wrapper-inner-padding-right: 150px;
       float: left;
       margin-right: 10px;
     }
+    &.bottomLogo {
+      float: right;
+      display: none;
+      @include media('<sm') {
+        display: block;
+      }
+    }
   }
 }
 
