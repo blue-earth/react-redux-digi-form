@@ -94,9 +94,13 @@
   font-size: 24px;
 }
 .savingsSection {
-  float: right;
-  width: 40%;
+  margin-left: 25%;
+  width: 50%;
   text-align: center;
+  @include media('<sm') {
+    width: 100%;
+    margin: 0;
+  }
 }
 .savings {
   padding: 70px 20px;
