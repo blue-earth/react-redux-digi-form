@@ -2,6 +2,7 @@
 @import './variables';
 
 .writePanelWrapper {
+  position: relative;
   overflow-y: auto;
   padding-bottom: 0;
 }
@@ -40,21 +41,20 @@
 }
 .signaturePadColourSelection {
   position: absolute;
-  visibility: hidden;
   padding: 0;
   margin: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  top: 15px;
+  left: 50%;
+  margin-left: -42px;
   text-align: center;
   .colourSelection {
     display: inline-block;
-    height: 26px;
-    width: 26px;
+    height: 20px;
+    width: 20px;
     margin: 4px;
     background-color: $black;
-    @include border-radius(20px);
-    border: 3px solid $white;
+    @include border-radius(50%);
+    border: 3px solid $signature-modal-bg-color;
     &.colour-red {
       background-color: $red;
     }
@@ -68,9 +68,6 @@
 }
 .activeSignature {
   border: 2px solid $dashboard-header-bg-color;
-  .signaturePadColourSelection {
-    visibility: visible;
-  }
 }
 
 :global {
