@@ -15,26 +15,45 @@
   font-style: normal;
   src: url(signature-fonts/MonsieurLaDoulaise-Regular.ttf) format("opentype");
 }
-
+/*
+ * Celebrity Fonts from https://www.dropbox.com/s/v2e4nsrk3uvh84x/Celebrity%20Fonts.zip?dl=0
+ */
 @font-face {
-    font-family: 'Swift';
-    src: url('MsSwift6.ttf') format('truetype');
+    font-family: 'Clinton';
+    src: url('Celebrity_Fonts/Clinton4.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'Lincoln';
-    src: url('Lincoln8.ttf') format('truetype');
+    src: url('Celebrity_Fonts/Lincoln8.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Swift';
+    src: url('Celebrity_Fonts/MsSwift12.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Obama';
+    src: url('Celebrity_Fonts/Obamdame2.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'Steve';
-    src: url('SteveJobsFin6.ttf') format('truetype');
+    src: url('Celebrity_Fonts/SteveJobsFin7.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
-
+@font-face {
+    font-family: 'Trump';
+    src: url('Celebrity_Fonts/Trump3.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 /*
  * Web Fonts from fontspring.com
  *
