@@ -13,7 +13,7 @@ import styles from './ChangePasswordModal.scss';
 
 class PasswordInput extends Component {
   static propTypes = {
-    input: PropTypes.array,
+    input: PropTypes.object,
     label: PropTypes.string,
     type: PropTypes.string,
     meta: PropTypes.object
