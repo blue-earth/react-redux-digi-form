@@ -1,36 +1,102 @@
 @import './mixins';
 @import './variables';
-:global {
-  .phoneNumberInput {
-    padding: 4px 15px;
-    border: 1px solid $text-border-color;
-    @include border-radius($input-border-radius);
-    font-size: 20px;
-    height: 64px;
-    background: $white;
-    color: $float-input-color;
-    -webkit-text-fill-color: $text-dark-color;
+
+.phoneInputWrap {
+  position: relative;
+}
+:global{
+.phoneNumberInput {
+  padding: 4px 15px;
+  border: 1px solid $text-border-color;
+  @include border-radius($input-border-radius);
+  font-size: 20px;
+  height: 64px;
+  background: $white;
+  color: $float-input-color;
+  -webkit-text-fill-color: $text-dark-color;
+  display: block;
+  width: 100%;
+  padding-left: 55px;
+  &[disabled] {
+    opacity: .5;
+  }
+  &:focus {
+    outline: none;
+    border-color: $select-button-hover-color;
+  }
+}
+.phoneNumberInputWrapper {
+  &.intl-tel-input {
     display: block;
-    width: 100%;
-    padding-left: 55px;
-    &[disabled] {
-      opacity: .5;
-    }
-    &:focus {
+  }
+  .selected-flag {
+    background-color: transparent !important;
+    width: 45px;
+    &:focus, &:active:focus {
       outline: none;
-      border-color: $select-button-hover-color;
     }
   }
-  .phoneNumberInputWrapper {
-    &.intl-tel-input {
-      display: block;
-    }
-    .selected-flag {
-      background-color: transparent !important;
-      width: 45px;
-      &:focus, &:active:focus {
-        outline: none;
-      }
-    }
+}
+}
+.phoneInputError input,
+.phoneInputError input:focus {
+  border-color: $red;
+}
+.errorIconWrapper {
+  display: inline;
+  cursor: pointer;
+  color: $red;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
+.hide {
+  display: none;
+}
+.errorTip {
+  @include hcenter;
+  line-height: 1em;
+  font-size: 0.6em;
+}
+.errorTipInner {
+  position: relative;
+  top: 7px;
+  padding: 1.5em;
+  color: #fff;
+  white-space: nowrap;
+  background-color: $red;
+  @include border-radius(0.4em);
+}
+.errorTipArrow {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  margin-left: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: $red;
+}
+:global {
+.phoneInputTooltip {
+  font-size: 14px;
+  font-family: 'Lato';
+  .tooltip-arrow {
+    height: 0;
   }
+  &.bottom .tooltip-arrow {
+    border-bottom-color: $red;
+  }
+  &.tooltip.in {
+    opacity: 1;
+  }
+  .tooltip-inner {
+    text-align: left;
+    background-color: $red;
+    padding: 0.7em 2em;
+    max-width: 300px;
+  }
+}
 }
