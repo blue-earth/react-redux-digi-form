@@ -1,6 +1,19 @@
 @import './mixins';
 @import './variables';
 
+.dateInputWrap {
+  font-size: 20px;
+  @include media('>=sm') {
+    font-size: 24px;
+  }
+  font-family: 'Lato';
+  font-weight: 400;
+  line-height: 1.5em;
+  color: $float-input-color;
+  position: relative;
+  padding: 0.5em 0;
+  display: inline-block;
+}
 .dateInput {
   padding: 15px;
   border: 1px solid $text-border-color;
@@ -18,5 +31,68 @@
   &:hover, &:focus {
     border: 1px solid $text-hover-border-color;
     outline: none;
+  }
+}
+
+.dateInputError input {
+  border-color: $red;
+}
+.errorIconWrapper {
+  display: inline;
+  cursor: pointer;
+  color: $red;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
+.hide {
+  display: none;
+}
+.errorTip {
+  @include hcenter;
+  line-height: 1em;
+  font-size: 0.6em;
+}
+.errorTipInner {
+  position: relative;
+  top: 7px;
+  padding: 1.5em;
+  color: #fff;
+  white-space: nowrap;
+  background-color: $red;
+  @include border-radius(0.4em);
+}
+.errorTipArrow {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  margin-left: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: $red;
+}
+
+:global {
+  .dateInputTooltip {
+    font-size: 14px;
+    font-family: 'Lato';
+    .tooltip-arrow {
+      height: 0;
+    }
+    &.bottom .tooltip-arrow {
+      border-bottom-color: $red;
+    }
+    &.tooltip.in {
+      opacity: 1;
+    }
+    .tooltip-inner {
+      text-align: left;
+      background-color: $red;
+      padding: 0.7em 2em;
+      max-width: 300px;
+    }
   }
 }

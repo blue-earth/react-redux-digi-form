@@ -2,24 +2,25 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import {
+  OverlayTrigger,
+  Tooltip
+} from 'react-bootstrap';
 import { findDOMNode } from 'react-dom';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
+import { IoAndroidAlert } from 'react-icons/lib/io';
 import styles from './DateInput.scss';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
 
 class DateInput extends Component {
 
   static contextTypes = {
     primaryColour: React.PropTypes.string
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      savedDate: typeof props.value !== 'undefined' ? props.value : null
-    };
-  }
 
   static propTypes = {
     isDisabled: PropTypes.bool,
@@ -31,12 +32,15 @@ class DateInput extends Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     onEnterKey: PropTypes.func,
-    autoFocus: PropTypes.bool
+    autoFocus: PropTypes.bool,
+    hasError: PropTypes.bool,
+    errorMessage: PropTypes.element
   };
 
   static defaultProps = {
     isDisabled: false,
     isReadOnly: false,
+    hasError: false,
     choices: [],
     value: null,
     dateFormat: 'YYYY/MM/DD',
@@ -44,8 +48,18 @@ class DateInput extends Component {
     onEnterKey: () => {}
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      savedDate: typeof props.value !== 'undefined' ? props.value : null
+    };
+  }
+
   componentDidMount() {
-    const { isReadOnly } = this.props;
+    const { isReadOnly, hasError } = this.props;
+    if (hasError) {
+      this.refs.errorMessage.show();
+    }
     if (!isReadOnly) {
       var dateInput = findDOMNode(this.refs.dateInput.refs.input);
       const that = this;
@@ -53,6 +67,14 @@ class DateInput extends Component {
       if (this.context.primaryColour) {
         dateInput.style = 'color:' + this.context.primaryColour;
       }
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    if (props.hasError) {
+      this.refs.errorMessage.show();
+    } else {
+      this.refs.errorMessage.hide();
     }
   }
 
@@ -66,11 +88,9 @@ class DateInput extends Component {
         year: date.year()
       };
     }
-
     this.setState({
       savedDate: jsonDate
     });
-
     if (typeof onChange === 'function') {
       onChange(jsonDate);
     }
@@ -82,6 +102,7 @@ class DateInput extends Component {
   }
 
   handleBlur = (event) => {
+    this.refs.errorMessage.hide();
     const { onBlur } = this.props;
     if (typeof onBlur === 'function') onBlur();
   }
@@ -94,10 +115,14 @@ class DateInput extends Component {
   }
 
   render() {
-    const { isDisabled, isReadOnly, dateFormat, autoFocus } = this.props;
+    const { isDisabled, isReadOnly, hasError, errorMessage, dateFormat, autoFocus } = this.props;
     const { savedDate } = this.state;
+    const tooltip = (
+      <Tooltip className="dateInputTooltip" id="tooltipQuestion_date">
+        {errorMessage}
+      </Tooltip>
+    );
     var optionals = {};
-
     if (typeof savedDate === 'object' && savedDate !== null) {
       if (isReadOnly) {
         optionals['value'] = moment(savedDate).format(dateFormat);
@@ -120,17 +145,29 @@ class DateInput extends Component {
       );
     } else {
       return (
-        <DatePicker className={styles.dateInput}
-          dateFormat={dateFormat}
-          placeholderText={dateFormat}
-          autoFocus={autoFocus}
-          onChange={this.handleChange}
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
-          showYearDropdown
-          ref="dateInput"
-          {...optionals}
-        />
+        <div className={cx('dateInputWrap', {dateInputError: hasError})}>
+          <DatePicker className={cx('dateInput')}
+            dateFormat={dateFormat}
+            placeholderText={dateFormat}
+            autoFocus={autoFocus}
+            onChange={this.handleChange}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
+            showYearDropdown
+            ref="dateInput"
+            {...optionals}
+          />
+          <OverlayTrigger ref="errorMessage"
+            placement="bottom"
+            overlay={tooltip}
+            trigger={['hover', 'focus']}>
+            <div className={cx('errorIconWrapper')}>
+              <IoAndroidAlert className={cx({
+                hide: !hasError
+              })} />
+            </div>
+          </OverlayTrigger>
+        </div>
       );
     }
   }
