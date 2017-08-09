@@ -146,6 +146,7 @@ class WriteSignature extends Component {
     return (
       <div className={classNames(className, styles.writePanelWrapper)}>
         <div className={styles.tabPanelTitle}>Like a celebrity</div>
+        {writeSignatureColourSelection}
         {preloadFonts}
         {signatureFonts.map((font, index) => {
           let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
@@ -167,7 +168,6 @@ class WriteSignature extends Component {
                 <canvas className={styles.signaturePanelCanvas}
                   ref={`writeSignature-${font.name}`} height="252">
                 </canvas>
-                {writeSignatureColourSelection}
               </div>
               <div className={styles.signatureTypeLabel}>
                 {font.name}
