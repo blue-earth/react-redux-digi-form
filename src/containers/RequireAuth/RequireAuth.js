@@ -16,6 +16,10 @@ export default function requiresAuth(Component) {
        * Indicates whether the request to fetch user is running
        */
       isAuthenticating: PropTypes.bool.isRequired,
+      /**
+       * The user dictionary object, includes first_name, last_name, email, and last_login
+       */
+      user: PropTypes.object.isRequired,
       authStatus: PropTypes.string.isRequired,
       fetchUserInfo: PropTypes.func.isRequired,
       updateUserProfile: PropTypes.func.isRequired,
@@ -66,7 +70,8 @@ export default function requiresAuth(Component) {
   const mapStateToProps = (state) => {
     return {
       authStatus: state.auth.authStatus,
-      isAuthenticating: state.auth.isAuthenticating
+      isAuthenticating: state.auth.isAuthenticating,
+      user: state.auth.user
     };
   };
   const mapActionCreators = {
