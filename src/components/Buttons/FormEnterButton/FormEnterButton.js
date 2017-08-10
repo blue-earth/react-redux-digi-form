@@ -30,22 +30,22 @@ class FormEnterButton extends Component {
     if (typeof onClick === 'function') onClick();
   }
 
-  renderDefaultLabel() {
-    return (
-      <div className={styles.btnDefaultInner}>
-        <div>press</div>
-        <div>ENTER</div>
-      </div>
-    );
-  }
 
   renderButtonLabel() {
     const { buttonLabel } = this.props;
-    return (
-      <div className={styles.btnInner}>
-        {buttonLabel}
-      </div>
-    );
+    if (buttonLabel) {
+      return (
+        <div className={cx('btnDefaultInner')}>
+          {buttonLabel}
+        </div>
+      );
+    } else {
+      return (
+        <div className={cx('btnDefaultInner')}>
+          <div>press <br />ENTER</div>
+        </div>
+      );
+    }
   }
 
   render() {
@@ -75,8 +75,8 @@ class FormEnterButton extends Component {
         className={styles.formEnterButton}
         {...optionals}>
         <img className={styles.btnIcon} src={arrowEnterIcon} alt="" />
-        {buttonLabel !== '' ? this.renderButtonLabel() : this.renderDefaultLabel()}
       </Button>
+        {this.renderButtonLabel()}
     );
   }
 }
