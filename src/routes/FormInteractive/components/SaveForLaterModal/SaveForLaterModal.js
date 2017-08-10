@@ -3,9 +3,9 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  Modal,
-  Button
+  Modal
 } from 'react-bootstrap';
+import AppButton from 'components/Buttons/AppButton';
 import { getSessionURL } from 'helpers/formInteractiveHelper';
 import { connectModal } from 'redux-modal';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -31,12 +31,21 @@ class SaveForLaterModal extends Component {
     super(props);
     this.state = {
       urlCopied: false,
-      emailSent: false
+      emailSent: false,
+      isSendDisabled: true
     };
   };
 
   handleCopy = () => {
     this.setState({urlCopied: true});
+  }
+
+  handleEmailChange = (event) => {
+    if (event.target.value.length > 1) {
+      this.setState({isSendDisabled: false});
+    } else {
+      this.setState({isSendDisabled: true});
+    }
   }
 
   handleSend = () => {
@@ -80,7 +89,7 @@ class SaveForLaterModal extends Component {
         <Modal.Body>
           <h3>Send resume link</h3>
           <p className={cx('dialogDescription')}>Input an email address<br />to send a resume link to.</p>
-          <input type="text" ref="email" className={cx('emailField')} />
+          <input type="text" ref="email" className={cx('emailField')} onChange={this.handleEmailChange} />
           <div className={cx('urlField')}>
             <input type="text" ref="url" readOnly className={cx('urlFieldInner')}
               value={getSessionURL(formId, sessionId)} />
@@ -90,11 +99,12 @@ class SaveForLaterModal extends Component {
           </div>
           {this.state.urlCopied
             ? <p className={cx('urlCopied')}><FaCheck /> URL copied to clipboard.</p> : null}
-          <Button className={cx('sendButton')} block
-            disabled={this.props.isSendingContinueLink}
+          <p><AppButton className={cx('sendButton')} block size="lg"
+            isDisabled={this.state.isSendDisabled}
+            isBusy={this.props.isSendingContinueLink}
             onClick={this.handleSend}>
             Send
-          </Button>
+          </AppButton></p>
           {this.renderSendResponse()}
           <p><a onClick={handleHide}>Go back</a></p>
         </Modal.Body>
