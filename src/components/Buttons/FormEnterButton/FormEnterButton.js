@@ -19,17 +19,12 @@ class FormEnterButton extends Component {
   static defaultProps = {
     buttonLabel: '',
     autoFocus: false
+    onClick: () => {}
   };
 
   static contextTypes = {
     primaryColour: React.PropTypes.string
   };
-
-  handleClick = () => {
-    const { onClick } = this.props;
-    if (typeof onClick === 'function') onClick();
-  }
-
 
   renderButtonLabel() {
     const { buttonLabel } = this.props;
@@ -71,8 +66,8 @@ class FormEnterButton extends Component {
     }
 
     return (
-      <Button type="button" onClick={this.handleClick}
         className={styles.formEnterButton}
+      <button type="button" onClick={onClick}
         {...optionals}>
         <img className={styles.btnIcon} src={arrowEnterIcon} alt="" />
       </Button>
