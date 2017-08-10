@@ -11,9 +11,9 @@ sup {
   display: inline-block;
   text-align: center;
   vertical-align: top;
-}
-.small .envSavingImage{
-  height: 38px;
+  @include media('<sm') {
+    width: 100%;
+  }
 }
 .envSavingImage {
   height: 64px;
@@ -28,12 +28,18 @@ sup {
   margin-bottom: 6px;
   font-size: 14px;
 }
-.roble {
-  &.envSavingNumber {
+.isWidget {
+  &.envSavingWrap {
+    width: 33%;
+  }
+  .envSavingImage {
+    height: 38px;
+  }
+  .envSavingNumber {
     font-size: 22px;
     font-family: "roble_alt_extrabold";
   }
-  &.envSavingLabel {
+  .envSavingLabel {
     font-family: "roble_alt_lightlight";
   }
 }
