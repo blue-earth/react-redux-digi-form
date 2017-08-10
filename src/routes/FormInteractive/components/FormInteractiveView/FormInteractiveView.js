@@ -258,7 +258,11 @@ class FormInteractiveView extends Component {
               isDisabled={shouldDisableNextButton(form, currentQuestion.id) || isVerifying} />
           </li>
           <li className={styles.bottomLogo}>
-            <StackLogo logoStyle="darkgrey" width={80} height={55} />
+            <FormEnterButton
+              displayIcon={false}
+              buttonLabel="SUBMIT"
+              onClick={this.handleEnter}
+              isDisabled={isVerifying} />
           </li>
         </ul>
         <div className={this.enterButtonClass}>
