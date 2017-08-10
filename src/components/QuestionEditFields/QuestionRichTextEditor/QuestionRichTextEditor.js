@@ -49,7 +49,13 @@ class QuestionRichTextEditor extends Component {
     setValue: PropTypes.func.isRequired,
     questions: PropTypes.array.isRequired,
     title: PropTypes.string.isRequired,
-    popoverId: PropTypes.string
+    popoverId: PropTypes.string,
+    /*
+    / labelStyle
+    / major - roble_alt_boldbold, 16px
+    / minor - Open Sans, 13px
+    */
+    labelStyle: PropTypes.oneOf(['major', 'minor'])
   };
 
   static defaultProps = {
@@ -142,11 +148,11 @@ class QuestionRichTextEditor extends Component {
   }
 
   renderToolbar() {
-    const { title, popoverId } = this.props;
+    const { title, labelStyle, popoverId } = this.props;
     return (
       <div className={styles.toolbar}>
         <div className={styles.titleWidget}>
-          <SectionTitle title={title} popoverId={popoverId} />
+          <SectionTitle title={title} popoverId={popoverId} labelStyle={labelStyle} />
         </div>
         <ul className={styles.buttonsWidget}>
           <li>
@@ -225,4 +231,3 @@ class QuestionRichTextEditor extends Component {
 }
 
 export default QuestionRichTextEditor;
-

@@ -17,7 +17,8 @@ import {
   setMappingPositionInfo,
   setPageZoom,
   saveElement,
-  deleteElement
+  deleteElement,
+  submitConfigure
 } from 'redux/modules/formBuilder';
 
 import FormBuilderSteps from '../components/FormBuilderSteps';
@@ -39,6 +40,7 @@ const mapActionCreators = {
   setPageZoom,
   saveElement,
   deleteElement,
+  submitConfigure,
   show
 };
 
@@ -46,6 +48,8 @@ const mapStateToProps = (state) => {
   const { formBuilder } = state;
   const {
     id,
+    title,
+    slug,
     currentStep,
     isFetching,
     isSubmitting,
@@ -54,6 +58,7 @@ const mapStateToProps = (state) => {
     logics,
     documents,
     documentMapping,
+    formConfig,
     currentElement,
     activeInputName,
     currentQuestionInstruction,
@@ -63,6 +68,8 @@ const mapStateToProps = (state) => {
   } = formBuilder || INIT_BUILDER_STATE;
   return {
     id: parseInt(id),
+    title,
+    slug,
     currentStep,
     isFetching,
     isSubmitting,
@@ -71,6 +78,7 @@ const mapStateToProps = (state) => {
     logics,
     documents,
     documentMapping,
+    formConfig,
     currentElement,
     activeInputName,
     currentQuestionInstruction,

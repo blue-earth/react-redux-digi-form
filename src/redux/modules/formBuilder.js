@@ -4,6 +4,7 @@ import { mergeItemIntoArray, findItemById } from 'helpers/pureFunctions';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
 import _ from 'lodash';
+import humps from 'humps';
 
 export const NEW_FORM = 'NEW_FORM';
 export const RECEIVE_FORM = 'RECEIVE_FORM';
@@ -31,6 +32,7 @@ export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
+export const UPDATE_STORE = 'UPDATE_STORE';
 
 export const INIT_BUILDER_STATE = {
   id: 0,
@@ -53,7 +55,16 @@ export const INIT_BUILDER_STATE = {
     //   height: 877
     // }
   ],
-  formConfig: {},
+  formConfig: {
+    customise: {
+      footer: '',
+      primaryColour: '#ffffff',
+      accentColour: '#ffffff',
+      emondoBranding: true
+    },
+    notifications: {},
+    security: []
+  },
   documentMapping: {},
   activeInputName: '',
   currentElement: null, // holds the current element state being added or edited.
@@ -127,7 +138,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
     logics,
     documents: data.assets_urls ? data.assets_urls : [],
     documentMapping: data.document_mapping ? data.document_mapping : [],
-    formConfig: data.form_config,
+    formConfig: data.form_config ? data.form_config : {},
     title: data.title,
     slug: data.slug,
     isModified: false,
@@ -463,6 +474,59 @@ const _setQuestionEditMode = (state, action) => {
 export const setCurrentStep = createAction(SET_CURRENT_STEP);
 
 // ------------------------------------
+// Action: submitConfigure
+// submit function for the configure step
+// ------------------------------------
+export const submitConfigure = (formData) => {
+  return (dispatch, getState) => {
+    dispatch(requestSubmitForm());
+    dispatch(processSubmitConfigure(formData));
+  };
+};
+// ------------------------------------
+// Action: updateStore
+// ------------------------------------
+export const updateStore = createAction(UPDATE_STORE);
+// ------------------------------------
+// Action: processSubmitConfigure
+// ------------------------------------
+export const processSubmitConfigure = (formData) => {
+  var body = humps.decamelizeKeys(formData);
+  var method = 'POST';
+  var requestURL = `${API_URL}/form_document/api/form/`;
+  if (formData.id && formData.id > 0) {
+    requestURL += `${formData.id}/`;
+    method = 'PUT';
+  }
+  const fetchParams = assignDefaults({
+    method,
+    body
+  });
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      const { id } = value;
+      id && dispatch(updateFormId(id));
+      dispatch(doneSubmitForm());
+      // update store
+      dispatch(updateStore(formData));
+      // console.log('fetch success');
+      // TODO: success message?
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(doneSubmitForm());
+      // console.log('fetch failed');
+      // TODO: error message?
+    };
+  };
+
+  return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const formBuilderReducer = handleActions({
@@ -500,6 +564,9 @@ const formBuilderReducer = handleActions({
     Object.assign({}, state, {
       activeInputName: action.payload
     }),
+
+  UPDATE_STORE: (state, action) =>
+    Object.assign({}, state, action.payload),
 
   SAVE_ELEMENT: (state, action) =>
     _saveElement(state, action),

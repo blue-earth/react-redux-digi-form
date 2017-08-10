@@ -3,6 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import FormBuilder from '../FormBuilder';
+import StepConfigure from '../StepConfigure';
 
 class FormBuilderSteps extends Component {
 
@@ -12,6 +13,8 @@ class FormBuilderSteps extends Component {
      * Form ID
      */
     id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    slug: PropTypes.string,
 
     /*
      * questions: Redux state to store the array of questions.
@@ -32,6 +35,8 @@ class FormBuilderSteps extends Component {
      * documentMapping: Redux state to hold the bounding box of the question item in document
      */
     documentMapping: PropTypes.object.isRequired,
+
+    formConfig: PropTypes.object,
 
     /*
      * isFetching: Redux state that indicates whether the requested form is being fetched from backend
@@ -153,7 +158,9 @@ class FormBuilderSteps extends Component {
     /*
      * goTo: Redux action to go to specific url.
      */
-    goTo: PropTypes.func.isRequired
+    goTo: PropTypes.func.isRequired,
+
+    submitConfigure: PropTypes.func.isRequired
   };
 
   // TODO: make the real step components
@@ -167,8 +174,14 @@ class FormBuilderSteps extends Component {
         };
       case 'configure':
         return {
-          Component: TempStepConfigure,
-          props: props
+          Component: StepConfigure,
+          props: {
+            id: props.id,
+            title: props.title,
+            slug: props.slug,
+            formConfig: props.formConfig,
+            submitConfigure: props.submitConfigure
+          }
         };
       case 'send':
         return {
@@ -208,13 +221,10 @@ class FormBuilderSteps extends Component {
             params: props.params,
             show: props.show,
             goTo: props.goTo
-
           }
         };
     }
   }
-
-  // TODO: the horizontal navbar with all the step links could probably go in here
 
   render() {
     const { Component, props } = this.currentStepComponent;
@@ -231,14 +241,6 @@ class TempStepArrange extends Component {
   render() {
     return (
       <div>Arrange</div>
-    );
-  }
-}
-
-class TempStepConfigure extends Component {
-  render() {
-    return (
-      <div>Configure</div>
     );
   }
 }
