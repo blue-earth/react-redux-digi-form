@@ -5,7 +5,10 @@ $wrapper-inner-padding-right: 150px;
 
 :global {
   body {
-    min-height: 610px;
+    min-height: 510px;
+    @include media('>=xs') {
+      min-height: 610px;
+    }
   }
 }
 
