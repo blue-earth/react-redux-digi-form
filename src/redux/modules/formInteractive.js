@@ -114,6 +114,7 @@ export const INIT_FORM_STATE = {
   shouldShowFinalSubmit: false, // indicates whether to show final form submit section.
   formAccessStatus: 'init', // can be 'init', 'waiting', 'failed', 'success'
   isAccessCodeProtected: false,
+  numberOfPages: 0,
   formAccessCode: '',
   idVerifyStatus: {
     people: TEST_PEOPLE_DATA, // people data
@@ -165,7 +166,8 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
   form: data.form_data,
   title: data.title,
   slug: data.slug,
-  isAccessCodeProtected: data.is_access_code_protected
+  isAccessCodeProtected: data.is_access_code_protected,
+  numberOfPages: data.number_of_pages
 }));
 
 // ------------------------------------
