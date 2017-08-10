@@ -60,6 +60,7 @@
 .browseButton {
   text-decoration: underline;
   cursor: pointer;
+  color: $signature-modal-tab-color;
 }
 .uploadInstructionWrapper {  
   @include vcenter;
