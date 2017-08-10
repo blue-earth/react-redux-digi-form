@@ -11,7 +11,6 @@ import Hogan from 'hogan.js';
 import { valueIsValid } from 'helpers/validationHelper';
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import FormEnterButton from 'components/Buttons/FormEnterButton';
-import StackLogo from 'components/Logos/StackLogo';
 import { MdKeyboardBackspace } from 'react-icons/lib/md';
 import {
   getContextFromAnswer,
