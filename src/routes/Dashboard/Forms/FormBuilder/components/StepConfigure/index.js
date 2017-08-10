@@ -30,6 +30,9 @@ class StepConfigure extends Component {
   }
 
   processForm = (values) => {
+    var newFormConfig = this.props.formConfig;
+    _.merge(newFormConfig, values.formConfig);
+    values.formConfig = newFormConfig;
     values.id = this.props.id;
     this.props.submitConfigure(values);
   }
