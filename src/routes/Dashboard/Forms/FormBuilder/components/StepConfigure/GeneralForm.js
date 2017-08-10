@@ -11,6 +11,7 @@ import Button from 'components/Buttons/DashboardButtons/Button';
 import { FaCheck } from 'react-icons/lib/fa';
 import styles from './Form.scss';
 import classNames from 'classnames';
+import _ from 'lodash';
 
 const renderTextInput = field => (
   <div className={classNames([styles.builderItem])}>
@@ -52,12 +53,17 @@ class GeneralForm extends Component {
 
   get questionsDropdown() {
     const { questions } = this.props;
-    // TODO: filter out type: Group
-    // TODO: improve dropdown text
-    return questions.map(item => ({
-      key: `answer_${item.id}`,
-      text: `answer_${item.id}`
-    }));
+    var filteredQuestions = [];
+    // filter out Group types
+    _.forEach(questions, function (q) {
+      if (q.type !== 'Group') {
+        filteredQuestions.push({
+          'text': q.question_instruction,
+          'key': `answer_${q.id}`
+        });
+      }
+    });
+    return filteredQuestions;
   }
 
   // TODO: need the real slug prefix
@@ -67,7 +73,7 @@ class GeneralForm extends Component {
       <form>
         <Field name="title" component={renderTextInput} label="Your form name" />
         <div className={styles.builderDivider} />
-        <Field name="slug" component={renderTextInput} label="Hosted form URL" prefix="https://cmc.emondo."
+        <Field name="slug" component={renderTextInput} label="Hosted form URL" prefix="https://emondo.co/"
           helpText="Unsupported characters will automatically be converted" normalize={sanitizedSlug} />
         <div className={styles.builderDivider} />
         <Field name="formConfig.redirect" component={renderTextInput} label="Redirect after submitting" />
