@@ -14,23 +14,29 @@ const colours = {
 
 const signatureFonts = [
   {
-    name: 'Swift',
-    size: 220
-  }, {
-    name: 'Lincoln',
-    size: 240
-  }, {
+    label: 'Steve Jobs',
     name: 'Steve',
     size: 160
   }, {
-    name: 'MayQueen',
+    label: 'Hillary Rodham Clinton',
+    name: 'Clinton',
     size: 200
   }, {
-    name: 'ArtySignature',
+    label: 'Donald Trump',
+    name: 'Trump',
     size: 200
   }, {
-    name: 'MonsieurLaDoulaise',
-    size: 140
+    label: 'Taylor Swift',
+    name: 'Swift',
+    size: 200
+  }, {
+    label: 'Abraham Lincoln',
+    name: 'Lincoln',
+    size: 200
+  }, {
+    label: 'Michelle Obama',
+    name: 'Obama',
+    size: 200
   }
 ];
 
@@ -77,7 +83,8 @@ class WriteSignature extends Component {
   handleWriteCanvasesResize = () => {
     signatureFonts.map((font) => {
       var writeCanvas = this.refs[`writeSignature-${font.name}`];
-      writeCanvas.width = writeCanvas.parentElement.offsetWidth * 2;
+      writeCanvas.width = (writeCanvas.parentElement.offsetWidth - 4) * 2;
+      writeCanvas.height = (writeCanvas.parentElement.offsetHeight - 4) * 2;
     });
     this.updateWriteSignatureCanvases();
   }
@@ -108,8 +115,8 @@ class WriteSignature extends Component {
       let adjustedHeight = font.size;
       ctx.font = `${adjustedHeight}px ${signatureStyle}`;
       let textWidth = ctx.measureText(signatureName).width;
-      if (textWidth > width - 40) {
-        adjustedHeight = parseInt(adjustedHeight * (width - 40) / textWidth);
+      if (textWidth > width - 100) {
+        adjustedHeight = parseInt(adjustedHeight * (width - 100) / textWidth);
       }
       ctx.font = `${adjustedHeight}px ${signatureStyle}`;
       textWidth = ctx.measureText(signatureName).width;
@@ -166,11 +173,11 @@ class WriteSignature extends Component {
               )}
                 onClick={handleClick}>
                 <canvas className={styles.signaturePanelCanvas}
-                  ref={`writeSignature-${font.name}`} height="252">
+                  ref={`writeSignature-${font.name}`}>
                 </canvas>
               </div>
               <div className={styles.signatureTypeLabel}>
-                {font.name}
+                {font.label}
               </div>
             </Col>
           );
