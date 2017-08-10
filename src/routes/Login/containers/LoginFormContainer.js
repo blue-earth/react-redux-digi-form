@@ -14,12 +14,10 @@ const mapStateToProps = (state) => {
   const { auth } = state;
   const {
     authStatus,
-    user,
     isAuthenticating
   } = auth || INIT_AUTH_STATE;
   return {
     authStatus,
-    user,
     isAuthenticating
   };
 };

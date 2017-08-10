@@ -6,7 +6,7 @@ import { Field } from 'redux-form';
 import { Form } from 'react-bootstrap';
 import classNames from 'classnames';
 import { dashboardUrl, signupUrl } from 'helpers/urlHelper';
-import { LOGIN_FAILED } from 'redux/modules/auth';
+import { LOGGED_IN, LOGIN_FAILED } from 'redux/modules/auth';
 import Verifier from 'components/Verifier/Verifier';
 import Button from 'components/Buttons/DashboardButtons/Button';
 
@@ -36,7 +36,6 @@ class LoginForm extends Component {
   static propTypes = {
     submitLoginForm: PropTypes.func.isRequired,
     authStatus: PropTypes.string,
-    user: PropTypes.object.isRequired,
     goTo: PropTypes.func.isRequired,
     isAuthenticating: PropTypes.bool.isRequired,
     pristine: PropTypes.bool.isRequired,
@@ -49,8 +48,8 @@ class LoginForm extends Component {
   };
 
   componentWillReceiveProps(props) {
-    const { user, goTo } = props;
-    if (Object.keys(user).length > 0) {
+    const { authStatus, goTo } = props;
+    if (authStatus === LOGGED_IN) {
       goTo(dashboardUrl(''));
     }
   }
