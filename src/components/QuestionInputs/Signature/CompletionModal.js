@@ -16,19 +16,24 @@ class CompletionModal extends Component {
   static propTypes = {
     handleHide: PropTypes.func.isRequired, // Modal hide function
     show: PropTypes.bool,                  // Modal display status
-    cancelModal: PropTypes.func
+    cancelModal: PropTypes.func,
+    closeModal: PropTypes.func.isRequired,
+    email: PropTypes.string.isRequired,
+    verifyEmailCode: PropTypes.func.isRequired,
+    resendCode: PropTypes.func.isRequired
   };
 
-  handleHide = () => {
-    const { cancelModal, handleHide } = this.props;
-    cancelModal();
-    handleHide();
+  handleComplete = () => {
+    this.props.verifyEmailCode(this.refs.codeInput.value, this.props.closeModal);
+  }
+  handleResend = () => {
+    this.props.resendCode();
   }
 
   render() {
-    const { show, handleHide } = this.props;
+    const { show, email, closeModal } = this.props;
     return (
-      <Modal backdrop="static" show={show} onHide={handleHide}
+      <Modal backdrop="static" show={show}
         className={styles.completionModal} dialogClassName={styles.modalWrapper}>
         <h3 className={styles.modalHeader}>
             Enter signature completion code
@@ -37,17 +42,17 @@ class CompletionModal extends Component {
           <Row>
             <Col xs={8} xsPush={2}>
               <p className={styles.info}>
-                A 4 digit signature code has been sent to {'mccown@emondo.com.au'}.
+                A 4 digit signature code has been sent to {email}.
                 {' '}
-                <a href="javascript: void(0)" className={styles.resendButton}>Resend?</a>
+                <a href="javascript:;" className={styles.resendButton} onClick={this.handleResend}>Resend?</a>
               </p>
-              <input placeholder="Code" className={styles.codeInput} />
+              <input ref="codeInput" placeholder="Code" className={styles.codeInput} />
               <div className={styles.buttonWrapper}>
-                <AppButton size="lg" extraClass={styles.completeButton}>
+                <AppButton size="lg" extraClass={styles.completeButton} onClick={this.handleComplete}>
                   Complete
                 </AppButton>
               </div>
-              <Button onClick={this.handleHide} bsStyle="link" className={styles.cancelButton}>
+              <Button onClick={closeModal} bsStyle="link" className={styles.cancelButton}>
                 Go back
               </Button>
             </Col>
@@ -58,4 +63,4 @@ class CompletionModal extends Component {
   }
 }
 
-export default connectModal({ name: 'signatureCompletionModal' })(CompletionModal);
+export default connectModal({ name: 'signatureVerificationModal' })(CompletionModal);

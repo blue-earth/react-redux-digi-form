@@ -16,64 +16,96 @@ import { connectModal } from 'redux-modal';
 import styles from './SignatureModal.scss';
 import classNames from 'classnames';
 import moment from 'moment';
+import AppButton from 'components/Buttons/AppButton';
 import DrawSignature from 'components/SignatureWidget/DrawSignature';
 import WriteSignature from 'components/SignatureWidget/WriteSignature';
+import CompletionModal from './CompletionModal';
+import { validateIsEmail } from 'helpers/validationHelper';
 
 const WRITE = 'write';
-const DRAW = 'draw';
-const UPLOAD = 'upload';
 
 class SignatureModal extends Component {
   static propTypes = {
     handleHide: PropTypes.func.isRequired, // Modal hide function
     show: PropTypes.bool,                 // Modal display status
-    finishModal: PropTypes.func,
+    showModal: PropTypes.func.isRequired,
     value: PropTypes.string,
     commitValue: PropTypes.func,
-    isConsented: PropTypes.bool
+    isConsented: PropTypes.bool,
+    isPageBusy: PropTypes.bool,
+    email: PropTypes.string.isRequired,
+    emailList: PropTypes.array.isRequired,
+    changeEmail: PropTypes.func.isRequired,
+    verifyEmailCode: PropTypes.func.isRequired,
+    fetchEmailList: PropTypes.func.isRequired,
+    requestVerificationCode: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super(props);
     this.state = {
+      isSignatureValidated: true,
+      isEmailValidated: true,
+      commitValue: '',
       activeTabName: WRITE,
       signatureName: '',
-      isConsented: props.isConsented || false
+      isConsented: props.isConsented || false,
+      isVerificationModalOpen: false
     };
   };
 
-  handleTabSelect = (activeTabName) => {
-    this.setState({ activeTabName });
+  componentWillMount() {
+    this.props.fetchEmailList();
+  }
+
+  hideVerificationModal = () => {
+    this.props.hide('signatureVerificationModal');
+    this.setState({ isVerificationModalOpen: false });
   }
 
   handleSubmit = () => {
-    const { handleHide, commitValue, finishModal } = this.props;
+    const { email, emailList, requestVerificationCode, showModal, handleHide, commitValue } = this.props;
     const { activeTabName } = this.state;
-    if (activeTabName === WRITE) {
-      commitValue(this.refs.write.dataUrl);
+    const value = this.refs[activeTabName].dataUrl;
+    // Empty signature error handle
+    if (value === '') {
+      return this.setState({
+        isSignatureValidated: false
+      });
     }
-    if (activeTabName === DRAW) {
-      commitValue(this.refs.draw.dataUrl);
+    if (!validateIsEmail(email)) {
+      return this.setState({
+        isEmailValidated: false
+      });
     }
-    if (activeTabName === UPLOAD) {
-      var signatureFile = this.refs.signatureFile.file();
-      if (!signatureFile || signatureFile.length === 0) {
-        commitValue('');
-      } else {
-        let reader = new FileReader();
-        reader.readAsDataURL(signatureFile);
-        reader.onload = (e) => {
-          commitValue(e.target.result);
-        };
-      }
+    if (emailList.indexOf(email) === -1) {
+      requestVerificationCode();
+      showModal('signatureVerificationModal');
+      this.setState({ isVerificationModalOpen: true });
+    } else {
+      commitValue(this.refs[activeTabName].dataUrl);
+      handleHide();
     }
-    finishModal();
-    handleHide();
+  }
+
+  handleTabSelect = (activeTabName) => {
+    this.setState({
+      activeTabName,
+      isSignatureValidated: true,
+      isEmailValidated: true
+    });
   }
 
   handleNameChange = (value) => {
     this.setState({
-      signatureName: value
+      signatureName: value,
+      isSignatureValidated: true
+    });
+  }
+  handleEmailChange = (value) => {
+    this.props.changeEmail(value);
+    this.setState({
+      isEmailValidated: true
     });
   }
 
@@ -87,12 +119,28 @@ class SignatureModal extends Component {
     this.refs.draw.resizeSignaturePad();
   }
 
+  handleSignatureChange = () => {
+    this.setState({
+      isSignatureValidated: true
+    });
+  }
+
   render() {
-    const { handleHide, show } = this.props;
     const {
+      handleHide,
+      show,
+      email,
+      isPageBusy,
+      verifyEmailCode,
+      requestVerificationCode
+    } = this.props;
+    const {
+      isEmailValidated,
+      isSignatureValidated,
       signatureName,
       activeTabName,
-      isConsented
+      isConsented,
+      isVerificationModalOpen
     } = this.state;
 
     const writeLogo = require('./Write.svg');
@@ -101,107 +149,146 @@ class SignatureModal extends Component {
 
     moment.locale('en-au');
     return (
-      <Modal show={show} onHide={handleHide} className={styles.signatureModal}
-        aria-labelledby="ModalHeader">
-        <Modal.Header>
-          <Modal.Title bsClass={styles.signatureModalTitle}>
-            YOUR SIGNATURE
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body bsClass={styles.signatureModalWrapper}>
-          <Row className={styles.infoSection}>
-            <Col xs={6}>
-              <div>Full name</div>
-              <FloatTextInput
-                extraClass={styles.signatureInput}
-                autoFocus
-                value={signatureName}
-                placeholder="Enter full name"
-                onChange={this.handleNameChange}
-                onEnterKey={this.handleAccept}
-              />
-            </Col>
-            <Col xs={3} xsPush={3}>
-              <div>Date</div>
-              <span className={styles.info}>{moment().format('L')}</span>
-            </Col>
-          </Row>
-          <Tabs activeKey={activeTabName} id="SignatureTabs"
-            onSelect={this.handleTabSelect}
-            className={classNames(
-              {'activeTab': activeTabName === 'write'})
-            }>
-            <Tab eventKey="write" title={
-              <div>
-                <img className={styles.tabIcon} src={writeLogo} />
-                <span>
-                  {' '}
-                  Write
-                </span>
-              </div>
-            }>
-              <WriteSignature ref="write" signatureName={signatureName} className={styles.tabPanelWrapper} />
-            </Tab>
-            <Tab
-              onEntered={this.handleDrawSignatureCanvasResize}
-              eventKey="draw" title={
-                <span>
-                  <img className={styles.tabIcon} src={drawLogo} />
-                  {' '}
-                  Draw
-                </span>
-            }>
-              <DrawSignature ref="draw" className={styles.tabPanelWrapper} />
-            </Tab>
-            <Tab eventKey="upload" title={
-              <span>
-                <img className={styles.tabIcon} src={uploadLogo} />
+      <div>
+        <Modal
+          backdrop="static"
+          show={show}
+          className={classNames(styles.signatureModal, {
+            'hide': isVerificationModalOpen
+          })}
+          aria-labelledby="ModalHeader">
+          <Modal.Header>
+            <Modal.Title bsClass={styles.signatureModalTitle}>
+              YOUR SIGNATURE
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body bsClass={styles.signatureModalWrapper}>
+            <Row>
+              <Col xs={6}>
+                <div>Full name</div>
+                <FloatTextInput
+                  extraClass={styles.signatureInput}
+                  autoFocus
+                  value={signatureName}
+                  placeholder="Enter full name"
+                  onChange={this.handleNameChange}
+                />
+              </Col>
+              <Col xs={6}>
+                <div>Email</div>
+                <FloatTextInput
+                  errorMessage={<span>Email address is not valid</span>}
+                  hasError={!isEmailValidated}
+                  extraClass={styles.signatureInput}
+                  value={email}
+                  placeholder="Enter email"
+                  onChange={this.handleEmailChange}
+                />
+              </Col>
+            </Row>
+            <Row className={styles.infoSection}>
+              <Col xs={6}>
+                Date
                 {' '}
-                Upload photo
-              </span>
-            }>
-              <div className={styles.tabPanelWrapper}>
-                <div className={styles.fileUploadSection}>
-                  <ImageUploader ref="signatureFile" />
+                <span className={styles.info}>{moment().format('L')}</span>
+              </Col>
+              <Col xs={12}>
+                {!isSignatureValidated && <span className={styles.errorMessage}>Please sign your signature</span>}
+              </Col>
+            </Row>
+            <Tabs activeKey={activeTabName} id="SignatureTabs"
+              onSelect={this.handleTabSelect}
+              className={classNames(
+                {'activeTab': activeTabName === 'write'})
+              }>
+              <Tab eventKey="write" title={
+                <div>
+                  <img className={styles.tabIcon} src={writeLogo} />
+                  <span>
+                    {' '}
+                    Write
+                  </span>
                 </div>
+              }>
+                <WriteSignature
+                  ref="write"
+                  onChange={this.handleSignatureChange}
+                  signatureName={signatureName}
+                  className={styles.tabPanelWrapper} />
+              </Tab>
+              <Tab
+                onEntered={this.handleDrawSignatureCanvasResize}
+                eventKey="draw" title={
+                  <span>
+                    <img className={styles.tabIcon} src={drawLogo} />
+                    {' '}
+                    Draw
+                  </span>
+              }>
+                <DrawSignature
+                  ref="draw"
+                  onChange={this.handleSignatureChange}
+                  className={styles.tabPanelWrapper} />
+              </Tab>
+              <Tab eventKey="upload" title={
+                <span>
+                  <img className={styles.tabIcon} src={uploadLogo} />
+                  {' '}
+                  Upload photo
+                </span>
+              }>
+                <div className={styles.tabPanelWrapper}>
+                  <div className={styles.fileUploadSection}>
+                    <ImageUploader ref="upload" onChange={this.handleSignatureChange} />
+                  </div>
+                </div>
+              </Tab>
+            </Tabs>
+          </Modal.Body>
+          <div className={classNames(
+            styles.signatureModalConsent,
+            styles.signatureModalWrapper
+          )}>
+            <div className={styles.consentTitle}>
+              <div style={{width: '30px', float: 'left'}}>
+                <input id="consent" type="checkbox" className={styles.checkbox}
+                  checked={isConsented} onChange={this.handleToggleConsent} />
               </div>
-            </Tab>
-          </Tabs>
-        </Modal.Body>
-        <div className={classNames(
-          styles.signatureModalConsent,
-          styles.signatureModalWrapper
-        )}>
-          <div className={styles.consentTitle}>
-            <div style={{width: '30px', float: 'left'}}>
-              <input id="consent" type="checkbox" className={styles.checkbox}
-                checked={isConsented} onChange={this.handleToggleConsent} />
+              <div><label htmlFor="consent">I consent to the following</label></div>
             </div>
-            <div><label htmlFor="consent">I consent to the following</label></div>
+            <div style={{marginLeft: '30px'}}>
+              <p className={styles.consentStatement}>
+                Lorem ipsum Occaecat proident.
+                irure proident nisi ea eiusmod mollit ex cillum.
+                dolor consequat et voluptate officia velit in cupidatat ad do sed aute voluptate.
+                ullamco nostrud sit eu ad labore elit cillum in officia sunt aliquip reprehenderit.
+                in labore qui in voluptate Duis do Duis deserunt anim Duis Excepteur commodo fugiat.
+                esse do id nostrud aute tempor reprehenderit laborum in sint culpa velit elit velit.
+              </p>
+            </div>
           </div>
-          <div style={{marginLeft: '30px'}}>
-            <p className={styles.consentStatement}>
-              Lorem ipsum Occaecat proident.
-              irure proident nisi ea eiusmod mollit ex cillum.
-              dolor consequat et voluptate officia velit in cupidatat ad do sed aute voluptate.
-              ullamco nostrud sit eu ad labore elit cillum in officia sunt aliquip reprehenderit.
-              in labore qui in voluptate Duis do Duis deserunt anim Duis Excepteur commodo fugiat.
-              esse do id nostrud aute tempor reprehenderit laborum in sint culpa velit elit velit.
-            </p>
-          </div>
-        </div>
-        <Modal.Footer className={classNames(
-          styles.signatureModalFooter,
-          styles.signatureModalWrapper
-        )}>
-          <Button onClick={handleHide} bsStyle="link" className={styles.cancelButton}>
-            Cancel
-          </Button>
-          <Button bsStyle="primary" onClick={this.handleSubmit} disabled={!isConsented}>
-            Accept & Witness
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <Modal.Footer className={classNames(
+            styles.signatureModalFooter,
+            styles.signatureModalWrapper
+          )}>
+            <Button onClick={handleHide} bsStyle="link" className={styles.cancelButton}>
+              Cancel
+            </Button>
+            <AppButton
+              onClick={this.handleSubmit}
+              isDisabled={!(isConsented && isEmailValidated && isSignatureValidated)}
+              isBusy={isPageBusy}
+              extraClass={styles.signButton}>
+              Sign
+            </AppButton>
+          </Modal.Footer>
+        </Modal>
+        <CompletionModal
+          closeModal={this.hideVerificationModal}
+          email={email}
+          verifyEmailCode={verifyEmailCode}
+          resendCode={requestVerificationCode} />
+      </div>
     );
   }
 }
