@@ -20,7 +20,6 @@ export const SET_IS_FETCHING_USER = 'SET_IS_FETCHING_USER';
 
 export const LOGOUT = 'LOGOUT';
 
-// TODO: decide if signup stuff should be here or in it's own module
 export const REQUEST_SIGNUP = 'REQUEST_SIGNUP';
 export const RECEIVE_SIGNUP_STATUS = 'RECEIVE_SIGNUP_STATUS';
 export const SET_SERVER_RESPONSE = 'SET_SERVER_RESPONSE';
@@ -36,6 +35,7 @@ export const INIT_AUTH_STATE = {
     last_name: ''
   },
   isAuthenticating: false,
+  isUpdating: false,
   serverResponse: {}
 };
 
@@ -57,6 +57,35 @@ export const submitSignupForm = (email, password) => {
     dispatch(requestSignup());
     dispatch(processSignup(email, password));
   };
+};
+
+// ------------------------------------
+// Action: updateUserProfile
+// ------------------------------------
+export const updateUserProfile = (user) => {
+  const body = {
+    first_name: user.first_name,
+    last_name: user.last_name
+  };
+  const fetchParams = assignDefaults({
+    method: 'PUT',
+    body
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(setUserProfile(value));
+      dispatch(setIsFetchingUserInfo(false));
+    };
+  };
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(setIsFetchingUserInfo(false));
+    };
+  };
+  return [
+    setIsFetchingUserInfo(true),
+    bind(fetch(`${API_URL}/accounts/api/user/`, fetchParams), fetchSuccess, fetchFail)
+  ];
 };
 
 // ------------------------------------
