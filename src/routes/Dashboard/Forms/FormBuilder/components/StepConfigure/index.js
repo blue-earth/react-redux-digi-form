@@ -15,6 +15,7 @@ class StepConfigure extends Component {
     title: PropTypes.string,
     slug: PropTypes.string,
     formConfig: PropTypes.any,
+    questions: PropTypes.array,
     submitConfigure: PropTypes.func
   }
 
@@ -35,6 +36,12 @@ class StepConfigure extends Component {
     values.formConfig = newFormConfig;
     values.id = this.props.id;
     this.props.submitConfigure(values);
+  }
+
+  get sidebarMenuItems() {
+    return [
+      {key: 'general', label: (<span><FaInfoCircle /> General</span>)}
+    ];
   }
 
   renderForm = () => {
@@ -64,7 +71,11 @@ class StepConfigure extends Component {
       case 'sec':
         return (<span>Security section, under construction</span>);
       default:
-        return (<GeneralForm onSubmit={this.processForm} {...initGeneral} enableReinitialize />);
+        return (
+          <GeneralForm {...initGeneral} enableReinitialize
+            onSubmit={this.processForm}
+            questions={this.props.questions} />
+        );
     }
   }
 
@@ -73,9 +84,7 @@ class StepConfigure extends Component {
       <div className={styles.stepConfigureWrapper}>
         <div className={styles.leftPanel}>
           <SidebarMenu
-            menuItems={[
-              {key: 'general', label: <span><FaInfoCircle /> General</span>}
-            ]}
+            menuItems={this.sidebarMenuItems}
             selectedItemKey={this.state.currentSubPageKey} onMenuItemSelect={this.handleSidebarSelect} />
         </div>
         <div className={styles.rightPanel}>

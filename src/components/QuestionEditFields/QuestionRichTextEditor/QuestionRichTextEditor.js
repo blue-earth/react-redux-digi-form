@@ -55,11 +55,17 @@ class QuestionRichTextEditor extends Component {
     / major - roble_alt_boldbold, 16px
     / minor - Open Sans, 13px
     */
-    labelStyle: PropTypes.oneOf(['major', 'minor'])
+    labelStyle: PropTypes.oneOf(['major', 'minor']),
+    /*
+    / answersPullRight
+    / align the answers dropdown to the right side of the button
+    */
+    answersPullRight: PropTypes.bool
   };
 
   static defaultProps = {
-    popoverId: ''
+    popoverId: '',
+    answersPullRight: false
   };
 
   constructor(props) {
@@ -185,7 +191,7 @@ class QuestionRichTextEditor extends Component {
   }
 
   renderAnswerDropdown() {
-    const { questions } = this.props;
+    const { questions, answersPullRight } = this.props;
     const buttonClass = classNames({
       [styles.dropdownAnswerButton]: true,
       'btn btn-xs btn-default': true
@@ -193,7 +199,7 @@ class QuestionRichTextEditor extends Component {
     return (
       <Dropdown
         id="QRT_AnswersDropdown"
-        className={styles.answersDropdown}
+        className={classNames({[styles.answersDropdown]: true, 'pull-right': answersPullRight})}
         onSelect={this.handleAnswerSelect}>
         <Button bsRole="toggle" block
           className={buttonClass}>

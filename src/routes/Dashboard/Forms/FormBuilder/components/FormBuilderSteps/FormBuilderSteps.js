@@ -163,7 +163,6 @@ class FormBuilderSteps extends Component {
     submitConfigure: PropTypes.func.isRequired
   };
 
-  // TODO: make the real step components
   get currentStepComponent() {
     const props = this.props;
     switch (props.currentStep) {
@@ -179,6 +178,7 @@ class FormBuilderSteps extends Component {
             id: props.id,
             title: props.title,
             slug: props.slug,
+            questions: props.questions,
             formConfig: props.formConfig,
             submitConfigure: props.submitConfigure
           }
@@ -236,7 +236,7 @@ class FormBuilderSteps extends Component {
 
 export default FormBuilderSteps;
 
-// temporary components for the remaining steps, just for testing navigation
+// TODO: replace these temporary components with the real ones
 class TempStepArrange extends Component {
   render() {
     return (

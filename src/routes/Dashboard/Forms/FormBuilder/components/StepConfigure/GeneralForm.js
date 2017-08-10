@@ -25,8 +25,8 @@ const renderTextInput = field => (
 
 const renderRTE = field => (
   <div className={classNames([styles.builderItem])}>
-    <QuestionRichTextEditor {...field.input}
-      title={field.title} labelStyle="major" questions={[]} setValue={field.input.onChange} />
+    <QuestionRichTextEditor {...field.input} answersPullRight
+      title={field.title} labelStyle="major" questions={field.questions} setValue={field.input.onChange} />
     {field.meta.touched && field.meta.error &&
       <div className={styles.error}>{field.meta.error}</div>
     }
@@ -46,7 +46,18 @@ const sanitizedSlug = value => value && value.replace(/[ ]/g, '_').replace(/([^a
 class GeneralForm extends Component {
 
   static propTypes = {
+    questions: PropTypes.array,
     handleSubmit: PropTypes.func
+  }
+
+  get questionsDropdown() {
+    const { questions } = this.props;
+    // TODO: filter out type: Group
+    // TODO: improve dropdown text
+    return questions.map(item => ({
+      key: `answer_${item.id}`,
+      text: `answer_${item.id}`
+    }));
   }
 
   // TODO: need the real slug prefix
@@ -61,7 +72,9 @@ class GeneralForm extends Component {
         <div className={styles.builderDivider} />
         <Field name="formConfig.redirect" component={renderTextInput} label="Redirect after submitting" />
         <div className={styles.builderDivider} />
-        <Field name="formConfig.customise.footer" component={renderRTE} title="Form footer" />
+        <Field name="formConfig.customise.footer" component={renderRTE}
+          title="Form footer"
+          questions={this.questionsDropdown} />
         <div className={styles.builderDivider} />
         <Field name="formConfig.customise.emondoBranding" component={renderSwitch}
           label="Emondo branding" helpText="Only premium accounts are eligable to turn this off." />
