@@ -2,10 +2,12 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Button } from 'react-bootstrap';
 import Color from 'color';
 import styles from './FormEnterButton.scss';
 import arrowEnterIcon from './arrow-enter.svg';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
 
 class FormEnterButton extends Component {
 
@@ -13,12 +15,13 @@ class FormEnterButton extends Component {
     onClick: PropTypes.func,
     isDisabled: PropTypes.bool,
     buttonLabel: PropTypes.string,
-    autoFocus: PropTypes.bool
+    displayIcon: PropTypes.bool
   };
 
   static defaultProps = {
     buttonLabel: '',
-    autoFocus: false
+    autoFocus: false,
+    displayIcon: true,
     onClick: () => {}
   };
 
@@ -44,34 +47,26 @@ class FormEnterButton extends Component {
   }
 
   render() {
-    const { buttonLabel, isDisabled, autoFocus } = this.props;
+    const { isDisabled, displayIcon, onClick } = this.props;
     const { primaryColour } = this.context;
     const shadowColor = Color(primaryColour).darken(0.2).rgbString();
     var optionals = {};
-
-    if (autoFocus) {
-      optionals['autoFocus'] = {
-        autoFocus: true
-      };
-    }
     if (typeof primaryColour !== 'undefined') {
       optionals['style'] = {
         backgroundColor: primaryColour,
         boxShadow: `0 3px 1px ${shadowColor}`
       };
     }
-
     if (isDisabled) {
       optionals['disabled'] = true;
     }
-
     return (
-        className={styles.formEnterButton}
       <button type="button" onClick={onClick}
+        className={cx('formEnterButton', {noIcon: !displayIcon})}
         {...optionals}>
-        <img className={styles.btnIcon} src={arrowEnterIcon} alt="" />
-      </Button>
+        { displayIcon && <img className={cx('btnIcon')} src={arrowEnterIcon} alt="" />}
         {this.renderButtonLabel()}
+      </button>
     );
   }
 }

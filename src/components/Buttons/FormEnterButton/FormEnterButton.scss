@@ -2,28 +2,15 @@
 @import './variables';
 
 .formEnterButton {
-  border: none;
-  color: white !important;
+  border: 0;
+  color: $white !important;
   background: $button-color;
   border-radius: 4px;
   cursor: pointer;
-  height: 65px;
-  width: 110px;
   position: relative;
   line-height: 18px;
   font-size: 14px;
-  padding: 0 5px;
-  &:before {
-    @include transition(all .15s);
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background-color: white;
-    opacity: 0;
-  }
+  padding: 13px;
   &:hover, &:focus {
     &:before {
       opacity: .2;
@@ -39,17 +26,16 @@
 
 .btnDefaultInner {
   text-align: left;
-  margin-left: 45px;
+  display: inline-block;
+  vertical-align: middle;
 }
-
-.btnInner {
-  font-size: 16px;
-  padding-right: 12px;
-  margin-left: 45px;
+.noIcon {
+  padding: 17px 26px;
+  font-weight: bold;
 }
-
 .btnIcon {
-  @include vcenter;
-  margin-top: 3px;
-  left: 12px;
+  display: inline;
+  padding-right: 9px;
+  vertical-align: middle;
+  padding-top: 4px;
 }
