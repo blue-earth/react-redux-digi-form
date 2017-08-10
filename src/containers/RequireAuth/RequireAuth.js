@@ -2,7 +2,9 @@ import React, {PropTypes} from 'react';
 import connect from 'redux/utils/connect';
 import {
   fetchUserInfo,
-  LOGGED_IN
+  LOGGED_IN,
+  setIsFetchingUserInfo,
+  updateUserProfile
 } from 'redux/modules/auth';
 import { goTo } from 'redux/modules/router';
 import { loginUrl } from 'helpers/urlHelper';
@@ -16,6 +18,7 @@ export default function requiresAuth(Component) {
       isAuthenticating: PropTypes.bool.isRequired,
       authStatus: PropTypes.string.isRequired,
       fetchUserInfo: PropTypes.func.isRequired,
+      updateUserProfile: PropTypes.func.isRequired,
       goTo: PropTypes.func.isRequired,
       location: PropTypes.object
     };
@@ -68,6 +71,8 @@ export default function requiresAuth(Component) {
   };
   const mapActionCreators = {
     fetchUserInfo,
+    setIsFetchingUserInfo,
+    updateUserProfile,
     goTo
   };
 

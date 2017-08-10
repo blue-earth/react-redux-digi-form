@@ -1,0 +1,73 @@
+@import './mixins';
+@import './variables';
+
+.formGroup {
+  label {
+    font-weight: 600;
+    display: block;
+    &.major {
+      font-family: "roble_alt_boldbold";
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+    &.minor {
+      font-family: $font-name;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+  }
+  .inputWrapper {}
+  &.hasPrefix {
+    .inputWrapper {
+      overflow: hidden;
+    }
+  }
+  .prefix {
+    padding-right: 10px;
+    font-size: 14px;
+    float: left;
+    line-height: 38px;
+  }
+  .help {
+    font-size: 11px;
+    padding-top: 14px;
+    color: lighten($darkblue, 50%);
+    display: block;
+    font-weight: 200;
+  }
+}
+
+.textInput {
+  border: 1px solid $grey;
+  @include border-radius(4px);
+  background-color: $white;
+  color: $darkblue;
+  font-size: 14px;
+  font-family: $font-name;
+  font-weight: 400;
+  height: 38px;
+  line-height: 38px;
+  padding-left: 14px;
+  padding-right: 14px;
+  box-sizing: border-box;
+  &.fullWidth {
+    width: 100%;
+  }
+  &.hasError {
+    border-color: $red;
+    box-shadow: 0 0 5px 1px rgba(red($red), green($red), blue($red), .15);
+  }
+  &.isDisabled {
+    background-color: lighten($grey, 15%);
+    cursor: not-allowed;
+  }
+  &.isReadOnly {
+    border-color: lighten($grey, 15%) !important;
+    box-shadow: none !important;
+  }
+  &:focus {
+    outline: none;
+    border-color: $blue;
+    box-shadow: 0 0 5px 1px rgba(red($blue), green($blue), blue($blue), .15);
+  }
+}
