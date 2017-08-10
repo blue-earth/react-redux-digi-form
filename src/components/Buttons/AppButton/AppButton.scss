@@ -14,8 +14,13 @@
   &:focus {
     outline: none;
   }
+  &.block {
+    display: block;
+    width: 100%;
+  }
   &.isDisabled {
     cursor: not-allowed;
+    opacity: .5;
   }
   &:active:focus {
     box-shadow: inset 0 3px 5px rgba(0,0,0,.125);

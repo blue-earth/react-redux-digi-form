@@ -39,6 +39,7 @@ class AppButton extends Component {
      * additional will render the button in additional style
      */
     type: PropTypes.oneOf(['primary', 'secondary', 'additional']),
+    block: PropTypes.bool,
     primaryColour: PropTypes.string,
     children: PropTypes.node
   };
@@ -46,6 +47,7 @@ class AppButton extends Component {
   static defaultProps = {
     size: 'md',
     type: 'primary',
+    block: false,
     primaryColour: '#3893d0',
     extraClass: ''
   };
@@ -75,11 +77,12 @@ class AppButton extends Component {
   };
 
   getButtonCSSClass() {
-    const {isDisabled, isBusy, size, type, extraClass} = this.props;
+    const {isDisabled, isBusy, size, type, block, extraClass} = this.props;
     return cx({
       [extraClass]: true,
       [type]: true,
       [size]: true,
+      block: block,
       isDisabled: isDisabled,
       isBusy: isBusy,
       button: true
