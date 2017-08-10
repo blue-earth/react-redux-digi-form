@@ -1,5 +1,6 @@
 import React, {
-  Component
+  Component,
+  PropTypes
 } from 'react';
 import styles from './SignatureWidgetImageUploader.scss';
 import classNames from 'classnames/bind';
@@ -11,6 +12,13 @@ const acceptTypes = {
 };
 
 class SignatureWidgetImageUploader extends Component {
+
+  static propTypes = {
+    onChange: PropTypes.func
+  };
+  static defaultProps = {
+    onChange: () => {}
+  };
   constructor(props) {
     super(props);
     this.activeDrag = 0;
@@ -41,6 +49,13 @@ class SignatureWidgetImageUploader extends Component {
       this.setState({isDragging: false});
     }
   }
+  changeFile = (file) => {
+    this.setState({
+      item: file
+    });
+    this.preview(file);
+    this.props.onChange();
+  }
 
   handleFileDrop = (event) => {
     event.preventDefault();
@@ -48,18 +63,12 @@ class SignatureWidgetImageUploader extends Component {
     this.setState({isDragging: false});
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       const file = event.dataTransfer.files[0];
-      this.setState({
-        item: file
-      });
-      this.preview(file);
+      this.changeFile(file);
     }
   }
   handleFileChange = (event) => {
     const file = event.target.files[0];
-    this.setState({
-      item: file
-    });
-    this.preview(file);
+    this.changeFile(file);
   }
   handleFileDelete = (event) => {
     this.setState({
@@ -73,6 +82,14 @@ class SignatureWidgetImageUploader extends Component {
     reader.onload = (e) => {
       this.refs.previewImage.src = e.target.result;
     };
+  }
+
+  get dataUrl() {
+    if (this.state.item) {
+      return this.refs.previewImage.src;
+    } else {
+      return '';
+    }
   }
 
   file = () => {
