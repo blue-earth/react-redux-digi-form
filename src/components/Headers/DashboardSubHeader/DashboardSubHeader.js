@@ -23,18 +23,16 @@ class DashboardSubHeader extends Component {
     }
     switch (path) {
       case 'formBuilder':
-        return FormBuilderNav;
+        return (<FormBuilderNav location={this.props.location} />);
       default:
-        return DashboardTabs;
+        return (<DashboardTabs location={this.props.location} />);
     }
   }
-  //
+
   render() {
-    var SubHeaderComponent = this.displayComponent();
+    // var SubHeaderComponent = this.displayComponent();
     return (
-      <div>
-        {<SubHeaderComponent location={location} />}
-      </div>
+      <div>{this.displayComponent()}</div>
     );
   }
 }

@@ -32,6 +32,15 @@ class DashboardTabs extends Component {
     };
   }
 
+  componentWillReceiveProps(newProps) {
+    const { location: { pathname } } = newProps;
+    const navItem = _.find(this.navItems, function (o) { return pathname.includes(o.path); });
+    var newKey = navItem ? navItem.path : undefined;
+    this.setState({
+      activeKey: newKey
+    });
+  }
+
   handleSelect = (navPath) => {
     event.preventDefault();
     this.setState({
