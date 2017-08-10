@@ -175,6 +175,11 @@ class FormInteractive extends Component {
     isAccessCodeProtected: PropTypes.bool,
 
     /*
+     * numberOfPages: Redux state to indicate the real world paper page number.
+     */
+    numberOfPages: PropTypes.number,
+
+    /*
      * goTo: Goes to specific url within page.
      */
     goTo: PropTypes.func.isRequired,
@@ -297,7 +302,7 @@ class FormInteractive extends Component {
             />
             {this.isInProgress && <FormInteractiveView {...this.props} />}
             {shouldShowFinalSubmit && !this.isCompleted && <Summary {...this.props} />}
-            {this.isCompleted && <FormCompletion title={title} />}
+            {this.isCompleted && <FormCompletion title={title} {...this.props} />}
             {this.needsAccessCode && <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />}
             <SaveForLaterModal formId={formId} sessionId={sessionId}
               sendContinueLink={this.props.sendContinueLink}

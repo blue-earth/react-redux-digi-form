@@ -12,11 +12,12 @@ import SocialShareFooter from 'components/Footer/SocialShareFooter';
 
 class FormCompletion extends Component {
   static propTypes = {
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
+    numberOfPages: PropTypes.number.isRequired
   };
 
   render() {
-    const { title } = this.props;
+    const { title, numberOfPages } = this.props;
     return (
       <div className={styles.formCompletion}>
         <Col lg={8} lgPush={2}>
@@ -30,9 +31,9 @@ class FormCompletion extends Component {
           <hr />
           <div className={styles.instruction}>By using our electronic forms you saved:</div>
           <div className={styles.envSavingSection}>
-            <EnvironmentSaving type="trees" value={0.34} />
-            <EnvironmentSaving type="co2" value={0.56} />
-            <EnvironmentSaving type="water" value={1.56} />
+            <EnvironmentSaving type="trees" numberOfPages={numberOfPages} />
+            <EnvironmentSaving type="co2" numberOfPages={numberOfPages} />
+            <EnvironmentSaving type="water" numberOfPages={numberOfPages} />
           </div>
           <div className={styles.instruction}>
             <Button bsStyle="link" className={styles.learnMoreButton}>Learn more</Button>

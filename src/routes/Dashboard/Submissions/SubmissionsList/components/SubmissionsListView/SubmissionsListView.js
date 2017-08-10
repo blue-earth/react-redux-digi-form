@@ -293,9 +293,9 @@ class SubmissionsListView extends Component {
         </div>
         <div className={styles.panelContent}>
           <div className={styles.savings}>
-            <EnvironmentSaving type="trees" value={trees} size="small" font="roble" />
-            <EnvironmentSaving type="water" value={water} size="small" font="roble" />
-            <EnvironmentSaving type="co2" value={co2} size="small" font="roble" />
+            <EnvironmentSaving type="trees" value={trees} isWidget />
+            <EnvironmentSaving type="water" value={water} isWidget />
+            <EnvironmentSaving type="co2" value={co2} isWidget />
           </div>
         </div>
       </div>
