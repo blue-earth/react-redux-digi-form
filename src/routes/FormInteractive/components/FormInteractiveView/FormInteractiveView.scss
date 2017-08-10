@@ -5,7 +5,10 @@ $wrapper-inner-padding-right: 150px;
 
 :global {
   body {
-    min-height: 610px;
+    min-height: 510px;
+    @include media('>=xs') {
+      min-height: 610px;
+    }
   }
 }
 
@@ -97,6 +100,7 @@ $wrapper-inner-padding-right: 150px;
 .navButtonsWrapper {
   @include media('<sm') {
     position: absolute;
+    top: initial;
     left: -15px;
     right: -15px;
     bottom: 0;
@@ -113,6 +117,8 @@ $wrapper-inner-padding-right: 150px;
   @include media('>=md') {
     right: 65px; // $wrapper-inner-padding-right;
   }
+  top: 0;
+  bottom: 0;
 }
 
 .arrowNavs {
