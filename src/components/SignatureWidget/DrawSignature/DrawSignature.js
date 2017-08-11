@@ -96,6 +96,7 @@ class DrawSignature extends Component {
         <div className={styles.signatureWrapper}>
           <SignaturePad ref="signatureCanvas" penColor={drawSignatureColour}
             onBegin={this.onStrokeStart} />
+          <div className={styles.guideLine}></div>
         </div>
       </div>
     );
