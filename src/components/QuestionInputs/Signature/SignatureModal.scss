@@ -33,6 +33,7 @@
   vertical-align: bottom;
   margin-bottom: 3px;
   margin-right: 6px;
+  opacity: 0.5;
 }
 .tabPanelWrapper {
   height: 275px;
@@ -112,6 +113,9 @@
             border-color: $signature-modal-border-color;
             border-bottom: none;
           }
+          img {
+            opacity: 1;
+          }       
         }
       }
     }
