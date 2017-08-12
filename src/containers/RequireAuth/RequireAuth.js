@@ -45,7 +45,8 @@ export default function requiresAuth(Component) {
     }
     shouldComponentUpdate(nextProps) {
       return this.props.isAuthenticating !== nextProps.isAuthenticating ||
-        this.props.location.pathname !== nextProps.location.pathname;
+        this.props.location.pathname !== nextProps.location.pathname ||
+        this.props.user !== nextProps.user;
     }
     _checkAndRedirect() {
       const { isAuthenticating, goTo, authStatus } = this.props;
