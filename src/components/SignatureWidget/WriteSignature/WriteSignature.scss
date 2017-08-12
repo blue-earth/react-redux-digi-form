@@ -37,8 +37,9 @@
 }
 
 .signatureTypeLabel {
+  font-size: 30px;
   text-align: center;
-  padding: 8px 0;
+  padding: 0;
 }
 .signaturePadColourSelection {
   position: absolute;
@@ -86,13 +87,13 @@
   .preload-Swift {
     font-family: 'Swift';
   }
-  .preload-MayQueen {
-    font-family: 'MayQueen';
+  .preload-Trump {
+    font-family: 'Trump';
   }
-  .preload-ArtySignature {
-    font-family: 'ArtySignature';
+  .preload-Obama {
+    font-family: 'Obama';
   }
-  .preload-MonsieurLaDoulaise {
-    font-family: 'MonsieurLaDoulaise';
+  .preload-Clinton {
+    font-family: 'Clinton';
   }
 }

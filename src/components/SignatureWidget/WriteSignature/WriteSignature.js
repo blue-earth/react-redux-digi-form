@@ -176,7 +176,7 @@ class WriteSignature extends Component {
                   ref={`writeSignature-${font.name}`}>
                 </canvas>
               </div>
-              <div className={styles.signatureTypeLabel}>
+              <div className={classNames(styles.signatureTypeLabel, `preload-${font.name}`)}>
                 {font.label}
               </div>
             </Col>
