@@ -9,6 +9,14 @@ $section-title-color:   $panel-text-color1;
   margin: 0;
   @include clearfix;
   color: $section-title-color;
+  &.major {
+    font-family: "roble_alt_boldbold";
+    font-size: 16px;
+  }
+  &.minor {
+    font-family: $font-name;
+    font-size: 13px;
+  }
 }
 .titleDescription {
   font-size: 11px;

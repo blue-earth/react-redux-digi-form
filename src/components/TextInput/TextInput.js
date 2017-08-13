@@ -10,8 +10,13 @@ class TextInput extends Component {
   static propTypes = {
     placeholderText: PropTypes.string,
     label: PropTypes.any,
-    labelStyle: PropTypes.string, // major or minor
     wrapperClass: PropTypes.string,
+    /*
+    / labelStyle
+    / major - roble_alt_boldbold, 16px
+    / minor - Open Sans, 13px
+    */
+    labelStyle: PropTypes.oneOf(['major', 'minor']),
     prefix: PropTypes.string,
     helpText: PropTypes.string,
     fullWidth: PropTypes.bool,

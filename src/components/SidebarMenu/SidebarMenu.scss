@@ -1,0 +1,37 @@
+@import './mixins';
+@import './variables';
+
+.sidebarMenu {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  font-family: "roble_alt_boldbold";
+  border: 1px solid lighten($grey, 15%);
+  background: $white;
+  @include border-radius(4px);
+  overflow: hidden;
+  li {
+    border-top: 1px solid lighten($grey, 15%);
+    a {
+      padding: 15px;
+      color: $grey;
+      &:focus, &:hover, &:active {
+        background: none !important;
+        outline: none;
+      }
+      svg {
+        margin-top: -3px; // fix vertical align
+        margin-right: 10px;
+      }
+    }
+  }
+  li:first-child {
+    border-top: none;
+  }
+  :global {
+  li.active a {
+    color: $blue;
+    border-right: 5px solid;
+  }
+  }
+}
