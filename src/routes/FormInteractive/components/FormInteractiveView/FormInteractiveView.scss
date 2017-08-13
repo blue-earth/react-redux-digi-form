@@ -98,7 +98,7 @@ $wrapper-inner-padding-right: 150px;
 }
 
 .navButtonsWrapper {
-  @include media('<sm') {
+  @include media('<xs') {
     position: absolute;
     top: initial;
     left: -15px;
@@ -108,7 +108,7 @@ $wrapper-inner-padding-right: 150px;
     padding: 10px 15px;
     @include box-shadow-custom(0 -3px 25px rgba(0, 0, 0, .15));
   }
-  @include media('>=sm') {
+  @include media('>xs') {
     height: 130px;
     text-align: right;
     @include vcenter;
@@ -128,28 +128,31 @@ $wrapper-inner-padding-right: 150px;
   @include clearfix;
   li {
     padding-left: 0;
-    @include media('>=sm') {
-      &:not(:first-child) {
-        margin-top: -1px;
-      }
-    }
-    @include media('<sm') {
+    @include media('<xs') {
       float: left;
       margin-right: 10px;
-    }
-    &.bottomLogo {
-      float: right;
-      display: none;
-      @include media('<sm') {
-        display: block;
-      }
     }
   }
 }
 
-.enterWrapper {
-  margin-top: 30px;
-  @include media('<sm') {
-    display: none;
+li.enterWrapper {
+  margin-top: 10px;
+  @include media('<xs') {
+    float: right;
+    margin-right: 0;
+    margin-top: 0;
+  }
+}
+
+.visibleMobile {
+  display: none;
+  @include media('<xs') {
+    display: block;
+  }
+}
+.visibleTabletDesktop {
+  display: none;
+  @include media('>xs') {
+    display: block;
   }
 }

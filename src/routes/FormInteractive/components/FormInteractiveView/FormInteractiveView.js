@@ -127,7 +127,7 @@ class FormInteractiveView extends Component {
       inputState: 'enter'
     });
     if (isValid) handleEnter();
-  }
+  };
 
   get enterButtonClass() {
     const { currentQuestion } = this.props;
@@ -145,7 +145,6 @@ class FormInteractiveView extends Component {
         break;
     }
     return classNames({
-      [styles.enterWrapper]: true,
       'hide': shouldHideButton
     });
   }
@@ -243,6 +242,26 @@ class FormInteractiveView extends Component {
     );
   }
 
+  renderEnterbutton() {
+    const { isVerifying } = this.props;
+    const mobileEnterButton = (<FormEnterButton
+      onClick={this.handleEnter}
+      isDisabled={isVerifying}
+      displayIcon={false}
+      buttonLabel="SUBMIT"
+    />);
+    const desktopEnterButton = (<FormEnterButton
+      onClick={this.handleEnter}
+      isDisabled={isVerifying}
+    />);
+    return (
+      <div>
+        <div className={styles.visibleTabletDesktop}>{desktopEnterButton}</div>
+        <div className={styles.visibleMobile}>{mobileEnterButton}</div>
+      </div>
+    );
+  }
+
   renderNavButtons() {
     const { form, currentQuestion, isVerifying, goToPrevQuestion, goToNextQuestion } = this.props;
 
@@ -257,19 +276,12 @@ class FormInteractiveView extends Component {
             <RightNavButton className={styles.navButton} onClick={goToNextQuestion}
               isDisabled={shouldDisableNextButton(form, currentQuestion.id) || isVerifying} />
           </li>
-          <li className={styles.bottomLogo}>
-            <FormEnterButton
-              displayIcon={false}
-              buttonLabel="SUBMIT"
-              onClick={this.handleEnter}
-              isDisabled={isVerifying} />
+          <li className={styles.enterWrapper}>
+            <div className={this.enterButtonClass}>
+              {this.renderEnterbutton()}
+            </div>
           </li>
         </ul>
-        <div className={this.enterButtonClass}>
-          <FormEnterButton
-            onClick={this.handleEnter}
-            isDisabled={isVerifying} />
-        </div>
       </div>
     );
   }
