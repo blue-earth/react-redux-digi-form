@@ -92,7 +92,6 @@ class StepConfigure extends Component {
         <div className={styles.middlePanel}>
           {this.renderForm()}
         </div>
-        <div className={styles.rightPanel} />
       </div>
     );
   }

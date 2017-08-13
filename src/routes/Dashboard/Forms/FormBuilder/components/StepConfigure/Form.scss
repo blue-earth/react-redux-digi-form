@@ -3,14 +3,15 @@
 
 .stepConfigureWrapper {
   min-height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   color: $dashboard-text-color;
   height: 100%;
   position: relative;
   @include clearfix();
 }
-.leftPanel,
-.rightPanel {
-  width: 20%;
+.leftPanel {
+  width: 30%;
   float: left;
   position: relative;
   height: 100%;
@@ -18,16 +19,15 @@
 }
 .middlePanel {
   height: 100%;
-  width: 60%;
+  width: 70%;
   padding-top: 25px;
   overflow: auto;
   padding-bottom: 40px;
   float: left;
   form {
     min-width: 400px;
-    max-width: 500px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 0 0 80px;
   }
 }
 .builderItem {
