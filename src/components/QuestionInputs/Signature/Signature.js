@@ -3,8 +3,8 @@ import React, {
   PropTypes
 } from 'react';
 import FormEnterButton from 'components/Buttons/FormEnterButton/FormEnterButton';
-import SignatureModal from './SignatureModal';
-import CompletionModal from './CompletionModal';
+import AppButton from 'components/Buttons/AppButton/AppButton';
+import SignatureModal from 'containers/SignatureVerification';
 import styles from './Signature.scss';
 
 class Signature extends Component {
@@ -83,15 +83,24 @@ class Signature extends Component {
             ref="signatureImage"
             tabIndex={0} onKeyDown={this.handleKeyDown} />
         }
-        {!isReadOnly &&
+        <div>
+          {value &&
+            <AppButton
+              isDisabled={isDisabled}
+              size="lg"
+              autoFocus={!value && autoFocus}
+              onClick={function () { showModal('signatureModal'); }}>
+              Re-sign
+            </AppButton>
+          }
+        </div>
+        {!isReadOnly && !value &&
           <FormEnterButton buttonLabel="Sign"
             isDisabled={isDisabled}
             autoFocus={!value && autoFocus}
             onClick={function () { showModal('signatureModal'); }} />
         }
-        <SignatureModal finishModal={function () { showModal('signatureCompletionModal'); }}
-          commitValue={this.handleChange} signatureImage={value} />
-        <CompletionModal cancelModal={function () { showModal('signatureModal'); }} />
+        <SignatureModal showModal={showModal} commitValue={this.handleChange} signatureImage={value} />
       </div>
     );
   }

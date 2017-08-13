@@ -58,3 +58,7 @@
     color: $signature-modal-text-light-color;
   }
 }
+.errorMessage {
+  color: $red;
+  line-height: 40px;
+}
