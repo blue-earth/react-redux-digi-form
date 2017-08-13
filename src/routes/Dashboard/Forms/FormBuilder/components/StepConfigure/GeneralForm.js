@@ -47,6 +47,7 @@ const sanitizedSlug = value => value && value.replace(/[ ]/g, '_').replace(/([^a
 class GeneralForm extends Component {
 
   static propTypes = {
+    subdomain: PropTypes.string,
     questions: PropTypes.array,
     handleSubmit: PropTypes.func,
     submitFailed: PropTypes.bool,
@@ -69,15 +70,15 @@ class GeneralForm extends Component {
     return filteredQuestions;
   }
 
-  // TODO: need the real slug prefix
-
   render() {
     return (
       <form>
         <Field name="title" component={renderTextInput} label="Your form name" />
         <div className={styles.builderDivider} />
-        <Field name="slug" component={renderTextInput} label="Hosted form URL" prefix="https://emondo.co/"
-          helpText="Unsupported characters will automatically be converted" normalize={sanitizedSlug} />
+        <Field name="slug" component={renderTextInput} label="Hosted form URL"
+          prefix={'https://' + this.props.subdomain + '/'}
+          helpText="Unsupported characters will automatically be converted"
+          normalize={sanitizedSlug} />
         <div className={styles.builderDivider} />
         <Field name="formConfig.redirect" component={renderTextInput} label="Redirect after submitting" />
         <div className={styles.builderDivider} />

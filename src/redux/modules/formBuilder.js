@@ -41,6 +41,7 @@ export const INIT_BUILDER_STATE = {
   isModified: false, // indicates the form is modified since last load or submission.
   title: 'New form',
   slug: 'new-form',
+  subdomain: '',
   questions: [],
   logics: [],
   documents: [
@@ -141,6 +142,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
     formConfig: data.form_config ? data.form_config : {},
     title: data.title,
     slug: data.slug,
+    subdomain: data.subdomain,
     isModified: false,
     lastQuestionId: _.defaultTo(_.max(_.map(questions, 'id')), 0)
   };

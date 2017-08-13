@@ -15,6 +15,7 @@ class FormBuilderSteps extends Component {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     slug: PropTypes.string,
+    subdomain: PropTypes.string,
 
     /*
      * questions: Redux state to store the array of questions.
@@ -178,6 +179,7 @@ class FormBuilderSteps extends Component {
             id: props.id,
             title: props.title,
             slug: props.slug,
+            subdomain: props.subdomain,
             questions: props.questions,
             formConfig: props.formConfig,
             processSubmitConfigure: props.processSubmitConfigure

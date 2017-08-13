@@ -14,6 +14,7 @@ class StepConfigure extends Component {
     id: PropTypes.number,
     title: PropTypes.string,
     slug: PropTypes.string,
+    subdomain: PropTypes.string,
     formConfig: PropTypes.any,
     questions: PropTypes.array,
     processSubmitConfigure: PropTypes.func
@@ -74,6 +75,7 @@ class StepConfigure extends Component {
         return (
           <GeneralForm {...initGeneral} enableReinitialize
             onSubmit={this.processForm}
+            subdomain={this.props.subdomain}
             questions={this.props.questions} />
         );
     }
