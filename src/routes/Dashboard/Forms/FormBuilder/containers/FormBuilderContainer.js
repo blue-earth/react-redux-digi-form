@@ -61,7 +61,7 @@ const mapStateToProps = (state) => {
     pageZoom,
     pageWidth,
     questionEditMode,
-    activeBox
+    activeBoxPath
   } = formBuilder || INIT_BUILDER_STATE;
   return {
     id: parseInt(id),
@@ -78,7 +78,7 @@ const mapStateToProps = (state) => {
     pageZoom,
     pageWidth,
     questionEditMode,
-    activeBox
+    activeBoxPath
   };
 };
 

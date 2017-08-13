@@ -58,7 +58,7 @@ class PageView extends Component {
     setCurrentElement: PropTypes.func.isRequired,
 
     /*
-     * setActiveBox: Redux action to set activeBox path.
+     * setActiveBox: Redux action to set activeBoxPath path.
      */
     setActiveBox: PropTypes.func.isRequired,
 

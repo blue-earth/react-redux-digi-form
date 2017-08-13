@@ -409,8 +409,8 @@ export const setMappingPositionInfo = createAction(SET_MAPPING_POSITION_INFO);
 // ------------------------------------
 const _setMappingPositionInfo = (state, action) => {
   const currentElement = _.assign({}, _.get(state, ['currentElement']));
-  const { activeBox } = currentElement;
-  const activePathArray = _.defaultTo(_.split(activeBox, '.'), []);
+  const { activeBoxPath } = currentElement;
+  const activePathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
   const positionPathArray = _.concat(['mappingInfo'], activePathArray);
 
   const position = _.get(currentElement, positionPathArray, {});
@@ -457,8 +457,8 @@ export const setActiveBox = createAction(SET_ACTIVE_BOX);
 const _setActiveBox = (state, action) => {
   const { currentElement } = state;
   const { mappingInfo } = currentElement;
-  const activeBox = action.payload;
-  const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
+  const activeBoxPath = action.payload;
+  const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
   const label = pathArray[formBuilderPathIndex.LABEL];
 
   const intialMappingState = _.merge({}, INIT_MAPPING_INFO_STATE, {
@@ -467,7 +467,7 @@ const _setActiveBox = (state, action) => {
 
   return Object.assign({}, state, {
     currentElement: _.merge({}, state.currentElement, {
-      activeBox,
+      activeBoxPath,
       mappingInfo: _.merge({
         [label]: intialMappingState
       }, mappingInfo)
@@ -487,16 +487,16 @@ const _setCurrentElement = (state, action) => {
       currentElement: action.payload
     });
   } else { // If it's for loading from existing questions & mappings.
-    const activeBox = action.payload.activeBox;
+    const activeBoxPath = action.payload.activeBoxPath;
     const mappingInfo = state.documentMapping[id];
-    const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
+    const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
     const label = pathArray[formBuilderPathIndex.LABEL];
     return Object.assign({}, state, {
       currentElement: {
         id: action.payload.id,
         question: findItemById(state.questions, id),
         mappingInfo,
-        activeBox,
+        activeBoxPath,
         isModified: false,
         defaultMappingType: mappingInfo[label].type
       }
