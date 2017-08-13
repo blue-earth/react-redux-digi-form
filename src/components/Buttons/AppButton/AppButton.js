@@ -98,12 +98,15 @@ class AppButton extends Component {
     return optionals;
   }
   render() {
-    const { primaryColour, children, isBusy, type, size } = this.props;
+    const { primaryColour, children, isBusy, type, size, isDisabled } = this.props;
     let backgroundColor = primaryColour;
     const cx = classNames.bind(styles); // eslint-disable-line
     var optionals = this.getOptionalAttributes;
     if (this.state.hover) {
       backgroundColor = lightness(primaryColour, -10);
+    }
+    if (isDisabled) {
+      backgroundColor = lightness(primaryColour, 40);
     }
     let styleOverride = {
       backgroundColor: backgroundColor

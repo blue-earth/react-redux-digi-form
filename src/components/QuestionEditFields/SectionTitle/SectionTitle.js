@@ -13,12 +13,19 @@ class SectionTitle extends Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     popoverId: PropTypes.string,
-    description: PropTypes.string
+    description: PropTypes.string,
+    /*
+    / labelStyle
+    / major - roble_alt_boldbold, 16px
+    / minor - Open Sans, 13px
+    */
+    labelStyle: PropTypes.oneOf(['major', 'minor'])
   };
 
   static defaultProps = {
     popoverId: '',
-    description: ''
+    description: '',
+    labelStyle: 'minor'
   }
 
   getPopover(popoverId) {
@@ -30,10 +37,10 @@ class SectionTitle extends Component {
   }
 
   render() {
-    const { title, popoverId, description } = this.props;
+    const { title, labelStyle, popoverId, description } = this.props;
     return (
       <div>
-        <h3 className={styles.sectionTitle}>
+        <h3 className={styles.sectionTitle + ' ' + styles[labelStyle]}>
           {title}
           {popoverId &&
             <OverlayTrigger trigger="focus" overlay={this.getPopover(popoverId)}>

@@ -143,7 +143,7 @@ class FormBuilder extends Component {
      * setActiveBox: Redux action to set activeBox path.
      */
     setActiveBox: PropTypes.func.isRequired,
-
+    deleteElement: PropTypes.func.isRequired,
     /*
      * newForm: Redux action to reset form with initial state for new form
      */

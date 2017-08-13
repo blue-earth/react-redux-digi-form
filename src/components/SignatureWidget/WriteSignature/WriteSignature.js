@@ -43,8 +43,14 @@ const signatureFonts = [
 class WriteSignature extends Component {
 
   static propTypes = {
+    onChange: PropTypes.func,
     className: PropTypes.string,
     signatureName: PropTypes.string
+  }
+  static defaultProps = {
+    onChange: () => {},
+    signatureName: '',
+    className: ''
   }
 
   constructor(props) {

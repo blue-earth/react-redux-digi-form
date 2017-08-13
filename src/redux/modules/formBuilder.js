@@ -10,6 +10,7 @@ import {
   formBuilderSelectMode
 } from 'constants/formBuilder';
 import _ from 'lodash';
+import humps from 'humps';
 
 export const NEW_FORM = 'NEW_FORM';
 export const RECEIVE_FORM = 'RECEIVE_FORM';
@@ -40,6 +41,7 @@ export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 export const SET_ACTIVE_BOX = 'SET_ACTIVE_BOX';
 
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
+export const UPDATE_STORE = 'UPDATE_STORE';
 
 export const INIT_BUILDER_STATE = {
   id: 0,
@@ -48,6 +50,7 @@ export const INIT_BUILDER_STATE = {
   isModified: false, // indicates the form is modified since last load or submission.
   title: 'New form',
   slug: 'new-form',
+  subdomain: '',
   questions: [],
   logics: [],
   documents: [
@@ -62,7 +65,16 @@ export const INIT_BUILDER_STATE = {
     //   height: 877
     // }
   ],
-  formConfig: {},
+  formConfig: {
+    customise: {
+      footer: '',
+      primaryColour: '#ffffff',
+      accentColour: '#ffffff',
+      emondoBranding: true
+    },
+    notifications: {},
+    security: []
+  },
   documentMapping: {},
   currentElement: null, // holds the current element state being added or edited.
   lastQuestionId: 0, // indicates lastly added question id
@@ -134,9 +146,10 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
     logics,
     documents: data.assets_urls ? data.assets_urls : [],
     documentMapping: data.document_mapping ? data.document_mapping : [],
-    formConfig: data.form_config,
+    formConfig: data.form_config ? data.form_config : {},
     title: data.title,
     slug: data.slug,
+    subdomain: data.subdomain,
     isModified: false,
     lastQuestionId: _.defaultTo(_.max(_.map(questions, 'id')), 0)
   };
@@ -519,6 +532,49 @@ const _setCurrentElement = (state, action) => {
 };
 
 // ------------------------------------
+// Action: processSubmitConfigure
+// ------------------------------------
+export const processSubmitConfigure = (formData) => {
+  var body = humps.decamelizeKeys(formData);
+  var method = 'POST';
+  var requestURL = `${API_URL}/form_document/api/form/`;
+  if (formData.id && formData.id > 0) {
+    requestURL += `${formData.id}/`;
+    method = 'PUT';
+  }
+  const fetchParams = assignDefaults({
+    method,
+    body
+  });
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      const { id } = value;
+      id && dispatch(updateFormId(id));
+      dispatch(doneSubmitForm());
+      // update store
+      dispatch(updateStore(formData));
+      // console.log('fetch success');
+      // TODO: success message?
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(doneSubmitForm());
+      // console.log('fetch failed');
+      // TODO: error message?
+    };
+  };
+
+  return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
+};
+// ------------------------------------
+// Action: updateStore
+// ------------------------------------
+export const updateStore = createAction(UPDATE_STORE);
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const formBuilderReducer = handleActions({
@@ -553,6 +609,9 @@ const formBuilderReducer = handleActions({
     Object.assign({}, state, {
       id: parseInt(action.payload)
     }),
+
+  UPDATE_STORE: (state, action) =>
+    Object.assign({}, state, action.payload),
 
   SAVE_ELEMENT: (state, action) =>
     _saveElement(state, action),

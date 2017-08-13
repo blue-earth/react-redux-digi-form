@@ -18,8 +18,12 @@ class DrawSignature extends Component {
 
   static propTypes = {
     className: PropTypes.string,
-    commitValue: PropTypes.func
-  }
+    onChange: PropTypes.func
+  };
+  static defaultProps = {
+    className: '',
+    onChange: () => {}
+  };
 
   constructor(props) {
     super(props);
@@ -50,11 +54,16 @@ class DrawSignature extends Component {
 
   handleRevert = () => {
     this.refs.signatureCanvas.clear();
-    this.refs.signatureCanvas.fromDataURL(this.drawSignatures.pop());
+    const dataUrl = this.drawSignatures.pop();
+    this.refs.signatureCanvas.fromDataURL(dataUrl);
+    if (this.drawSignatures.length === 0) {
+      this.refs.signatureCanvas.clear(); // Reset canvas to empty if nothing to set.
+    }
   }
 
   onStrokeStart = (event) => {
     this.drawSignatures.push(this.refs.signatureCanvas.toDataURL());
+    this.props.onChange();
   }
 
   /**
