@@ -48,7 +48,10 @@ class GeneralForm extends Component {
 
   static propTypes = {
     questions: PropTypes.array,
-    handleSubmit: PropTypes.func
+    handleSubmit: PropTypes.func,
+    submitFailed: PropTypes.bool,
+    submitSucceeded: PropTypes.bool,
+    submitting: PropTypes.bool
   }
 
   get questionsDropdown() {
@@ -58,7 +61,7 @@ class GeneralForm extends Component {
     _.forEach(questions, function (q) {
       if (q.type !== 'Group') {
         filteredQuestions.push({
-          'text': q.question_instruction,
+          'text': `answer_${q.id}`,
           'key': `answer_${q.id}`
         });
       }

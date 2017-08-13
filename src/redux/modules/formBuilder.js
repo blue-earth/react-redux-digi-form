@@ -474,20 +474,6 @@ const _setQuestionEditMode = (state, action) => {
 export const setCurrentStep = createAction(SET_CURRENT_STEP);
 
 // ------------------------------------
-// Action: submitConfigure
-// submit function for the configure step
-// ------------------------------------
-export const submitConfigure = (formData) => {
-  return (dispatch, getState) => {
-    dispatch(requestSubmitForm());
-    dispatch(processSubmitConfigure(formData));
-  };
-};
-// ------------------------------------
-// Action: updateStore
-// ------------------------------------
-export const updateStore = createAction(UPDATE_STORE);
-// ------------------------------------
 // Action: processSubmitConfigure
 // ------------------------------------
 export const processSubmitConfigure = (formData) => {
@@ -525,6 +511,10 @@ export const processSubmitConfigure = (formData) => {
 
   return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
 };
+// ------------------------------------
+// Action: updateStore
+// ------------------------------------
+export const updateStore = createAction(UPDATE_STORE);
 
 // ------------------------------------
 // Reducer

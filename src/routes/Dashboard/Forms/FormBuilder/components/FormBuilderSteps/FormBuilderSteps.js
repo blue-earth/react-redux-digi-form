@@ -160,7 +160,7 @@ class FormBuilderSteps extends Component {
      */
     goTo: PropTypes.func.isRequired,
 
-    submitConfigure: PropTypes.func.isRequired
+    processSubmitConfigure: PropTypes.func
   };
 
   get currentStepComponent() {
@@ -180,7 +180,7 @@ class FormBuilderSteps extends Component {
             slug: props.slug,
             questions: props.questions,
             formConfig: props.formConfig,
-            submitConfigure: props.submitConfigure
+            processSubmitConfigure: props.processSubmitConfigure
           }
         };
       case 'send':

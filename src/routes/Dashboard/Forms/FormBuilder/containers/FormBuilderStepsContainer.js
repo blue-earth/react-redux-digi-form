@@ -18,7 +18,7 @@ import {
   setPageZoom,
   saveElement,
   deleteElement,
-  submitConfigure
+  processSubmitConfigure
 } from 'redux/modules/formBuilder';
 
 import FormBuilderSteps from '../components/FormBuilderSteps';
@@ -40,7 +40,7 @@ const mapActionCreators = {
   setPageZoom,
   saveElement,
   deleteElement,
-  submitConfigure,
+  processSubmitConfigure,
   show
 };
 
