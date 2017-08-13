@@ -53,17 +53,6 @@ class FormBuilderSteps extends Component {
      * isModified: Redux state that indicates whether the form is modified since last save or load.
      */
     isModified: PropTypes.bool.isRequired,
-
-    /*
-     * activeInputName: Redux state to indicate the active input element name.
-     */
-    activeInputName: PropTypes.string.isRequired,
-
-    /*
-     * setActiveInputName: Action to set active input element selected, and enables to draw on the right
-     */
-    setActiveInputName: PropTypes.func.isRequired,
-
     /*
      * saveElement: Redux action to save the current element being edited.
      */
@@ -78,7 +67,7 @@ class FormBuilderSteps extends Component {
      * currentElement: Redux state to hold the element currently being edited.
      */
     currentElement: PropTypes.object,
-
+    setCurrentElement: PropTypes.func.isRequired,
     /*
      * setQuestionInfo: Redux action to add or update a specific item into current question.
      */
@@ -127,7 +116,7 @@ class FormBuilderSteps extends Component {
     /*
      * questionEditMode: Redux state to indicate question edit mode
      */
-    questionEditMode: PropTypes.bool.isRequired,
+    questionEditMode: PropTypes.number.isRequired,
 
     /*
      * setQuestionEditMode: Redux action to set question edit mode.
@@ -202,11 +191,12 @@ class FormBuilderSteps extends Component {
             isFetching: props.isFetching,
             isSubmitting: props.isSubmitting,
             isModified: props.isModified,
-            activeInputName: props.activeInputName,
-            setActiveInputName: props.setActiveInputName,
             saveElement: props.saveElement,
             saveForm: props.saveForm,
             currentElement: props.currentElement,
+            setCurrentElement: props.setCurrentElement,
+            deleteElement: props.deleteElement,
+            setActiveBox: props.setActiveBox,
             setQuestionInfo: props.setQuestionInfo,
             resetQuestionInfo: props.resetQuestionInfo,
             setValidationInfo: props.setValidationInfo,

@@ -7,7 +7,6 @@ import {
   fetchForm,
   saveForm,
   setQuestionEditMode,
-  setActiveInputName,
   setQuestionInfo,
   resetQuestionInfo,
   setValidationInfo,
@@ -17,13 +16,12 @@ import {
   setMappingPositionInfo,
   setPageZoom,
   saveElement,
-  deleteElement,
-  setCurrentElement,
   setActiveBox,
-  processSubmitConfigure
+  deleteElement,
+  setCurrentElement
 } from 'redux/modules/formBuilder';
 
-import FormBuilderSteps from '../components/FormBuilderSteps';
+import FormBuilder from '../components/FormBuilder';
 
 const mapActionCreators = {
   newForm,
@@ -31,7 +29,6 @@ const mapActionCreators = {
   goTo,
   saveForm,
   setQuestionEditMode,
-  setActiveInputName,
   setQuestionInfo,
   resetQuestionInfo,
   setValidationInfo,
@@ -41,20 +38,16 @@ const mapActionCreators = {
   setMappingPositionInfo,
   setPageZoom,
   saveElement,
-  deleteElement,
-  setCurrentElement,
   setActiveBox,
-  processSubmitConfigure,
-  show
+  deleteElement,
+  show,
+  setCurrentElement
 };
 
 const mapStateToProps = (state) => {
   const { formBuilder } = state;
   const {
     id,
-    title,
-    slug,
-    subdomain,
     currentStep,
     isFetching,
     isSubmitting,
@@ -63,19 +56,15 @@ const mapStateToProps = (state) => {
     logics,
     documents,
     documentMapping,
-    formConfig,
     currentElement,
-    activeInputName,
     currentQuestionInstruction,
     pageZoom,
     pageWidth,
-    questionEditMode
+    questionEditMode,
+    activeBox
   } = formBuilder || INIT_BUILDER_STATE;
   return {
     id: parseInt(id),
-    title,
-    slug,
-    subdomain,
     currentStep,
     isFetching,
     isSubmitting,
@@ -84,14 +73,13 @@ const mapStateToProps = (state) => {
     logics,
     documents,
     documentMapping,
-    formConfig,
     currentElement,
-    activeInputName,
     currentQuestionInstruction,
     pageZoom,
     pageWidth,
-    questionEditMode
+    questionEditMode,
+    activeBox
   };
 };
 
-export default connect(mapStateToProps, mapActionCreators)(FormBuilderSteps);
+export default connect(mapStateToProps, mapActionCreators)(FormBuilder);

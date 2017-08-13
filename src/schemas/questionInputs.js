@@ -1,9 +1,11 @@
-const STANDARD = 'standard';
+import { formBuilderBoxMappingType } from 'constants/formBuilder';
+
+const STANDARD = formBuilderBoxMappingType.STANDARD;
 
 export const questionInputGroups = [
   {
     name: STANDARD,
-    displayText: 'Standard'
+    displayText: formBuilderBoxMappingType.STANDARD
   }
 ];
 
@@ -33,10 +35,21 @@ const questionInputs = {
       'does_not_contain'
     ],
     selectionTypes: [
-      'standard',
-      'block'
+      formBuilderBoxMappingType.STANDARD,
+      formBuilderBoxMappingType.BLOCK
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'ShortText',
+          'key': 'short_text',
+          'group': formBuilderBoxMappingType.STANDARD,
+          'maxSelection': 10,
+          'minSelection': 1
+        }
+      ]
+    ]
   },
   'EmailField': {
     name: 'EmailField',
@@ -57,10 +70,21 @@ const questionInputs = {
       'greater_than_equal_to'
     ],
     selectionTypes: [
-      'standard',
-      'block'
+      formBuilderBoxMappingType.STANDARD,
+      formBuilderBoxMappingType.BLOCK
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'Email',
+          'key': 'email',
+          'group': formBuilderBoxMappingType.STANDARD,
+          'maxSelection': 1,
+          'minSelection': 1
+        }
+      ]
+    ]
   },
   'PhoneNumberField': {
     name: 'PhoneNumberField',
@@ -72,10 +96,21 @@ const questionInputs = {
     ],
     logicOperations: [],
     selectionTypes: [
-      'standard',
-      'block'
+      formBuilderBoxMappingType.STANDARD,
+      formBuilderBoxMappingType.BLOCK
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'Phone Number',
+          'key': 'phone',
+          'group': formBuilderBoxMappingType.STANDARD,
+          'maxSelection': 1,
+          'minSelection': 1
+        }
+      ]
+    ]
   },
   'AddressField': {
     name: 'AddressField',
@@ -87,8 +122,8 @@ const questionInputs = {
     ],
     logicOperations: [],
     selectionTypes: [
-      'standard',
-      'block'
+      formBuilderBoxMappingType.STANDARD,
+      formBuilderBoxMappingType.BLOCK
     ],
     group: STANDARD
   },
@@ -105,7 +140,7 @@ const questionInputs = {
       'not'
     ],
     selectionTypes: [
-      'block'
+      formBuilderBoxMappingType.BLOCK
     ],
     group: STANDARD
   },
@@ -127,10 +162,51 @@ const questionInputs = {
       'after_on'
     ],
     selectionTypes: [
-      'standard',
-      'block'
+      formBuilderBoxMappingType.STANDARD,
+      formBuilderBoxMappingType.BLOCK
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'Day',
+          'key': 'day',
+          'group': 'Separate'
+        },
+        {
+          'displayName': 'Month',
+          'key': 'month',
+          'group': 'Separate'
+        },
+        {
+          'displayName': 'Year',
+          'key': 'year',
+          'group': 'Separate'
+        }
+      ],
+      [
+        {
+          'displayName': 'Month/Year',
+          'key': 'month/year',
+          'group': 'Combined'
+        },
+        {
+          'displayName': 'Year/Month/Day',
+          'key': 'year/month/day',
+          'group': 'Combined'
+        },
+        {
+          'displayName': 'Day/Month/Year',
+          'key': 'day/month/year',
+          'group': 'Combined'
+        },
+        {
+          'displayName': 'Month/Day/Year',
+          'key': 'month/day/year',
+          'group': 'Combined'
+        }
+      ]
+    ]
   },
   'MultipleChoice': {
     name: 'MultipleChoice',
@@ -145,7 +221,7 @@ const questionInputs = {
       'not'
     ],
     selectionTypes: [
-      'standard'
+      formBuilderBoxMappingType.STANDARD
     ],
     group: STANDARD
   },
@@ -169,8 +245,8 @@ const questionInputs = {
       'greater_than_equal_to'
     ],
     selectionTypes: [
-      'standard',
-      'block'
+      formBuilderBoxMappingType.STANDARD,
+      formBuilderBoxMappingType.BLOCK
     ],
     group: STANDARD
   },
@@ -193,7 +269,7 @@ const questionInputs = {
       'does_not_contain'
     ],
     selectionTypes: [
-      'standard'
+      formBuilderBoxMappingType.STANDARD
     ],
     group: STANDARD
   },
@@ -210,7 +286,7 @@ const questionInputs = {
       'not'
     ],
     selectionTypes: [
-      'standard'
+      formBuilderBoxMappingType.STANDARD
     ],
     group: STANDARD
   },
@@ -222,7 +298,7 @@ const questionInputs = {
     validations: [],
     logicOperations: [],
     selectionTypes: [
-      'standard'
+      formBuilderBoxMappingType.STANDARD
     ],
     group: STANDARD
   },
@@ -248,7 +324,7 @@ const questionInputs = {
     ],
     logicOperations: [],
     selectionTypes: [
-      'standard'
+      formBuilderBoxMappingType.STANDARD
     ],
     group: STANDARD
   }

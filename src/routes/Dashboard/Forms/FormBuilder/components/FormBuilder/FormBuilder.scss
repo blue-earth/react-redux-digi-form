@@ -10,7 +10,13 @@ $panel-border-color: #086DB6;
   height: 100%;
   position: relative;
 }
-
+.fieldsSelectorHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+}
 .leftPanel {
   width: 360px;
   position: relative;

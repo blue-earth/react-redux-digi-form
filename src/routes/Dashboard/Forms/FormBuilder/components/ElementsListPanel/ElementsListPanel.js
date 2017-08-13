@@ -17,29 +17,20 @@ import questionInputs, {
   questionInputGroups
 } from 'schemas/questionInputs';
 import styles from './ElementsListPanel.scss';
+import { formBuilderSelectMode } from 'constants/formBuilder';
+import { createEmptyQuestionElement } from 'helpers/formBuilderHelper';
 
 export default class ElementsListPanel extends Component {
 
   static propTypes = {
     /*
-     * activeInputName: Redux state to indicate the active input element name.
-     */
-    activeInputName: PropTypes.string.isRequired,
-
-    /*
-     * setActiveInputName: used to set active input element selected, and enables to draw on the right
-     */
-    setActiveInputName: PropTypes.func.isRequired,
-
-    /*
-     * saveElement: Redux action to save the current element being edited.
-     */
-    saveElement: PropTypes.func.isRequired,
-
-    /*
      * setQuestionEditMode: Redux action to set question edit mode
      */
-    setQuestionEditMode: PropTypes.func.isRequired
+    setQuestionEditMode: PropTypes.func.isRequired,
+    /**
+     * Set current Element
+     */
+    setCurrentElement: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -63,35 +54,44 @@ export default class ElementsListPanel extends Component {
 
   }
 
+  createEmptyQuestion = (questionTypeName, boxMappingType=null) => {
+    const {
+      setQuestionEditMode,
+      setCurrentElement
+    } = this.props;
+    // 1. Create empty question object based on questionTypeName
+    const newQuestion = createEmptyQuestionElement(questionTypeName, boxMappingType);
+    // 2. Set current element to this new question object
+    setCurrentElement(newQuestion);
+    // 3. Enter box mapping mode (Hide left side bar)
+    setQuestionEditMode(formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW);
+  };
+
   handleQuestionTypePanelClick = (key) => {
     const { panels } = this.state;
     const newValue = !_.defaultTo(panels[key], false);
     this.setState({
       panels: Object.assign({}, panels, { [key]: newValue })
     });
-  }
+  };
 
   handleElementClick(event, inputType) {
+    // handle the creation of question type with no drop down options
+    // such as fileupload
     event.stopPropagation();
     const { setQuestionEditMode } = this.props;
-    setQuestionEditMode({
-      mode: true,
-      inputType
-    });
+    setQuestionEditMode(formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW);
+    // todo: change InputType
+    // todo: change box mapping type
   }
 
   handleElementOptClick = (key) => {
-    const { setQuestionEditMode } = this.props;
     var splitKey = key.split('|');
+    // todo: refactor this "|" hack
     var inputType = splitKey[0];
     var selectionType = splitKey[1];
-    console.log(selectionType);
-    // TODO: pass selectionType to the reducer to do something with it
-    setQuestionEditMode({
-      mode: true,
-      inputType
-    });
-  }
+    this.createEmptyQuestion(inputType, selectionType);
+  };
 
   renderPanelContent(elements) {
     const that = this;

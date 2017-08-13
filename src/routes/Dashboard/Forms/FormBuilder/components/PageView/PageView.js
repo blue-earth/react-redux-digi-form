@@ -11,22 +11,11 @@ import _ from 'lodash';
 import { pageZoomPercent } from 'helpers/formBuilderHelper';
 
 class PageView extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {isDrawing: false};
-  };
-
   static propTypes = {
     /*
      * documents: Redux state to hold document image urls.
      */
     documents: PropTypes.array.isRequired,
-
-    /*
-     * activeInputName: Redux state to indicate the active input element name.
-     */
-    activeInputName: PropTypes.string.isRequired,
 
     /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
@@ -56,7 +45,7 @@ class PageView extends Component {
     /*
      * questionEditMode: Redux state to indicate question edit mode
      */
-    questionEditMode: PropTypes.bool.isRequired,
+    questionEditMode: PropTypes.number.isRequired,
 
     /*
      * setQuestionEditMode: Redux action to set question edit mode
@@ -64,9 +53,28 @@ class PageView extends Component {
     setQuestionEditMode: PropTypes.func.isRequired,
 
     /*
+     * setCurrentElement: Redux action to set/load currentElement
+     */
+    setCurrentElement: PropTypes.func.isRequired,
+
+    /*
+     * setActiveBox: Redux action to set activeBox path.
+     */
+    setActiveBox: PropTypes.func.isRequired,
+
+    /*
      * currentElement: Redux state to hold the element currently being edited.
      */
     currentElement: PropTypes.object
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDrawing: false,
+      viewportWidth: 0
+    };
+    window.addEventListener('resize', this.getViewportSize);
   };
 
   componentWillMount() {
@@ -74,6 +82,14 @@ class PageView extends Component {
   }
 
   componentDidMount() {
+    this.getViewportSize();
+  }
+
+  getViewportSize = () => {
+    this.setState({
+      viewportWidth: this.refs.spacer.offsetWidth,
+      viewportHeight: this.refs.pagesWrapper.offsetHeight
+    });
   }
 
   handleElementClick = (metaData) => {
@@ -112,6 +128,7 @@ class PageView extends Component {
 
   renderDocuments() {
     const { documents, pageZoom } = this.props;
+    const { viewportWidth, viewportHeight } = this.state;
     return documents
       ? documents.map((document, index) => {
         const zoomedWidth = document.width * pageZoom;
@@ -124,6 +141,7 @@ class PageView extends Component {
             <img src={document.url} alt={`Page Image ${pageNumber}`}
               className={styles.pageImage} ref={`pageImage${pageNumber}`} />
             <DrawingBoard {...this.props} pageNumber={pageNumber}
+              viewportWidth={viewportWidth} viewportHeight={viewportHeight}
               getPageDOM={this.getPageDOM} containerId="clientArea" />
           </div>
         );

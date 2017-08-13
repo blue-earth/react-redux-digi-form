@@ -1,14 +1,25 @@
 @import './mixins';
 @import './variables';
 
-$box-border-color: #FF6600;
+$box-border-color: $blue;
+$box-bg-color: $blue;
 $handle-size: 12px;
+
 .interactWrapper {
   width: 100px;
   height: 50px;
   position: absolute;
-  border: 2px dashed $box-border-color;
-  background-color: rgba(0, 0, 0, .1);
+  border: 1px dashed $box-border-color;
+  &:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $box-bg-color;
+    opacity: .15;
+    content: '';
+  }
   // @include transition(background .05s linear);
   @include transition(border-color .05s linear);
   &.active {
@@ -17,7 +28,10 @@ $handle-size: 12px;
     }
     z-index: 999;
     // background-color: rgba(255, 255, 255, .95);
-    @include box-shadow-custom(0 0 5px rgba(0, 0, 0, .5));
+    &:before {
+      opacity: .3;
+    }
+    @include box-shadow-custom(0 0 2px rgba(0, 0, 0, .5));
   }
 }
 .innerContent {
@@ -27,7 +41,6 @@ $handle-size: 12px;
   bottom: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
   cursor: pointer;
 }
 .active {

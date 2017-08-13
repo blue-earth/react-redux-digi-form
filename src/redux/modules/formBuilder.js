@@ -1,8 +1,14 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { mergeItemIntoArray, findItemById } from 'helpers/pureFunctions';
+import { findItemById, mergeItemIntoArray } from 'helpers/pureFunctions';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
+import {
+  formBuilderBoxMappingType,
+  formBuilderFontSize,
+  formBuilderPathIndex,
+  formBuilderSelectMode
+} from 'constants/formBuilder';
 import _ from 'lodash';
 import humps from 'humps';
 
@@ -29,7 +35,10 @@ export const SET_MAPPING_POSITION_INFO = 'SET_MAPPING_POSITION_INFO';
 
 export const UPDATE_FORM_ID = 'UPDATE_FORM_ID';
 export const SET_QUESTION_EDIT_MODE = 'SET_QUESTION_EDIT_MODE';
+export const SET_CURRENT_ELEMENT = 'SET_CURRENT_ELEMENT';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
+
+export const SET_ACTIVE_BOX = 'SET_ACTIVE_BOX';
 
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
 export const UPDATE_STORE = 'UPDATE_STORE';
@@ -67,11 +76,10 @@ export const INIT_BUILDER_STATE = {
     security: []
   },
   documentMapping: {},
-  activeInputName: '',
   currentElement: null, // holds the current element state being added or edited.
   lastQuestionId: 0, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
-  questionEditMode: false,
+  questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
   currentStep: 'select' // select, arrange, configure or send
 };
 
@@ -88,9 +96,8 @@ export const INIT_QUESTION_STATE = {
 };
 
 export const INIT_MAPPING_INFO_STATE = {
-  type: 'Standard',
-  positions: [],
-  activeIndex: 0
+  type: formBuilderBoxMappingType.STANDARD,
+  positions: {}
 };
 
 // ------------------------------------
@@ -190,7 +197,7 @@ export const submitForm = () => {
 export const processSubmitForm = (formData) => {
   var body = {
     'title': formData.title,
-    'slug': formData.slug,
+    // 'slug': formData.slug,
     'form_data': {
       'logics': formData.logics,
       'questions': formData.questions
@@ -217,14 +224,14 @@ export const processSubmitForm = (formData) => {
       const { id } = value;
       id && dispatch(updateFormId(id));
       dispatch(doneSubmitForm()); // Hide submitting spinner
-      dispatch(setQuestionEditMode({ mode: false }));
+      dispatch(setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW));
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitForm()); // Hide submitting spinner
-      dispatch(setQuestionEditMode({ mode: false }));
+      dispatch(setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW));
     };
   };
 
@@ -247,11 +254,6 @@ export const saveForm = () => {
 export const updateFormId = createAction(UPDATE_FORM_ID);
 
 // ------------------------------------
-// Action: setActiveInputName
-// ------------------------------------
-export const setActiveInputName = createAction(SET_ACTIVE_INPUT_NAME);
-
-// ------------------------------------
 // Action: saveElement
 // ------------------------------------
 export const saveElement = createAction(SAVE_ELEMENT);
@@ -263,11 +265,11 @@ const _saveElement = (state, action) => {
   const { currentElement } = state;
   const id = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
   var question = _.merge({}, INIT_QUESTION_STATE, currentElement.question, { id });
-  var mappingInfo = _.merge({}, INIT_MAPPING_INFO_STATE, currentElement.mappingInfo, { id });
+  // TODO: Update mappingInfo assignment
   var isModified = state.isModified || currentElement.isModified;
   return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
-    documentMapping: mergeItemIntoArray(state.documentMapping, mappingInfo),
+    documentMapping: _.merge({}, state.documentMapping, { [id]: currentElement.mappingInfo }),
     lastQuestionId: id,
     currentElement: _.merge({}, currentElement, { id }),
     isModified
@@ -289,7 +291,6 @@ const _deleteElement = (state, action) => {
     documentMapping: _.pullAllBy(state.documentMapping, [{id}], 'id'),
     questionEditMode: false,
     currentElement: null,
-    activeInputName: '',
     isModified: true
   });
 };
@@ -407,18 +408,24 @@ export const setMappingPositionInfo = createAction(SET_MAPPING_POSITION_INFO);
 // Helper: _setMappingPositionInfo
 // ------------------------------------
 const _setMappingPositionInfo = (state, action) => {
-  const positions = _.get(state, [
-    'currentElement', 'mappingInfo', 'positions'
-  ], []).slice(0);
-  const index = _.get(state, [
-    'currentElement', 'mappingInfo', 'activeIndex'
-  ], 0);
-  const newPosition = _.pick(action.payload, [
-    'page_number', 'bounding_box'
-  ]);
-  positions[index] = _.merge({}, positions[index], newPosition);
-  return _setMappingInfo(state, {
-    payload: { positions }
+  const currentElement = _.assign({}, _.get(state, ['currentElement']));
+  const { activeBox } = currentElement;
+  const activePathArray = _.defaultTo(_.split(activeBox, '.'), []);
+  const positionPathArray = _.concat(['mappingInfo'], activePathArray);
+
+  const position = _.get(currentElement, positionPathArray, {});
+
+  const newPosition = _.merge(
+    { 'font_size': formBuilderFontSize },
+    position,
+    _.pick(action.payload, [
+      'page', 'box', 'font_size'
+    ])
+  );
+  _.set(currentElement, positionPathArray, newPosition);
+
+  return _.assign({}, state, {
+    currentElement
   });
 };
 
@@ -443,37 +450,86 @@ export const setPageZoom = createAction(SET_PAGE_ZOOM);
 // ------------------------------------
 export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
 
-const _setQuestionEditMode = (state, action) => {
+export const setCurrentElement = createAction(SET_CURRENT_ELEMENT);
+
+export const setActiveBox = createAction(SET_ACTIVE_BOX);
+
+const _setActiveBox = (state, action) => {
   const { currentElement } = state;
-  const { id, mode, inputType, activeBoxIndex } = action.payload;
-  const question = id
-    ? findItemById(state.questions, id)
-    : Object.assign({}, INIT_QUESTION_STATE, {
-      type: inputType
-    });
-  const newCurrentElement = mode ? {
-    id,
-    question,
-    isModified: false,
-    mappingInfo: _.pick(Object.assign({}, id
-      ? findItemById(state.documentMapping, id)
-      : currentElement
-        ? currentElement.mappingInfo
-        : INIT_MAPPING_INFO_STATE,
-      { activeIndex: _.defaultTo(activeBoxIndex, 0) }
-    ), _.keys(INIT_MAPPING_INFO_STATE))
-  } : null;
+  const { mappingInfo } = currentElement;
+  const activeBox = action.payload;
+  const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
+  const label = pathArray[formBuilderPathIndex.LABEL];
+
+  const intialMappingState = _.merge({}, INIT_MAPPING_INFO_STATE, {
+    type: currentElement.defaultMappingType
+  });
+
   return Object.assign({}, state, {
-    currentElement: newCurrentElement,
-    questionEditMode: mode,
-    activeInputName: _.defaultTo(id ? question.type : inputType, '')
+    currentElement: _.merge({}, state.currentElement, {
+      activeBox,
+      mappingInfo: _.merge({
+        [label]: intialMappingState
+      }, mappingInfo)
+    })
   });
 };
+
+// const _setQuestionEditMode = (state, action) => {
+//   // todo: Remove this
+//   const { currentElement } = state;
+//   const { id, mode, inputType, activeBoxIndex } = action.payload;
+//   const question = id
+//     ? findItemById(state.questions, id)
+//     : Object.assign({}, INIT_QUESTION_STATE, {
+//       type: inputType
+//     });
+//   const newCurrentElement = mode ? {
+//     id,
+//     question,
+//     isModified: false,
+//     mappingInfo: _.pick(Object.assign({}, id
+//       ? findItemById(state.documentMapping, id)
+//       : currentElement
+//         ? currentElement.mappingInfo
+//         : INIT_MAPPING_INFO_STATE,
+//       { activeIndex: _.defaultTo(activeBoxIndex, 0) }
+//     ), _.keys(INIT_MAPPING_INFO_STATE))
+//   } : null;
+//   return Object.assign({}, state, {
+//     currentElement: newCurrentElement,
+//     questionEditMode: mode
+//   });
+// };
 
 // ------------------------------------
 // Action: setCurrentStep
 // ------------------------------------
 export const setCurrentStep = createAction(SET_CURRENT_STEP);
+
+const _setCurrentElement = (state, action) => {
+  const id = _.get(action, ['payload', 'id']);
+  if (_.isNil(id)) { // If it's for creating a new question and mapping.
+    return Object.assign({}, state, {
+      currentElement: action.payload
+    });
+  } else { // If it's for loading from existing questions & mappings.
+    const activeBox = action.payload.activeBox;
+    const mappingInfo = state.documentMapping[id];
+    const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
+    const label = pathArray[formBuilderPathIndex.LABEL];
+    return Object.assign({}, state, {
+      currentElement: {
+        id: action.payload.id,
+        question: findItemById(state.questions, id),
+        mappingInfo,
+        activeBox,
+        isModified: false,
+        defaultMappingType: mappingInfo[label].type
+      }
+    });
+  }
+};
 
 // ------------------------------------
 // Action: processSubmitConfigure
@@ -548,13 +604,10 @@ const formBuilderReducer = handleActions({
     Object.assign({}, state, {
       isSubmitting: false
     }),
+
   UPDATE_FORM_ID: (state, action) =>
     Object.assign({}, state, {
       id: parseInt(action.payload)
-    }),
-  SET_ACTIVE_INPUT_NAME: (state, action) =>
-    Object.assign({}, state, {
-      activeInputName: action.payload
     }),
 
   UPDATE_STORE: (state, action) =>
@@ -598,7 +651,16 @@ const formBuilderReducer = handleActions({
     }),
 
   SET_QUESTION_EDIT_MODE: (state, action) =>
-    _setQuestionEditMode(state, action)
+    Object.assign({}, state, {
+      questionEditMode: action.payload
+    }),
+
+  SET_CURRENT_ELEMENT: (state, action) =>
+    _setCurrentElement(state, action),
+
+  SET_ACTIVE_BOX: (state, action) =>
+    _setActiveBox(state, action)
+
 }, INIT_BUILDER_STATE);
 
 export default formBuilderReducer;

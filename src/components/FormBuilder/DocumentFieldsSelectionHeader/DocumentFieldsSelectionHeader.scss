@@ -1,0 +1,36 @@
+@import './variables';
+
+.headerContainer {
+  background-color: #14212a;
+  padding: 10px;
+  color: $white;
+}
+
+.headerContainerRow {
+  overflow: hidden;
+  width: 85%;
+  margin: 0 auto;
+}
+.centerAlign {
+  text-align: center;
+}
+.backLink {
+  color: $white;
+  text-decoration: underline;
+  &:hover {
+    color: #71828b;
+  }
+}
+.left {
+  display: inline-block;
+  width: 185px;
+}
+.middle {
+  display: inline-block;
+  width: calc(100% - 380px);
+  text-align: center;
+}
+.right {
+  display: inline-block;
+  width: 195px;
+}

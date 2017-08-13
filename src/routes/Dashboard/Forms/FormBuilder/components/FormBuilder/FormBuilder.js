@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import _ from 'lodash';
 import classNames from 'classnames';
 import ElementsListPanel from '../ElementsListPanel';
 import PageView from '../PageView';
@@ -10,6 +11,12 @@ import CancelConfirmModal from '../CancelConfirmModal';
 import UploadModal from '../UploadModal';
 import { formsUrl } from 'helpers/urlHelper';
 import styles from './FormBuilder.scss';
+import DocumentFieldsSelectionHeader from 'components/FormBuilder/DocumentFieldsSelectionHeader';
+import {
+  formBuilderSelectMode,
+  formBuilderPathIndex
+} from 'constants/formBuilder';
+import questionInputs from 'schemas/questionInputs';
 
 class FormBuilder extends Component {
 
@@ -53,16 +60,6 @@ class FormBuilder extends Component {
      * isModified: Redux state that indicates whether the form is modified since last save or load.
      */
     isModified: PropTypes.bool.isRequired,
-
-    /*
-     * activeInputName: Redux state to indicate the active input element name.
-     */
-    activeInputName: PropTypes.string.isRequired,
-
-    /*
-     * setActiveInputName: Action to set active input element selected, and enables to draw on the right
-     */
-    setActiveInputName: PropTypes.func.isRequired,
 
     /*
      * saveElement: Redux action to save the current element being edited.
@@ -126,8 +123,14 @@ class FormBuilder extends Component {
 
     /*
      * questionEditMode: Redux state to indicate question edit mode
+     * One of formBuilderSelectMode
      */
-    questionEditMode: PropTypes.bool.isRequired,
+    questionEditMode: PropTypes.number.isRequired,
+
+    /*
+     * setCurrentElement: Redux action to set/load currentElement
+     */
+    setCurrentElement: PropTypes.func.isRequired,
 
     /*
      * setQuestionEditMode: Redux action to set question edit mode.
@@ -136,6 +139,11 @@ class FormBuilder extends Component {
      */
     setQuestionEditMode: PropTypes.func.isRequired,
 
+    /*
+     * setActiveBox: Redux action to set activeBox path.
+     */
+    setActiveBox: PropTypes.func.isRequired,
+    deleteElement: PropTypes.func.isRequired,
     /*
      * newForm: Redux action to reset form with initial state for new form
      */
@@ -182,9 +190,26 @@ class FormBuilder extends Component {
     }
   }
 
-  resetActiveInputName = () => {
-    const { setActiveInputName } = this.props;
-    setActiveInputName('');
+  goToQuestionTypeListView = () => {
+    this.props.setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
+  }
+
+  getAvailableSelectionFields = () => {
+    const questionTypeName = this.props.currentElement.question.type;
+    var result = questionInputs[questionTypeName]['availableFields'];
+    return result;
+  }
+
+  get activeLabel() {
+    const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
+    const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
+    return pathArray[formBuilderPathIndex.LABEL];
+  }
+
+  setActiveLabel = (label) => {
+    const { setActiveBox } = this.props;
+    const index = 0;
+    setActiveBox(_.join([label, 'positions', index], '.'));
   }
 
   render() {
@@ -197,8 +222,19 @@ class FormBuilder extends Component {
       [styles.rightPanel]: true,
       [styles.open]: questionEditMode
     });
+
+    var DocumentHeaderElement = null;
+    if (questionEditMode === formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW) {
+      DocumentHeaderElement = <DocumentFieldsSelectionHeader
+        backLinkClickHandler={this.goToQuestionTypeListView}
+        availableFields={this.getAvailableSelectionFields()}
+        className={styles.fieldsSelectorHeader}
+        activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel} />;
+    }
+
     return (
       <div className={styles.formBuilderContainer}>
+        {DocumentHeaderElement}
         <div className={leftPanelClass}>
           {questionEditMode
             ? <QuestionEditPanel {...this.props} />
