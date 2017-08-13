@@ -17,12 +17,6 @@ export const getImageDimension = (url, callback) => {
 export const isCurrentElementId = (id, currentElement) =>
   (currentElement && _.isEqual(parseInt(id, 10), currentElement.id)) || _.isEqual(parseInt(id, 10), 0);
 
-export const getActiveBoxIndex = (currentElement) =>
-  _.get(currentElement, ['mappingInfo', 'activeIndex'], false);
-
-export const isActiveBox = (currentElement, index) =>
-  currentElement && getActiveBoxIndex(currentElement) === index;
-
 export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom) => {
   const activeBoxPath = _.get(currentElement, ['activeBoxPath'], '');
   const activeBoxPosition = _.get(currentElement.mappingInfo, activeBoxPath, null);

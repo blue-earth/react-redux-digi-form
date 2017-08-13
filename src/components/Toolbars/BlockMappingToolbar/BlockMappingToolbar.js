@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import _ from 'lodash';
 import AppButton from 'components/Buttons/AppButton';
 import Switch from 'rc-switch';
 import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
@@ -34,7 +35,7 @@ export default class BlockMappingToolbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      blocks: 1,
+      blocks: props.values.blocks || [],
       box: props.values.box,
       fontSize: props.values.font_size
     };
@@ -48,8 +49,18 @@ export default class BlockMappingToolbar extends Component {
     });
   }
 
-  handleBlocksChange = (value) => {
-
+  handleBlocksChange = (blockCount) => {
+    const box = this.state.box;
+    const { WIDTH, HEIGHT } = formBuilderBox;
+    const blockWidth = box[WIDTH] / blockCount;
+    const blockHeight = box[HEIGHT];
+    const blocks = _.map(new Array(blockCount), (block, index) => ([
+      blockWidth * index, // left
+      0,  // top
+      blockWidth,  // width
+      blockHeight  // height
+    ]));
+    this.setState({ blocks });
   }
 
   handleWidthChange = (width) => {
@@ -72,8 +83,9 @@ export default class BlockMappingToolbar extends Component {
 
   handleSaveClick = () => {
     const { onChange } = this.props;
-    const { box, fontSize } = this.state;
+    const { blocks, box, fontSize } = this.state;
     onChange({
+      'blocks': blocks,
       'box': box,
       'font_size': fontSize
     });
@@ -90,7 +102,7 @@ export default class BlockMappingToolbar extends Component {
         <ToolbarRow>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Blocks:</Label>
-            <SpinEdit value={blocks} onChange={this.handleBlocksChange} />
+            <SpinEdit value={blocks.length} onChange={this.handleBlocksChange} />
           </ToolbarCol>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Font:</Label>

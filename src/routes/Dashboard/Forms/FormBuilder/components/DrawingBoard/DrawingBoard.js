@@ -3,17 +3,12 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  findItemById
-} from 'helpers/pureFunctions';
-import {
   getDragSnappingTargets,
   getResizeSnappingTargets,
   getDragSnappingHelpersRect,
   getResizeSnappingHelpersPos,
-  getActiveBoxIndex,
   isCurrentElementId,
-  zoomValue,
-  getChoiceLabelByIndex
+  zoomValue
 } from 'helpers/formBuilderHelper';
 // import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
 // import classNames from 'classnames';
@@ -401,23 +396,47 @@ class DrawingBoard extends Component {
   }
 
   handleDeleteBox = () => {
-    const { setMappingInfo, currentElement } = this.props;
-    const positions = _.get(currentElement, ['mappingInfo', 'positions'], []);
-    const activeBoxIndex = getActiveBoxIndex(currentElement);
-    positions[activeBoxIndex] = null;
-    setMappingInfo({
-      positions,
-      activeIndex: activeBoxIndex
-    });
+    // TODO: Implement delete box here.
   }
 
-  getBoxLabel(elementId, boxIndex) {
-    const { questions, currentElement } = this.props;
-    const question = isCurrentElementId(elementId, currentElement)
-      ? currentElement.question
-      : findItemById(questions, elementId);
-    const { type, choices } = question;
-    return choices ? _.get(choices, [boxIndex, 'label'], getChoiceLabelByIndex(choices.length)) : type;
+  renderBlocks(position) {
+    const { pageZoom } = this.props;
+    const { LEFT, TOP, WIDTH, HEIGHT } = formBuilderBox;
+    if (_.isEmpty(position.blocks)) {
+      const style = {
+        fontSize: position.font_size
+      };
+      return (
+        <div className={styles.boxLabel} style={style}>
+          {'D'}
+        </div>
+      );
+    } else {
+      const style = {
+        fontSize: position.font_size,
+        height: zoomValue(position.box[HEIGHT], pageZoom)
+      };
+      const blocks = _.map(position.blocks, (block, index) => {
+        const boxStyle = {
+          left: zoomValue(block[LEFT], pageZoom),
+          top: zoomValue(block[TOP], pageZoom),
+          width: zoomValue(block[WIDTH], pageZoom),
+          height: zoomValue(block[HEIGHT], pageZoom)
+        };
+        return (
+          <div key={index} className={styles.block} style={boxStyle}>
+            <div className={styles.blockLabel}>
+              {'X'}
+            </div>
+          </div>
+        );
+      });
+      return (
+        <div className={styles.blocks} style={style}>
+          {blocks}
+        </div>
+      );
+    }
   }
 
   belongsToPage(position) {
@@ -430,6 +449,7 @@ class DrawingBoard extends Component {
     const { documentMapping, currentElement, pageZoom,
       viewportWidth, viewportHeight } = this.props;
     const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
+    const { LEFT, TOP, WIDTH, HEIGHT } = formBuilderBox;
     var boardOptionals = {};
     if (activeBoxPath) {
       boardOptionals['style'] = _.merge(boardOptionals['style'], {
@@ -453,7 +473,7 @@ class DrawingBoard extends Component {
             return false; // skip if the mapping is not for this page
           }
           const isActive = false;
-          const boundingBox = position.box;
+          const box = position.box;
           const zIndex = isActive ? 101 : 100;
           const path = _.join([label, 'positions', positionKey], '.');
           if (isCurrentElementId(id, currentElement) && _.isEqual(path, activeBoxPath)) {
@@ -461,13 +481,13 @@ class DrawingBoard extends Component {
           }
           return (
             <InteractWrapper
-              x={zoomValue(boundingBox[formBuilderBox.LEFT], pageZoom)}
-              y={zoomValue(boundingBox[formBuilderBox.TOP], pageZoom)}
+              x={zoomValue(box[LEFT], pageZoom)}
+              y={zoomValue(box[TOP], pageZoom)}
               zIndex={zIndex}
               active={isActive}
               className="interactWrapper"
-              width={zoomValue(boundingBox[formBuilderBox.WIDTH], pageZoom)}
-              height={zoomValue(boundingBox[formBuilderBox.HEIGHT], pageZoom)}
+              width={zoomValue(box[WIDTH], pageZoom)}
+              height={zoomValue(box[HEIGHT], pageZoom)}
               minWidth={10}
               minHeight={10}
               onClick={this.handleBoxClick}
@@ -475,7 +495,7 @@ class DrawingBoard extends Component {
               viewportWidth={viewportWidth}
               viewportHeight={viewportHeight}
             >
-              <div className={styles.boxLabel}>{'D'}</div>
+              {this.renderBlocks(position)}
             </InteractWrapper>
           );
         });
@@ -521,18 +541,19 @@ class DrawingBoard extends Component {
     const position = _.get(currentElement.mappingInfo, activeBoxPath);
     if (!this.belongsToPage(position)) return false;
     const isActive = true;
-    const boundingBox = position.box;
+    const box = position.box;
     const zIndex = isActive ? 101 : 100;
+    const { LEFT, TOP, WIDTH, HEIGHT } = formBuilderBox;
 
     return (
       <InteractWrapper
-        x={zoomValue(boundingBox[formBuilderBox.LEFT], pageZoom)}
-        y={zoomValue(boundingBox[formBuilderBox.TOP], pageZoom)}
+        x={zoomValue(box[LEFT], pageZoom)}
+        y={zoomValue(box[TOP], pageZoom)}
         zIndex={zIndex}
         active={isActive}
         className="interactWrapper"
-        width={zoomValue(boundingBox[formBuilderBox.WIDTH], pageZoom)}
-        height={zoomValue(boundingBox[formBuilderBox.HEIGHT], pageZoom)}
+        width={zoomValue(box[WIDTH], pageZoom)}
+        height={zoomValue(box[HEIGHT], pageZoom)}
         minWidth={10}
         minHeight={10}
         onResizeStart={this.handleResizeStart}
@@ -547,7 +568,7 @@ class DrawingBoard extends Component {
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}
         metaData={{ id: currentElement.id, path: activeBoxPath }}
       >
-        <div className={styles.boxLabel}>{'D'}</div>
+        {this.renderBlocks(position)}
       </InteractWrapper>
     );
   }

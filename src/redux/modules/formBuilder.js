@@ -409,18 +409,20 @@ export const setMappingPositionInfo = createAction(SET_MAPPING_POSITION_INFO);
 // ------------------------------------
 const _setMappingPositionInfo = (state, action) => {
   const currentElement = _.assign({}, _.get(state, ['currentElement']));
-  const { activeBoxPath } = currentElement;
-  const activePathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
-  const positionPathArray = _.concat(['mappingInfo'], activePathArray);
 
+  const { activeBoxPath, defaultMappingType } = currentElement;
+  const activePathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
+
+  const positionPathArray = _.concat(['mappingInfo'], activePathArray);
+  const fields = _.isEqual(defaultMappingType, formBuilderBoxMappingType.STANDARD)
+    ? ['box', 'font_size', 'page']
+    : ['box', 'font_size', 'page', 'blocks'];
   const position = _.get(currentElement, positionPathArray, {});
 
   const newPosition = _.merge(
     { 'font_size': formBuilderFontSize },
-    position,
-    _.pick(action.payload, [
-      'page', 'box', 'font_size'
-    ])
+    _.omit(position, ['blocks']),
+    _.pick(action.payload, fields)
   );
   _.set(currentElement, positionPathArray, newPosition);
 
