@@ -26,19 +26,23 @@ const WRITE = 'write';
 
 class SignatureModal extends Component {
   static propTypes = {
-    handleHide: PropTypes.func.isRequired, // Modal hide function
+    handleHide: PropTypes.func.isRequired, // Current modal hide function
     show: PropTypes.bool,                 // Modal display status
-    showModal: PropTypes.func.isRequired,
+    hide: PropTypes.func.isRequired,      // Hide modal function from 'redux-modal'
     value: PropTypes.string,
-    commitValue: PropTypes.func,
+    submitSignature: PropTypes.func,      // Submit answer
     isConsented: PropTypes.bool,
     isPageBusy: PropTypes.bool,
+    isVerifyingCode: PropTypes.bool.isRequired,
+    isCodeVerified: PropTypes.bool.isRequired,
     email: PropTypes.string.isRequired,
-    emailList: PropTypes.array.isRequired,
     changeEmail: PropTypes.func.isRequired,
+    verifyEmail: PropTypes.func.isRequired,
     verifyEmailCode: PropTypes.func.isRequired,
-    fetchEmailList: PropTypes.func.isRequired,
-    requestVerificationCode: PropTypes.func.isRequired
+    updateSessionId: PropTypes.func.isRequired,
+    requestVerificationCode: PropTypes.func.isRequired,
+    closeVerificationModal: PropTypes.func.isRequired,
+    resetVerifyErrorMessage: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -46,25 +50,18 @@ class SignatureModal extends Component {
     this.state = {
       isSignatureValidated: true,
       isEmailValidated: true,
-      commitValue: '',
       activeTabName: WRITE,
       signatureName: '',
-      isConsented: props.isConsented || false,
-      isVerificationModalOpen: false
+      isConsented: props.isConsented || false
     };
   };
 
-  componentWillMount() {
-    this.props.fetchEmailList();
-  }
-
-  hideVerificationModal = () => {
-    this.props.hide('signatureVerificationModal');
-    this.setState({ isVerificationModalOpen: false });
+  componentDidMount() {
+    this.props.updateSessionId();
   }
 
   handleSubmit = () => {
-    const { email, emailList, requestVerificationCode, showModal, handleHide, commitValue } = this.props;
+    const { email, verifyEmail } = this.props;
     const { activeTabName } = this.state;
     const value = this.refs[activeTabName].dataUrl;
     // Empty signature error handle
@@ -78,14 +75,7 @@ class SignatureModal extends Component {
         isEmailValidated: false
       });
     }
-    if (emailList.indexOf(email) === -1) {
-      requestVerificationCode();
-      showModal('signatureVerificationModal');
-      this.setState({ isVerificationModalOpen: true });
-    } else {
-      commitValue(this.refs[activeTabName].dataUrl);
-      handleHide();
-    }
+    verifyEmail(value);
   }
 
   handleTabSelect = (activeTabName) => {
@@ -132,15 +122,16 @@ class SignatureModal extends Component {
       email,
       isPageBusy,
       verifyEmailCode,
-      requestVerificationCode
+      isVerifyingCode,
+      requestVerificationCode,
+      isCodeVerified
     } = this.props;
     const {
       isEmailValidated,
       isSignatureValidated,
       signatureName,
       activeTabName,
-      isConsented,
-      isVerificationModalOpen
+      isConsented
     } = this.state;
 
     const writeLogo = require('./Write.svg');
@@ -154,7 +145,7 @@ class SignatureModal extends Component {
           backdrop="static"
           show={show}
           className={classNames(styles.signatureModal, {
-            'hide': isVerificationModalOpen
+            'hide': isVerifyingCode
           })}
           aria-labelledby="ModalHeader">
           <Modal.Header>
@@ -284,8 +275,9 @@ class SignatureModal extends Component {
           </Modal.Footer>
         </Modal>
         <CompletionModal
-          closeModal={this.hideVerificationModal}
-          email={email}
+          resetVerifyErrorMessage={this.props.resetVerifyErrorMessage}
+          isCodeVerified={isCodeVerified}
+          closeModal={this.props.closeVerificationModal}
           verifyEmailCode={verifyEmailCode}
           resendCode={requestVerificationCode} />
       </div>

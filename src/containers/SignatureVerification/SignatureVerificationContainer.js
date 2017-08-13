@@ -1,26 +1,34 @@
 import connect from 'redux/utils/connect';
 import SignatureModal from 'components/QuestionInputs/Signature/SignatureModal';
 import {
-  fetchEmailList,
-  requestVerificationCode,
-  hideVerificationModal,
+  updateSessionId,
+  closeVerificationModal,
   changeEmail,
+  verifyEmail,
   verifyEmailCode,
+  submitSignature,
+  requestVerificationCode,
+  closeCodeVerify,
+  resetVerifyErrorMessage,
   INIT_SIGNATURE_STATE
 } from 'redux/modules/signatureVerification';
 
 const mapActionCreators = {
-  fetchEmailList,
-  requestVerificationCode,
-  hideVerificationModal,
+  updateSessionId,
+  closeVerificationModal,
   changeEmail,
-  verifyEmailCode
+  verifyEmail,
+  verifyEmailCode,
+  submitSignature,
+  requestVerificationCode,
+  closeCodeVerify,
+  resetVerifyErrorMessage
 };
 
 const mapStateToProps = (state) => {
   const { signatureVerification } = state;
-  const { isPageBusy, email, emailList, isVerifing } = signatureVerification || INIT_SIGNATURE_STATE;
-  return { isPageBusy, email, emailList, isVerifing };
+  const { isPageBusy, email, isVerifyingCode, isCodeVerified } = signatureVerification || INIT_SIGNATURE_STATE;
+  return { isPageBusy, email, isVerifyingCode, isCodeVerified };
 };
 
 export default connect(mapStateToProps, mapActionCreators)(SignatureModal);
