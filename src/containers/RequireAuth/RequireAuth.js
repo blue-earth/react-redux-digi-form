@@ -8,6 +8,7 @@ import {
 } from 'redux/modules/auth';
 import { goTo } from 'redux/modules/router';
 import { loginUrl } from 'helpers/urlHelper';
+import _ from 'lodash';
 
 export default function requiresAuth(Component) {
   class AuthenticatedComponent extends React.Component {
@@ -45,7 +46,8 @@ export default function requiresAuth(Component) {
     }
     shouldComponentUpdate(nextProps) {
       return this.props.isAuthenticating !== nextProps.isAuthenticating ||
-        this.props.location.pathname !== nextProps.location.pathname;
+        this.props.location.pathname !== nextProps.location.pathname ||
+        !_.isEqual(this.props.user, nextProps.user);
     }
     _checkAndRedirect() {
       const { isAuthenticating, goTo, authStatus } = this.props;

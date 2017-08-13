@@ -39,6 +39,14 @@ class DashboardLayout extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.user.first_name || !nextProps.user.last_name) {
+      this.setState({ showProfileModal: true });
+    } else {
+      this.setState({ showProfileModal: false });
+    }
+  }
+
   handleHideProfileModal = () => {
     this.setState({ showProfileModal: false });
   }
