@@ -158,7 +158,7 @@ class WriteSignature extends Component {
     );
     return (
       <div className={classNames(className, styles.writePanelWrapper)}>
-        <div className={styles.tabPanelTitle}>Like a celebrity</div>
+        <div className={classNames(styles.tabPanelTitle, 'invisible')}>Like a celebrity</div>
         {writeSignatureColourSelection}
         {preloadFonts}
         {signatureFonts.map((font, index) => {
