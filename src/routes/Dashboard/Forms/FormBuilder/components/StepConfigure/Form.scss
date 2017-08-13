@@ -6,22 +6,29 @@
   color: $dashboard-text-color;
   height: 100%;
   position: relative;
+  @include clearfix();
 }
-.leftPanel {
-  width: 360px;
+.leftPanel,
+.rightPanel {
+  width: 20%;
+  float: left;
   position: relative;
   height: 100%;
   padding-top: 25px;
-
 }
-.rightPanel {
+.middlePanel {
   height: 100%;
-  position: absolute;
-  left: 390px;
-  top: 25px;
-  right: 0;
+  width: 60%;
+  padding-top: 25px;
   overflow: auto;
   padding-bottom: 40px;
+  float: left;
+  form {
+    min-width: 400px;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
 }
 .builderItem {
   font-family: $font-name;

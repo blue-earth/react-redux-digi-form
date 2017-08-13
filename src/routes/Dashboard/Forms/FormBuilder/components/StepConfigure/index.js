@@ -89,9 +89,10 @@ class StepConfigure extends Component {
             menuItems={this.sidebarMenuItems}
             selectedItemKey={this.state.currentSubPageKey} onMenuItemSelect={this.handleSidebarSelect} />
         </div>
-        <div className={styles.rightPanel}>
+        <div className={styles.middlePanel}>
           {this.renderForm()}
         </div>
+        <div className={styles.rightPanel} />
       </div>
     );
   }
