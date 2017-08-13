@@ -33,17 +33,6 @@ webpackConfig.entry = {
     : APP_ENTRY_PATHS,
   vendor: config.compiler_vendor
 }
-
-var demoPages = {};
-if (__DEV__) {
-  demoPages = {
-    'components/Questions/QuestionInteractive/demo': [
-      'components/Questions/QuestionInteractive/demo/demo.js'
-    ]
-  };
-  webpackConfig.entry = Object.assign({}, demoPages, webpackConfig.entry)
-}
-
 // ------------------------------------
 // Bundle Output
 // ------------------------------------
@@ -79,37 +68,11 @@ webpackConfig.plugins = [
 ]
 
 if (__DEV__) {
-  // Push demo pages
-  var demoHTMLFiles = [];
-  // demoPages.forEach(function () {
-  //
-  //   new HtmlWebpackPlugin({});
-  // })
-  demoHTMLFiles = Object.keys(demoPages).map(function(name) {
-    var p = new HtmlWebpackPlugin({
-      template: paths.client('index.html'),
-      hash: false,
-      favicon: paths.client('static/favicon.ico'),
-      filename: 'demo/' + name + '.html',
-      inject: 'body',
-      minify: {
-        collapseWhitespace: false
-      },
-      chunks: ['vendor', name]
-    });
-    return p;
-  });
-  webpackConfig.plugins.push(...demoHTMLFiles);
-  // webpackConfig.plugins = webpackConfig.plugins.concat(demoPages);
-
-}
-
-if (__DEV__) {
   debug('Enable plugins for live development (HMR, NoErrors).')
   webpackConfig.plugins.push(
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
-  )
+  );
 } else if (__PROD__) {
   debug('Enable plugins for production (OccurenceOrder, Dedupe & UglifyJS).')
   webpackConfig.plugins.push(
