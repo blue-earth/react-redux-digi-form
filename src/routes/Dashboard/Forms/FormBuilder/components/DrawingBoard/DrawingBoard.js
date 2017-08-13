@@ -24,6 +24,7 @@ import _ from 'lodash';
 import interact from 'interact.js';
 import styles from './DrawingBoard.scss';
 import {
+  formBuilderBox,
   formBuilderSelectMode,
   formBuilderBoxMappingType
 } from 'constants/formBuilder';
@@ -238,12 +239,12 @@ class DrawingBoard extends Component {
     }
     setMappingPositionInfo({
       'page': pageNumber,
-      'box': {
-        left: Math.min(startX, endX) / pageZoom,
-        top: Math.min(startY, endY) / pageZoom,
-        width: Math.abs(endX - startX) / pageZoom,
-        height: Math.abs(endY - startY) / pageZoom
-      }
+      'box': [
+        Math.min(startX, endX) / pageZoom,
+        Math.min(startY, endY) / pageZoom,
+        Math.abs(endX - startX) / pageZoom,
+        Math.abs(endY - startY) / pageZoom
+      ]
     });
   }
 
@@ -265,12 +266,12 @@ class DrawingBoard extends Component {
   handleResizeEnd = (rect, metaData) => {
     const { setMappingPositionInfo, pageZoom } = this.props;
     this.setState({ isResizing: false });
-    const newBoundingBox = {
-      left: rect.left / pageZoom,
-      top: rect.top / pageZoom,
-      width: rect.width / pageZoom,
-      height: rect.height / pageZoom
-    };
+    const newBoundingBox = [
+      rect.left / pageZoom,
+      rect.top / pageZoom,
+      rect.width / pageZoom,
+      rect.height / pageZoom
+    ];
 
     setMappingPositionInfo({
       'box': newBoundingBox
@@ -307,12 +308,12 @@ class DrawingBoard extends Component {
         ? newRect.top - (destPage.offsetTop - sourcePage.offsetTop)
         : (sourcePage.offsetTop - destPage.offsetTop) + newRect.top;
     }
-    const newBoundingBox = {
-      left: newRect.left / pageZoom,
-      top: newRect.top / pageZoom,
-      width: newRect.width / pageZoom,
-      height: newRect.height / pageZoom
-    };
+    const newBoundingBox = [
+      newRect.left / pageZoom,
+      newRect.top / pageZoom,
+      newRect.width / pageZoom,
+      newRect.height / pageZoom
+    ];
 
     setMappingPositionInfo({
       'page': destPageNumber && destPageNumber,
@@ -377,20 +378,20 @@ class DrawingBoard extends Component {
     ], false);
     if (!boundingBox) return;
 
-    const newBoundingBox = _.assign({}, boundingBox);
+    const newBoundingBox = _.slice(boundingBox);
 
     switch (event.keyCode) {
       case 37: // Left key
-        newBoundingBox.left -= 1.0 / pageZoom;
+        newBoundingBox[formBuilderBox.LEFT] -= 1.0 / pageZoom;
         break;
       case 38: // Up key
-        newBoundingBox.top -= 1.0 / pageZoom;
+        newBoundingBox[formBuilderBox.TOP] -= 1.0 / pageZoom;
         break;
       case 39: // Right key
-        newBoundingBox.left += 1.0 / pageZoom;
+        newBoundingBox[formBuilderBox.LEFT] += 1.0 / pageZoom;
         break;
       case 40: // Down key
-        newBoundingBox.top += 1.0 / pageZoom;
+        newBoundingBox[formBuilderBox.TOP] += 1.0 / pageZoom;
         break;
       case 46: // Delete key
         this.handleDeleteBox();
@@ -465,13 +466,13 @@ class DrawingBoard extends Component {
           }
           return (
             <InteractWrapper
-              x={zoomValue(boundingBox.left, pageZoom)}
-              y={zoomValue(boundingBox.top, pageZoom)}
+              x={zoomValue(boundingBox[formBuilderBox.LEFT], pageZoom)}
+              y={zoomValue(boundingBox[formBuilderBox.TOP], pageZoom)}
               zIndex={zIndex}
               active={isActive}
               className="interactWrapper"
-              width={zoomValue(boundingBox.width, pageZoom)}
-              height={zoomValue(boundingBox.height, pageZoom)}
+              width={zoomValue(boundingBox[formBuilderBox.WIDTH], pageZoom)}
+              height={zoomValue(boundingBox[formBuilderBox.HEIGHT], pageZoom)}
               minWidth={10}
               minHeight={10}
               onClick={this.handleBoxClick}
@@ -530,13 +531,13 @@ class DrawingBoard extends Component {
 
     return (
       <InteractWrapper
-        x={zoomValue(boundingBox.left, pageZoom)}
-        y={zoomValue(boundingBox.top, pageZoom)}
+        x={zoomValue(boundingBox[formBuilderBox.LEFT], pageZoom)}
+        y={zoomValue(boundingBox[formBuilderBox.TOP], pageZoom)}
         zIndex={zIndex}
         active={isActive}
         className="interactWrapper"
-        width={zoomValue(boundingBox.width, pageZoom)}
-        height={zoomValue(boundingBox.height, pageZoom)}
+        width={zoomValue(boundingBox[formBuilderBox.WIDTH], pageZoom)}
+        height={zoomValue(boundingBox[formBuilderBox.HEIGHT], pageZoom)}
         minWidth={10}
         minHeight={10}
         onResizeStart={this.handleResizeStart}

@@ -2,7 +2,9 @@ import _ from 'lodash';
 import {
   INIT_QUESTION_STATE
 } from 'redux/modules/formBuilder';
-
+import {
+  formBuilderBox
+} from 'constants/formBuilder';
 export const getImageDimension = (url, callback) => {
   var img = new Image();
   img.onload = function () {
@@ -46,37 +48,37 @@ export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom
         if (position.page !== activeBoxPosition.page) return;
         snappingTargets = _.concat(snappingTargets, [
           {
-            x: zoomValue(boundingBox.left, pageZoom),
+            x: zoomValue(boundingBox[formBuilderBox.LEFT], pageZoom),
             type: 'left',
             id,
             path
           },
           {
-            y: zoomValue(boundingBox.top, pageZoom),
+            y: zoomValue(boundingBox[formBuilderBox.TOP], pageZoom),
             type: 'top',
             id,
             path
           },
           {
-            x: zoomValue(boundingBox.left + boundingBox.width, pageZoom),
+            x: zoomValue(boundingBox[formBuilderBox.LEFT] + boundingBox[formBuilderBox.WIDTH], pageZoom),
             type: 'right',
             id,
             path
           },
           {
-            y: zoomValue(boundingBox.top + boundingBox.height, pageZoom),
+            y: zoomValue(boundingBox[formBuilderBox.TOP] + boundingBox[formBuilderBox.HEIGHT], pageZoom),
             type: 'bottom',
             id,
             path
           },
           {
-            x: zoomValue(boundingBox.left + boundingBox.width / 2, pageZoom),
+            x: zoomValue(boundingBox[formBuilderBox.LEFT] + boundingBox[formBuilderBox.WIDTH] / 2, pageZoom),
             type: 'hcenter',
             id,
             path
           },
           {
-            y: zoomValue(boundingBox.top + boundingBox.height / 2, pageZoom),
+            y: zoomValue(boundingBox[formBuilderBox.TOP] + boundingBox[formBuilderBox.HEIGHT] / 2, pageZoom),
             type: 'vcenter',
             id,
             path
@@ -117,49 +119,49 @@ export const getResizeSnappingTargets = (documentMapping, currentElement, pageZo
         const targetBoundingBox = position.box;
         snappingTargets = _.concat(snappingTargets, [
           {
-            x: zoomValue(boundingBox.left + targetBoundingBox.width, pageZoom),
+            x: zoomValue(boundingBox[formBuilderBox.LEFT] + targetBoundingBox[formBuilderBox.WIDTH], pageZoom),
             type: 'width',
             id,
             path
           },
           {
-            x: zoomValue(boundingBox.left + boundingBox.width - targetBoundingBox.width, pageZoom),
+            x: zoomValue(boundingBox[formBuilderBox.LEFT] + boundingBox[formBuilderBox.WIDTH] - targetBoundingBox[formBuilderBox.WIDTH], pageZoom),
             type: 'width',
             id,
             path
           },
           { // incase inverse resize.
-            x: zoomValue(boundingBox.left - targetBoundingBox.width, pageZoom),
+            x: zoomValue(boundingBox[formBuilderBox.LEFT] - targetBoundingBox[formBuilderBox.WIDTH], pageZoom),
             type: 'width',
             id,
             path
           },
           { // incase inverse resize.
-            x: zoomValue(boundingBox.left + boundingBox.width + targetBoundingBox.width, pageZoom),
+            x: zoomValue(boundingBox[formBuilderBox.LEFT] + boundingBox[formBuilderBox.WIDTH] + targetBoundingBox[formBuilderBox.WIDTH], pageZoom),
             type: 'width',
             id,
             path
           },
           {
-            y: zoomValue(boundingBox.top + targetBoundingBox.height, pageZoom),
+            y: zoomValue(boundingBox[formBuilderBox.TOP] + targetBoundingBox[formBuilderBox.HEIGHT], pageZoom),
             type: 'height',
             id,
             path
           },
           {
-            y: zoomValue(boundingBox.top + boundingBox.height - targetBoundingBox.height, pageZoom),
+            y: zoomValue(boundingBox[formBuilderBox.TOP] + boundingBox[formBuilderBox.HEIGHT] - targetBoundingBox[formBuilderBox.HEIGHT], pageZoom),
             type: 'height',
             id,
             path
           },
           { // incase inverse resize.
-            y: zoomValue(boundingBox.top - targetBoundingBox.height, pageZoom),
+            y: zoomValue(boundingBox[formBuilderBox.TOP] - targetBoundingBox[formBuilderBox.HEIGHT], pageZoom),
             type: 'height',
             id,
             path
           },
           { // incase inverse resize.
-            y: zoomValue(boundingBox.top + boundingBox.height + targetBoundingBox.height, pageZoom),
+            y: zoomValue(boundingBox[formBuilderBox.TOP] + boundingBox[formBuilderBox.HEIGHT] + targetBoundingBox[formBuilderBox.HEIGHT], pageZoom),
             type: 'height',
             id,
             path
@@ -202,22 +204,22 @@ export const getDragSnappingHelpersRect = (elRect, currentElement, documentMappi
 
     if (item.x === compX || item.y === compY) {
       var helperRect = {
-        top: _.min([compY, targetBoundingBox.top]),
-        left: _.min([compX, targetBoundingBox.left]),
+        top: _.min([compY, targetBoundingBox[formBuilderBox.TOP]]),
+        left: _.min([compX, targetBoundingBox[formBuilderBox.LEFT]]),
         width: 2,
         height: 2
       };
       if (item.x === compX) {
         helperRect.left = compX - 1; // 1px adjustment as helper width is 2px.
         helperRect.height =
-          _.max([compY + elRect.height, targetBoundingBox.top + targetBoundingBox.height]) -
-          _.min([compY, targetBoundingBox.top]);
+          _.max([compY + elRect.height, targetBoundingBox[formBuilderBox.TOP] + targetBoundingBox[formBuilderBox.HEIGHT]]) -
+          _.min([compY, targetBoundingBox[formBuilderBox.TOP]]);
       }
       if (item.y === compY) {
         helperRect.top = compY - 1;  // 1px adjustment as helper height is 2px.
         helperRect.width =
-          _.max([compX + elRect.width, targetBoundingBox.left + targetBoundingBox.width]) -
-          _.min([compX, targetBoundingBox.left]);
+          _.max([compX + elRect.width, targetBoundingBox[formBuilderBox.LEFT] + targetBoundingBox[formBuilderBox.WIDTH]]) -
+          _.min([compX, targetBoundingBox[formBuilderBox.LEFT]]);
       }
       helperRects.push(helperRect);
     }
@@ -246,22 +248,22 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
     for (var prop in targetBoundingBox) {
       targetBoundingBox[prop] = zoomValue(targetBoundingBox[prop], pageZoom);
     }
-    if (elRect.width === targetBoundingBox.width) {
+    if (elRect.width === targetBoundingBox[formBuilderBox.WIDTH]) {
       hasWidthSnapping = true;
       helpersPos.push({
-        x: targetBoundingBox.left,
-        y: targetBoundingBox.top - 10,
+        x: targetBoundingBox[formBuilderBox.LEFT],
+        y: targetBoundingBox[formBuilderBox.TOP] - 10,
         type: 'width',
-        size: targetBoundingBox.width
+        size: targetBoundingBox[formBuilderBox.WIDTH]
       });
     }
-    if (elRect.height === targetBoundingBox.height) {
+    if (elRect.height === targetBoundingBox[formBuilderBox.HEIGHT]) {
       hasHeightSnapping = true;
       helpersPos.push({
-        x: targetBoundingBox.left - 10,
-        y: targetBoundingBox.top,
+        x: targetBoundingBox[formBuilderBox.LEFT] - 10,
+        y: targetBoundingBox[formBuilderBox.TOP],
         type: 'height',
-        size: targetBoundingBox.height
+        size: targetBoundingBox[formBuilderBox.HEIGHT]
       });
     }
   }

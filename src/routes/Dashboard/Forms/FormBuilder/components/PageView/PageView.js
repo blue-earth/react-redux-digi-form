@@ -72,7 +72,8 @@ class PageView extends Component {
     super(props);
     this.state = {
       isDrawing: false,
-      viewportWidth: 0
+      viewportWidth: 0,
+      viewportHeight: 0
     };
     window.addEventListener('resize', this.getViewportSize);
   };

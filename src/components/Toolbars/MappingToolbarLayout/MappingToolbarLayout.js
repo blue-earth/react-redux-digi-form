@@ -5,13 +5,14 @@ import React, {
 import _ from 'lodash';
 import classNames from 'classnames';
 import styles from './MappingToolbarLayout.scss';
+import { formBuilderBox } from 'constants/formBuilder';
 
 const arrowSize = 10;
 
 export default class MappingToolbarLayout extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
-    box: PropTypes.object,
+    box: PropTypes.array,
     pageZoom: PropTypes.number,
     viewportHeight: PropTypes.number.isRequired,
     viewportWidth: PropTypes.number.isRequired
@@ -36,10 +37,11 @@ export default class MappingToolbarLayout extends Component {
   get toolbarPosition() {
     const { box, pageZoom, viewportWidth } = this.props;
     const { width, height } = this.state;
-    const boxX = box['left'] * pageZoom;
-    const boxY = box['top'] * pageZoom;
-    const boxW = box['width'] * pageZoom;
-    const boxH = box['height'] * pageZoom;
+    const { LEFT, TOP, WIDTH, HEIGHT } = formBuilderBox;
+    const boxX = box[LEFT] * pageZoom;
+    const boxY = box[TOP] * pageZoom;
+    const boxW = box[WIDTH] * pageZoom;
+    const boxH = box[HEIGHT] * pageZoom;
     const left = boxX + (boxW - width) / 2;
     const leftMin = 1;
     const leftMax = viewportWidth - width - 2;

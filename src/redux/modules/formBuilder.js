@@ -475,33 +475,6 @@ const _setActiveBox = (state, action) => {
   });
 };
 
-// const _setQuestionEditMode = (state, action) => {
-//   // todo: Remove this
-//   const { currentElement } = state;
-//   const { id, mode, inputType, activeBoxIndex } = action.payload;
-//   const question = id
-//     ? findItemById(state.questions, id)
-//     : Object.assign({}, INIT_QUESTION_STATE, {
-//       type: inputType
-//     });
-//   const newCurrentElement = mode ? {
-//     id,
-//     question,
-//     isModified: false,
-//     mappingInfo: _.pick(Object.assign({}, id
-//       ? findItemById(state.documentMapping, id)
-//       : currentElement
-//         ? currentElement.mappingInfo
-//         : INIT_MAPPING_INFO_STATE,
-//       { activeIndex: _.defaultTo(activeBoxIndex, 0) }
-//     ), _.keys(INIT_MAPPING_INFO_STATE))
-//   } : null;
-//   return Object.assign({}, state, {
-//     currentElement: newCurrentElement,
-//     questionEditMode: mode
-//   });
-// };
-
 // ------------------------------------
 // Action: setCurrentStep
 // ------------------------------------
