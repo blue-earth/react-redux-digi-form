@@ -3,16 +3,16 @@
 
 .textInput {
   padding: 15px 20px;
-  border: 1px solid $float-input-color;
+  border: 1px solid $cf-input-border-color;
   @include border-radius($input-border-radius);
   font-size: 20px;
   background: $white;
   width: 100%;
-  color: $text-dark-color;
+  color: $cf-input-text-color;
   resize: none;
   @include input-box-shadow;
   &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder {
-    color: $text-light-color;
+    color: $cf-input-placeholder-color;
   }
 }
 

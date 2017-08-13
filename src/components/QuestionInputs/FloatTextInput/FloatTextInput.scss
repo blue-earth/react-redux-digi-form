@@ -3,25 +3,22 @@
 
 .textInputWrap {
   font-size: 20px;
-  @include media('>=sm') {
-    font-size: 24px;
-  }
   font-family: 'Lato';
   font-weight: 400;
   line-height: 1.5em;
-  color: $float-input-color;
+  color: $cf-input-text-color;
   position: relative;
   padding: 0.5em 0;
 }
 .textInput {
   width: 100%;
   box-sizing: border-box;
-  color: $float-input-color;
+  color: $cf-input-text-color;
   font-size: 1em;
-  line-height: 1.2em;
+  height: $input-height-lg;
+  line-height: $input-height-lg;
   padding: 0.5em 1em;
-  line-height: 1.5em;
-  border: 1px solid $float-input-color;
+  border: 1px solid $cf-input-border-color;
   @include input-box-shadow;
   @include border-radius(0.2em);
   background-color: inherit;
@@ -31,11 +28,11 @@
 }
 .textInput.disabled {
   cursor: not-allowed;
-  color: $float-input-color;
+  color: $cf-input-text-color;
 }
 .textInputLabel {
   position: absolute;
-  top: 1.3em;
+  top: 1.5em;
   left: 1em;
   font-size: 1em;
   padding: 0;
@@ -43,6 +40,8 @@
   background-color: $white;
   transition: all .2s ease-in-out;
   cursor: text;
+  color: $cf-input-placeholder-color;
+  font-weight: normal;
 }
 .filled {
   margin-left: -0.5em;
@@ -54,19 +53,19 @@
   cursor: default;
 }
 .filled.hasError {
-  color: $red !important;
+  color: $cf-error-color !important;
 }
 .isErrorInput {
-  color: $red !important;
-  border-color: $red !important;
+  color: $cf-error-color !important;
+  border-color: $cf-error-color !important;
 }
 .filledInput {
-  color: $black;
+  color: $cf-input-text-color;
 }
 .errorIconWrapper {
   display: inline;
   cursor: pointer;
-  color: $red;
+  color: $cf-error-color;
   position: absolute;
   right: 1em;
   top: 1em;
@@ -85,7 +84,7 @@
   padding: 1.5em;
   color: #fff;
   white-space: nowrap;
-  background-color: $red;
+  background-color: $cf-error-color;
   @include border-radius(0.4em);
 }
 .errorTipArrow {
@@ -98,7 +97,7 @@
   border-style: solid;
   margin-left: -5px;
   border-width: 0 5px 5px;
-  border-bottom-color: $red;
+  border-bottom-color: $cf-error-color;
 }
 
 :global {
@@ -109,14 +108,14 @@
       height: 0;
     }
     &.bottom .tooltip-arrow {
-      border-bottom-color: $red;
+      border-bottom-color: $cf-error-color;
     }
     &.tooltip.in {
       opacity: 1;
     }
     .tooltip-inner {
       text-align: left;
-      background-color: $red;
+      background-color: $cf-error-color;
       padding: 0.7em 2em;
       max-width: 300px;
     }

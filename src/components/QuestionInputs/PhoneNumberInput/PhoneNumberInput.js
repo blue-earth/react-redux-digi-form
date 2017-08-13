@@ -122,6 +122,13 @@ class PhoneNumberInput extends Component {
     }
   }
 
+  get activeColour() {
+    return {
+      color: this.context.primaryColour,
+      borderColor: this.context.primaryColour
+    };
+  }
+
   render() {
     const { errorMessage, hasError } = this.props;
     const cx = classNames.bind(styles); // eslint-disable-line
@@ -131,7 +138,7 @@ class PhoneNumberInput extends Component {
       </Tooltip>
     );
     return (
-      <div className={cx('phoneInputWrap', { phoneInputError: hasError })}>
+      <div className={cx('phoneInputWrap', { phoneInputError: hasError })} style={this.activeColour}>
         <IntlTelInput preferredCountries={[]}
           onlyCountries={['au', 'sg']}
           ref="intlTelInput"
