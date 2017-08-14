@@ -8,17 +8,13 @@ import {
   Tab
 } from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
-import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
-import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
-import LengthValidation from 'components/QuestionEditFields/LengthValidation';
-import RangeValidation from 'components/QuestionEditFields/RangeValidation';
-import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
 import MultipleSelection from 'components/QuestionEditFields/MultipleSelection';
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
 import 'rc-switch/assets/index.css';
 import { formBuilderSelectMode } from 'constants/formBuilder';
 import styles from './QuestionEditPanel.scss';
+import { getQuestionTypeConfigComponent } from '../QuestionEditConfigSidebar';
 
 export default class QuestionEditPanel extends Component {
 
@@ -176,6 +172,8 @@ export default class QuestionEditPanel extends Component {
     const componentProps = _.merge({}, this.props, {
       inputSchema: this.inputSchema
     });
+
+    var questionType = this.props.currentElement.question.type;
     return (
       <Tab.Container defaultActiveKey="general" id="question-edit-panel">
         <div className={styles.questionEditView}>
@@ -183,11 +181,7 @@ export default class QuestionEditPanel extends Component {
           <Tab.Content animation>
             <Tab.Pane eventKey="general">
               <div className={styles.viewBody}>
-                <InstructionDescription {...componentProps} />
-                <AnswerOutputArea {...componentProps} />
-                <LengthValidation {...componentProps} />
-                <RangeValidation {...componentProps} />
-                <RequiredValidation {...componentProps} />
+                {getQuestionTypeConfigComponent(questionType, 'general', componentProps)}
               </div>
             </Tab.Pane>
             <Tab.Pane eventKey="advanced">
