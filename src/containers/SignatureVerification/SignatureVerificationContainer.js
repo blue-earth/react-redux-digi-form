@@ -8,10 +8,9 @@ import {
   changeConsented,
   verifyEmail,
   verifyEmailCode,
-  submitSignature,
   requestVerificationCode,
   closeCodeVerify,
-  resetVerifyErrorMessage,
+  changeCommitValue,
   INIT_SIGNATURE_STATE
 } from 'redux/modules/signatureVerification';
 
@@ -23,10 +22,9 @@ const mapActionCreators = {
   changeConsented,
   verifyEmail,
   verifyEmailCode,
-  submitSignature,
   requestVerificationCode,
   closeCodeVerify,
-  resetVerifyErrorMessage
+  changeCommitValue
 };
 
 const mapStateToProps = (state) => {
@@ -36,16 +34,14 @@ const mapStateToProps = (state) => {
     isConsented,
     email,
     name,
-    isVerifyingCode,
-    isCodeVerified
+    isCodeVerifyingModalOpen
   } = signatureVerification || INIT_SIGNATURE_STATE;
   return {
     isPageBusy,
     isConsented,
     email,
     name,
-    isVerifyingCode,
-    isCodeVerified
+    isCodeVerifyingModalOpen
   };
 };
 
