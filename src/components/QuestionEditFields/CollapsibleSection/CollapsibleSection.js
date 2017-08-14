@@ -6,6 +6,9 @@ import Switch from 'rc-switch';
 import SectionTitle from '../SectionTitle';
 import TextInput from 'components/TextInput';
 import styles from './CollapsibleSection.scss';
+import classNames from 'classnames/bind';
+
+var cx = classNames.bind(styles);
 
 class CollapsibleSection extends Component {
   static propTypes = {
@@ -29,9 +32,22 @@ class CollapsibleSection extends Component {
   }
   _toggleSectionOpen = () => {
     var isOpened = this.state.isOpened;
+    var newIsOpened = !isOpened;
+    const {
+      setQuestionInfo,
+      questionPropKey
+    } = this.props;
     this.setState({
-      isOpened: !isOpened
+      isOpened: newIsOpened
     });
+    // if the toggle turns off, update an empty value
+    if (!newIsOpened) {
+      setQuestionInfo({
+        [questionPropKey]: null
+      });
+    } else {
+      // todo: Save the value in the TextInput
+    }
   };
 
   _onValueChanged = (event) => {
@@ -56,7 +72,7 @@ class CollapsibleSection extends Component {
             <Switch onChange={this._toggleSectionOpen} checked={this.state.isOpened} />
           </div>
         </div>
-        <div className={styles.configInputRow}>
+        <div className={cx('configInputRow', {'hide': !this.state.isOpened})}>
           <TextInput type="text" onChange={this._onValueChanged} />
         </div>
       </div>
