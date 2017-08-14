@@ -27,7 +27,8 @@ class FloatTextInput extends Component {
     errorMessage: PropTypes.element,
     extraClass: PropTypes.string,
     type: PropTypes.string,
-    refName: PropTypes.string
+    refName: PropTypes.string,
+    size: PropTypes.oneOf(['sm', 'md', 'lg'])
   }
   static defaultProps = {
     primaryColour: '#3893d0',
@@ -35,7 +36,8 @@ class FloatTextInput extends Component {
     isDisabled: false,
     placeholder: '',
     type: 'text',
-    value: ''
+    value: '',
+    size: 'lg'
   }
 
   static counter = 0;
@@ -150,7 +152,7 @@ class FloatTextInput extends Component {
     return null;
   }
   render() {
-    const { placeholder, label, name, errorMessage, extraClass, type, isDisabled } = this.props;
+    const { placeholder, label, name, errorMessage, extraClass, type, isDisabled, size } = this.props;
     let { filled, active, savedValue, hasError, inputId } = this.state;
     const cx = classNames.bind(styles); // eslint-disable-line
     const controlId = name || `floatTextInput_${inputId}`;
@@ -160,7 +162,7 @@ class FloatTextInput extends Component {
       </Tooltip>
     );
     return (
-      <div className={cx('textInputWrap', extraClass)}>
+      <div className={cx('textInputWrap', size, extraClass)}>
         <label
           htmlFor={controlId}
           className={cx('textInputLabel', {

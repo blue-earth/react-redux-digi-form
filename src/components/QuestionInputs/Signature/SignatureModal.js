@@ -158,6 +158,7 @@ class SignatureModal extends Component {
                 <div>Full name</div>
                 <FloatTextInput
                   extraClass={styles.signatureInput}
+                  size="md"
                   autoFocus
                   value={name}
                   placeholder="Enter full name"
@@ -170,6 +171,7 @@ class SignatureModal extends Component {
                   errorMessage={<span>Email address is not valid</span>}
                   hasError={!isEmailValidated}
                   extraClass={styles.signatureInput}
+                  size="md"
                   value={email}
                   placeholder="Enter email"
                   onChange={this.handleEmailChange}

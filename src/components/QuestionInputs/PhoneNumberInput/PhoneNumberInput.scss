@@ -7,13 +7,13 @@
 :global{
 .phoneNumberInput {
   padding: 4px 15px;
-  border: 1px solid $text-border-color;
+  border: 1px solid $cf-input-border-color;
   @include border-radius($input-border-radius);
   font-size: 20px;
   height: 64px;
   background: $white;
-  color: $float-input-color;
-  -webkit-text-fill-color: $text-dark-color;
+  color: $cf-input-text-color;
+  -webkit-text-fill-color: $cf-input-text-color;
   display: block;
   width: 100%;
   padding-left: 55px;
@@ -22,10 +22,25 @@
   }
   &:focus {
     outline: none;
-    border-color: $select-button-hover-color;
+    border-color: inherit;
+  }
+  &:placeholder-shown {
+    color: $cf-input-placeholder-color;
+    font-weight: 300;
+    opacity: 1 !important;
+  }
+  &::-webkit-input-placeholder,
+  &:-moz-placeholder,
+  &::-moz-placeholder,
+  &:-ms-input-placeholder {
+    color: $cf-input-placeholder-color;
+    font-weight: 300;
+    opacity: 1 !important;
   }
 }
 .phoneNumberInputWrapper {
+  color: inherit;
+  border-color: inherit;
   &.intl-tel-input {
     display: block;
   }
