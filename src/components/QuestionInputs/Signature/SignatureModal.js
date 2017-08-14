@@ -31,7 +31,8 @@ class SignatureModal extends Component {
     hide: PropTypes.func.isRequired,      // Hide modal function from 'redux-modal'
     value: PropTypes.string,
     submitSignature: PropTypes.func,      // Submit answer
-    isConsented: PropTypes.bool,
+    isConsented: PropTypes.bool.isRequired,
+    changeConsented: PropTypes.func.isRequired,
     isPageBusy: PropTypes.bool,
     isVerifyingCode: PropTypes.bool.isRequired,
     isCodeVerified: PropTypes.bool.isRequired,
@@ -52,8 +53,7 @@ class SignatureModal extends Component {
     this.state = {
       isSignatureValidated: true,
       isEmailValidated: true,
-      activeTabName: WRITE,
-      isConsented: props.isConsented || false
+      activeTabName: WRITE
     };
   };
 
@@ -101,9 +101,7 @@ class SignatureModal extends Component {
   }
 
   handleToggleConsent = (event) => {
-    this.setState({
-      isConsented: !this.state.isConsented
-    });
+    this.props.changeConsented();
   }
 
   handleDrawSignatureCanvasResize = () => {
@@ -123,6 +121,7 @@ class SignatureModal extends Component {
       email,
       name,
       isPageBusy,
+      isConsented,
       verifyEmailCode,
       isVerifyingCode,
       requestVerificationCode,
@@ -131,8 +130,7 @@ class SignatureModal extends Component {
     const {
       isEmailValidated,
       isSignatureValidated,
-      activeTabName,
-      isConsented
+      activeTabName
     } = this.state;
 
     const writeLogo = require('./Write.svg');

@@ -5,6 +5,7 @@ import {
   closeVerificationModal,
   changeEmail,
   changeName,
+  changeConsented,
   verifyEmail,
   verifyEmailCode,
   submitSignature,
@@ -19,6 +20,7 @@ const mapActionCreators = {
   closeVerificationModal,
   changeEmail,
   changeName,
+  changeConsented,
   verifyEmail,
   verifyEmailCode,
   submitSignature,
@@ -29,8 +31,22 @@ const mapActionCreators = {
 
 const mapStateToProps = (state) => {
   const { signatureVerification } = state;
-  const { isPageBusy, email, name, isVerifyingCode, isCodeVerified } = signatureVerification || INIT_SIGNATURE_STATE;
-  return { isPageBusy, email, name, isVerifyingCode, isCodeVerified };
+  const {
+    isPageBusy,
+    isConsented,
+    email,
+    name,
+    isVerifyingCode,
+    isCodeVerified
+  } = signatureVerification || INIT_SIGNATURE_STATE;
+  return {
+    isPageBusy,
+    isConsented,
+    email,
+    name,
+    isVerifyingCode,
+    isCodeVerified
+  };
 };
 
 export default connect(mapStateToProps, mapActionCreators)(SignatureModal);
