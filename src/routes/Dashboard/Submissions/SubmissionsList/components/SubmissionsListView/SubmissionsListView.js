@@ -7,7 +7,7 @@ import {
   StatusHeaderCell,
   ActionsHeaderCell,
   // ContactInfoCell,
-  statusCell,
+  StatusCell,
   DateCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
@@ -119,7 +119,7 @@ class SubmissionsListView extends Component {
         visible: true,
         displayName: 'Status',
         customHeaderComponent: StatusHeaderCell,
-        customComponent: statusCell,
+        customComponent: StatusCell,
         cssClassName: styles.columnStatus
       },
       {
