@@ -75,11 +75,13 @@ class PageView extends Component {
       viewportWidth: 0,
       viewportHeight: 0
     };
-    window.addEventListener('resize', this.getViewportSize);
   };
 
   componentWillMount() {
-
+    window.addEventListener('resize', this.getViewportSize);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.getViewportSize);
   }
 
   componentDidMount() {
