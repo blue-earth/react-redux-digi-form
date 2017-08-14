@@ -9,38 +9,50 @@
   font-family: 'Lato';
   font-weight: 400;
   line-height: 1.5em;
-  color: $float-input-color;
+  color: $cf-input-text-color;
   position: relative;
   padding: 0.5em 0;
   display: inline-block;
 }
 .dateInput {
   padding: 15px;
-  border: 1px solid $text-border-color;
+  border: 1px solid $cf-input-border-color;
   @include border-radius($input-border-radius);
-  background: $text-bg-color;
+  background: $white;
   font-size: 20px;
   display: block;
   width: 100%;
-  height: 64px;
-  color: $text-dark-color;
-  -webkit-text-fill-color: $text-dark-color;
+  height: $input-height-lg;
+  color: $cf-input-text-color;
+  -webkit-text-fill-color: $cf-input-text-color;
   &[disabled] {
     opacity: .5;
   }
   &:hover, &:focus {
-    border: 1px solid $text-hover-border-color;
     outline: none;
+  }
+  &:placeholder-shown {
+    color: $cf-input-placeholder-color;
+    font-weight: 300;
+    opacity: 1 !important;
+  }
+  &::-webkit-input-placeholder,
+  &:-moz-placeholder,
+  &::-moz-placeholder,
+  &:-ms-input-placeholder {
+    color: $cf-input-placeholder-color;
+    font-weight: 300;
+    opacity: 1 !important;
   }
 }
 
 .dateInputError input {
-  border-color: $red;
+  border-color: $cf-error-color;
 }
 .errorIconWrapper {
   display: inline;
   cursor: pointer;
-  color: $red;
+  color: $cf-error-color;
   position: absolute;
   right: 1em;
   top: 1em;
@@ -57,9 +69,9 @@
   position: relative;
   top: 7px;
   padding: 1.5em;
-  color: #fff;
+  color: $white;
   white-space: nowrap;
-  background-color: $red;
+  background-color: $cf-error-color;
   @include border-radius(0.4em);
 }
 .errorTipArrow {
@@ -72,7 +84,7 @@
   border-style: solid;
   margin-left: -5px;
   border-width: 0 5px 5px;
-  border-bottom-color: $red;
+  border-bottom-color: $cf-error-color;
 }
 
 :global {
@@ -83,14 +95,14 @@
       height: 0;
     }
     &.bottom .tooltip-arrow {
-      border-bottom-color: $red;
+      border-bottom-color: $cf-error-color;
     }
     &.tooltip.in {
       opacity: 1;
     }
     .tooltip-inner {
       text-align: left;
-      background-color: $red;
+      background-color: $cf-error-color;
       padding: 0.7em 2em;
       max-width: 300px;
     }

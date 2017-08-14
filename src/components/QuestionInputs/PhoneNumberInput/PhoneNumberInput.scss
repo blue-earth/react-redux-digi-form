@@ -24,8 +24,18 @@
     outline: none;
     border-color: inherit;
   }
-  &::-webkit-input-placeholder, &:-moz-placeholder, &::-moz-placeholder, &:-ms-input-placeholder {
+  &:placeholder-shown {
     color: $cf-input-placeholder-color;
+    font-weight: 300;
+    opacity: 1 !important;
+  }
+  &::-webkit-input-placeholder,
+  &:-moz-placeholder,
+  &::-moz-placeholder,
+  &:-ms-input-placeholder {
+    color: $cf-input-placeholder-color;
+    font-weight: 300;
+    opacity: 1 !important;
   }
 }
 .phoneNumberInputWrapper {

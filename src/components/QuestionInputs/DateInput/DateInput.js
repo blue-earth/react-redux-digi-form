@@ -64,9 +64,6 @@ class DateInput extends Component {
       var dateInput = findDOMNode(this.refs.dateInput.refs.input);
       const that = this;
       dateInput.addEventListener('keydown', (event) => that.handleKeyDown(event));
-      if (this.context.primaryColour) {
-        dateInput.style = 'color:' + this.context.primaryColour;
-      }
     }
   }
 
@@ -97,12 +94,20 @@ class DateInput extends Component {
   }
 
   handleFocus = (event) => {
+    var dateInput = findDOMNode(this.refs.dateInput.refs.input);
+    if (this.context.primaryColour) {
+      dateInput.style = 'border-color:' + this.context.primaryColour;
+    }
     const { onFocus } = this.props;
     if (typeof onFocus === 'function') onFocus();
   }
 
   handleBlur = (event) => {
     this.refs.errorMessage.hide();
+    var dateInput = findDOMNode(this.refs.dateInput.refs.input);
+    if (this.context.primaryColour) {
+      dateInput.style = ' ';
+    }
     const { onBlur } = this.props;
     if (typeof onBlur === 'function') onBlur();
   }

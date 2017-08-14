@@ -8,17 +8,17 @@
     outline: none !important;
     &:hover, &:focus, &:active {
       .Dropdown-control {
-        background-color: darken($dropdown-bg-color, 2%);
+        background-color: darken($cf-input-bg-color, 2%);
       }
       .Dropdown-arrow:after {
-        border-top-color: darken($dropdown-bg-color, 2%);
+        border-top-color: darken($cf-input-bg-color, 2%);
       }
     }
   }
   .Dropdown-root {
     position: absolute;
     font-size: 23px;  /* eMonDoHaCk */
-    font-family: "Open Sans"; /* eMonDoHaCk */
+    font-family: "Lato"; /* eMonDoHaCk */
     width: 100%; /* eMonDoHaCk */
     @include media('>sm') { /* eMonDoHaCk */
       width: 500px;
@@ -32,16 +32,17 @@
   .Dropdown-control {
     position: relative;
     overflow: hidden;
-    background-color: $dropdown-bg-color; /* eMonDoHaCk */
+    background-color: $cf-input-bg-color; /* eMonDoHaCk */
     /* eMonDoHaCk */
-    border: 1px solid $dropdown-border-color;
+    border: 1px solid $cf-input-border-color;
     /* eMonDoHaCk */
     @include border-radius(5px);
     box-sizing: border-box;
-    color: $text-dark-color; /* eMonDoHaCk */
+    color: $cf-input-text-color; /* eMonDoHaCk */
     cursor: pointer;        /* eMonDoHaCk */
     outline: none;
-    line-height: 1em; /* eMonDoHaCk */
+    line-height: 1.2em; /* eMonDoHaCk */
+    height: $input-height-lg;
     padding: 0.8em 3em 0.8em 1em; /* eMonDoHaCk */
     @include transition(background-color .1s);
     @include input-box-shadow;  /* eMonDoHaCk */
@@ -53,13 +54,11 @@
     white-space: nowrap;  /* eMonDoHaCk */
   }
   .dropdownIsEmpty .Dropdown-placeholder {
-    color: $frontend-text-color1; /* eMonDoHaCk */
-    opacity: 0.5; /* eMonDoHaCk */
+    color: $cf-input-placeholder-color;
+    font-weight: 300;
   }
 
   .Dropdown-arrow {
-    /* eMonDoHaCk */
-    
     position: absolute;
     right: 1.5em;
     @include vcenter; /* eMonDoHaCk */
@@ -81,7 +80,7 @@
     position: absolute;
     left: 2px;
     top: 0;
-    border-top: 4px solid $dropdown-bg-color;
+    border-top: 4px solid $cf-input-bg-color;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
   }
@@ -98,7 +97,7 @@
 
   .Dropdown-menu {
     background-color: white;
-    border: 1px solid $dropdown-border-color; /* eMonDoHaCk */
+    border: 1px solid $cf-input-border-color; /* eMonDoHaCk */
     /* eMonDoHaCk */
     box-shadow: 0 2px 2px -1px #b4bdc6; /* eMonDoHaCk */
     box-sizing: border-box;
@@ -123,12 +122,12 @@
 
   .Dropdown-option {
     box-sizing: border-box;
-    color: $text-dark-color; /* eMonDoHaCk */
+    color: $cf-input-text-color; /* eMonDoHaCk */
     cursor: pointer;
     display: block;
     line-height: 1em;     /* eMonDoHaCk */
     padding: 0.65em 1em;  /* eMonDoHaCk */
-    border-bottom: 1px solid $dropdown-option-border-color; /* eMonDoHaCk */
+    border-bottom: 1px solid $cf-input-border-color; /* eMonDoHaCk */
     min-height: 2.3em; /* eMonDoHaCk */
   }
 
@@ -137,18 +136,16 @@
   }
 
   .Dropdown-option:hover {
-    /* eMonDoHaCk */
-    background-color: $dropdown-bg-color;
+    background-color: $cf-input-bg-color;
   }
 
   .Dropdown-option.is-selected {
-    /* eMonDoHaCk */
-    background-color: $dropdown-bg-color;
+    background-color: $cf-input-bg-color;
   }
 
   .Dropdown-noresults {
     box-sizing: border-box;
-    color: $text-dark-color; /* eMonDoHaCk */
+    color: $cf-input-text-color;
     cursor: default;
     display: block;
     padding: 8px 10px;

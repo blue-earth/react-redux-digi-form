@@ -84,7 +84,6 @@ class PhoneNumberInput extends Component {
     input.addEventListener('keydown', (event) => that.handleKeyDown(event));
     input.addEventListener('focus', (event) => onFocus(event));
     input.addEventListener('blur', (event) => onBlur(event));
-    input.style = 'color:' + this.context.primaryColour;
     input.blur();
     if (autoFocus) {
       setTimeout(() => input.focus(), 1);
