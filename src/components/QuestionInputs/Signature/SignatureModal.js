@@ -30,12 +30,10 @@ class SignatureModal extends Component {
     show: PropTypes.bool,                 // Modal display status
     hide: PropTypes.func.isRequired,      // Hide modal function from 'redux-modal'
     value: PropTypes.string,
-    submitSignature: PropTypes.func,      // Submit answer
     isConsented: PropTypes.bool.isRequired,
     changeConsented: PropTypes.func.isRequired,
     isPageBusy: PropTypes.bool,
-    isVerifyingCode: PropTypes.bool.isRequired,
-    isCodeVerified: PropTypes.bool.isRequired,
+    isCodeVerifyingModalOpen: PropTypes.bool.isRequired,
     email: PropTypes.string.isRequired,
     changeEmail: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
@@ -45,7 +43,7 @@ class SignatureModal extends Component {
     updateSessionId: PropTypes.func.isRequired,
     requestVerificationCode: PropTypes.func.isRequired,
     closeVerificationModal: PropTypes.func.isRequired,
-    resetVerifyErrorMessage: PropTypes.func.isRequired
+    changeCommitValue: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -62,7 +60,7 @@ class SignatureModal extends Component {
   }
 
   handleSubmit = () => {
-    const { email, verifyEmail } = this.props;
+    const { email, verifyEmail, changeCommitValue } = this.props;
     const { activeTabName } = this.state;
     const value = this.refs[activeTabName].dataUrl;
     // Empty signature error handle
@@ -76,7 +74,8 @@ class SignatureModal extends Component {
         isEmailValidated: false
       });
     }
-    verifyEmail(value);
+    changeCommitValue(value);
+    verifyEmail();
   }
 
   handleTabSelect = (activeTabName) => {
@@ -123,9 +122,8 @@ class SignatureModal extends Component {
       isPageBusy,
       isConsented,
       verifyEmailCode,
-      isVerifyingCode,
-      requestVerificationCode,
-      isCodeVerified
+      isCodeVerifyingModalOpen,
+      requestVerificationCode
     } = this.props;
     const {
       isEmailValidated,
@@ -144,7 +142,7 @@ class SignatureModal extends Component {
           backdrop="static"
           show={show}
           className={classNames(styles.signatureModal, {
-            'hide': isVerifyingCode
+            'hide': isCodeVerifyingModalOpen
           })}
           aria-labelledby="ModalHeader">
           <Modal.Header>
@@ -276,8 +274,6 @@ class SignatureModal extends Component {
           </Modal.Footer>
         </Modal>
         <CompletionModal
-          resetVerifyErrorMessage={this.props.resetVerifyErrorMessage}
-          isCodeVerified={isCodeVerified}
           closeModal={this.props.closeVerificationModal}
           verifyEmailCode={verifyEmailCode}
           resendCode={requestVerificationCode} />
