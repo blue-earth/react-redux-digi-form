@@ -2,11 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
-import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
-import LengthValidation from 'components/QuestionEditFields/LengthValidation';
-import RangeValidation from 'components/QuestionEditFields/RangeValidation';
-import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
+import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection';
 
 class ShortTextFieldAdvancedTab extends Component {
   static propTypes = {
@@ -15,13 +11,18 @@ class ShortTextFieldAdvancedTab extends Component {
     setQuestionInfo: PropTypes.func.isRequired
   };
   render() {
-    return (<div>
-      <InstructionDescription {...this.props} />
-      <AnswerOutputArea {...this.props} />
-      <LengthValidation {...this.props} />
-      <RangeValidation {...this.props} />
-      <RequiredValidation {...this.props} />
-    </div>);
+    const {
+      setQuestionInfo
+    } = this.props;
+    return (
+      <div>
+        <CollapsibleSection
+          setQuestionInfo={setQuestionInfo}
+          questionPropKey={'value'}
+          title={'Default value'}
+        />
+      </div>
+    );
   }
 }
 
