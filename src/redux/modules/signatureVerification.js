@@ -9,7 +9,8 @@ export const INIT_SIGNATURE_STATE = {
   isPageBusy: false,
   isVerifyingCode: false,
   isCodeVerified: true,
-  email: ''
+  email: '',
+  name: ''
 };
 
 const OPEN_CODE_VERIFY = 'OPEN_CODE_VERIFY';
@@ -18,6 +19,7 @@ const REQUEST_VERIFY_EMAIL = 'REQUEST_VERIFY_EMAIL';
 const DONE_VERIFYING_EMAIL = 'DONE_VERIFYING_EMAIL';
 const IS_CODE_VERIFIED = 'IS_CODE_VERIFIED';
 const CHANGE_EMAIL = 'CHANGE_EMAIL';
+const CHANGE_NAME = 'CHANGE_NAME';
 
 export const openCodeVerify = createAction(OPEN_CODE_VERIFY);
 export const closeCodeVerify = createAction(CLOSE_CODE_VERIFY);
@@ -26,6 +28,7 @@ export const doneVerifyingEmail = createAction(DONE_VERIFYING_EMAIL);
 export const isEmailCodeVerified = createAction(IS_CODE_VERIFIED);
 
 export const changeEmail = createAction(CHANGE_EMAIL);
+export const changeName = createAction(CHANGE_NAME);
 
 export const updateSessionId = () => {
   return (dispatch, getState) => {
@@ -172,6 +175,10 @@ const signatureReducer = handleActions({
   CHANGE_EMAIL: (state, action) =>
     Object.assign({}, state, {
       email: action.payload
+    }),
+  CHANGE_NAME: (state, action) =>
+    Object.assign({}, state, {
+      name: action.payload
     })
 }, INIT_SIGNATURE_STATE);
 

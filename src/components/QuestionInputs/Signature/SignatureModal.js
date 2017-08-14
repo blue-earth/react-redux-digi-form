@@ -37,6 +37,8 @@ class SignatureModal extends Component {
     isCodeVerified: PropTypes.bool.isRequired,
     email: PropTypes.string.isRequired,
     changeEmail: PropTypes.func.isRequired,
+    name: PropTypes.string.isRequired,
+    changeName: PropTypes.func.isRequired,
     verifyEmail: PropTypes.func.isRequired,
     verifyEmailCode: PropTypes.func.isRequired,
     updateSessionId: PropTypes.func.isRequired,
@@ -51,7 +53,6 @@ class SignatureModal extends Component {
       isSignatureValidated: true,
       isEmailValidated: true,
       activeTabName: WRITE,
-      signatureName: '',
       isConsented: props.isConsented || false
     };
   };
@@ -87,8 +88,8 @@ class SignatureModal extends Component {
   }
 
   handleNameChange = (value) => {
+    this.props.changeName(value);
     this.setState({
-      signatureName: value,
       isSignatureValidated: true
     });
   }
@@ -120,6 +121,7 @@ class SignatureModal extends Component {
       handleHide,
       show,
       email,
+      name,
       isPageBusy,
       verifyEmailCode,
       isVerifyingCode,
@@ -129,7 +131,6 @@ class SignatureModal extends Component {
     const {
       isEmailValidated,
       isSignatureValidated,
-      signatureName,
       activeTabName,
       isConsented
     } = this.state;
@@ -160,7 +161,7 @@ class SignatureModal extends Component {
                 <FloatTextInput
                   extraClass={styles.signatureInput}
                   autoFocus
-                  value={signatureName}
+                  value={name}
                   placeholder="Enter full name"
                   onChange={this.handleNameChange}
                 />
@@ -204,7 +205,7 @@ class SignatureModal extends Component {
                 <WriteSignature
                   ref="write"
                   onChange={this.handleSignatureChange}
-                  signatureName={signatureName}
+                  signatureName={name}
                   className={styles.tabPanelWrapper} />
               </Tab>
               <Tab
