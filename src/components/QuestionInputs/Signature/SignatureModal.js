@@ -31,12 +31,15 @@ class SignatureModal extends Component {
     hide: PropTypes.func.isRequired,      // Hide modal function from 'redux-modal'
     value: PropTypes.string,
     submitSignature: PropTypes.func,      // Submit answer
-    isConsented: PropTypes.bool,
+    isConsented: PropTypes.bool.isRequired,
+    changeConsented: PropTypes.func.isRequired,
     isPageBusy: PropTypes.bool,
     isVerifyingCode: PropTypes.bool.isRequired,
     isCodeVerified: PropTypes.bool.isRequired,
     email: PropTypes.string.isRequired,
     changeEmail: PropTypes.func.isRequired,
+    name: PropTypes.string.isRequired,
+    changeName: PropTypes.func.isRequired,
     verifyEmail: PropTypes.func.isRequired,
     verifyEmailCode: PropTypes.func.isRequired,
     updateSessionId: PropTypes.func.isRequired,
@@ -50,9 +53,7 @@ class SignatureModal extends Component {
     this.state = {
       isSignatureValidated: true,
       isEmailValidated: true,
-      activeTabName: WRITE,
-      signatureName: '',
-      isConsented: props.isConsented || false
+      activeTabName: WRITE
     };
   };
 
@@ -87,8 +88,8 @@ class SignatureModal extends Component {
   }
 
   handleNameChange = (value) => {
+    this.props.changeName(value);
     this.setState({
-      signatureName: value,
       isSignatureValidated: true
     });
   }
@@ -100,9 +101,7 @@ class SignatureModal extends Component {
   }
 
   handleToggleConsent = (event) => {
-    this.setState({
-      isConsented: !this.state.isConsented
-    });
+    this.props.changeConsented();
   }
 
   handleDrawSignatureCanvasResize = () => {
@@ -120,7 +119,9 @@ class SignatureModal extends Component {
       handleHide,
       show,
       email,
+      name,
       isPageBusy,
+      isConsented,
       verifyEmailCode,
       isVerifyingCode,
       requestVerificationCode,
@@ -129,9 +130,7 @@ class SignatureModal extends Component {
     const {
       isEmailValidated,
       isSignatureValidated,
-      signatureName,
-      activeTabName,
-      isConsented
+      activeTabName
     } = this.state;
 
     const writeLogo = require('./Write.svg');
@@ -160,7 +159,7 @@ class SignatureModal extends Component {
                 <FloatTextInput
                   extraClass={styles.signatureInput}
                   autoFocus
-                  value={signatureName}
+                  value={name}
                   placeholder="Enter full name"
                   onChange={this.handleNameChange}
                 />
@@ -204,7 +203,7 @@ class SignatureModal extends Component {
                 <WriteSignature
                   ref="write"
                   onChange={this.handleSignatureChange}
-                  signatureName={signatureName}
+                  signatureName={name}
                   className={styles.tabPanelWrapper} />
               </Tab>
               <Tab
