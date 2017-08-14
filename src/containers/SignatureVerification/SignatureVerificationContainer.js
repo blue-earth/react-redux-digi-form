@@ -9,7 +9,6 @@ import {
   verifyEmail,
   verifyEmailCode,
   requestVerificationCode,
-  closeCodeVerify,
   changeCommitValue,
   INIT_SIGNATURE_STATE
 } from 'redux/modules/signatureVerification';
@@ -23,7 +22,6 @@ const mapActionCreators = {
   verifyEmail,
   verifyEmailCode,
   requestVerificationCode,
-  closeCodeVerify,
   changeCommitValue
 };
 

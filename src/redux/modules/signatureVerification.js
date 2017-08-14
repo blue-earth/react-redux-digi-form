@@ -85,13 +85,13 @@ const processVerifyEmail = (email, responseId, questionId) => {
 
 export const requestVerificationCode = () => {
   return (dispatch, getState) => {
-    const { signatureVerification: { email }, formInteractive: { sessionId } } = getState();
-    dispatch(processRequestVerificationCode(email, sessionId));
+    const { signatureVerification: { email, name }, formInteractive: { sessionId } } = getState();
+    dispatch(processRequestVerificationCode(email, sessionId, name));
   };
 };
-const processRequestVerificationCode = (email, sessionId) => {
+const processRequestVerificationCode = (email, sessionId, name) => {
   const apiUrl = `${API_URL}/form_document/api/signing_verification/request_email_verification_code/`;
-  const body = { email, response_id: sessionId };
+  const body = { email, response_id: sessionId, display_name: name };
   const fetchParams = assignDefaults({
     method: 'POST',
     body
