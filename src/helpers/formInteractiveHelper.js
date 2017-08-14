@@ -31,8 +31,8 @@ export const groupFormQuestions = (questions) => {
   });
 
   var newGroup = [];
-  for (var prop in tempGroup.groups) {
-    var group = tempGroup.groups[prop];
+  for (var groupId in tempGroup.groups) {
+    var group = tempGroup.groups[groupId];
     newGroup.push({
       id: group.id,
       title: group.title,
