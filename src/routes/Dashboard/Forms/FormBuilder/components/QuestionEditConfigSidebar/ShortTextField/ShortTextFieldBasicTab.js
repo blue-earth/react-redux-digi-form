@@ -2,7 +2,6 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
 import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
 import LengthValidation from 'components/QuestionEditFields/LengthValidation';
 import RangeValidation from 'components/QuestionEditFields/RangeValidation';
@@ -17,7 +16,6 @@ class ShortTextFieldBasicTab extends Component {
   render() {
     return (<div>
       <InstructionDescription {...this.props} />
-      <AnswerOutputArea {...this.props} />
       <LengthValidation {...this.props} />
       <RangeValidation {...this.props} />
       <RequiredValidation {...this.props} />
