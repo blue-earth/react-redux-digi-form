@@ -3,6 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection';
+import EditSection from 'components/QuestionEditFields/EditSection';
 
 class ShortTextFieldAdvancedTab extends Component {
   static propTypes = {
@@ -16,11 +17,20 @@ class ShortTextFieldAdvancedTab extends Component {
     } = this.props;
     return (
       <div>
-        <CollapsibleSection
-          setQuestionInfo={setQuestionInfo}
-          questionPropKey={'value'}
-          title={'Default value'}
-        />
+        <EditSection>
+          <CollapsibleSection
+            setQuestionInfo={setQuestionInfo}
+            questionPropKey={'value'}
+            title={'Default value'}
+          />
+        </EditSection>
+        <EditSection>
+          <CollapsibleSection
+            setQuestionInfo={setQuestionInfo}
+            questionPropKey={'placeholder_text'}
+            title={'Placeholder'}
+          />
+        </EditSection>
       </div>
     );
   }

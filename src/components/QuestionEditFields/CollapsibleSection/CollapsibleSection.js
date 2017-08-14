@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import Switch from 'rc-switch';
-import EditSection from '../EditSection';
 import SectionTitle from '../SectionTitle';
 import TextInput from 'components/TextInput';
 import styles from './CollapsibleSection.scss';
@@ -35,7 +34,7 @@ class CollapsibleSection extends Component {
     });
   };
 
-  _onValueChanged = (value) => {
+  _onValueChanged = (event) => {
     const {
       setQuestionInfo,
       questionPropKey
@@ -48,7 +47,7 @@ class CollapsibleSection extends Component {
   render() {
     const { title } = this.props;
     return (
-      <EditSection>
+      <div>
         <div className={styles.switchRow}>
           <div className={styles.switchColLeft}>
             <SectionTitle title={title} />
@@ -60,7 +59,7 @@ class CollapsibleSection extends Component {
         <div className={styles.configInputRow}>
           <TextInput type="text" onChange={this._onValueChanged} />
         </div>
-      </EditSection>
+      </div>
     );
   }
 }
