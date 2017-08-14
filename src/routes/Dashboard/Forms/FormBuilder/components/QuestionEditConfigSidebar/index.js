@@ -1,13 +1,19 @@
 import React from 'react';
-import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
-import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
-import LengthValidation from 'components/QuestionEditFields/LengthValidation';
-import RangeValidation from 'components/QuestionEditFields/RangeValidation';
-import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
+import {
+  ShortTextFieldBasicTab,
+  ShortTextFieldAdvancedTab
+} from './ShortTextField';
 
 export const getQuestionTypeConfigComponent = function (questionTypeName, tabName = 'general', componentProps) {
+  var ConfigComponent;
   switch (questionTypeName) {
     case 'ShortTextField':
+      if (tabName === 'general') {
+        ConfigComponent = ShortTextFieldBasicTab;
+      } else {
+        ConfigComponent = ShortTextFieldAdvancedTab;
+      }
+      break;
     case 'EmailField':
     case 'LongTextField':
     case 'StatementField':
@@ -19,14 +25,7 @@ export const getQuestionTypeConfigComponent = function (questionTypeName, tabNam
     case 'DateField':
     case 'AddressField':
     case 'SignatureField':
-      return (
-        <div>
-          <InstructionDescription {...componentProps} />
-          <AnswerOutputArea {...componentProps} />
-          <LengthValidation {...componentProps} />
-          <RangeValidation {...componentProps} />
-          <RequiredValidation {...componentProps} />
-        </div>
-      );
+      break;
   }
+  return <ConfigComponent {...componentProps} />;
 };

@@ -186,7 +186,7 @@ export default class QuestionEditPanel extends Component {
             </Tab.Pane>
             <Tab.Pane eventKey="advanced">
               <div className={styles.viewBody}>
-                <MultipleSelection {...componentProps} />
+                {getQuestionTypeConfigComponent(questionType, 'advanced', componentProps)}
               </div>
             </Tab.Pane>
           </Tab.Content>
