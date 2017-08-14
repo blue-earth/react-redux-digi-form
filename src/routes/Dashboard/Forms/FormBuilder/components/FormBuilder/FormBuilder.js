@@ -140,7 +140,7 @@ class FormBuilder extends Component {
     setQuestionEditMode: PropTypes.func.isRequired,
 
     /*
-     * setActiveBox: Redux action to set activeBox path.
+     * setActiveBox: Redux action to set activeBoxPath path.
      */
     setActiveBox: PropTypes.func.isRequired,
     deleteElement: PropTypes.func.isRequired,
@@ -201,8 +201,8 @@ class FormBuilder extends Component {
   }
 
   get activeLabel() {
-    const activeBox = _.get(this.props, ['currentElement', 'activeBox']);
-    const pathArray = _.defaultTo(_.split(activeBox, '.'), []);
+    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
+    const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
     return pathArray[formBuilderPathIndex.LABEL];
   }
 

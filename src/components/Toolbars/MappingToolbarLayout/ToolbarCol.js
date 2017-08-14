@@ -8,7 +8,7 @@ import styles from './MappingToolbarLayout.scss';
 export default class ToolbarCol extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
-    className: PropTypes.string.isRequired
+    className: PropTypes.string
   };
 
   render() {

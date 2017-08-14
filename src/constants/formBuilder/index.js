@@ -17,3 +17,10 @@ export const formBuilderPathIndex = {
 };
 
 export const formBuilderFontSize = 12;
+
+export const formBuilderBox = {
+  LEFT: 0,
+  TOP: 1,
+  WIDTH: 2,
+  HEIGHT: 3
+};

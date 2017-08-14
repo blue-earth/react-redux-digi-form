@@ -31,12 +31,7 @@ $snapping-border-color: #f3d359;
     @include box-shadow-custom(0 0 5px rgba(0, 0, 0, .5));
   }
 }
-.boxLabel {
-  font-size: 12px;
-  @include vhcenter;
-  padding: 2px;
-  @include user-select(none);
-}
+
 .newBoxDraw {
   border: 1px dashed $element-border-color;
   position: absolute;
@@ -91,4 +86,30 @@ $snapping-border-color: #f3d359;
       bottom: 0;
     }
   }
+}
+
+.boxLabel {
+  font-size: 12px;
+  @include vhcenter;
+  padding: 2px;
+  @include user-select(none);
+}
+
+.blocks {
+  position: relative;
+  @include user-select(none);
+  height: 100%;
+  width: 100%;
+}
+
+.block {
+  position: absolute;
+  @include user-select(none);
+  left: 0;
+  top: 0;
+}
+
+.blockLabel {
+  @include vhcenter;
+  @include user-select(none);
 }

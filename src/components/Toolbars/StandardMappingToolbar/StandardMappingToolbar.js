@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import { Button } from 'react-bootstrap';
-import _ from 'lodash';
 import AppButton from 'components/Buttons/AppButton';
 import MappingToolbarLayout, {
   ToolbarCol,
@@ -11,6 +10,7 @@ import MappingToolbarLayout, {
 } from '../MappingToolbarLayout';
 import { MdCheck } from 'react-icons/lib/md';
 import { GoTrashcan } from 'react-icons/lib/go';
+import { formBuilderBox } from 'constants/formBuilder';
 import SpinEdit from '../SpinEdit';
 import styles from './StandardMappingToolbar.scss';
 
@@ -40,11 +40,17 @@ export default class StandardMappingToolbar extends Component {
   }
 
   handleWidthChange = (width) => {
-    this.setState({ box: _.assign({}, this.state.box, { width }) });
+    const box = this.state.box.slice();
+    const { WIDTH } = formBuilderBox;
+    box[WIDTH] = width;
+    this.setState({ box });
   }
 
   handleHeightChange = (height) => {
-    this.setState({ box: _.assign({}, this.state.box, { height }) });
+    const box = this.state.box.slice();
+    const { HEIGHT } = formBuilderBox;
+    box[HEIGHT] = height;
+    this.setState({ box });
   }
 
   handleFontSizeChange = (fontSize) => {
@@ -62,17 +68,18 @@ export default class StandardMappingToolbar extends Component {
 
   render() {
     const { pageZoom, values, viewportWidth, viewportHeight } = this.props;
-    const { box: { width, height }, fontSize } = this.state;
+    const { box, fontSize } = this.state;
+    const { WIDTH, HEIGHT } = formBuilderBox;
 
     return (
       <MappingToolbarLayout box={values.box} pageZoom={pageZoom}
         viewportWidth={viewportWidth} viewportHeight={viewportHeight}>
         <ToolbarRow>
           <ToolbarCol>
-            <SpinEdit label="W:" value={width} onChange={this.handleWidthChange} />
+            <SpinEdit label="W:" value={box[WIDTH]} onChange={this.handleWidthChange} />
           </ToolbarCol>
           <ToolbarCol>
-            <SpinEdit label="H:" value={height} onChange={this.handleHeightChange} />
+            <SpinEdit label="H:" value={box[HEIGHT]} onChange={this.handleHeightChange} />
           </ToolbarCol>
           <ToolbarCol>
             <SpinEdit label="Font:" value={fontSize} onChange={this.handleFontSizeChange} />
