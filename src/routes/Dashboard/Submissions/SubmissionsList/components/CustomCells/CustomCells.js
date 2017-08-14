@@ -12,12 +12,11 @@ import {
   MdEmail,
   MdPhone
 } from 'react-icons/lib/md';
-import { FaCircleO } from 'react-icons/lib/fa';
+import SubmissionStatus from '../SubmissionStatus';
 import _ from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import styles from './CustomCells.scss';
 import { DropdownHeaderCell, DateCell } from 'components/GriddleComponents/CommonCells/CommonCells';
-import classNames from 'classnames';
 
 export { DateCell };
 
@@ -76,27 +75,13 @@ export class ActionsHeaderCell extends Component {
   }
 }
 
-export class statusCell extends Component {
+export class StatusCell extends Component {
   static propTypes = {
     data: PropTypes.string
   };
   render() {
     const {data} = this.props;
-    const classList = ['new', 'rejected', 'processing', 'done'];
-    const statusClass = data.toLowerCase().replace(/ /g, '');
-    return (
-      <div>
-        <div className={classNames(
-          styles.statusRing,
-          styles[statusClass],
-          {hide: classList.indexOf(statusClass) === -1}
-        )}>
-          <FaCircleO style={{verticalAlign: 'baseline'}} />
-        </div>
-        {' '}
-        {data}
-      </div>
-    );
+    return (<SubmissionStatus status={data} />);
   }
 }
 
