@@ -14,6 +14,7 @@ class CollapsibleSection extends Component {
   static propTypes = {
     setQuestionInfo: PropTypes.func.isRequired,
     questionPropKey: PropTypes.string.isRequired,
+    questionPropValue: PropTypes.string,
     isInitiallyOpened: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     helpText: PropTypes.string
@@ -50,13 +51,13 @@ class CollapsibleSection extends Component {
     }
   };
 
-  _onValueChanged = (event) => {
+  _onValueChanged = (value) => {
     const {
       setQuestionInfo,
       questionPropKey
     } = this.props;
     setQuestionInfo({
-      [questionPropKey]: event.target.value
+      [questionPropKey]: value
     });
   };
 
@@ -73,7 +74,7 @@ class CollapsibleSection extends Component {
           </div>
         </div>
         <div className={cx('configInputRow', {'hide': !this.state.isOpened})}>
-          <TextInput type="text" onChange={this._onValueChanged} />
+          <TextInput type="text" value={this.props.questionPropValue} onChange={this._onValueChanged} />
         </div>
       </div>
     );

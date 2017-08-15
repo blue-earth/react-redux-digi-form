@@ -13,7 +13,8 @@ class ShortTextFieldAdvancedTab extends Component {
   };
   render() {
     const {
-      setQuestionInfo
+      setQuestionInfo,
+      currentElement
     } = this.props;
     return (
       <div>
@@ -21,6 +22,7 @@ class ShortTextFieldAdvancedTab extends Component {
           <CollapsibleSection
             setQuestionInfo={setQuestionInfo}
             questionPropKey={'value'}
+            questionPropValue={currentElement.question.value}
             title={'Default value'}
           />
         </EditSection>
@@ -28,6 +30,7 @@ class ShortTextFieldAdvancedTab extends Component {
           <CollapsibleSection
             setQuestionInfo={setQuestionInfo}
             questionPropKey={'placeholder_text'}
+            questionPropValue={currentElement.question.placeholder_text}
             title={'Placeholder'}
           />
         </EditSection>
