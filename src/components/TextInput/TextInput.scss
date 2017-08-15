@@ -1,24 +1,24 @@
 @import './mixins';
 @import './variables';
 
-.formGroup {
+.textInputWrapper {
   label {
     font-weight: 600;
     display: block;
-    &.major {
-      font-family: "roble_alt_boldbold";
-      font-size: 16px;
-      margin-bottom: 18px;
-    }
-    &.minor {
-      font-family: $font-name;
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
   }
-  .inputWrapper {}
+  label.major {
+    font-family: "roble_alt_boldbold";
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+  label.minor {
+    font-family: $font-name;
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  .overflowWrapper {}
   &.hasPrefix {
-    .inputWrapper {
+    .overflowWrapper {
       overflow: hidden;
     }
   }
