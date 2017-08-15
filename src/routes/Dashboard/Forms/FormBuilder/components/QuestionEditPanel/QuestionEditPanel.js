@@ -8,7 +8,6 @@ import {
   Tab
 } from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
-import MultipleSelection from 'components/QuestionEditFields/MultipleSelection';
 import questionInputs from 'schemas/questionInputs';
 import _ from 'lodash';
 import 'rc-switch/assets/index.css';
