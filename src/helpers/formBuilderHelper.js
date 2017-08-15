@@ -2,7 +2,11 @@ import _ from 'lodash';
 import {
   INIT_QUESTION_STATE
 } from 'redux/modules/formBuilder';
-import { formBuilderBox } from 'constants/formBuilder';
+import {
+  formBuilderBox,
+  formBuilderPathIndex
+} from 'constants/formBuilder';
+
 export const getImageDimension = (url, callback) => {
   var img = new Image();
   img.onload = function () {
@@ -14,8 +18,25 @@ export const getImageDimension = (url, callback) => {
   img.src = url;
 };
 
+export const getActiveLabel = (activeBoxPath) => {
+  const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
+  return pathArray[formBuilderPathIndex.LABEL];
+};
+
 export const isCurrentElementId = (id, currentElement) =>
   (currentElement && _.isEqual(parseInt(id, 10), currentElement.id)) || _.isEqual(parseInt(id, 10), 0);
+
+export const getArrangedBlocksPosition = (box, blockCount) => {
+  const { WIDTH, HEIGHT } = formBuilderBox;
+  const blockWidth = box[WIDTH] / blockCount;
+  const blockHeight = box[HEIGHT];
+  return _.map(new Array(blockCount), (block, index) => ([
+    blockWidth * index, // left
+    0,  // top
+    blockWidth,  // width
+    blockHeight  // height
+  ]));
+};
 
 export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom) => {
   const activeBoxPath = _.get(currentElement, ['activeBoxPath'], '');

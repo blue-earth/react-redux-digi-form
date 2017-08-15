@@ -99,11 +99,6 @@ class FormBuilderSteps extends Component {
     setMappingPositionInfo: PropTypes.func.isRequired,
 
     /*
-     * resetMappingInfo: Redux action to remove document mapping info
-     */
-    resetMappingInfo: PropTypes.func.isRequired,
-
-    /*
      * pageZoom: Redux state to keep the page zoom ratio.
      */
     pageZoom: PropTypes.number.isRequired,
@@ -203,7 +198,6 @@ class FormBuilderSteps extends Component {
             resetValidationInfo: props.resetValidationInfo,
             setMappingInfo: props.setMappingInfo,
             setMappingPositionInfo: props.setMappingPositionInfo,
-            resetMappingInfo: props.resetMappingInfo,
             pageZoom: props.pageZoom,
             setPageZoom: props.setPageZoom,
             questionEditMode: props.questionEditMode,

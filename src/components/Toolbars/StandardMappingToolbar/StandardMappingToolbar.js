@@ -17,58 +17,38 @@ import styles from './StandardMappingToolbar.scss';
 export default class StandardMappingToolbar extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
+    onDelete: PropTypes.func,
+    onSave: PropTypes.func,
     pageZoom: PropTypes.number.isRequired,
     values: PropTypes.object.isRequired,
     viewportHeight: PropTypes.number.isRequired,
     viewportWidth: PropTypes.number.isRequired
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      box: props.values.box,
-      fontSize: props.values.font_size
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { values } = nextProps;
-    this.setState({
-      box: values.box,
-      fontSize: values.font_size
-    });
-  }
-
   handleWidthChange = (width) => {
-    const box = this.state.box.slice();
     const { WIDTH } = formBuilderBox;
+    const { onChange, values } = this.props;
+    const box = values.box.slice();
     box[WIDTH] = width;
-    this.setState({ box });
+    onChange({ box });
   }
 
   handleHeightChange = (height) => {
-    const box = this.state.box.slice();
     const { HEIGHT } = formBuilderBox;
+    const { onChange, values } = this.props;
+    const box = values.box.slice();
     box[HEIGHT] = height;
-    this.setState({ box });
+    onChange({ box });
   }
 
   handleFontSizeChange = (fontSize) => {
-    this.setState({ fontSize });
-  }
-
-  handleSaveClick = () => {
     const { onChange } = this.props;
-    const { box, fontSize } = this.state;
-    onChange({
-      'box': box,
-      'font_size': fontSize
-    });
+    onChange({ 'font_size': fontSize });
   }
 
   render() {
-    const { pageZoom, values, viewportWidth, viewportHeight } = this.props;
-    const { box, fontSize } = this.state;
+    const { onDelete, onSave, pageZoom, values, viewportWidth, viewportHeight } = this.props;
+    const { box, font_size: fontSize } = values;
     const { WIDTH, HEIGHT } = formBuilderBox;
 
     return (
@@ -85,10 +65,12 @@ export default class StandardMappingToolbar extends Component {
             <SpinEdit label="Font:" value={fontSize} onChange={this.handleFontSizeChange} />
           </ToolbarCol>
           <ToolbarCol>
-            <AppButton size="sm" extraClass={styles.saveButton} onClick={this.handleSaveClick}>
+            <AppButton size="sm" extraClass={styles.saveButton} onClick={onSave}>
               <MdCheck size={16} />
             </AppButton>
-            <Button className={styles.removeButton}><GoTrashcan size={18} /></Button>
+            <Button className={styles.removeButton} onClick={onDelete}>
+              <GoTrashcan size={18} />
+            </Button>
           </ToolbarCol>
         </ToolbarRow>
       </MappingToolbarLayout>

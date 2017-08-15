@@ -13,9 +13,9 @@ import { formsUrl } from 'helpers/urlHelper';
 import styles from './FormBuilder.scss';
 import DocumentFieldsSelectionHeader from 'components/FormBuilder/DocumentFieldsSelectionHeader';
 import {
-  formBuilderSelectMode,
-  formBuilderPathIndex
+  formBuilderSelectMode
 } from 'constants/formBuilder';
+import { getActiveLabel } from 'helpers/formBuilderHelper';
 import questionInputs from 'schemas/questionInputs';
 
 class FormBuilder extends Component {
@@ -105,11 +105,6 @@ class FormBuilder extends Component {
      * setMappingPositionInfo: Action to update the document mapping position info of active selection.
      */
     setMappingPositionInfo: PropTypes.func.isRequired,
-
-    /*
-     * resetMappingInfo: Redux action to remove document mapping info
-     */
-    resetMappingInfo: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.
@@ -202,8 +197,7 @@ class FormBuilder extends Component {
 
   get activeLabel() {
     const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
-    const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
-    return pathArray[formBuilderPathIndex.LABEL];
+    return getActiveLabel(activeBoxPath);
   }
 
   setActiveLabel = (label) => {
