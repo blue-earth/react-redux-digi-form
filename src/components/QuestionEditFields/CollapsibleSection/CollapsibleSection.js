@@ -3,6 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import Switch from 'rc-switch';
+import { FaCheck } from 'react-icons/lib/fa';
 import SectionTitle from '../SectionTitle';
 import styles from './CollapsibleSection.scss';
 import classNames from 'classnames/bind';
@@ -11,11 +12,11 @@ var cx = classNames.bind(styles);
 
 class CollapsibleSection extends Component {
   static propTypes = {
-    questionPropKey: PropTypes.string.isRequired,
     isInitiallyOpened: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     helpText: PropTypes.string,
     onToggleOpen: PropTypes.func,
+    onToggleClosed: PropTypes.func,
     children: PropTypes.node
   };
 
@@ -30,16 +31,22 @@ class CollapsibleSection extends Component {
       isOpened: this.props.isInitiallyOpened
     };
   }
+
   _toggleSectionOpen = () => {
     var isOpened = this.state.isOpened;
     var newIsOpened = !isOpened;
-    const { onToggleOpen, questionPropKey } = this.props;
     this.setState({
       isOpened: newIsOpened
     });
-    // if the toggle turns off, update an empty value
+    const { onToggleClosed, onToggleOpen } = this.props;
     if (!newIsOpened) {
-      onToggleOpen('', questionPropKey);
+      if (typeof onToggleClosed === 'function') {
+        onToggleClosed();
+      }
+    } else {
+      if (typeof onToggleOpen === 'function') {
+        onToggleOpen();
+      }
     }
   };
 
@@ -52,7 +59,9 @@ class CollapsibleSection extends Component {
             <SectionTitle title={title} />
           </div>
           <div className={styles.switchColRight}>
-            <Switch onChange={this._toggleSectionOpen} checked={this.state.isOpened} />
+            <Switch checked={this.state.isOpened}
+              onChange={this._toggleSectionOpen}
+              checkedChildren={<FaCheck />} />
           </div>
         </div>
         <div className={cx('configInputRow', {'hide': !this.state.isOpened})}>

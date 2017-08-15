@@ -24,7 +24,7 @@ class ShortTextFieldAdvancedTab extends Component {
           <CollapsibleSection
             questionPropKey={'value'}
             title={'Default value'}
-            onToggleOpen={updateQuestionProp}
+            onToggleClosed={function () { updateQuestionProp('', 'value'); }}
           >
             <TextInput type="text" value={currentElement.question.value}
               onChange={function (x) { updateQuestionProp(x, 'value'); }} />
@@ -34,7 +34,7 @@ class ShortTextFieldAdvancedTab extends Component {
           <CollapsibleSection
             questionPropKey={'placeholder_text'}
             title={'Placeholder'}
-            onToggleOpen={updateQuestionProp}
+            onToggleClosed={function () { updateQuestionProp('', 'placeholder_text'); }}
           >
             <TextInput type="text" value={currentElement.question.placeholder_text}
               onChange={function (x) { updateQuestionProp(x, 'placeholder_text'); }} />
