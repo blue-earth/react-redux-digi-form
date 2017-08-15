@@ -35,9 +35,15 @@ export default class BlockMappingToolbar extends Component {
     viewportWidth: PropTypes.number.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      arranged: false
+    };
+  }
+
   handleBlocksChange = (blockCount) => {
-    const { onChange, values } = this.props;
-    const box = values.box.slice();
+    const { onChange, values: { box } } = this.props;
     const blocks = getArrangedBlocksPosition(box, blockCount);
     onChange({ blocks });
   }
@@ -65,9 +71,19 @@ export default class BlockMappingToolbar extends Component {
     onChange({ 'font_size': fontSize });
   }
 
+  handleArrange = (arranged) => {
+    if (arranged) {
+      const { onChange, values: { box, blocks: currentBlocks } } = this.props;
+      const blocks = getArrangedBlocksPosition(box, _.size(currentBlocks));
+      onChange({ blocks });
+    }
+    this.setState({ arranged });
+  }
+
   render() {
     const { onDelete, onSave, pageZoom, values, viewportWidth, viewportHeight } = this.props;
     const { blocks, box, font_size: fontSize } = values;
+    const { arranged } = this.state;
     const { WIDTH, HEIGHT } = formBuilderBox;
     const blocksCount = blocks ? blocks.length : 1;
     return (
@@ -76,21 +92,21 @@ export default class BlockMappingToolbar extends Component {
         <ToolbarRow>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Blocks:</Label>
-            <SpinEdit value={blocksCount} onChange={this.handleBlocksChange} />
+            <SpinEdit disabled={arranged} value={blocksCount} onChange={this.handleBlocksChange} />
           </ToolbarCol>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Font:</Label>
-            <SpinEdit value={fontSize} onChange={this.handleFontSizeChange} />
+            <SpinEdit disabled={arranged} value={fontSize} onChange={this.handleFontSizeChange} />
           </ToolbarCol>
         </ToolbarRow>
         <ToolbarRow>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Width:</Label>
-            <SpinEdit value={box[WIDTH]} onChange={this.handleWidthChange} />
+            <SpinEdit disabled={arranged} value={box[WIDTH]} onChange={this.handleWidthChange} />
           </ToolbarCol>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Height:</Label>
-            <SpinEdit value={box[HEIGHT]} onChange={this.handleHeightChange} />
+            <SpinEdit disabled={arranged} value={box[HEIGHT]} onChange={this.handleHeightChange} />
           </ToolbarCol>
         </ToolbarRow>
         <ToolbarRow>
@@ -104,7 +120,7 @@ export default class BlockMappingToolbar extends Component {
               </OverlayTrigger>
             </Label>
             <div className="pull-right">
-              <Switch />
+              <Switch checked={arranged} onChange={this.handleArrange} />
             </div>
           </ToolbarCol>
           <ToolbarCol className={`${styles.halfCol} text-right`}>
