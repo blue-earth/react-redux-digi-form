@@ -49,6 +49,7 @@ class SignatureModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isNameValidated: true,
       isSignatureValidated: true,
       isEmailValidated: true,
       activeTabName: WRITE
@@ -60,16 +61,25 @@ class SignatureModal extends Component {
   }
 
   handleSubmit = () => {
-    const { email, verifyEmail, changeCommitValue } = this.props;
+    const { email, verifyEmail, changeCommitValue, name } = this.props;
     const { activeTabName } = this.state;
     const value = this.refs[activeTabName].dataUrl;
+    // Empty signature name error handle
+    if (name.length === 0) {
+      this.refs.nameInput.refs.input.focus();
+      return this.setState({
+        isNameValidated: false
+      });
+    }
     // Empty signature error handle
     if (value === '') {
+      this.refs.errorMessageFocus.focus();
       return this.setState({
         isSignatureValidated: false
       });
     }
     if (!validateIsEmail(email)) {
+      this.refs.emailInput.refs.input.focus();
       return this.setState({
         isEmailValidated: false
       });
@@ -89,6 +99,7 @@ class SignatureModal extends Component {
   handleNameChange = (value) => {
     this.props.changeName(value);
     this.setState({
+      isNameValidated: true,
       isSignatureValidated: true
     });
   }
@@ -126,6 +137,7 @@ class SignatureModal extends Component {
       requestVerificationCode
     } = this.props;
     const {
+      isNameValidated,
       isEmailValidated,
       isSignatureValidated,
       activeTabName
@@ -155,6 +167,9 @@ class SignatureModal extends Component {
               <Col xs={6}>
                 <div>Full name</div>
                 <FloatTextInput
+                  ref="nameInput"
+                  errorMessage={<span>This field can not be empty</span>}
+                  hasError={!isNameValidated}
                   extraClass={styles.signatureInput}
                   size="md"
                   autoFocus
@@ -166,6 +181,7 @@ class SignatureModal extends Component {
               <Col xs={6}>
                 <div>Email</div>
                 <FloatTextInput
+                  ref="emailInput"
                   errorMessage={<span>Email address is not valid</span>}
                   hasError={!isEmailValidated}
                   extraClass={styles.signatureInput}
@@ -183,6 +199,7 @@ class SignatureModal extends Component {
                 <span className={styles.info}>{moment().format('L')}</span>
               </Col>
               <Col xs={12}>
+                <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
                 {!isSignatureValidated && <span className={styles.errorMessage}>Please sign your signature</span>}
               </Col>
             </Row>
