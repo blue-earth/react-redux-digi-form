@@ -3,7 +3,9 @@ import React, {
   PropTypes
 } from 'react';
 import styles from './TextInput.scss';
-import classNames from 'classnames';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
 
 class TextInput extends Component {
 
@@ -27,15 +29,18 @@ class TextInput extends Component {
       PropTypes.number,
       PropTypes.array
     ]),
-    defaultValue: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-      PropTypes.array
-    ]),
     isReadOnly: PropTypes.bool,
     isDisabled: PropTypes.bool,
     // redux-form will supply an array of error messages
     hasError: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
+    /*
+    / If this component receives an onChange prop it will be
+    / a controlled component. The value of the input will be
+    / passed to the onChange function.
+    / If there is no onChange, then it will be considered an
+    / uncontrolled component, and the value will be added as
+    / a defaultValue.
+    */
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -57,26 +62,30 @@ class TextInput extends Component {
     const { onEnterKey } = this.props;
     if (event.keyCode === 13 && typeof onEnterKey === 'function') {
       onEnterKey();
-      // this.refs.input.blur()
+    }
+  }
+
+  handleChange = (event) => {
+    const value = event.target.value;
+    if (typeof this.props.onChange === 'function') {
+      this.props.onChange(value);
     }
   }
 
   getInputCSSClass() {
     const {isReadOnly, isDisabled, hasError, fullWidth} = this.props;
-    return classNames({
-      [styles.isReadOnly]: isReadOnly,
-      [styles.isDisabled]: isDisabled,
-      [styles.hasError]: hasError,
-      [styles.fullWidth]: fullWidth,
-      [styles.textInput]: true
+    return cx('textInput', {
+      'isReadOnly': isReadOnly,
+      'isDisabled': isDisabled,
+      'hasError': hasError,
+      'fullWidth': fullWidth
     });
   }
 
   getWrapperCSSClass() {
     const { prefix, wrapperClass } = this.props;
-    return classNames({
-      [styles.hasPrefix]: prefix,
-      [styles.formGroup]: true,
+    return cx('textInputWrapper', {
+      'hasPrefix': prefix,
       [wrapperClass]: wrapperClass
     });
   }
@@ -84,7 +93,7 @@ class TextInput extends Component {
   renderLabel() {
     const { label, labelStyle } = this.props;
     if (typeof label !== 'undefined') {
-      return (<label className={styles[labelStyle]}>{label}</label>);
+      return (<label className={cx(labelStyle)}>{label}</label>);
     } else {
       return false;
     }
@@ -93,7 +102,7 @@ class TextInput extends Component {
   renderPrefix() {
     const { prefix } = this.props;
     if (typeof prefix !== 'undefined') {
-      return (<span className={styles.prefix}>{prefix}</span>);
+      return (<span className={cx('prefix')}>{prefix}</span>);
     } else {
       return false;
     }
@@ -102,7 +111,7 @@ class TextInput extends Component {
   renderHelpText() {
     const { helpText } = this.props;
     if (typeof helpText !== 'undefined') {
-      return (<span className={styles.help}>{helpText}</span>);
+      return (<span className={cx('help')}>{helpText}</span>);
     } else {
       return false;
     }
@@ -114,7 +123,6 @@ class TextInput extends Component {
       autoFocus,
       placeholderText,
       value,
-      defaultValue,
       isDisabled,
       isReadOnly } = this.props;
     var optionals = {};
@@ -128,23 +136,25 @@ class TextInput extends Component {
       optionals['readOnly'] = true;
     }
     var valueProp = {};
-    if (value || !defaultValue) {
+    if (typeof this.props.onChange === 'function') {
+      // component is controlled
       valueProp['value'] = value;
-    } else if (defaultValue) {
-      valueProp['defaultValue'] = defaultValue;
+    } else {
+      // component is uncontrolled
+      valueProp['defaultValue'] = value;
     }
 
     return (
       <div className={this.getWrapperCSSClass()}>
         {this.renderLabel()}
         {this.renderPrefix()}
-        <div className={styles.inputWrapper}>
+        <div className={cx('overflowWrapper')}>
           <input
             {...valueProp}
             className={this.getInputCSSClass()}
             type={type}
             autoFocus={autoFocus}
-            onChange={this.props.onChange}
+            onChange={this.handleChange}
             onBlur={this.props.onBlur}
             onFocus={this.props.onFocus}
             onKeyDown={this.handleKeyDown}

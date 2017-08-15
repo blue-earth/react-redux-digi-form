@@ -48,11 +48,11 @@ class ProfileModal extends Component {
     handleHide();
   }
 
-  handleChangeFirstName = (event) => {
-    this.setState({fname: event.target.value});
+  handleChangeFirstName = (fNameValue) => {
+    this.setState({fname: fNameValue});
   }
-  handleChangeLastName = (event) => {
-    this.setState({lname: event.target.value});
+  handleChangeLastName = (lNameValue) => {
+    this.setState({lname: lNameValue});
   }
 
   render() {
