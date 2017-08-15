@@ -6,7 +6,7 @@ import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection
 import EditSection from 'components/QuestionEditFields/EditSection';
 import TextInput from 'components/TextInput';
 
-class ShortTextFieldAdvancedTab extends Component {
+class EmailFieldAdvancedTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
@@ -30,19 +30,9 @@ class ShortTextFieldAdvancedTab extends Component {
               onChange={function (x) { updateQuestionProp(x, 'value'); }} />
           </CollapsibleSection>
         </EditSection>
-        <EditSection>
-          <CollapsibleSection
-            questionPropKey={'placeholder_text'}
-            title={'Placeholder'}
-            onToggleOpen={updateQuestionProp}
-          >
-            <TextInput type="text" value={currentElement.question.placeholder_text}
-              onChange={function (x) { updateQuestionProp(x, 'placeholder_text'); }} />
-          </CollapsibleSection>
-        </EditSection>
       </div>
     );
   }
 }
 
-export default ShortTextFieldAdvancedTab;
+export default EmailFieldAdvancedTab;
