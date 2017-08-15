@@ -19,13 +19,15 @@ class SectionTitle extends Component {
     / major - roble_alt_boldbold, 16px
     / minor - Open Sans, 13px
     */
-    labelStyle: PropTypes.oneOf(['major', 'minor'])
+    labelStyle: PropTypes.oneOf(['major', 'minor']),
+    style: PropTypes.object
   };
 
   static defaultProps = {
     popoverId: '',
     description: '',
-    labelStyle: 'minor'
+    labelStyle: 'minor',
+    style: {}
   }
 
   getPopover(popoverId) {
@@ -37,9 +39,9 @@ class SectionTitle extends Component {
   }
 
   render() {
-    const { title, labelStyle, popoverId, description } = this.props;
+    const { title, labelStyle, popoverId, description, style } = this.props;
     return (
-      <div>
+      <div style={style}>
         <h3 className={styles.sectionTitle + ' ' + styles[labelStyle]}>
           {title}
           {popoverId &&
