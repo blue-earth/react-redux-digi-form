@@ -24,22 +24,43 @@
   display: inline-block;
   vertical-align: middle;
 }
-.selectLabel {
+.fullWidth .selectWrapper {
+  display: block;
+}
+.selectButton {
   display: inline-block;
   vertical-align: top;
   padding: 0 10px;
   line-height: $button-height-md - 2;
   width: 100%;
-  background-color: #ddd;
   border: 1px solid $select-button-border-color;
   cursor: pointer;
   @include border-radius(4px);
+}
+.flatWhite .selectButton {
   background: $white;
 }
-.isOpen .selectLabel {
+.flatGrey .selectButton {
+  background: #ddd;
+}
+.shiny .selectButton {
+  @include background-gradient($select-button-start-color, $select-button-end-color);
+}
+.isOpen .selectButton {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+.flatWhite .isOpen .selectButton,
+.flatWhite .isOpen .selectOptionsWrapper {
   border-color: $select-button-hover-color;
+}
+.flatGrey .isOpen .selectButton,
+.flatGrey .isOpen .selectOptionsWrapper {
+  border-color: $select-button-hover-color;
+}
+.shiny .isOpen .selectButton,
+.shiny .isOpen .selectOptionsWrapper {
+  border-color: darken($select-button-border-color, 10%);
 }
 .selectValue {
   padding:0 20px 0 4px;
@@ -72,7 +93,7 @@
   top: 100%;
   left: 0;
   background-color: $white;
-  border: 1px solid $select-button-border-color;
+  border: 1px solid;
   border-top-width: 0;
   @include border-radius(4px);
   border-top-left-radius: 0;

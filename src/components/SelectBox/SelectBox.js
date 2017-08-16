@@ -31,7 +31,9 @@ class SelectBox extends Component {
       PropTypes.string,
       PropTypes.node
     ]),
-    labelPosition: PropTypes.string,
+    labelPosition: PropTypes.oneOf(['inline', 'above']),
+    appearance: PropTypes.oneOf(['flatWhite', 'flatGrey', 'shiny']),
+    fullWidth: PropTypes.bool,
     /**
      * Selection items list
      */
@@ -70,6 +72,8 @@ class SelectBox extends Component {
     optionsList: [],
     label: '',
     labelPosition: 'inline',
+    appearance: 'flatWhite',
+    fullWidth: false,
     onChange: () => {}
   }
 
@@ -148,16 +152,16 @@ class SelectBox extends Component {
   }
 
   render() {
-    const { label, labelPosition, optionsList, className } = this.props;
+    const { label, labelPosition, optionsList, appearance, fullWidth, className } = this.props;
     const { selectedIndex } = this.state;
     const that = this;
     return (
-      <div className={cx('selectBox', className)}>
+      <div className={cx('selectBox', appearance, className, {'fullWidth': fullWidth})}>
         {label && <span className={cx('selectBoxLabel', [labelPosition])}>{label}</span>}
         <div ref="dropdown" className={cx('selectWrapper', {
           isOpen: this.state.isOpen
         })}>
-          <div className={cx('selectLabel')} onClick={this.toggleOpen}>
+          <div className={cx('selectButton')} onClick={this.toggleOpen}>
             <div className={cx('selectValue')}>
               {this.renderValue()}
             </div>

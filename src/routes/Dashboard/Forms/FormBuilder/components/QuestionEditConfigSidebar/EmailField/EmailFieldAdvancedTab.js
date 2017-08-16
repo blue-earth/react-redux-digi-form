@@ -57,7 +57,7 @@ class EmailFieldAdvancedTab extends Component {
             title={'Default value'}
             onToggleClosed={function () { updateQuestionProp('', 'value'); }}
           >
-            <SelectBox value={currentElement.question.value}
+            <SelectBox value={currentElement.question.value} appearance="shiny" fullWidth
               onChange={function (newValue) { updateQuestionProp(newValue, 'value'); }}
               optionsList={that.emailQuestions}
               placeholder="Select email address" />
