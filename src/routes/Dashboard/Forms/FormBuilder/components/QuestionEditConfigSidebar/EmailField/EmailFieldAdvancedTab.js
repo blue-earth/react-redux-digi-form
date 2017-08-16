@@ -6,6 +6,7 @@ import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection
 import EditSection from 'components/QuestionEditFields/EditSection';
 import SelectBox from 'components/SelectBox';
 import SwitchRow from 'components/QuestionEditFields/SwitchRow';
+import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
 import _ from 'lodash';
 
 class EmailFieldAdvancedTab extends Component {
@@ -28,28 +29,14 @@ class EmailFieldAdvancedTab extends Component {
     }
   }
 
-  get emailQuestions() {
-    const { questions } = this.props;
-    var filteredQuestions = [];
-    _.forEach(questions, function (q) {
-      if (q.type === 'EmailField') {
-        filteredQuestions.push({
-          'label': `answer_${q.id}`,
-          'value': `answer_${q.id}`
-        });
-      }
-    });
-    return filteredQuestions;
-  }
-
   render() {
     const {
       currentElement,
       updateQuestionProp
     } = this.props;
+    var emailQuestions = mapQuestionsToDropdown(getQuestionsByType(this.props.questions, 'EmailField'));
     var verifications = currentElement.question.verifications;
     var hasEmondoEmailFieldService = _.indexOf(verifications, 'EmondoEmailFieldService') > -1;
-    const that = this;
     return (
       <div>
         <EditSection>
@@ -59,7 +46,7 @@ class EmailFieldAdvancedTab extends Component {
           >
             <SelectBox value={currentElement.question.value} appearance="shiny" fullWidth
               onChange={function (newValue) { updateQuestionProp(newValue, 'value'); }}
-              optionsList={that.emailQuestions}
+              optionsList={emailQuestions}
               placeholder="Select email address" />
           </CollapsibleSection>
         </EditSection>

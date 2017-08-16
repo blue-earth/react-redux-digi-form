@@ -1,3 +1,4 @@
+import React from 'react';
 import _ from 'lodash';
 import {
   INIT_QUESTION_STATE
@@ -302,4 +303,25 @@ export const createEmptyQuestionElement = function (questionTypeName, boxMapping
     isModified: false,
     defaultMappingType: boxMappingType
   };
+};
+
+export const getQuestionsByType = function (questions, targetQuestionType, isReversed=true) {
+  /*
+  / isReversed=true will return only questions of questionType
+  / isReversed=false will return  questions that are not questionType
+  */
+  if (isReversed) {
+    return questions.filter((question) => question.type === targetQuestionType);
+  } else {
+    return questions.filter((question) => question.type !== targetQuestionType);
+  }
+};
+
+export const mapQuestionsToDropdown = function (questions) {
+  return questions.map(function (q) {
+    return {
+      'label': (<span><b>{q.id}.</b> {q.question_instruction}</span>),
+      'value': `{{ ${q.id} }}`
+    };
+  });
 };
