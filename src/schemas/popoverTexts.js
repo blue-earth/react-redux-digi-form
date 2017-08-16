@@ -5,7 +5,8 @@ const popoverTexts = {
   outputArea: 'TODO: Add output area popover text here.',
   previewAnswerOutput: 'TODO: Add preview answer output popover text here.',
   reselectOutputArea: 'Reselect output area',
-  isRequired: 'TODO: Add isRequired popover text here.'
+  isRequired: 'TODO: Add isRequired popover text here.',
+  emailAddressValidation: 'TODO: Add emailAddressValidation popover text here.'
 };
 
 export default popoverTexts;

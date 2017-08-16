@@ -295,6 +295,15 @@ const _deleteElement = (state, action) => {
 };
 
 // ------------------------------------
+// Action: updateQuestionProp
+// ------------------------------------
+export const updateQuestionProp = (value, questionPropKey) => {
+  return (dispatch, getState) => {
+    dispatch(setQuestionInfo({ [questionPropKey]: value }));
+  };
+};
+
+// ------------------------------------
 // Action: setQuestionInfo
 // ------------------------------------
 export const setQuestionInfo = createAction(SET_QUESTION_INFO);

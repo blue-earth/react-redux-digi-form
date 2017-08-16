@@ -4,35 +4,41 @@ import React, {
 } from 'react';
 import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection';
 import EditSection from 'components/QuestionEditFields/EditSection';
+import TextInput from 'components/TextInput';
 
 class ShortTextFieldAdvancedTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
-    setQuestionInfo: PropTypes.func.isRequired
+    updateQuestionProp: PropTypes.func.isRequired
   };
+
   render() {
     const {
-      setQuestionInfo,
-      currentElement
+      currentElement,
+      updateQuestionProp
     } = this.props;
     return (
       <div>
         <EditSection>
           <CollapsibleSection
-            setQuestionInfo={setQuestionInfo}
             questionPropKey={'value'}
-            questionPropValue={currentElement.question.value}
             title={'Default value'}
-          />
+            onToggleClosed={function () { updateQuestionProp('', 'value'); }}
+          >
+            <TextInput type="text" value={currentElement.question.value}
+              onChange={function (x) { updateQuestionProp(x, 'value'); }} />
+          </CollapsibleSection>
         </EditSection>
         <EditSection>
           <CollapsibleSection
-            setQuestionInfo={setQuestionInfo}
             questionPropKey={'placeholder_text'}
-            questionPropValue={currentElement.question.placeholder_text}
             title={'Placeholder'}
-          />
+            onToggleClosed={function () { updateQuestionProp('', 'placeholder_text'); }}
+          >
+            <TextInput type="text" value={currentElement.question.placeholder_text}
+              onChange={function (x) { updateQuestionProp(x, 'placeholder_text'); }} />
+          </CollapsibleSection>
         </EditSection>
       </div>
     );

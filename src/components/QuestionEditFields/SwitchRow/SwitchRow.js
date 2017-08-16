@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import classNames from 'classnames';
 import Switch from 'rc-switch';
+import { FaCheck } from 'react-icons/lib/fa';
 import SectionTitle from '../SectionTitle';
 import styles from './SwitchRow.scss';
 
@@ -29,7 +30,7 @@ class SwitchRow extends Component {
           <SectionTitle title={title} popoverId={popoverId} />
         </div>
         <div className={styles.switchColRight}>
-          <Switch onChange={onChange} checked={checked} />
+          <Switch onChange={onChange} checked={checked} checkedChildren={<FaCheck />} />
         </div>
       </div>
     );

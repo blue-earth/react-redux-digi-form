@@ -58,6 +58,8 @@ export default class QuestionEditPanel extends Component {
      */
     setQuestionInfo: PropTypes.func.isRequired,
 
+    updateQuestionProp: PropTypes.func.isRequired,
+
     /*
      * resetQuestionInfo: Redux action to remove a specific item into current question.
      */

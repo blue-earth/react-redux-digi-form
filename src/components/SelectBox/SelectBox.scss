@@ -1,0 +1,135 @@
+@import './mixins';
+@import './variables';
+
+.selectBox {
+  color: $select-button-color;
+  font-family: 'Helvetica';
+  min-width: 160px;
+}
+.selectBoxLabel {
+  font-family: 'Helvetica';
+  font-weight: 600;
+  font-size: 13px;
+  margin-right: 20px;
+  display: inline-block;
+  &.above {
+    display: block;
+  }
+}
+.selectWrapper {
+  position: relative;
+  height: $button-height-md;
+  min-width: 180px;
+  max-width: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.fullWidth .selectWrapper {
+  display: block;
+}
+.selectButton {
+  display: inline-block;
+  vertical-align: top;
+  padding: 0 10px;
+  line-height: $button-height-md - 2;
+  width: 100%;
+  border: 1px solid $select-button-border-color;
+  cursor: pointer;
+  @include border-radius(4px);
+}
+.flatWhite .selectButton {
+  background: $white;
+}
+.flatGrey .selectButton {
+  background: #ddd;
+}
+.shiny .selectButton {
+  @include background-gradient($select-button-start-color, $select-button-end-color);
+}
+.isOpen .selectButton {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.flatWhite .isOpen .selectButton,
+.flatWhite .isOpen .selectOptionsWrapper {
+  border-color: $select-button-hover-color;
+}
+.flatGrey .isOpen .selectButton,
+.flatGrey .isOpen .selectOptionsWrapper {
+  border-color: $select-button-hover-color;
+}
+.shiny .isOpen .selectButton,
+.shiny .isOpen .selectOptionsWrapper {
+  border-color: darken($select-button-border-color, 10%);
+}
+.selectValue {
+  padding:0 20px 0 4px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  b {
+    margin-right: 5px;
+  }
+}
+.selectCaret {
+  position: absolute;
+  right: 10px;
+  top: 0;
+  line-height: $button-height-md - 2;
+}
+.placeholder {
+  color: $grey;
+  font-weight: 300;
+}
+.selectOptionsWrapper {
+  width: 100%;
+  max-height: 200px;
+  overflow: auto;
+  display: none;
+  position: absolute;
+  z-index: 2000;
+  top: 100%;
+  left: 0;
+  background-color: $white;
+  border: 1px solid;
+  border-top-width: 0;
+  @include border-radius(4px);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.isOpen .selectOptionsWrapper {
+  display: inline-block;
+  border-color: $select-button-hover-color;
+}
+.selectOptions {
+  list-style: none;
+  margin: 0;
+  padding: 0
+}
+.selectOption {
+  margin: 4px;
+  line-height: $button-height-md - 8;
+  @include border-radius(4px);
+  cursor: pointer;
+  &:hover {
+    color: $select-button-hover-color;
+    background-color: $select-button-hover-bg-color;
+  }
+}
+.selectOption.isSelected {
+  font-weight: bold;
+}
+.selectOption.disabled {
+  color: $select-button-border-color;
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+.selectOptionContent {
+  display: inline-block;
+  padding: 0 6px;
+  vertical-align: middle;
+  line-height: 14px;
+}

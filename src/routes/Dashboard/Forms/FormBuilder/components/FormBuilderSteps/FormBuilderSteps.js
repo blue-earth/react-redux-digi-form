@@ -73,6 +73,8 @@ class FormBuilderSteps extends Component {
      */
     setQuestionInfo: PropTypes.func.isRequired,
 
+    updateQuestionProp: PropTypes.func.isRequired,
+
     /*
      * resetQuestionInfo: Redux action to remove a specific item into current question.
      */
@@ -192,6 +194,7 @@ class FormBuilderSteps extends Component {
             setCurrentElement: props.setCurrentElement,
             deleteElement: props.deleteElement,
             setActiveBox: props.setActiveBox,
+            updateQuestionProp: props.updateQuestionProp,
             setQuestionInfo: props.setQuestionInfo,
             resetQuestionInfo: props.resetQuestionInfo,
             setValidationInfo: props.setValidationInfo,
