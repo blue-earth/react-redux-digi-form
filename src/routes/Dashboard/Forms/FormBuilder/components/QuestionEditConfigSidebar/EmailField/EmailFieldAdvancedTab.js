@@ -58,7 +58,7 @@ class EmailFieldAdvancedTab extends Component {
             onToggleClosed={function () { updateQuestionProp('', 'value'); }}
           >
             <SelectBox value={currentElement.question.value}
-              onChange={function (x) { updateQuestionProp(x, 'value'); }}
+              onChange={function (newValue) { updateQuestionProp(newValue, 'value'); }}
               optionsList={that.emailQuestions}
               placeholder="Select email address" />
           </CollapsibleSection>
