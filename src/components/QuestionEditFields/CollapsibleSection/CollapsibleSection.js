@@ -64,9 +64,9 @@ class CollapsibleSection extends Component {
               checkedChildren={<FaCheck />} />
           </div>
         </div>
-        <div className={cx('configInputRow', {'hide': !this.state.isOpened})}>
+        {children && <div className={cx('configInputRow', {'hide': !this.state.isOpened})}>
           {children}
-        </div>
+        </div>}
       </div>
     );
   }

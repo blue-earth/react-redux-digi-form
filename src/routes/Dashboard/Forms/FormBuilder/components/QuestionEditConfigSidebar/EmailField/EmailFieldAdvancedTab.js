@@ -5,6 +5,7 @@ import React, {
 import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection';
 import EditSection from 'components/QuestionEditFields/EditSection';
 import SelectBox from 'components/SelectBox';
+import SwitchRow from 'components/QuestionEditFields/SwitchRow';
 import _ from 'lodash';
 
 class EmailFieldAdvancedTab extends Component {
@@ -13,6 +14,19 @@ class EmailFieldAdvancedTab extends Component {
     questions: PropTypes.array.isRequired,
     updateQuestionProp: PropTypes.func.isRequired
   };
+
+  handleEmailValidationChange = (isOn) => {
+    const { currentElement, updateQuestionProp } = this.props;
+    if (isOn) {
+      currentElement.question.verifications.push('EmondoEmailFieldService');
+      updateQuestionProp(currentElement.question.verifications, 'verifications');
+    } else {
+      updateQuestionProp(
+        _.pull(currentElement.question.verifications, 'EmondoEmailFieldService'),
+        'verifications'
+      );
+    }
+  }
 
   get emailQuestions() {
     const { questions } = this.props;
@@ -34,7 +48,7 @@ class EmailFieldAdvancedTab extends Component {
       updateQuestionProp
     } = this.props;
     var verifications = currentElement.question.verifications;
-    var hasEmondoEmailFieldService = _.indexOf(verifications, 'EmondoEmailFieldService');
+    var hasEmondoEmailFieldService = _.indexOf(verifications, 'EmondoEmailFieldService') > -1;
     const that = this;
     return (
       <div>
@@ -50,20 +64,9 @@ class EmailFieldAdvancedTab extends Component {
           </CollapsibleSection>
         </EditSection>
         <EditSection>
-          <CollapsibleSection
-            title={'Email address validation'}
-            isInitiallyOpened={hasEmondoEmailFieldService !== -1}
-            onToggleOpen={function () {
-              verifications.push('EmondoEmailFieldService');
-              updateQuestionProp(verifications, 'verifications');
-            }}
-            onToggleClosed={function () {
-              updateQuestionProp(
-                _.pull(verifications, 'EmondoEmailFieldService'),
-                'verifications'
-              );
-            }}
-          />
+          <SwitchRow title="Email address validation" popoverId="emailAddressValidation"
+            checked={hasEmondoEmailFieldService}
+            onChange={this.handleEmailValidationChange} />
         </EditSection>
       </div>
     );
