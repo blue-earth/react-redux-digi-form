@@ -64,28 +64,34 @@ class SignatureModal extends Component {
     const { email, verifyEmail, changeCommitValue, name } = this.props;
     const { activeTabName } = this.state;
     const value = this.refs[activeTabName].dataUrl;
-    // Empty signature name error handle
-    if (name.length === 0) {
-      this.refs.nameInput.refs.input.focus();
-      return this.setState({
-        isNameValidated: false
-      });
-    }
+    let isValid = true;
     // Empty signature error handle
     if (value === '') {
       this.refs.errorMessageFocus.focus();
-      return this.setState({
+      this.setState({
         isSignatureValidated: false
       });
+      isValid = false;
+    }
+    // Empty signature name error handle
+    if (name.length === 0) {
+      this.refs.nameInput.refs.input.focus();
+      this.setState({
+        isNameValidated: false
+      });
+      isValid = false;
     }
     if (!validateIsEmail(email)) {
       this.refs.emailInput.refs.input.focus();
-      return this.setState({
+      this.setState({
         isEmailValidated: false
       });
+      isValid = false;
     }
-    changeCommitValue(value);
-    verifyEmail();
+    if (isValid) {
+      changeCommitValue(value);
+      verifyEmail();
+    }
   }
 
   handleTabSelect = (activeTabName) => {
