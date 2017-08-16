@@ -74,11 +74,6 @@ export default class QuestionEditPanel extends Component {
     resetValidationInfo: PropTypes.func.isRequired,
 
     /*
-     * resetMappingInfo: Redux action to remove document mapping info
-     */
-    resetMappingInfo: PropTypes.func.isRequired,
-
-    /*
      * isModified: Redux state that indicates whether the form is modified since last save or load.
      */
     isModified: PropTypes.bool.isRequired,

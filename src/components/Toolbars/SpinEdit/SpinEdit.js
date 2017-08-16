@@ -15,12 +15,14 @@ import styles from './SpinEdit.scss';
 
 export default class SpinEdit extends Component {
   static propTypes = {
+    disabled: PropTypes.bool,
     label: PropTypes.string,
     onChange: PropTypes.func,
     value: PropTypes.number
   };
 
   static defaultProps = {
+    disabled: false,
     onChange: () => {},
     value: 0
   }
@@ -41,22 +43,23 @@ export default class SpinEdit extends Component {
   }
 
   render() {
-    const { label, value } = this.props;
+    const { disabled, label, value } = this.props;
     return (
       <ul className={styles.spinEdit}>
         {label &&
           <li><Label>{label}</Label></li>
         }
         <li>
-          <Button className={styles.circleButton} onClick={this.handleDecreaseClick}>
+          <Button className={styles.circleButton} disabled={disabled} onClick={this.handleDecreaseClick}>
             <MdRemove />
           </Button>
         </li>
         <li>
-          <FormControl type="number" onChange={this.handleValueChange} value={value} className={styles.input} />
+          <FormControl disabled={disabled} type="number" onChange={this.handleValueChange} value={value}
+            className={styles.input} />
         </li>
         <li>
-          <Button className={styles.circleButton} onClick={this.handleIncraseClick}>
+          <Button className={styles.circleButton} disabled={disabled} onClick={this.handleIncraseClick}>
             <MdAdd />
           </Button>
         </li>

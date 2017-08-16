@@ -27,7 +27,6 @@ export const DELETE_ELEMENT = 'DELETE_ELEMENT';
 export const SET_QUESTION_INFO = 'SET_QUESTION_INFO';
 export const RESET_QUESTION_INFO = 'RESET_QUESTION_INFO';
 export const SET_MAPPING_INFO = 'SET_MAPPING_INFO';
-export const RESET_MAPPING_INFO = 'RESET_MAPPING_INFO';
 export const SET_VALIDATION_INFO = 'SET_VALIDATION_INFO';
 export const RESET_VALIDATION_INFO = 'RESET_VALIDATION_INFO';
 
@@ -369,37 +368,6 @@ const _resetValidationInfo = (state, action) => {
 export const setMappingInfo = createAction(SET_MAPPING_INFO);
 
 // ------------------------------------
-// Helper: _setQuestionInfo
-// ------------------------------------
-const _setMappingInfo = (state, action) => {
-  const newMappingInfo = _.pick(action.payload, [
-    'type', 'positions', 'activeIndex'
-  ]);
-  const { currentElement: { mappingInfo } } = state;
-
-  return _updateCurrentElement(state, {
-    mappingInfo: Object.assign({}, mappingInfo, newMappingInfo)
-  });
-};
-
-// ------------------------------------
-// Action: resetMappingInfo
-// ------------------------------------
-export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
-
-// ------------------------------------
-// Helper: _resetMappingInfo
-// ------------------------------------
-const _resetMappingInfo = (state, action) => {
-  return _updateCurrentElement(state, {
-    mappingInfo: {
-      positions: [],
-      activeIndex: 0
-    }
-  });
-};
-
-// ------------------------------------
 // Action: setMappingPositionInfo
 // ------------------------------------
 export const setMappingPositionInfo = createAction(SET_MAPPING_POSITION_INFO);
@@ -417,11 +385,13 @@ const _setMappingPositionInfo = (state, action) => {
   const fields = _.isEqual(defaultMappingType, formBuilderBoxMappingType.STANDARD)
     ? ['box', 'font_size', 'page']
     : ['box', 'font_size', 'page', 'blocks'];
-  const position = _.get(currentElement, positionPathArray, {});
-
+  let position = _.get(currentElement, positionPathArray, {});
+  if (action.payload.blocks) {
+    position = _.omit(position, ['blocks']);
+  }
   const newPosition = _.merge(
     { 'font_size': formBuilderFontSize },
-    _.omit(position, ['blocks']),
+    position,
     _.pick(action.payload, fields)
   );
   _.set(currentElement, positionPathArray, newPosition);
@@ -459,20 +429,25 @@ export const setActiveBox = createAction(SET_ACTIVE_BOX);
 const _setActiveBox = (state, action) => {
   const { currentElement } = state;
   const { mappingInfo } = currentElement;
-  const activeBoxPath = action.payload;
+  const activeBoxPath = action.payload || null;
   const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
-  const label = pathArray[formBuilderPathIndex.LABEL];
+  let newMappingInfo = mappingInfo;
 
   const intialMappingState = _.merge({}, INIT_MAPPING_INFO_STATE, {
     type: currentElement.defaultMappingType
   });
 
+  if (!_.isNil(activeBoxPath)) {
+    const label = pathArray[formBuilderPathIndex.LABEL];
+    newMappingInfo = _.merge({
+      [label]: intialMappingState
+    }, mappingInfo);
+  }
+
   return Object.assign({}, state, {
-    currentElement: _.merge({}, state.currentElement, {
+    currentElement: _.assign({}, state.currentElement, {
       activeBoxPath,
-      mappingInfo: _.merge({
-        [label]: intialMappingState
-      }, mappingInfo)
+      mappingInfo: newMappingInfo
     })
   });
 };
@@ -601,10 +576,9 @@ const formBuilderReducer = handleActions({
     _resetQuestionInfo(state, action),
 
   SET_MAPPING_INFO: (state, action) =>
-    _setMappingInfo(state, action),
-
-  RESET_MAPPING_INFO: (state, action) =>
-    _resetMappingInfo(state, action),
+    _updateCurrentElement(state, {
+      mappingInfo: Object.assign({}, action.payload)
+    }),
 
   SET_MAPPING_POSITION_INFO: (state, action) =>
     _setMappingPositionInfo(state, action),

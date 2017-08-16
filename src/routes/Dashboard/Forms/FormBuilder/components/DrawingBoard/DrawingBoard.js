@@ -367,6 +367,7 @@ class DrawingBoard extends Component {
     if (!currentElement) return;
     const { activeBoxPath } = currentElement;
     const position = _.get(currentElement.mappingInfo, activeBoxPath);
+    if (!position) return;
     const box = position.box;
     if (!box) return;
     const { LEFT, TOP } = formBuilderBox;
@@ -395,8 +396,18 @@ class DrawingBoard extends Component {
     event.preventDefault();
   }
 
+  handleToolbarSave = () => {
+    const { saveElement, setActiveBox } = this.props;
+    saveElement();
+    setActiveBox(null);
+  }
+
   handleDeleteBox = () => {
-    // TODO: Implement delete box here.
+    const { currentElement, setMappingInfo } = this.props;
+    if (!currentElement) return;
+    const mappingInfo = _.assign({}, currentElement.mappingInfo);
+    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
+    setMappingInfo(_.unset(mappingInfo, activeBoxPath));
   }
 
   renderBlocks(position) {
@@ -517,6 +528,8 @@ class DrawingBoard extends Component {
     const toolbarProps = {
       values: position,
       onChange: setMappingPositionInfo,
+      onDelete: this.handleDeleteBox,
+      onSave: this.handleToolbarSave,
       pageZoom,
       viewportWidth,
       viewportHeight

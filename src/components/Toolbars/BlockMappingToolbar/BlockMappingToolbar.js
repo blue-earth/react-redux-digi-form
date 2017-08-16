@@ -9,6 +9,7 @@ import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { MdInfo, MdCheck } from 'react-icons/lib/md';
 import { GoTrashcan } from 'react-icons/lib/go';
 import { formBuilderBox } from 'constants/formBuilder';
+import { getArrangedBlocksPosition } from 'helpers/formBuilderHelper';
 import MappingToolbarLayout, {
   ToolbarCol,
   ToolbarRow
@@ -26,6 +27,8 @@ const arrangePopover = (
 export default class BlockMappingToolbar extends Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
+    onDelete: PropTypes.func,
+    onSave: PropTypes.func,
     pageZoom: PropTypes.number.isRequired,
     values: PropTypes.object.isRequired,
     viewportHeight: PropTypes.number.isRequired,
@@ -35,88 +38,75 @@ export default class BlockMappingToolbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      blocks: props.values.blocks || [],
-      box: props.values.box,
-      fontSize: props.values.font_size
+      arranged: false
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { values } = nextProps;
-    this.setState({
-      box: values.box,
-      fontSize: values.font_size
-    });
-  }
-
   handleBlocksChange = (blockCount) => {
-    const box = this.state.box;
-    const { WIDTH, HEIGHT } = formBuilderBox;
-    const blockWidth = box[WIDTH] / blockCount;
-    const blockHeight = box[HEIGHT];
-    const blocks = _.map(new Array(blockCount), (block, index) => ([
-      blockWidth * index, // left
-      0,  // top
-      blockWidth,  // width
-      blockHeight  // height
-    ]));
-    this.setState({ blocks });
+    const { onChange, values: { box } } = this.props;
+    const blocks = getArrangedBlocksPosition(box, blockCount);
+    onChange({ blocks });
   }
 
   handleWidthChange = (width) => {
-    const box = this.state.box.slice();
     const { WIDTH } = formBuilderBox;
+    const { onChange, values } = this.props;
+    const box = values.box.slice();
     box[WIDTH] = width;
-    this.setState({ box });
+    const blocks = getArrangedBlocksPosition(box, _.size(values.blocks));
+    onChange({ box, blocks });
   }
 
   handleHeightChange = (height) => {
-    const box = this.state.box.slice();
     const { HEIGHT } = formBuilderBox;
+    const { onChange, values } = this.props;
+    const box = values.box.slice();
     box[HEIGHT] = height;
-    this.setState({ box });
+    const blocks = getArrangedBlocksPosition(box, _.size(values.blocks));
+    onChange({ box, blocks });
   }
 
   handleFontSizeChange = (fontSize) => {
-    this.setState({ fontSize });
+    const { onChange } = this.props;
+    onChange({ 'font_size': fontSize });
   }
 
-  handleSaveClick = () => {
-    const { onChange } = this.props;
-    const { blocks, box, fontSize } = this.state;
-    onChange({
-      'blocks': blocks,
-      'box': box,
-      'font_size': fontSize
-    });
+  handleArrange = (arranged) => {
+    if (arranged) {
+      const { onChange, values: { box, blocks: currentBlocks } } = this.props;
+      const blocks = getArrangedBlocksPosition(box, _.size(currentBlocks));
+      onChange({ blocks });
+    }
+    this.setState({ arranged });
   }
 
   render() {
-    const { pageZoom, values, viewportWidth, viewportHeight } = this.props;
-    const { blocks, box, fontSize } = this.state;
+    const { onDelete, onSave, pageZoom, values, viewportWidth, viewportHeight } = this.props;
+    const { blocks, box, font_size: fontSize } = values;
+    const { arranged } = this.state;
     const { WIDTH, HEIGHT } = formBuilderBox;
-
+    const blocksCount = blocks ? blocks.length : 1;
     return (
       <MappingToolbarLayout box={values.box} pageZoom={pageZoom}
         viewportWidth={viewportWidth} viewportHeight={viewportHeight}>
         <ToolbarRow>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Blocks:</Label>
-            <SpinEdit value={blocks.length} onChange={this.handleBlocksChange} />
+            <SpinEdit disabled={arranged} value={blocksCount} onChange={this.handleBlocksChange} />
           </ToolbarCol>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Font:</Label>
-            <SpinEdit value={fontSize} onChange={this.handleFontSizeChange} />
+            <SpinEdit disabled={arranged} value={fontSize} onChange={this.handleFontSizeChange} />
           </ToolbarCol>
         </ToolbarRow>
         <ToolbarRow>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Width:</Label>
-            <SpinEdit value={box[WIDTH]} onChange={this.handleWidthChange} />
+            <SpinEdit disabled={arranged} value={box[WIDTH]} onChange={this.handleWidthChange} />
           </ToolbarCol>
           <ToolbarCol className={styles.halfCol}>
             <Label className={styles.label}>Height:</Label>
-            <SpinEdit value={box[HEIGHT]} onChange={this.handleHeightChange} />
+            <SpinEdit disabled={arranged} value={box[HEIGHT]} onChange={this.handleHeightChange} />
           </ToolbarCol>
         </ToolbarRow>
         <ToolbarRow>
@@ -130,12 +120,14 @@ export default class BlockMappingToolbar extends Component {
               </OverlayTrigger>
             </Label>
             <div className="pull-right">
-              <Switch />
+              <Switch checked={arranged} onChange={this.handleArrange} />
             </div>
           </ToolbarCol>
           <ToolbarCol className={`${styles.halfCol} text-right`}>
-            <Button className={styles.removeButton}><GoTrashcan size={18} /></Button>
-            <AppButton size="sm" extraClass={styles.saveButton} onClick={this.handleSaveClick}>
+            <Button className={styles.removeButton} onClick={onDelete}>
+              <GoTrashcan size={18} />
+            </Button>
+            <AppButton size="sm" extraClass={styles.saveButton} onClick={onSave}>
               <MdCheck size={16} />
             </AppButton>
           </ToolbarCol>
