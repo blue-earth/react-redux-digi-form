@@ -3,11 +3,11 @@
 
 .selectBox {
   color: $select-button-color;
-  font-family: 'Helvetica';
   min-width: 160px;
+  text-align: left;
+  font-family: Helvetica;
 }
 .selectBoxLabel {
-  font-family: 'Helvetica';
   font-weight: 600;
   font-size: 13px;
   margin-right: 20px;
@@ -19,7 +19,6 @@
 .selectWrapper {
   position: relative;
   height: $button-height-md;
-  min-width: 180px;
   max-width: 100%;
   display: inline-block;
   vertical-align: middle;

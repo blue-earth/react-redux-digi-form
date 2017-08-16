@@ -7,6 +7,10 @@ import {
   EmailFieldBasicTab,
   EmailFieldAdvancedTab
 } from './EmailField';
+import {
+  PhoneNumberFieldBasicTab,
+  PhoneNumberFieldAdvancedTab
+} from './PhoneNumberField';
 
 export const getQuestionTypeConfigComponent = function (questionTypeName, tabName = 'general', componentProps) {
   var ConfigComponent;
@@ -29,6 +33,12 @@ export const getQuestionTypeConfigComponent = function (questionTypeName, tabNam
     case 'StatementField':
     case 'NumberField':
     case 'PhoneNumberField':
+      if (tabName === 'general') {
+        ConfigComponent = PhoneNumberFieldBasicTab;
+      } else {
+        ConfigComponent = PhoneNumberFieldAdvancedTab;
+      }
+      break;
     case 'DropdownField':
     case 'MultipleChoiceField':
     case 'YesNoChoiceField':
