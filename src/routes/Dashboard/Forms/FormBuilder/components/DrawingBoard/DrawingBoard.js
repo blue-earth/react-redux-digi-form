@@ -3,6 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import {
+  getArrangedBlocksPosition,
   getDragSnappingTargets,
   getResizeSnappingTargets,
   getDragSnappingHelpersRect,
@@ -259,7 +260,9 @@ class DrawingBoard extends Component {
   }
 
   handleResizeEnd = (rect, metaData) => {
-    const { setMappingPositionInfo, pageZoom } = this.props;
+    const { currentElement, setMappingPositionInfo, pageZoom } = this.props;
+    const { activeBoxPath } = currentElement;
+
     this.setState({ isResizing: false });
     const box = [
       rect.left / pageZoom,
@@ -268,7 +271,10 @@ class DrawingBoard extends Component {
       rect.height / pageZoom
     ];
 
-    setMappingPositionInfo({ box });
+    const position = _.get(currentElement.mappingInfo, activeBoxPath);
+    const blocks = getArrangedBlocksPosition(box, _.size(position.blocks));
+
+    setMappingPositionInfo({ blocks, box });
 
     // Reset SnappingHelper
     this.resetSnappingHelper();
@@ -347,7 +353,7 @@ class DrawingBoard extends Component {
     const { setCurrentElement, setQuestionEditMode, setActiveBox,
       currentElement, isModified, show } = this.props;
     if (isCurrentElementId(metaData.id, currentElement)) {
-      setActiveBox(metaData.activeBoxPath);
+      setActiveBox(metaData.path);
     } else {
       if (isModified && currentElement) {
         show('cancelConfirmModal');
