@@ -5,6 +5,7 @@ import React, {
 import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection';
 import EditSection from 'components/QuestionEditFields/EditSection';
 import TextInput from 'components/TextInput';
+import SelectBoxRow from 'components/QuestionEditFields/SelectBoxRow';
 
 class NumberFieldAdvancedTab extends Component {
   static propTypes = {
@@ -24,6 +25,13 @@ class NumberFieldAdvancedTab extends Component {
             <TextInput type="text" value={currentElement.question.value}
               onChange={function (newValue) { setQuestionInfo({'value': newValue}); }} />
           </CollapsibleSection>
+        </EditSection>
+        <EditSection>
+          <SelectBoxRow
+            title="Visibility"
+            value={currentElement.question.visibility}
+            optionsList={[{label: 'Everyone', value: 'everyone'}]}
+            onChange={function (newValue) { setQuestionInfo({'visibility': newValue}); }} />
         </EditSection>
       </div>
     );
