@@ -12,7 +12,6 @@ import { FaCheck } from 'react-icons/lib/fa';
 import styles from './Form.scss';
 import classNames from 'classnames';
 import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
-import _ from 'lodash';
 
 const renderTextInput = field => (
   <div className={classNames([styles.builderItem])}>
