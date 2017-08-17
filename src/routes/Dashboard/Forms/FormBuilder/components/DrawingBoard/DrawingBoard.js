@@ -235,18 +235,26 @@ class DrawingBoard extends Component {
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
     }
-    const { activeBoxPath } = currentElement;
+    const { activeBoxPath, defaultMappingType } = currentElement;
     const label = getActiveLabel(activeBoxPath);
     const index = getNextBoxIndex(label, currentElement);
     setActiveBox(_.join([label, 'positions', index], '.'));
+
+    const box = [
+      Math.min(startX, endX) / pageZoom,
+      Math.min(startY, endY) / pageZoom,
+      Math.abs(endX - startX) / pageZoom,
+      Math.abs(endY - startY) / pageZoom
+    ];
+
+    const { BLOCK } = formBuilderBoxMappingType;
+
+    const blocks = _.isEqual(defaultMappingType, BLOCK) ? getArrangedBlocksPosition(box, 1) : undefined;
+
     setMappingPositionInfo({
-      'page': pageNumber,
-      'box': [
-        Math.min(startX, endX) / pageZoom,
-        Math.min(startY, endY) / pageZoom,
-        Math.abs(endX - startX) / pageZoom,
-        Math.abs(endY - startY) / pageZoom
-      ]
+      page: pageNumber,
+      box,
+      blocks
     });
   }
 
@@ -278,7 +286,7 @@ class DrawingBoard extends Component {
     ];
 
     const position = _.get(currentElement.mappingInfo, activeBoxPath);
-    const blocks = getArrangedBlocksPosition(box, _.size(position.blocks));
+    const blocks = position.blocks ? getArrangedBlocksPosition(box, _.size(position.blocks)) : undefined;
 
     setMappingPositionInfo({ blocks, box });
 
@@ -321,8 +329,8 @@ class DrawingBoard extends Component {
     ];
 
     setMappingPositionInfo({
-      'page': destPageNumber && destPageNumber,
-      'box': box
+      page: destPageNumber,
+      box
     });
 
     // Reset SnappingHelper
