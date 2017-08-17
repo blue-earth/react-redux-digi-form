@@ -6,6 +6,7 @@ import InstructionDescription from 'components/QuestionEditFields/InstructionDes
 import AnswerOutputTypeStatus from 'components/QuestionEditFields/AnswerOutputTypeStatus';
 import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
 import EditSection from 'components/QuestionEditFields/EditSection';
+import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
 
 class EmailFieldBasicTab extends Component {
   static propTypes = {
@@ -14,8 +15,15 @@ class EmailFieldBasicTab extends Component {
     setQuestionInfo: PropTypes.func.isRequired
   };
   render() {
+    const { currentElement, questions } = this.props;
+    const filteredQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'Group', false));
     return (<div>
-      <InstructionDescription {...this.props} />
+      <InstructionDescription
+        currentElementId={currentElement.id}
+        questionInstruction={currentElement.question.question_instruction}
+        questionDescription={currentElement.question.question_description}
+        filteredQuestions={filteredQuestions}
+        setQuestionInfo={this.props.setQuestionInfo} />
       <EditSection>
         <AnswerOutputTypeStatus
           status={this.props.currentElement.defaultMappingType} />

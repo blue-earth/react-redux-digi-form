@@ -59,6 +59,16 @@ $qrt-toolbutton-bg-color: #ffffff;
 
 .answersDropdown {
   display: block;
+  ul {
+    min-width: 100px;
+    max-width: 156px;
+    a {
+      padding: 5px 0;
+      margin: 0 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
 }
 
 .dropdownAnswerButton,
