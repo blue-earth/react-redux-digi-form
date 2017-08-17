@@ -7,18 +7,24 @@ import AnswerOutputTypeStatus from 'components/QuestionEditFields/AnswerOutputTy
 import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
 import EditSection from 'components/QuestionEditFields/EditSection';
 import SelectBoxRow from 'components/QuestionEditFields/SelectBoxRow';
+import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
 
 class PhoneNumberFieldBasicTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
-    setQuestionInfo: PropTypes.func.isRequired,
-    updateQuestionProp: PropTypes.func.isRequired
+    setQuestionInfo: PropTypes.func.isRequired
   };
   render() {
-    const { updateQuestionProp, currentElement } = this.props;
+    const { setQuestionInfo, currentElement, questions } = this.props;
+    const filteredQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'Group', false));
     return (<div>
-      <InstructionDescription {...this.props} />
+      <InstructionDescription
+        currentElementId={currentElement.id}
+        questionInstruction={currentElement.question.question_instruction}
+        questionDescription={currentElement.question.question_description}
+        filteredQuestions={filteredQuestions}
+        setQuestionInfo={this.props.setQuestionInfo} />
       <EditSection>
         <AnswerOutputTypeStatus
           status={this.props.currentElement.defaultMappingType} />
@@ -29,7 +35,7 @@ class PhoneNumberFieldBasicTab extends Component {
           title="Default country code"
           value={currentElement.question.country_code}
           optionsList={[{label: '+ Australia (AU)', value: 'AU'}]}
-          onChange={function (newValue) { updateQuestionProp(newValue, 'country_code'); }} />
+          onChange={function (newValue) { setQuestionInfo({'country_code': newValue}); }} />
       </EditSection>
     </div>);
   }
