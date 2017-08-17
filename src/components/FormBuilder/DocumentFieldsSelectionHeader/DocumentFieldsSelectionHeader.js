@@ -128,7 +128,7 @@ class DocumentFieldsSelectionHeader extends Component {
             <p>Choose a format and make your selection(s)</p>
           </div>
           <div className={cx('right')}>
-            <GoTrashcan size={'24px'} style={{'cursor': 'pointer', 'marginRight': '8'}} />
+            <GoTrashcan size={'24px'} style={{'cursor': 'pointer', 'marginRight': '8px'}} />
             <SelectableOutlineButton isSelectable={false}>
               Save & Continue
             </SelectableOutlineButton>
