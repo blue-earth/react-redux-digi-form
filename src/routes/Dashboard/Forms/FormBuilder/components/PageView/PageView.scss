@@ -47,8 +47,12 @@ $page-toolbar-bg-color: #f4f4f4;
 }
 .page {
   margin: 5px 0;
-  border: 1px solid $page-border-color;
   position: relative;
+  &:before {
+    content: '';
+    @include full-size;
+    border: 1px solid $page-border-color;
+  }
   // @include box-shadow-custom(1px 1px 3px 0px rgba(0,0,0,0.6));
   &:first-child {
     margin-top: 0;

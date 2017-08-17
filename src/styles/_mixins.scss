@@ -62,3 +62,11 @@
 @mixin input-box-shadow {
   @include box-shadow-custom(0 1px 2px rgba(0, 0, 0, .15));
 }
+
+@mixin full-size {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
