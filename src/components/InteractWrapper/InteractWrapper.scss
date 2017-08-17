@@ -9,16 +9,17 @@ $handle-size: 12px;
   width: 100px;
   height: 50px;
   position: absolute;
-  border: 1px dashed $box-border-color;
+  &:before, &:after {
+    @include full-size;
+    content: '';
+  }
   &:before {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
     background-color: $box-bg-color;
     opacity: .15;
-    content: '';
+  }
+  &:after {
+    pointer-events: none;
+    border: 1px dashed $box-border-color;
   }
   // @include transition(background .05s linear);
   @include transition(border-color .05s linear);
@@ -36,11 +37,7 @@ $handle-size: 12px;
 }
 .innerContent {
   overflow: hidden;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  @include full-size;
   cursor: pointer;
 }
 .active {

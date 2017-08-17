@@ -25,11 +25,7 @@ $pt-button-width: 47px;
   position: relative;
   &:before {
     content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    @include full-size;
     background-color: white;
     opacity: .8;
   }
