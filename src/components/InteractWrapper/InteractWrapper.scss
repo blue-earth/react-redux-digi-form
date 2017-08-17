@@ -1,6 +1,7 @@
 @import './mixins';
 @import './variables';
 
+$box-text-color: $blue;
 $box-border-color: $blue;
 $box-bg-color: $blue;
 $handle-size: 12px;
@@ -9,37 +10,46 @@ $handle-size: 12px;
   width: 100px;
   height: 50px;
   position: absolute;
+  color: white;
+  font-weight: 600;
   &:before, &:after {
     @include full-size;
     content: '';
   }
   &:before {
     background-color: $box-bg-color;
-    opacity: .15;
   }
   &:after {
     pointer-events: none;
-    border: 1px dashed $box-border-color;
   }
-  // @include transition(background .05s linear);
-  @include transition(border-color .05s linear);
+  &:hover, &:focus {
+    &:after {
+      border: 1px dashed white;
+    }
+  }
   &.active {
+    color: $box-text-color;
+    &:before {
+      opacity: .15;
+    }
+    &:after {
+      border: 1px dashed $box-border-color;
+    }
     &:hover, &:focus {
-      // background-color: rgba(255, 255, 255, 1);
+      &:before {
+        opacity: .2;
+      }
     }
     z-index: 999;
-    // background-color: rgba(255, 255, 255, .95);
-    &:before {
-      opacity: .3;
-    }
-    @include box-shadow-custom(0 0 2px rgba(0, 0, 0, .5));
   }
 }
+
 .innerContent {
   overflow: hidden;
   @include full-size;
   cursor: pointer;
 }
+
 .active {
   .innerContent {
     cursor: move;
@@ -77,36 +87,57 @@ $handle-size: 12px;
     cursor: ns-resize;
   }
 
-  .handleBottomLeft {
-    position: absolute;
-    width: $handle-size;
-    height: $handle-size;
-    bottom: -($handle-size / 3);
-    left: -($handle-size / 3);
-    cursor: nesw-resize;
-  }
-  .handleTopLeft {
-    position: absolute;
-    width: $handle-size;
-    height: $handle-size;
-    top: -($handle-size / 3);
-    left: -($handle-size / 3);
-    cursor: nwse-resize;
-  }
-  .handleTopRight {
-    position: absolute;
-    width: $handle-size;
-    height: $handle-size;
-    top: -($handle-size / 3);
-    right: -($handle-size / 3);
-    cursor: nesw-resize;
-  }
+  .handleBottomLeft,
+  .handleTopLeft,
+  .handleTopRight,
   .handleBottomRight {
     position: absolute;
     width: $handle-size;
     height: $handle-size;
+    &:before {
+      content: '';
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 2px;
+      background-color: $box-border-color;
+    }
+  }
+
+  .handleBottomLeft {
+    bottom: -($handle-size / 3);
+    left: -($handle-size / 3);
+    cursor: nesw-resize;
+    &:before {
+      bottom: ($handle-size / 3) - 1px;
+      left: ($handle-size / 3) - 1px;
+    }
+  }
+  .handleTopLeft {
+    top: -($handle-size / 3);
+    left: -($handle-size / 3);
+    cursor: nwse-resize;
+    &:before {
+      left: ($handle-size / 3) - 1px;
+      top: ($handle-size / 3) - 1px;
+    }
+  }
+  .handleTopRight {
+    top: -($handle-size / 3);
+    right: -($handle-size / 3);
+    cursor: nesw-resize;
+    &:before {
+      top: ($handle-size / 3) - 1px;
+      right: ($handle-size / 3) - 1px;
+    }
+  }
+  .handleBottomRight {
     bottom: -($handle-size / 3);
     right: -($handle-size / 3);
     cursor: nwse-resize;
+    &:before {
+      bottom: ($handle-size / 3) - 1px;
+      right: ($handle-size / 3) - 1px;
+    }
   }
 }
