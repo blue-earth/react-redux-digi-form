@@ -1,0 +1,17 @@
+.selectBoxRow {
+  display: table;
+  table-layout: fixed;
+}
+
+.selectColLeft {
+  display: table-cell;
+  width: 60%;
+  vertical-align: middle;
+}
+.selectColRight {
+  display: table-cell;
+  width: 40%;
+  text-align: right;
+  vertical-align: middle;
+  font-size: 13px;
+}

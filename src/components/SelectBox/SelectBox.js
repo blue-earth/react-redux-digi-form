@@ -100,7 +100,7 @@ class SelectBox extends Component {
       }
     } else if (!value && !this.props.placeholder) {
       // select the first item in optionsList
-      this.props.onChange(optionsList[0].key);
+      this.props.onChange(optionsList[0].value);
       this.setState({ selectedIndex: 0 });
     }
   }
