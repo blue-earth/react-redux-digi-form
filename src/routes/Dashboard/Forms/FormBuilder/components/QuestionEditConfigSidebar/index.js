@@ -4,6 +4,10 @@ import {
   ShortTextFieldAdvancedTab
 } from './ShortTextField';
 import {
+  LongTextFieldBasicTab,
+  LongTextFieldAdvancedTab
+} from './LongTextField';
+import {
   EmailFieldBasicTab,
   EmailFieldAdvancedTab
 } from './EmailField';
@@ -30,6 +34,12 @@ export const getQuestionTypeConfigComponent = function (questionTypeName, tabNam
       }
       break;
     case 'LongTextField':
+      if (tabName === 'general') {
+        ConfigComponent = LongTextFieldBasicTab;
+      } else {
+        ConfigComponent = LongTextFieldAdvancedTab;
+      }
+      break;
     case 'StatementField':
     case 'NumberField':
     case 'PhoneNumberField':
