@@ -4,7 +4,6 @@ import React, {
 } from 'react';
 import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection';
 import EditSection from 'components/QuestionEditFields/EditSection';
-import SelectBoxRow from 'components/QuestionEditFields/SelectBoxRow';
 import TextInput from 'components/TextInput';
 
 class LongTextFieldAdvancedTab extends Component {
@@ -30,13 +29,6 @@ class LongTextFieldAdvancedTab extends Component {
             <TextInput type="text" value={currentElement.question.value}
               onChange={function (newValue) { setQuestionInfo({'value': newValue}); }} />
           </CollapsibleSection>
-        </EditSection>
-        <EditSection>
-          <SelectBoxRow
-            title="Visibility"
-            value={currentElement.question.visibility}
-            optionsList={[{label: 'Everyone', value: 'everyone'}]}
-            onChange={function (newValue) { setQuestionInfo({'visibility': newValue}); }} />
         </EditSection>
       </div>
     );
