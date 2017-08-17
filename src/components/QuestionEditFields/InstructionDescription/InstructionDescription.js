@@ -2,17 +2,24 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import { getQuestionsById } from 'helpers/formBuilderHelper';
 import EditSection from '../EditSection';
 import QuestionRichTextEditor from '../QuestionRichTextEditor';
-import _ from 'lodash';
 import styles from './InstructionDescription.scss';
 
-class Instruction extends Component {
+class InstructionDescription extends Component {
   static propTypes = {
-    currentElement: PropTypes.object.isRequired,
-    questions: PropTypes.array.isRequired,
+    currentElementId: PropTypes.number,
+    questionInstruction: PropTypes.string,
+    questionDescription: PropTypes.string,
+    filteredQuestions: PropTypes.array.isRequired,
     setQuestionInfo: PropTypes.func.isRequired
   };
+
+  static defaultProps = {
+    questionInstruction: '',
+    questionDescription: ''
+  }
 
   setInstruction = (value) => {
     const { setQuestionInfo } = this.props;
@@ -29,37 +36,29 @@ class Instruction extends Component {
   }
 
   get otherQuestions() {
-    const { questions, currentElement } = this.props;
-    const filteredQuestions = currentElement.id
-      ? _.differenceBy(questions, [{id: currentElement.id}], 'id')
-      : questions;
-    return filteredQuestions.map(item => ({
-      key: `answer_${item.id}`,
-      text: `answer_${item.id}`
-    }));
+    const { filteredQuestions, currentElementId } = this.props;
+    return getQuestionsById(filteredQuestions, currentElementId, false);
   }
 
   render() {
-    const { currentElement: { question } } = this.props;
-    const instruction = _.defaultTo(question.question_instruction, '');
-    const description = _.defaultTo(question.question_description, '');
+    const { questionInstruction, questionDescription } = this.props;
     return (
       <EditSection>
         <div className={styles.textEditorWrapper}>
           <QuestionRichTextEditor
             title="Question"
-            value={instruction}
+            value={questionInstruction}
             setValue={this.setInstruction}
-            questions={this.otherQuestions}
+            filteredQuestions={this.otherQuestions}
           />
         </div>
         <div className={styles.textEditorWrapper}>
           <QuestionRichTextEditor
             title="Question description"
-            value={description}
+            value={questionDescription}
             popoverId="questionDescription"
             setValue={this.setDescription}
-            questions={this.otherQuestions}
+            filteredQuestions={this.otherQuestions}
           />
         </div>
       </EditSection>
@@ -67,4 +66,4 @@ class Instruction extends Component {
   }
 }
 
-export default Instruction;
+export default InstructionDescription;

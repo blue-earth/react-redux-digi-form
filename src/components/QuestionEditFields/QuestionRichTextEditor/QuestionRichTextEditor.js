@@ -47,7 +47,7 @@ class QuestionRichTextEditor extends Component {
   static propTypes = {
     value: PropTypes.string.isRequired,
     setValue: PropTypes.func.isRequired,
-    questions: PropTypes.array.isRequired,
+    filteredQuestions: PropTypes.array.isRequired,
     title: PropTypes.string.isRequired,
     popoverId: PropTypes.string,
     /*
@@ -191,7 +191,7 @@ class QuestionRichTextEditor extends Component {
   }
 
   renderAnswerDropdown() {
-    const { questions, answersPullRight } = this.props;
+    const { filteredQuestions, answersPullRight } = this.props;
     const buttonClass = classNames({
       [styles.dropdownAnswerButton]: true,
       'btn btn-xs btn-default': true
@@ -209,9 +209,9 @@ class QuestionRichTextEditor extends Component {
           </span>
         </Button>
         <Dropdown.Menu>
-          {questions.length > 0
-            ? questions.map(item => (
-              <MenuItem key={`{{${item.key}}}`} eventKey={`{{${item.key}}}`}>{item.text}</MenuItem>
+          {filteredQuestions.length > 0
+            ? filteredQuestions.map(item => (
+              <MenuItem key={item.value} eventKey={`{{ answer_${item.value} }}`}>{item.label}</MenuItem>
             ))
             : <MenuItem disabled>No questions available</MenuItem>
           }
