@@ -282,7 +282,18 @@ const questionInputs = {
     selectionTypes: [
       formBuilderBoxMappingType.STANDARD
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'Paragraph',
+          'key': 'long_text',
+          'group': formBuilderBoxMappingType.STANDARD,
+          'maxSelection': 1,
+          'minSelection': 1
+        }
+      ]
+    ]
   },
   'DropdownField': {
     name: 'DropdownField',
