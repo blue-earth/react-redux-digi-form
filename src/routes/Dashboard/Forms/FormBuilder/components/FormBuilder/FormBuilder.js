@@ -15,7 +15,10 @@ import DocumentFieldsSelectionHeader from 'components/FormBuilder/DocumentFields
 import {
   formBuilderSelectMode
 } from 'constants/formBuilder';
-import { getActiveLabel } from 'helpers/formBuilderHelper';
+import {
+  getActiveLabel,
+  getNextBoxIndex
+} from 'helpers/formBuilderHelper';
 import questionInputs from 'schemas/questionInputs';
 
 class FormBuilder extends Component {
@@ -201,8 +204,8 @@ class FormBuilder extends Component {
   }
 
   setActiveLabel = (label) => {
-    const { setActiveBox } = this.props;
-    const index = 0;
+    const { currentElement, setActiveBox } = this.props;
+    const index = getNextBoxIndex(label, currentElement);
     setActiveBox(_.join([label, 'positions', index], '.'));
   }
 

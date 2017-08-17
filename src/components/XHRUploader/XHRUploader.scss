@@ -75,11 +75,7 @@ $progressbar-bg-color: #e8e6e7;
 }
 
 .progress {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 0;
+  @include full-size;
   @include border-radius(2px);
   background-color: $dashboard-text-color;
 }
