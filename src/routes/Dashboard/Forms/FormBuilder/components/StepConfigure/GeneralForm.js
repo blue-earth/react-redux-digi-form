@@ -11,6 +11,7 @@ import Button from 'components/Buttons/DashboardButtons/Button';
 import { FaCheck } from 'react-icons/lib/fa';
 import styles from './Form.scss';
 import classNames from 'classnames';
+import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
 import _ from 'lodash';
 
 const renderTextInput = field => (
@@ -27,7 +28,8 @@ const renderTextInput = field => (
 const renderRTE = field => (
   <div className={classNames([styles.builderItem])}>
     <QuestionRichTextEditor {...field.input} answersPullRight
-      title={field.title} labelStyle="major" questions={field.questions} setValue={field.input.onChange} />
+      title={field.title} labelStyle="major"
+      filteredQuestions={field.filteredQuestions} setValue={field.input.onChange} />
     {field.meta.touched && field.meta.error &&
       <div className={styles.error}>{field.meta.error}</div>
     }
@@ -55,22 +57,9 @@ class GeneralForm extends Component {
     submitting: PropTypes.bool
   }
 
-  get questionsDropdown() {
-    const { questions } = this.props;
-    var filteredQuestions = [];
-    // filter out Group types
-    _.forEach(questions, function (q) {
-      if (q.type !== 'Group') {
-        filteredQuestions.push({
-          'text': `answer_${q.id}`,
-          'key': `answer_${q.id}`
-        });
-      }
-    });
-    return filteredQuestions;
-  }
-
   render() {
+    const { questions } = this.props;
+    const filteredQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'Group', false));
     return (
       <form>
         <Field name="title" component={renderTextInput} label="Your form name" />
@@ -84,7 +73,7 @@ class GeneralForm extends Component {
         <div className={styles.builderDivider} />
         <Field name="formConfig.customise.footer" component={renderRTE}
           title="Form footer"
-          questions={this.questionsDropdown} />
+          filteredQuestions={filteredQuestions} />
         <div className={styles.builderDivider} />
         <Field name="formConfig.customise.emondoBranding" component={renderSwitch}
           label="Emondo branding" helpText="Only premium accounts are eligable to turn this off." />

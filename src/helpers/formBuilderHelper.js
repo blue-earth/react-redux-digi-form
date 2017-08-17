@@ -326,15 +326,39 @@ export const createEmptyQuestionElement = function (questionTypeName, boxMapping
   };
 };
 
-export const getQuestionsByType = function (questions, targetQuestionType, isReversed=true) {
-  /*
-  / isReversed=true will return only questions of questionType
-  / isReversed=false will return  questions that are not questionType
-  */
-  if (isReversed) {
-    return questions.filter((question) => question.type === targetQuestionType);
+export const getQuestionsByType = function (questions, targetQuestionType, includeTarget=true) {
+  if (includeTarget) {
+    // return questions of type targetQuestionType
+    if (Array.isArray(targetQuestionType)) {
+      return questions.filter((question) => targetQuestionType.indexOf(question.type) !== -1);
+    } else {
+      return questions.filter((question) => question.type === targetQuestionType);
+    }
   } else {
-    return questions.filter((question) => question.type !== targetQuestionType);
+    // return questions NOT of type targetQuestionType
+    if (Array.isArray(targetQuestionType)) {
+      return questions.filter((question) => targetQuestionType.indexOf(question.type) === -1);
+    } else {
+      return questions.filter((question) => question.type !== targetQuestionType);
+    }
+  }
+};
+
+export const getQuestionsById = function (questions, targetQuestionId, includeTarget=true) {
+  if (includeTarget) {
+    // return questions with Id targetQuestionId
+    if (Array.isArray(targetQuestionId)) {
+      return questions.filter((question) => targetQuestionId.indexOf(question.id) !== -1);
+    } else {
+      return questions.filter((question) => question.id === targetQuestionId);
+    }
+  } else {
+    // return questions NOT with Id targetQuestionId
+    if (Array.isArray(targetQuestionId)) {
+      return questions.filter((question) => targetQuestionId.indexOf(question.id) === -1);
+    } else {
+      return questions.filter((question) => question.id !== targetQuestionId);
+    }
   }
 };
 
@@ -342,7 +366,9 @@ export const mapQuestionsToDropdown = function (questions) {
   return questions.map(function (q) {
     return {
       'label': (<span><b>{q.id}.</b> {q.question_instruction}</span>),
-      'value': `{{ ${q.id} }}`
+      'value': q.id,
+      'id': q.id,
+      'type': q.type
     };
   });
 };
