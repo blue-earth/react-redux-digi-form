@@ -3,8 +3,10 @@ import React, {
   PropTypes
 } from 'react';
 import {
+  getActiveLabel,
   getArrangedBlocksPosition,
   getDragSnappingTargets,
+  getNextBoxIndex,
   getResizeSnappingTargets,
   getDragSnappingHelpersRect,
   getResizeSnappingHelpersPos,
@@ -228,11 +230,15 @@ class DrawingBoard extends Component {
       endX,
       endY
     });
-    const { setMappingPositionInfo, pageZoom, pageNumber } = this.props;
+    const { currentElement, pageZoom, pageNumber, setActiveBox, setMappingPositionInfo } = this.props;
 
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
     }
+    const { activeBoxPath } = currentElement;
+    const label = getActiveLabel(activeBoxPath);
+    const index = getNextBoxIndex(label, currentElement);
+    setActiveBox(_.join([label, 'positions', index], '.'));
     setMappingPositionInfo({
       'page': pageNumber,
       'box': [
