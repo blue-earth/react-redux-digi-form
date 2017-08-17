@@ -248,7 +248,18 @@ const questionInputs = {
       formBuilderBoxMappingType.STANDARD,
       formBuilderBoxMappingType.BLOCK
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'Number',
+          'key': 'number',
+          'group': formBuilderBoxMappingType.STANDARD,
+          'maxSelection': 10,
+          'minSelection': 1
+        }
+      ]
+    ]
   },
   'LongTextField': {
     name: 'LongTextField',
