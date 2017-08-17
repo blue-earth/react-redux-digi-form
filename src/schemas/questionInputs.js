@@ -315,14 +315,25 @@ const questionInputs = {
   'StatementField': {
     name: 'StatementField',
     componentName: 'Statement',
-    displayText: 'Legal',
+    displayText: 'Statement',
     displayIcon: 'Legal',
     validations: [],
     logicOperations: [],
     selectionTypes: [
       formBuilderBoxMappingType.STANDARD
     ],
-    group: STANDARD
+    group: STANDARD,
+    availableFields: [
+      [
+        {
+          'displayName': 'Statement',
+          'key': 'statement',
+          'group': formBuilderBoxMappingType.STANDARD,
+          'maxSelection': 1,
+          'minSelection': 1
+        }
+      ]
+    ]
   },
   'UploadField': {
     name: 'UploadField',
