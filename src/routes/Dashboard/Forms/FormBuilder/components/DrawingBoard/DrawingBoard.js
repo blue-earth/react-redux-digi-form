@@ -3,7 +3,10 @@ import React, {
   PropTypes
 } from 'react';
 import {
+  getActiveLabel,
+  getArrangedBlocksPosition,
   getDragSnappingTargets,
+  getNextBoxIndex,
   getResizeSnappingTargets,
   getDragSnappingHelpersRect,
   getResizeSnappingHelpersPos,
@@ -227,19 +230,31 @@ class DrawingBoard extends Component {
       endX,
       endY
     });
-    const { setMappingPositionInfo, pageZoom, pageNumber } = this.props;
+    const { currentElement, pageZoom, pageNumber, setActiveBox, setMappingPositionInfo } = this.props;
 
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
     }
+    const { activeBoxPath, defaultMappingType } = currentElement;
+    const label = getActiveLabel(activeBoxPath);
+    const index = getNextBoxIndex(label, currentElement);
+    setActiveBox(_.join([label, 'positions', index], '.'));
+
+    const box = [
+      Math.min(startX, endX) / pageZoom,
+      Math.min(startY, endY) / pageZoom,
+      Math.abs(endX - startX) / pageZoom,
+      Math.abs(endY - startY) / pageZoom
+    ];
+
+    const { BLOCK } = formBuilderBoxMappingType;
+
+    const blocks = _.isEqual(defaultMappingType, BLOCK) ? getArrangedBlocksPosition(box, 1) : undefined;
+
     setMappingPositionInfo({
-      'page': pageNumber,
-      'box': [
-        Math.min(startX, endX) / pageZoom,
-        Math.min(startY, endY) / pageZoom,
-        Math.abs(endX - startX) / pageZoom,
-        Math.abs(endY - startY) / pageZoom
-      ]
+      page: pageNumber,
+      box,
+      blocks
     });
   }
 
@@ -259,7 +274,9 @@ class DrawingBoard extends Component {
   }
 
   handleResizeEnd = (rect, metaData) => {
-    const { setMappingPositionInfo, pageZoom } = this.props;
+    const { currentElement, setMappingPositionInfo, pageZoom } = this.props;
+    const { activeBoxPath } = currentElement;
+
     this.setState({ isResizing: false });
     const box = [
       rect.left / pageZoom,
@@ -268,7 +285,10 @@ class DrawingBoard extends Component {
       rect.height / pageZoom
     ];
 
-    setMappingPositionInfo({ box });
+    const position = _.get(currentElement.mappingInfo, activeBoxPath);
+    const blocks = position.blocks ? getArrangedBlocksPosition(box, _.size(position.blocks)) : undefined;
+
+    setMappingPositionInfo({ blocks, box });
 
     // Reset SnappingHelper
     this.resetSnappingHelper();
@@ -309,8 +329,8 @@ class DrawingBoard extends Component {
     ];
 
     setMappingPositionInfo({
-      'page': destPageNumber && destPageNumber,
-      'box': box
+      page: destPageNumber,
+      box
     });
 
     // Reset SnappingHelper
@@ -347,7 +367,7 @@ class DrawingBoard extends Component {
     const { setCurrentElement, setQuestionEditMode, setActiveBox,
       currentElement, isModified, show } = this.props;
     if (isCurrentElementId(metaData.id, currentElement)) {
-      setActiveBox(metaData.activeBoxPath);
+      setActiveBox(metaData.path);
     } else {
       if (isModified && currentElement) {
         show('cancelConfirmModal');
@@ -517,7 +537,7 @@ class DrawingBoard extends Component {
   renderToolbar() {
     const { currentElement, pageZoom, setMappingPositionInfo,
       viewportWidth, viewportHeight } = this.props;
-    const { isDragging, isResizing } = this.state;
+    const { isDragging, isDrawing, isResizing } = this.state;
 
     if (!currentElement) return false;
     const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
@@ -535,7 +555,7 @@ class DrawingBoard extends Component {
       viewportHeight
     };
 
-    if (!currentElement || isDragging || isResizing) return false;
+    if (!currentElement || isDrawing || isDragging || isResizing) return false;
     if (_.isEqual(currentElement.defaultMappingType, formBuilderBoxMappingType.STANDARD)) {
       return <StandardMappingToolbar {...toolbarProps} />;
     } else if (_.isEqual(currentElement.defaultMappingType, formBuilderBoxMappingType.BLOCK)) {
