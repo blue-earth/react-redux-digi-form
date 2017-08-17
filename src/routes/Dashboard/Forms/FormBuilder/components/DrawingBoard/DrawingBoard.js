@@ -529,7 +529,7 @@ class DrawingBoard extends Component {
   renderToolbar() {
     const { currentElement, pageZoom, setMappingPositionInfo,
       viewportWidth, viewportHeight } = this.props;
-    const { isDragging, isResizing } = this.state;
+    const { isDragging, isDrawing, isResizing } = this.state;
 
     if (!currentElement) return false;
     const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
@@ -547,7 +547,7 @@ class DrawingBoard extends Component {
       viewportHeight
     };
 
-    if (!currentElement || isDragging || isResizing) return false;
+    if (!currentElement || isDrawing || isDragging || isResizing) return false;
     if (_.isEqual(currentElement.defaultMappingType, formBuilderBoxMappingType.STANDARD)) {
       return <StandardMappingToolbar {...toolbarProps} />;
     } else if (_.isEqual(currentElement.defaultMappingType, formBuilderBoxMappingType.BLOCK)) {
