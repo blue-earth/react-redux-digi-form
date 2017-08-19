@@ -28,6 +28,8 @@ node('master') {
 
 
     currentBuild.result = "SUCCESS"
+    def nodeHome = tool 'node-4.1.1'
+    env.PATH="${env.PATH}:${nodeHome}/bin"
 
     try {
 
