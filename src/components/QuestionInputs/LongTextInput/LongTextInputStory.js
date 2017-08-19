@@ -8,7 +8,7 @@ storiesOf('Input', module)
     return (
       <div style={{width: '500px'}}>
         <LongTextInput
-          autoFocus={true}
+          autoFocus
           value="Long text test"
           onFocus={action('focus')}
           onBlur={action('blur')}

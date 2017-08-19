@@ -2,7 +2,6 @@ import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
 import FileUpload from './FileUpload';
 
-
 storiesOf('File upload field', module)
   .add('no files uploaded', () => {
     return (

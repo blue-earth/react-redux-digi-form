@@ -5,7 +5,7 @@ import Dropdown from './Dropdown';
 storiesOf('Dropdown', module)
   .add('Select dropdown', () => {
     const choices = [
-    '',
+      '',
       'sdkfls dflksdjfvln vslkakldjsf lsnvlksjdlkfjsdlf',
       'sdfsdfsdf sdfsdf sdfsdfsdff',
       '3', '4', '5', '6', '7', '8'];
