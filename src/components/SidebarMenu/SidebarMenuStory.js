@@ -14,5 +14,5 @@ storiesOf('Sidebar menu', module)
       {key: 'intaccess', label: <span><FaBuilding /> Internal access</span>},
       {key: 'sec', label: <span><FaLock /> Security</span>}]}
       selectedItemKey="general"
-      onMenuItemSelect={ action('menu item click') }/>
+      onMenuItemSelect={action('menu item click')} />
   ));

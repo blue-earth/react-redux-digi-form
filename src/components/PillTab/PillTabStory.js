@@ -19,7 +19,7 @@ storiesOf('Tabs', module)
     }];
     return (
       <div>
-        <PillTab tabs={tabs}/>
+        <PillTab tabs={tabs} />
       </div>
     );
   });

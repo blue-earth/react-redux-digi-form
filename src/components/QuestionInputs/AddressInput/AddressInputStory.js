@@ -6,7 +6,7 @@ storiesOf('Input', module)
   .add('Address input', () => {
     return (
       <div>
-        <AddressInput autoFocus={true} />
+        <AddressInput autoFocus />
       </div>
     );
   }

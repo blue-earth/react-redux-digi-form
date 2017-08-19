@@ -1,7 +1,6 @@
 import React from 'react';
-import { storiesOf, action } from '@kadira/storybook';
+import { storiesOf } from '@kadira/storybook';
 import ColorPicker from './ColorPicker';
-
 
 storiesOf('Color Picker', module)
   .add('default', () => (

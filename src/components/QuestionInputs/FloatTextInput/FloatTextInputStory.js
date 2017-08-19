@@ -4,7 +4,6 @@ import FloatTextInput from './FloatTextInput';
 import styles from './FloatTextInputStory.scss';
 import classNames from 'classnames/bind';
 
-
 storiesOf('Input', module)
   .add('Text Input', () => {
     const cx = classNames.bind(styles);

@@ -2,7 +2,6 @@ import React from 'react';
 import { storiesOf, action } from '@kadira/storybook';
 import Spinner from './Spinner';
 
-
 storiesOf('Button', module)
   .add('Spinner', () => (
     <div>
