@@ -41,24 +41,8 @@ node('master') {
             env.NODE_ENV = "test"
 
             print "Environment will be : ${env.NODE_ENV}"
-
-            echo "${GIT_BRANCH}"
-
-            echo "${GIT_URL}"
-
-            echo "${GIT_COMMIT}"
-
-
             echo "${GIT_COMMITTER_EMAIL}"
-
-            echo "${GIT_COMMITTER_NAME}"
-
             echo "${GIT_AUTHOR_EMAIL}"
-
-            echo "${GIT_AUTHOR_NAME}"
-
-            echo "${GIT_USER}"
-
 
             sh 'node -v'
             sh 'npm prune'
