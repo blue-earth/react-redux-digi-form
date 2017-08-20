@@ -122,9 +122,7 @@ class MultipleChoice extends Component {
     if (typeof onChange !== 'function') return;
     if (allowMultiple) {
       var newValue = _.xorWith(value, [val], _.isEqual);
-      // if ( this.canAcceptChange(newValue) ) {
       onChange(newValue);
-      // }
     } else {
       onChange(val);
       setTimeout(onEnterKey, 50);
@@ -175,13 +173,12 @@ class MultipleChoice extends Component {
   }
 
   render() {
-    const { isDisabled, isReadOnly/*, value*/, autoFocus } = this.props;
+    const { isDisabled, isReadOnly, autoFocus } = this.props;
     const that = this;
-    // const isMultiSelectable = that.isMultiSelectable(value);
     var optionals = {};
     var ChoiceItemTemplate = (item, index) => {
       const active = that.isActiveItem(item);
-      const disabled = isDisabled || isReadOnly;// || !active && (allowMultiple && !isMultiSelectable)
+      const disabled = isDisabled || isReadOnly;
       return <MultipleChoiceItem
         key={`${item.label}-${item.text}`}
         label={item.label}

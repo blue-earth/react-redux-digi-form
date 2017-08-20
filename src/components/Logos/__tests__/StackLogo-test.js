@@ -1,2 +1,0 @@
-jest.unmock('../StackLogo/index');
-

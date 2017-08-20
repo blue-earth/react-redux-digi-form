@@ -82,7 +82,11 @@ storiesOf('Button', module)
         </div>
         <p>No label with static value</p>
         <div>
-          <SelectButton label={<div>{svg} Checkbox</div>} optionsList={optionsListIcons} value="standard" isValueHidden />
+          <SelectButton
+            label={<div>{svg} Checkbox</div>}
+            optionsList={optionsListIcons}
+            value="standard"
+            isValueHidden />
         </div>
         <p>Label with no display of value</p>
       </div>
