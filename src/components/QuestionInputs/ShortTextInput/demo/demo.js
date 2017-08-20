@@ -14,8 +14,8 @@ var testData = {
 };
 
 const test1 = (
-    <ShortTextInput {...testData}>
-    </ShortTextInput>
+  <ShortTextInput {...testData}>
+  </ShortTextInput>
 );
 
 ReactDOM.render(test1, document.getElementById('app'));
