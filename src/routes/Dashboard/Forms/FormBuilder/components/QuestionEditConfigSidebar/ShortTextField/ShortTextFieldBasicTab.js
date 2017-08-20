@@ -14,10 +14,34 @@ class ShortTextFieldBasicTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
-    setQuestionInfo: PropTypes.func.isRequired
+    setQuestionInfo: PropTypes.func.isRequired,
+    setValidationInfo: PropTypes.func.isRequired,
+    resetValidationInfo: PropTypes.func.isRequired
   };
   render() {
-    const { currentElement, questions } = this.props;
+    const {
+      currentElement,
+      questions,
+      setValidationInfo,
+      resetValidationInfo
+    } = this.props;
+    // todo: Dry validation value retrieval
+    const validations = currentElement.question['validations'];
+    const minLengthValidators = validations.filter((v) => v.type === 'minLength');
+    var minLengthValue;
+    if (minLengthValidators.length) {
+      minLengthValue = minLengthValidators[0].value;
+    } else {
+      minLengthValue = null;
+    }
+    var maxLengthValue;
+    const maxLengthValidators = validations.filter((v) => v.type === 'maxLength');
+    if (maxLengthValidators.length) {
+      maxLengthValue= maxLengthValidators[0].value;
+    } else {
+      maxLengthValue = null;
+    }
+
     const filteredQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'Group', false));
     return (<div>
       <InstructionDescription
@@ -30,7 +54,12 @@ class ShortTextFieldBasicTab extends Component {
         <AnswerOutputTypeStatus
           status={this.props.currentElement.defaultMappingType} />
       </EditSection>
-      <LengthValidation {...this.props} />
+      <LengthValidation
+        setValidationInfo={setValidationInfo}
+        resetValidationInfo={resetValidationInfo}
+        minLengthValue={minLengthValue}
+        maxLengthValue={maxLengthValue}
+      />
       <RangeValidation {...this.props} />
       <RequiredValidation {...this.props} />
     </div>);
