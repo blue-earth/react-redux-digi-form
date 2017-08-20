@@ -9,8 +9,10 @@ import {
 import styles from './PillTab.scss';
 import classNames from 'classnames/bind';
 
+const cx = classNames.bind(styles);
+
 class PillTab extends Component {
-  static porpTypes = {
+  static propTypes = {
     tabs: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,
@@ -19,10 +21,10 @@ class PillTab extends Component {
     )
   }
   render() {
-    let cx = classNames.bind(styles);
+    const { tabs } = this.props;
     return (
       <Tabs className={cx('pillTab')} defaultActiveKey={0} id="test">
-        {this.props.tabs.map((tab, index) => (
+        {tabs.map((tab, index) => (
           <Tab key={index} eventKey={index} title={tab.title}>{tab.content}</Tab>
         ))}
       </Tabs>

@@ -9,11 +9,19 @@ storiesOf('Dropdown', module)
       'sdkfls dflksdjfvln vslkakldjsf lsnvlksjdlkfjsdlf',
       'sdfsdfsdf sdfsdf sdfsdfsdff',
       '3', '4', '5', '6', '7', '8'];
-    const defaultOption = choices[0];
     return (
       <div style={{width: '500px'}}>
-        <Dropdown className="dropdown" choices={choices} placeholder="Select option" onChange={action('onChange')} />
-        <Dropdown className="dropdown" value={''} choices={choices} placeholder="Select option" onChange={action('onChange')} />
+        <Dropdown
+          className="dropdown"
+          choices={choices}
+          placeholder="Select option"
+          onChange={action('onChange')} />
+        <Dropdown
+          className="dropdown"
+          value={''}
+          choices={choices}
+          placeholder="Select option"
+          onChange={action('onChange')} />
       </div>
     );
   }
