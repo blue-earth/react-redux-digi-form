@@ -9,6 +9,7 @@ import EditSection from 'components/QuestionEditFields/EditSection';
 import SelectBoxRow from 'components/QuestionEditFields/SelectBoxRow';
 import SectionTitle from 'components/QuestionEditFields/SectionTitle';
 import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
+import _ from 'lodash';
 
 class DateFieldBasicTab extends Component {
   static propTypes = {
@@ -16,27 +17,25 @@ class DateFieldBasicTab extends Component {
     questions: PropTypes.array.isRequired,
     setQuestionInfo: PropTypes.func.isRequired
   };
+
   _onDayFormatChanged = (newValue) => {
+    var newFormat = _.merge(this.props.currentElement.question.format, {'day': newValue});
     this.props.setQuestionInfo({
-      'format': {
-        'day': newValue
-      }
+      'format': newFormat
     });
   };
 
   _onMonthFormatChanged = (newValue) => {
+    var newFormat = _.merge(this.props.currentElement.question.format, {'month': newValue});
     this.props.setQuestionInfo({
-      'format': {
-        'month': newValue
-      }
+      'format': newFormat
     });
   };
 
   _onYearFormatChanged = (newValue) => {
+    var newFormat = _.merge(this.props.currentElement.question.format, {'year': newValue});
     this.props.setQuestionInfo({
-      'format': {
-        'year': newValue
-      }
+      'format': newFormat
     });
   };
 
