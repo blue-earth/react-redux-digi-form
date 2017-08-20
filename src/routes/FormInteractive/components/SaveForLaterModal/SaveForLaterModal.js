@@ -11,6 +11,7 @@ import { connectModal } from 'redux-modal';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { FaCheck } from 'react-icons/lib/fa';
 import classNames from 'classnames/bind';
+import { validateIsEmail } from 'helpers/validationHelper';
 import styles from './SaveForLaterModal.scss';
 
 const cx = classNames.bind(styles);
@@ -41,7 +42,8 @@ class SaveForLaterModal extends Component {
   }
 
   handleEmailChange = (event) => {
-    if (event.target.value.length > 1) {
+    const email = event.target.value;
+    if (validateIsEmail(email)) {
       this.setState({isSendDisabled: false});
     } else {
       this.setState({isSendDisabled: true});
