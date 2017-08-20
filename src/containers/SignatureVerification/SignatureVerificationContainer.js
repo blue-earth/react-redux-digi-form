@@ -3,43 +3,35 @@ import SignatureModal from 'components/QuestionInputs/Signature/SignatureModal';
 import {
   updateSessionId,
   closeVerificationModal,
-  changeEmail,
-  changeName,
-  changeConsented,
   verifyEmail,
   verifyEmailCode,
   requestVerificationCode,
-  changeCommitValue,
+  submitValue,
+  resetCodeVerified,
   INIT_SIGNATURE_STATE
 } from 'redux/modules/signatureVerification';
 
 const mapActionCreators = {
   updateSessionId,
   closeVerificationModal,
-  changeEmail,
-  changeName,
-  changeConsented,
   verifyEmail,
   verifyEmailCode,
   requestVerificationCode,
-  changeCommitValue
+  submitValue,
+  resetCodeVerified
 };
 
 const mapStateToProps = (state) => {
   const { signatureVerification } = state;
   const {
     isPageBusy,
-    isConsented,
-    email,
-    name,
-    isCodeVerifyingModalOpen
+    isCodeVerifyingModalOpen,
+    isCodeVerified
   } = signatureVerification || INIT_SIGNATURE_STATE;
   return {
     isPageBusy,
-    isConsented,
-    email,
-    name,
-    isCodeVerifyingModalOpen
+    isCodeVerifyingModalOpen,
+    isCodeVerified
   };
 };
 

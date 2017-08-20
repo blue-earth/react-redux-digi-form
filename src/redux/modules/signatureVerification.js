@@ -4,35 +4,28 @@ import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
 import { submitAnswer, FORM_USER_SUBMISSION, handleEnter, storeAnswer } from 'redux/modules/formInteractive';
 import { show, hide } from 'redux-modal';
-import { startSubmit, stopSubmit } from 'redux-form';
 
 export const INIT_SIGNATURE_STATE = {
   isPageBusy: false,
   isCodeVerifyingModalOpen: false,
-  email: '',
-  name: '',
-  isConsented: false,
-  commitValue: ''
+  isCodeVerified: true,
+  commitValue: {}
 };
 
 const OPEN_CODE_VERIFY = 'OPEN_CODE_VERIFY';
 const CLOSE_CODE_VERIFY = 'CLOSE_CODE_VERIFY';
 const REQUEST_VERIFY_EMAIL = 'REQUEST_VERIFY_EMAIL';
 const DONE_VERIFYING_EMAIL = 'DONE_VERIFYING_EMAIL';
-const CHANGE_EMAIL = 'CHANGE_EMAIL';
-const CHANGE_NAME = 'CHANGE_NAME';
-const CHANGE_CONSENTED = 'CHANGE_CONSENTED';
-const CHANGE_COMMIT_VALUE = 'CHANGE_COMMIT_VALUE';
+const IS_CODE_VERIFIED = 'IS_CODE_VERIFIED';
+const RESET_CODE_VERIFIED = 'RESET_CODE_VERIFIED';
 
 export const openCodeVerify = createAction(OPEN_CODE_VERIFY);
 export const closeCodeVerify = createAction(CLOSE_CODE_VERIFY);
 export const requestVerifyEmail = createAction(REQUEST_VERIFY_EMAIL);
 export const doneVerifyingEmail = createAction(DONE_VERIFYING_EMAIL);
 
-export const changeEmail = createAction(CHANGE_EMAIL);
-export const changeName = createAction(CHANGE_NAME);
-export const changeConsented = createAction(CHANGE_CONSENTED);
-export const changeCommitValue = createAction(CHANGE_COMMIT_VALUE);
+export const isCodeVerified = createAction(IS_CODE_VERIFIED);
+export const resetCodeVerified = createAction(RESET_CODE_VERIFIED);
 
 export const updateSessionId = () => {
   return (dispatch, getState) => {
@@ -42,20 +35,22 @@ export const updateSessionId = () => {
 
 export const closeVerificationModal = () => {
   return (dispatch, getState) => {
+    dispatch(resetCodeVerified());
     dispatch(closeCodeVerify());
     dispatch(hide('signatureVerificationModal'));
   };
 };
 
-export const verifyEmail = () => {
+export const submitValue = (values) => {
   return (dispatch, getState) => {
-    const { signatureVerification: { email }, formInteractive: { sessionId, currentQuestion: { id } } } = getState();
+    const { formInteractive: { sessionId, currentQuestion: { id } } } = getState();
     dispatch(requestVerifyEmail());
-    dispatch(processVerifyEmail(email, sessionId, id));
+    dispatch(processVerifyEmail(values, sessionId, id));
   };
 };
 
-const processVerifyEmail = (email, responseId, questionId) => {
+const processVerifyEmail = (commitValue, responseId, questionId) => {
+  const { email } = commitValue;
   const apiUrl = `${API_URL}/form_document/api/signing_verification/check_email/` +
     `?email=${email}&response_id=${responseId}`;
   const fetchParams = assignDefaults({
@@ -65,12 +60,12 @@ const processVerifyEmail = (email, responseId, questionId) => {
     return (dispatch, getState) => {
       dispatch(doneVerifyingEmail());
       if (value.is_verified) {
-        dispatch(submitSignature(questionId));
+        dispatch(submitSignature(questionId, commitValue));
       } else {
-        dispatch(requestVerificationCode());
+        dispatch(requestVerificationCode(commitValue));
         dispatch(openCodeVerify());
         dispatch(show('signatureVerificationModal', {
-          email
+          commitValue
         }));
       }
     };
@@ -83,9 +78,10 @@ const processVerifyEmail = (email, responseId, questionId) => {
   return bind(fetch(apiUrl, fetchParams), fetchSuccess, fetchFail);
 };
 
-export const requestVerificationCode = () => {
+export const requestVerificationCode = (values) => {
   return (dispatch, getState) => {
-    const { signatureVerification: { email, name }, formInteractive: { sessionId } } = getState();
+    const { email, name } = values;
+    const { formInteractive: { sessionId } } = getState();
     dispatch(processRequestVerificationCode(email, sessionId, name));
   };
 };
@@ -107,21 +103,18 @@ const processRequestVerificationCode = (email, sessionId, name) => {
   return bind(fetch(apiUrl, fetchParams), fetchSuccess, fetchFail);
 };
 
-export const verifyEmailCode = (values) => {
+export const verifyEmailCode = (commitValue) => {
+  const { code } = commitValue;
   return (dispatch, getState) => {
-    const { code } = values;
-    const { signatureVerification: { email }, formInteractive: { sessionId, currentQuestion: { id } } } = getState();
-    dispatch(startSubmit('signatureVerificationCode'));
-    if (code) {
-      dispatch(processVerifyEmailCode(email, sessionId, code, id));
-    } else {
-      dispatch(stopSubmit('signatureVerificationCode', {
-        _error: 'Sorry, the code is empty.'
-      }));
+    if (code.length === 0) {
+      return dispatch(isCodeVerified(false));
     }
+    const { formInteractive: { sessionId, currentQuestion: { id } } } = getState();
+    dispatch(processVerifyEmailCode(commitValue, sessionId, id));
   };
 };
-const processVerifyEmailCode = (email, sessionId, code, questionId) => {
+const processVerifyEmailCode = (commitValue, sessionId, questionId) => {
+  const {code, email} = commitValue;
   const apiUrl = `${API_URL}/form_document/api/signing_verification/verify_email_code/`;
   const body = { email, response_id: sessionId, code };
   const fetchParams = assignDefaults({
@@ -132,23 +125,22 @@ const processVerifyEmailCode = (email, sessionId, code, questionId) => {
     return (dispatch, getState) => {
       if (value.is_verified) {
         dispatch(closeVerificationModal());
-        dispatch(submitSignature(questionId));
+        dispatch(isCodeVerified(true));
+        dispatch(submitSignature(questionId, commitValue));
       } else {
-        dispatch(stopSubmit('signatureVerificationCode', {_error: 'Sorry, the code is not correct!'}));
+        dispatch(isCodeVerified(false));
       }
     };
   };
   const fetchFail = (data) => {
     return (dispatch, getState) => {
-      dispatch(stopSubmit('signatureVerificationCode', {_error: 'Sorry, there are errors '}));
     };
   };
   return bind(fetch(apiUrl, fetchParams), fetchSuccess, fetchFail);
 };
 
-export const submitSignature = (id) => {
+export const submitSignature = (id, commitValue) => {
   return (dispatch, getState) => {
-    const {signatureVerification: {commitValue}} = getState();
     dispatch(storeAnswer({
       id,
       value: commitValue
@@ -177,21 +169,13 @@ const signatureReducer = handleActions({
     Object.assign({}, state, {
       isPageBusy: false
     }),
-  CHANGE_COMMIT_VALUE: (state, action) =>
+  IS_CODE_VERIFIED: (state, action) =>
     Object.assign({}, state, {
-      commitValue: action.payload
+      isCodeVerified: action.payload
     }),
-  CHANGE_EMAIL: (state, action) =>
+  RESET_CODE_VERIFIED: (state, action) =>
     Object.assign({}, state, {
-      email: action.payload
-    }),
-  CHANGE_NAME: (state, action) =>
-    Object.assign({}, state, {
-      name: action.payload
-    }),
-  CHANGE_CONSENTED: (state, action) =>
-    Object.assign({}, state, {
-      isConsented: !state.isConsented
+      isCodeVerified: true
     })
 }, INIT_SIGNATURE_STATE);
 
