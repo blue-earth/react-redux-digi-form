@@ -7,12 +7,7 @@ import ColorPicker from 'components/ColorPicker/ColorPicker';
 import classNames from 'classnames';
 import styles from './DrawSignature.scss';
 import { IoReply } from 'react-icons/lib/io';
-
-const colours = {
-  black: '#000000',
-  blue: '#3993d1',
-  red: '#d45644'
-};
+import { colours } from 'schemas/signatureSchema';
 
 class DrawSignature extends Component {
 
