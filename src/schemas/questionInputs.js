@@ -149,7 +149,6 @@ const questionInputs = {
     componentName: 'DateInput',
     displayText: 'Date',
     displayIcon: 'Date',
-    defaultDateFormat: 'YYYY/MM/DD',
     validations: [
       'is_required'
     ],
@@ -187,22 +186,22 @@ const questionInputs = {
       [
         {
           'displayName': 'Month/Year',
-          'key': 'month/year',
+          'key': 'month_year',
           'group': 'Combined'
         },
         {
           'displayName': 'Year/Month/Day',
-          'key': 'year/month/day',
+          'key': 'year_month_day',
           'group': 'Combined'
         },
         {
           'displayName': 'Day/Month/Year',
-          'key': 'day/month/year',
+          'key': 'day_month_year',
           'group': 'Combined'
         },
         {
           'displayName': 'Month/Day/Year',
-          'key': 'month/day/year',
+          'key': 'month_day_year',
           'group': 'Combined'
         }
       ]

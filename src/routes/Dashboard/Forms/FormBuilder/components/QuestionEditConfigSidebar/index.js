@@ -23,6 +23,10 @@ import {
   StatementFieldBasicTab,
   StatementFieldAdvancedTab
 } from './StatementField';
+import {
+  DateFieldBasicTab,
+  DateFieldAdvancedTab
+} from './DateField';
 
 export const getQuestionTypeConfigComponent = function (questionTypeName, tabName = 'general', componentProps) {
   var ConfigComponent;
@@ -73,6 +77,12 @@ export const getQuestionTypeConfigComponent = function (questionTypeName, tabNam
     case 'MultipleChoiceField':
     case 'YesNoChoiceField':
     case 'DateField':
+      if (tabName === 'general') {
+        ConfigComponent = DateFieldBasicTab;
+      } else {
+        ConfigComponent = DateFieldAdvancedTab;
+      }
+      break;
     case 'AddressField':
     case 'SignatureField':
       break;

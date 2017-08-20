@@ -19,15 +19,16 @@ class SwitchRow extends Component {
     popoverId: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     checked: PropTypes.bool.isRequired,
-    className: PropTypes.string
+    className: PropTypes.string,
+    description: PropTypes.string
   };
 
   render() {
-    const { title, onChange, checked, className, popoverId } = this.props;
+    const { title, onChange, checked, className, popoverId, description } = this.props;
     return (
       <div className={classNames(styles.switchRow, className)}>
         <div className={styles.switchColLeft}>
-          <SectionTitle title={title} popoverId={popoverId} />
+          <SectionTitle title={title} popoverId={popoverId} description={description} />
         </div>
         <div className={styles.switchColRight}>
           <Switch onChange={onChange} checked={checked} checkedChildren={<FaCheck />} />

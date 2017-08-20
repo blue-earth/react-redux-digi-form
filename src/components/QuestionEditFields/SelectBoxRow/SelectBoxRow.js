@@ -38,13 +38,18 @@ class SelectBoxRow extends Component {
       })
     ),
     placeholder: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    style: PropTypes.object
+  };
+
+  static defaultProps = {
+    style: {}
   };
 
   render() {
-    const { title, onChange, className, popoverId, optionsList, placeholder, value } = this.props;
+    const { title, onChange, className, popoverId, optionsList, placeholder, value, style } = this.props;
     return (
-      <div className={classNames(styles.selectBoxRow, className)}>
+      <div className={classNames(styles.selectBoxRow, className)} style={style}>
         <div className={styles.selectColLeft}>
           <SectionTitle title={title} popoverId={popoverId} />
         </div>
