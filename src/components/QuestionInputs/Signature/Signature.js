@@ -6,6 +6,7 @@ import FormEnterButton from 'components/Buttons/FormEnterButton/FormEnterButton'
 import AppButton from 'components/Buttons/AppButton/AppButton';
 import SignatureModal from 'containers/SignatureVerification';
 import styles from './Signature.scss';
+import { signatureFonts } from 'schemas/signatureSchema';
 
 class Signature extends Component {
 
@@ -70,6 +71,9 @@ class Signature extends Component {
 
   render() {
     const { showModal, value, isReadOnly, isDisabled, autoFocus } = this.props;
+    const preloadFonts = signatureFonts.map((font, index) => (
+      <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>
+    ));
     return (
       <div className={styles.signature}>
         {value.dataUrl &&
@@ -96,6 +100,7 @@ class Signature extends Component {
             onClick={function () { showModal('signatureModal', {value}); }} />
         }
         <SignatureModal />
+        {preloadFonts}
       </div>
     );
   }

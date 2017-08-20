@@ -63,7 +63,8 @@
   .m-signature-pad--body
     canvas {
       @include user-select(none);
-      @include full-size;
+      height: 100%;
+      width: 100%;
       &:active {
         cursor: pointer;
       }

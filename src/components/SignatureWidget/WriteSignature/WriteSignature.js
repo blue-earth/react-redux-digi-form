@@ -5,40 +5,7 @@ import React, {
 import { Col } from 'react-bootstrap';
 import classNames from 'classnames';
 import styles from './WriteSignature.scss';
-
-const colours = {
-  black: '#000000',
-  blue: '#3993d1',
-  red: '#d45644'
-};
-
-const signatureFonts = [
-  {
-    label: 'Steve Jobs',
-    name: 'Steve',
-    size: 120
-  }, {
-    label: 'Hillary Rodham Clinton',
-    name: 'Clinton',
-    size: 150
-  }, {
-    label: 'Donald Trump',
-    name: 'Trump',
-    size: 150
-  }, {
-    label: 'Taylor Swift',
-    name: 'Swift',
-    size: 150
-  }, {
-    label: 'Abraham Lincoln',
-    name: 'Lincoln',
-    size: 150
-  }, {
-    label: 'Michelle Obama',
-    name: 'Obama',
-    size: 150
-  }
-];
+import { colours, signatureFonts } from 'schemas/signatureSchema';
 
 class WriteSignature extends Component {
 
@@ -135,9 +102,6 @@ class WriteSignature extends Component {
   render() {
     const { className } = this.props;
     const { signatureStyle, writeSignatureColour } = this.state;
-    const preloadFonts = signatureFonts.map((font, index) => {
-      return <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>;
-    });
     const writeSignatureColourSelection = (
       <ul className={styles.signaturePadColourSelection}>
         {Object.keys(colours).map((colourName, index) => {
@@ -160,7 +124,6 @@ class WriteSignature extends Component {
       <div className={classNames(className, styles.writePanelWrapper)}>
         <div className={classNames(styles.tabPanelTitle, 'invisible')}>Like a celebrity</div>
         {writeSignatureColourSelection}
-        {preloadFonts}
         {signatureFonts.map((font, index) => {
           let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
           return (
