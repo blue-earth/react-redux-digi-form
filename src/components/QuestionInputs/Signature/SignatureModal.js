@@ -29,26 +29,26 @@ class SignatureModal extends Component {
     handleHide: PropTypes.func.isRequired, // Current modal hide function
     show: PropTypes.bool,                 // Modal display status
     hide: PropTypes.func.isRequired,      // Hide modal function from 'redux-modal'
-    value: PropTypes.string,
-    isConsented: PropTypes.bool.isRequired,
-    changeConsented: PropTypes.func.isRequired,
+    value: PropTypes.object,
     isPageBusy: PropTypes.bool,
+    isConsented: PropTypes.bool,
     isCodeVerifyingModalOpen: PropTypes.bool.isRequired,
-    email: PropTypes.string.isRequired,
-    changeEmail: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    changeName: PropTypes.func.isRequired,
-    verifyEmail: PropTypes.func.isRequired,
+    isCodeVerified: PropTypes.bool.isRequired,
     verifyEmailCode: PropTypes.func.isRequired,
     updateSessionId: PropTypes.func.isRequired,
     requestVerificationCode: PropTypes.func.isRequired,
     closeVerificationModal: PropTypes.func.isRequired,
-    changeCommitValue: PropTypes.func.isRequired
+    resetCodeVerified: PropTypes.func.isRequired,
+    submitValue: PropTypes.func.isRequired
   };
 
   constructor(props) {
     super(props);
+    const {name, email} = props.value;
     this.state = {
+      name: name || '',
+      email: email || '',
+      isConsented: props.isConsented || false,
       isNameValidated: true,
       isSignatureValidated: true,
       isEmailValidated: true,
@@ -61,12 +61,12 @@ class SignatureModal extends Component {
   }
 
   handleSubmit = () => {
-    const { email, verifyEmail, changeCommitValue, name } = this.props;
-    const { activeTabName } = this.state;
-    const value = this.refs[activeTabName].dataUrl;
+    const { submitValue } = this.props;
+    const { activeTabName, name, email } = this.state;
+    const dataUrl = this.refs[activeTabName].dataUrl;
     let isValid = true;
     // Empty signature error handle
-    if (value === '') {
+    if (dataUrl === '') {
       this.refs.errorMessageFocus.focus();
       this.setState({
         isSignatureValidated: false
@@ -89,8 +89,7 @@ class SignatureModal extends Component {
       isValid = false;
     }
     if (isValid) {
-      changeCommitValue(value);
-      verifyEmail();
+      submitValue({dataUrl, email, name});
     }
   }
 
@@ -103,21 +102,23 @@ class SignatureModal extends Component {
   }
 
   handleNameChange = (value) => {
-    this.props.changeName(value);
     this.setState({
+      name: value,
       isNameValidated: true,
       isSignatureValidated: true
     });
   }
   handleEmailChange = (value) => {
-    this.props.changeEmail(value);
     this.setState({
+      email: value,
       isEmailValidated: true
     });
   }
 
   handleToggleConsent = (event) => {
-    this.props.changeConsented();
+    this.setState({
+      isConsented: !this.state.isConsented
+    });
   }
 
   handleDrawSignatureCanvasResize = () => {
@@ -130,32 +131,170 @@ class SignatureModal extends Component {
     });
   }
 
+  get signatureHeader() {
+    const {
+      name,
+      email,
+      isNameValidated,
+      isEmailValidated,
+      isSignatureValidated
+    } = this.state;
+    return (
+      <div>
+        <Row>
+          <Col xs={6}>
+            <div>Full name</div>
+            <FloatTextInput
+              ref="nameInput"
+              errorMessage={<span>This field can not be empty</span>}
+              hasError={!isNameValidated}
+              extraClass={styles.signatureInput}
+              size="md"
+              autoFocus
+              value={name}
+              placeholder="Enter full name"
+              onChange={this.handleNameChange} />
+          </Col>
+          <Col xs={6}>
+            <div>Email</div>
+            <FloatTextInput
+              ref="emailInput"
+              errorMessage={<span>Email address is not valid</span>}
+              hasError={!isEmailValidated}
+              extraClass={styles.signatureInput}
+              size="md"
+              value={email}
+              placeholder="Enter email"
+              onChange={this.handleEmailChange} />
+          </Col>
+        </Row>
+        <Row className={styles.infoSection}>
+          <Col xs={6}>
+            Date
+            {' '}
+            <span className={styles.info}>{moment().format('L')}</span>
+          </Col>
+          <Col xs={12}>
+            <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
+            {!isSignatureValidated && <span className={styles.errorMessage}>Please sign your signature</span>}
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+
+  get signatureTabs() {
+    const writeLogo = require('./Write.svg');
+    const drawLogo = require('./Draw.svg');
+    const uploadLogo = require('./Upload.svg');
+    const {activeTabName, name} = this.state;
+    return (
+      <Tabs
+        activeKey={activeTabName}
+        id="SignatureTabs"
+        onSelect={this.handleTabSelect}
+        className={classNames({'activeTab': activeTabName === 'write'})}>
+        <Tab eventKey="write" title={
+          <div>
+            <img className={styles.tabIcon} src={writeLogo} />
+            <span>{' '}Write</span>
+          </div>
+        }>
+          <WriteSignature
+            ref="write"
+            onChange={this.handleSignatureChange}
+            signatureName={name}
+            className={styles.tabPanelWrapper} />
+        </Tab>
+        <Tab
+          onEntered={this.handleDrawSignatureCanvasResize}
+          eventKey="draw" title={
+            <span><img className={styles.tabIcon} src={drawLogo} />{' '}Draw</span>
+        }>
+          <DrawSignature
+            ref="draw"
+            onChange={this.handleSignatureChange}
+            className={styles.tabPanelWrapper} />
+        </Tab>
+        <Tab eventKey="upload" title={
+          <span>
+            <img className={styles.tabIcon} src={uploadLogo} />
+            {' '}
+            Upload photo
+          </span>
+        }>
+          <div className={styles.tabPanelWrapper}>
+            <div className={styles.fileUploadSection}>
+              <ImageUploader ref="upload" onChange={this.handleSignatureChange} />
+            </div>
+          </div>
+        </Tab>
+      </Tabs>
+    );
+  }
+
+  get consentSection() {
+    const { isConsented } = this.state;
+    return (
+      <div className={classNames(
+        styles.signatureModalConsent,
+        styles.signatureModalWrapper
+      )}>
+        <div className={styles.consentTitle}>
+          <div style={{width: '30px', float: 'left'}}>
+            <input id="consent" type="checkbox" className={styles.checkbox}
+              value={isConsented} checked={isConsented} onChange={this.handleToggleConsent} />
+          </div>
+          <div><label htmlFor="consent">I consent to the following</label></div>
+        </div>
+        <div style={{marginLeft: '30px'}}>
+          <p className={styles.consentStatement}>
+            Lorem ipsum Occaecat proident.
+            irure proident nisi ea eiusmod mollit ex cillum.
+            dolor consequat et voluptate officia velit in cupidatat ad do sed aute voluptate.
+            ullamco nostrud sit eu ad labore elit cillum in officia sunt aliquip reprehenderit.
+            in labore qui in voluptate Duis do Duis deserunt anim Duis Excepteur commodo fugiat.
+            esse do id nostrud aute tempor reprehenderit laborum in sint culpa velit elit velit.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  get verifyCodeModal() {
+    const {
+      isCodeVerified,
+      closeVerificationModal,
+      verifyEmailCode,
+      requestVerificationCode,
+      resetCodeVerified
+    } = this.props;
+    return (
+      <CompletionModal
+        hasError={!isCodeVerified}
+        closeModal={closeVerificationModal}
+        verifyEmailCode={verifyEmailCode}
+        resendCode={requestVerificationCode}
+        resetCodeVerified={resetCodeVerified} />
+    );
+  }
+
   render() {
     const {
       handleHide,
       show,
-      email,
-      name,
       isPageBusy,
-      isConsented,
-      verifyEmailCode,
-      isCodeVerifyingModalOpen,
-      requestVerificationCode
+      isCodeVerifyingModalOpen
     } = this.props;
     const {
-      isNameValidated,
+      isConsented,
       isEmailValidated,
-      isSignatureValidated,
-      activeTabName
+      isSignatureValidated
     } = this.state;
-
-    const writeLogo = require('./Write.svg');
-    const drawLogo = require('./Draw.svg');
-    const uploadLogo = require('./Upload.svg');
 
     moment.locale('en-au');
     return (
-      <div>
+      <form>
         <Modal
           backdrop="static"
           show={show}
@@ -169,117 +308,10 @@ class SignatureModal extends Component {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body bsClass={styles.signatureModalWrapper}>
-            <Row>
-              <Col xs={6}>
-                <div>Full name</div>
-                <FloatTextInput
-                  ref="nameInput"
-                  errorMessage={<span>This field can not be empty</span>}
-                  hasError={!isNameValidated}
-                  extraClass={styles.signatureInput}
-                  size="md"
-                  autoFocus
-                  value={name}
-                  placeholder="Enter full name"
-                  onChange={this.handleNameChange}
-                />
-              </Col>
-              <Col xs={6}>
-                <div>Email</div>
-                <FloatTextInput
-                  ref="emailInput"
-                  errorMessage={<span>Email address is not valid</span>}
-                  hasError={!isEmailValidated}
-                  extraClass={styles.signatureInput}
-                  size="md"
-                  value={email}
-                  placeholder="Enter email"
-                  onChange={this.handleEmailChange}
-                />
-              </Col>
-            </Row>
-            <Row className={styles.infoSection}>
-              <Col xs={6}>
-                Date
-                {' '}
-                <span className={styles.info}>{moment().format('L')}</span>
-              </Col>
-              <Col xs={12}>
-                <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
-                {!isSignatureValidated && <span className={styles.errorMessage}>Please sign your signature</span>}
-              </Col>
-            </Row>
-            <Tabs activeKey={activeTabName} id="SignatureTabs"
-              onSelect={this.handleTabSelect}
-              className={classNames(
-                {'activeTab': activeTabName === 'write'})
-              }>
-              <Tab eventKey="write" title={
-                <div>
-                  <img className={styles.tabIcon} src={writeLogo} />
-                  <span>
-                    {' '}
-                    Write
-                  </span>
-                </div>
-              }>
-                <WriteSignature
-                  ref="write"
-                  onChange={this.handleSignatureChange}
-                  signatureName={name}
-                  className={styles.tabPanelWrapper} />
-              </Tab>
-              <Tab
-                onEntered={this.handleDrawSignatureCanvasResize}
-                eventKey="draw" title={
-                  <span>
-                    <img className={styles.tabIcon} src={drawLogo} />
-                    {' '}
-                    Draw
-                  </span>
-              }>
-                <DrawSignature
-                  ref="draw"
-                  onChange={this.handleSignatureChange}
-                  className={styles.tabPanelWrapper} />
-              </Tab>
-              <Tab eventKey="upload" title={
-                <span>
-                  <img className={styles.tabIcon} src={uploadLogo} />
-                  {' '}
-                  Upload photo
-                </span>
-              }>
-                <div className={styles.tabPanelWrapper}>
-                  <div className={styles.fileUploadSection}>
-                    <ImageUploader ref="upload" onChange={this.handleSignatureChange} />
-                  </div>
-                </div>
-              </Tab>
-            </Tabs>
+            {this.signatureHeader}
+            {this.signatureTabs}
           </Modal.Body>
-          <div className={classNames(
-            styles.signatureModalConsent,
-            styles.signatureModalWrapper
-          )}>
-            <div className={styles.consentTitle}>
-              <div style={{width: '30px', float: 'left'}}>
-                <input id="consent" type="checkbox" className={styles.checkbox}
-                  checked={isConsented} onChange={this.handleToggleConsent} />
-              </div>
-              <div><label htmlFor="consent">I consent to the following</label></div>
-            </div>
-            <div style={{marginLeft: '30px'}}>
-              <p className={styles.consentStatement}>
-                Lorem ipsum Occaecat proident.
-                irure proident nisi ea eiusmod mollit ex cillum.
-                dolor consequat et voluptate officia velit in cupidatat ad do sed aute voluptate.
-                ullamco nostrud sit eu ad labore elit cillum in officia sunt aliquip reprehenderit.
-                in labore qui in voluptate Duis do Duis deserunt anim Duis Excepteur commodo fugiat.
-                esse do id nostrud aute tempor reprehenderit laborum in sint culpa velit elit velit.
-              </p>
-            </div>
-          </div>
+          {this.consentSection}
           <Modal.Footer className={classNames(
             styles.signatureModalFooter,
             styles.signatureModalWrapper
@@ -296,11 +328,8 @@ class SignatureModal extends Component {
             </AppButton>
           </Modal.Footer>
         </Modal>
-        <CompletionModal
-          closeModal={this.props.closeVerificationModal}
-          verifyEmailCode={verifyEmailCode}
-          resendCode={requestVerificationCode} />
-      </div>
+        {this.verifyCodeModal}
+      </form>
     );
   }
 }

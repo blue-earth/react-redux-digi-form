@@ -60,7 +60,7 @@ export default class AnswerValue extends Component {
   }
 
   renderSignatureField(value) {
-    return <img src={value} alt="signature" />;
+    return <span>{value.name}</span>;
   }
 
   getAnswerStringByType() {
