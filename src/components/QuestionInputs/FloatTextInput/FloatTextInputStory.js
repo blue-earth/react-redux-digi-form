@@ -1,5 +1,5 @@
 import React from 'react';
-import { storiesOf, action } from '@kadira/storybook';
+import { storiesOf } from '@kadira/storybook';
 import FloatTextInput from './FloatTextInput';
 import styles from './FloatTextInputStory.scss';
 import classNames from 'classnames/bind';
