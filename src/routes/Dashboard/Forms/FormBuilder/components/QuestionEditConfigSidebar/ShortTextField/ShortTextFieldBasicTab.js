@@ -25,7 +25,7 @@ class ShortTextFieldBasicTab extends Component {
       setValidationInfo,
       resetValidationInfo
     } = this.props;
-
+    // todo: Dry validation value retrieval
     const validations = currentElement.question['validations'];
     const minLengthValidators = validations.filter((v) => v.type === 'minLength');
     var minLengthValue;
