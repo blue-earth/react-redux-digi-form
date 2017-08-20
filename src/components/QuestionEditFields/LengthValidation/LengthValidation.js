@@ -15,23 +15,28 @@ import styles from './LengthValidation.scss';
 
 class LengthValidation extends Component {
   static propTypes = {
-    currentElement: PropTypes.object.isRequired,
     setValidationInfo: PropTypes.func.isRequired,
     resetValidationInfo: PropTypes.func.isRequired,
-    inputSchema: PropTypes.object.isRequired
+    minLengthValue: PropTypes.number,
+    maxLengthValue: PropTypes.number
+  };
+
+  static defaultProps = {
+    minLengthValue: null,
+    maxLengthValue: null
   };
 
   handleMinLengthChange = (event) => {
     const value = _.defaultTo(parseInt(event.target.value), false);
-    this.changeValidationValue('minLength', value);
-  }
+    this._changeValidationValue('minLength', value);
+  };
 
   handleMaxLengthChange = (event) => {
     const value = _.defaultTo(parseInt(event.target.value), false);
-    this.changeValidationValue('maxLength', value);
-  }
+    this._changeValidationValue('maxLength', value);
+  };
 
-  changeValidationValue(type, value) {
+  _changeValidationValue(type, value) {
     const { setValidationInfo, resetValidationInfo } = this.props;
     value
     ? setValidationInfo({ type, value })
@@ -39,47 +44,37 @@ class LengthValidation extends Component {
   }
 
   render() {
-    const { inputSchema } = this.props;
-    const minLengthNeeded = _.includes(inputSchema.validations, 'min_length');
-    const maxLengthNeeded = _.includes(inputSchema.validations, 'max_length');
-    if (!minLengthNeeded && !maxLengthNeeded) return false;
-    const validations = _.get(this.props, ['currentElement', 'question', 'validations'], []);
-    const minLength = _.defaultTo(_.find(validations, { type: 'minLength' }), { value: '' });
-    const maxLength = _.defaultTo(_.find(validations, { type: 'maxLength' }), { value: '' });
+    const { minLengthValue, maxLengthValue } = this.props;
     return (
       <EditSection>
-        {minLengthNeeded &&
-          <EditRow>
-            <Col xs={8} sm={9}>
-              <SectionTitle
-                title="Minimum characters"
-                popoverId="validationMinLength"
-                description="(Leave empty if not required)"
-              />
-            </Col>
-            <Col xs={4} sm={3}>
-              <FormControl type="number" className={styles.textInput}
-                value={minLength.value}
-                onChange={this.handleMinLengthChange} />
-            </Col>
-          </EditRow>
-        }
-        {maxLengthNeeded &&
-          <EditRow>
-            <Col xs={8} sm={9}>
-              <SectionTitle
-                title="Maximum characters"
-                popoverId="validationMaxLength"
-                description="(Leave empty if not required)"
-              />
-            </Col>
-            <Col xs={4} sm={3}>
-              <FormControl type="number" className={styles.textInput}
-                value={maxLength.value}
-                onChange={this.handleMaxLengthChange} />
-            </Col>
-          </EditRow>
-        }
+        <EditRow>
+          <Col xs={8} sm={9}>
+            <SectionTitle
+              title="Minimum characters"
+              popoverId="validationMinLength"
+              description="(Leave empty if not required)"
+            />
+          </Col>
+          <Col xs={4} sm={3}>
+            <FormControl type="number" className={styles.textInput}
+              value={minLengthValue}
+              onChange={this.handleMinLengthChange} />
+          </Col>
+        </EditRow>
+        <EditRow>
+          <Col xs={8} sm={9}>
+            <SectionTitle
+              title="Maximum characters"
+              popoverId="validationMaxLength"
+              description="(Leave empty if not required)"
+            />
+          </Col>
+          <Col xs={4} sm={3}>
+            <FormControl type="number" className={styles.textInput}
+              value={maxLengthValue}
+              onChange={this.handleMaxLengthChange} />
+          </Col>
+        </EditRow>
       </EditSection>
     );
   }
