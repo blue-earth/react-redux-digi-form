@@ -17,7 +17,7 @@ class Signature extends Component {
     isDisabled: PropTypes.bool,
     isReadOnly: PropTypes.bool,
     autoFocus: PropTypes.bool,
-    value: PropTypes.string,
+    value: PropTypes.object,
     onChange: PropTypes.func,
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
@@ -28,7 +28,7 @@ class Signature extends Component {
   static defaultProps = {
     isDisabled: false,
     isReadOnly: false,
-    value: '',
+    value: {},
     onChange: () => {},
     show: () => {}
   };
@@ -49,11 +49,6 @@ class Signature extends Component {
         signatureImage.focus();
       }, 50);
     }
-  }
-
-  handleChange = (value) => {
-    const { onChange } = this.props;
-    onChange(value);
   }
 
   handleFocus = (event) => {
@@ -77,30 +72,30 @@ class Signature extends Component {
     const { showModal, value, isReadOnly, isDisabled, autoFocus } = this.props;
     return (
       <div className={styles.signature}>
-        {value &&
-          <img src={value} alt="signature"
+        {value.dataUrl &&
+          <img src={value.dataUrl} alt="signature"
             className={styles.signatureImage}
             ref="signatureImage"
             tabIndex={0} onKeyDown={this.handleKeyDown} />
         }
         <div>
-          {value &&
+          {value.dataUrl &&
             <AppButton
               isDisabled={isDisabled}
               size="lg"
-              autoFocus={!value && autoFocus}
-              onClick={function () { showModal('signatureModal'); }}>
+              autoFocus={!value.dataUrl && autoFocus}
+              onClick={function () { showModal('signatureModal', {value, isConsented: true}); }}>
               Re-sign
             </AppButton>
           }
         </div>
-        {!isReadOnly && !value &&
+        {!isReadOnly && !value.dataUrl &&
           <FormEnterButton buttonLabel="Sign"
             isDisabled={isDisabled}
-            autoFocus={!value && autoFocus}
-            onClick={function () { showModal('signatureModal'); }} />
+            autoFocus={!value.dataUrl && autoFocus}
+            onClick={function () { showModal('signatureModal', {value}); }} />
         }
-        <SignatureModal showModal={showModal} commitValue={this.handleChange} signatureImage={value} />
+        <SignatureModal />
       </div>
     );
   }
