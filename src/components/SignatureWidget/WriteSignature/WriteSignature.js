@@ -102,9 +102,6 @@ class WriteSignature extends Component {
   render() {
     const { className } = this.props;
     const { signatureStyle, writeSignatureColour } = this.state;
-    const preloadFonts = signatureFonts.map((font, index) => {
-      return <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>;
-    });
     const writeSignatureColourSelection = (
       <ul className={styles.signaturePadColourSelection}>
         {Object.keys(colours).map((colourName, index) => {
@@ -127,7 +124,6 @@ class WriteSignature extends Component {
       <div className={classNames(className, styles.writePanelWrapper)}>
         <div className={classNames(styles.tabPanelTitle, 'invisible')}>Like a celebrity</div>
         {writeSignatureColourSelection}
-        {preloadFonts}
         {signatureFonts.map((font, index) => {
           let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
           return (
