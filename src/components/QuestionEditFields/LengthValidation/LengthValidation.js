@@ -25,13 +25,13 @@ class LengthValidation extends Component {
     maxLengthValue: ''
   };
 
-  handleMinLengthChange = (event) => {
-    const value = _.defaultTo(parseInt(event.target.value), false);
+  handleMinLengthChange = (inputValue) => {
+    const value = _.defaultTo(parseInt(inputValue), false);
     this._changeValidationValue('minLength', value);
   };
 
-  handleMaxLengthChange = (event) => {
-    const value = _.defaultTo(parseInt(event.target.value), false);
+  handleMaxLengthChange = (inputValue) => {
+    const value = _.defaultTo(parseInt(inputValue), false);
     this._changeValidationValue('maxLength', value);
   };
 

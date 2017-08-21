@@ -20,13 +20,13 @@ class RangeValidation extends Component {
     maxRangeValue: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf([''])])
   };
 
-  handleMinimumChange = (event) => {
-    const value = _.defaultTo(parseInt(event.target.value), false);
+  handleMinimumChange = (inputValue) => {
+    const value = _.defaultTo(parseInt(inputValue), false);
     this._changeValidationValue('minimum', value);
   }
 
-  handleMaximumChange = (event) => {
-    const value = _.defaultTo(parseInt(event.target.value), false);
+  handleMaximumChange = (inputValue) => {
+    const value = _.defaultTo(parseInt(inputValue), false);
     this._changeValidationValue('maximum', value);
   }
 
