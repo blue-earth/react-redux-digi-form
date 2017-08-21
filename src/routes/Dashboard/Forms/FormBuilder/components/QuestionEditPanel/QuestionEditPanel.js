@@ -163,9 +163,13 @@ export default class QuestionEditPanel extends Component {
   }
 
   render() {
-    const componentProps = _.merge({}, this.props, {
-      inputSchema: this.inputSchema
-    });
+    const componentProps = {
+      currentElement: this.props.currentElement,
+      questions: this.props.questions,
+      setQuestionInfo: this.props.setQuestionInfo,
+      setValidationInfo: this.props.setValidationInfo,
+      resetValidationInfo: this.props.resetValidationInfo
+    };
 
     var questionType = this.props.currentElement.question.type;
     return (
