@@ -6,32 +6,18 @@ import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection
 import EditSection from 'components/QuestionEditFields/EditSection';
 import SelectBox from 'components/SelectBox';
 import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
-import _ from 'lodash';
 
 class PhoneNumberFieldAdvancedTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
-    updateQuestionProp: PropTypes.func.isRequired
+    setQuestionInfo: PropTypes.func.isRequired
   };
-
-  handleEmailValidationChange = (isOn) => {
-    const { currentElement, updateQuestionProp } = this.props;
-    if (isOn) {
-      currentElement.question.verifications.push('EmondoEmailFieldService');
-      updateQuestionProp(currentElement.question.verifications, 'verifications');
-    } else {
-      updateQuestionProp(
-        _.pull(currentElement.question.verifications, 'EmondoEmailFieldService'),
-        'verifications'
-      );
-    }
-  }
 
   render() {
     const {
       currentElement,
-      updateQuestionProp
+      setQuestionInfo
     } = this.props;
     var phoneQuestions = mapQuestionsToDropdown(getQuestionsByType(this.props.questions, 'PhoneNumberField'));
     return (
@@ -39,10 +25,10 @@ class PhoneNumberFieldAdvancedTab extends Component {
         <EditSection>
           <CollapsibleSection
             title={'Default value'}
-            onToggleClosed={function () { updateQuestionProp('', 'value'); }}
+            onToggleClosed={function () { setQuestionInfo({'value': ''}); }}
           >
             <SelectBox value={currentElement.question.value} appearance="shiny" fullWidth
-              onChange={function (newValue) { updateQuestionProp(newValue, 'value'); }}
+              onChange={function (newValue) { setQuestionInfo({'value': newValue}); }}
               optionsList={phoneQuestions}
               placeholder="Select phone number" />
           </CollapsibleSection>

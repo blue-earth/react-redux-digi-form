@@ -7,8 +7,7 @@ import EditSection from 'components/QuestionEditFields/EditSection';
 class StatementFieldAdvancedTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
-    questions: PropTypes.array.isRequired,
-    updateQuestionProp: PropTypes.func.isRequired
+    questions: PropTypes.array.isRequired
   };
 
   render() {

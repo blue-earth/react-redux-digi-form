@@ -7,4 +7,10 @@
   padding: $builder-left-panel-padding + 5;
   margin: 0;
   border-bottom: 1px solid $question-edit-separator-color;
+  &.withSpacing > * {
+    margin-bottom: 15px;
+  }
+  &.withSpacing > *:last-child {
+    margin-bottom: 0;
+  }
 }

@@ -4,35 +4,34 @@ import React, {
 } from 'react';
 
 import {
-  Col,
-  FormControl
+  Col
 } from 'react-bootstrap';
 import _ from 'lodash';
 import EditRow from '../EditRow';
 import EditSection from '../EditSection';
 import SectionTitle from '../SectionTitle';
-import styles from './LengthValidation.scss';
+import TextInput from 'components/TextInput';
 
 class LengthValidation extends Component {
   static propTypes = {
     setValidationInfo: PropTypes.func.isRequired,
     resetValidationInfo: PropTypes.func.isRequired,
-    minLengthValue: PropTypes.number,
-    maxLengthValue: PropTypes.number
+    minLengthValue: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf([''])]),
+    maxLengthValue: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf([''])])
   };
 
   static defaultProps = {
-    minLengthValue: null,
-    maxLengthValue: null
+    minLengthValue: '',
+    maxLengthValue: ''
   };
 
-  handleMinLengthChange = (event) => {
-    const value = _.defaultTo(parseInt(event.target.value), false);
+  handleMinLengthChange = (inputValue) => {
+    const value = _.defaultTo(parseInt(inputValue), false);
     this._changeValidationValue('minLength', value);
   };
 
-  handleMaxLengthChange = (event) => {
-    const value = _.defaultTo(parseInt(event.target.value), false);
+  handleMaxLengthChange = (inputValue) => {
+    const value = _.defaultTo(parseInt(inputValue), false);
     this._changeValidationValue('maxLength', value);
   };
 
@@ -56,8 +55,8 @@ class LengthValidation extends Component {
             />
           </Col>
           <Col xs={4} sm={3}>
-            <FormControl type="number" className={styles.textInput}
-              value={minLengthValue}
+            <TextInput type="number"
+              value={minLengthValue === null ? '' : minLengthValue}
               onChange={this.handleMinLengthChange} />
           </Col>
         </EditRow>
@@ -70,8 +69,8 @@ class LengthValidation extends Component {
             />
           </Col>
           <Col xs={4} sm={3}>
-            <FormControl type="number" className={styles.textInput}
-              value={maxLengthValue}
+            <TextInput type="number"
+              value={maxLengthValue === null ? '' : maxLengthValue}
               onChange={this.handleMaxLengthChange} />
           </Col>
         </EditRow>
