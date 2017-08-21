@@ -32,16 +32,29 @@ export const getNextBoxIndex = (label, currentElement) =>
 export const isCurrentElementId = (id, currentElement) =>
   (currentElement && _.isEqual(parseInt(id, 10), currentElement.id)) || _.isEqual(parseInt(id, 10), 0);
 
-export const getArrangedBlocksPosition = (box, blockCount) => {
+export const getArrangedBlocksPosition = (box, fontSize, blockCount) => {
   const { WIDTH, HEIGHT } = formBuilderBox;
-  const blockWidth = box[WIDTH] / blockCount;
+  const ratio = 1;
+  const blockMaxWidth = box[WIDTH] / blockCount;
+  const blockWidth = Math.min(fontSize * ratio, blockMaxWidth);
   const blockHeight = box[HEIGHT];
   return _.map(new Array(blockCount), (block, index) => ([
-    blockWidth * index, // left
+    blockMaxWidth * index + (blockMaxWidth - blockWidth) / 2, // left
     0,  // top
     blockWidth,  // width
     blockHeight  // height
   ]));
+};
+
+export const adjustModifiedBlocksPosition = (newBlocks, position) => {
+  const { font_size: fontSize, box, blocks } = position;
+  const { LEFT } = formBuilderBox;
+  const arrangedBlocks = getArrangedBlocksPosition(box, fontSize, box.length);
+  _.forEach(blocks, (block, index) => {
+    newBlocks[index][LEFT] += block[LEFT] - arrangedBlocks[index][LEFT];
+    newBlocks[index][LEFT] = Math.max(0, newBlocks[index][LEFT]);
+  });
+  return newBlocks;
 };
 
 export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom) => {
@@ -64,7 +77,7 @@ export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom
         const box = position.box;
         const path = _.join([label, 'positions', positionKey], '.');
 
-        if (_.isEqual(path, activeBoxPath)) return false;
+        if (_.isEqual(path, activeBoxPath) && isCurrentElementId(id, currentElement)) return;
         if (position.page !== activeBoxPosition.page) return;
         snappingTargets = _.concat(snappingTargets, [
           {
@@ -134,7 +147,7 @@ export const getResizeSnappingTargets = (documentMapping, currentElement, pageZo
         const position = positions[positionKey];
         const path = _.join([label, 'positions', positionKey], '.');
 
-        if (_.isEqual(path, activeBoxPath)) return false;
+        if (_.isEqual(path, activeBoxPath) && isCurrentElementId(id, currentElement)) return;
         if (position.page !== activeBoxPosition.page) return;
 
         const targetBox = position.box;
@@ -207,7 +220,7 @@ export const getDragSnappingHelpersRect = (elRect, currentElement, documentMappi
       : documentMapping[item.id];
 
     const position = _.get(mappingInfo, item.path);
-    if (_.isEqual(item.path, activeBoxPath)) continue;
+    if (_.isEqual(item.path, activeBoxPath) && isCurrentElementId(item.id, currentElement)) continue;
     if (position.page !== activeBoxPosition.page) continue;
 
     var targetBox = _.assign({}, position.box);
@@ -264,7 +277,7 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
       : documentMapping[item.id];
 
     const position = _.get(mappingInfo, item.path);
-    if (_.isEqual(item.path, activeBoxPath)) continue;
+    if (_.isEqual(item.path, activeBoxPath) && isCurrentElementId(item.id, currentElement)) continue;
     if (position.page !== activeBoxPosition.page) continue;
 
     var targetBox = _.assign({}, position.box);

@@ -1,0 +1,14 @@
+@import './mixins';
+@import './variables';
+
+.block {
+  position: absolute;
+  @include user-select(none);
+  left: 0;
+  top: 0;
+}
+
+.blockLabel {
+  @include vhcenter;
+  @include user-select(none);
+}
