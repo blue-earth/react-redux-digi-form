@@ -10,6 +10,7 @@ import Date from './Date';
 import List from './List';
 import Number from './Number';
 import Pin from './Pin';
+import Pen from './Pen';
 import Paragraph from './Paragraph';
 import Phone from './Phone';
 import ShortText from './ShortText';
@@ -37,6 +38,7 @@ export default class Icon extends Component {
       Legal: <Statement />,
       Number: <Number />,
       Pin: <Pin />,
+      Pen: <Pen />,
       Phone: <Phone />,
       Paragraph: <Paragraph />,
       ShortText: <ShortText />,
