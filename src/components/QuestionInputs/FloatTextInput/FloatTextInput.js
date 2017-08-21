@@ -28,6 +28,7 @@ class FloatTextInput extends Component {
     extraClass: PropTypes.string,
     type: PropTypes.string,
     refName: PropTypes.string,
+    backgroundColour: PropTypes.string,
     size: PropTypes.oneOf(['sm', 'md', 'lg'])
   }
   static defaultProps = {
@@ -136,12 +137,14 @@ class FloatTextInput extends Component {
     }
   }
   get activeColour() {
+    const { backgroundColour } = this.props;
+    let style = { backgroundColor: backgroundColour };
     if (this.state.active) {
-      return {
+      return Object.assign(style, {
         color: this.props.primaryColour
-      };
+      });
     }
-    return null;
+    return style;
   }
   get activeBorderColour() {
     if (this.state.active) {
