@@ -105,6 +105,12 @@ class SelectBox extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.value || nextProps.value === '' || nextProps.value === null) {
+      this.setState({ selectedIndex: null });
+    }
+  }
+
   componentWillUnmount() {
     /**
      * Remove event listener for closing dropdown.
