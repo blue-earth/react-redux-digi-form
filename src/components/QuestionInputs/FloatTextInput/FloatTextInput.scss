@@ -49,6 +49,7 @@
   @include input-box-shadow;
   @include border-radius(0.2em);
   background-color: inherit;
+  @include no-spinner;
   &:focus {
     outline: none;
   }

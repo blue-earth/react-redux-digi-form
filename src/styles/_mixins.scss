@@ -70,3 +70,13 @@
   left: 0;
   right: 0;
 }
+
+// remove the brower-default spinner ui on number inputs
+@mixin no-spinner {
+  -moz-appearance: textfield;
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
