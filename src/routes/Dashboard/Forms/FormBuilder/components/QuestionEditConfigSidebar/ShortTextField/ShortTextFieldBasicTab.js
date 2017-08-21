@@ -5,10 +5,10 @@ import React, {
 import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
 import AnswerOutputTypeStatus from 'components/QuestionEditFields/AnswerOutputTypeStatus';
 import LengthValidation from 'components/QuestionEditFields/LengthValidation';
-import RangeValidation from 'components/QuestionEditFields/RangeValidation';
 import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
 import EditSection from 'components/QuestionEditFields/EditSection';
 import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
+import _ from 'lodash';
 
 class ShortTextFieldBasicTab extends Component {
   static propTypes = {
@@ -32,15 +32,16 @@ class ShortTextFieldBasicTab extends Component {
     if (minLengthValidators.length) {
       minLengthValue = minLengthValidators[0].value;
     } else {
-      minLengthValue = null;
+      minLengthValue = '';
     }
     var maxLengthValue;
     const maxLengthValidators = validations.filter((v) => v.type === 'maxLength');
     if (maxLengthValidators.length) {
       maxLengthValue= maxLengthValidators[0].value;
     } else {
-      maxLengthValue = null;
+      maxLengthValue = '';
     }
+    const isRequired = typeof _.find(validations, { type: 'isRequired' }) !== 'undefined';
 
     const filteredQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'Group', false));
     return (<div>
@@ -60,8 +61,11 @@ class ShortTextFieldBasicTab extends Component {
         minLengthValue={minLengthValue}
         maxLengthValue={maxLengthValue}
       />
-      <RangeValidation {...this.props} />
-      <RequiredValidation {...this.props} />
+      <RequiredValidation
+        setValidationInfo={setValidationInfo}
+        resetValidationInfo={resetValidationInfo}
+        checked={isRequired}
+      />
     </div>);
   }
 }

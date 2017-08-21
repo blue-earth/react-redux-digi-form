@@ -9,7 +9,6 @@ import {
 } from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import questionInputs from 'schemas/questionInputs';
-import _ from 'lodash';
 import 'rc-switch/assets/index.css';
 import { formBuilderSelectMode } from 'constants/formBuilder';
 import styles from './QuestionEditPanel.scss';
@@ -57,8 +56,6 @@ export default class QuestionEditPanel extends Component {
      * currentQuestionInstruction: Redux state to specify the active input instruction.
      */
     setQuestionInfo: PropTypes.func.isRequired,
-
-    updateQuestionProp: PropTypes.func.isRequired,
 
     /*
      * resetQuestionInfo: Redux action to remove a specific item into current question.
@@ -165,9 +162,13 @@ export default class QuestionEditPanel extends Component {
   }
 
   render() {
-    const componentProps = _.merge({}, this.props, {
-      inputSchema: this.inputSchema
-    });
+    const componentProps = {
+      currentElement: this.props.currentElement,
+      questions: this.props.questions,
+      setQuestionInfo: this.props.setQuestionInfo,
+      setValidationInfo: this.props.setValidationInfo,
+      resetValidationInfo: this.props.resetValidationInfo
+    };
 
     var questionType = this.props.currentElement.question.type;
     return (

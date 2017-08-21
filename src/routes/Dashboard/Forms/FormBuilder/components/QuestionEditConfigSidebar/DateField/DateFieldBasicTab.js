@@ -15,7 +15,9 @@ class DateFieldBasicTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
-    setQuestionInfo: PropTypes.func.isRequired
+    setQuestionInfo: PropTypes.func.isRequired,
+    setValidationInfo: PropTypes.func.isRequired,
+    resetValidationInfo: PropTypes.func.isRequired
   };
 
   _onDayFormatChanged = (newValue) => {
@@ -42,13 +44,13 @@ class DateFieldBasicTab extends Component {
   render() {
     const {
       currentElement,
-      questions
+      questions,
+      setValidationInfo,
+      resetValidationInfo
     } = this.props;
     const filteredQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'Group', false));
-
-    const formatSelectRowStyle = {
-      'marginBottom': '15px'
-    };
+    const validations = currentElement.question['validations'];
+    const isRequired = typeof _.find(validations, { type: 'isRequired' }) !== 'undefined';
 
     return (<div>
       <InstructionDescription
@@ -61,13 +63,12 @@ class DateFieldBasicTab extends Component {
         <AnswerOutputTypeStatus
           status={this.props.currentElement.defaultMappingType} />
       </EditSection>
-      <EditSection>
-        <SectionTitle title={'Output format'} style={{'marginBottom': '8px'}} />
+      <EditSection withSpacing>
+        <SectionTitle title={'Output format'} />
         <SelectBoxRow
           label="Day"
           title="Day"
           value={'D'}
-          style={formatSelectRowStyle}
           optionsList={[
             {label: 'D', value: 'D'},
             {label: 'DD', value: 'DD'},
@@ -82,7 +83,6 @@ class DateFieldBasicTab extends Component {
             {label: 'MM', value: 'MM'},
             {label: 'M', value: 'M'}
           ]}
-          style={formatSelectRowStyle}
           onChange={this._onMonthFormatChanged}
         />
         <SelectBoxRow
@@ -92,11 +92,14 @@ class DateFieldBasicTab extends Component {
             {label: 'YYYY', value: 'YYYY'},
             {label: 'YY', value: 'YY'}
           ]}
-          style={formatSelectRowStyle}
           onChange={this._onYearFormatChanged}
         />
       </EditSection>
-      <RequiredValidation {...this.props} />
+      <RequiredValidation
+        setValidationInfo={setValidationInfo}
+        resetValidationInfo={resetValidationInfo}
+        checked={isRequired}
+      />
     </div>);
   }
 }
