@@ -8,16 +8,27 @@ import RequiredValidation from 'components/QuestionEditFields/RequiredValidation
 import EditSection from 'components/QuestionEditFields/EditSection';
 import SelectBoxRow from 'components/QuestionEditFields/SelectBoxRow';
 import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
+import _ from 'lodash';
 
 class PhoneNumberFieldBasicTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
-    setQuestionInfo: PropTypes.func.isRequired
+    setQuestionInfo: PropTypes.func.isRequired,
+    setValidationInfo: PropTypes.func.isRequired,
+    resetValidationInfo: PropTypes.func.isRequired
   };
   render() {
-    const { setQuestionInfo, currentElement, questions } = this.props;
+    const {
+      setQuestionInfo,
+      currentElement,
+      questions,
+      setValidationInfo,
+      resetValidationInfo
+    } = this.props;
     const filteredQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'Group', false));
+    const validations = currentElement.question['validations'];
+    const isRequired = typeof _.find(validations, { type: 'isRequired' }) !== 'undefined';
     return (<div>
       <InstructionDescription
         currentElementId={currentElement.id}
@@ -29,7 +40,11 @@ class PhoneNumberFieldBasicTab extends Component {
         <AnswerOutputTypeStatus
           status={this.props.currentElement.defaultMappingType} />
       </EditSection>
-      <RequiredValidation {...this.props} />
+      <RequiredValidation
+        setValidationInfo={setValidationInfo}
+        resetValidationInfo={resetValidationInfo}
+        checked={isRequired}
+      />
       <EditSection>
         <SelectBoxRow
           title="Default country code"

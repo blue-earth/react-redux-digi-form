@@ -10,13 +10,13 @@ class ShortTextFieldAdvancedTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
-    updateQuestionProp: PropTypes.func.isRequired
+    setQuestionInfo: PropTypes.func.isRequired
   };
 
   render() {
     const {
       currentElement,
-      updateQuestionProp
+      setQuestionInfo
     } = this.props;
     return (
       <div>
@@ -24,20 +24,20 @@ class ShortTextFieldAdvancedTab extends Component {
           <CollapsibleSection
             questionPropKey={'value'}
             title={'Default value'}
-            onToggleClosed={function () { updateQuestionProp('', 'value'); }}
+            onToggleClosed={function () { setQuestionInfo({'value': ''}); }}
           >
             <TextInput type="text" value={currentElement.question.value}
-              onChange={function (x) { updateQuestionProp(x, 'value'); }} />
+              onChange={function (newValue) { setQuestionInfo({'value': newValue}); }} />
           </CollapsibleSection>
         </EditSection>
         <EditSection>
           <CollapsibleSection
             questionPropKey={'placeholder_text'}
             title={'Placeholder'}
-            onToggleClosed={function () { updateQuestionProp('', 'placeholder_text'); }}
+            onToggleClosed={function () { setQuestionInfo({'placeholder_text': ''}); }}
           >
             <TextInput type="text" value={currentElement.question.placeholder_text}
-              onChange={function (x) { updateQuestionProp(x, 'placeholder_text'); }} />
+              onChange={function (newValue) { setQuestionInfo({'placeholder_text': newValue}); }} />
           </CollapsibleSection>
         </EditSection>
       </div>

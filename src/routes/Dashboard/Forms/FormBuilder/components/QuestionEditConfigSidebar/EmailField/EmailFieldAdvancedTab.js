@@ -13,26 +13,26 @@ class EmailFieldAdvancedTab extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
-    updateQuestionProp: PropTypes.func.isRequired
+    setQuestionInfo: PropTypes.func.isRequired
   };
 
   handleEmailValidationChange = (isOn) => {
-    const { currentElement, updateQuestionProp } = this.props;
+    const { setQuestionInfo } = this.props;
+    var verifications = this.props.currentElement.question.verifications;
     if (isOn) {
-      currentElement.question.verifications.push('EmondoEmailFieldService');
-      updateQuestionProp(currentElement.question.verifications, 'verifications');
+      verifications.push('EmondoEmailFieldService');
+      setQuestionInfo({'verifications': verifications});
     } else {
-      updateQuestionProp(
-        _.pull(currentElement.question.verifications, 'EmondoEmailFieldService'),
-        'verifications'
-      );
+      setQuestionInfo({
+        'verifications': _.pull(verifications, 'EmondoEmailFieldService')
+      });
     }
   }
 
   render() {
     const {
       currentElement,
-      updateQuestionProp
+      setQuestionInfo
     } = this.props;
     var emailQuestions = mapQuestionsToDropdown(getQuestionsByType(this.props.questions, 'EmailField'));
     var verifications = currentElement.question.verifications;
@@ -42,10 +42,10 @@ class EmailFieldAdvancedTab extends Component {
         <EditSection>
           <CollapsibleSection
             title={'Default value'}
-            onToggleClosed={function () { updateQuestionProp('', 'value'); }}
+            onToggleClosed={function () { setQuestionInfo({'value': ''}); }}
           >
             <SelectBox value={currentElement.question.value} appearance="shiny" fullWidth
-              onChange={function (newValue) { updateQuestionProp(newValue, 'value'); }}
+              onChange={function (newValue) { setQuestionInfo({'value': newValue}); }}
               optionsList={emailQuestions}
               placeholder="Select email address" />
           </CollapsibleSection>
