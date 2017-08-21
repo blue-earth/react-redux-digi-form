@@ -143,7 +143,6 @@ class SignatureModal extends Component {
       <div>
         <Row>
           <Col xs={6}>
-            <div>Full name</div>
             <FloatTextInput
               ref="nameInput"
               errorMessage={<span>This field can not be empty</span>}
@@ -152,11 +151,10 @@ class SignatureModal extends Component {
               size="md"
               autoFocus
               value={name}
-              placeholder="Enter full name"
+              label="Full name"
               onChange={this.handleNameChange} />
           </Col>
           <Col xs={6}>
-            <div>Email</div>
             <FloatTextInput
               ref="emailInput"
               errorMessage={<span>Email address is not valid</span>}
@@ -164,7 +162,7 @@ class SignatureModal extends Component {
               extraClass={styles.signatureInput}
               size="md"
               value={email}
-              placeholder="Enter email"
+              label="Email"
               onChange={this.handleEmailChange} />
           </Col>
         </Row>
@@ -174,7 +172,7 @@ class SignatureModal extends Component {
             {' '}
             <span className={styles.info}>{moment().format('L')}</span>
           </Col>
-          <Col xs={12}>
+          <Col xs={12} style={{height: '10px'}}>
             <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
             {!isSignatureValidated && <span className={styles.errorMessage}>Please sign your signature</span>}
           </Col>
@@ -197,7 +195,7 @@ class SignatureModal extends Component {
         <Tab eventKey="write" title={
           <div>
             <img className={styles.tabIcon} src={writeLogo} />
-            <span>{' '}Write</span>
+            <span>{' '}Type</span>
           </div>
         }>
           <WriteSignature
@@ -220,7 +218,7 @@ class SignatureModal extends Component {
           <span>
             <img className={styles.tabIcon} src={uploadLogo} />
             {' '}
-            Upload photo
+            Upload
           </span>
         }>
           <div className={styles.tabPanelWrapper}>
