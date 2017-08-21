@@ -27,6 +27,10 @@ import {
   DateFieldBasicTab,
   DateFieldAdvancedTab
 } from './DateField';
+import {
+  UploadFieldBasicTab,
+  UploadFieldAdvancedTab
+} from './UploadField';
 
 export const getQuestionTypeConfigComponent = function (questionTypeName, tabName = 'general', componentProps) {
   var ConfigComponent;
@@ -84,6 +88,13 @@ export const getQuestionTypeConfigComponent = function (questionTypeName, tabNam
       }
       break;
     case 'AddressField':
+    case 'UploadField':
+      if (tabName === 'general') {
+        ConfigComponent = UploadFieldBasicTab;
+      } else {
+        ConfigComponent = UploadFieldAdvancedTab;
+      }
+      break;
     case 'SignatureField':
       break;
   }
