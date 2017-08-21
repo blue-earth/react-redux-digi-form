@@ -2,7 +2,10 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import _ from 'lodash';
+import interact from 'interact.js';
 import {
+  adjustModifiedBlocksPosition,
   getActiveLabel,
   getArrangedBlocksPosition,
   getDragSnappingTargets,
@@ -13,19 +16,17 @@ import {
   isCurrentElementId,
   zoomValue
 } from 'helpers/formBuilderHelper';
-// import ResizableAndMovablePlus from 'components/ResizableAndMovablePlus';
-// import classNames from 'classnames';
-import InteractWrapper from 'components/InteractWrapper';
-import BlockMappingToolbar from 'components/Toolbars/BlockMappingToolbar';
-import StandardMappingToolbar from 'components/Toolbars/StandardMappingToolbar';
-import _ from 'lodash';
-import interact from 'interact.js';
-import styles from './DrawingBoard.scss';
 import {
   formBuilderBox,
+  formBuilderFontSize,
   formBuilderSelectMode,
   formBuilderBoxMappingType
 } from 'constants/formBuilder';
+import BlockMappingItem from 'components/FormBuilder/BlockMappingItem';
+import BlockMappingToolbar from 'components/Toolbars/BlockMappingToolbar';
+import InteractWrapper from 'components/InteractWrapper';
+import StandardMappingToolbar from 'components/Toolbars/StandardMappingToolbar';
+import styles from './DrawingBoard.scss';
 
 class DrawingBoard extends Component {
   static propTypes = {
@@ -249,7 +250,9 @@ class DrawingBoard extends Component {
 
     const { BLOCK } = formBuilderBoxMappingType;
 
-    const blocks = _.isEqual(defaultMappingType, BLOCK) ? getArrangedBlocksPosition(box, 1) : undefined;
+    const blocks = _.isEqual(defaultMappingType, BLOCK)
+      ? getArrangedBlocksPosition(box, formBuilderFontSize, 1)
+      : undefined;
 
     setMappingPositionInfo({
       page: pageNumber,
@@ -286,7 +289,11 @@ class DrawingBoard extends Component {
     ];
 
     const position = _.get(currentElement.mappingInfo, activeBoxPath);
-    const blocks = position.blocks ? getArrangedBlocksPosition(box, _.size(position.blocks)) : undefined;
+    let blocks;
+    if (position.blocks) {
+      const arrangedBlocks = getArrangedBlocksPosition(box, position.font_size, _.size(position.blocks));
+      blocks = adjustModifiedBlocksPosition(arrangedBlocks, position);
+    }
 
     setMappingPositionInfo({ blocks, box });
 
@@ -335,6 +342,20 @@ class DrawingBoard extends Component {
 
     // Reset SnappingHelper
     this.resetSnappingHelper();
+  }
+
+  handleBlockDragEnd = (rect, index) => {
+    const { currentElement, setMappingPositionInfo, pageZoom } = this.props;
+    const { activeBoxPath } = currentElement;
+    const position = _.get(currentElement.mappingInfo, activeBoxPath);
+    const blocks = position.blocks.slice(0);
+    blocks[index] = [
+      rect.left / pageZoom,
+      rect.top / pageZoom,
+      rect.width / pageZoom,
+      rect.height / pageZoom
+    ];
+    setMappingPositionInfo({ blocks });
   }
 
   setDragSnappingHelpers(helpersRect) {
@@ -430,12 +451,12 @@ class DrawingBoard extends Component {
     setMappingInfo(_.unset(mappingInfo, activeBoxPath));
   }
 
-  renderBlocks(position) {
+  renderBlocks(position, isActive) {
     const { pageZoom } = this.props;
     const { LEFT, TOP, WIDTH, HEIGHT } = formBuilderBox;
     if (_.isEmpty(position.blocks)) {
       const style = {
-        fontSize: position.font_size
+        fontSize: zoomValue(position.font_size, pageZoom)
       };
       return (
         <div className={styles.boxLabel} style={style}>
@@ -444,22 +465,19 @@ class DrawingBoard extends Component {
       );
     } else {
       const style = {
-        fontSize: position.font_size,
+        fontSize: zoomValue(position.font_size, pageZoom),
         height: zoomValue(position.box[HEIGHT], pageZoom)
       };
       const blocks = _.map(position.blocks, (block, index) => {
-        const boxStyle = {
+        const position = {
           left: zoomValue(block[LEFT], pageZoom),
           top: zoomValue(block[TOP], pageZoom),
           width: zoomValue(block[WIDTH], pageZoom),
           height: zoomValue(block[HEIGHT], pageZoom)
         };
         return (
-          <div key={index} className={styles.block} style={boxStyle}>
-            <div className={styles.blockLabel}>
-              {'X'}
-            </div>
-          </div>
+          <BlockMappingItem key={index} active={isActive} position={position}
+            onDragEnd={this.handleBlockDragEnd} metaData={index} />
         );
       });
       return (
@@ -526,7 +544,7 @@ class DrawingBoard extends Component {
               viewportWidth={viewportWidth}
               viewportHeight={viewportHeight}
             >
-              {this.renderBlocks(position)}
+              {this.renderBlocks(position, isActive)}
             </InteractWrapper>
           );
         });
@@ -601,7 +619,7 @@ class DrawingBoard extends Component {
         resizeSnapTargets={getResizeSnappingTargets(documentMapping, currentElement, pageZoom)}
         metaData={{ id: currentElement.id, path: activeBoxPath }}
       >
-        {this.renderBlocks(position)}
+        {this.renderBlocks(position, isActive)}
       </InteractWrapper>
     );
   }

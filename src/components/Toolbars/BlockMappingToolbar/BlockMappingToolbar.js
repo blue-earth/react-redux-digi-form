@@ -9,7 +9,10 @@ import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { MdInfo, MdCheck } from 'react-icons/lib/md';
 import { GoTrashcan } from 'react-icons/lib/go';
 import { formBuilderBox } from 'constants/formBuilder';
-import { getArrangedBlocksPosition } from 'helpers/formBuilderHelper';
+import {
+  adjustModifiedBlocksPosition,
+  getArrangedBlocksPosition
+} from 'helpers/formBuilderHelper';
 import MappingToolbarLayout, {
   ToolbarCol,
   ToolbarRow
@@ -43,26 +46,32 @@ export default class BlockMappingToolbar extends Component {
   }
 
   handleBlocksChange = (blockCount) => {
-    const { onChange, values: { box } } = this.props;
-    const blocks = getArrangedBlocksPosition(box, blockCount);
+    const { onChange, values: { box, font_size: fontSize } } = this.props;
+    const blocks = getArrangedBlocksPosition(box, fontSize, blockCount);
     onChange({ blocks });
   }
 
   handleWidthChange = (width) => {
     const { WIDTH } = formBuilderBox;
-    const { onChange, values } = this.props;
+    const { onChange, values, values: { font_size: fontSize } } = this.props;
     const box = values.box.slice();
     box[WIDTH] = width;
-    const blocks = getArrangedBlocksPosition(box, _.size(values.blocks));
+
+    const arrangedBlocks = getArrangedBlocksPosition(box, fontSize, _.size(values.blocks));
+    const blocks = adjustModifiedBlocksPosition(arrangedBlocks, values);
+
     onChange({ box, blocks });
   }
 
   handleHeightChange = (height) => {
     const { HEIGHT } = formBuilderBox;
-    const { onChange, values } = this.props;
+    const { onChange, values, values: { font_size: fontSize } } = this.props;
     const box = values.box.slice();
     box[HEIGHT] = height;
-    const blocks = getArrangedBlocksPosition(box, _.size(values.blocks));
+
+    const arrangedBlocks = getArrangedBlocksPosition(box, fontSize, _.size(values.blocks));
+    const blocks = adjustModifiedBlocksPosition(arrangedBlocks, values);
+
     onChange({ box, blocks });
   }
 
@@ -73,8 +82,8 @@ export default class BlockMappingToolbar extends Component {
 
   handleArrange = (arranged) => {
     if (arranged) {
-      const { onChange, values: { box, blocks: currentBlocks } } = this.props;
-      const blocks = getArrangedBlocksPosition(box, _.size(currentBlocks));
+      const { onChange, values: { box, blocks: currentBlocks, font_size: fontSize } } = this.props;
+      const blocks = getArrangedBlocksPosition(box, fontSize, _.size(currentBlocks));
       onChange({ blocks });
     }
     this.setState({ arranged });

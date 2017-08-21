@@ -97,15 +97,3 @@ $snapping-border-color: #f3d359;
   height: 100%;
   width: 100%;
 }
-
-.block {
-  position: absolute;
-  @include user-select(none);
-  left: 0;
-  top: 0;
-}
-
-.blockLabel {
-  @include vhcenter;
-  @include user-select(none);
-}

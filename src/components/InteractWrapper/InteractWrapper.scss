@@ -48,6 +48,7 @@ $handle-size: 12px;
   overflow: hidden;
   @include full-size;
   cursor: pointer;
+  font-family: $mapping-block-font-family;
 }
 
 .active {

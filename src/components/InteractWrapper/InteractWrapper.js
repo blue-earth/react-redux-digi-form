@@ -36,7 +36,6 @@ class InteractWrapper extends Component {
     dragSnapTargets: PropTypes.array, // array of target positions {id, type, x or y}, id: question id.
     snapRange: PropTypes.number,
     className: PropTypes.string,
-    toolbar: PropTypes.node,
     viewportWidth: PropTypes.number,
     viewportHeight: PropTypes.number
   };
@@ -66,11 +65,7 @@ class InteractWrapper extends Component {
       x: props.x,
       y: props.y,
       width: props.width,
-      height: props.height,
-      toolbarSize: {
-        width: 0,
-        height: 0
-      }
+      height: props.height
     };
   }
 
@@ -295,7 +290,7 @@ class InteractWrapper extends Component {
   }
 
   render() {
-    const { zIndex, active, metaData, className, toolbar } = this.props;
+    const { zIndex, active, metaData, className } = this.props;
     const { x, y, width, height } = this.state;
     var style = {};
     var optionals = {};
@@ -318,11 +313,6 @@ class InteractWrapper extends Component {
         onDoubleClick={this.handleDoubleClick}
         ref="interactWrapper"
         {...optionals}>
-        {toolbar &&
-          <div className={styles.toolbar} ref="toolbar" style={this.toolbarCoordinates}>
-            {toolbar}
-          </div>
-        }
         <div className={styles.innerContent}>
           {this.props.children}
         </div>
