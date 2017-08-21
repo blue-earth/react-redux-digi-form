@@ -77,7 +77,7 @@ export const getDragSnappingTargets = (documentMapping, currentElement, pageZoom
         const box = position.box;
         const path = _.join([label, 'positions', positionKey], '.');
 
-        if (_.isEqual(path, activeBoxPath)) return false;
+        if (_.isEqual(path, activeBoxPath) && isCurrentElementId(id, currentElement)) return;
         if (position.page !== activeBoxPosition.page) return;
         snappingTargets = _.concat(snappingTargets, [
           {
@@ -147,7 +147,7 @@ export const getResizeSnappingTargets = (documentMapping, currentElement, pageZo
         const position = positions[positionKey];
         const path = _.join([label, 'positions', positionKey], '.');
 
-        if (_.isEqual(path, activeBoxPath)) return false;
+        if (_.isEqual(path, activeBoxPath) && isCurrentElementId(id, currentElement)) return;
         if (position.page !== activeBoxPosition.page) return;
 
         const targetBox = position.box;
@@ -220,7 +220,7 @@ export const getDragSnappingHelpersRect = (elRect, currentElement, documentMappi
       : documentMapping[item.id];
 
     const position = _.get(mappingInfo, item.path);
-    if (_.isEqual(item.path, activeBoxPath)) continue;
+    if (_.isEqual(item.path, activeBoxPath) && isCurrentElementId(item.id, currentElement)) continue;
     if (position.page !== activeBoxPosition.page) continue;
 
     var targetBox = _.assign({}, position.box);
@@ -277,7 +277,7 @@ export const getResizeSnappingHelpersPos = (elRect, currentElement, documentMapp
       : documentMapping[item.id];
 
     const position = _.get(mappingInfo, item.path);
-    if (_.isEqual(item.path, activeBoxPath)) continue;
+    if (_.isEqual(item.path, activeBoxPath) && isCurrentElementId(item.id, currentElement)) continue;
     if (position.page !== activeBoxPosition.page) continue;
 
     var targetBox = _.assign({}, position.box);
