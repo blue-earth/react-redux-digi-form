@@ -3,6 +3,7 @@ import React, {
   PropTypes
 } from 'react';
 import { Col } from 'react-bootstrap';
+import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import ColourPicker from '../ColourPicker';
 import classNames from 'classnames';
 import styles from './WriteSignature.scss';
@@ -12,20 +13,18 @@ class WriteSignature extends Component {
 
   static propTypes = {
     onChange: PropTypes.func,
-    className: PropTypes.string,
-    signatureName: PropTypes.string
+    className: PropTypes.string
   }
   static defaultProps = {
     onChange: () => {},
-    signatureName: '',
     className: ''
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      signatureName: props.signatureName,
       writeSignatureColour: '#000000',
+      signatureName: '',
       signatureStyle: signatureFonts[0].name
     };
   }
@@ -37,12 +36,6 @@ class WriteSignature extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleWriteCanvasesResize);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      signatureName: nextProps.signatureName
-    }, this.updateWriteSignatureCanvases);
   }
 
   get dataUrl() {
@@ -71,6 +64,11 @@ class WriteSignature extends Component {
   handleSignatureStyleChange = (value) => {
     this.setState({
       signatureStyle: value
+    }, this.updateWriteSignatureCanvases);
+  }
+  hanldeSignatureNameChange = (value) => {
+    this.setState({
+      signatureName: value
     }, this.updateWriteSignatureCanvases);
   }
 
@@ -105,7 +103,15 @@ class WriteSignature extends Component {
     const { signatureStyle, signatureName } = this.state;
     return (
       <div className={classNames(className, styles.writePanelWrapper)}>
-        <div className={classNames(styles.tabPanelTitle, 'invisible')}>Like a celebrity</div>
+        <div className={styles.nameInputWrapper}>
+          <FloatTextInput
+            backgroundColour="#f5f6fa"
+            placeholder="Text as signature"
+            size="md"
+            autoFocus
+            value={signatureName}
+            onChange={this.hanldeSignatureNameChange} />
+        </div>
         <div className={styles.colourPicker}>
           <ColourPicker onChange={this.handleSelectActiveColour} />
         </div>
@@ -126,12 +132,17 @@ class WriteSignature extends Component {
                 }
               )}
                 onClick={handleClick}>
-                <canvas className={styles.signaturePanelCanvas}
-                  ref={`writeSignature-${font.name}`}>
-                </canvas>
-              </div>
-              <div className={classNames(styles.signatureTypeLabel, `preload-${font.name}`)}>
-                {font.label}
+                <div className={styles.signatureCanvasWrapper}>
+                  <canvas className={styles.signaturePanelCanvas}
+                    ref={`writeSignature-${font.name}`}>
+                  </canvas>
+                </div>
+                <div className={styles.signatureTypeWrapper}>
+                  <div className="pull-left">{font.label}</div>
+                  <div className={classNames(`preload-${font.name}`, styles.signatureTypeLabel)}>
+                    {signatureName}
+                  </div>
+                </div>
               </div>
             </Col>
           );
