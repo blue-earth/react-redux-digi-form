@@ -2,9 +2,9 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Col } from 'react-bootstrap';
 import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import ColourPicker from '../ColourPicker';
+import SigantureTabButton from '../SignatureTabs';
 import classNames from 'classnames';
 import styles from './WriteSignature.scss';
 import { signatureFonts } from 'schemas/signatureSchema';
@@ -13,9 +13,11 @@ class WriteSignature extends Component {
 
   static propTypes = {
     onChange: PropTypes.func,
-    className: PropTypes.string
+    className: PropTypes.string,
+    onTabChange: PropTypes.func
   }
   static defaultProps = {
+    onTabChange: () => {},
     onChange: () => {},
     className: ''
   }
@@ -99,54 +101,60 @@ class WriteSignature extends Component {
   }
 
   render() {
-    const { className } = this.props;
+    const { className, onTabChange } = this.props;
     const { signatureStyle, signatureName } = this.state;
     return (
       <div className={classNames(className, styles.writePanelWrapper)}>
-        <div className={styles.nameInputWrapper}>
+        <div className={styles.signaturePanelHeader}>
+          <div className="pull-left">
+            <SigantureTabButton onTabChange={onTabChange} activeTab="write" />
+          </div>
           <FloatTextInput
+            extraClass={styles.nameInputWrapper}
             backgroundColour="#f5f6fa"
             placeholder="Text as signature"
             size="md"
             autoFocus
             value={signatureName}
             onChange={this.hanldeSignatureNameChange} />
+          <div className={styles.colourPicker}>
+            <ColourPicker onChange={this.handleSelectActiveColour} />
+          </div>
         </div>
-        <div className={styles.colourPicker}>
-          <ColourPicker onChange={this.handleSelectActiveColour} />
-        </div>
-        {signatureFonts.map((font, index) => {
-          let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
-          return (
-            <Col key={`signature-panel-${index}`} xs={6} className={classNames(
-              styles.signaturePanelWrapper,
-              {
-                [styles.signaturePanelLeft]: index % 2 === 0,
-                [styles.signaturePanelRight]: index % 2 === 1
-              }
-            )}>
-              <div className={classNames(
-                styles.signaturePanel,
+        <ul style={{padding: '0', margin: '0', listStyle: 'none'}}>
+          {signatureFonts.map((font, index) => {
+            let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
+            return (
+              <li key={`signature-panel-${index}`} className={classNames(
+                styles.signaturePanelWrapper,
                 {
-                  [styles.activeSignature]: font.name === signatureStyle
+                  [styles.signaturePanelLeft]: index % 2 === 0,
+                  [styles.signaturePanelRight]: index % 2 === 1
                 }
-              )}
-                onClick={handleClick}>
-                <div className={styles.signatureCanvasWrapper}>
-                  <canvas className={styles.signaturePanelCanvas}
-                    ref={`writeSignature-${font.name}`}>
-                  </canvas>
-                </div>
-                <div className={styles.signatureTypeWrapper}>
-                  <div className="pull-left">{font.label}</div>
-                  <div className={classNames(`preload-${font.name}`, styles.signatureTypeLabel)}>
-                    {signatureName}
+              )}>
+                <div className={classNames(
+                  styles.signaturePanel,
+                  {
+                    [styles.activeSignature]: font.name === signatureStyle
+                  }
+                )}
+                  onClick={handleClick}>
+                  <div className={styles.signatureCanvasWrapper}>
+                    <canvas className={styles.signaturePanelCanvas}
+                      ref={`writeSignature-${font.name}`}>
+                    </canvas>
+                  </div>
+                  <div className={styles.signatureTypeWrapper}>
+                    <div className="pull-left">{font.label}</div>
+                    <div className={classNames(`preload-${font.name}`, styles.signatureTypeLabel)}>
+                      {font.label}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Col>
-          );
-        })}
+              </li>
+            );
+          })}
+        </ul>
         <div className="clearfix"></div>
       </div>
     );

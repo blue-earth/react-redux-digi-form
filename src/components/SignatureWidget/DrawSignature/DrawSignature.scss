@@ -8,16 +8,23 @@
   }
 }
 .drawPanelWrapper {
-  padding: 10px 16px;
+  // padding: 10px 16px;
 }
 .signatureWrapper {
-  height: calc(100% - 50px);
+  height: calc(100% - 60px);
+  @include media('<xs') {
+    height: calc(100% - 70px);
+  }
+}
+.drawPanelButtons {
+  line-height: 50px;
+  height: 50px;
 }
 .clearButton {
   float: right;
   height: 36px;
   width: 36px;
-  margin: 0 4px;
+  margin: 7px 4px;
   padding: 0;
   background-color: #fff;
   border: 1px solid $grey;
@@ -26,15 +33,15 @@
   color: $text-dark-color;
   @include border-radius(5px);
   @include input-box-shadow;
+  &:focus {
+    outline: none;
+  }
 }
 .colourPicker {
   float: right;
-  line-height: 36px;
-  height: 36px;
+  margin-left: 10px;
 }
-.colorPickerButton {
-  @include background-gradient($select-button-start-color, $select-button-end-color);
-}
+
 .guideLine {
   @include user-select(none);
   &:before {

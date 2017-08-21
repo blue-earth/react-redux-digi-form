@@ -7,16 +7,17 @@ import ColourPicker from '../ColourPicker';
 import classNames from 'classnames';
 import styles from './DrawSignature.scss';
 import { IoIosTrashOutline } from 'react-icons/lib/io';
+import SignatureTabs from '../SignatureTabs';
 
 class DrawSignature extends Component {
 
   static propTypes = {
-    className: PropTypes.string,
-    onChange: PropTypes.func
+    onTabChange: PropTypes.func,
+    className: PropTypes.string
   };
   static defaultProps = {
-    className: '',
-    onChange: () => {}
+    onTabChange: () => {},
+    className: ''
   };
 
   constructor(props) {
@@ -62,12 +63,13 @@ class DrawSignature extends Component {
   }
 
   render() {
-    const { className } = this.props;
+    const { className, onTabChange } = this.props;
     const { drawSignatureColour } = this.state;
     return (
       <div className={classNames(className, styles.drawPanelWrapper)}
         tabIndex={0}>
         <div className={styles.drawPanelButtons}>
+          <SignatureTabs activeTab="draw" onTabChange={onTabChange} />
           <div className={styles.colourPicker}>
             <ColourPicker onChange={this.handleColourChange} />
           </div>
