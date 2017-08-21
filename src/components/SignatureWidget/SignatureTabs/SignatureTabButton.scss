@@ -1,0 +1,27 @@
+@import './mixins';
+@import './variables';
+
+.signatureTabGroup {
+  display: none;
+  @include media('<xs') {
+    display: inline-block;
+  }
+}
+.signatureTabButton {
+  color: $signature-modal-tab-color;
+  border-color: $signature-modal-tab-color;
+  &:hover {
+    border-color: $signature-modal-tab-color;
+    color: $white;
+    background-color: rgba(56,147,208,0.5);
+  }
+  &:active, &:focus {
+    border-color: $signature-modal-tab-color;
+    color: $white;
+    background-color: $signature-modal-tab-color;
+  }
+  &.activeTab {
+    color: $white;
+    background-color: $signature-modal-tab-color;
+  }
+}
