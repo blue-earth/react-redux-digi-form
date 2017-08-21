@@ -8,7 +8,7 @@ import {
   Tab
 } from 'react-bootstrap';
 import Button from 'components/Buttons/DashboardButtons/Button';
-import questionInputs from 'schemas/questionInputs';
+import { getQuestionInputSchema } from 'schemas/questionInputs';
 import 'rc-switch/assets/index.css';
 import { formBuilderSelectMode } from 'constants/formBuilder';
 import styles from './QuestionEditPanel.scss';
@@ -101,7 +101,7 @@ export default class QuestionEditPanel extends Component {
   }
 
   setSchema(inputName) {
-    this.inputSchema = questionInputs[inputName];
+    this.inputSchema = getQuestionInputSchema(inputName);
   }
 
   handlePreview = () => {

@@ -13,7 +13,8 @@ import SelectButton from 'components/Buttons/SelectButton';
 import Icon from 'components/Icon';
 import _ from 'lodash';
 import classNames from 'classnames';
-import questionInputs, {
+import {
+  questionInputSchemas,
   questionInputGroups
 } from 'schemas/questionInputs';
 import styles from './ElementsListPanel.scss';
@@ -157,7 +158,7 @@ export default class ElementsListPanel extends Component {
           </div>
           <Collapse in={expanded}>
             <Panel eventKey={index} className={styles.panel}>
-              {that.renderPanelContent(_.filter(questionInputs, {group: group.name}))}
+              {that.renderPanelContent(_.filter(questionInputSchemas, {group: group.name}))}
             </Panel>
           </Collapse>
         </div>

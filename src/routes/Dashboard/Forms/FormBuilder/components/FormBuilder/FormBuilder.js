@@ -19,7 +19,7 @@ import {
   getActiveLabel,
   getNextBoxIndex
 } from 'helpers/formBuilderHelper';
-import questionInputs from 'schemas/questionInputs';
+import { getQuestionInputSchema } from 'schemas/questionInputs';
 
 class FormBuilder extends Component {
 
@@ -194,7 +194,8 @@ class FormBuilder extends Component {
 
   getAvailableSelectionFields = () => {
     const questionTypeName = this.props.currentElement.question.type;
-    var result = questionInputs[questionTypeName]['availableFields'];
+    var schema = getQuestionInputSchema(questionTypeName);
+    var result = schema['availableFields'];
     return result;
   }
 
