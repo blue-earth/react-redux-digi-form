@@ -3,9 +3,10 @@ import React, {
   PropTypes
 } from 'react';
 import { Col } from 'react-bootstrap';
+import ColourPicker from '../ColourPicker';
 import classNames from 'classnames';
 import styles from './WriteSignature.scss';
-import { colours, signatureFonts } from 'schemas/signatureSchema';
+import { signatureFonts } from 'schemas/signatureSchema';
 
 class WriteSignature extends Component {
 
@@ -23,8 +24,8 @@ class WriteSignature extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      writeSignatureColour: 'black',
       signatureName: props.signatureName,
+      writeSignatureColour: '#000000',
       signatureStyle: signatureFonts[0].name
     };
   }
@@ -94,36 +95,20 @@ class WriteSignature extends Component {
       ctx.font = `${adjustedHeight}px ${signatureStyle}`;
       textWidth = ctx.measureText(signatureName).width;
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = colours[writeSignatureColour];
+      ctx.fillStyle = writeSignatureColour;
       ctx.fillText(signatureName, (width-textWidth) / 2, canvas.height * 0.5);
     });
   }
 
   render() {
     const { className } = this.props;
-    const { signatureStyle, writeSignatureColour } = this.state;
-    const writeSignatureColourSelection = (
-      <ul className={styles.signaturePadColourSelection}>
-        {Object.keys(colours).map((colourName, index) => {
-          const colour = colours[colourName];
-          let boundSelectActiveColour = this.handleSelectActiveColour.bind(this, colourName); // eslint-disable-line
-          return (
-            <li
-              key={`colour-${index}`}
-              onClick={boundSelectActiveColour}
-              className={classNames(styles.colourSelection, {
-                [styles.activeColour]: writeSignatureColour === colourName
-              })}
-              style={{backgroundColor: colour}}>
-            </li>
-          );
-        })}
-      </ul>
-    );
+    const { signatureStyle, signatureName } = this.state;
     return (
       <div className={classNames(className, styles.writePanelWrapper)}>
         <div className={classNames(styles.tabPanelTitle, 'invisible')}>Like a celebrity</div>
-        {writeSignatureColourSelection}
+        <div className={styles.colourPicker}>
+          <ColourPicker onChange={this.handleSelectActiveColour} />
+        </div>
         {signatureFonts.map((font, index) => {
           let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
           return (

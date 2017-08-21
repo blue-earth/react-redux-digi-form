@@ -26,6 +26,11 @@
   @include border-radius(5px);
   @include input-box-shadow;
 }
+.colourPicker {
+  float: right;
+  line-height: 36px;
+  height: 36px;
+}
 .colorPickerButton {
   @include background-gradient($select-button-start-color, $select-button-end-color);
 }

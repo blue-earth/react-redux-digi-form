@@ -1,0 +1,28 @@
+@import './mixins';
+@import './variables';
+
+.colourSelectionWrapper {
+  text-align: right;
+  padding: 0;
+  margin: 0;
+  .colourSelection {
+    display: inline-block;
+    vertical-align: middle;
+    height: 28px;
+    width: 28px;
+    margin: 0 2px;
+    background-color: $black;
+    cursor: pointer;
+    @include border-radius(50%);
+    border: 3px solid $signature-modal-bg-color;
+    &.colour-red {
+      background-color: $red;
+    }
+    &.colour-blue {
+      background-color: $blue;
+    }
+    &.activeColour {
+      border-color: #97CAE9;
+    }
+  }
+}

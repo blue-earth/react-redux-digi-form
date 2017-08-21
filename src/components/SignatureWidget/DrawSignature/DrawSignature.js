@@ -3,11 +3,10 @@ import React, {
   PropTypes
 } from 'react';
 import SignaturePad from 'react-signature-pad';
-import ColorPicker from 'components/ColorPicker/ColorPicker';
+import ColourPicker from '../ColourPicker';
 import classNames from 'classnames';
 import styles from './DrawSignature.scss';
 import { IoReply } from 'react-icons/lib/io';
-import { colours } from 'schemas/signatureSchema';
 
 class DrawSignature extends Component {
 
@@ -79,18 +78,8 @@ class DrawSignature extends Component {
       <div className={classNames(className, styles.drawPanelWrapper)}
         tabIndex={0}>
         <div className={styles.drawPanelButtons}>
-          <div className="pull-right">
-            <ColorPicker
-              /**
-                * Use github style for color picker.
-                * See list of styles at https://casesandberg.github.io/react-color/
-                */
-              type="github"
-              value={drawSignatureColour}
-              customSwatches={Object.keys(colours).map((key) => colours[key])}
-              buttonClassName={styles.colorPickerButton}
-              onChange={this.handleColourChange}
-            />
+          <div className={styles.colourPicker}>
+            <ColourPicker onChange={this.handleColourChange} />
           </div>
           <button className={styles.revertButton} onClick={this.handleRevert}>
             <IoReply />
