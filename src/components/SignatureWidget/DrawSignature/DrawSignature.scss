@@ -13,11 +13,12 @@
 .signatureWrapper {
   height: calc(100% - 50px);
 }
-.revertButton {
+.clearButton {
   float: right;
   height: 36px;
   width: 36px;
   margin: 0 4px;
+  padding: 0;
   background-color: #fff;
   border: 1px solid $grey;
   font-size: 20px;

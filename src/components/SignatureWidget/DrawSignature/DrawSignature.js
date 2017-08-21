@@ -6,7 +6,7 @@ import SignaturePad from 'react-signature-pad';
 import ColourPicker from '../ColourPicker';
 import classNames from 'classnames';
 import styles from './DrawSignature.scss';
-import { IoReply } from 'react-icons/lib/io';
+import { IoIosTrashOutline } from 'react-icons/lib/io';
 
 class DrawSignature extends Component {
 
@@ -24,7 +24,7 @@ class DrawSignature extends Component {
     this.state = {
       drawSignatureColour: '#000000'
     };
-    this.drawSignatures = [];
+    this.drawSignaturePaths = [];
   }
 
   componentDidMount() {
@@ -46,18 +46,8 @@ class DrawSignature extends Component {
     this.refs.signatureCanvas.penColor = colour;
   }
 
-  handleRevert = () => {
+  handleClear = () => {
     this.refs.signatureCanvas.clear();
-    const dataUrl = this.drawSignatures.pop();
-    this.refs.signatureCanvas.fromDataURL(dataUrl);
-    if (this.drawSignatures.length === 0) {
-      this.refs.signatureCanvas.clear(); // Reset canvas to empty if nothing to set.
-    }
-  }
-
-  onStrokeStart = (event) => {
-    this.drawSignatures.push(this.refs.signatureCanvas.toDataURL());
-    this.props.onChange();
   }
 
   /**
@@ -81,14 +71,13 @@ class DrawSignature extends Component {
           <div className={styles.colourPicker}>
             <ColourPicker onChange={this.handleColourChange} />
           </div>
-          <button className={styles.revertButton} onClick={this.handleRevert}>
-            <IoReply />
+          <button className={styles.clearButton} onClick={this.handleClear}>
+            <IoIosTrashOutline height={24} width={24} />
           </button>
           <div className="clearfix"></div>
         </div>
         <div className={styles.signatureWrapper}>
-          <SignaturePad ref="signatureCanvas" penColor={drawSignatureColour}
-            onBegin={this.onStrokeStart} />
+          <SignaturePad ref="signatureCanvas" penColor={drawSignatureColour} />
           <div className={styles.guideLine}></div>
         </div>
       </div>
