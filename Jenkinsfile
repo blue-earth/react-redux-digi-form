@@ -58,12 +58,12 @@ node('master') {
             echo 'prune and cleanup'
             sh 'npm prune'
             sh 'rm node_modules -rf'
-            slackSend channel: '#jenkins', color: 'good', message: '${env.BRANCH_NAME} build succeeded', teamDomain: 'emondo', token: 'MLdBnvbjuG3Oul8yeSFTZLCl'
+            slackSend channel: '#jenkins', color: 'good', message: "${env.BRANCH_NAME} build succeeded", teamDomain: 'emondo', token: 'MLdBnvbjuG3Oul8yeSFTZLCl'
     }
     catch (err) {
 
         currentBuild.result = "FAILURE"
-        slackSend channel: '#jenkins', color: 'good', message: '${env.BRANCH_NAME} build failure', teamDomain: 'emondo', token: 'MLdBnvbjuG3Oul8yeSFTZLCl'
+        slackSend channel: '#jenkins', color: 'good', message: "${env.BRANCH_NAME} build failure", teamDomain: 'emondo', token: 'MLdBnvbjuG3Oul8yeSFTZLCl'
 
         throw err
     }
