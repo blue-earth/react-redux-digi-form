@@ -31,6 +31,10 @@ import {
   UploadFieldBasicTab,
   UploadFieldAdvancedTab
 } from './UploadField';
+import {
+  CheckboxFieldBasicTab,
+  CheckboxFieldAdvancedTab
+} from './CheckboxField';
 
 export const getQuestionTypeConfigComponent = function (questionTypeName, tabName = 'general', componentProps) {
   var ConfigComponent;
@@ -80,6 +84,13 @@ export const getQuestionTypeConfigComponent = function (questionTypeName, tabNam
     case 'DropdownField':
     case 'MultipleChoiceField':
     case 'YesNoChoiceField':
+    case 'CheckboxField':
+      if (tabName === 'general') {
+        ConfigComponent = CheckboxFieldBasicTab;
+      } else {
+        ConfigComponent = CheckboxFieldAdvancedTab;
+      }
+      break;
     case 'DateField':
       if (tabName === 'general') {
         ConfigComponent = DateFieldBasicTab;

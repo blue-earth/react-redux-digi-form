@@ -133,6 +133,24 @@ export const addressFieldSchema = {
 export const yesNoChoiceSchema = {
   name: 'YesNoChoice',
   componentName: 'YesNoChoice',
+  displayText: 'Yes/No Choice',
+  displayIcon: 'Checkbox',
+  validations: [
+    'is_required'
+  ],
+  logicOperations: [
+    'is',
+    'not'
+  ],
+  selectionTypes: [
+    formBuilderBoxMappingType.BLOCK
+  ],
+  group: STANDARD
+};
+
+export const checkboxSchema = {
+  name: 'CheckboxField',
+  componentName: 'Checkbox',
   displayText: 'Checkbox',
   displayIcon: 'Checkbox',
   validations: [
@@ -377,6 +395,7 @@ export const questionInputSchemas = {
   emailFieldSchema,
   phoneNumberFieldSchema,
   addressFieldSchema,
+  checkboxSchema,
   yesNoChoiceSchema,
   dateFieldSchema,
   multipleChoiceSchema,
@@ -406,6 +425,8 @@ export function getQuestionInputSchema(questionTypeName) {
       return dropdownFieldSchema;
     case 'MultipleChoiceField':
       return multipleChoiceSchema;
+    case 'CheckboxField':
+      return checkboxSchema;
     case 'YesNoChoiceField':
       return yesNoChoiceSchema;
     case 'DateField':
