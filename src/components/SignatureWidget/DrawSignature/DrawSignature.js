@@ -12,6 +12,7 @@ import SignatureTabs from '../SignatureTabs';
 class DrawSignature extends Component {
 
   static propTypes = {
+    onChange: PropTypes.func,
     onTabChange: PropTypes.func,
     className: PropTypes.string
   };
@@ -49,6 +50,7 @@ class DrawSignature extends Component {
 
   handleClear = () => {
     this.refs.signatureCanvas.clear();
+    this.props.onChange();
   }
 
   /**
@@ -63,7 +65,7 @@ class DrawSignature extends Component {
   }
 
   render() {
-    const { className, onTabChange } = this.props;
+    const { className, onTabChange, onChange } = this.props;
     const { drawSignatureColour } = this.state;
     return (
       <div className={classNames(className, styles.drawPanelWrapper)}
@@ -79,7 +81,7 @@ class DrawSignature extends Component {
           <div className="clearfix"></div>
         </div>
         <div className={styles.signatureWrapper}>
-          <SignaturePad ref="signatureCanvas" penColor={drawSignatureColour} />
+          <SignaturePad ref="signatureCanvas" penColor={drawSignatureColour} onBegin={onChange} />
           <div className={styles.guideLine}></div>
         </div>
       </div>
