@@ -41,7 +41,7 @@ class UploadFieldBasicTab extends Component {
         <QuestionRichTextEditor
           title="Question description"
           value={currentElement.question.question_description || ''}
-          setValue={function (newValue) { setQuestionInfo({'instruction': newValue}); }}
+          setValue={function (newValue) { setQuestionInfo({'question_description': newValue}); }}
           filteredQuestions={otherQuestions}
         />
       </EditSection>
