@@ -161,6 +161,7 @@ class SignatureModal extends Component {
           <div className={classNames(styles.inputWrapper, styles.inputRight)}>
             <FloatTextInput
               ref="emailInput"
+              type="EmailField"
               errorMessage={<span>Please enter a valid email.</span>}
               hasError={!isEmailValidated}
               extraClass={styles.signatureInput}
