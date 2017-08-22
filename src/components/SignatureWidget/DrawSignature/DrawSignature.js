@@ -3,21 +3,22 @@ import React, {
   PropTypes
 } from 'react';
 import SignaturePad from 'react-signature-pad';
-import ColorPicker from 'components/ColorPicker/ColorPicker';
+import ColourPicker from '../ColourPicker';
 import classNames from 'classnames';
 import styles from './DrawSignature.scss';
-import { IoReply } from 'react-icons/lib/io';
-import { colours } from 'schemas/signatureSchema';
+import { IoIosTrashOutline } from 'react-icons/lib/io';
+import SignatureTabs from '../SignatureTabs';
 
 class DrawSignature extends Component {
 
   static propTypes = {
-    className: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    onTabChange: PropTypes.func,
+    className: PropTypes.string
   };
   static defaultProps = {
-    className: '',
-    onChange: () => {}
+    onTabChange: () => {},
+    className: ''
   };
 
   constructor(props) {
@@ -25,7 +26,7 @@ class DrawSignature extends Component {
     this.state = {
       drawSignatureColour: '#000000'
     };
-    this.drawSignatures = [];
+    this.drawSignaturePaths = [];
   }
 
   componentDidMount() {
@@ -47,17 +48,8 @@ class DrawSignature extends Component {
     this.refs.signatureCanvas.penColor = colour;
   }
 
-  handleRevert = () => {
+  handleClear = () => {
     this.refs.signatureCanvas.clear();
-    const dataUrl = this.drawSignatures.pop();
-    this.refs.signatureCanvas.fromDataURL(dataUrl);
-    if (this.drawSignatures.length === 0) {
-      this.refs.signatureCanvas.clear(); // Reset canvas to empty if nothing to set.
-    }
-  }
-
-  onStrokeStart = (event) => {
-    this.drawSignatures.push(this.refs.signatureCanvas.toDataURL());
     this.props.onChange();
   }
 
@@ -73,33 +65,23 @@ class DrawSignature extends Component {
   }
 
   render() {
-    const { className } = this.props;
+    const { className, onTabChange, onChange } = this.props;
     const { drawSignatureColour } = this.state;
     return (
       <div className={classNames(className, styles.drawPanelWrapper)}
         tabIndex={0}>
         <div className={styles.drawPanelButtons}>
-          <div className="pull-right">
-            <ColorPicker
-              /**
-                * Use github style for color picker.
-                * See list of styles at https://casesandberg.github.io/react-color/
-                */
-              type="github"
-              value={drawSignatureColour}
-              customSwatches={Object.keys(colours).map((key) => colours[key])}
-              buttonClassName={styles.colorPickerButton}
-              onChange={this.handleColourChange}
-            />
+          <SignatureTabs activeTab="draw" onTabChange={onTabChange} />
+          <div className={styles.colourPicker}>
+            <ColourPicker onChange={this.handleColourChange} />
           </div>
-          <button className={styles.revertButton} onClick={this.handleRevert}>
-            <IoReply />
+          <button className={styles.clearButton} onClick={this.handleClear}>
+            <IoIosTrashOutline height={24} width={24} />
           </button>
           <div className="clearfix"></div>
         </div>
         <div className={styles.signatureWrapper}>
-          <SignaturePad ref="signatureCanvas" penColor={drawSignatureColour}
-            onBegin={this.onStrokeStart} />
+          <SignaturePad ref="signatureCanvas" penColor={drawSignatureColour} onBegin={onChange} />
           <div className={styles.guideLine}></div>
         </div>
       </div>

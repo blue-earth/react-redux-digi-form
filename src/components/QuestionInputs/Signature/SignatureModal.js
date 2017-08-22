@@ -8,7 +8,9 @@ import {
   Tabs,
   Tab,
   Row,
-  Col
+  Col,
+  Popover,
+  OverlayTrigger
 } from 'react-bootstrap';
 import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import ImageUploader from 'components/SignatureWidget/ImageUploader';
@@ -21,6 +23,7 @@ import DrawSignature from 'components/SignatureWidget/DrawSignature';
 import WriteSignature from 'components/SignatureWidget/WriteSignature';
 import CompletionModal from './CompletionModal';
 import { validateIsEmail } from 'helpers/validationHelper';
+import { FaClose } from 'react-icons/lib/fa';
 
 const WRITE = 'write';
 
@@ -73,18 +76,18 @@ class SignatureModal extends Component {
       });
       isValid = false;
     }
+    if (!validateIsEmail(email)) {
+      this.refs.emailInput.refs.input.focus();
+      this.setState({
+        isEmailValidated: false
+      });
+      isValid = false;
+    }
     // Empty signature name error handle
     if (name.length === 0) {
       this.refs.nameInput.refs.input.focus();
       this.setState({
         isNameValidated: false
-      });
-      isValid = false;
-    }
-    if (!validateIsEmail(email)) {
-      this.refs.emailInput.refs.input.focus();
-      this.setState({
-        isEmailValidated: false
       });
       isValid = false;
     }
@@ -142,43 +145,44 @@ class SignatureModal extends Component {
     return (
       <div>
         <Row>
-          <Col xs={6}>
-            <div>Full name</div>
+          <div className={classNames(styles.inputWrapper, styles.inputLeft)}>
             <FloatTextInput
               ref="nameInput"
-              errorMessage={<span>This field can not be empty</span>}
+              errorMessage={<span>Please enter your full name.</span>}
               hasError={!isNameValidated}
               extraClass={styles.signatureInput}
               size="md"
               autoFocus
               value={name}
-              placeholder="Enter full name"
-              onChange={this.handleNameChange} />
-          </Col>
-          <Col xs={6}>
-            <div>Email</div>
+              label="Full name"
+              onChange={this.handleNameChange}
+              errorPlacement="top" />
+          </div>
+          <div className={classNames(styles.inputWrapper, styles.inputRight)}>
             <FloatTextInput
               ref="emailInput"
-              errorMessage={<span>Email address is not valid</span>}
+              errorMessage={<span>Please enter a valid email.</span>}
               hasError={!isEmailValidated}
               extraClass={styles.signatureInput}
               size="md"
               value={email}
-              placeholder="Enter email"
+              label="Email"
               onChange={this.handleEmailChange} />
-          </Col>
+          </div>
         </Row>
-        <Row className={styles.infoSection}>
+        <Row>
           <Col xs={6}>
             Date
             {' '}
             <span className={styles.info}>{moment().format('L')}</span>
           </Col>
-          <Col xs={12}>
-            <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
-            {!isSignatureValidated && <span className={styles.errorMessage}>Please sign your signature</span>}
-          </Col>
         </Row>
+        <div className={classNames(styles.errorMessageWrapper, {
+          [styles.noErrorMessage]: isSignatureValidated
+        })}>
+          <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
+          {!isSignatureValidated && <span className={styles.errorMessage}>Please sign your signature</span>}
+        </div>
       </div>
     );
   }
@@ -197,11 +201,12 @@ class SignatureModal extends Component {
         <Tab eventKey="write" title={
           <div>
             <img className={styles.tabIcon} src={writeLogo} />
-            <span>{' '}Write</span>
+            <span>{' '}Type</span>
           </div>
         }>
           <WriteSignature
             ref="write"
+            onTabChange={this.handleTabSelect}
             onChange={this.handleSignatureChange}
             signatureName={name}
             className={styles.tabPanelWrapper} />
@@ -213,6 +218,7 @@ class SignatureModal extends Component {
         }>
           <DrawSignature
             ref="draw"
+            onTabChange={this.handleTabSelect}
             onChange={this.handleSignatureChange}
             className={styles.tabPanelWrapper} />
         </Tab>
@@ -220,12 +226,14 @@ class SignatureModal extends Component {
           <span>
             <img className={styles.tabIcon} src={uploadLogo} />
             {' '}
-            Upload photo
+            Upload
           </span>
         }>
           <div className={styles.tabPanelWrapper}>
             <div className={styles.fileUploadSection}>
-              <ImageUploader ref="upload" onChange={this.handleSignatureChange} />
+              <ImageUploader
+                ref="upload"
+                onChange={this.handleSignatureChange} />
             </div>
           </div>
         </Tab>
@@ -235,27 +243,34 @@ class SignatureModal extends Component {
 
   get consentSection() {
     const { isConsented } = this.state;
+    const termsNConditions = (
+      <Popover id="terms-and-conditions" title="Terms & Conditions">
+        Lorem ipsum Occaecat proident.
+        irure proident nisi ea eiusmod mollit ex cillum.
+        dolor consequat et voluptate officia velit in cupidatat ad do sed aute voluptate.
+        ullamco nostrud sit eu ad labore elit cillum in officia sunt aliquip reprehenderit.
+        in labore qui in voluptate Duis do Duis deserunt anim Duis Excepteur commodo fugiat.
+        esse do id nostrud aute tempor reprehenderit laborum in sint culpa velit elit velit.
+      </Popover>
+    );
     return (
       <div className={classNames(
         styles.signatureModalConsent,
         styles.signatureModalWrapper
       )}>
-        <div className={styles.consentTitle}>
+        <div className={styles.consent}>
           <div style={{width: '30px', float: 'left'}}>
             <input id="consent" type="checkbox" className={styles.checkbox}
               value={isConsented} checked={isConsented} onChange={this.handleToggleConsent} />
           </div>
-          <div><label htmlFor="consent">I consent to the following</label></div>
-        </div>
-        <div style={{marginLeft: '30px'}}>
-          <p className={styles.consentStatement}>
-            Lorem ipsum Occaecat proident.
-            irure proident nisi ea eiusmod mollit ex cillum.
-            dolor consequat et voluptate officia velit in cupidatat ad do sed aute voluptate.
-            ullamco nostrud sit eu ad labore elit cillum in officia sunt aliquip reprehenderit.
-            in labore qui in voluptate Duis do Duis deserunt anim Duis Excepteur commodo fugiat.
-            esse do id nostrud aute tempor reprehenderit laborum in sint culpa velit elit velit.
-          </p>
+          <div className={styles.consentStatement}>
+            <label htmlFor="consent" className={styles.consentLabel}>
+              I consent to the following
+            </label>
+            <OverlayTrigger trigger={['hover', 'focus']} placement="top" overlay={termsNConditions}>
+              <div className={styles.btnLink}>terms & conditions</div>
+            </OverlayTrigger>
+          </div>
         </div>
       </div>
     );
@@ -305,6 +320,9 @@ class SignatureModal extends Component {
           <Modal.Header>
             <Modal.Title bsClass={styles.signatureModalTitle}>
               YOUR SIGNATURE
+              <button className={styles.closeModalButton} onClick={handleHide}>
+                <FaClose size={16} />
+              </button>
             </Modal.Title>
           </Modal.Header>
           <Modal.Body bsClass={styles.signatureModalWrapper}>

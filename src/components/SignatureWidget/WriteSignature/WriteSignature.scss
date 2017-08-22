@@ -6,13 +6,36 @@
   overflow-y: auto;
   padding-bottom: 0;
 }
-.tabPanelTitle {
-  line-height: 18px;
-  margin-bottom: 12px;
+.signaturePanelHeader {
+  height: 50px;
+  line-height: 50px;
 }
-
+.nameInputWrapper {
+  width: 50%;
+  float: left;
+  @include media('<xs') {
+    width: auto;
+    float: right;
+  }
+}
+.colourPicker {
+  float: right;
+  @include media('<xs') {
+    display: none;
+  }
+}
 .signaturePanelWrapper {
+  float: left;
+  width: 50%;
   padding: 0;
+  margin: 10px 0;
+  @include media('<xs') {
+    width: 100%;
+    display: none;
+    &:first-child {
+      display: block;
+    }
+  }
 }
 .signaturePanelLeft {
   padding-right: 5px;
@@ -22,52 +45,48 @@
 }
 .signaturePanel {
   position: relative;
-  height: 100px;
+  height: 130px;
   box-shadow: inset 0px 0px 24px 10px $white;
+  overflow: hidden;
   @include border-radius(4px);
   @include input-box-shadow;
   border: 1px solid $border-color;
   cursor: pointer;
   background-color: $white;
-  padding: 0 10px;
+  @include media('<xs') {
+    height: 180px;
+  }
+}
+.signatureCanvasWrapper {
+  float: left;
+  height: 100px;
+  width: 100%;
+  @include media('<xs') {
+    height: 150px;
+  }
 }
 .signaturePanelCanvas {
   width: 100%;
   height: 100%;
 }
 
+.signatureTypeWrapper {
+  float: left;
+  width: 100%; 
+  height: 30px;
+  line-height: 30px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;  
+  color: $cf-input-placeholder-color;;
+  background-color: $signature-modal-bg-color;
+}
 .signatureTypeLabel {
-  font-size: 30px;
-  text-align: center;
-  padding: 0;
+  float: right;
+  font-size: 25px;
 }
-.signaturePadColourSelection {
-  position: absolute;
-  padding: 0;
-  margin: 0;
-  top: 15px;
-  left: 50%;
-  margin-left: -42px;
-  text-align: center;
-  .colourSelection {
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    margin: 4px;
-    background-color: $black;
-    @include border-radius(50%);
-    border: 3px solid $signature-modal-bg-color;
-    &.colour-red {
-      background-color: $red;
-    }
-    &.colour-blue {
-      background-color: $blue;
-    }
-    &.activeColour {
-      border-color: #97CAE9;
-    }
-  }
-}
+
 .activeSignature {
   border: 2px solid $dashboard-header-bg-color;
 }

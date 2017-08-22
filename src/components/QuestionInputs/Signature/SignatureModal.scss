@@ -12,19 +12,45 @@
   font-weight: 600;
   padding: 0 25px;
   letter-spacing: 1px;
+  @include media('<sm') {
+    padding: 0;
+  }
 }
 .signatureModalWrapper {
   padding: 20px 40px;
+  @include media('<sm') {
+    padding: 10px;
+  }
+}
+.inputWrapper {
+  width: 50%;
+  float: left;
+  &.inputLeft {
+    padding-left: 15px;
+    padding-right: 5px;
+  }
+  &.inputRight {
+    padding-left: 5px;
+    padding-right: 15px;
+  }
 }
 
 .info {
+  @include media('<xs') {
+    line-height: 1.5em;
+  }
   line-height: 3.5em;
   font-weight: 400;
   color: $signature-modal-info-color;
 }
-.infoSection {
-  margin-bottom: 18px;
+
+.errorMessageWrapper {
+  height: 30px;
+  &.noErrorMessage {
+    height: 0px;
+  }
 }
+
 .errorMessage {
   color: $red;
 }
@@ -39,10 +65,14 @@
   opacity: 0.5;
 }
 .tabPanelWrapper {
-  height: 325px;
-  padding: 18px 16px;
+  height: 375px;
+  padding: 10px;
   &:focus {
     outline: none;
+  }
+  @include media('<xs') {
+    padding: 0 10px;
+    height: 250px;
   }
 }
 .signaturePadWrapper {
@@ -54,16 +84,29 @@
 }
 .signatureModalConsent {
   background-color: $signature-modal-bg-color;
-  .consentTitle {
+  .consent {
     font-size: 14px;
     font-weight: 400;
     margin: 4px 0;
-    line-height: 24px;
-    height: 24px;
+    line-height: 20px;
+    height: 20px;
+    @include media('<xs') {
+      height: auto;
+    }
+  }
+  .consentLabel {
+    float: left;
+    font-weight: 400;
+    margin: 0;
+    margin-right: 5px;
+    @include media('<xs') {
+      width: 100%;
+      float: none;
+    }
   }
   .consentStatement {
-    color: $signature-modal-text-light-color;
-    font-size: 10px;
+    margin: 0 30px;
+    max-width: 80%;
     font-weight: 400;
   }
   .checkbox {
@@ -90,14 +133,52 @@
   &:hover {
     color: $signature-modal-text-light-color;
   }
+  @include media('<xs') {
+    display: none;
+  }
+}
+.closeModalButton {
+  float: right;
+  padding: 0;
+  height: 20px;
+  width: 20px;
+  background: none;
+  border: none;
+  color: #333;
+  line-height: 16px;
+  @include media('>=xs') {
+    display: none;
+  }
 }
 .signButton {
   width: 150px;
   height: 50px;
+  @include media('<xs') {
+    width: 100%;
+  }
 }
-
+.btnLink {
+  color: $signature-modal-tab-color;
+  cursor: pointer;
+}
 :global {
+  .modal-dialog {
+    @include media('<sm') {
+      margin: 20px;
+    }
+    @include media('<xs') {
+      margin: 0;
+    }
+  }
+  .modal-header {
+    @include media('<sm') {
+      padding: 10px;
+    }
+  }
   .nav-tabs{
+    @include media('<xs') {
+      display: none;
+    }
     border-bottom: none;
     > li{
       >a{
@@ -130,6 +211,9 @@
   }
   #SignatureTabs {
     margin-bottom: 8px;
+    @include media('<xs') {
+      margin: 0;
+    }
   }
   .tab-content {
     @include border-radius(5px);

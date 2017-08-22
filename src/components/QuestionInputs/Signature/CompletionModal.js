@@ -10,6 +10,7 @@ import {
 } from 'react-bootstrap';
 import AppButton from 'components/Buttons/AppButton';
 import { connectModal } from 'redux-modal';
+import { FaClose } from 'react-icons/lib/fa';
 import styles from './CompletionModal.scss';
 
 class CompletionModal extends Component {
@@ -56,12 +57,17 @@ class CompletionModal extends Component {
     return (
       <Modal backdrop="static" show={show}
         className={styles.completionModal} dialogClassName={styles.modalWrapper}>
-        <h3 className={styles.modalHeader}>
-            Enter signature completion code
-        </h3>
+        <div style={{position: 'relative'}}>
+          <h3 className={styles.modalHeader}>
+              Enter signature completion code
+          </h3>
+          <button className={styles.closeModalButton} onClick={closeModal}>
+            <FaClose size={16} />
+          </button>
+        </div>
         <Modal.Body bsClass={styles.completionModalWrapper}>
           <Row>
-            <Col xs={8} xsPush={2}>
+            <Col sm={8} smPush={2}>
               <p className={styles.info}>
                 The signature code has been sent to {commitValue.email}.
                 {' '}

@@ -25,13 +25,16 @@ class FloatTextInput extends Component {
     hasError: PropTypes.bool,
     isDisabled: PropTypes.bool,
     errorMessage: PropTypes.element,
+    errorPlacement: PropTypes.string,
     extraClass: PropTypes.string,
     type: PropTypes.string,
     refName: PropTypes.string,
+    backgroundColour: PropTypes.string,
     size: PropTypes.oneOf(['sm', 'md', 'lg'])
   }
   static defaultProps = {
     primaryColour: '#3893d0',
+    errorPlacement: 'bottom',
     hasError: false,
     isDisabled: false,
     placeholder: '',
@@ -136,12 +139,14 @@ class FloatTextInput extends Component {
     }
   }
   get activeColour() {
+    const { backgroundColour } = this.props;
+    let style = { backgroundColor: backgroundColour };
     if (this.state.active) {
-      return {
+      return Object.assign(style, {
         color: this.props.primaryColour
-      };
+      });
     }
-    return null;
+    return style;
   }
   get activeBorderColour() {
     if (this.state.active) {
@@ -152,7 +157,17 @@ class FloatTextInput extends Component {
     return null;
   }
   render() {
-    const { placeholder, label, name, errorMessage, extraClass, type, isDisabled, size } = this.props;
+    const {
+      placeholder,
+      label,
+      name,
+      errorMessage,
+      extraClass,
+      type,
+      isDisabled,
+      size,
+      errorPlacement
+    } = this.props;
     let { filled, active, savedValue, hasError, inputId } = this.state;
     const cx = classNames.bind(styles); // eslint-disable-line
     const controlId = name || `floatTextInput_${inputId}`;
@@ -191,7 +206,7 @@ class FloatTextInput extends Component {
           style={this.activeBorderColour}
           placeholder=""
         />
-        <OverlayTrigger ref="errorMessage" placement="bottom" overlay={tooltip} trigger={['hover', 'focus']}>
+        <OverlayTrigger ref="errorMessage" placement={errorPlacement} overlay={tooltip} trigger={['hover', 'focus']}>
           <div className={cx('errorIconWrapper')}>
             <IoAndroidAlert className={cx({
               hide: !hasError

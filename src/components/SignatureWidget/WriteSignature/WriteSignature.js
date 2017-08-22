@@ -2,29 +2,31 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { Col } from 'react-bootstrap';
+import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
+import ColourPicker from '../ColourPicker';
+import SigantureTabButton from '../SignatureTabs';
 import classNames from 'classnames';
 import styles from './WriteSignature.scss';
-import { colours, signatureFonts } from 'schemas/signatureSchema';
+import { signatureFonts } from 'schemas/signatureSchema';
 
 class WriteSignature extends Component {
 
   static propTypes = {
     onChange: PropTypes.func,
     className: PropTypes.string,
-    signatureName: PropTypes.string
+    onTabChange: PropTypes.func
   }
   static defaultProps = {
+    onTabChange: () => {},
     onChange: () => {},
-    signatureName: '',
     className: ''
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      writeSignatureColour: 'black',
-      signatureName: props.signatureName,
+      writeSignatureColour: '#000000',
+      signatureName: '',
       signatureStyle: signatureFonts[0].name
     };
   }
@@ -36,12 +38,6 @@ class WriteSignature extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleWriteCanvasesResize);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      signatureName: nextProps.signatureName
-    }, this.updateWriteSignatureCanvases);
   }
 
   get dataUrl() {
@@ -72,6 +68,11 @@ class WriteSignature extends Component {
       signatureStyle: value
     }, this.updateWriteSignatureCanvases);
   }
+  hanldeSignatureNameChange = (value) => {
+    this.setState({
+      signatureName: value
+    }, this.updateWriteSignatureCanvases);
+  }
 
   /**
   * Redraw write signature panel canvas according to updated params (textWidth, color, canvasSize etc.).
@@ -94,63 +95,66 @@ class WriteSignature extends Component {
       ctx.font = `${adjustedHeight}px ${signatureStyle}`;
       textWidth = ctx.measureText(signatureName).width;
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = colours[writeSignatureColour];
+      ctx.fillStyle = writeSignatureColour;
       ctx.fillText(signatureName, (width-textWidth) / 2, canvas.height * 0.5);
     });
   }
 
   render() {
-    const { className } = this.props;
-    const { signatureStyle, writeSignatureColour } = this.state;
-    const writeSignatureColourSelection = (
-      <ul className={styles.signaturePadColourSelection}>
-        {Object.keys(colours).map((colourName, index) => {
-          const colour = colours[colourName];
-          let boundSelectActiveColour = this.handleSelectActiveColour.bind(this, colourName); // eslint-disable-line
-          return (
-            <li
-              key={`colour-${index}`}
-              onClick={boundSelectActiveColour}
-              className={classNames(styles.colourSelection, {
-                [styles.activeColour]: writeSignatureColour === colourName
-              })}
-              style={{backgroundColor: colour}}>
-            </li>
-          );
-        })}
-      </ul>
-    );
+    const { className, onTabChange } = this.props;
+    const { signatureStyle, signatureName } = this.state;
     return (
       <div className={classNames(className, styles.writePanelWrapper)}>
-        <div className={classNames(styles.tabPanelTitle, 'invisible')}>Like a celebrity</div>
-        {writeSignatureColourSelection}
-        {signatureFonts.map((font, index) => {
-          let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
-          return (
-            <Col key={`signature-panel-${index}`} xs={6} className={classNames(
-              styles.signaturePanelWrapper,
-              {
-                [styles.signaturePanelLeft]: index % 2 === 0,
-                [styles.signaturePanelRight]: index % 2 === 1
-              }
-            )}>
-              <div className={classNames(
-                styles.signaturePanel,
+        <div className={styles.signaturePanelHeader}>
+          <div className="pull-left">
+            <SigantureTabButton onTabChange={onTabChange} activeTab="write" />
+          </div>
+          <FloatTextInput
+            extraClass={styles.nameInputWrapper}
+            backgroundColour="#f5f6fa"
+            placeholder="Text as signature"
+            size="md"
+            autoFocus
+            value={signatureName}
+            onChange={this.hanldeSignatureNameChange} />
+          <div className={styles.colourPicker}>
+            <ColourPicker onChange={this.handleSelectActiveColour} />
+          </div>
+        </div>
+        <ul style={{padding: '0', margin: '0', listStyle: 'none'}}>
+          {signatureFonts.map((font, index) => {
+            let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
+            return (
+              <li key={`signature-panel-${index}`} className={classNames(
+                styles.signaturePanelWrapper,
                 {
-                  [styles.activeSignature]: font.name === signatureStyle
+                  [styles.signaturePanelLeft]: index % 2 === 0,
+                  [styles.signaturePanelRight]: index % 2 === 1
                 }
-              )}
-                onClick={handleClick}>
-                <canvas className={styles.signaturePanelCanvas}
-                  ref={`writeSignature-${font.name}`}>
-                </canvas>
-              </div>
-              <div className={classNames(styles.signatureTypeLabel, `preload-${font.name}`)}>
-                {font.label}
-              </div>
-            </Col>
-          );
-        })}
+              )}>
+                <div className={classNames(
+                  styles.signaturePanel,
+                  {
+                    [styles.activeSignature]: font.name === signatureStyle
+                  }
+                )}
+                  onClick={handleClick}>
+                  <div className={styles.signatureCanvasWrapper}>
+                    <canvas className={styles.signaturePanelCanvas}
+                      ref={`writeSignature-${font.name}`}>
+                    </canvas>
+                  </div>
+                  <div className={styles.signatureTypeWrapper}>
+                    <div className="pull-left">{font.label}</div>
+                    <div className={classNames(`preload-${font.name}`, styles.signatureTypeLabel)}>
+                      {font.label}
+                    </div>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
         <div className="clearfix"></div>
       </div>
     );
