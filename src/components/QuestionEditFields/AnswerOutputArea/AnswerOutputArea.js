@@ -24,10 +24,15 @@ import styles from './AnswerOutputArea.scss';
 
 class AnswerOutputArea extends Component {
   static propTypes = {
+    currentElement: PropTypes.object.isRequired,
+    title: PropTypes.string,
     setMappingInfo: PropTypes.func.isRequired,
-    setQuestionInfo: PropTypes.func.isRequired,
-    inputSchema: PropTypes.object.isRequired
+    setQuestionInfo: PropTypes.func.isRequired
   };
+
+  static defaultProps = {
+    title: 'Answer output area(s)'
+  }
 
   getPopover(popoverId) {
     return (
@@ -35,12 +40,6 @@ class AnswerOutputArea extends Component {
         {popoverTexts[popoverId]}
       </Popover>
     );
-  }
-
-  sectionIsNeeded() {
-    const { inputSchema } = this.props;
-    const components = ['MultipleChoice', 'DropdownField'];
-    return _.includes(components, inputSchema.name);
   }
 
   get choices() {
@@ -208,12 +207,11 @@ class AnswerOutputArea extends Component {
   }
 
   render() {
-    if (!this.sectionIsNeeded()) return false;
     return (
       <div>
         <EditSection>
           <SectionTitle
-            title="Answer output area(s)"
+            title={this.props.title}
             popoverId="outputArea"
           />
           {this.renderList()}

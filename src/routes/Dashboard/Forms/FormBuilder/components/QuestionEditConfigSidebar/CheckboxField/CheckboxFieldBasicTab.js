@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import InstructionDescription from 'components/QuestionEditFields/InstructionDescription';
 import RequiredValidation from 'components/QuestionEditFields/RequiredValidation';
+import AnswerOutputArea from 'components/QuestionEditFields/AnswerOutputArea';
 import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
 import _ from 'lodash';
 
@@ -32,6 +33,11 @@ class CheckboxFieldBasicTab extends Component {
         questionInstruction={currentElement.question.question_instruction}
         questionDescription={currentElement.question.question_description}
         filteredQuestions={filteredQuestions}
+        setQuestionInfo={this.props.setQuestionInfo} />
+      <AnswerOutputArea
+        currentElement={currentElement}
+        title="Checkbox choices"
+        setMappingInfo={this.props.setMappingInfo}
         setQuestionInfo={this.props.setQuestionInfo} />
       <RequiredValidation
         setValidationInfo={setValidationInfo}
