@@ -25,6 +25,13 @@ class CheckboxFieldAdvancedTab extends Component {
     };
   }
 
+  componentDidMount() {
+    if (!this.props.currentElement.question.checkbox_style) {
+      this.setState({selectedCheckboxStyle: 'x'});
+      this.props.setQuestionInfo({'checkbox_style': 'x'});
+    }
+  }
+
   handleCheckboxClick = (value) => {
     this.setState({selectedCheckboxStyle: value});
     this.props.setQuestionInfo({'checkbox_style': value});

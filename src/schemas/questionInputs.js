@@ -161,9 +161,10 @@ export const checkboxSchema = {
     'not'
   ],
   selectionTypes: [
-    formBuilderBoxMappingType.BLOCK
+    formBuilderBoxMappingType.STANDARD
   ],
-  group: STANDARD
+  group: STANDARD,
+  availableFields: []
 };
 
 export const dateFieldSchema = {
