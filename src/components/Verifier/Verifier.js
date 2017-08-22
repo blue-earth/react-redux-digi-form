@@ -15,7 +15,7 @@ class Verifier extends Component {
   };
 
   static defaultMessages = {
-    'EmondoEmailFieldService': 'This email is unavailable.',
+    'EmondoEmailFieldService': 'Please enter a valid email.',
     'AccessCodeService': 'Incorrect password. Passwords are case sensitive.',
     'EmondoAuthenticationService': 'This Access Code is wrong.'
   }
