@@ -29,6 +29,14 @@ export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false, iterat
   }
 };
 
+export const removeItemFromArray = (itemArray, item, iteratee = 'id') => {
+  const index = findIndexByProp(itemArray, item[iteratee], iteratee);
+  if (index !== -1) {
+    itemArray.splice(index, 1);
+  }
+  return itemArray;
+};
+
 export const buildQueryString = (query) =>
   _.join(_.map(_.toPairs(query), pair => `${pair[0]}=${pair[1]}`), '&');
 

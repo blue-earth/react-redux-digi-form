@@ -1,6 +1,6 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { findIndexById, findItemById, mergeItemIntoArray } from 'helpers/pureFunctions';
+import { findIndexById, findItemById, mergeItemIntoArray, removeItemFromArray } from 'helpers/pureFunctions';
 import { createAction, handleActions } from 'redux-actions';
 import { getNextQuestionId, getOutcomeWithQuestionId } from 'helpers/formInteractiveHelper';
 import { assignDefaults } from 'redux/utils/request';
@@ -708,7 +708,8 @@ const formInteractiveReducer = handleActions({
 
   CHANGE_CURRENT_ANSWER: (state, action) =>
     Object.assign({}, state, {
-      currentQuestion: Object.assign({}, state.currentQuestion, action.payload)
+      currentQuestion: Object.assign({}, state.currentQuestion, action.payload),
+      verificationStatus: removeItemFromArray(state.verificationStatus, {id: state.currentQuestion.id})
     }),
   STORE_ANSWER: (state, action) =>
     Object.assign({}, state, {
