@@ -80,10 +80,8 @@ export default class ElementsListPanel extends Component {
     // handle the creation of question type with no drop down options
     // such as fileupload
     event.stopPropagation();
-    const { setQuestionEditMode } = this.props;
-    setQuestionEditMode(formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW);
-    // todo: change InputType
     // todo: change box mapping type
+    this.createEmptyQuestion(inputType, 'STANDARD');
   }
 
   handleElementOptClick = (key) => {

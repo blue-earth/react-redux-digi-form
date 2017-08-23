@@ -414,5 +414,7 @@ export function getQuestionInputSchema(questionTypeName) {
       return addressFieldSchema;
     case 'SignatureField':
       return signatureFieldSchema;
+    case 'UploadField':
+      return uploadFieldSchema;
   }
 }

@@ -223,11 +223,15 @@ class FormBuilder extends Component {
 
     var DocumentHeaderElement = null;
     if (questionEditMode === formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW) {
-      DocumentHeaderElement = <DocumentFieldsSelectionHeader
-        backLinkClickHandler={this.goToQuestionTypeListView}
-        availableFields={this.getAvailableSelectionFields()}
-        className={styles.fieldsSelectorHeader}
-        activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel} />;
+      var availableFields = this.getAvailableSelectionFields();
+      // only display this component if availableFields is configured in the the schema
+      if (availableFields) {
+        DocumentHeaderElement = <DocumentFieldsSelectionHeader
+          backLinkClickHandler={this.goToQuestionTypeListView}
+          availableFields={availableFields}
+          className={styles.fieldsSelectorHeader}
+          activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel} />;
+      }
     }
 
     return (
