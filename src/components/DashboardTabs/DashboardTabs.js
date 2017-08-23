@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  Navbar,
   Nav,
   NavItem
 } from 'react-bootstrap';
@@ -11,11 +10,9 @@ import {
   dashboardUrl,
   submissionsPath,
   formsPath,
-  usersPath,
-  settingsPath
+  usersPath
 } from 'helpers/urlHelper';
 import styles from './DashboardTabs.scss';
-import { MdHome } from 'react-icons/lib/md';
 import _ from 'lodash';
 
 class DashboardTabs extends Component {
@@ -59,24 +56,15 @@ class DashboardTabs extends Component {
     return [
       {
         path: submissionsPath,
-        label: 'Submissions',
-        icon: <MdHome size={16} style={{'verticalAlign': 'text-top', marginRight: '5px'}} />,
-        position: 'left'
+        label: 'Submissions'
       },
       {
         path: formsPath,
-        label: 'Forms',
-        position: 'left'
-      },
-      {
-        path: settingsPath,
-        label: 'Settings',
-        position: 'right'
+        label: 'Forms'
       },
       {
         path: usersPath,
-        label: 'Users',
-        position: 'right'
+        label: 'Users'
       }
     ];
   }
@@ -89,30 +77,17 @@ class DashboardTabs extends Component {
 
   render() {
     return (
-      <Navbar className={styles.dashboardTabs}>
-        <Nav className={styles.leftTabs} onSelect={this.handleSelect} activeKey={this.state.activeKey}>
-          {
-            this.navItems.filter(navItem => navItem.position === 'left').map((navItem) => {
-              return (
-                <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
-                  {navItem.icon} {navItem.label}
-                </NavItem>
-              );
-            })
-          }
-        </Nav>
-        <Nav className={styles.rightTabs} pullRight onSelect={this.handleSelect} activeKey={this.state.activeKey}>
-          {
-            this.navItems.filter(navItem => navItem.position === 'right').map((navItem) => {
-              return (
-                <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
-                  {navItem.icon} {navItem.label}
-                </NavItem>
-              );
-            })
-          }
-        </Nav>
-      </Navbar>
+      <Nav className={styles.dashboardTabs} onSelect={this.handleSelect} activeKey={this.state.activeKey}>
+        {
+          this.navItems.map((navItem) => {
+            return (
+              <NavItem key={navItem.path} eventKey={navItem.path} className="navItem">
+                {navItem.label}
+              </NavItem>
+            );
+          })
+        }
+      </Nav>
     );
   }
 }

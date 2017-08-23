@@ -37,9 +37,8 @@ $button-header-color: #fff;
 $button-header-bg-color: darken($blue, 13%);
 
 // dashboard tabs component
-$dashtabs-color: $grey;
-$dashtabs-active-color: $blue;
-$dashtabs-active-border-color: $blue;
+$dashtabs-color: rgba(255,255,255,0.6);
+$dashtabs-active-color: #2F89C6;
 
 $table-header-bg-color:         #f5f8fa;
 $table-header-text-color:       #7f8fa4;
