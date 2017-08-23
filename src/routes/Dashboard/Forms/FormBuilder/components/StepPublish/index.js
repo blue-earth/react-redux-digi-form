@@ -17,9 +17,14 @@ class StepPublish extends Component {
     id: PropTypes.number,
     title: PropTypes.string,
     slug: PropTypes.string,
-    status: PropTypes.string,
+    status: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.bool,
+      PropTypes.string
+    ]),
     subdomain: PropTypes.string,
-    setFormStatus: PropTypes.func.isRequired
+    setFormStatus: PropTypes.func.isRequired,
+    submitPublishStep: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -30,10 +35,14 @@ class StepPublish extends Component {
   }
 
   handleClickPublic = () => {
-    this.props.setFormStatus('published');
+    this.props.setFormStatus(1);
   }
   handleClickPrivate = () => {
-    this.props.setFormStatus('unpublished');
+    this.props.setFormStatus(0);
+  }
+
+  handleClickSave = () => {
+    this.props.submitPublishStep({id: this.props.id, status: this.props.status});
   }
 
   handleCopy = () => {
@@ -47,12 +56,12 @@ class StepPublish extends Component {
         <p><b>Status:</b></p>
         <ButtonGroup>
           <Button
-            className={cx('statusButton', {'isActive': this.props.status === 'published'})}
+            className={cx('statusButton', {'isActive': this.props.status === 1})}
             onClick={this.handleClickPublic}>
             Public
           </Button>
           <Button
-            className={cx('statusButton', {'isActive': this.props.status === 'unpublished'})}
+            className={cx('statusButton', {'isActive': this.props.status === 0})}
             onClick={this.handleClickPrivate}>
             Private
           </Button>
@@ -71,7 +80,7 @@ class StepPublish extends Component {
           ? <p className={styles.urlCopied}><FaCheck /> URL copied to clipboard.</p> : null}
         <hr className={styles.divider} />
         <p>
-          <DashButton>Save &amp; Continue</DashButton>
+          <DashButton onClick={this.handleClickSave}>Save &amp; Continue</DashButton>
         </p>
       </div>
     );

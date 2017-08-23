@@ -16,7 +16,12 @@ class FormBuilderSteps extends Component {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     slug: PropTypes.string,
-    status: PropTypes.string,
+    // TODO: once the backend is sorted out, change this to whatever type status ends up as
+    status: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.bool,
+      PropTypes.string
+    ]),
     subdomain: PropTypes.string,
 
     /*
@@ -147,7 +152,8 @@ class FormBuilderSteps extends Component {
      */
     goTo: PropTypes.func.isRequired,
 
-    processSubmitConfigure: PropTypes.func,
+    submitConfigureStep: PropTypes.func,
+    submitPublishStep: PropTypes.func,
 
     setFormStatus: PropTypes.func
   };
@@ -170,7 +176,7 @@ class FormBuilderSteps extends Component {
             subdomain: props.subdomain,
             questions: props.questions,
             formConfig: props.formConfig,
-            processSubmitConfigure: props.processSubmitConfigure
+            submitConfigureStep: props.submitConfigureStep
           }
         };
       case 'publish':
@@ -182,7 +188,8 @@ class FormBuilderSteps extends Component {
             slug: props.slug,
             status: props.status,
             subdomain: props.subdomain,
-            setFormStatus: props.setFormStatus
+            setFormStatus: props.setFormStatus,
+            submitPublishStep: props.submitPublishStep
           }
         };
       default:

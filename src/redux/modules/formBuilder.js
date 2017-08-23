@@ -82,7 +82,7 @@ export const INIT_BUILDER_STATE = {
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
   currentStep: 'select', // select, arrange, configure or publish
-  status: 'unpublished' // 'unpublished' or 'published'
+  status: 0 // 'unpublished' or 'published'
 };
 
 export const INIT_QUESTION_STATE = {
@@ -144,6 +144,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
   const logics = data.form_data ? _.defaultTo(data.form_data.logics, []) : [];
   return {
     id: data.id,
+    status: data.status,
     questions,
     logics,
     documents: data.assets_urls ? data.assets_urls : [],
@@ -485,9 +486,9 @@ const _setCurrentElement = (state, action) => {
 };
 
 // ------------------------------------
-// Action: processSubmitConfigure
+// Action: submitConfigureStep
 // ------------------------------------
-export const processSubmitConfigure = (formData) => {
+export const submitConfigureStep = (formData) => {
   var body = humps.decamelizeKeys(formData);
   var method = 'POST';
   var requestURL = `${API_URL}/form_document/api/form/`;
@@ -507,7 +508,39 @@ export const processSubmitConfigure = (formData) => {
       dispatch(doneSubmitForm());
       // update store
       dispatch(updateStore(formData));
-      // console.log('fetch success');
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(doneSubmitForm());
+    };
+  };
+
+  return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
+};
+// ------------------------------------
+// Action: submitPublishStep
+// ------------------------------------
+export const submitPublishStep = (formData) => {
+  // var body = humps.decamelizeKeys(formData);
+  var body = formData;
+  var method = 'POST';
+  var requestURL = `${API_URL}/form_document/api/form/`;
+  if (formData.id && formData.id > 0) {
+    requestURL += `${formData.id}/`;
+    method = 'PUT';
+  }
+  const fetchParams = assignDefaults({
+    method,
+    body
+  });
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      const { id } = value;
+      id && dispatch(updateFormId(id));
+      dispatch(doneSubmitForm());
       // TODO: success message?
     };
   };
@@ -515,7 +548,6 @@ export const processSubmitConfigure = (formData) => {
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitForm());
-      // console.log('fetch failed');
       // TODO: error message?
     };
   };

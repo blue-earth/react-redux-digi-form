@@ -19,7 +19,8 @@ import {
   deleteElement,
   setCurrentElement,
   setActiveBox,
-  processSubmitConfigure,
+  submitConfigureStep,
+  submitPublishStep,
   setFormStatus
 } from 'redux/modules/formBuilder';
 
@@ -43,7 +44,8 @@ const mapActionCreators = {
   deleteElement,
   setCurrentElement,
   setActiveBox,
-  processSubmitConfigure,
+  submitConfigureStep,
+  submitPublishStep,
   setFormStatus,
   show
 };

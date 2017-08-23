@@ -17,7 +17,7 @@ class StepConfigure extends Component {
     subdomain: PropTypes.string,
     formConfig: PropTypes.any,
     questions: PropTypes.array,
-    processSubmitConfigure: PropTypes.func
+    submitConfigureStep: PropTypes.func
   }
 
   constructor(props) {
@@ -36,7 +36,7 @@ class StepConfigure extends Component {
     _.merge(newFormConfig, values.formConfig);
     values.formConfig = newFormConfig;
     values.id = this.props.id;
-    return this.props.processSubmitConfigure(values);
+    return this.props.submitConfigureStep(values);
   }
 
   get sidebarMenuItems() {
