@@ -59,3 +59,21 @@ export const settingsUrl = (relativePath) =>
 
 export const signupUrl = (relativePath) =>
   formatUrl(`${rootPath}/${signupPath}/${relativePath}`);
+
+export const subHeaderType = (path) => {
+// TODO: is there a better way to figure out where we are?
+  if (!path) {
+    return '';
+  }
+  var pathArray = path.split('/');
+  pathArray = pathArray.filter((n) => (n !== ''));
+  // determine if we are in form builder or somewhere else
+  var type = '';
+  if (pathArray[1] === 'forms' && pathArray[3] === 'edit') {
+    type = 'formBuilder';
+  }
+  if (pathArray[1] === 'forms' && pathArray[2] === 'new') {
+    type = 'formBuilder';
+  }
+  return type;
+};
