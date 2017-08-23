@@ -19,7 +19,8 @@ import {
   deleteElement,
   setCurrentElement,
   setActiveBox,
-  processSubmitConfigure
+  processSubmitConfigure,
+  setFormStatus
 } from 'redux/modules/formBuilder';
 
 import FormBuilderSteps from '../components/FormBuilderSteps';
@@ -43,6 +44,7 @@ const mapActionCreators = {
   setCurrentElement,
   setActiveBox,
   processSubmitConfigure,
+  setFormStatus,
   show
 };
 
@@ -52,6 +54,7 @@ const mapStateToProps = (state) => {
     id,
     title,
     slug,
+    status,
     subdomain,
     currentStep,
     isFetching,
@@ -73,6 +76,7 @@ const mapStateToProps = (state) => {
     id: parseInt(id),
     title,
     slug,
+    status,
     subdomain,
     currentStep,
     isFetching,

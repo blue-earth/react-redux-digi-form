@@ -1,0 +1,14 @@
+@import './variables';
+@import './mixins';
+
+.stepPublishWrapper {
+  min-height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: $dashboard-text-color;
+  height: 100%;
+  position: relative;
+  padding-top: 25px;
+  text-align: center;
+  @include clearfix();
+}

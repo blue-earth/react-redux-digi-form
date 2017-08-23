@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import FormBuilder from '../FormBuilder';
 import StepConfigure from '../StepConfigure';
+import StepPublish from '../StepPublish';
 
 class FormBuilderSteps extends Component {
 
@@ -15,6 +16,7 @@ class FormBuilderSteps extends Component {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     slug: PropTypes.string,
+    status: PropTypes.string,
     subdomain: PropTypes.string,
 
     /*
@@ -145,7 +147,9 @@ class FormBuilderSteps extends Component {
      */
     goTo: PropTypes.func.isRequired,
 
-    processSubmitConfigure: PropTypes.func
+    processSubmitConfigure: PropTypes.func,
+
+    setFormStatus: PropTypes.func
   };
 
   get currentStepComponent() {
@@ -169,10 +173,17 @@ class FormBuilderSteps extends Component {
             processSubmitConfigure: props.processSubmitConfigure
           }
         };
-      case 'send':
+      case 'publish':
         return {
-          Component: TempStepSend,
-          props: props
+          Component: StepPublish,
+          props: {
+            id: props.id,
+            title: props.title,
+            slug: props.slug,
+            status: props.status,
+            subdomain: props.subdomain,
+            setFormStatus: props.setFormStatus
+          }
         };
       default:
         return {
@@ -227,14 +238,6 @@ class TempStepArrange extends Component {
   render() {
     return (
       <div>Arrange</div>
-    );
-  }
-}
-
-class TempStepSend extends Component {
-  render() {
-    return (
-      <div>Send</div>
     );
   }
 }

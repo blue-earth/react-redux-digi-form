@@ -42,6 +42,8 @@ export const SET_ACTIVE_BOX = 'SET_ACTIVE_BOX';
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
 export const UPDATE_STORE = 'UPDATE_STORE';
 
+export const SET_FORM_STATUS = 'SET_FORM_STATUS';
+
 export const INIT_BUILDER_STATE = {
   id: 0,
   isFetching: false, // indicates the form is being loaded.
@@ -79,7 +81,8 @@ export const INIT_BUILDER_STATE = {
   lastQuestionId: 0, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
-  currentStep: 'select' // select, arrange, configure or send
+  currentStep: 'select', // select, arrange, configure or publish
+  status: 'unpublished' // 'unpublished' or 'published'
 };
 
 export const INIT_QUESTION_STATE = {
@@ -525,6 +528,16 @@ export const processSubmitConfigure = (formData) => {
 export const updateStore = createAction(UPDATE_STORE);
 
 // ------------------------------------
+// Action: setFormStatus
+// ------------------------------------
+export const setFormStatus = createAction(SET_FORM_STATUS);
+const _setFormStatus = (state, action) => {
+  return Object.assign({}, state, {
+    status: action.payload
+  });
+};
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const formBuilderReducer = handleActions({
@@ -559,6 +572,9 @@ const formBuilderReducer = handleActions({
     Object.assign({}, state, {
       id: parseInt(action.payload)
     }),
+
+  SET_FORM_STATUS: (state, action) =>
+    _setFormStatus(state, action),
 
   UPDATE_STORE: (state, action) =>
     Object.assign({}, state, action.payload),
