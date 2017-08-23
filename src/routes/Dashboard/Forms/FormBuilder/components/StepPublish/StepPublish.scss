@@ -12,3 +12,68 @@
   text-align: center;
   @include clearfix();
 }
+
+.statusButton {
+  background: $white;
+  color: $blue;
+  border-color: $blue;
+  @include border-radius($input-border-radius);
+  height: $button-height-md;
+  padding-left: 25px;
+  padding-right: 25px;
+  font-weight: 600;
+  font-size: 13px;
+  &.isActive, &.active, &:focus, &:active, &:active:hover {
+    background: $blue;
+    border-color: $blue;
+    color: $white;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.urlField {
+  width: 400px;
+  max-width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background: lighten($grey, 10%);
+  @include border-radius($input-border-radius);
+  margin: 0 auto 20px;
+  .inputWrapper {
+    display: block;
+    height: $input-height-lg;
+    padding: 13px 10px;
+    border: 1px solid $grey;
+    background: $white;
+    @include border-radius($input-border-radius);
+    input {
+      display: inline-block;
+      height: $input-height-lg - 22;
+      padding: 0;
+      border: none;
+      width: 70%;
+      text-align: left;
+    }
+    .copyButton {
+      display: inline-block;
+      height: $button-height-md;
+      line-height: $button-height-md;
+      background: $blue;
+      color: $white;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 0 10px;
+      vertical-align: top;
+      @include border-radius($input-border-radius);
+    }
+  }
+}
+.urlCopied {
+  margin: 0 0 20px;
+}
+
+.divider {
+  border-color: $grey;
+  margin: 36px;
+}

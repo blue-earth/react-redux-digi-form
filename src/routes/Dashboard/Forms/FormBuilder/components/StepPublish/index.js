@@ -2,11 +2,14 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { ButtonGroup } from 'react-bootstrap';
-import Button from 'components/Buttons/DashboardButtons/Button';
+import { Button, ButtonGroup } from 'react-bootstrap';
+import { default as DashButton } from 'components/Buttons/DashboardButtons/Button';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { FaCheck } from 'react-icons/lib/fa';
 import styles from './StepPublish.scss';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
 
 class StepPublish extends Component {
 
@@ -27,11 +30,9 @@ class StepPublish extends Component {
   }
 
   handleClickPublic = () => {
-    console.log('set to published');
     this.props.setFormStatus('published');
   }
   handleClickPrivate = () => {
-    console.log('set to unpublished');
     this.props.setFormStatus('unpublished');
   }
 
@@ -45,27 +46,32 @@ class StepPublish extends Component {
       <div className={styles.stepPublishWrapper}>
         <p><b>Status:</b></p>
         <ButtonGroup>
-          <Button style="submitButton"
+          <Button
+            className={cx('statusButton', {'isActive': this.props.status === 'published'})}
             onClick={this.handleClickPublic}>
             Public
           </Button>
           <Button
+            className={cx('statusButton', {'isActive': this.props.status === 'unpublished'})}
             onClick={this.handleClickPrivate}>
             Private
           </Button>
         </ButtonGroup>
-        <hr />
+        <hr className={styles.divider} />
         <p><b>Use direct link to your live form:</b></p>
         <div className={styles.urlField}>
-          <input type="text" ref="url" readOnly value={url} />
-          <CopyToClipboard text={url} onCopy={this.handleCopy}>
-            <span className={styles.copyButton}>Copy URL</span>
-          </CopyToClipboard>
+          <div className={styles.inputWrapper}>
+            <input type="text" ref="url" readOnly value={url} />
+            <CopyToClipboard text={url} onCopy={this.handleCopy}>
+              <span className={styles.copyButton}>Copy URL</span>
+            </CopyToClipboard>
+          </div>
         </div>
         {this.state.urlCopied
-          ? <p><FaCheck /> URL copied to clipboard.</p> : null}
+          ? <p className={styles.urlCopied}><FaCheck /> URL copied to clipboard.</p> : null}
+        <hr className={styles.divider} />
         <p>
-          <Button style="formButton">Save &amp; Continue</Button>
+          <DashButton>Save &amp; Continue</DashButton>
         </p>
       </div>
     );
