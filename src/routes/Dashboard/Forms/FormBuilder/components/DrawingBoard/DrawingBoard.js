@@ -451,7 +451,7 @@ class DrawingBoard extends Component {
     setMappingInfo(_.unset(mappingInfo, activeBoxPath));
   }
 
-  renderBlocks(position, isActive) {
+  renderBlocks(position, isActive, id) {
     const { pageZoom } = this.props;
     const { LEFT, TOP, WIDTH, HEIGHT } = formBuilderBox;
     if (_.isEmpty(position.blocks)) {
@@ -460,7 +460,7 @@ class DrawingBoard extends Component {
       };
       return (
         <div className={styles.boxLabel} style={style}>
-          {'D'}
+          {id ? 'Q' + id : 'Q'}
         </div>
       );
     } else {
@@ -544,7 +544,7 @@ class DrawingBoard extends Component {
               viewportWidth={viewportWidth}
               viewportHeight={viewportHeight}
             >
-              {this.renderBlocks(position, isActive)}
+              {this.renderBlocks(position, isActive, id)}
             </InteractWrapper>
           );
         });
