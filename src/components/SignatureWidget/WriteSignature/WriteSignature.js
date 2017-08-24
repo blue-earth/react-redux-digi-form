@@ -112,7 +112,7 @@ class WriteSignature extends Component {
           <FloatTextInput
             extraClass={styles.nameInputWrapper}
             backgroundColour="#f5f6fa"
-            placeholder="Text as signature"
+            label="Text as signature"
             size="md"
             autoFocus
             value={signatureName}
