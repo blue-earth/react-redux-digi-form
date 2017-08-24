@@ -149,12 +149,14 @@ class FloatTextInput extends Component {
     return style;
   }
   get activeBorderColour() {
+    const { backgroundColour } = this.props;
+    let style = { backgroundColor: backgroundColour };
     if (this.state.active) {
-      return {
+      return Object.assign(style, {
         borderColor: this.props.primaryColour
-      };
+      });
     }
-    return null;
+    return style;
   }
   render() {
     const {

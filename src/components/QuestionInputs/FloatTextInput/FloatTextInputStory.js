@@ -55,6 +55,18 @@ storiesOf('Input', module)
           label="test"
           primaryColour={'#3893d0'}
           extraClass={cx('default')} />
+        <FloatTextInput
+          name="test"
+          label="test"
+          size="md"
+          primaryColour={'#3893d0'}
+          extraClass={cx('default')} />
+        <FloatTextInput
+          name="test"
+          label="test"
+          primaryColour={'#3893d0'}
+          size="sm"
+          extraClass={cx('default')} />
       </div>
     );
   }
