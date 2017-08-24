@@ -17,7 +17,8 @@ import {
 } from 'constants/formBuilder';
 import {
   getActiveLabel,
-  getNextBoxIndex
+  getNextBoxIndex,
+  getChoiceLabelByIndex
 } from 'helpers/formBuilderHelper';
 import { getQuestionInputSchema } from 'schemas/questionInputs';
 
@@ -206,9 +207,26 @@ class FormBuilder extends Component {
 
   getAvailableSelectionFields = () => {
     const questionTypeName = this.props.currentElement.question.type;
-    var schema = getQuestionInputSchema(questionTypeName);
-    var result = schema['availableFields'];
-    return result;
+    if (questionTypeName === 'CheckboxField') {
+      var choices = this.props.currentElement.question.choices;
+      if (!choices) {
+        return [];
+      }
+      var fieldsGroup = [];
+      _.forEach(choices, function (choice) {
+        var field = {'displayName': choice.label, 'key': choice.label, 'group': 'STANDARD'};
+        fieldsGroup.push(field);
+      });
+      if (this.props.currentElement.question.include_other) {
+        var otherLabel = getChoiceLabelByIndex(choices.length);
+        fieldsGroup.push({'displayName': otherLabel, 'key': otherLabel, 'group': 'STANDARD'});
+      }
+      return [fieldsGroup];
+    } else {
+      var schema = getQuestionInputSchema(questionTypeName);
+      var result = schema['availableFields'];
+      return result;
+    }
   }
 
   get activeLabel() {
