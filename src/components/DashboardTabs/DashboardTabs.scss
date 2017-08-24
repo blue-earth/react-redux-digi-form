@@ -2,53 +2,35 @@
 @import './variables';
 
 .dashboardTabs {
-  background-color: #fff;
   border: none;
   @include border-radius(0);
-  margin-bottom: 0;
+  display: inline-block;
+  margin: 0;
   padding: 0;
-  height: $dashboard-tabs-height;
+  height: $dashboard-header-height;
   font-size: 14px;
   font-family: "roble_alt_boldbold";
-  > .container {
-    padding: 0;
-  }
-}
-.leftTabs {
-  float: left;
-  margin: 0;
-}
-.rightTabs {
-  float: right;
-  margin: 0;
 }
 
 :global {
-  .homelink {
-    float: left;
-    margin: 13px 15px 12px 0;
-    color: $blue;
-    cursor: pointer;
-    @media (max-width: 767px) {
-      margin-left: 15px;
-    }
-  }
-  .navItem {
-    float: left;
-    padding-top: 19px;
-    margin-right: 15px;
-    margin-bottom: -1px;
-    a {
-      color: $dashtabs-color !important;
-      background: none !important;
-      padding: 0px 10px !important;
-      height: 37px;
-      @include transition(color .15s);
-    }
-    a:hover, a:focus,
-    &.active a {
-      color: $dashtabs-active-color !important;
-      border-bottom: 4px solid $dashtabs-active-border-color;
+  .nav {
+    .navItem {
+      float: left;
+      height: $dashboard-header-height;
+      line-height: $dashboard-header-height;
+      > a {
+        padding: 0 22px;
+        color: $dashtabs-color;
+        @include transition(color .15s);
+      }
+      > a:hover, > a:focus {
+        color: $white;
+        background-color: transparent;
+      }
+      &.active > a {
+        color: $white;
+        background-color: $dashtabs-active-color;
+      }
     }
   }
 }

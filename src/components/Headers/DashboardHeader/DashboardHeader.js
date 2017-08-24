@@ -19,6 +19,7 @@ import {
 import AlertMessage from 'components/AlertMessage';
 import ProfileMenu from 'components/ProfileMenu';
 import DashboardPageInnerLayout from 'layouts/DashboardPageInnerLayout';
+import DashboardTabs from 'containers/DashboardTabsContainer';
 
 export default class DashboardHeader extends Component {
 
@@ -99,10 +100,6 @@ export default class DashboardHeader extends Component {
       key: 'logout',
       url: 'logout'
     }];
-    const createUrl = require('./create.svg');
-    const sendUrl = require('./send.svg');
-    const signUrl = require('./sign.svg');
-    const height = 14;
     const { user } = this.props;
     const firstName = user.first_name;
     const lastName = user.last_name;
@@ -110,19 +107,9 @@ export default class DashboardHeader extends Component {
       <div className={styles.header}>
         <DashboardPageInnerLayout>
           <div className={styles.logo}>
-            <StackLogo className={styles.logo} width="auto" height={32} logoStyle="white" />
+            <StackLogo className={styles.logo} width="auto" height={31} logoStyle="white" />
           </div>
-          <ButtonToolbar className={styles.leftToolbar}>
-            <Button defaultWidth={76} style="headerButton">
-              <img width="auto" height={height} src={createUrl} className={styles.dashboardButton} /> Create
-            </Button>
-            <Button defaultWidth={76} style="headerButton">
-              <img width="auto" height={height} src={signUrl} className={styles.dashboardButton} /> Sign
-            </Button>
-            <Button defaultWidth={76} style="headerButton">
-              <img width="auto" height={height} src={sendUrl} className={styles.dashboardButton} /> Send
-            </Button>
-          </ButtonToolbar>
+          <DashboardTabs location={this.props.location} />
           <ButtonToolbar className={styles.rightToolbar}>
             <ProfileMenu list={profileMenus} onClick={this.handleNav}>
               <Button style="headerButton" iconOnly pullRight id="peofile-menu">

@@ -3,11 +3,12 @@ import React, {
   PropTypes
 } from 'react';
 import DashboardHeader from 'containers/Headers/DashboardHeaderContainer';
-// import DashboardTabs from 'containers/DashboardTabsContainer';
 import DashboardSubHeader from 'components/Headers/DashboardSubHeader';
 import styles from './DashboardLayout.scss';
 import DashboardPageInnerLayout from 'layouts/DashboardPageInnerLayout';
 import ProfileModal from 'components/ProfileModal';
+import { subHeaderType } from 'helpers/urlHelper';
+import classNames from 'classnames';
 
 const innerWrapperStyle = {
   'position': 'absolute',
@@ -59,9 +60,13 @@ class DashboardLayout extends Component {
     } = this.props;
     return (
       <div className={styles.dashboard}>
-        <DashboardHeader />
-        <DashboardSubHeader location={location} />
-        <div className={styles.contentWrapper}>
+        <div className={styles.dashboardHeader}>
+          <DashboardHeader location={location} />
+          <DashboardSubHeader location={location} />
+        </div>
+        <div className={classNames(
+          styles.contentWrapper,
+          {[styles.hasSubHeader]: subHeaderType(location.pathname)})}>
           <DashboardPageInnerLayout extraStyle={innerWrapperStyle}>
             {children}
           </DashboardPageInnerLayout>

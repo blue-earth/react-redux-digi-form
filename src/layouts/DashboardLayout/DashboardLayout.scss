@@ -5,13 +5,20 @@
   min-height: 100%;
   background-color: $dashboard-bg-color;
 }
+.dashboardHeader {
+  @include clearfix;
+  height: 100%;
+}
 
 .contentWrapper {
   position: absolute;
   bottom: 0;
-  top: 128px;
+  top: $dashboard-header-height;
   left: 0;
   right: 0;
   min-height: 500px;
   height: auto;
+  &.hasSubHeader {
+    top: $dashboard-sub-header-height;
+  }
 }

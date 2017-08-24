@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import DashboardTabs from 'containers/DashboardTabsContainer';
 import FormBuilderNav from 'containers/FormBuilderNavContainer';
+import { subHeaderType } from 'helpers/urlHelper';
 
 class DashboardSubHeader extends Component {
 
@@ -9,28 +9,17 @@ class DashboardSubHeader extends Component {
   }
 
   displayComponent = () => {
-    const { location: { pathname } } = this.props;
-    // TODO: is there a better way to figure out where we are?
-    var pathArray = pathname.split('/');
-    pathArray = pathArray.filter(function (n) { return n !== ''; });
-    // determine if we are in form builder or somewhere else
-    var path = 'default';
-    if (pathArray[1] === 'forms' && pathArray[3] === 'edit') {
-      path = 'formBuilder';
-    }
-    if (pathArray[1] === 'forms' && pathArray[2] === 'new') {
-      path = 'formBuilder';
-    }
-    switch (path) {
+    const { location } = this.props;
+    const type = subHeaderType(location.pathname);
+    switch (type) {
       case 'formBuilder':
-        return (<FormBuilderNav location={this.props.location} />);
+        return (<FormBuilderNav location={location} />);
       default:
-        return (<DashboardTabs location={this.props.location} />);
+        return;
     }
   }
 
   render() {
-    // var SubHeaderComponent = this.displayComponent();
     return (
       <div>{this.displayComponent()}</div>
     );
