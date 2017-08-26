@@ -10,7 +10,7 @@ export const assignDefaults = request => {
     'Content-Type': 'application/json'
   }, request.headers);
 
-  var body = null;
+  var body; // default should be null
   if (_.includes(['POST', 'PUT'], request.method)) {
     headers['X-CSRFToken'] = getCsrfToken();
     if (request.body && !(request.body instanceof FormData)) {
