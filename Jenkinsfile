@@ -31,25 +31,25 @@ node('master') {
     def nodeHome = tool 'node-4.1.1'
     env.PATH="${env.PATH}:${nodeHome}/bin"
 
-    sh 'env > env.txt'
-    readFile('env.txt').split("\r?\n").each {
-        println it
-    }
-
     try {
+       stage 'Environment'
+
+            print "Printing Environment Variables"
+            sh 'env > env.txt'
+            for (String i : readFile('env.txt').split("\r?\n")) {
+                println i
+            }
+            env.NODE_ENV = "test"
+            print "Environment will be : ${env.NODE_ENV}"
+            sh 'node -v'
+            sh 'npm -v'
 
        stage 'Checkout'
 
             checkout scm
 
-
        stage 'Install Dependencies'
 
-            env.NODE_ENV = "test"
-
-            print "Environment will be : ${env.NODE_ENV}"
-
-            sh 'node -v'
             sh 'npm prune'
             sh 'npm install'
             sh 'npm update'
@@ -68,7 +68,7 @@ node('master') {
     catch (err) {
         currentBuild.result = "FAILURE"
         echo "Build failed (see ${env.BUILD_URL}): ${err.message}"
-        slackSend channel: '#jenkins', color: 'good', message: "${env.BRANCH_NAME} build failure", teamDomain: 'emondo', token: 'MLdBnvbjuG3Oul8yeSFTZLCl'
+        slackSend channel: '#jenkins', color: 'danger', message: "${env.BRANCH_NAME} build failure", teamDomain: 'emondo', token: 'MLdBnvbjuG3Oul8yeSFTZLCl'
 
         throw err
     }
