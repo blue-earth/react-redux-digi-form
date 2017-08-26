@@ -5,7 +5,9 @@ export const validateIsRequired = (value) => {
 
 export const validateIsEmail = (value) => {
   // from http://emailregex.com/
-  var re = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i; // eslint-disable-line
+  // modified using Python version of regex
+  // Addition 1: Rejected domain that has only one characeter
+  var re = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.([a-zA-Z0-9-.]{2,8})+$/i;
   return re.test(value);
 };
 
