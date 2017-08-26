@@ -31,6 +31,11 @@ node('master') {
     def nodeHome = tool 'node-4.1.1'
     env.PATH="${env.PATH}:${nodeHome}/bin"
 
+    sh 'env > env.txt'
+    readFile('env.txt').split("\r?\n").each {
+        println it
+    }
+
     try {
 
        stage 'Checkout'
@@ -61,8 +66,8 @@ node('master') {
             slackSend channel: '#jenkins', color: 'good', message: "${env.BRANCH_NAME} build succeeded", teamDomain: 'emondo', token: 'MLdBnvbjuG3Oul8yeSFTZLCl'
     }
     catch (err) {
-
         currentBuild.result = "FAILURE"
+        echo "Build failed (see ${env.BUILD_URL}): ${err.message}"
         slackSend channel: '#jenkins', color: 'good', message: "${env.BRANCH_NAME} build failure", teamDomain: 'emondo', token: 'MLdBnvbjuG3Oul8yeSFTZLCl'
 
         throw err
