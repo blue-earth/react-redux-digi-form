@@ -133,6 +133,7 @@ class DocumentFieldsSelectionHeader extends Component {
   render() {
     const {
       backLinkClickHandler,
+      saveAndContinueClickHandler,
       availableFields,
       style,
       className
@@ -154,7 +155,7 @@ class DocumentFieldsSelectionHeader extends Component {
           </div>
           <div className={cx('right')}>
             <GoTrashcan size={'24px'} style={{'cursor': 'pointer', 'marginRight': '8px'}} />
-            <SelectableOutlineButton isSelectable={false}>
+            <SelectableOutlineButton isSelectable={false} onClick={saveAndContinueClickHandler}>
               Save & Continue
             </SelectableOutlineButton>
           </div>

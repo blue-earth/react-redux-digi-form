@@ -192,6 +192,12 @@ class FormBuilder extends Component {
     this.props.setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
   }
 
+  saveAndContinue = () => {
+    const { saveForm } = this.props;
+    saveForm();
+    this.goToQuestionTypeListView();
+  }
+
   getAvailableSelectionFields = () => {
     const questionTypeName = this.props.currentElement.question.type;
     var schema = getQuestionInputSchema(questionTypeName);
@@ -239,6 +245,7 @@ class FormBuilder extends Component {
           className={styles.fieldsSelectorHeader}
           activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel}
           finalisedFields={this.getMappedFieldsForCurrentQuestion()}
+          saveAndContinueClickHandler={this.saveAndContinue}
         />;
       }
     }
