@@ -210,6 +210,13 @@ class FormBuilder extends Component {
     setActiveBox(_.join([label, 'positions', index], '.'));
   }
 
+  getMappedFieldsForCurrentQuestion() {
+    var fieldsWithValidMapping = _.pickBy(this.props.currentElement.mappingInfo, function (value, key, object) {
+      return value && Object.keys(value['positions']).length > 0;
+    });
+    return Object.keys(fieldsWithValidMapping);
+  }
+
   render() {
     const { saveElement, setQuestionEditMode, questionEditMode } = this.props;
     const leftPanelClass = classNames({
@@ -230,7 +237,9 @@ class FormBuilder extends Component {
           backLinkClickHandler={this.goToQuestionTypeListView}
           availableFields={availableFields}
           className={styles.fieldsSelectorHeader}
-          activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel} />;
+          activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel}
+          finalisedFields={this.getMappedFieldsForCurrentQuestion()}
+        />;
       }
     }
 

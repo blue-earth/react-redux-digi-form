@@ -15,7 +15,10 @@ const cx = classNames.bind(styles);
 class DocumentFieldsSelectionHeader extends Component {
   static propTypes = {
     availableFields: PropTypes.arrayOf(PropTypes.array).isRequired,
-    shortDescription: PropTypes.string,
+    /**
+     * Fields already completed document mapping
+     */
+    finalisedFields: PropTypes.array,
     backLinkClickHandler: PropTypes.func,
     saveAndContinueClickHandler: PropTypes.func,
     deleteClickHandler: PropTypes.func,
@@ -29,6 +32,7 @@ class DocumentFieldsSelectionHeader extends Component {
     availableFields: [
       []    // Empty group, has no label
     ],
+    finalisedFields: [],
     backLinkClickHandler: noop,
     style: {}
   };
@@ -100,6 +104,7 @@ class DocumentFieldsSelectionHeader extends Component {
       'margin': '3px 8px',
       'fontSize': '12px'
     };
+    const { finalisedFields } = this.props;
     return (
       <div>
         {fieldGroupNameRow}
@@ -108,8 +113,9 @@ class DocumentFieldsSelectionHeader extends Component {
             return <SelectableOutlineButton
               isSelectable={false}
               isSelected={this.isLabelSelected(label['key'])}
-              onClick={this.labelSelectHandler}
               name={label['key']}
+              onClick={this.labelSelectHandler}
+              isFinalised={finalisedFields.indexOf(label['key']) > -1}
               style={buttonStyleModifier} key={i}>
               {label['displayName']}
             </SelectableOutlineButton>;
