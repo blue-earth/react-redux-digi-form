@@ -4,16 +4,17 @@
 .FormBuilderNavWrapper {
   background-color: #fff;
   margin: 0;
-  padding: 0 15px;
+  padding: 0 25px;
   line-height: $dashboard-tabs-height;
   font-size: 14px;
   font-family: "roble_alt_boldbold";
+  position: relative;
 }
 
 .breadcrumbs {
-  float: left;
+  position: absolute;
+  left: 25px;
   width: 25%;
-  min-width: 280px;
   color: $grey;
 }
 .crumbDivider {
@@ -26,10 +27,16 @@
 .formTitle {
   color: #848c98;
   vertical-align: middle;
+  display: inline-block;
+  width: calc(100% - 50px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .actions {
-  float: right;
+  position: absolute;
+  right: 25px;
   text-align: right;
   width: 25%;
   min-width: 280px;
@@ -39,10 +46,17 @@
   button:first-of-type {
     margin-left: 0;
   }
+  @include media('<lg') {
+    .prev, .next {
+      display: none;
+    }
+  }
 }
 
 .formStepsNav {
-  margin: 0;
+  z-index: 10;
+  position: relative;
+  margin: 0 25%;
   padding: 0;
   list-style-type: none;
   text-align: center;
@@ -78,5 +92,17 @@
       background: $blue;
       color: $white;
     }
+  }
+  @include media('<md') {
+    li {
+      margin: 0 5px;
+      .stepNum {
+        margin-right: 2px;
+      }
+    }
+  }
+  @include media('<sm') {
+    .stepLabel { display: none; }
+    .active .stepLabel { display: inline-block; }
   }
 }
