@@ -40,6 +40,17 @@ class DocumentFieldsSelectionHeader extends Component {
     };
   }
 
+  componentDidMount() {
+    // If the toolbar only has one group and it contains only 1 label(field),
+    // select it automatically
+    const numLabelGroups = this.props.availableFields.length;
+    if (numLabelGroups === 1 && this.props.availableFields[0].length === 1) {
+      // Only has 1 label group, and the group contains only 1 label
+      const firstLabelName = this.props.availableFields[0][0]['key'];
+      this.labelSelectHandler(firstLabelName);
+    }
+  }
+
   labelSelectHandler = (name) => {
     const { setActiveLabel } = this.props;
     var label = '';
