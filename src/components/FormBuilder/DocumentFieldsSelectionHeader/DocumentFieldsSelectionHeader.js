@@ -26,6 +26,9 @@ class DocumentFieldsSelectionHeader extends Component {
   };
 
   static defaultProps = {
+    availableFields: [
+      []    // Empty group, has no label
+    ],
     backLinkClickHandler: noop,
     style: {}
   };
