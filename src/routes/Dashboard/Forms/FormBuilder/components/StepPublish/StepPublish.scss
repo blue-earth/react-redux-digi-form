@@ -36,7 +36,7 @@
 }
 
 .urlField {
-  width: 400px;
+  display: inline-block;
   max-width: 100%;
   padding: 20px;
   box-sizing: border-box;
@@ -44,7 +44,7 @@
   @include border-radius($input-border-radius);
   margin: 0 auto 20px;
   .inputWrapper {
-    display: block;
+    display: inline-block;
     height: $input-height-lg;
     padding: 13px 10px;
     border: 1px solid $grey;
@@ -55,7 +55,6 @@
       height: $input-height-md;
       line-height: $input-height-md;
       padding: 0 5px 0 0;
-      width: calc(100% - 90px);
       text-align: left;
       overflow: hidden;
       text-overflow: ellipsis;
