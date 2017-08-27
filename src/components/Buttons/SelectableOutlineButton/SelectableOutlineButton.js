@@ -12,6 +12,11 @@ class SelectableOutlineButton extends Component {
      */
     isSelected: PropTypes.bool,
     /**
+     * Display a small tick before the button text
+     * Button can be **isFinalised** and **isDisabled** at the same time
+     */
+    isFinalised: PropTypes.bool,
+    /**
      * Should this button has a selected state
      * the button will remain in selected state after mouse release
      */
@@ -25,6 +30,7 @@ class SelectableOutlineButton extends Component {
   static defaultProps = {
     backgroundColour: 'transparent',
     isSelectable: true,
+    isFinalised: false,
     isSelected: false,
     isDisabled: false,
     selectedBackgroundColour: '#3893d0',
@@ -84,9 +90,18 @@ class SelectableOutlineButton extends Component {
   render() {
     const { style, name } = this.props;
     const buttonStyle = Object.assign({}, style, this.getButtonStyle());
+    var Image;
+    if (this.props.isFinalised) {
+      var checkIcon = require('./images/check.svg');
+      const checkIconStyle = {'width': '12px', 'marginRight': '4px'};
+      Image = <img style={checkIconStyle} src={checkIcon} alt="Checked" />;
+    }
     return (
       <button type="button" style={buttonStyle} name={name} onClick={this.onClickHandler}>
-        {this.props.children}
+        {Image}
+        <span>
+          {this.props.children}
+        </span>
       </button>
     );
   }
