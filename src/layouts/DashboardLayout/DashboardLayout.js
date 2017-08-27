@@ -12,6 +12,7 @@ import classNames from 'classnames';
 
 const innerWrapperStyle = {
   'position': 'absolute',
+  'paddingBottom': '25px',
   'top': 0,
   'left': 0,
   'right': 0,
