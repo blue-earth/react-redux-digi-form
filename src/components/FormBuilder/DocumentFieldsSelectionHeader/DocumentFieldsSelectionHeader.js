@@ -134,6 +134,7 @@ class DocumentFieldsSelectionHeader extends Component {
     const {
       backLinkClickHandler,
       saveAndContinueClickHandler,
+      deleteClickHandler,
       availableFields,
       style,
       className
@@ -154,7 +155,8 @@ class DocumentFieldsSelectionHeader extends Component {
             <p>Choose a format and make your selection(s)</p>
           </div>
           <div className={cx('right')}>
-            <GoTrashcan size={'24px'} style={{'cursor': 'pointer', 'marginRight': '8px'}} />
+            <GoTrashcan
+              onClick={deleteClickHandler} size={'24px'} style={{'cursor': 'pointer', 'marginRight': '8px'}} />
             <SelectableOutlineButton isSelectable={false} onClick={saveAndContinueClickHandler}>
               Save & Continue
             </SelectableOutlineButton>

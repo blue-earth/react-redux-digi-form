@@ -198,6 +198,12 @@ class FormBuilder extends Component {
     this.goToQuestionTypeListView();
   }
 
+  deleteCurrentQuestion = () => {
+    const { setQuestionEditMode, setCurrentElement } = this.props;
+    setCurrentElement(null);
+    setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
+  }
+
   getAvailableSelectionFields = () => {
     const questionTypeName = this.props.currentElement.question.type;
     var schema = getQuestionInputSchema(questionTypeName);
@@ -246,6 +252,7 @@ class FormBuilder extends Component {
           activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel}
           finalisedFields={this.getMappedFieldsForCurrentQuestion()}
           saveAndContinueClickHandler={this.saveAndContinue}
+          deleteClickHandler={this.deleteCurrentQuestion}
         />;
       }
     }
