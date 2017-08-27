@@ -16,12 +16,7 @@ class FormBuilderSteps extends Component {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     slug: PropTypes.string,
-    // TODO: once the backend is sorted out, change this to whatever type status ends up as
-    status: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.bool,
-      PropTypes.string
-    ]),
+    status: PropTypes.number,
     subdomain: PropTypes.string,
 
     /*
