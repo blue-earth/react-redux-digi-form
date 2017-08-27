@@ -67,8 +67,8 @@ class FormBuilderNav extends Component {
         label: 'Configure'
       },
       {
-        stepKey: 'send',
-        label: 'Send'
+        stepKey: 'publish',
+        label: 'Publish'
       }
     ];
   }

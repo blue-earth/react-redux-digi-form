@@ -42,6 +42,8 @@ export const SET_ACTIVE_BOX = 'SET_ACTIVE_BOX';
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
 export const UPDATE_STORE = 'UPDATE_STORE';
 
+export const SET_FORM_STATUS = 'SET_FORM_STATUS';
+
 export const INIT_BUILDER_STATE = {
   id: 0,
   isFetching: false, // indicates the form is being loaded.
@@ -79,7 +81,8 @@ export const INIT_BUILDER_STATE = {
   lastQuestionId: 0, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
-  currentStep: 'select' // select, arrange, configure or send
+  currentStep: 'select', // select, arrange, configure or publish
+  status: 0 // 'unpublished' or 'published'
 };
 
 export const INIT_QUESTION_STATE = {
@@ -141,6 +144,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
   const logics = data.form_data ? _.defaultTo(data.form_data.logics, []) : [];
   return {
     id: data.id,
+    status: data.status,
     questions,
     logics,
     documents: data.assets_urls ? data.assets_urls : [],
@@ -482,9 +486,9 @@ const _setCurrentElement = (state, action) => {
 };
 
 // ------------------------------------
-// Action: processSubmitConfigure
+// Action: submitConfigureStep
 // ------------------------------------
-export const processSubmitConfigure = (formData) => {
+export const submitConfigureStep = (formData) => {
   var body = humps.decamelizeKeys(formData);
   var method = 'POST';
   var requestURL = `${API_URL}/form_document/api/form/`;
@@ -504,7 +508,39 @@ export const processSubmitConfigure = (formData) => {
       dispatch(doneSubmitForm());
       // update store
       dispatch(updateStore(formData));
-      // console.log('fetch success');
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      dispatch(doneSubmitForm());
+    };
+  };
+
+  return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
+};
+// ------------------------------------
+// Action: submitPublishStep
+// ------------------------------------
+export const submitPublishStep = (formData) => {
+  // var body = humps.decamelizeKeys(formData);
+  var body = formData;
+  var method = 'POST';
+  var requestURL = `${API_URL}/form_document/api/form/`;
+  if (formData.id && formData.id > 0) {
+    requestURL += `${formData.id}/`;
+    method = 'PUT';
+  }
+  const fetchParams = assignDefaults({
+    method,
+    body
+  });
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      const { id } = value;
+      id && dispatch(updateFormId(id));
+      dispatch(doneSubmitForm());
       // TODO: success message?
     };
   };
@@ -512,7 +548,6 @@ export const processSubmitConfigure = (formData) => {
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitForm());
-      // console.log('fetch failed');
       // TODO: error message?
     };
   };
@@ -523,6 +558,16 @@ export const processSubmitConfigure = (formData) => {
 // Action: updateStore
 // ------------------------------------
 export const updateStore = createAction(UPDATE_STORE);
+
+// ------------------------------------
+// Action: setFormStatus
+// ------------------------------------
+export const setFormStatus = createAction(SET_FORM_STATUS);
+const _setFormStatus = (state, action) => {
+  return Object.assign({}, state, {
+    status: action.payload
+  });
+};
 
 // ------------------------------------
 // Reducer
@@ -559,6 +604,9 @@ const formBuilderReducer = handleActions({
     Object.assign({}, state, {
       id: parseInt(action.payload)
     }),
+
+  SET_FORM_STATUS: (state, action) =>
+    _setFormStatus(state, action),
 
   UPDATE_STORE: (state, action) =>
     Object.assign({}, state, action.payload),
