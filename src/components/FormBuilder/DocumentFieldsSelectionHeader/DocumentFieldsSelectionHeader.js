@@ -83,7 +83,7 @@ class DocumentFieldsSelectionHeader extends Component {
   }
 
   renderTagGroup = (labels) => {
-    var labelRow;
+    var fieldGroupNameRow;
     var groupName = labels[0]['group'];
     if (this.currentSelectedGroup && this.currentSelectedGroup !== groupName) {
       return null;
@@ -94,7 +94,7 @@ class DocumentFieldsSelectionHeader extends Component {
         'color': '#71828b',
         'fontSize': '11px'
       };
-      labelRow = <span style={style}>{labels[0]['group']}</span>;
+      fieldGroupNameRow = <span style={style}>{labels[0]['group']}</span>;
     }
     const buttonStyleModifier = {
       'margin': '3px 8px',
@@ -102,7 +102,7 @@ class DocumentFieldsSelectionHeader extends Component {
     };
     return (
       <div>
-        {labelRow}
+        {fieldGroupNameRow}
         <div>
           {labels.map((label, i) => {
             return <SelectableOutlineButton
