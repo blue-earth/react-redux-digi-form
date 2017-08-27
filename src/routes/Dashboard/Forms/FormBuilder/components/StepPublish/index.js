@@ -17,11 +17,7 @@ class StepPublish extends Component {
     id: PropTypes.number,
     title: PropTypes.string,
     slug: PropTypes.string,
-    status: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.bool,
-      PropTypes.string
-    ]),
+    status: PropTypes.number,
     subdomain: PropTypes.string,
     setFormStatus: PropTypes.func.isRequired,
     submitPublishStep: PropTypes.func.isRequired
@@ -70,7 +66,7 @@ class StepPublish extends Component {
         <p><b>Use direct link to your live form:</b></p>
         <div className={styles.urlField}>
           <div className={styles.inputWrapper}>
-            <input type="text" ref="url" readOnly value={url} />
+            <div className={styles.urlInput}>{url}</div>
             <CopyToClipboard text={url} onCopy={this.handleCopy}>
               <span className={styles.copyButton}>Copy URL</span>
             </CopyToClipboard>

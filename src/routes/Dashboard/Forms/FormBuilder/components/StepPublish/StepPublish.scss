@@ -8,9 +8,12 @@
   color: $dashboard-text-color;
   height: 100%;
   position: relative;
-  padding-top: 25px;
+  padding-top: 40px;
   text-align: center;
   @include clearfix();
+  p {
+    margin: 0 0 15px;
+  }
 }
 
 .statusButton {
@@ -47,13 +50,15 @@
     border: 1px solid $grey;
     background: $white;
     @include border-radius($input-border-radius);
-    input {
+    .urlInput {
       display: inline-block;
-      height: $input-height-lg - 22;
-      padding: 0;
-      border: none;
-      width: 70%;
+      height: $input-height-md;
+      line-height: $input-height-md;
+      padding: 0 5px 0 0;
+      width: calc(100% - 90px);
       text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .copyButton {
       display: inline-block;
@@ -75,5 +80,5 @@
 
 .divider {
   border-color: $grey;
-  margin: 36px;
+  margin: 40px;
 }
