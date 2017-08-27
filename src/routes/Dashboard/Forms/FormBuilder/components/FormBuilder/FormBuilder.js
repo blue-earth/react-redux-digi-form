@@ -192,6 +192,18 @@ class FormBuilder extends Component {
     this.props.setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
   }
 
+  saveAndContinue = () => {
+    const { saveForm } = this.props;
+    saveForm();
+    this.goToQuestionTypeListView();
+  }
+
+  deleteCurrentQuestion = () => {
+    const { setQuestionEditMode, setCurrentElement } = this.props;
+    setCurrentElement(null);
+    setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW);
+  }
+
   getAvailableSelectionFields = () => {
     const questionTypeName = this.props.currentElement.question.type;
     var schema = getQuestionInputSchema(questionTypeName);
@@ -208,6 +220,13 @@ class FormBuilder extends Component {
     const { currentElement, setActiveBox } = this.props;
     const index = getNextBoxIndex(label, currentElement);
     setActiveBox(_.join([label, 'positions', index], '.'));
+  }
+
+  getMappedFieldsForCurrentQuestion() {
+    var fieldsWithValidMapping = _.pickBy(this.props.currentElement.mappingInfo, function (value, key, object) {
+      return value && Object.keys(value['positions']).length > 0;
+    });
+    return Object.keys(fieldsWithValidMapping);
   }
 
   render() {
@@ -230,7 +249,11 @@ class FormBuilder extends Component {
           backLinkClickHandler={this.goToQuestionTypeListView}
           availableFields={availableFields}
           className={styles.fieldsSelectorHeader}
-          activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel} />;
+          activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel}
+          finalisedFields={this.getMappedFieldsForCurrentQuestion()}
+          saveAndContinueClickHandler={this.saveAndContinue}
+          deleteClickHandler={this.deleteCurrentQuestion}
+        />;
       }
     }
 

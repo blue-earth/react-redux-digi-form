@@ -15,7 +15,10 @@ const cx = classNames.bind(styles);
 class DocumentFieldsSelectionHeader extends Component {
   static propTypes = {
     availableFields: PropTypes.arrayOf(PropTypes.array).isRequired,
-    shortDescription: PropTypes.string,
+    /**
+     * Fields already completed document mapping
+     */
+    finalisedFields: PropTypes.array,
     backLinkClickHandler: PropTypes.func,
     saveAndContinueClickHandler: PropTypes.func,
     deleteClickHandler: PropTypes.func,
@@ -26,6 +29,10 @@ class DocumentFieldsSelectionHeader extends Component {
   };
 
   static defaultProps = {
+    availableFields: [
+      []    // Empty group, has no label
+    ],
+    finalisedFields: [],
     backLinkClickHandler: noop,
     style: {}
   };
@@ -37,6 +44,17 @@ class DocumentFieldsSelectionHeader extends Component {
     };
   }
 
+  componentDidMount() {
+    // If the toolbar only has one group and it contains only 1 label(field),
+    // select it automatically
+    const numLabelGroups = this.props.availableFields.length;
+    if (numLabelGroups === 1 && this.props.availableFields[0].length === 1) {
+      // Only has 1 label group, and the group contains only 1 label
+      const firstLabelName = this.props.availableFields[0][0]['key'];
+      this.labelSelectHandler(firstLabelName);
+    }
+  }
+
   labelSelectHandler = (name) => {
     const { setActiveLabel } = this.props;
     var label = '';
@@ -44,6 +62,11 @@ class DocumentFieldsSelectionHeader extends Component {
     // toggle the selection off
     if (name !== this.state.selectedLabel) {
       label = name;
+    } else {
+      if (this.props.finalisedFields.indexOf(name) > -1) {
+      // If the label is mapped, do not allow it from deselecting
+        return;
+      }
     }
     this.setState({
       selectedLabel: label
@@ -69,7 +92,7 @@ class DocumentFieldsSelectionHeader extends Component {
   }
 
   renderTagGroup = (labels) => {
-    var labelRow;
+    var fieldGroupNameRow;
     var groupName = labels[0]['group'];
     if (this.currentSelectedGroup && this.currentSelectedGroup !== groupName) {
       return null;
@@ -80,22 +103,24 @@ class DocumentFieldsSelectionHeader extends Component {
         'color': '#71828b',
         'fontSize': '11px'
       };
-      labelRow = <span style={style}>{labels[0]['group']}</span>;
+      fieldGroupNameRow = <span style={style}>{labels[0]['group']}</span>;
     }
     const buttonStyleModifier = {
       'margin': '3px 8px',
       'fontSize': '12px'
     };
+    const { finalisedFields } = this.props;
     return (
       <div>
-        {labelRow}
+        {fieldGroupNameRow}
         <div>
           {labels.map((label, i) => {
             return <SelectableOutlineButton
               isSelectable={false}
               isSelected={this.isLabelSelected(label['key'])}
-              onClick={this.labelSelectHandler}
               name={label['key']}
+              onClick={this.labelSelectHandler}
+              isFinalised={finalisedFields.indexOf(label['key']) > -1}
               style={buttonStyleModifier} key={i}>
               {label['displayName']}
             </SelectableOutlineButton>;
@@ -108,6 +133,8 @@ class DocumentFieldsSelectionHeader extends Component {
   render() {
     const {
       backLinkClickHandler,
+      saveAndContinueClickHandler,
+      deleteClickHandler,
       availableFields,
       style,
       className
@@ -128,8 +155,9 @@ class DocumentFieldsSelectionHeader extends Component {
             <p>Choose a format and make your selection(s)</p>
           </div>
           <div className={cx('right')}>
-            <GoTrashcan size={'24px'} style={{'cursor': 'pointer', 'marginRight': '8px'}} />
-            <SelectableOutlineButton isSelectable={false}>
+            <GoTrashcan
+              onClick={deleteClickHandler} size={'24px'} style={{'cursor': 'pointer', 'marginRight': '8px'}} />
+            <SelectableOutlineButton isSelectable={false} onClick={saveAndContinueClickHandler}>
               Save & Continue
             </SelectableOutlineButton>
           </div>
