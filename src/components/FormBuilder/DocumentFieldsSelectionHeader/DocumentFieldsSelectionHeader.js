@@ -62,6 +62,11 @@ class DocumentFieldsSelectionHeader extends Component {
     // toggle the selection off
     if (name !== this.state.selectedLabel) {
       label = name;
+    } else {
+      if (this.props.finalisedFields.indexOf(name) > -1) {
+      // If the label is mapped, do not allow it from deselecting
+        return;
+      }
     }
     this.setState({
       selectedLabel: label
