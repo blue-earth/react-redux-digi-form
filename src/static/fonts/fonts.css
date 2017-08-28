@@ -55,6 +55,24 @@
     font-style: normal;
 }
 /*
+ * Mistral Regular download from http://ttfonts.net/font/1004_Mistral.htm
+ **/
+@font-face {
+    font-family: 'Mistral';
+    src: url('Standard_Fonts/Mistral.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+/*
+ * Vladimir Script download from http://fontzone.net/download/vladimir-script
+ **/
+@font-face {
+    font-family: 'Vladimir';
+    src: url('Standard_Fonts/Vladimir.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+/*
  * Web Fonts from fontspring.com
  *
  * (c) 2010-2016 Fontspring

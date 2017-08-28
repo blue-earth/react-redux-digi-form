@@ -29,5 +29,13 @@ export const signatureFonts = [
     label: 'Hillary Rodham Clinton',
     name: 'Clinton',
     size: 150
+  }, {
+    label: 'Mistral',
+    name: 'Mistral',
+    size: 100
+  }, {
+    label: 'Vladimir',
+    name: 'Vladimir',
+    size: 100
   }
 ];
