@@ -209,7 +209,7 @@ class FormBuilder extends Component {
     const questionTypeName = this.props.currentElement.question.type;
     if (questionTypeName === 'CheckboxField') {
       var choices = this.props.currentElement.question.choices;
-      if (!choices) {
+      if (!choices || !choices.length > 0) {
         return [];
       }
       var fieldsGroup = [];
@@ -219,9 +219,19 @@ class FormBuilder extends Component {
       });
       if (this.props.currentElement.question.include_other) {
         var otherLabel = getChoiceLabelByIndex(choices.length);
-        fieldsGroup.push({'displayName': otherLabel, 'key': otherLabel, 'group': 'STANDARD'});
+        fieldsGroup.push({'displayName': otherLabel, 'key': 'other', 'group': 'STANDARD'});
       }
       return [fieldsGroup];
+      // var mappingInfo = this.props.currentElement.mappingInfo;
+      // if (_.isEmpty(mappingInfo)) {
+      //   return [];
+      // }
+      // var fieldsGroup = [];
+      // _.forEach(mappingInfo, function (value, key) {
+      //   var field = {'displayName': key, 'key': key, 'group': 'STANDARD'};
+      //   fieldsGroup.push(field);
+      // });
+      // return [fieldsGroup];
     } else {
       var schema = getQuestionInputSchema(questionTypeName);
       var result = schema['availableFields'];

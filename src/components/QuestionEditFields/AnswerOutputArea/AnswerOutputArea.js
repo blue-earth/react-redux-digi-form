@@ -27,6 +27,7 @@ class AnswerOutputArea extends Component {
     currentElement: PropTypes.object.isRequired,
     title: PropTypes.string,
     setMappingInfo: PropTypes.func.isRequired,
+    resetMappingInfo: PropTypes.func.isRequired,
     setQuestionInfo: PropTypes.func.isRequired
   };
 
@@ -66,29 +67,43 @@ class AnswerOutputArea extends Component {
   }
 
   get activeBoxIndex() {
+    // TODO: deal with activeIndex
     return _.get(this.props, ['currentElement', 'mappingInfo', 'activeIndex'], false);
   }
 
-  handleDeleteSelection = (index) => {
-    const { setQuestionInfo, setMappingInfo } = this.props;
+  handleDeleteSelection = (index, label) => {
+    const { setQuestionInfo, resetMappingInfo } = this.props;
     const choices = this.choices;
+    var oldMappingInfo = this.props.currentElement.mappingInfo;
+    const deleteKey = choices[index].label;
+    delete oldMappingInfo[deleteKey];
+    var newMappingInfo = {};
     _.pullAt(choices, [index]);
-    _.map(choices, (item, index) => { item.label = getChoiceLabelByIndex(index); });
+    _.map(choices, (item, index) => {
+      var oldLabel = item.label;
+      var newLabel = getChoiceLabelByIndex(index);
+      newMappingInfo[newLabel] = oldMappingInfo[oldLabel];
+      item.label = newLabel;
+    });
+    if (this.includeOther) {
+      newMappingInfo['other'] = oldMappingInfo['other'];
+    }
+    resetMappingInfo(newMappingInfo);
     setQuestionInfo({ choices });
-
-    const positions = this.positions;
-    _.pullAt(positions, [index]);
-    setMappingInfo({ positions });
   }
 
-  handleReselect = (index) => {
-    const { setMappingInfo } = this.props;
-    const positions = this.positions;
-    positions[index] = null;
-    setMappingInfo({
-      positions,
-      activeIndex: index
-    });
+  handleReselect = (choiceMappingKey, isOther) => {
+    if (isOther) {
+      choiceMappingKey = 'other';
+    }
+    const { resetMappingInfo } = this.props;
+    var newMappingInfo = this.props.currentElement.mappingInfo;
+    if (newMappingInfo[choiceMappingKey]) {
+      console.log('reselect ' + choiceMappingKey);
+      newMappingInfo[choiceMappingKey] = {'positions': {}, 'type': 'STANDARD'};
+      resetMappingInfo(newMappingInfo);
+    }
+    // TODO: deal with activeIndex
   }
 
   handleAddChoice = () => {
@@ -98,17 +113,13 @@ class AnswerOutputArea extends Component {
       label: this.newLabel,
       text: ''
     };
+    var newMappingInfo = this.props.currentElement.mappingInfo;
+    var newMappingItem = {[newItem.label]: {'positions': {}, 'type': 'STANDARD'}};
+    setMappingInfo(Object.assign({}, newMappingInfo, newMappingItem));
     setQuestionInfo({
       choices: _.concat(choices, [newItem])
     });
-
-    const positions = this.positions;
-    const newIndex = choices.length;
-    positions.splice(newIndex, 0, null);
-    setMappingInfo({
-      activeIndex: newIndex,
-      positions
-    });
+    // TODO: activeIndex
   }
 
   handleChangeText = (index, text) => {
@@ -120,26 +131,24 @@ class AnswerOutputArea extends Component {
     });
   }
 
-  handleIncludeOther = () => {
-    const { setQuestionInfo, setMappingInfo } = this.props;
-    const choices = this.choices;
-    const positions = this.positions;
+  handleIncludeOther = (isOn) => {
+    const { setQuestionInfo, setMappingInfo, resetMappingInfo } = this.props;
     setQuestionInfo({
       include_other: !this.includeOther
     });
-    if (this.includeOther) {
-      setMappingInfo({
-        activeIndex: 0,
-        positions: positions.slice(0, choices.length)
-      });
+    var newMappingInfo = this.props.currentElement.mappingInfo;
+    if (isOn) {
+      var newMappingItem = {'other': {'positions': {}, 'type': 'STANDARD'}};
+      setMappingInfo(Object.assign({}, newMappingInfo, newMappingItem));
     } else {
-      setMappingInfo({
-        activeIndex: positions.length
-      });
+      delete newMappingInfo['other'];
+      resetMappingInfo(newMappingInfo);
     }
+    // TODO: activeIndex
   }
 
   handlePreviewButtonClick = (activeIndex) => {
+    // TODO: this function
     const { setMappingInfo } = this.props;
     setMappingInfo({ activeIndex });
   }
@@ -164,7 +173,7 @@ class AnswerOutputArea extends Component {
           <li>
             <OverlayTrigger trigger={['hover', 'focus']} overlay={this.getPopover('reselectOutputArea')}>
               <Button className={`${styles.actionButton} ${styles.reselectButton}`}
-                onClick={function (e) { that.handleReselect(index); }}
+                onClick={function (e) { that.handleReselect(item.label, isReadonlyField(index)); }}
               >
                 <MdCropFree size={18} />
               </Button>
@@ -173,7 +182,7 @@ class AnswerOutputArea extends Component {
           <li>
             {!isReadonlyField(index) &&
               <Button className={`${styles.actionButton} ${styles.deleteButton}`}
-                onClick={function (e) { that.handleDeleteSelection(index); }}
+                onClick={function (e) { that.handleDeleteSelection(index, item.label); }}
               >
                 <span className={styles.removeLabel}>Remove?</span>
                 <MdDelete size={18} />
