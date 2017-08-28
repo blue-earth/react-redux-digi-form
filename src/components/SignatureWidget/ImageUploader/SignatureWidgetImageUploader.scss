@@ -26,6 +26,7 @@
   padding: 10px;
 }
 .imageWrapper {
+  position: relative;
   height: calc(100% - 30px);
   width: 100%;
   border: 1px solid $button-default-bg-color;
