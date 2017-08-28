@@ -16,7 +16,8 @@ class CheckboxFieldBasicTab extends Component {
     setMappingInfo: PropTypes.func.isRequired,
     resetMappingInfo: PropTypes.func.isRequired,
     setValidationInfo: PropTypes.func.isRequired,
-    resetValidationInfo: PropTypes.func.isRequired
+    resetValidationInfo: PropTypes.func.isRequired,
+    setActiveBox: PropTypes.func.isRequired
   };
   render() {
     const {
@@ -40,7 +41,8 @@ class CheckboxFieldBasicTab extends Component {
         title="Checkbox choices"
         setMappingInfo={this.props.setMappingInfo}
         resetMappingInfo={this.props.resetMappingInfo}
-        setQuestionInfo={this.props.setQuestionInfo} />
+        setQuestionInfo={this.props.setQuestionInfo}
+        setActiveBox={this.props.setActiveBox} />
       <RequiredValidation
         setValidationInfo={setValidationInfo}
         resetValidationInfo={resetValidationInfo}

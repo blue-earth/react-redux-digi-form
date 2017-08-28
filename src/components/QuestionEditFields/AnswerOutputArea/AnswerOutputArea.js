@@ -7,13 +7,14 @@ import {
   FormGroup,
   InputGroup,
   FormControl,
-  OverlayTrigger,
   Popover
 } from 'react-bootstrap';
-import { getChoiceLabelByIndex } from 'helpers/formBuilderHelper';
+import {
+  getActiveLabel,
+  getChoiceLabelByIndex
+} from 'helpers/formBuilderHelper';
 import popoverTexts from 'schemas/popoverTexts';
 import {
-  MdCropFree,
   MdDelete
 } from 'react-icons/lib/md';
 import EditSection from '../EditSection';
@@ -28,7 +29,11 @@ class AnswerOutputArea extends Component {
     title: PropTypes.string,
     setMappingInfo: PropTypes.func.isRequired,
     resetMappingInfo: PropTypes.func.isRequired,
-    setQuestionInfo: PropTypes.func.isRequired
+    setQuestionInfo: PropTypes.func.isRequired,
+    /*
+     * setActiveBox: Redux action to set activeBoxPath path.
+     */
+    setActiveBox: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -67,12 +72,18 @@ class AnswerOutputArea extends Component {
   }
 
   get activeBoxIndex() {
-    // TODO: deal with activeIndex
-    return _.get(this.props, ['currentElement', 'mappingInfo', 'activeIndex'], false);
+    const { activeBoxPath } = this.props.currentElement;
+    const choices = this.choices;
+    const label = getActiveLabel(activeBoxPath);
+    if (label === 'other') {
+      return choices.length;
+    } else {
+      return _.findIndex(choices, function (o) { return o.label === label; });
+    }
   }
 
-  handleDeleteSelection = (index, label) => {
-    const { setQuestionInfo, resetMappingInfo } = this.props;
+  handleDeleteSelection = (index) => {
+    const { setQuestionInfo, resetMappingInfo, setActiveBox } = this.props;
     const choices = this.choices;
     var oldMappingInfo = this.props.currentElement.mappingInfo;
     const deleteKey = choices[index].label;
@@ -90,24 +101,11 @@ class AnswerOutputArea extends Component {
     }
     resetMappingInfo(newMappingInfo);
     setQuestionInfo({ choices });
-  }
-
-  handleReselect = (choiceMappingKey, isOther) => {
-    if (isOther) {
-      choiceMappingKey = 'other';
-    }
-    const { resetMappingInfo } = this.props;
-    var newMappingInfo = this.props.currentElement.mappingInfo;
-    if (newMappingInfo[choiceMappingKey]) {
-      console.log('reselect ' + choiceMappingKey);
-      newMappingInfo[choiceMappingKey] = {'positions': {}, 'type': 'STANDARD'};
-      resetMappingInfo(newMappingInfo);
-    }
-    // TODO: deal with activeIndex
+    setActiveBox(null);
   }
 
   handleAddChoice = () => {
-    const { setQuestionInfo, setMappingInfo } = this.props;
+    const { setQuestionInfo, setMappingInfo, setActiveBox } = this.props;
     const choices = this.choices;
     const newItem = {
       label: this.newLabel,
@@ -119,7 +117,7 @@ class AnswerOutputArea extends Component {
     setQuestionInfo({
       choices: _.concat(choices, [newItem])
     });
-    // TODO: activeIndex
+    setActiveBox(_.join([newItem.label, 'positions', 0], '.'));
   }
 
   handleChangeText = (index, text) => {
@@ -132,7 +130,7 @@ class AnswerOutputArea extends Component {
   }
 
   handleIncludeOther = (isOn) => {
-    const { setQuestionInfo, setMappingInfo, resetMappingInfo } = this.props;
+    const { setQuestionInfo, setMappingInfo, resetMappingInfo, setActiveBox } = this.props;
     setQuestionInfo({
       include_other: !this.includeOther
     });
@@ -140,11 +138,12 @@ class AnswerOutputArea extends Component {
     if (isOn) {
       var newMappingItem = {'other': {'positions': {}, 'type': 'STANDARD'}};
       setMappingInfo(Object.assign({}, newMappingInfo, newMappingItem));
+      setActiveBox(_.join(['other', 'positions', 0], '.'));
     } else {
       delete newMappingInfo['other'];
       resetMappingInfo(newMappingInfo);
+      setActiveBox(null);
     }
-    // TODO: activeIndex
   }
 
   handlePreviewButtonClick = (activeIndex) => {
@@ -171,18 +170,9 @@ class AnswerOutputArea extends Component {
         </InputGroup>
         <ul className={styles.actionItems}>
           <li>
-            <OverlayTrigger trigger={['hover', 'focus']} overlay={this.getPopover('reselectOutputArea')}>
-              <Button className={`${styles.actionButton} ${styles.reselectButton}`}
-                onClick={function (e) { that.handleReselect(item.label, isReadonlyField(index)); }}
-              >
-                <MdCropFree size={18} />
-              </Button>
-            </OverlayTrigger>
-          </li>
-          <li>
             {!isReadonlyField(index) &&
               <Button className={`${styles.actionButton} ${styles.deleteButton}`}
-                onClick={function (e) { that.handleDeleteSelection(index, item.label); }}
+                onClick={function (e) { that.handleDeleteSelection(index); }}
               >
                 <span className={styles.removeLabel}>Remove?</span>
                 <MdDelete size={18} />
@@ -192,27 +182,6 @@ class AnswerOutputArea extends Component {
         </ul>
       </FormGroup>
     ));
-  }
-
-  renderPreviewAnswerOutput() {
-    const choices = this.finalChoices;
-    const that = this;
-    return (
-      <ul className={styles.previewItems}>
-        {
-          _.map(choices, (item, index) => (
-            <li key={index}>
-              <Button onClick={function (e) { that.handlePreviewButtonClick(index); }}
-                className={styles.previewItemButton}
-                active={that.activeBoxIndex === index}
-              >
-                {item.label}
-              </Button>
-            </li>
-          ))
-        }
-      </ul>
-    );
   }
 
   render() {
@@ -231,14 +200,6 @@ class AnswerOutputArea extends Component {
             title={'Allow "Other" option'}
             onChange={this.handleIncludeOther}
             checked={this.includeOther} />
-        </EditSection>
-        <EditSection>
-          <SectionTitle
-            title="Preview answer output"
-            description="Select one answer to preview"
-            popoverId="previewAnswerOutput"
-          />
-          {this.renderPreviewAnswerOutput()}
         </EditSection>
       </div>
     );

@@ -84,7 +84,9 @@ export default class QuestionEditPanel extends Component {
     /*
      * show: Redux modal show
      */
-    show: PropTypes.func.isRequired
+    show: PropTypes.func.isRequired,
+
+    setActiveBox: PropTypes.func
   };
 
   constructor(props) {
@@ -173,7 +175,8 @@ export default class QuestionEditPanel extends Component {
       setValidationInfo: this.props.setValidationInfo,
       resetValidationInfo: this.props.resetValidationInfo,
       setMappingInfo: this.props.setMappingInfo,
-      resetMappingInfo: this.props.resetMappingInfo
+      resetMappingInfo: this.props.resetMappingInfo,
+      setActiveBox: this.props.setActiveBox
     };
 
     var questionType = this.props.currentElement.question.type;
