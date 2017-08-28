@@ -37,10 +37,10 @@ class SignatureModal extends Component {
     isConsented: PropTypes.bool,
     isCodeVerifyingModalOpen: PropTypes.bool.isRequired,
     isCodeVerified: PropTypes.bool.isRequired,
+    hasCodeVerified: PropTypes.bool,
     verifyEmailCode: PropTypes.func.isRequired,
     updateSessionId: PropTypes.func.isRequired,
     requestVerificationCode: PropTypes.func.isRequired,
-    closeVerificationModal: PropTypes.func.isRequired,
     resetCodeVerified: PropTypes.func.isRequired,
     submitValue: PropTypes.func.isRequired
   };
@@ -281,7 +281,7 @@ class SignatureModal extends Component {
     const {
       isPageBusy,
       isCodeVerified,
-      closeVerificationModal,
+      hasCodeVerified,
       verifyEmailCode,
       requestVerificationCode,
       resetCodeVerified
@@ -289,8 +289,8 @@ class SignatureModal extends Component {
     return (
       <CompletionModal
         isPageBusy={isPageBusy}
+        hasCodeVerified={hasCodeVerified}
         hasError={!isCodeVerified}
-        closeModal={closeVerificationModal}
         verifyEmailCode={verifyEmailCode}
         resendCode={requestVerificationCode}
         resetCodeVerified={resetCodeVerified} />

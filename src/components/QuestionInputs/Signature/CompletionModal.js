@@ -16,9 +16,10 @@ import styles from './CompletionModal.scss';
 class CompletionModal extends Component {
   static propTypes = {
     show: PropTypes.bool,                  // Modal display status
-    closeModal: PropTypes.func.isRequired, // Redux store implemented close current modal function
+    handleHide: PropTypes.func.isRequired,      // Hide modal function from 'redux-modal'
     hasError: PropTypes.bool.isRequired,
     isPageBusy: PropTypes.bool,
+    hasCodeVerified: PropTypes.bool,
     commitValue: PropTypes.object.isRequired,
     verifyEmailCode: PropTypes.func.isRequired,
     resendCode: PropTypes.func.isRequired,
@@ -52,8 +53,12 @@ class CompletionModal extends Component {
     });
   }
 
+  handleCloseModal = () => {
+    const {handleHide} = this.props;
+    handleHide('signatureVerificationModal');
+  }
+
   render() {
-    const { show, commitValue, closeModal, hasError } = this.props;
     const { show, commitValue, hasError, isPageBusy, hasCodeVerified } = this.props;
     const { code } = this.state;
     return (
@@ -63,7 +68,7 @@ class CompletionModal extends Component {
           <h3 className={styles.modalHeader}>
               Enter signature completion code
           </h3>
-          <button className={styles.closeModalButton} onClick={closeModal}>
+          <button className={styles.closeModalButton} onClick={this.handleCloseModal}>
             <FaClose size={16} />
           </button>
         </div>
@@ -89,7 +94,7 @@ class CompletionModal extends Component {
                   Complete
                 </AppButton>
               </div>
-              <Button onClick={closeModal} bsStyle="link" className={styles.cancelButton}>
+              <Button onClick={this.handleCloseModal} bsStyle="link" className={styles.cancelButton}>
                 Go back
               </Button>
             </Col>

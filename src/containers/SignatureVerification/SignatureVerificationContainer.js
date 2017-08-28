@@ -2,7 +2,6 @@ import connect from 'redux/utils/connect';
 import SignatureModal from 'components/QuestionInputs/Signature/SignatureModal';
 import {
   updateSessionId,
-  closeVerificationModal,
   verifyEmail,
   verifyEmailCode,
   requestVerificationCode,
@@ -13,7 +12,6 @@ import {
 
 const mapActionCreators = {
   updateSessionId,
-  closeVerificationModal,
   verifyEmail,
   verifyEmailCode,
   requestVerificationCode,
@@ -22,16 +20,19 @@ const mapActionCreators = {
 };
 
 const mapStateToProps = (state) => {
-  const { signatureVerification } = state;
+  const { signatureVerification, modal: { signatureVerificationModal }, formInteractive: { title } } = state;
   const {
     isPageBusy,
-    isCodeVerifyingModalOpen,
-    isCodeVerified
+    isCodeVerified,
+    hasCodeVerified
   } = signatureVerification || INIT_SIGNATURE_STATE;
+  const isCodeVerifyingModalOpen = signatureVerificationModal && signatureVerificationModal.show || false;
   return {
+    title,
     isPageBusy,
     isCodeVerifyingModalOpen,
-    isCodeVerified
+    isCodeVerified,
+    hasCodeVerified
   };
 };
 
