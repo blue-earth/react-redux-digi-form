@@ -6,7 +6,7 @@ import SignaturePad from 'react-signature-pad';
 import ColourPicker from '../ColourPicker';
 import classNames from 'classnames';
 import styles from './DrawSignature.scss';
-import { IoIosTrashOutline } from 'react-icons/lib/io';
+import { IoIosRefreshEmpty } from 'react-icons/lib/io';
 import SignatureTabs from '../SignatureTabs';
 
 class DrawSignature extends Component {
@@ -76,7 +76,7 @@ class DrawSignature extends Component {
             <ColourPicker onChange={this.handleColourChange} />
           </div>
           <button className={styles.clearButton} onClick={this.handleClear}>
-            <IoIosTrashOutline height={24} width={24} />
+            <IoIosRefreshEmpty height={24} width={24} />
           </button>
           <div className="clearfix"></div>
         </div>
