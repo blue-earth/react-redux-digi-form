@@ -35,5 +35,11 @@ storiesOf('Button', module)
         <AppButton type="secondary" onClick={action('clicked')} isBusy>a</AppButton>
         <AppButton size="sm" type="additional" onClick={action('clicked')} isBusy>a</AppButton>
       </p>
+      <p>
+        Content succeed:
+        <AppButton size="lg" onClick={action('clicked')} isSucceed>a</AppButton>
+        <AppButton type="secondary" onClick={action('clicked')} isSucceed>a</AppButton>
+        <AppButton size="sm" type="additional" onClick={action('clicked')} isSucceed>a</AppButton>
+      </p>
     </div>
   ));

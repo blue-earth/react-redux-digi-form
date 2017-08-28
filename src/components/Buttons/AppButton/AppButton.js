@@ -6,6 +6,7 @@ import classNames from 'classnames/bind';
 import styles from './AppButton.scss';
 import Spinner from 'components/Spinner';
 import lightness from 'lightness';
+import { FaCheck } from 'react-icons/lib/fa';
 
 const cx = classNames.bind(styles);
 
@@ -23,6 +24,9 @@ class AppButton extends Component {
 
     // disables the button and adds a spinner icon
     isBusy: PropTypes.bool,
+
+    // Display a success status with a tick inside
+    isSucceed: PropTypes.bool,
 
     // className attribute
     extraClass: PropTypes.string,
@@ -98,7 +102,7 @@ class AppButton extends Component {
     return optionals;
   }
   render() {
-    const { primaryColour, children, isBusy, type, size, isDisabled } = this.props;
+    const { primaryColour, children, isBusy, type, size, isDisabled, isSucceed } = this.props;
     let backgroundColor = primaryColour;
     const cx = classNames.bind(styles); // eslint-disable-line
     var optionals = this.getOptionalAttributes;
@@ -122,7 +126,10 @@ class AppButton extends Component {
         {
           isBusy && <Spinner primaryColour={backgroundColor} size={size} />
         }
-        <span className={cx({hidden: isBusy})}>{children}</span>
+        {
+          isSucceed && <FaCheck />
+        }
+        <span className={cx({hidden: isBusy || isSucceed})}>{children}</span>
       </button>
     );
   }
