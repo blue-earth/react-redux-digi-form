@@ -279,6 +279,7 @@ class SignatureModal extends Component {
 
   get verifyCodeModal() {
     const {
+      isPageBusy,
       isCodeVerified,
       closeVerificationModal,
       verifyEmailCode,
@@ -287,6 +288,7 @@ class SignatureModal extends Component {
     } = this.props;
     return (
       <CompletionModal
+        isPageBusy={isPageBusy}
         hasError={!isCodeVerified}
         closeModal={closeVerificationModal}
         verifyEmailCode={verifyEmailCode}

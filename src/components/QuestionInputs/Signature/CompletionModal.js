@@ -18,6 +18,7 @@ class CompletionModal extends Component {
     show: PropTypes.bool,                  // Modal display status
     closeModal: PropTypes.func.isRequired, // Redux store implemented close current modal function
     hasError: PropTypes.bool.isRequired,
+    isPageBusy: PropTypes.bool,
     commitValue: PropTypes.object.isRequired,
     verifyEmailCode: PropTypes.func.isRequired,
     resendCode: PropTypes.func.isRequired,
@@ -53,6 +54,7 @@ class CompletionModal extends Component {
 
   render() {
     const { show, commitValue, closeModal, hasError } = this.props;
+    const { show, commitValue, hasError, isPageBusy, hasCodeVerified } = this.props;
     const { code } = this.state;
     return (
       <Modal backdrop="static" show={show}
@@ -78,7 +80,12 @@ class CompletionModal extends Component {
                 {hasError && <span>Please input valid code</span>}
               </div>
               <div className={styles.buttonWrapper}>
-                <AppButton size="lg" extraClass={styles.completeButton} onClick={this.handleSubmit}>
+                <AppButton
+                  size="lg"
+                  extraClass={styles.completeButton}
+                  onClick={this.handleSubmit}
+                  isBusy={isPageBusy}
+                  isSucceed={hasCodeVerified}>
                   Complete
                 </AppButton>
               </div>
