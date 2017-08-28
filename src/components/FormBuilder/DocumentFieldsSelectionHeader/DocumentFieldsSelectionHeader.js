@@ -40,7 +40,7 @@ class DocumentFieldsSelectionHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedLabel: ''
+      selectedLabel: this.props.activeLabel
     };
   }
 
@@ -52,6 +52,12 @@ class DocumentFieldsSelectionHeader extends Component {
       // Only has 1 label group, and the group contains only 1 label
       const firstLabelName = this.props.availableFields[0][0]['key'];
       this.labelSelectHandler(firstLabelName);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.activeLabel && nextProps.activeLabel !== this.props.activeLabel) {
+      this.labelSelectHandler(nextProps.activeLabel);
     }
   }
 

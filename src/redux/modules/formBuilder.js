@@ -27,6 +27,7 @@ export const DELETE_ELEMENT = 'DELETE_ELEMENT';
 export const SET_QUESTION_INFO = 'SET_QUESTION_INFO';
 export const RESET_QUESTION_INFO = 'RESET_QUESTION_INFO';
 export const SET_MAPPING_INFO = 'SET_MAPPING_INFO';
+export const RESET_MAPPING_INFO = 'RESET_MAPPING_INFO';
 export const SET_VALIDATION_INFO = 'SET_VALIDATION_INFO';
 export const RESET_VALIDATION_INFO = 'RESET_VALIDATION_INFO';
 
@@ -370,6 +371,28 @@ const _resetValidationInfo = (state, action) => {
 // Action: setMappingInfo
 // ------------------------------------
 export const setMappingInfo = createAction(SET_MAPPING_INFO);
+// ------------------------------------
+// Helper: _setMappingInfo
+// ------------------------------------
+const _setMappingInfo = (state, action) => {
+  const mappingInfo = _.get(state, ['currentElement', 'mappingInfo'], {});
+  return _updateCurrentElement(state, {
+    mappingInfo: Object.assign({}, mappingInfo, action.payload)
+  });
+};
+// ------------------------------------
+// Action: resetMappingInfo
+// replace mappingInfo with a new object
+// ------------------------------------
+export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
+// ------------------------------------
+// Helper: _resetMappingInfo
+// ------------------------------------
+const _resetMappingInfo = (state, action) => {
+  return _updateCurrentElement(state, {
+    mappingInfo: action.payload
+  });
+};
 
 // ------------------------------------
 // Action: setMappingPositionInfo
@@ -624,9 +647,10 @@ const formBuilderReducer = handleActions({
     _resetQuestionInfo(state, action),
 
   SET_MAPPING_INFO: (state, action) =>
-    _updateCurrentElement(state, {
-      mappingInfo: Object.assign({}, action.payload)
-    }),
+    _setMappingInfo(state, action),
+
+  RESET_MAPPING_INFO: (state, action) =>
+    _resetMappingInfo(state, action),
 
   SET_MAPPING_POSITION_INFO: (state, action) =>
     _setMappingPositionInfo(state, action),

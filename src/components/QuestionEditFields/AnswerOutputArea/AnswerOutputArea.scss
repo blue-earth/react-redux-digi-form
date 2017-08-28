@@ -10,7 +10,7 @@ $preview-button-bg-color: white;
 
 .formGroup {
   margin-top: 15px;
-	padding-right: ($action-button-size + $action-button-padding * 2) * 2 + $items-offset;
+	padding-right: ($action-button-size + $action-button-padding * 2) + $items-offset;
   position: relative;
 }
 

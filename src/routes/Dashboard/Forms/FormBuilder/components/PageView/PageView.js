@@ -17,6 +17,14 @@ class PageView extends Component {
      */
     documents: PropTypes.array.isRequired,
 
+    questions: PropTypes.array,
+
+    isModified: PropTypes.bool,
+
+    saveElement: PropTypes.func,
+
+    show: PropTypes.func,
+
     /*
      * documentMapping: Redux state to hold the bounding box of the question item in document
      */
@@ -143,9 +151,27 @@ class PageView extends Component {
             style={pageStyle}>
             <img src={document.url} alt={`Page Image ${pageNumber}`}
               className={styles.pageImage} ref={`pageImage${pageNumber}`} />
-            <DrawingBoard {...this.props} pageNumber={pageNumber}
-              viewportWidth={viewportWidth} viewportHeight={viewportHeight}
-              getPageDOM={this.getPageDOM} containerId="clientArea" />
+            <DrawingBoard
+              documents={this.props.documents}
+              questions={this.props.questions}
+              isModified={this.props.isModified}
+              saveElement={this.props.saveElement}
+              documentMapping={this.props.documentMapping}
+              setMappingInfo={this.props.setMappingInfo}
+              setMappingPositionInfo={this.props.setMappingPositionInfo}
+              pageZoom={this.props.pageZoom}
+              setPageZoom={this.props.setPageZoom}
+              questionEditMode={this.props.questionEditMode}
+              setQuestionEditMode={this.props.setQuestionEditMode}
+              currentElement={this.props.currentElement}
+              setCurrentElement={this.props.setCurrentElement}
+              show={this.props.show}
+              setActiveBox={this.props.setActiveBox}
+              pageNumber={pageNumber}
+              viewportWidth={viewportWidth}
+              viewportHeight={viewportHeight}
+              getPageDOM={this.getPageDOM}
+              containerId="clientArea" />
           </div>
         );
       })

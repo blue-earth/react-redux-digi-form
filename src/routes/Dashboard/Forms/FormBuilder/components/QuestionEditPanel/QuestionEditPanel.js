@@ -72,6 +72,10 @@ export default class QuestionEditPanel extends Component {
      */
     resetValidationInfo: PropTypes.func.isRequired,
 
+    setMappingInfo: PropTypes.func.isRequired,
+
+    resetMappingInfo: PropTypes.func.isRequired,
+
     /*
      * isModified: Redux state that indicates whether the form is modified since last save or load.
      */
@@ -80,7 +84,9 @@ export default class QuestionEditPanel extends Component {
     /*
      * show: Redux modal show
      */
-    show: PropTypes.func.isRequired
+    show: PropTypes.func.isRequired,
+
+    setActiveBox: PropTypes.func
   };
 
   constructor(props) {
@@ -167,7 +173,10 @@ export default class QuestionEditPanel extends Component {
       questions: this.props.questions,
       setQuestionInfo: this.props.setQuestionInfo,
       setValidationInfo: this.props.setValidationInfo,
-      resetValidationInfo: this.props.resetValidationInfo
+      resetValidationInfo: this.props.resetValidationInfo,
+      setMappingInfo: this.props.setMappingInfo,
+      resetMappingInfo: this.props.resetMappingInfo,
+      setActiveBox: this.props.setActiveBox
     };
 
     var questionType = this.props.currentElement.question.type;

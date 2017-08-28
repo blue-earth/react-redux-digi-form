@@ -95,6 +95,8 @@ class FormBuilderSteps extends Component {
      */
     setMappingInfo: PropTypes.func.isRequired,
 
+    resetMappingInfo: PropTypes.func.isRequired,
+
     /*
      * setMappingPositionInfo: Action to update the document mapping position info of active selection.
      */
@@ -210,6 +212,7 @@ class FormBuilderSteps extends Component {
             setValidationInfo: props.setValidationInfo,
             resetValidationInfo: props.resetValidationInfo,
             setMappingInfo: props.setMappingInfo,
+            resetMappingInfo: props.resetMappingInfo,
             setMappingPositionInfo: props.setMappingPositionInfo,
             pageZoom: props.pageZoom,
             setPageZoom: props.setPageZoom,

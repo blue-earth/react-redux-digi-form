@@ -1,0 +1,43 @@
+@import './mixins';
+@import './variables';
+
+.checkboxItem {
+  position: relative;
+  padding: 12px 12px 12px 70px;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 18px 20px 2px;
+  &:hover, &:focus {
+    outline: none;
+  }
+  > .text {
+    display: block;
+  }
+  &.active {
+
+  }
+  &.disabled {
+    cursor: default;
+    opacity: .5;
+  }
+}
+.checkboxBox {
+  @include border-radius($input-border-radius);
+  @include input-box-shadow;
+  border: 1px solid $choice-border-color;
+  background-color: white;
+  color: $choice-border-color;
+  display: inline-block;
+  text-align: center;
+  font-size: 1em;
+  left: 12px;
+  padding: 0.1em;
+  cursor: pointer;
+  svg {
+    display: block;
+  }
+  &.active {
+    color: $blue;
+    border-color: $blue;
+  }
+}
