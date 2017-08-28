@@ -105,6 +105,8 @@ class FormBuilder extends Component {
      */
     setMappingInfo: PropTypes.func.isRequired,
 
+    resetMappingInfo: PropTypes.func.isRequired,
+
     /*
      * setMappingPositionInfo: Action to update the document mapping position info of active selection.
      */

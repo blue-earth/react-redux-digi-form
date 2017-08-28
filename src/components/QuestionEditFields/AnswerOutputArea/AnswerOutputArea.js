@@ -82,14 +82,14 @@ class AnswerOutputArea extends Component {
     }
   }
 
-  handleDeleteSelection = (index) => {
+  handleDeleteSelection = (choiceIndex) => {
     const { setQuestionInfo, resetMappingInfo, setActiveBox } = this.props;
     const choices = this.choices;
     var oldMappingInfo = this.props.currentElement.mappingInfo;
-    const deleteKey = choices[index].label;
+    const deleteKey = choices[choiceIndex].label;
     delete oldMappingInfo[deleteKey];
     var newMappingInfo = {};
-    _.pullAt(choices, [index]);
+    _.pullAt(choices, [choiceIndex]);
     _.map(choices, (item, index) => {
       var oldLabel = item.label;
       var newLabel = getChoiceLabelByIndex(index);
