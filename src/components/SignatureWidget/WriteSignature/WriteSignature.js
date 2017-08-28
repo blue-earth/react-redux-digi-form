@@ -59,16 +59,19 @@ class WriteSignature extends Component {
   }
 
   handleSelectActiveColour = (colour) => {
+    this.props.onChange();
     this.setState({
       writeSignatureColour: colour
     }, this.updateWriteSignatureCanvases);
   }
   handleSignatureStyleChange = (value) => {
+    this.props.onChange();
     this.setState({
       signatureStyle: value
     }, this.updateWriteSignatureCanvases);
   }
   hanldeSignatureNameChange = (value) => {
+    this.props.onChange();
     this.setState({
       signatureName: value
     }, this.updateWriteSignatureCanvases);
