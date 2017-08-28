@@ -224,16 +224,6 @@ class FormBuilder extends Component {
         fieldsGroup.push({'displayName': otherLabel, 'key': 'other', 'group': 'STANDARD'});
       }
       return [fieldsGroup];
-      // var mappingInfo = this.props.currentElement.mappingInfo;
-      // if (_.isEmpty(mappingInfo)) {
-      //   return [];
-      // }
-      // var fieldsGroup = [];
-      // _.forEach(mappingInfo, function (value, key) {
-      //   var field = {'displayName': key, 'key': key, 'group': 'STANDARD'};
-      //   fieldsGroup.push(field);
-      // });
-      // return [fieldsGroup];
     } else {
       var schema = getQuestionInputSchema(questionTypeName);
       var result = schema['availableFields'];
