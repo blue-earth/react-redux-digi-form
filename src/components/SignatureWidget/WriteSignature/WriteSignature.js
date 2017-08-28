@@ -121,7 +121,7 @@ class WriteSignature extends Component {
             <ColourPicker onChange={this.handleSelectActiveColour} />
           </div>
         </div>
-        <ul style={{padding: '0', margin: '0', listStyle: 'none'}}>
+        <ul className={styles.writeSignatureList}>
           {signatureFonts.map((font, index) => {
             let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
             return (
