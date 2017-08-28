@@ -46,6 +46,7 @@ class DrawSignature extends Component {
       drawSignatureColour: colour
     });
     this.refs.signatureCanvas.penColor = colour;
+    this.handleClear();
   }
 
   handleClear = () => {
