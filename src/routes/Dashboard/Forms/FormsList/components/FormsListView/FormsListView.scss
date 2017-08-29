@@ -22,27 +22,29 @@ $slt-border-color:          rgba(204, 204, 204, .3);
 
 .columnID {
   width: auto;
+  max-width: 15%;
 }
 .columnName {
-  width: auto;
+  width: 30%;
+  font-weight: 700;
 }
 .columnCreatedBy {
   width: auto;
+  max-width: 15%;
   text-align: center;
 }
 .columnCreated {
   width: auto;
+  max-width: 10%;
 }
 .columnStatus {
   width: auto;
+  max-width: 10%;
   text-align: center;
 }
-.columnActionsList{
-  width: auto;
-  text-align: right;
-}
 .columnActions {
-  width: 60px;
+  width: auto;
+  max-width: 20%;
   border-left: 1px solid $table-line-color;
 }
 
