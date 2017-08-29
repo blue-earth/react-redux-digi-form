@@ -1,8 +1,18 @@
+@import './mixins';
+@import './variables';
+
 .filterContainer {
   padding: 14px;
 }
 .formButton {
-  line-height: 37px;
   float: left;
-  margin-left: 14px;
+  margin-left: 13px;
+  height: 39px;
+}
+.buttonIcon {
+  margin-right: 9px;
+  vertical-align: middle;
+}
+.createButton {
+  font-family: $button-font-family;
 }
