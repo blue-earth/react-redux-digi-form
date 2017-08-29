@@ -73,28 +73,56 @@ class QuestionInteractive extends Component {
 
     handleEnter: PropTypes.func.isRequired,
 
+    getStoreAnswerByQuestionId: PropTypes.func.isRequired,
+
     /*
      * showModal: redux-modal action to show modal
      */
     showModal: PropTypes.func.isRequired
   };
 
+  constructor(props) {
+    super(props);
+    this.handleEnterKeyPress = this.handleEnterKeyPress.bind(this);
+    this.state = {
+      'hasError': false
+    };
+  }
+
   static contextTypes = {
     primaryColour: PropTypes.string
   };
 
   handleChange = (value) => {
-    const {changeCurrentState, storeAnswer, question: {id, validations}} = this.props;
+    const {changeCurrentState, storeAnswer, question: {id}} = this.props;
 
     changeCurrentState({
       answerValue: value,
       inputState: 'changed'
     });
+    storeAnswer({
+      id,
+      value
+    });
+  };
 
-    if (valueIsValid(value, validations)) {
-      storeAnswer({
-        id,
-        value
+  handleEnterKeyPress = () => {
+    const {
+      getStoreAnswerByQuestionId,
+      handleEnter,
+      question
+    } = this.props;
+    const answer = getStoreAnswerByQuestionId(question.id);
+    const isValid = valueIsValid(answer, question.validations);
+    if (isValid) {
+      this.setState({
+        'hasError': false
+      }, function () {
+        handleEnter();
+      });
+    } else {
+      this.setState({
+        'hasError': true
       });
     }
   };
@@ -155,13 +183,13 @@ class QuestionInteractive extends Component {
   }
 
   render() {
-    const { handleEnter, verifications, value, question, question: { validations } } = this.props;
+    const { verifications, value, question, question: { validations } } = this.props;
     var extraProps = {
       autoFocus: true,
       primaryColour: this.context.primaryColour,
       onChange: this.handleChange,
-      hasError: this.hasError,
-      onEnterKey: handleEnter,
+      hasError: this.state.hasError,
+      onEnterKey: this.handleEnterKeyPress,
       errorMessage: <FieldError
         value={value} validations={validations} verifications={verifications} />
     };
