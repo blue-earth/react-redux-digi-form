@@ -33,14 +33,15 @@ class SignatureModal extends Component {
     show: PropTypes.bool,                 // Modal display status
     hide: PropTypes.func.isRequired,      // Hide modal function from 'redux-modal'
     value: PropTypes.object,
+    title: PropTypes.string,
     isPageBusy: PropTypes.bool,
     isConsented: PropTypes.bool,
     isCodeVerifyingModalOpen: PropTypes.bool.isRequired,
     isCodeVerified: PropTypes.bool.isRequired,
+    hasCodeVerified: PropTypes.bool,
     verifyEmailCode: PropTypes.func.isRequired,
     updateSessionId: PropTypes.func.isRequired,
     requestVerificationCode: PropTypes.func.isRequired,
-    closeVerificationModal: PropTypes.func.isRequired,
     resetCodeVerified: PropTypes.func.isRequired,
     submitValue: PropTypes.func.isRequired
   };
@@ -243,15 +244,20 @@ class SignatureModal extends Component {
   }
 
   get consentSection() {
-    const { isConsented } = this.state;
+    const { isConsented, name } = this.state;
+    const { title } = this.props;
     const termsNConditions = (
       <Popover id="terms-and-conditions" title="Terms & Conditions">
-        Lorem ipsum Occaecat proident.
-        irure proident nisi ea eiusmod mollit ex cillum.
-        dolor consequat et voluptate officia velit in cupidatat ad do sed aute voluptate.
-        ullamco nostrud sit eu ad labore elit cillum in officia sunt aliquip reprehenderit.
-        in labore qui in voluptate Duis do Duis deserunt anim Duis Excepteur commodo fugiat.
-        esse do id nostrud aute tempor reprehenderit laborum in sint culpa velit elit velit.
+        <p>By continuing,
+        I agree that the text or image displayed or created above is my or my authorised agent’s electronic
+        signature (electronic representation of my or my authorised agent’s signature).
+        The electronic signature shall have the same force and effect as a signature
+        affixed by hand on a paper document. I or my agent on my behalf may affix
+        electronic signature for the purposes of authorizing and authenticating
+        electronic forms.</p>
+        <p>I acknowledge that on the {moment().format('L')}, at {moment().format('LT')} the
+          form {title} was electronically signed by the signer {name} using his/her electronic signature.
+        </p>
       </Popover>
     );
     return (
@@ -279,16 +285,18 @@ class SignatureModal extends Component {
 
   get verifyCodeModal() {
     const {
+      isPageBusy,
       isCodeVerified,
-      closeVerificationModal,
+      hasCodeVerified,
       verifyEmailCode,
       requestVerificationCode,
       resetCodeVerified
     } = this.props;
     return (
       <CompletionModal
+        isPageBusy={isPageBusy}
+        hasCodeVerified={hasCodeVerified}
         hasError={!isCodeVerified}
-        closeModal={closeVerificationModal}
         verifyEmailCode={verifyEmailCode}
         resendCode={requestVerificationCode}
         resetCodeVerified={resetCodeVerified} />

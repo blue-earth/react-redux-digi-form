@@ -59,16 +59,19 @@ class WriteSignature extends Component {
   }
 
   handleSelectActiveColour = (colour) => {
+    this.props.onChange();
     this.setState({
       writeSignatureColour: colour
     }, this.updateWriteSignatureCanvases);
   }
   handleSignatureStyleChange = (value) => {
+    this.props.onChange();
     this.setState({
       signatureStyle: value
     }, this.updateWriteSignatureCanvases);
   }
   hanldeSignatureNameChange = (value) => {
+    this.props.onChange();
     this.setState({
       signatureName: value
     }, this.updateWriteSignatureCanvases);
@@ -121,7 +124,7 @@ class WriteSignature extends Component {
             <ColourPicker onChange={this.handleSelectActiveColour} />
           </div>
         </div>
-        <ul style={{padding: '0', margin: '0', listStyle: 'none'}}>
+        <ul className={styles.writeSignatureList}>
           {signatureFonts.map((font, index) => {
             let handleClick = this.handleSignatureStyleChange.bind(this, font.name); // eslint-disable-line
             return (

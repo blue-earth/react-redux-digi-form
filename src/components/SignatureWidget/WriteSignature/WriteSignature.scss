@@ -3,12 +3,14 @@
 
 .writePanelWrapper {
   position: relative;
-  overflow-y: auto;
   padding-bottom: 0;
+  padding: 0;
 }
 .signaturePanelHeader {
   height: 50px;
   line-height: 50px;
+  margin: 10px;
+  margin-bottom: 0;
 }
 .nameInputWrapper {
   width: 50%;
@@ -22,6 +24,16 @@
   float: right;
   @include media('<xs') {
     display: none;
+  }
+}
+.writeSignatureList{
+  padding: 0 10px;
+  margin: 0;
+  list-style: none;
+  height: 295px;
+  overflow-y: auto;
+  @include media('<xs') {
+    height: 200px;
   }
 }
 .signaturePanelWrapper {
@@ -114,5 +126,11 @@
   }
   .preload-Clinton {
     font-family: 'Clinton';
+  }
+  .preload-Mistral {
+    font-family: 'Mistral';
+  }
+  .preload-Vladimir {
+    font-family: 'Vladimir';
   }
 }

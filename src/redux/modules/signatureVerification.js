@@ -9,20 +9,21 @@ export const INIT_SIGNATURE_STATE = {
   isPageBusy: false,
   isCodeVerifyingModalOpen: false,
   isCodeVerified: true,
+  hasCodeVerified: false,
   commitValue: {}
 };
 
-const OPEN_CODE_VERIFY = 'OPEN_CODE_VERIFY';
-const CLOSE_CODE_VERIFY = 'CLOSE_CODE_VERIFY';
 const REQUEST_VERIFY_EMAIL = 'REQUEST_VERIFY_EMAIL';
 const DONE_VERIFYING_EMAIL = 'DONE_VERIFYING_EMAIL';
 const IS_CODE_VERIFIED = 'IS_CODE_VERIFIED';
 const RESET_CODE_VERIFIED = 'RESET_CODE_VERIFIED';
+const REQUEST_VERIFY_CODE = 'REQUEST_VERIFY_CODE';
+const DONE_VERIFYING_CODE = 'DONE_VERIFYING_CODE';
 
-export const openCodeVerify = createAction(OPEN_CODE_VERIFY);
-export const closeCodeVerify = createAction(CLOSE_CODE_VERIFY);
 export const requestVerifyEmail = createAction(REQUEST_VERIFY_EMAIL);
 export const doneVerifyingEmail = createAction(DONE_VERIFYING_EMAIL);
+export const requestVerifyCode = createAction(REQUEST_VERIFY_CODE);
+export const doneVerifyingCode = createAction(DONE_VERIFYING_CODE);
 
 export const isCodeVerified = createAction(IS_CODE_VERIFIED);
 export const resetCodeVerified = createAction(RESET_CODE_VERIFIED);
@@ -36,7 +37,6 @@ export const updateSessionId = () => {
 export const closeVerificationModal = () => {
   return (dispatch, getState) => {
     dispatch(resetCodeVerified());
-    dispatch(closeCodeVerify());
     dispatch(hide('signatureVerificationModal'));
   };
 };
@@ -63,7 +63,6 @@ const processVerifyEmail = (commitValue, responseId, questionId) => {
         dispatch(submitSignature(questionId, commitValue));
       } else {
         dispatch(requestVerificationCode(commitValue));
-        dispatch(openCodeVerify());
         dispatch(show('signatureVerificationModal', {
           commitValue
         }));
@@ -107,8 +106,9 @@ export const verifyEmailCode = (commitValue) => {
   const { code } = commitValue;
   return (dispatch, getState) => {
     if (code.length === 0) {
-      return dispatch(isCodeVerified(false));
+      return dispatch(doneVerifyingCode(false));
     }
+    dispatch(requestVerifyCode());
     const { formInteractive: { sessionId, currentQuestion: { id } } } = getState();
     dispatch(processVerifyEmailCode(commitValue, sessionId, id));
   };
@@ -124,11 +124,13 @@ const processVerifyEmailCode = (commitValue, sessionId, questionId) => {
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
       if (value.is_verified) {
-        dispatch(closeVerificationModal());
-        dispatch(isCodeVerified(true));
-        dispatch(submitSignature(questionId, commitValue));
+        dispatch(doneVerifyingCode(true));
+        setTimeout(() => {
+          dispatch(closeVerificationModal());
+          dispatch(submitSignature(questionId, commitValue));
+        }, 2000);
       } else {
-        dispatch(isCodeVerified(false));
+        dispatch(doneVerifyingCode(false));
       }
     };
   };
@@ -153,14 +155,6 @@ export const submitSignature = (id, commitValue) => {
 // Reducer
 // ------------------------------------
 const signatureReducer = handleActions({
-  OPEN_CODE_VERIFY: (state, action) =>
-    Object.assign({}, state, {
-      isCodeVerifyingModalOpen: true
-    }),
-  CLOSE_CODE_VERIFY: (state, action) =>
-    Object.assign({}, state, {
-      isCodeVerifyingModalOpen: false
-    }),
   REQUEST_VERIFY_EMAIL: (state, action) =>
     Object.assign({}, state, {
       isPageBusy: true
@@ -169,8 +163,14 @@ const signatureReducer = handleActions({
     Object.assign({}, state, {
       isPageBusy: false
     }),
-  IS_CODE_VERIFIED: (state, action) =>
+  REQUEST_VERIFY_CODE: (state, action) =>
     Object.assign({}, state, {
+      isPageBusy: true
+    }),
+  DONE_VERIFYING_CODE: (state, action) =>
+    Object.assign({}, state, {
+      isPageBusy: false,
+      hasCodeVerified: action.payload,
       isCodeVerified: action.payload
     }),
   RESET_CODE_VERIFIED: (state, action) =>
