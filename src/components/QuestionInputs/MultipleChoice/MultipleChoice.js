@@ -156,12 +156,13 @@ class MultipleChoice extends Component {
     const allChoices = this.allChoices;
     if (event.keyCode === 13) {
       onEnterKey();
+    } else {
+      const foundIndex = _.findIndex(allChoices, { label: String.fromCharCode(event.keyCode) });
+      if (foundIndex > -1) {
+        this.handleClick(allChoices[foundIndex]);
+      }
     }
-    const foundIndex = _.findIndex(allChoices, { label: String.fromCharCode(event.keyCode) });
-    if (foundIndex > -1) {
-      this.handleClick(allChoices[foundIndex]);
-    }
-  }
+  };
 
   render() {
     const { isDisabled, isReadOnly, autoFocus } = this.props;
