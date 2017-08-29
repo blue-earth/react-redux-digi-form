@@ -10,7 +10,6 @@ import FieldError from '../../QuestionInputs/FieldError';
 import QuestionInstruction from 'components/Questions/QuestionInstruction';
 import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
-import YesNoChoice from '../../QuestionInputs/YesNoChoice/YesNoChoice';
 import Statement from '../../QuestionInputs/Statement/Statement';
 import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
 import DateInput from '../../QuestionInputs/DateInput/DateInput';
@@ -124,9 +123,6 @@ class QuestionInteractive extends Component {
         break;
       case 'MultipleChoice':
         InputComponent = MultipleChoice;
-        break;
-      case 'YesNoChoiceField':
-        InputComponent = YesNoChoice;
         break;
       case 'LongTextField':
         InputComponent = LongTextInput;
