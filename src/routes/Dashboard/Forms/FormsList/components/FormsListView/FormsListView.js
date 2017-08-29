@@ -9,6 +9,7 @@ import { formsUrl, editFormUrl } from 'helpers/urlHelper';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import FormsFilter from '../FormsFilter';
+import SendFormLinkModal from '../SendFormLinkModal';
 import styles from './FormsListView.scss';
 import classNames from 'classnames';
 import { SelectionCell, SelectionHeaderCell, LinkCell } from 'components/GriddleComponents/CommonCells/CommonCells';
@@ -80,12 +81,20 @@ class FormsListView extends Component {
     deleteForm: PropTypes.func.isRequired,
     duplicateForm: PropTypes.func.isRequired,
     archiveForm: PropTypes.func.isRequired,
+    sendFormLink: PropTypes.func.isRequired,
+    isPageBusy: PropTypes.bool.isRequired,
+
+    showModal: PropTypes.func.isRequired,
 
     /*
      * selectedItems: Redux state in array to hold selected item ids.
      */
     selectedItems: PropTypes.array.isRequired
   };
+
+  openSendFormModal = (id) => {
+    this.props.showModal('sendFormLinkModal', { formId: id });
+  }
 
   get columnMetadata() {
     const {
@@ -165,13 +174,14 @@ class FormsListView extends Component {
           name: 'send',
           label: 'Send',
           icon: <Icon name="Send" height={16} width={16} style={{verticalAlign: 'top'}} />,
-          onClick: (id) => console.log(id)
+          onClick: (id) => this.openSendFormModal(id)
         }],
         idName: 'id',
         dropdownMenus: [{
           name: 'send',
           label: 'Send',
-          icon: 'Send'
+          icon: 'Send',
+          onClick: (id) => this.openSendFormModal(id)
         }, {
           name: 'archive',
           label: 'Archive',
@@ -246,7 +256,9 @@ class FormsListView extends Component {
       setPageSize,
       selectedItems,
       next,
-      previous
+      previous,
+      sendFormLink,
+      isPageBusy
     } = this.props;
     return (
       <div className={styles.formsList}>
@@ -265,6 +277,7 @@ class FormsListView extends Component {
           maxPage={Math.ceil(totalCount / pageSize)}
           previous={previous}
           next={next} />
+        <SendFormLinkModal sendFormLink={sendFormLink} isPageBusy={isPageBusy} />
       </div>
     );
   }

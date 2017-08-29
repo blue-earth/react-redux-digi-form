@@ -7,11 +7,15 @@ import { createAction, handleActions } from 'redux-actions';
 import _ from 'lodash';
 import { goTo } from './router';
 import { editFormUrl } from 'helpers/urlHelper';
+import { hide } from 'redux-modal';
 
 export const RECEIVE_FORMSLIST = 'RECEIVE_FORMSLIST';
 export const REQUEST_FORMSLIST = 'REQUEST_FORMSLIST';
 export const DONE_FETCHING_FORMSLIST = 'DONE_FETCHING_FORMSLIST';
 export const SELECT_FORM_ITEMS = 'SELECT_FORM_ITEMS';
+
+const REQUEST_SEND_FORM_LINK = 'REQUEST_SEND_FORM_LINK';
+const DONE_SEND_FORM_LINK = 'DONE_SEND_FORM_LINK';
 
 const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
 const NEXT_PAGE = 'NEXT_PAGE';
@@ -26,7 +30,8 @@ export const INIT_FORMSLIST_STATE = {
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: 'id', // indicates the column name to sort by
   sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
-  selectedItems: [] // holds the selected items id.
+  selectedItems: [], // holds the selected items id.
+  isPageBusy: false // indicates the busy status of send form link
 };
 
 // ------------------------------------
@@ -43,6 +48,9 @@ export const receiveFormsList = createAction(RECEIVE_FORMSLIST);
 // Action: doneFetchingFormsList
 // ------------------------------------
 export const doneFetchingFormsList = createAction(DONE_FETCHING_FORMSLIST);
+
+export const requestSendFormLink = createAction(REQUEST_SEND_FORM_LINK);
+export const doneSendFormLink = createAction(DONE_SEND_FORM_LINK);
 
 // ------------------------------------
 // Action: selectItems
@@ -154,7 +162,7 @@ export const duplicateForm = (id) => {
 };
 
 const processDuplicateForm = (id) => {
-  var apiURL = `${API_URL}/form_document/api/form/${id}/duplicate/`;
+  const apiURL = `${API_URL}/form_document/api/form/${id}/duplicate/`;
   const body = {};
   const fetchParams = assignDefaults({
     method: 'POST',
@@ -174,6 +182,37 @@ const processDuplicateForm = (id) => {
 
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
+
+export const sendFormLink = (id, email) => {
+  return (dispatch, getState) => {
+    dispatch(requestSendFormLink());
+    dispatch(processSendForm(id, email));
+  };
+};
+
+const processSendForm = (id, email) => {
+  const apiURL = `${API_URL}/form_document/api/form/${id}/email_form_tracking_link/`;
+  const body = { email };
+  const fetchParams = assignDefaults({
+    method: 'POST',
+    body
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(doneSendFormLink());
+      dispatch(hide('sendFormLinkModal'));
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      // Todo: Handler for failed send form link
+      dispatch(doneSendFormLink());
+    };
+  };
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+};
+
 // ------------------------------------
 // Action: selectAllItems
 // ------------------------------------
@@ -282,6 +321,14 @@ const formsListReducer = handleActions({
   DONE_FETCHING_FORMSLIST: (state, action) =>
     Object.assign({}, state, {
       isFetching: false
+    }),
+  REQUEST_SEND_FORM_LINK: (state, action) =>
+    Object.assign({}, state, {
+      isPageBusy: true
+    }),
+  DONE_SEND_FORM_LINK: (state, action) =>
+    Object.assign({}, state, {
+      isPageBusy: false
     }),
 
   SELECT_FORM_ITEMS: (state, action) =>
