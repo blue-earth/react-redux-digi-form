@@ -45,6 +45,12 @@ export const UPDATE_STORE = 'UPDATE_STORE';
 
 export const SET_FORM_STATUS = 'SET_FORM_STATUS';
 
+export const INIT_DEFAULT_GROUP = { // Assign default group to questions
+  id: 0,
+  title: 'Default Group',
+  type: 'Group'
+};
+
 export const INIT_BUILDER_STATE = {
   id: 0,
   isFetching: false, // indicates the form is being loaded.
@@ -53,7 +59,7 @@ export const INIT_BUILDER_STATE = {
   title: 'New form',
   slug: 'new-form',
   subdomain: '',
-  questions: [],
+  questions: [INIT_DEFAULT_GROUP],
   logics: [],
   documents: [
     // {
@@ -79,7 +85,7 @@ export const INIT_BUILDER_STATE = {
   },
   documentMapping: {},
   currentElement: null, // holds the current element state being added or edited.
-  lastQuestionId: 0, // indicates lastly added question id
+  lastQuestionId: INIT_DEFAULT_GROUP.id, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
   currentStep: 'select', // select, arrange, configure or publish
@@ -141,7 +147,9 @@ export const requestForm = createAction(REQUEST_FORM);
 // Action: receiveForm
 // ------------------------------------
 export const receiveForm = createAction(RECEIVE_FORM, (data) => {
-  const questions = data.form_data ? _.defaultTo(data.form_data.questions, []) : [];
+  const questions = data.form_data
+    ? _.defaultTo(data.form_data.questions, [INIT_DEFAULT_GROUP])
+    : [INIT_DEFAULT_GROUP];
   const logics = data.form_data ? _.defaultTo(data.form_data.logics, []) : [];
   return {
     id: data.id,
@@ -266,7 +274,7 @@ export const saveElement = createAction(SAVE_ELEMENT);
 // Helper: _saveElement
 // ------------------------------------
 const _saveElement = (state, action) => {
-  const { currentElement } = state;
+  const { currentElement, lastQuestionId } = state;
   const id = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
   var question = _.merge({}, INIT_QUESTION_STATE, currentElement.question, { id });
   // TODO: Update mappingInfo assignment
@@ -274,7 +282,7 @@ const _saveElement = (state, action) => {
   return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
     documentMapping: _.merge({}, state.documentMapping, { [id]: currentElement.mappingInfo }),
-    lastQuestionId: id,
+    lastQuestionId: _.max(id, lastQuestionId),
     currentElement: _.merge({}, currentElement, { id }),
     isModified
   });
@@ -310,7 +318,9 @@ export const setQuestionInfo = createAction(SET_QUESTION_INFO);
 const _setQuestionInfo = (state, action) => {
   const question = _.get(state, ['currentElement', 'question'], {});
   return _updateCurrentElement(state, {
-    question: Object.assign({}, question, action.payload)
+    question: Object.assign({
+      group: INIT_DEFAULT_GROUP.id
+    }, question, action.payload)
   });
 };
 
