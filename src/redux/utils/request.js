@@ -5,13 +5,13 @@ export const assignDefaults = request => {
   if (!request) {
     request = {};
   }
-  const headers = request.method === 'DELETE' ? request.headers : Object.assign({}, {
+  const headers = Object.assign({}, {
     Accept: 'application/json',
     'Content-Type': 'application/json'
   }, request.headers);
 
   var body; // default should be null
-  if (_.includes(['POST', 'PUT'], request.method)) {
+  if (_.includes(['POST', 'PUT', 'DELETE'], request.method)) {
     headers['X-CSRFToken'] = getCsrfToken();
     if (request.body && !(request.body instanceof FormData)) {
       body = JSON.stringify(request.body);
