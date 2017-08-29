@@ -124,7 +124,6 @@ class FormInteractiveView extends Component {
       case 'MultipleChoice':
         shouldHideButton = !allowMultiple;
         break;
-      case 'YesNoChoiceField':
       case 'DropdownField':
         shouldHideButton = true;
         break;
