@@ -144,18 +144,6 @@ class MultipleChoice extends Component {
     return _allChoices;
   }
 
-  canAcceptChange(value) {
-    const { maxAnswers } = this.props;
-    if (maxAnswers > 0 && value.length > maxAnswers) return false;
-    return true;
-  }
-
-  isMultiSelectable(value) {
-    const { maxAnswers } = this.props;
-    if (maxAnswers > 0 && value.length >= maxAnswers) return false;
-    return true;
-  }
-
   isActiveItem(item) {
     var values = this.props.value;
     if (typeof values !== 'object') return false;
