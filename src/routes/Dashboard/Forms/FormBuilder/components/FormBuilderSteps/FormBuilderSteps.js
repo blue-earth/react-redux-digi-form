@@ -2,9 +2,12 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import _ from 'lodash';
 import FormBuilder from '../FormBuilder';
+import StepArrange from '../StepArrange';
 import StepConfigure from '../StepConfigure';
 import StepPublish from '../StepPublish';
+import styles from './FormBuilderSteps.scss';
 
 class FormBuilderSteps extends Component {
 
@@ -156,8 +159,14 @@ class FormBuilderSteps extends Component {
     switch (props.currentStep) {
       case 'arrange':
         return {
-          Component: TempStepArrange,
-          props: props
+          Component: StepArrange,
+          props: _.pick(props, [
+            'id',
+            'questions',
+            'logics',
+            'setQuestionInfo',
+            'resetQuestionInfo'
+          ])
         };
       case 'configure':
         return {
@@ -227,18 +236,11 @@ class FormBuilderSteps extends Component {
   render() {
     const { Component, props } = this.currentStepComponent;
     return (
-      <Component {...props} />
+      <div className={styles.wrapper}>
+        <Component {...props} />
+      </div>
     );
   }
 }
 
 export default FormBuilderSteps;
-
-// TODO: replace these temporary components with the real ones
-class TempStepArrange extends Component {
-  render() {
-    return (
-      <div>Arrange</div>
-    );
-  }
-}

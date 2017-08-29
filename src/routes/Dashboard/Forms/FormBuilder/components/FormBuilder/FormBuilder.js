@@ -97,14 +97,17 @@ class FormBuilder extends Component {
     resetValidationInfo: PropTypes.func.isRequired,
 
     /*
-     * setMappingInfo: Action to update the document mapping info.
+     * setMappingInfo: Redux action to update the document mapping info.
      */
     setMappingInfo: PropTypes.func.isRequired,
 
+    /*
+     * resetMappingInfo: Redux action to update the document mapping info.
+     */
     resetMappingInfo: PropTypes.func.isRequired,
 
     /*
-     * setMappingPositionInfo: Action to update the document mapping position info of active selection.
+     * setMappingPositionInfo: Redux action to update the document mapping position info of active selection.
      */
     setMappingPositionInfo: PropTypes.func.isRequired,
 

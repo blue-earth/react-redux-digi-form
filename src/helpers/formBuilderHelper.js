@@ -391,3 +391,34 @@ export const mapQuestionsToDropdown = function (questions) {
     };
   });
 };
+
+export const transformQuestionsToTreeData = (questions) => (
+  _.map(questions, (question) => (
+    _.merge(
+      {
+        title: question.question_instruction || question.title,
+        id: question.id,
+        type: question.type
+      },
+      _.isNil(question.group) ? {} : { group: question.group }
+    )
+  ))
+);
+
+export const getTreeDataFromQuestions = (questions) => {
+  const tempGroup = _.groupBy(transformQuestionsToTreeData(questions), (q) => (
+    q.type === 'Group' ? 'groups' : typeof q.group !== 'undefined' ? q.group : 'orphans'
+  ));
+
+  var newGroup = [];
+  for (var groupId in tempGroup.groups) {
+    var group = tempGroup.groups[groupId];
+    newGroup.push({
+      id: group.id,
+      title: group.title,
+      children: tempGroup[group.id]
+    });
+  }
+
+  return newGroup;
+};
