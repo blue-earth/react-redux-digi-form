@@ -71,6 +71,10 @@ class MultipleChoice extends Component {
     setTimeout(this.alignmentHandle);
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.alignmentResizeHandle);
+  }
+
   alignmentResizeHandle = () => {
     const { width } = this.state;
     var realWidth = 0;
