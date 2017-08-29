@@ -12,6 +12,7 @@ import styles from './FormsFilter.scss';
 class FormsFilter extends Component {
 
   static propTypes = {
+    refresh: PropTypes.func.isRequired,
     pageSize: PropTypes.number,
     setPageSize: PropTypes.func,
     selectedItems: PropTypes.array,
@@ -20,6 +21,9 @@ class FormsFilter extends Component {
 
   handleCreateForm = () => {
     this.props.handleCreateForm();
+  }
+  handleRefresh = () => {
+    this.props.refresh();
   }
 
   get paginationOptions() {
@@ -50,7 +54,8 @@ class FormsFilter extends Component {
             onChange={setPageSize} />
         </ButtonToolbar>
         <ButtonToolbar className="pull-right">
-          <SelectButton className={styles.formButton}
+          <SelectButton
+            className={styles.formButton}
             label={
               <strong>
                 <Icon name="Refresh" height={37} width={15} className={styles.buttonIcon} />

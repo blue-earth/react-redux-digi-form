@@ -239,6 +239,7 @@ class FormsListView extends Component {
 
   render() {
     const {
+      fetchFormsList,
       page,
       pageSize,
       totalCount,
@@ -251,6 +252,7 @@ class FormsListView extends Component {
       <div className={styles.formsList}>
         <div className={classNames(styles.widgetPanel, styles.formsListInner)}>
           <FormsFilter
+            refresh={fetchFormsList}
             setPageSize={setPageSize}
             pageSize={pageSize}
             handleCreateForm={this.handleCreateForm}
