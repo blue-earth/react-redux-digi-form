@@ -35,3 +35,107 @@ $contact-icon-color: #1C4468;
     outline: none;
   }
 }
+.selectionCell {
+  text-align: right;
+}
+.linkCell {
+  cursor: pointer;
+}
+.actionIconWrapper {
+  display: inline-block;
+  vertical-align: text-top;
+  margin: 0 9px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.checkBoxWrapper {
+  display: inline-block;
+  cursor: pointer;
+  padding-left: 9px;
+  border: 1px solid transparent;
+  @include border-radius(3px);
+  &.hover {
+    border-color: #c7c8c8;
+    background-color: $white;
+    .dropdownCaret {
+      visibility: visible;
+    }
+  }
+}
+.dropdownCaret {
+  visibility: hidden;
+  margin: 0 5px;
+}
+
+.dropdownMenus {
+  font-family: 'Open Sans';
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  cursor: pointer;
+  .dropdownMenu {
+    color: $select-button-color;
+    padding: 0 10px;
+    height: 38px;
+    line-height: 38px;
+    font-weight: 600;
+    &:hover {
+      color: $select-button-hover-color;
+      background-color: $select-button-hover-bg-color;
+    }
+  }
+}
+
+:global {
+  .dropdownMenuContent.bottom {
+    @include transform(translateX(-40px));
+    @include border-radius(5px);
+    border-color: $select-button-border-color;
+    padding: 0;
+    min-width: 160px;
+    margin-top: 5px;
+    box-shadow: none;
+    .popover-content {
+      padding: 4px;
+    }
+    >.arrow {
+      margin-left: 46px;
+      border-width: 5px;
+      top: -11px;
+    }
+  }
+  .actionTooltip {
+    font-size: 12px;
+    .tooltip-arrow {
+      height: 0;
+    }
+    &.bottom .tooltip-arrow {
+      border-bottom-color: #CED0DA;
+      &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        left: -5px;
+        bottom: -7px;
+        width: 0;
+        height: 0;
+        border: 5px solid transparent;
+        border-bottom-color: $white;
+      }
+    }
+    &.tooltip.in {
+      opacity: 1;
+    }
+    .tooltip-inner {
+      font-weight: 400;
+      text-align: left;
+      border: 1px solid #CED0DA;
+      background-color: $white;
+      color: #354052;
+      padding: 0.5em 1em;
+      max-width: 300px;
+    }
+  }
+}
