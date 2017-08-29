@@ -157,7 +157,6 @@ class MultipleChoice extends Component {
     if (event.keyCode === 13) {
       onEnterKey();
     }
-    console.log(String.fromCharCode(event.keyCode));
     const foundIndex = _.findIndex(allChoices, { label: String.fromCharCode(event.keyCode) });
     if (foundIndex > -1) {
       this.handleClick(allChoices[foundIndex]);
