@@ -54,21 +54,7 @@ class InteractiveInput extends Component {
     primaryColour: PropTypes.string
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      /*
-       * InputComponent: stores the Child Input component class throughout the component life cycle.
-       */
-      InputComponent: null
-    };
-  };
-
-  componentWillMount() {
-    this._determineInputComponent();
-  }
-
-  _determineInputComponent() {
+  getQuestionInputComponent() {
     const { type } = this.props;
     var InputComponent = null;
     switch (type) {
@@ -108,23 +94,18 @@ class InteractiveInput extends Component {
         InputComponent = FileUploadContainer;
         break;
       default:
-        return false;
+        InputComponent = (<p>`Question input not found for ${type}`</p>);
     }
-    this.setState({
-      InputComponent
-    });
+    return InputComponent;
   }
 
   render() {
-    const { InputComponent } = this.state;
-    if (InputComponent === null) return false;
-
     var extraProps = {
       autoFocus: true,
       primaryColour: this.context.primaryColour,
       errorMessage: <FieldError {...this.props} />
     };
-
+    const InputComponent = this.getQuestionInputComponent();
     return (
       <InputComponent {...this.props} {...extraProps} />
     );
