@@ -3,21 +3,16 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  DateCell,
-  SelectionHeaderCell,
-  SelectionCell,
-  ActionsCell
+  DateCell
 } from '../CustomCells/CustomCells';
-import {
-  MenuItem,
-  DropdownButton
-} from 'react-bootstrap';
-import { formsUrl } from 'helpers/urlHelper';
+import { formsUrl, editFormUrl } from 'helpers/urlHelper';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import FormsFilter from '../FormsFilter';
 import styles from './FormsListView.scss';
 import classNames from 'classnames';
+import { SelectionCell, SelectionHeaderCell, LinkCell } from 'components/GriddleComponents/CommonCells/CommonCells';
+import Icon from 'components/Icon';
 
 class FormsListView extends Component {
   static propTypes = {
@@ -82,6 +77,9 @@ class FormsListView extends Component {
     setPageSize: PropTypes.func.isRequired,
     next: PropTypes.func.isRequired,
     previous: PropTypes.func.isRequired,
+    deleteForm: PropTypes.func.isRequired,
+    duplicateForm: PropTypes.func.isRequired,
+    archiveForm: PropTypes.func.isRequired,
 
     /*
      * selectedItems: Redux state in array to hold selected item ids.
@@ -94,7 +92,11 @@ class FormsListView extends Component {
       selectAllItems,
       forms,
       selectedItems,
-      toggleSelectItem
+      toggleSelectItem,
+      goTo,
+      deleteForm,
+      duplicateForm,
+      archiveForm
     } = this.props;
     return [
       {
@@ -103,6 +105,10 @@ class FormsListView extends Component {
         locked: false,
         visible: true,
         displayName: 'ID',
+        customComponent: LinkCell,
+        idName: 'id',
+        goTo,
+        url: editFormUrl,
         cssClassName: styles.columnID
       },
       {
@@ -111,10 +117,14 @@ class FormsListView extends Component {
         locked: false,
         visible: true,
         displayName: 'Name',
+        customComponent: LinkCell,
+        idName: 'id',
+        goTo,
+        url: editFormUrl,
         cssClassName: styles.columnName
       },
       {
-        columnName: 'author',
+        columnName: 'created_by',
         order: 3,
         locked: false,
         visible: true,
@@ -144,26 +154,49 @@ class FormsListView extends Component {
         visible: false
       },
       {
-        columnName: 'actionList',
-        order: 6,
-        locked: true,
-        sortable: false,
-        displayName: '',
-        customComponent: ActionsCell,
-        cssClassName: styles.columnActionsList
-      },
-      {
         columnName: 'actions',
-        order: 7,
+        order: 6,
         locked: true,
         sortable: false,
         displayName: '',
         customHeaderComponent: SelectionHeaderCell,
         customComponent: SelectionCell,
+        inlineActions: [{
+          name: 'send',
+          label: 'Send',
+          icon: <Icon name="Send" height={16} width={16} style={{verticalAlign: 'top'}} />,
+          onClick: (id) => console.log(id)
+        }],
+        idName: 'id',
+        dropdownMenus: [{
+          name: 'send',
+          label: 'Send',
+          icon: 'Send'
+        }, {
+          name: 'archive',
+          label: 'Archive',
+          icon: 'Archive',
+          onClick: (id) => archiveForm(id)
+        }, {
+          name: 'duplicate',
+          label: 'Duplicate',
+          icon: 'Duplicate',
+          onClick: (id) => duplicateForm(id)
+        }, {
+          name: 'delete',
+          label: 'Delete',
+          icon: 'Delete',
+          onClick: (id) => deleteForm(id)
+        }],
         selectedItems,
         toggleSelectItem,
         cssClassName: styles.columnActions,
         customHeaderComponentProps: {
+          dropdownMenus: [{
+            name: 'archive',
+            label: 'Archive',
+            icon: 'Archive'
+          }],
           selectAllItems,
           isAllSelected: forms.length === selectedItems.length
         }
@@ -171,22 +204,9 @@ class FormsListView extends Component {
     ];
   }
 
-  handleNewForm = () => {
+  handleCreateForm = () => {
     const { goTo } = this.props;
     goTo(formsUrl('new'));
-  }
-
-  renderActions() {
-    return (
-      <div className={styles.actionsWrapper}>
-        <DropdownButton pullRight bsSize="small"
-          className={styles.actionsButton}
-          id="formListActions"
-          title="Quick actions">
-          <MenuItem onClick={this.handleNewForm}>New Form</MenuItem>
-        </DropdownButton>
-      </div>
-    );
   }
 
   renderFormsList() {
@@ -233,7 +253,7 @@ class FormsListView extends Component {
           <FormsFilter
             setPageSize={setPageSize}
             pageSize={pageSize}
-            formAction={this.formAction}
+            handleCreateForm={this.handleCreateForm}
             selectedItems={selectedItems}
           />
           {this.renderFormsList()}

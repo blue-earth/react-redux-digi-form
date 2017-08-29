@@ -6,7 +6,10 @@ import {
   toggleSelectItem,
   setPageSize,
   next,
-  previous
+  previous,
+  archiveForm,
+  duplicateForm,
+  deleteForm
 } from 'redux/modules/formsList';
 import { goTo } from 'redux/modules/router.js';
 
@@ -47,7 +50,10 @@ const mapActionCreators = {
   goTo,
   setPageSize,
   next,
-  previous
+  previous,
+  archiveForm,
+  duplicateForm,
+  deleteForm
 };
 
 export default connect(mapStateToProps, mapActionCreators)(FormsListView);

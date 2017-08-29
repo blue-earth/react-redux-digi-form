@@ -5,6 +5,8 @@ import { buildQueryString } from 'helpers/pureFunctions';
 import { getPageQueryParamsObject } from 'helpers/pageListingHelpers';
 import { createAction, handleActions } from 'redux-actions';
 import _ from 'lodash';
+import { goTo } from './router';
+import { editFormUrl } from 'helpers/urlHelper';
 
 export const RECEIVE_FORMSLIST = 'RECEIVE_FORMSLIST';
 export const REQUEST_FORMSLIST = 'REQUEST_FORMSLIST';
@@ -55,7 +57,7 @@ export const next = () => {
   return (dispatch, getState) => {
     dispatch(goToNextPage());
     dispatch(fetchFormsList({
-      page: getState().submissionsList.page
+      page: getState().formsList.page
     }));
   };
 };
@@ -63,7 +65,7 @@ export const previous = () => {
   return (dispatch, getState) => {
     dispatch(goToPreviousPage());
     dispatch(fetchFormsList({
-      page: getState().submissionsList.page
+      page: getState().formsList.page
     }));
   };
 };
@@ -85,6 +87,93 @@ export const fetchFormsList = (options) => {
   };
 };
 
+// ------------------------------------
+// Action: ArchiveForm
+// ------------------------------------
+export const archiveForm = (id) => {
+  return (dispatch, getState) => {
+    dispatch(processArchiveForm(id));
+  };
+};
+
+const processArchiveForm = (id) => {
+  var apiURL = `${API_URL}/form_document/api/form/${id}/archive/`;
+  const body = {};
+  const fetchParams = assignDefaults({
+    method: 'DELETE',
+    body
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(fetchFormsList({page: 1}));
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+    };
+  };
+
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+export const deleteForm = (id) => {
+  return (dispatch, getState) => {
+    dispatch(processDeleteForm(id));
+  };
+};
+
+const processDeleteForm = (id) => {
+  var apiURL = `${API_URL}/form_document/api/form/${id}/`;
+  const body = {};
+  const fetchParams = assignDefaults({
+    method: 'DELETE',
+    body
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(fetchFormsList({page: 1}));
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+    };
+  };
+
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+// ------------------------------------
+// Action: DuplicateForm
+// ------------------------------------
+export const duplicateForm = (id) => {
+  return (dispatch, getState) => {
+    dispatch(processDuplicateForm(id));
+  };
+};
+
+const processDuplicateForm = (id) => {
+  var apiURL = `${API_URL}/form_document/api/form/${id}/duplicate/`;
+  const body = {};
+  const fetchParams = assignDefaults({
+    method: 'POST',
+    body
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(goTo(editFormUrl(value.id)));
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      // Todo: Handler for failed duplicate form
+    };
+  };
+
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+};
 // ------------------------------------
 // Action: selectAllItems
 // ------------------------------------
