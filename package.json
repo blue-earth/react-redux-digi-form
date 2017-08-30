@@ -156,9 +156,11 @@
     "rimraf": "^2.5.1",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.0",
+    "superagent": "^2.3.0",
     "url-loader": "^0.5.6",
     "velocity-animate": "^1.2.3",
     "webpack": "^1.12.14",
+    "whatwg-fetch": "^1.0.0",
     "yargs": "^4.0.0"
   },
   "devDependencies": {

@@ -16,9 +16,12 @@ import DateInput from '../../QuestionInputs/DateInput/DateInput';
 import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
 import Signature from '../../QuestionInputs/Signature/Signature';
 import FileUploadContainer from '../../QuestionInputs/FileUpload/FileUploadContainer';
-import validateField, {
+import {
   valueIsValid
 } from 'helpers/validationHelper';
+import {
+  aggregateVerifications
+} from 'helpers/verificationHelpers';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -94,6 +97,7 @@ class QuestionInteractive extends Component {
   };
 
   handleChange = (value) => {
+    console.log('handleChange', value);
     const {changeCurrentState, storeAnswer, question: {id}} = this.props;
 
     changeCurrentState({
@@ -112,13 +116,23 @@ class QuestionInteractive extends Component {
       handleEnter,
       question
     } = this.props;
+    var self = this;
     const answer = getStoreAnswerByQuestionId(question.id);
+    // Format Validations
     const isValid = valueIsValid(answer, question.validations);
     if (isValid) {
-      this.setState({
-        'hasError': false
+      // Check Verifications
+      var verificationPromises = aggregateVerifications(question.verifications, answer);
+      Promise.all(verificationPromises).then(function (verifications) {
+        self.setState({
+          'hasError': false
+        }, function () {
+          handleEnter();
+        });
       }, function () {
-        handleEnter();
+        self.setState({
+          'hasError': true
+        });
       });
     } else {
       this.setState({
@@ -126,19 +140,6 @@ class QuestionInteractive extends Component {
       });
     }
   };
-
-  shouldShowValidation() {
-    return this.props.inputState === 'enter';
-  }
-
-  get hasError() {
-    const {verifications, value, question: { validations }} = this.props;
-    const failedValidations = _.filter(validations, function (validation) {
-      return !validateField(validation, value);
-    });
-    const failedVerifications = _.filter(verifications, {status: false});
-    return (this.shouldShowValidation() && failedValidations.length > 0) || failedVerifications.length > 0;
-  }
 
   getQuestionInputComponent() {
     const { question: { type } } = this.props;
@@ -184,6 +185,7 @@ class QuestionInteractive extends Component {
 
   render() {
     const { verifications, value, question, question: { validations } } = this.props;
+    console.log('render', validations, verifications);
     var extraProps = {
       autoFocus: true,
       primaryColour: this.context.primaryColour,
