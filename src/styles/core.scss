@@ -26,6 +26,10 @@
     height: 100%;
   }
 
+  img {
+    -ms-interpolation-mode: bicubic;
+  }
+
   .container {
     @media screen and (min-width: 1600px) {
       width: 1570px;
