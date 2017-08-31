@@ -10,10 +10,11 @@
 .selectBoxLabel {
   font-weight: 600;
   font-size: 13px;
-  margin-right: 20px;
+  margin: 0 20px 0 0;
   display: inline-block;
   &.above {
     display: block;
+    margin: 0 0 12px;
   }
 }
 .selectWrapper {
