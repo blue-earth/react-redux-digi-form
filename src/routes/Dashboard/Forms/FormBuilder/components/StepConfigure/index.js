@@ -3,8 +3,9 @@ import React, {
   PropTypes
 } from 'react';
 import SidebarMenu from 'components/SidebarMenu';
-import { FaInfoCircle } from 'react-icons/lib/fa';
+import { FaInfoCircle, FaBell } from 'react-icons/lib/fa';
 import GeneralForm from './GeneralForm';
+import NotificationsForm from './NotificationsForm';
 import styles from './Form.scss';
 import _ from 'lodash';
 
@@ -41,7 +42,8 @@ class StepConfigure extends Component {
 
   get sidebarMenuItems() {
     return [
-      {key: 'general', label: (<span><FaInfoCircle /> General</span>)}
+      {key: 'general', label: (<span><FaInfoCircle /> General</span>)},
+      {key: 'notifications', label: (<span><FaBell /> Notifications</span>)}
     ];
   }
 
@@ -60,11 +62,27 @@ class StepConfigure extends Component {
       }
     };
 
+    let initNotifications = {
+      initialValues: {
+        formConfig: {
+          notifications: {
+            recipient: _.get(this.props.formConfig.notifications, ['recipient'], ''),
+            sender: _.get(this.props.formConfig.notifications, ['sender'], ''),
+            signature: _.get(this.props.formConfig.notifications, ['signature'], '')
+          }
+        }
+      }
+    };
+
     switch (this.state.currentSubPageKey) {
       case 'customize':
         return (<span>Customise section, under construction</span>);
       case 'notifications':
-        return (<span>Notifications section, under construction</span>);
+        return (
+          <NotificationsForm {...initNotifications} enableReinitialize
+            onSubmit={this.processForm}
+            questions={this.props.questions} />
+        );
       case 'btext':
         return (<span>Buttons Text section, under construction</span>);
       case 'intaccess':
