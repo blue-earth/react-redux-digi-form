@@ -1,7 +1,7 @@
 @import './mixins';
 @import './variables';
 
-.textInputWrapper {
+.textInputWrapper, .textAreaWrapper {
   label {
     font-weight: 600;
     display: block;
@@ -16,6 +16,16 @@
     font-size: 13px;
     margin-bottom: 12px;
   }
+  .help {
+    font-size: 11px;
+    padding-top: 14px;
+    color: lighten($darkblue, 50%);
+    display: block;
+    font-weight: 200;
+  }
+}
+
+.textInputWrapper {
   .overflowWrapper {}
   &.hasPrefix {
     .overflowWrapper {
@@ -28,13 +38,6 @@
     float: left;
     line-height: 38px;
   }
-  .help {
-    font-size: 11px;
-    padding-top: 14px;
-    color: lighten($darkblue, 50%);
-    display: block;
-    font-weight: 200;
-  }
 }
 
 .textInput {
@@ -45,8 +48,6 @@
   font-size: 14px;
   font-family: $font-name;
   font-weight: 400;
-  height: $input-height-md;
-  line-height: $input-height-md;
   padding-left: 14px;
   padding-right: 14px;
   box-sizing: border-box;
@@ -70,4 +71,9 @@
     border-color: $blue;
     box-shadow: 0 0 5px 1px rgba(red($blue), green($blue), blue($blue), .15);
   }
+}
+
+.textInputWrapper .textInput {
+  height: $input-height-md;
+  line-height: $input-height-md;
 }
