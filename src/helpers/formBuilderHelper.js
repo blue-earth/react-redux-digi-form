@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import { stripeTags } from './pureFunctions';
 import {
   INIT_QUESTION_STATE
 } from 'redux/modules/formBuilder';
@@ -396,7 +397,7 @@ export const transformQuestionsToTreeData = (questions) => (
   _.map(questions, (question) => (
     _.merge(
       {
-        title: question.question_instruction || question.title,
+        title: stripeTags(question.question_instruction || question.title),
         id: question.id,
         type: question.type
       },

@@ -60,7 +60,7 @@ export default class StepArrange extends Component {
         <div className={styles.panelHeader}>
           <Row>
             <Col xs={6}>New Section</Col>
-            <Col xs={6} className="text-right">
+            <Col xs={6} className={styles.rightActions}>
               <AppButton type="secondary">View logic maps</AppButton>
               <AppButton>Save & continue</AppButton>
             </Col>
@@ -69,6 +69,7 @@ export default class StepArrange extends Component {
         <Panel className={styles.panel}>
           <SortableTree
             treeData={treeData}
+            maxDepth={2}
             onChange={this.handleTreeChange}
           />
         </Panel>

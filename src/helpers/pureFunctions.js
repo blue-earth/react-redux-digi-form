@@ -40,6 +40,8 @@ export const removeItemFromArray = (itemArray, item, iteratee = 'id') => {
 export const buildQueryString = (query) =>
   _.join(_.map(_.toPairs(query), pair => `${pair[0]}=${pair[1]}`), '&');
 
+export const stripeTags = (html) => html.replace(/(<([^>]+)>)/ig, '');
+
 const fnToString = (fn) => Function.prototype.toString.call(fn);
 
 /**
