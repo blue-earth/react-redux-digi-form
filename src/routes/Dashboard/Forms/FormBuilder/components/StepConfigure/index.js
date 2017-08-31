@@ -48,15 +48,16 @@ class StepConfigure extends Component {
   }
 
   renderForm = () => {
+    const { formConfig } = this.props;
     let initGeneral = {
       initialValues: {
         title: this.props.title,
         slug: this.props.slug,
         formConfig: {
-          redirect: _.get(this.props.formConfig, ['redirect'], ''),
+          redirect: _.get(formConfig, ['redirect'], ''),
           customise: {
-            footer: _.get(this.props.formConfig, 'customise.footer', ''),
-            emondoBranding: _.get(this.props.formConfig, 'customise.emondoBranding', true)
+            footer: _.get(formConfig, 'customise.footer', ''),
+            emondoBranding: _.get(formConfig, 'customise.emondoBranding', true)
           }
         }
       }
@@ -65,10 +66,11 @@ class StepConfigure extends Component {
     let initNotifications = {
       initialValues: {
         formConfig: {
-          notifications: {
-            recipient: _.get(this.props.formConfig.notifications, ['recipient'], ''),
-            sender: _.get(this.props.formConfig.notifications, ['sender'], ''),
-            signature: _.get(this.props.formConfig.notifications, ['signature'], '')
+          externalNotifications: {
+            recipients: _.get(formConfig.externalNotifications, ['recipients'], []),
+            sender: _.get(formConfig.externalNotifications, ['sender'], ''),
+            signature: _.get(formConfig.externalNotifications, ['signature'], ''),
+            disclaimer: _.get(formConfig.externalNotifications, ['disclaimer'], '')
           }
         }
       }

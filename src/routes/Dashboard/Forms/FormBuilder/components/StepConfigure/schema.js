@@ -23,14 +23,21 @@ const schemaGeneral = {
 export const formSchemaGeneral = buildSchema(schemaGeneral);
 
 const schemaNotifications = {
-  'formConfig.notifications.recipient': {
+  'formConfig.externalNotifications.recipients[].data': {
     label: 'Send email notifications to'
   },
-  'formConfig.notifications.sender': {
-    label: 'Send email notifications from'
+  'formConfig.externalNotifications.recipients[].type': {
+    label: 'Recipient type'
   },
-  'formConfig.notifications.signature': {
+  'formConfig.externalNotifications.sender': {
+    label: 'Send email notifications from',
+    type: 'email'
+  },
+  'formConfig.externalNotifications.signature': {
     label: 'Signature'
+  },
+  'formConfig.externalNotifications.disclaimer': {
+    label: 'Disclaimer'
   }
 };
 export const formSchemaNotifications = buildSchema(schemaNotifications);

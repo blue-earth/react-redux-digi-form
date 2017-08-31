@@ -2,10 +2,10 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field, FieldArray } from 'redux-form';
 import { formSchemaNotifications } from './schema';
 import TextInput from 'components/TextInput';
-import QuestionRichTextEditor from 'components/QuestionEditFields/QuestionRichTextEditor';
+import TextArea from 'components/TextInput/TextArea';
 import SelectBox from 'components/SelectBox';
 import Button from 'components/Buttons/DashboardButtons/Button';
 import styles from './Form.scss';
@@ -25,11 +25,11 @@ const renderTextInput = field => (
   </div>
 );
 
-const renderRTE = field => (
+const renderTextArea = field => (
   <div className={cx('builderItem')}>
-    <QuestionRichTextEditor {...field.input} answersPullRight
-      title={field.title} labelStyle={field.labelStyle}
-      filteredQuestions={field.filteredQuestions} setValue={field.input.onChange} />
+    <TextArea {...field.input} label={field.label} labelStyle={field.labelStyle}
+      autoFocus={field.autoFocus} helpText={field.helpText}
+      hasError={field.meta.touched && field.meta.error} />
     {field.meta.touched && field.meta.error &&
       <div className={cx('error')}>{field.meta.error}</div>
     }
@@ -51,6 +51,37 @@ export const renderSelectBox = field => (
   </div>
 );
 
+class renderRecipients extends Component {
+  static propTypes = {
+    fields: PropTypes.object,
+    meta: PropTypes.object,
+    emailQuestions: PropTypes.array
+  }
+
+  componentDidMount() {
+    if (this.props.fields.length < 1) {
+      this.props.fields.push({type: 'question_prefill'});
+    }
+  }
+
+  render() {
+    const { fields, emailQuestions } = this.props;
+    return (<div>
+      {fields.map((recipient, index) =>
+        <div key={index}>
+          <Field name={`${recipient}.data`}
+            component={renderSelectBox}
+            optionsList={emailQuestions}
+            label="Send email notifications to:"
+            labelPosition="above"
+            placeholder="Choose email question"
+            fullWidth />
+        </div>
+      )}
+    </div>);
+  }
+}
+
 class NotificationsForm extends Component {
 
   static propTypes = {
@@ -63,24 +94,24 @@ class NotificationsForm extends Component {
 
   render() {
     const { questions } = this.props;
-    const filteredQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'Group', false));
+    const emailQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'EmailField'));
     return (
       <form>
-        <Field name={'formConfig.notifications.recipient'}
-          component={renderSelectBox}
-          optionsList={getQuestionsByType(filteredQuestions, 'EmailField')}
-          label="Send email notifications to:"
-          labelPosition="above"
-          placeholder="Choose email question"
-          fullWidth />
-        <Field name={'formConfig.notifications.sender'}
+        <FieldArray name="formConfig.externalNotifications.recipients"
+          component={renderRecipients}
+          emailQuestions={emailQuestions} />
+        <Field name={'formConfig.externalNotifications.sender'}
           component={renderTextInput}
           label="Send email notifications from:"
           labelStyle="minor" />
-        <Field name="formConfig.notifications.signature" component={renderRTE}
-          title="Email signature"
-          labelStyle="minor"
-          filteredQuestions={filteredQuestions} />
+        <Field name={'formConfig.externalNotifications.signature'}
+          component={renderTextArea}
+          label="Email signature"
+          labelStyle="minor" />
+        <Field name={'formConfig.externalNotifications.disclaimer'}
+          component={renderTextArea}
+          label="Email disclaimer"
+          labelStyle="minor" />
         <p className={styles.formSubmit}>
           <Button style="formButton" onClick={this.props.handleSubmit}>Save &amp; Continue</Button>
         </p>
