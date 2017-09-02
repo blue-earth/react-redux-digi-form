@@ -1,6 +1,10 @@
 export const validateIsRequired = (value) => {
-  return !(typeof value === 'undefined' || value === '' || value === null ||
+  var result = !(typeof value === 'undefined' || value === '' || value === null ||
     (value.constructor === Array && value.length === 0));
+  if (!result) {
+    return 'This field is required';
+  }
+  return null;
 };
 
 export const validateIsEmail = (value) => {
@@ -8,34 +12,58 @@ export const validateIsEmail = (value) => {
   // modified using Python version of regex
   // Addition 1: Rejected domain that has only one characeter
   var re = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.([a-zA-Z0-9-.]{2,8})+$/i;
-  return re.test(value);
+  var result = re.test(value);
+  if (!result) {
+    return 'Please enter a valid email';
+  }
+  return null;
 };
 
 export const validateMinLength = (value, length) => {
-  return (typeof value !== 'undefined' && value.length >= length);
+  var result = (typeof value !== 'undefined' && value.length >= length);
+  if (!result) {
+    return `Minimum of ${length} charaters are required`;
+  }
+  return null;
 };
 
 export const validateMaxLength = (value, length) => {
-  return !(typeof value !== 'undefined' && value.length > length);
+  var result = !(typeof value !== 'undefined' && value.length > length);
+  if (!result) {
+    return `Maximum of ${length} charaters are required`;
+  }
+  return null;
 };
 
 export const validateMinValue = (value, minValue) => {
-  return value >= minValue;
+  var result = value >= minValue;
+  if (!result) {
+    return `Value must not be less than ${minValue}`;
+  }
+  return null;
 };
 
 export const validateMaxValue = (value, maxValue) => {
-  return value <= maxValue;
+  var result = value <= maxValue;
+  if (!result) {
+    return `Value must not be greater than ${maxValue}`;
+  }
+  return null;
 };
 
 export const valueIsValid = (value, validations) => {
-  var isValid = true;
+  console.log('valueIsValid', value);
+  var errors = [];
   if (validations) {
     for (var i = 0; i < validations.length; i++) {
-      isValid = validateField(validations[i], value);
-      if (!isValid) break;
+      var result = validateField(validations[i], value);
+
+      if (result) {
+        errors.push(result);
+      }
     }
   }
-  return isValid;
+  return errors;
 };
 
 const validateField = (validation, value) => {
