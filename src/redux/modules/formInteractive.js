@@ -456,26 +456,6 @@ export const processVerifyEmail = (questionId, email) => {
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
 
-// const shouldVerifyEmail = (state, id) => {
-//   const { formInteractive: { form: { questions } } } = state;
-//   const idx = findIndexById(questions, id);
-
-//   if (_.indexOf(questions[idx].verifications, 'EmondoEmailFieldService') != -1)
-//     return true;
-//   else
-//     return false;
-// }
-
-const shouldVerify = (formInteractive) => {
-  const { form: { questions }, currentQuestion } = formInteractive;
-  const idx = findIndexById(questions, currentQuestion.id);
-  if (typeof questions[idx].verifications !== 'undefined' && questions[idx].verifications.length > 0) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
 // ------------------------------------
 // Action: nextQuestionAfterVerification
 // ------------------------------------
@@ -524,13 +504,7 @@ export const updateVerificationStatus = createAction(RECEIVE_VERIFICATION);
 // ------------------------------------
 export const handleEnter = () => {
   return (dispatch, getState) => {
-    const formInteractive = getState().formInteractive;
-    // check if verification is required.
-    if (shouldVerify(formInteractive)) {
-      dispatch(nextQuestionAfterVerification());
-    } else {
-      dispatch(goToNextQuestion());
-    }
+    dispatch(goToNextQuestion());
   };
 };
 
@@ -711,12 +685,13 @@ const formInteractiveReducer = handleActions({
       currentQuestion: Object.assign({}, state.currentQuestion, action.payload),
       verificationStatus: removeItemFromArray(state.verificationStatus, {id: state.currentQuestion.id})
     }),
-  STORE_ANSWER: (state, action) =>
-    Object.assign({}, state, {
+  STORE_ANSWER: (state, action) => {
+    var State = Object.assign({}, state, {
       answers: mergeItemIntoArray(state.answers, action.payload),
       isModified: true
-    }),
-
+    });
+    return State;
+  },
   REQUEST_VERIFICATION: (state, action) =>
     Object.assign({}, state, {
       isVerifying: true

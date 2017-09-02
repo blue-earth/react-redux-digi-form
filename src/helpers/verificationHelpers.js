@@ -3,12 +3,11 @@ import request from 'superagent';
 
 export const verifyEmail = (email) => {
   const apiURL = `${API_URL}/verifications/api/email/verify/`;
-
   return new Promise(function (resolve, reject) {
     request.post(apiURL)
       .set('X-CSRFToken', getCsrfToken())
       .send({ email: email })
-      .end(function(err, res) {
+      .end(function (err, res) {
         if (err) {
           reject(false);
         }
