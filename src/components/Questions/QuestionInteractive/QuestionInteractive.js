@@ -2,26 +2,18 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import _ from 'lodash';
 import styles from './QuestionInteractive.scss';
-import FloatTextInput from '../../QuestionInputs/FloatTextInput';
-import DropdownInput from '../../QuestionInputs/Dropdown';
-import FieldError from '../../QuestionInputs/FieldError';
 import QuestionInstruction from 'components/Questions/QuestionInstruction';
+import SingularTextInputQuestion from '../../QuestionTypes/SingularTextInputQuestion';
+import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
+import DropdownInput from '../../QuestionInputs/Dropdown';
 import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
 import Statement from '../../QuestionInputs/Statement/Statement';
 import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
 import DateInput from '../../QuestionInputs/DateInput/DateInput';
 import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
-import Signature from '../../QuestionInputs/Signature/Signature';
 import FileUploadContainer from '../../QuestionInputs/FileUpload/FileUploadContainer';
-import {
-  valueIsValid
-} from 'helpers/validationHelper';
-import {
-  aggregateVerifications
-} from 'helpers/verificationHelpers';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -84,22 +76,12 @@ class QuestionInteractive extends Component {
     showModal: PropTypes.func.isRequired
   };
 
-  constructor(props) {
-    super(props);
-    this.handleEnterKeyPress = this.handleEnterKeyPress.bind(this);
-    this.state = {
-      'hasError': false
-    };
-  }
-
   static contextTypes = {
     primaryColour: PropTypes.string
   };
 
   handleChange = (value) => {
-    console.log('handleChange', value);
     const {changeCurrentState, storeAnswer, question: {id}} = this.props;
-
     changeCurrentState({
       answerValue: value,
       inputState: 'changed'
@@ -110,57 +92,51 @@ class QuestionInteractive extends Component {
     });
   };
 
-  handleEnterKeyPress = () => {
-    const {
-      getStoreAnswerByQuestionId,
-      handleEnter,
-      question
-    } = this.props;
-    var self = this;
-    const answer = getStoreAnswerByQuestionId(question.id);
-    // Format Validations
-    const isValid = valueIsValid(answer, question.validations);
-    if (isValid) {
-      // Check Verifications
-      var verificationPromises = aggregateVerifications(question.verifications, answer);
-      Promise.all(verificationPromises).then(function (verifications) {
-        self.setState({
-          'hasError': false
-        }, function () {
-          handleEnter();
-        });
-      }, function () {
-        self.setState({
-          'hasError': true
-        });
-      });
-    } else {
-      this.setState({
-        'hasError': true
-      });
-    }
-  };
-
   getQuestionInputComponent() {
-    const { question: { type } } = this.props;
     var InputComponent = null;
+    const { value, question, question: { type },
+      getStoreAnswerByQuestionId, storeAnswer, changeCurrentState } = this.props;
+    var props = {
+      primaryColour: this.context.primaryColour,
+      onChange: this.handleChange,
+      compiledQuestion: question,
+      getStoreAnswerByQuestionId: getStoreAnswerByQuestionId,
+      changeCurrentState: changeCurrentState,
+      storeAnswer: storeAnswer,
+      handleEnter: this.props.handleEnter,
+      value: value
+    };
+
     switch (type) {
       case 'ShortTextField':
+        InputComponent = SingularTextInputQuestion;
+        props = Object.assign({}, props, {
+          'type': 'text'
+        });
+        break;
       case 'EmailField':
+        InputComponent = SingularTextInputQuestion;
+        props = Object.assign({}, props, {
+          'type': 'email'
+        });
+        break;
       case 'NumberField':
-        InputComponent = FloatTextInput;
+        InputComponent = SingularTextInputQuestion;
+        props = Object.assign({}, props, {
+          'type': 'number'
+        });
         break;
-      case 'MultipleChoice':
-        InputComponent = MultipleChoice;
-        break;
-      case 'LongTextField':
-        InputComponent = LongTextInput;
+      case 'PhoneNumberField':
+        InputComponent = PhoneNumberInput;
         break;
       case 'StatementField':
         InputComponent = Statement;
         break;
-      case 'PhoneNumberField':
-        InputComponent = PhoneNumberInput;
+      case 'LongTextField':
+        InputComponent = LongTextInput;
+        break;
+      case 'MultipleChoice':
+        InputComponent = MultipleChoice;
         break;
       case 'DropdownField':
         InputComponent = DropdownInput;
@@ -172,7 +148,7 @@ class QuestionInteractive extends Component {
         InputComponent = AddressInput;
         break;
       case 'SignatureField':
-        InputComponent = Signature;
+        InputComponent = SignatureQuestion;
         break;
       case 'FileUploadField':
         InputComponent = FileUploadContainer;
@@ -180,29 +156,18 @@ class QuestionInteractive extends Component {
       default:
         InputComponent = (<p>`Question input not found for ${type}`</p>);
     }
-    return InputComponent;
+    return (<InputComponent {...props} />);
   }
 
   render() {
-    const { verifications, value, question, question: { validations } } = this.props;
-    console.log('render', validations, verifications);
-    var extraProps = {
-      autoFocus: true,
-      primaryColour: this.context.primaryColour,
-      onChange: this.handleChange,
-      hasError: this.state.hasError,
-      onEnterKey: this.handleEnterKeyPress,
-      errorMessage: <FieldError
-        value={value} validations={validations} verifications={verifications} />
-    };
-    const InputComponent = this.getQuestionInputComponent();
+    const { question } = this.props;
     return (
       <div className={styles.wrapper}>
         <QuestionInstruction
           instruction={question.questionInstruction}
           description={question.questionDescription}
-          />
-        <InputComponent {...this.props} {...extraProps} />
+        />
+        {this.getQuestionInputComponent()}
       </div>
     );
   }
