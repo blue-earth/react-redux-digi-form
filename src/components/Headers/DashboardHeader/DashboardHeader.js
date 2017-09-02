@@ -18,7 +18,6 @@ import {
 } from 'helpers/urlHelper';
 import AlertMessage from 'components/AlertMessage';
 import ProfileMenu from 'components/ProfileMenu';
-import DashboardPageInnerLayout from 'layouts/DashboardPageInnerLayout';
 import DashboardTabs from 'containers/DashboardTabsContainer';
 
 export default class DashboardHeader extends Component {
@@ -105,30 +104,28 @@ export default class DashboardHeader extends Component {
     const lastName = user.last_name;
     return (
       <div className={styles.header}>
-        <DashboardPageInnerLayout>
-          <div className={styles.logo}>
-            <StackLogo className={styles.logo} width="auto" height={31} logoStyle="white" />
-          </div>
-          <DashboardTabs location={this.props.location} />
-          <ButtonToolbar className={styles.rightToolbar}>
-            <ProfileMenu list={profileMenus} onClick={this.handleNav}>
-              <Button style="headerButton" iconOnly pullRight id="peofile-menu">
-                { user.avatar
-                  ? (<img src={user.avatar} alt="" className={styles.profileImage} />)
-                  : <span className={styles.noAvatar}>
-                    {firstName.substring(0, 1)}{lastName.substring(0, 1)}
-                  </span>
-                }
-                <span className={styles.profileName}>{firstName} {lastName}</span>
-              </Button>
-            </ProfileMenu>
-            <AlertMessage list={list}>
-              <Button style="headerButton" iconOnly notificationCounter={5}>
-                <FaBell size={24} />
-              </Button>
-            </AlertMessage>
-          </ButtonToolbar>
-        </DashboardPageInnerLayout>
+        <div className={styles.logo}>
+          <StackLogo className={styles.logo} width="auto" height={31} logoStyle="white" />
+        </div>
+        <DashboardTabs location={this.props.location} />
+        <ButtonToolbar className={styles.rightToolbar}>
+          <ProfileMenu list={profileMenus} onClick={this.handleNav}>
+            <Button style="headerButton" iconOnly pullRight id="peofile-menu">
+              { user.avatar
+                ? (<img src={user.avatar} alt="" className={styles.profileImage} />)
+                : <span className={styles.noAvatar}>
+                  {firstName.substring(0, 1)}{lastName.substring(0, 1)}
+                </span>
+              }
+              <span className={styles.profileName}>{firstName} {lastName}</span>
+            </Button>
+          </ProfileMenu>
+          <AlertMessage list={list}>
+            <Button style="headerButton" iconOnly notificationCounter={5}>
+              <FaBell size={24} />
+            </Button>
+          </AlertMessage>
+        </ButtonToolbar>
       </div>
     );
   }
