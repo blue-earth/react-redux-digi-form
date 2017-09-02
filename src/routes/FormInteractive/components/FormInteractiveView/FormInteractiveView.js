@@ -26,11 +26,6 @@ import styles from './FormInteractiveView.scss';
 import _ from 'lodash';
 
 class FormInteractiveView extends Component {
-
-  static contextTypes = {
-    primaryColour: React.PropTypes.string
-  };
-
   static propTypes = {
     /*
      * form: form_data of response, consists of questions and logics.
