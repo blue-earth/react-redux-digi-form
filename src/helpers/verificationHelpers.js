@@ -16,12 +16,13 @@ export const verifyEmail = (email) => {
         if (serverResult) {
           resolve(serverResult);
         } else {
-          reject(serverResult);
+          reject(['Please enter a valid email']);
         }
       });
   });
 };
 
+// verifications = ['EmondoEmailFieldService']
 export const aggregateVerifications = (verifications, answerValue) => {
   verifications = verifications || [];
   var results = verifications.map(function (verificationName) {
@@ -35,6 +36,5 @@ export const aggregateVerifications = (verifications, answerValue) => {
       return verificationFunction(answerValue);
     }
   });
-  console.log(results);
   return results;
 };
