@@ -27,7 +27,11 @@
   }
 
   img {
+    // https://msdn.microsoft.com/en-us/library/ff521095%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396
+    // resampling method used to stretch images for IE
     -ms-interpolation-mode: bicubic;
+    // todo: Do we need support for other browsers?
+    // image-rendering prop?
   }
 
   .container {
