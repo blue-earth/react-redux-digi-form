@@ -76,7 +76,7 @@ class FormHeader extends Component {
       <div className={styles.wrapper}>
         <span className={styles.alignmentHelper} />
         <div className={styles.logoWrapper}>
-          <StackLogo logoStyle="grey" width="auto" height={45} />
+          <StackLogo logoStyle="grey" height={'48px'} />
         </div>
         <h1 className={styles.title}>{title}</h1>
         <div className={classNames(styles.buttonWrapper, {

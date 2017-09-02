@@ -8,7 +8,6 @@ import {
 } from '../NavButton';
 import classNames from 'classnames';
 import Hogan from 'hogan.js';
-import { valueIsValid } from 'helpers/validationHelper';
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import FormEnterButton from 'components/Buttons/FormEnterButton';
 import { MdKeyboardBackspace } from 'react-icons/lib/md';
@@ -115,20 +114,6 @@ class FormInteractiveView extends Component {
     return unavailables.length === 0;
   }
 
-  handleEnter = () => {
-    // We only do validation and verification on enter, onChange submits the answer if valid.
-    const { handleEnter, changeCurrentState, currentQuestion } = this.props;
-    const { questions } = this.state;
-    const question = findItemById(questions, currentQuestion.id);
-    if (!question) return false;
-    const { validations } = question;
-    const isValid = valueIsValid(currentQuestion.answerValue, validations);
-    changeCurrentState({
-      inputState: 'enter'
-    });
-    if (isValid) handleEnter();
-  };
-
   get enterButtonClass() {
     const { currentQuestion } = this.props;
     const { questions } = this.state;
@@ -139,7 +124,6 @@ class FormInteractiveView extends Component {
       case 'MultipleChoice':
         shouldHideButton = !allowMultiple;
         break;
-      case 'YesNoChoiceField':
       case 'DropdownField':
         shouldHideButton = true;
         break;
@@ -148,6 +132,30 @@ class FormInteractiveView extends Component {
       'hide': shouldHideButton
     });
   }
+
+  getStoreAnswerByQuestionId = (questionId) => {
+    const { answers } = this.props;
+    var answerResult = answers.filter((answer) => answer.id === questionId);
+    if (answerResult.length) {
+      return answerResult[0].value;
+    } else {
+      return null;
+    }
+  };
+
+  handleEnter = () => {
+    // We only do validation and verification on enter, onChange submits the answer if valid.
+    const { handleEnter, changeCurrentState, currentQuestion } = this.props;
+    const { questions } = this.state;
+    const question = findItemById(questions, currentQuestion.id);
+    if (!question) {
+      return false;
+    }
+    changeCurrentState({
+      inputState: 'enter'
+    });
+    handleEnter();
+  };
 
   shouldPrefillValue() {
     const { currentQuestion } = this.props;
@@ -186,6 +194,7 @@ class FormInteractiveView extends Component {
             handleEnter={this.handleEnter}
             isVerifying={isVerifying}
             showModal={showModal}
+            getStoreAnswerByQuestionId={this.getStoreAnswerByQuestionId}
             {...optionals}
           />
         </div>

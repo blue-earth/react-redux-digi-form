@@ -33,10 +33,16 @@ $mobile-menu-bg-color:    #f4f5f8;
 .logoWrapper {
   display: inline-block;
   vertical-align: middle;
+  height: 48px;
+  max-width: 136px;
   margin-right: 25px;
   // padding: 15px 0;
   @include media('<sm') {
     display: none;
+  }
+  img {
+    max-height: 48px;
+    max-width: 136px;
   }
 }
 .title {

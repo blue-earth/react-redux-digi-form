@@ -1,15 +1,6 @@
 @import './mixins';
-@import './variables';
 
 .wrapper {
   @include clearfix;
   width: 100%;
-}
-
-.inputWrapper {
-
-}
-
-.validatiorTransition {
-  transition: all .3s;
 }

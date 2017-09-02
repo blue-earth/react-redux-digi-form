@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import FormBuilderNav from 'containers/FormBuilderNavContainer';
+import FormBuilderNavContainer from 'containers/FormBuilderNavContainer';
 import { subHeaderType } from 'helpers/urlHelper';
 
 class DashboardSubHeader extends Component {
@@ -13,7 +13,7 @@ class DashboardSubHeader extends Component {
     const type = subHeaderType(location.pathname);
     switch (type) {
       case 'formBuilder':
-        return (<FormBuilderNav location={location} />);
+        return (<FormBuilderNavContainer location={location} />);
       default:
         return;
     }

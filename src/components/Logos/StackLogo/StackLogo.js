@@ -21,7 +21,7 @@ export default class StackLogo extends Component {
   };
 
   static defaultProps = {
-    width: 140,
+    width: 'auto',
     height: 'auto',
     link: '/',
     logoStyle: 'white',
@@ -43,15 +43,18 @@ export default class StackLogo extends Component {
       } else if (logoStyle === 'darkgrey') {
         logoUrl = require('./Emondo-Logo-Darkgrey.svg');
       } else {
-        logoUrl = require('./Emondo-Logo-Horizontal.svg');
+        logoUrl = require('./Emondo-Logo-Horizontal.png');
+        // svg scaling in IE is dodgy unless you set both width and height
+        // so because this logo version is for the conversational form header
+        // and may be dynamically replaced with a user logo where we don't want to set both w and h
+        // it's best to just use a png
       }
     }
     return (
       <Link to={link}>
         <div className="text-center">
           <img
-            width={width}
-            height={height}
+            style={{width: width, height: height}}
             src={logoUrl} />
         </div>
       </Link>

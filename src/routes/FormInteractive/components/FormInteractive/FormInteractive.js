@@ -311,7 +311,7 @@ class FormInteractive extends Component {
             <div className={styles.bottomLogoWrapper}>
               <span>Powered by</span>
               <div className={styles.bottomLogo}>
-                <StackLogo logoStyle="darkgrey" width={80} />
+                <StackLogo logoStyle="darkgrey" width={'80px'} height={'28px'} />
               </div>
             </div>
           </div>

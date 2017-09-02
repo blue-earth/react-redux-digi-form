@@ -71,6 +71,10 @@ class MultipleChoice extends Component {
     setTimeout(this.alignmentHandle);
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.alignmentResizeHandle);
+  }
+
   alignmentResizeHandle = () => {
     const { width } = this.state;
     var realWidth = 0;
@@ -140,18 +144,6 @@ class MultipleChoice extends Component {
     return _allChoices;
   }
 
-  canAcceptChange(value) {
-    const { maxAnswers } = this.props;
-    if (maxAnswers > 0 && value.length > maxAnswers) return false;
-    return true;
-  }
-
-  isMultiSelectable(value) {
-    const { maxAnswers } = this.props;
-    if (maxAnswers > 0 && value.length >= maxAnswers) return false;
-    return true;
-  }
-
   isActiveItem(item) {
     var values = this.props.value;
     if (typeof values !== 'object') return false;
@@ -164,13 +156,13 @@ class MultipleChoice extends Component {
     const allChoices = this.allChoices;
     if (event.keyCode === 13) {
       onEnterKey();
+    } else {
+      const foundIndex = _.findIndex(allChoices, { label: String.fromCharCode(event.keyCode) });
+      if (foundIndex > -1) {
+        this.handleClick(allChoices[foundIndex]);
+      }
     }
-    console.log(String.fromCharCode(event.keyCode));
-    const foundIndex = _.findIndex(allChoices, { label: String.fromCharCode(event.keyCode) });
-    if (foundIndex > -1) {
-      this.handleClick(allChoices[foundIndex]);
-    }
-  }
+  };
 
   render() {
     const { isDisabled, isReadOnly, autoFocus } = this.props;
