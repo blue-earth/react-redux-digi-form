@@ -10,6 +10,8 @@ import styles from './FloatTextInput.scss';
 import classNames from 'classnames/bind';
 import { IoAndroidAlert } from 'react-icons/lib/io';
 
+const cx = classNames.bind(styles);
+
 class FloatTextInput extends Component {
   static propTypes = {
     placeholder: PropTypes.string,
@@ -37,6 +39,7 @@ class FloatTextInput extends Component {
     isDisabled: false,
     value: '',
     placeholder: '',
+    label: '',
     type: 'text',
     size: 'lg',
     errors: []
@@ -45,12 +48,14 @@ class FloatTextInput extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: false
+      active: false,
+      filled: props.value,
+      inputId: FloatTextInput.counter ++
     };
   }
 
-  isFilled = () => {
-    return Boolean(this.props.value);
+  get isFilled() {
+    return this.props.value.length > 0;
   };
 
   get hasError() {
@@ -88,7 +93,8 @@ class FloatTextInput extends Component {
 
   handleFocus = (event) => {
     this.setState({
-      active: true
+      active: true,
+      filled: true
     });
     const { onFocus } = this.props;
     if (typeof onFocus === 'function') {
@@ -98,7 +104,8 @@ class FloatTextInput extends Component {
 
   handleBlur = (event) => {
     this.setState({
-      active: false
+      active: false,
+      filled: this.isFilled
     });
     this.refs.errorMessage.hide();
     const { onBlur } = this.props;
@@ -147,9 +154,8 @@ class FloatTextInput extends Component {
       value,
       errorPlacement
     } = this.props;
-    let { filled, active, inputId } = this.state;
-    const cx = classNames.bind(styles); // eslint-disable-line
-
+    let { filled, active, savedValue, hasError, inputId } = this.state;
+    const controlId = name || `floatTextInput_${inputId}`;
     const tooltip = (
       <Tooltip className="floatTextInputTooltip" id={`tooltipQuestion_${inputId}`}>
         {errors.map((error, i) => <p key={i}>{error}</p>)}
@@ -164,9 +170,10 @@ class FloatTextInput extends Component {
             hide: filled && placeholder.length > 0
           })}
           style={this.activeColour}>
-          { placeholder }
+          { label || placeholder }
         </label>
         <input
+          id={controlId}
           type={type}
           value={value}
           name={name}
