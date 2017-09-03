@@ -6,10 +6,11 @@ import styles from './QuestionInteractive.scss';
 import QuestionInstruction from 'components/Questions/QuestionInstruction';
 import SingularTextInputQuestion from '../../QuestionTypes/SingularTextInputQuestion';
 import LongTextQuestion from '../../QuestionTypes/LongTextQuestion';
+import NameQuestion from '../../QuestionTypes/NameQuestion';
 import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
 import DropdownInput from '../../QuestionInputs/Dropdown';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
-import Statement from '../../QuestionInputs/Statement/Statement';
+import StatementQuestion from '../../QuestionTypes/StatementQuestion';
 import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
 import DateInput from '../../QuestionInputs/DateInput/DateInput';
 import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
@@ -126,11 +127,14 @@ class QuestionInteractive extends Component {
           'type': 'number'
         });
         break;
+      case 'NameField':
+        InputComponent = NameQuestion;
+        break;
       case 'PhoneNumberField':
         InputComponent = PhoneNumberInput;
         break;
       case 'StatementField':
-        InputComponent = Statement;
+        InputComponent = StatementQuestion;
         break;
       case 'LongTextField':
         InputComponent = LongTextQuestion;
