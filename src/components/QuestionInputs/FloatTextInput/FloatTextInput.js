@@ -154,7 +154,7 @@ class FloatTextInput extends Component {
       value,
       errorPlacement
     } = this.props;
-    let { filled, active, savedValue, hasError, inputId } = this.state;
+    let { filled, active, inputId } = this.state;
     const controlId = name || `floatTextInput_${inputId}`;
     const tooltip = (
       <Tooltip className="floatTextInputTooltip" id={`tooltipQuestion_${inputId}`}>
