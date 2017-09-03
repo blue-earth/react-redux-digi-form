@@ -11,6 +11,7 @@ import {
 import AppButton from 'components/Buttons/AppButton';
 import { connectModal } from 'redux-modal';
 import { validateIsEmail } from 'helpers/validationHelper';
+import classNames from 'classnames';
 import styles from './SendFormLinkModal.scss';
 
 class SendFormLinkModal extends Component {
@@ -26,6 +27,8 @@ class SendFormLinkModal extends Component {
     super(props);
     this.state = {
       email: '',
+      firstName: '',
+      lastName: '',
       isEmailValid: true
     };
   }
@@ -33,8 +36,18 @@ class SendFormLinkModal extends Component {
   handleCloseModal = () => {
     this.props.handleHide();
   }
+  handleFirstNameChange = (event) => {
+    this.setState({
+      firstName: event.target.value
+    });
+  }
+  handleLastNameChange = (event) => {
+    this.setState({
+      lastName: event.target.value
+    });
+  }
 
-  handleChange = (event) => {
+  handleEmailChange = (event) => {
     this.setState({
       email: event.target.value,
       isEmailValid: true
@@ -43,9 +56,9 @@ class SendFormLinkModal extends Component {
 
   handleSend = () => {
     const { formId, sendFormLink } = this.props;
-    const { email } = this.state;
+    const { email, firstName, lastName } = this.state;
     if (validateIsEmail(email)) {
-      sendFormLink(formId, email);
+      sendFormLink(formId, email, firstName, lastName);
     } else {
       this.setState({
         isEmailValid: false
@@ -55,7 +68,7 @@ class SendFormLinkModal extends Component {
 
   render() {
     const { show, isPageBusy } = this.props;
-    const { email, isEmailValid } = this.state;
+    const { email, isEmailValid, firstName, lastName } = this.state;
     return (
       <Modal backdrop="static" show={show}
         className={styles.sendFormLinkModal} dialogClassName={styles.modalWrapper}>
@@ -68,10 +81,25 @@ class SendFormLinkModal extends Component {
           <Row>
             <Col sm={10} smPush={1}>
               <p className={styles.info}>
-                Input an email address <br />
+                Input name and an email address <br />
                 to send a form link to.
               </p>
-              <input placeholder="Email" className={styles.input} value={email} onChange={this.handleChange} />
+              <input
+                autoFocus
+                placeholder="First Name"
+                className={classNames(styles.input, styles.smallInput, 'pull-left')}
+                value={firstName}
+                onChange={this.handleFirstNameChange} />
+              <input
+                placeholder="Last Name"
+                className={classNames(styles.input, styles.smallInput, 'pull-right')}
+                value={lastName}
+                onChange={this.handleLastNameChange} />
+              <input
+                placeholder="Email"
+                className={styles.input}
+                value={email}
+                onChange={this.handleEmailChange} />
               <div className={styles.buttonWrapper}>
                 <div className={styles.errorMessage}>
                   {!isEmailValid && <span>Please input a valid email</span>}

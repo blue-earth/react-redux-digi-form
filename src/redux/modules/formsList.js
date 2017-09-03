@@ -183,16 +183,20 @@ const processDuplicateForm = (id) => {
   return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
 
-export const sendFormLink = (id, email) => {
+export const sendFormLink = (id, email, firstName, lastName) => {
   return (dispatch, getState) => {
     dispatch(requestSendFormLink());
-    dispatch(processSendForm(id, email));
+    dispatch(processSendForm(id, email, firstName, lastName));
   };
 };
 
-const processSendForm = (id, email) => {
+const processSendForm = (id, email, firstName, lastName) => {
   const apiURL = `${API_URL}/form_document/api/form/${id}/email_form_tracking_link/`;
-  const body = { email };
+  const body = {
+    email,
+    first_name: firstName,
+    last_name: lastName
+  };
   const fetchParams = assignDefaults({
     method: 'POST',
     body
