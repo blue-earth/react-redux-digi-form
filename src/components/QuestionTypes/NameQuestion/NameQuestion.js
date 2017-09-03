@@ -96,16 +96,16 @@ class NameQuestion extends Component {
           />
         </Col>
         {includeMiddleName &&
-        <Col md={4} sm={12}>
-          <FloatTextInput
-            label="Middle name"
-            onChange={this.onChange}
-            onEnterKey={function () { that.onEnterKeyDown('lname'); }}
-            value={this.props.value.mname}
-            name="mname"
-            ref="mname"
-          />
-        </Col>
+          <Col md={4} sm={12}>
+            <FloatTextInput
+              label="Middle name"
+              onChange={this.onChange}
+              onEnterKey={function () { that.onEnterKeyDown('lname'); }}
+              value={this.props.value.mname}
+              name="mname"
+              ref="mname"
+            />
+          </Col>
         }
         <Col md={4} sm={12}>
           <FloatTextInput
