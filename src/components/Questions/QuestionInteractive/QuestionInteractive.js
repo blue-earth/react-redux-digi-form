@@ -8,7 +8,7 @@ import SingularTextInputQuestion from '../../QuestionTypes/SingularTextInputQues
 import LongTextQuestion from '../../QuestionTypes/LongTextQuestion';
 import NameQuestion from '../../QuestionTypes/NameQuestion';
 import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
-import DropdownInput from '../../QuestionInputs/Dropdown';
+import DropdownQuestion from '../../QuestionTypes/DropdownQuestion';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
 import StatementQuestion from '../../QuestionTypes/StatementQuestion';
 import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
@@ -148,7 +148,7 @@ class QuestionInteractive extends Component {
         InputComponent = MultipleChoice;
         break;
       case 'DropdownField':
-        InputComponent = DropdownInput;
+        InputComponent = DropdownQuestion;
         break;
       case 'DateField':
         InputComponent = DateInput;
