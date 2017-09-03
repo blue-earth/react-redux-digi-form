@@ -79,7 +79,10 @@ class FormInteractiveView extends Component {
     /*
      * verificationStatus: Redux state that holds the status of verification, ex. EmondoEmailService
      */
-    verificationStatus: PropTypes.array
+    verificationStatus: PropTypes.array,
+
+    formId: PropTypes.number,
+    sessionId: PropTypes.number
 
   };
 
@@ -190,6 +193,8 @@ class FormInteractiveView extends Component {
             isVerifying={isVerifying}
             showModal={showModal}
             getStoreAnswerByQuestionId={this.getStoreAnswerByQuestionId}
+            formId={this.props.formId}
+            sessionId={this.props.sessionId}
             {...optionals}
           />
         </div>

@@ -14,7 +14,7 @@ import StatementQuestion from '../../QuestionTypes/StatementQuestion';
 import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
 import DateInput from '../../QuestionInputs/DateInput/DateInput';
 import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
-import FileUploadContainer from '../../QuestionInputs/FileUpload/FileUploadContainer';
+import FileUpload from '../../QuestionInputs/FileUpload';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -74,7 +74,10 @@ class QuestionInteractive extends Component {
     /*
      * showModal: redux-modal action to show modal
      */
-    showModal: PropTypes.func.isRequired
+    showModal: PropTypes.func.isRequired,
+
+    formId: PropTypes.number,
+    sessionId: PropTypes.number
   };
 
   static contextTypes = {
@@ -105,7 +108,9 @@ class QuestionInteractive extends Component {
       changeCurrentState: changeCurrentState,
       storeAnswer: storeAnswer,
       handleEnter: this.props.handleEnter,
-      value: value
+      value: value,
+      formId: this.props.formId,
+      sessionId: this.props.sessionId
     };
 
     switch (type) {
@@ -155,7 +160,7 @@ class QuestionInteractive extends Component {
         InputComponent = SignatureQuestion;
         break;
       case 'FileUploadField':
-        InputComponent = FileUploadContainer;
+        InputComponent = FileUpload;
         break;
       default:
         InputComponent = (<p>`Question input not found for ${type}`</p>);
