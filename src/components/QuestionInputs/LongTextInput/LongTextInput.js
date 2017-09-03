@@ -45,7 +45,8 @@ class LongTextInput extends Component {
     placeholder: '',
     rows: 6,
     cols: 50,
-    errors: []
+    errors: [],
+    primaryColour: '#3893d0'
   };
 
   constructor(props) {
@@ -168,6 +169,7 @@ class LongTextInput extends Component {
           onFocus={this.handleFocus}
           autoFocus={autoFocus}
           disabled={isDisabled}
+          style={this.activeBorderColour}
         />
         <OverlayTrigger ref="errorMessage" placement="right" overlay={tooltip} trigger={['hover', 'focus']}>
           <div className={cx('errorIconWrapper')}>

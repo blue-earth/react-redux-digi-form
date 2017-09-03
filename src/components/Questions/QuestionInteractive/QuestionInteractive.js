@@ -5,9 +5,9 @@ import React, {
 import styles from './QuestionInteractive.scss';
 import QuestionInstruction from 'components/Questions/QuestionInstruction';
 import SingularTextInputQuestion from '../../QuestionTypes/SingularTextInputQuestion';
+import LongTextQuestion from '../../QuestionTypes/LongTextQuestion';
 import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
 import DropdownInput from '../../QuestionInputs/Dropdown';
-import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
 import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
 import Statement from '../../QuestionInputs/Statement/Statement';
 import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
@@ -133,7 +133,7 @@ class QuestionInteractive extends Component {
         InputComponent = Statement;
         break;
       case 'LongTextField':
-        InputComponent = LongTextInput;
+        InputComponent = LongTextQuestion;
         break;
       case 'MultipleChoice':
         InputComponent = MultipleChoice;
