@@ -3,8 +3,9 @@ import React, {
   PropTypes
 } from 'react';
 import SidebarMenu from 'components/SidebarMenu';
-import { FaInfoCircle } from 'react-icons/lib/fa';
+import { FaInfoCircle, FaBell } from 'react-icons/lib/fa';
 import GeneralForm from './GeneralForm';
+import NotificationsForm from './NotificationsForm';
 import styles from './Form.scss';
 import _ from 'lodash';
 
@@ -41,20 +42,35 @@ class StepConfigure extends Component {
 
   get sidebarMenuItems() {
     return [
-      {key: 'general', label: (<span><FaInfoCircle /> General</span>)}
+      {key: 'general', label: (<span><FaInfoCircle /> General</span>)},
+      {key: 'notifications', label: (<span><FaBell /> Notifications</span>)}
     ];
   }
 
   renderForm = () => {
+    const { formConfig } = this.props;
     let initGeneral = {
       initialValues: {
         title: this.props.title,
         slug: this.props.slug,
         formConfig: {
-          redirect: _.get(this.props.formConfig, ['redirect'], ''),
+          redirect: _.get(formConfig, ['redirect'], ''),
           customise: {
-            footer: _.get(this.props.formConfig, 'customise.footer', ''),
-            emondoBranding: _.get(this.props.formConfig, 'customise.emondoBranding', true)
+            footer: _.get(formConfig, 'customise.footer', ''),
+            emondoBranding: _.get(formConfig, 'customise.emondoBranding', true)
+          }
+        }
+      }
+    };
+
+    let initNotifications = {
+      initialValues: {
+        formConfig: {
+          externalNotifications: {
+            recipients: _.get(formConfig.externalNotifications, ['recipients'], []),
+            sender: _.get(formConfig.externalNotifications, ['sender'], ''),
+            signature: _.get(formConfig.externalNotifications, ['signature'], ''),
+            disclaimer: _.get(formConfig.externalNotifications, ['disclaimer'], '')
           }
         }
       }
@@ -64,7 +80,11 @@ class StepConfigure extends Component {
       case 'customize':
         return (<span>Customise section, under construction</span>);
       case 'notifications':
-        return (<span>Notifications section, under construction</span>);
+        return (
+          <NotificationsForm {...initNotifications} enableReinitialize
+            onSubmit={this.processForm}
+            questions={this.props.questions} />
+        );
       case 'btext':
         return (<span>Buttons Text section, under construction</span>);
       case 'intaccess':

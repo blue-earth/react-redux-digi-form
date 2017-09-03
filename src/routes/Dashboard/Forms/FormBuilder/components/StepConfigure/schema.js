@@ -20,5 +20,24 @@ const schemaGeneral = {
     type: 'boolean'
   }
 };
-
 export const formSchemaGeneral = buildSchema(schemaGeneral);
+
+const schemaNotifications = {
+  'formConfig.externalNotifications.recipients[].data': {
+    label: 'Send email notifications to'
+  },
+  'formConfig.externalNotifications.recipients[].type': {
+    label: 'Recipient type'
+  },
+  'formConfig.externalNotifications.sender': {
+    label: 'Send email notifications from',
+    type: 'email'
+  },
+  'formConfig.externalNotifications.signature': {
+    label: 'Signature'
+  },
+  'formConfig.externalNotifications.disclaimer': {
+    label: 'Disclaimer'
+  }
+};
+export const formSchemaNotifications = buildSchema(schemaNotifications);
