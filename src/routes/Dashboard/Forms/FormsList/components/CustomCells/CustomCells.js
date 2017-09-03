@@ -14,9 +14,6 @@ import {
 } from 'react-icons/lib/fa';
 import _ from 'lodash';
 import styles from './CustomCells.scss';
-import { DateCell } from 'components/GriddleComponents/CommonCells/CommonCells';
-
-export { DateCell };
 
 export class SelectionHeaderCell extends Component {
   static propTypes = {

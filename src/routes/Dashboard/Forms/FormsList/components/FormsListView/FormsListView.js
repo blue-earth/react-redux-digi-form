@@ -2,9 +2,6 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import {
-  DateCell
-} from '../CustomCells/CustomCells';
 import { formsUrl, editFormUrl } from 'helpers/urlHelper';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
@@ -12,7 +9,10 @@ import FormsFilter from '../FormsFilter';
 import SendFormLinkModal from '../SendFormLinkModal';
 import styles from './FormsListView.scss';
 import classNames from 'classnames';
-import { SelectionCell, SelectionHeaderCell, LinkCell } from 'components/GriddleComponents/CommonCells/CommonCells';
+import DateCell from 'components/GriddleComponents/CommonCells/DateCell';
+import SelectionHeaderCell from 'components/GriddleComponents/CommonCells/SelectionHeaderCell';
+import SelectionCell from 'components/GriddleComponents/CommonCells/SelectionCell';
+import LinkCell from 'components/GriddleComponents/CommonCells/LinkCell';
 import Icon from 'components/Icon';
 
 class FormsListView extends Component {
@@ -78,7 +78,6 @@ class FormsListView extends Component {
     setPageSize: PropTypes.func.isRequired,
     next: PropTypes.func.isRequired,
     previous: PropTypes.func.isRequired,
-    deleteForm: PropTypes.func.isRequired,
     duplicateForm: PropTypes.func.isRequired,
     archiveForm: PropTypes.func.isRequired,
     sendFormLink: PropTypes.func.isRequired,
@@ -103,7 +102,6 @@ class FormsListView extends Component {
       selectedItems,
       toggleSelectItem,
       goTo,
-      deleteForm,
       duplicateForm,
       archiveForm
     } = this.props;
@@ -158,11 +156,6 @@ class FormsListView extends Component {
         cssClassName: styles.columnStatus
       },
       {
-        columnName: 'slug',
-        locked: true,
-        visible: false
-      },
-      {
         columnName: 'actions',
         order: 6,
         locked: true,
@@ -192,11 +185,6 @@ class FormsListView extends Component {
           label: 'Duplicate',
           icon: 'Duplicate',
           onClick: (id) => duplicateForm(id)
-        }, {
-          name: 'delete',
-          label: 'Delete',
-          icon: 'Delete',
-          onClick: (id) => deleteForm(id)
         }],
         selectedItems,
         toggleSelectItem,
