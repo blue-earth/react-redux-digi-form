@@ -2,7 +2,7 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import FloatTextInput from '../../QuestionInputs/FloatTextInput';
+import LongTextInput from '../../QuestionInputs/LongTextInput';
 import {
   valueIsValid
 } from 'helpers/validationHelper';
@@ -10,7 +10,7 @@ import {
   aggregateVerifications
 } from 'helpers/verificationHelpers';
 
-class SingularTextInputQuestion extends Component {
+class LongTextQuestion extends Component {
   static propTypes = {
     compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.oneOfType([
@@ -92,12 +92,12 @@ class SingularTextInputQuestion extends Component {
   render() {
     return (
       <div style={{'overflow': 'hidden', 'width': '100%'}}>
-        <FloatTextInput
+        <LongTextInput
           onEnterKey={this.onEnterKeyDown}
           onChange={this.onChange}
-          type={this.props.type}
           errors={this.state.errors}
           value={this.props.value}
+          placeholder={this.props.compiledQuestion.placeholder}
           isDisabled={this.state.isDisabled}
         />
       </div>
@@ -105,4 +105,4 @@ class SingularTextInputQuestion extends Component {
   }
 }
 
-export default SingularTextInputQuestion;
+export default LongTextQuestion;

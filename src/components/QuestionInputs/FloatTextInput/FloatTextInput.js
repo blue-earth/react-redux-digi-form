@@ -35,6 +35,7 @@ class FloatTextInput extends Component {
     primaryColour: '#3893d0',
     errorPlacement: 'bottom',
     isDisabled: false,
+    value: '',
     placeholder: '',
     type: 'text',
     size: 'lg',
