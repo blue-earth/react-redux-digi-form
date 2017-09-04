@@ -19,44 +19,25 @@ class MultipleChoice extends Component {
 
   static propTypes = {
     isDisabled: PropTypes.bool,
-    isReadOnly: PropTypes.bool,
     allowMultiple: PropTypes.bool,
-    maxAnswers: PropTypes.number,
     includeOther: PropTypes.bool,
     choices: PropTypes.array.isRequired,
-    value: PropTypes.oneOfType([
-      PropTypes.object,
-      PropTypes.array
-    ]),
-    onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
+    value: PropTypes.array,
     onChange: PropTypes.func,
     onEnterKey: PropTypes.func,
-    autoFocus: PropTypes.bool
+    autoFocus: PropTypes.bool,
+    errors: PropTypes.array
   };
 
   static defaultProps = {
     isDisabled: false,
-    isReadOnly: false,
     allowMultiple: false,
-    maxAnswers: 0,
     includeOther: false,
-    choices: [
-      {
-        text: 'First Selection',
-        label: 'A'
-      },
-      {
-        text: 'Second Selection',
-        label: 'B'
-      }
-    ],
-    value: {
-      text: '',
-      label: ''
-    },
+    choices: [{text: 'First Selection', label: 'A'}],
+    value: [],
     onChange: () => {},
-    onEnterKey: () => {}
+    onEnterKey: () => {},
+    autoFocus: true
   };
 
   componentDidMount() {
@@ -90,7 +71,7 @@ class MultipleChoice extends Component {
         this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.style.width = realWidth;
       }
     }
-  }
+  };
 
   alignmentHandle = () => {
     var width = 0;
@@ -118,22 +99,33 @@ class MultipleChoice extends Component {
         this.refs[`ChoiceItem${index}`].refs.divForMultipleChoiceItem.style.width = width;
       }
     }
-  }
+  };
 
-  handleClick = (val) => {
-    const { allowMultiple,
-      onChange, onEnterKey, value } = this.props;
-    if (typeof onChange !== 'function') return;
+  handleClick = (selectedChoice) => {
+    const {
+      allowMultiple,
+      onChange,
+      onEnterKey,
+      value
+    } = this.props;
+    var selectedArray;
     if (allowMultiple) {
-      var newValue = _.xorWith(value, [val], _.isEqual);
-      onChange(newValue);
+      // selectedChoice is currently selected, deselect it
+      if (value.filter((_val) => _val.label === selectedChoice.label).length) {
+        selectedArray = value.filter(item => item.label !== selectedChoice.label);
+      } else {
+        selectedArray = [...value, selectedChoice];
+      }
+      onChange(selectedArray);
     } else {
-      onChange(val);
+      onChange([selectedChoice]);
       setTimeout(onEnterKey, 50);
     }
-  }
+  };
 
   get allChoices() {
+    // This function injects an "other" to the end of choices
+    // if the question is configured "includeOther"
     const { choices, includeOther } = this.props;
     var _allChoices = choices.slice(0);
     if (includeOther) {
@@ -144,11 +136,9 @@ class MultipleChoice extends Component {
     return _allChoices;
   }
 
-  isActiveItem(item) {
-    var values = this.props.value;
-    if (typeof values !== 'object') return false;
-    if (values.constructor !== Array) values = [values];
-    return typeof _.find(values, {label: item.label}) !== 'undefined';
+  isItemSelected(item) {
+    return this.props.value.filter(
+      selectedItem => selectedItem.label === item.label).length > 0;
   }
 
   handleKeyDown = (event) => {
@@ -165,18 +155,16 @@ class MultipleChoice extends Component {
   };
 
   render() {
-    const { isDisabled, isReadOnly, autoFocus } = this.props;
     const that = this;
+    const { errors } = this.props;
     var optionals = {};
     var ChoiceItemTemplate = (item, index) => {
-      const active = that.isActiveItem(item);
-      const disabled = isDisabled || isReadOnly;
+      const isSelected = that.isItemSelected(item);
       return <MultipleChoiceItem
         key={`${item.label}-${item.text}`}
         label={item.label}
         text={item.text}
-        active={active}
-        disabled={disabled}
+        active={isSelected}
         onClick={that.handleClick}
         ref={`ChoiceItem${index}`}
       />;
@@ -188,12 +176,13 @@ class MultipleChoice extends Component {
     return (
       <div className={styles.choicesContainer}
         tabIndex={0} onKeyDown={this.handleKeyDown}
-        autoFocus={autoFocus}
         ref="choiceContainer"
         {...optionals}>
         <div className={styles.choicesRow}>
           {choicesList}
         </div>
+        {errors.length > 0 &&
+        errors.map((error, i) => <p className={styles.error} key={i}>{error}</p>)}
       </div>
     );
   }

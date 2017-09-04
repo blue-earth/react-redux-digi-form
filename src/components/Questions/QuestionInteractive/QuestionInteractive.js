@@ -9,7 +9,7 @@ import LongTextQuestion from '../../QuestionTypes/LongTextQuestion';
 import NameQuestion from '../../QuestionTypes/NameQuestion';
 import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
 import DropdownQuestion from '../../QuestionTypes/DropdownQuestion';
-import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
+import MultipleChoiceQuestion from '../../QuestionTypes/MultipleChoiceQuestion';
 import StatementQuestion from '../../QuestionTypes/StatementQuestion';
 import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
 import DateInput from '../../QuestionInputs/DateInput/DateInput';
@@ -145,7 +145,7 @@ class QuestionInteractive extends Component {
         InputComponent = LongTextQuestion;
         break;
       case 'MultipleChoice':
-        InputComponent = MultipleChoice;
+        InputComponent = MultipleChoiceQuestion;
         break;
       case 'DropdownField':
         InputComponent = DropdownQuestion;
