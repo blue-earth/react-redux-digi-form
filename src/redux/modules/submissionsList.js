@@ -13,9 +13,9 @@ export const SELECT_SUBMISSION_ITEMS = 'SELECT_SUBMISSION_ITEMS';
 
 export const SELECT_ANALYTICS_PERIOD = 'SELECT_ANALYTICS_PERIOD';
 
-export const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
-const NEXT_PAGE = 'NEXT_PAGE';
-const PREVIOUS_PAGE = 'PREVIOUS_PAGE';
+export const SET_SUBMISSIONS_PAGE_SIZE = 'SET_SUBMISSIONS_PAGE_SIZE';
+const NEXT_SUBMISSIONS_PAGE = 'NEXT_SUBMISSIONS_PAGE';
+const PREVIOUS_SUBMISSIONS_PAGE = 'PREVIOUS_SUBMISSIONS_PAGE';
 
 export const INIT_SUBMISSIONS_STATE = {
   id: 0,
@@ -25,7 +25,7 @@ export const INIT_SUBMISSIONS_STATE = {
   pageSize: 5, // indicates number of items per page.
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: 'response_id', // indicates the column name to sort by
-  sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
+  sortAscending: false, // indicates the sort direction (true: ascending | false: descending)
   selectedItems: [], // holds the selected items id.
   analyticsPeriod: 'today', // indicates the selected period of analytics
   analytics: {
@@ -99,8 +99,8 @@ export const selectItems = createAction(SELECT_SUBMISSION_ITEMS);
 
 export const selectAnalyticsPeriod = createAction(SELECT_ANALYTICS_PERIOD);
 
-const goToNextPage = createAction(NEXT_PAGE);
-const goToPreviousPage = createAction(PREVIOUS_PAGE);
+const goToNextPage = createAction(NEXT_SUBMISSIONS_PAGE);
+const goToPreviousPage = createAction(PREVIOUS_SUBMISSIONS_PAGE);
 export const next = () => {
   return (dispatch, getState) => {
     dispatch(goToNextPage());
@@ -178,7 +178,7 @@ export const selectItem = ({id, selected}) => {
   };
 };
 
-export const setPageSize = createAction(SET_PAGE_SIZE);
+export const setPageSize = createAction(SET_SUBMISSIONS_PAGE_SIZE);
 
 // ------------------------------------
 // Helper Action: processFetchSubmissions
@@ -259,16 +259,16 @@ const submissionsReducer = handleActions({
       analyticsPeriod: action.payload
     }),
 
-  SET_PAGE_SIZE: (state, action) =>
+  SET_SUBMISSIONS_PAGE_SIZE: (state, action) =>
     Object.assign({}, state, {
       pageSize: parseInt(action.payload),
       page: 1
     }),
-  NEXT_PAGE: (state, action) =>
+  NEXT_SUBMISSIONS_PAGE: (state, action) =>
     Object.assign({}, state, {
       page: state.page + 1
     }),
-  PREVIOUS_PAGE: (state, action) =>
+  PREVIOUS_SUBMISSIONS_PAGE: (state, action) =>
     Object.assign({}, state, {
       page: state.page - 1
     })

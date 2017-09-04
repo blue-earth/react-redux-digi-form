@@ -194,7 +194,6 @@ class SubmissionsListView extends Component {
         sortColumn={sortColumn}
         sortAscending={sortAscending}
         Pagination={Pagination}
-        initialSort="response_id"
         isFetching={isFetching}
         showFilter
         useCustomFilterComponent

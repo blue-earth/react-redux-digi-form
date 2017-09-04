@@ -244,7 +244,6 @@ class FormsListView extends Component {
         sortColumn={sortColumn}
         sortAscending={sortAscending}
         Pagination={Pagination}
-        initialSort="id"
         isFetching={isFetching}
       />
     );
