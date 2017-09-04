@@ -174,12 +174,20 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
 // ------------------------------------
 const _receiveForm = (state, { payload }) => {
   const id = _validateQuestionId(payload.form);
+  const allQuestions = payload.form.questions;
+  const prefilledAnswers = allQuestions
+    .filter(question => Boolean(question.value) === true) // All questions with prefills
+    .map(question => ({id: question.id, value: question.value}));
+
+  const currentQuestionAnswer = findItemById(prefilledAnswers, id);
+  const currentQuestion = Object.assign({}, state.currentQuestion, {
+    id,
+    answerValue: _.get(currentQuestionAnswer, 'value', null)
+  });
   return Object.assign({}, state, payload, {
+    answers: prefilledAnswers,
     lastUpdated: Date.now(),
-    currentQuestion: _.merge({}, state.currentQuestion, {
-      id,
-      answerValue: _.defaultTo(findItemById(state.answers, id), {}).value
-    }),
+    currentQuestion: currentQuestion,
     formAccessStatus: !payload.form ? (state.formAccessStatus === 'init' ? 'required' : 'fail') : 'success'
   });
 };
@@ -308,8 +316,7 @@ const _loadQuestion = (state, action) => {
   return Object.assign({}, state, {
     currentQuestion: {
       id: action.payload,
-      answerValue: _.defaultTo(findItemById(answers, action.payload), {}).value,
-      inputState: 'init'
+      answerValue: _.defaultTo(findItemById(answers, action.payload), {}).value
     },
     shouldShowFinalSubmit: false
   });
