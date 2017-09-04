@@ -26,6 +26,7 @@ export default class DropdownSelection extends Component {
 
   static propTypes = {
     id: PropTypes.number,
+    selectedItems: PropTypes.array,
     checked: PropTypes.bool,
     dropdownMenus: PropTypes.array,
     onSelect: PropTypes.func
@@ -67,9 +68,13 @@ export default class DropdownSelection extends Component {
   }
 
   handleMenuClick = (event) => {
-    const { dropdownMenus, id } = this.props;
+    const { dropdownMenus, id, selectedItems } = this.props;
     const menu = dropdownMenus[event.currentTarget.dataset.index];
-    menu.onClick(id);
+    if (selectedItems && selectedItems.length > 0) {
+      menu.onClick(selectedItems);
+    } else {
+      menu.onClick(id);
+    }
     this.refs.dropdownTrigger.hide();
   }
 

@@ -8,6 +8,7 @@ import styles from './SelectionHeaderCell.scss';
 class SelectionHeaderCell extends Component {
 
   static propTypes = {
+    selectedItems: PropTypes.array,
     selectAllItems: PropTypes.func,
     isAllSelected: PropTypes.bool,
     dropdownMenus: PropTypes.array
@@ -19,10 +20,11 @@ class SelectionHeaderCell extends Component {
   }
 
   render() {
-    const { isAllSelected, dropdownMenus } = this.props;
+    const { isAllSelected, dropdownMenus, selectedItems } = this.props;
     return (
       <div className={styles.selectionCell}>
         <DropdownSelection
+          selectedItems={selectedItems}
           checked={isAllSelected}
           onSelect={this.handleSelectItem}
           dropdownMenus={dropdownMenus} />
