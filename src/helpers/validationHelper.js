@@ -52,12 +52,10 @@ export const validateMaxValue = (value, maxValue) => {
 };
 
 export const valueIsValid = (value, validations) => {
-  console.log('valueIsValid', value);
   var errors = [];
   if (validations) {
     for (var i = 0; i < validations.length; i++) {
       var result = validateField(validations[i], value);
-
       if (result) {
         errors.push(result);
       }
