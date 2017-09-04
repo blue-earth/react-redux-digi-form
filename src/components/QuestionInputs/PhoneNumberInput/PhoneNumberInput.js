@@ -15,6 +15,8 @@ import classNames from 'classnames/bind';
 import { IoAndroidAlert } from 'react-icons/lib/io';
 import _ from 'lodash';
 
+const cx = classNames.bind(styles);
+
 class PhoneNumberInput extends Component {
 
   static contextTypes = {
@@ -30,39 +32,27 @@ class PhoneNumberInput extends Component {
     onFocus: PropTypes.func,
     onBlur: PropTypes.func,
     onEnterKey: PropTypes.func,
-    hasError: PropTypes.bool,
-    errorMessage: PropTypes.element
+    errors: PropTypes.array
   };
 
   static defaultProps = {
     value: '',
     isDisabled: false,
     isReadOnly: false,
-    hasError: false,
+    errors: [],
     onChange: () => {},
     onFocus: () => {},
     onEnterKey: () => {},
     onBlur: () => {}
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      number: props.value || ''
-    };
-  }
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return nextProps.value !== this.props.value;
-  // }
-
   componentDidMount() {
-    const { autoFocus, isDisabled, isReadOnly, hasError, value, onFocus, onBlur } = this.props;
+    const { value, errors, autoFocus, isDisabled, isReadOnly, onFocus, onBlur } = this.props;
     // finds the input dom node to bind event handler.
     var intlTelInput = this.refs.intlTelInput;
     var input = findDOMNode(intlTelInput.refs.telInput);
     const that = this;
-    if (hasError) {
+    if (errors.length > 0) {
       this.refs.errorMessage.show();
     }
     if (isDisabled) {
@@ -91,7 +81,7 @@ class PhoneNumberInput extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.hasError) {
+    if (props.errors.length > 0) {
       this.refs.errorMessage.show();
     } else {
       this.refs.errorMessage.hide();
@@ -129,28 +119,27 @@ class PhoneNumberInput extends Component {
   }
 
   render() {
-    const { errorMessage, hasError } = this.props;
-    const cx = classNames.bind(styles); // eslint-disable-line
+    const { value, errors } = this.props;
     const tooltip = (
       <Tooltip className="phoneInputTooltip" id="tooltipQuestion_phone">
-        {errorMessage}
+        {errors.map((error, i) => <p key={i}>{error}</p>)}
       </Tooltip>
     );
     return (
-      <div className={cx('phoneInputWrap', { phoneInputError: hasError })} style={this.activeColour}>
+      <div className={cx('phoneInputWrap', { phoneInputError: errors.length > 0 })} style={this.activeColour}>
         <IntlTelInput preferredCountries={[]}
           onlyCountries={['au', 'sg']}
           ref="intlTelInput"
           defaultCountry={'au'}
           css={['intl-tel-input phoneNumberInputWrapper', 'phoneNumberInput']}
-          value={this.state.number}
+          value={value}
           onPhoneNumberChange={this.handleChange}
           utilsScript={'libphonenumber.js'}
           />
         <OverlayTrigger ref="errorMessage" placement="bottom" overlay={tooltip} trigger={['hover', 'focus']}>
           <div className={cx('errorIconWrapper')}>
             <IoAndroidAlert className={cx({
-              hide: !hasError
+              hide: errors.length === 0
             })} />
           </div>
         </OverlayTrigger>
