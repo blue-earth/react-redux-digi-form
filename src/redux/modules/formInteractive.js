@@ -383,14 +383,10 @@ export const goToPrevQuestion = () => {
 // Action Handler: _getPrevQuestionId
 // ------------------------------------
 const _getPrevQuestionId = (questions, questionId) => {
-  var curIdx, prevIdx;
-  curIdx = prevIdx = _.findIndex(questions, function (o) { return o.id === questionId; });
-  while (prevIdx > 1) {
-    var q = questions[--prevIdx];
-    if (q.type !== 'Group') break;
-  }
-  if (questions[prevIdx].type === 'Group') prevIdx = curIdx; // In case it reaches index 0 and question type is 'Group'
-  return questions[prevIdx].id;
+  const questionsNoGroup = questions.filter(question => question.type.toLowerCase() !== 'group');
+  const questionIndex = questionsNoGroup.findIndex(question => question.id === questionId);
+  const consolidatedIndex = Math.max(0, questionIndex-1);
+  return questions[consolidatedIndex].id;
 };
 
 // ------------------------------------
