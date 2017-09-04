@@ -7,50 +7,47 @@ import {
   Col
 } from 'react-bootstrap';
 import { loadScript } from 'helpers/pureFunctions';
-import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
-import styles from './AddressInput.scss';
+import FloatTextInput from '../../QuestionInputs/FloatTextInput';
+import {
+  valueIsValid
+} from 'helpers/validationHelper';
 
-class AddressInput extends Component {
-
-  static contextTypes = {
-    primaryColour: React.PropTypes.string
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = props.value;
-  }
-
+class AddressQuestion extends Component {
   static propTypes = {
-    isDisabled: PropTypes.bool,
-    isReadOnly: PropTypes.bool,
-    autoFocus: PropTypes.bool,
-    autoComplete: PropTypes.bool,
+    compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.object,
-    onChange: PropTypes.func,
-    onEnterKey: PropTypes.func,
-    onFocus: PropTypes.func,
-    onBlur: PropTypes.func
+    storeAnswer: PropTypes.func.isRequired,
+    handleEnter: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    changeCurrentState: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    isDisabled: false,
     value: {
       unit_number: '',
       address_line1: '',
       suburb: '',
       state: '',
       postcode: ''
-    },
-    autoComplete: true,
-    onChange: () => {},
-    onEnterKey: () => {},
-    onFocus: () => {},
-    onBlur: () => {}
+    }
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      errors: {
+        address_line1: [],
+        suburb: [],
+        state: [],
+        postcode: []
+      },
+      isDisabled: false
+    };
+  }
+
   componentDidMount() {
-    const { autoComplete } = this.props;
+    // const { autoComplete } = this.props.compiledQuestion;
+    var autoComplete = true;
     if (autoComplete) {
       // check if it's already loaded by id.
       if (!document.getElementById('googlemap_script')) {
@@ -78,7 +75,7 @@ class AddressInput extends Component {
     // Create the autocomplete object, restricting the search to geographical
     // location types.
     var autocomplete = new google.maps.places.Autocomplete(
-        /** @type {!HTMLInputElement} */this.refs.addressLine1Input.refs.input,
+        /** @type {!HTMLInputElement} */this.refs.address_line1.refs.input,
         {types: ['geocode']});
 
     // When the user selects an address from the dropdown, populate the address
@@ -91,41 +88,39 @@ class AddressInput extends Component {
     const componentForm = {
       subpremise: {
         fieldName: 'short_name',
-        ref: 'unitNumberInput',
+        ref: 'unit_number',
         for: 'unit_number'
       },
       street_number: {
         fieldName: 'short_name',
-        ref: 'addressLine1Input',
+        ref: 'address_line1',
         for: 'address_line1'
       },
       route: {
         fieldName: 'long_name',
-        ref: 'addressLine2Input',
+        ref: 'address_line2',
         for: 'address_line2'
       },
       locality: {
         fieldName: 'long_name',
-        ref: 'suburbInput',
+        ref: 'suburb',
         for: 'suburb'
       },
       administrative_area_level_1: {
         fieldName: 'long_name',
-        ref: 'stateInput',
+        ref: 'state',
         for: 'state'
       },
       postal_code: {
         fieldName: 'short_name',
-        ref: 'postcodeInput',
+        ref: 'postcode',
         for: 'postcode'
       }
     };
     const { autocomplete } = this.state;
     var place = autocomplete.getPlace();
     if (!place.place_id) {
-      return this.setState({
-        address_line1: place.name
-      });
+      return;
     }
     let newValue = {};
     // Get each component of the address from the place details
@@ -147,22 +142,14 @@ class AddressInput extends Component {
       }
       delete newValue['address_line2']; // remove addressline2
     }
-    let newState = {};
-    for (let key of Object.keys(componentForm)) {
-      const component = componentForm[key];
-      if (newValue[component.for] && newValue[component.for].length > 0) {
-        newState[component.for] = newValue[component.for];
-      }
-    }
-    this.setState(newState);
-    this.handleChange();
+    this.resetError();
+    this.props.onChange(newValue);
   }
 
   // Bias the autocomplete object to the user's geographical location,
   // as supplied by the browser's 'navigator.geolocation' object.
   geolocate() {
     const { autocomplete } = this.state;
-
     if (navigator.geolocation && autocomplete) {
       navigator.geolocation.getCurrentPosition(function (position) {
         var geolocation = {
@@ -178,104 +165,115 @@ class AddressInput extends Component {
     }
   }
 
+  resetError = () => {
+    this.setState({'errors': {first_name: [], last_name: []}});
+  }
+
   handleFocusAddressLine1 = (event) => {
-    const { onFocus } = this.props;
     this.geolocate();
-    onFocus();
   }
 
-  handleChange = (event) => {
-    const { onChange } = this.props;
-    if (typeof onChange === 'function') {
-      var newValue = {
-        address_line1: this.refs.addressLine1Input.refs.input.value,
-        unit_number: this.refs.unitNumberInput.refs.input.value,
-        suburb: this.refs.suburbInput.refs.input.value,
-        state: this.refs.stateInput.refs.input.value,
-        postcode: this.refs.postcodeInput.refs.input.value
-      };
-      this.setState(newValue);
-      onChange(newValue);
-    }
-  }
+  handleChange = () => {
+    this.resetError();
+    var newValue = {
+      unit_number: this.refs.unit_number.refs.input.value,
+      address_line1: this.refs.address_line1.refs.input.value,
+      suburb: this.refs.suburb.refs.input.value,
+      state: this.refs.state.refs.input.value,
+      postcode: this.refs.postcode.refs.input.value
+    };
+    this.props.onChange(newValue);
+  };
 
-  handleKeyDown = (event) => {
-    const { onEnterKey } = this.props;
-    if (event.keyCode === 13) {
-      onEnterKey();
+  onEnterKeyDown = (nextRef=false) => {
+    var self = this;
+    if (nextRef) {
+      this.refs[nextRef].refs.input.focus();
+      return;
     }
-  }
+    const {
+      value,
+      compiledQuestion: { validations }
+    } = this.props;
+    var errors = this.state.errors;
+    errors.address_line1 = valueIsValid(value.address_line1, validations);
+    errors.suburb = valueIsValid(value.suburb, validations);
+    errors.state = valueIsValid(value.state, validations);
+    errors.postcode = valueIsValid(value.postcode, validations);
+    var hasErrors = false;
+    for (var key in errors) {
+      if (errors[key].length > 0) {
+        this.setState({ 'errors': errors });
+        hasErrors = true;
+        break;
+      }
+    }
+    // no verifications for address field
+    if (!hasErrors) { self.props.handleEnter(); }
+  };
 
   render() {
-    const { isDisabled, isReadOnly, autoFocus, onFocus, onBlur } = this.props;
+    const { value } = this.props;
+    const { isDisabled } = this.state;
     const { primaryColour } = this.context;
-    const { suburb, state, postcode } = this.state;
-    var optionals = {};
-
-    if (isDisabled) {
-      optionals['disabled'] = 'disabled';
-    }
-
-    if (isReadOnly) {
-      optionals['readOnly'] = true;
-    }
-
-    if (typeof primaryColour !== 'undefined') {
-      optionals['style'] = {
-        color: primaryColour
-      };
-    }
-
+    const that = this;
     return (
-      <div className={styles.addressWrapper}>
+      <div>
         <Row>
           <Col md={4} sm={6}>
             <FloatTextInput
               label="Unit number"
+              value={value.unit_number}
+              errors={this.state.errors.unit_number}
+              isDisabled={isDisabled}
               onChange={this.handleChange}
-              onFocus={onFocus}
-              onBlur={onBlur}
-              value={this.state.unit_number}
-              name="unitNumberInput"
+              onEnterKey={function () { that.onEnterKeyDown('address_line1'); }}
+              name="unit_number"
+              ref="unit_number"
               primaryColour={primaryColour}
-              ref="unitNumberInput"
             />
           </Col>
           <Col md={8} sm={12}>
             <FloatTextInput
               label="Address Line 1"
-              autoFocus={autoFocus && this.state.address_line1.length === 0}
+              value={value.address_line1}
+              errors={this.state.errors.address_line1}
+              isDisabled={isDisabled}
+              autoFocus={value.address_line1.length === 0}
               onChange={this.handleChange}
               onFocus={this.handleFocusAddressLine1}
-              onBlur={onBlur}
-              value={this.state.address_line1}
-              name="addressLine1Input"
+              onEnterKey={function () { that.onEnterKeyDown('suburb'); }}
+              name="address_line1"
+              ref="address_line1"
               primaryColour={primaryColour}
-              ref="addressLine1Input"
-              refName="addressLine1Input" />
+            />
           </Col>
         </Row>
         <Row>
           <Col sm={6}>
             <FloatTextInput
               label="City"
+              value={value.suburb}
+              errors={this.state.errors.suburb}
+              isDisabled={isDisabled}
               onChange={this.handleChange}
-              onFocus={onFocus}
-              onBlur={onBlur}
-              value={suburb}
-              name="suburbInput"
-              ref="suburbInput"
+              onEnterKey={function () { that.onEnterKeyDown('state'); }}
+              name="suburb"
+              ref="suburb"
+              primaryColour={primaryColour}
             />
           </Col>
           <Col sm={6}>
             <FloatTextInput
               label="State"
+              value={value.state}
+              errors={this.state.errors.state}
+              isDisabled={isDisabled}
               onChange={this.handleChange}
-              onFocus={onFocus}
-              onBlur={onBlur}
-              value={state}
-              name="stateInput"
-              ref="stateInput"
+              onEnterKey={function () { that.onEnterKeyDown('postcode'); }}
+              name="state"
+              ref="state"
+              primaryColour={primaryColour}
             />
           </Col>
         </Row>
@@ -283,12 +281,14 @@ class AddressInput extends Component {
           <Col md={4} sm={6}>
             <FloatTextInput
               label="Postal Code"
+              value={value.postcode}
+              errors={this.state.errors.postcode}
+              isDisabled={isDisabled}
               onChange={this.handleChange}
-              onBlur={onBlur}
-              value={postcode}
-              name="postcodeInput"
+              onEnterKey={function () { that.onEnterKeyDown(); }}
+              name="postcode"
+              ref="postcode"
               primaryColour={primaryColour}
-              ref="postcodeInput"
             />
           </Col>
         </Row>
@@ -297,4 +297,4 @@ class AddressInput extends Component {
   }
 }
 
-export default AddressInput;
+export default AddressQuestion;
