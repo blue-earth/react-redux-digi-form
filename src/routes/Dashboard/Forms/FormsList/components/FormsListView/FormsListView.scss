@@ -21,11 +21,10 @@ $slt-border-color:          rgba(204, 204, 204, .3);
 }
 
 .columnID {
-  width: auto;
-  max-width: 15%;
+  width: 120px;
 }
 .columnName {
-  width: 30%;
+  width: 40%;
   font-weight: 700;
 }
 .columnCreatedBy {
@@ -35,16 +34,15 @@ $slt-border-color:          rgba(204, 204, 204, .3);
 }
 .columnCreated {
   width: auto;
-  max-width: 10%;
+  max-width: 20%;
 }
 .columnStatus {
   width: auto;
-  max-width: 10%;
+  max-width: 20%;
   text-align: center;
 }
 .columnActions {
-  width: auto;
-  max-width: 20%;
+  width: 120px;
   border-left: 1px solid $table-line-color;
 }
 

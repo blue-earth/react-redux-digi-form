@@ -21,7 +21,7 @@
   th {
     height: 38px;
     line-height: 28px;
-    padding: 10px 15px;
+    padding: 0 15px;
     word-wrap: break-word;
     color: $text-light-color !important;
     border-bottom: none !important;
@@ -68,7 +68,7 @@
         background: $table-line-color;
         content: ' ';
         position: absolute;
-        top: 16px;
+        top: 10px;
         right: 0px;
       }
       th:nth-last-child(2):after {
