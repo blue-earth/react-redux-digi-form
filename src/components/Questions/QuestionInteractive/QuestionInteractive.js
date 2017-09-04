@@ -11,7 +11,7 @@ import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
 import DropdownQuestion from '../../QuestionTypes/DropdownQuestion';
 import MultipleChoiceQuestion from '../../QuestionTypes/MultipleChoiceQuestion';
 import StatementQuestion from '../../QuestionTypes/StatementQuestion';
-import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
+import PhoneNumberQuestion from '../../QuestionTypes/PhoneNumberQuestion';
 import DateQuestion from '../../QuestionTypes/DateQuestion';
 import AddressQuestion from '../../QuestionTypes/AddressQuestion';
 import FileUpload from '../../QuestionInputs/FileUpload';
@@ -127,7 +127,7 @@ class QuestionInteractive extends Component {
         InputComponent = NameQuestion;
         break;
       case 'PhoneNumberField':
-        InputComponent = PhoneNumberInput;
+        InputComponent = PhoneNumberQuestion;
         break;
       case 'StatementField':
         InputComponent = StatementQuestion;
