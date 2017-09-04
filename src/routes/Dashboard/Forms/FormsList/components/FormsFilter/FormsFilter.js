@@ -2,19 +2,28 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import Button from 'components/Buttons/DashboardButtons/Button';
 import SelectButton from 'components/Buttons/SelectButton';
 import { ButtonToolbar } from 'react-bootstrap';
-import { IoStatsBars, IoRefresh } from 'react-icons/lib/io';
+import Icon from 'components/Icon';
+import AppButton from 'components/Buttons/AppButton';
+import classNames from 'classnames';
 import styles from './FormsFilter.scss';
 
 class FormsFilter extends Component {
 
   static propTypes = {
+    refresh: PropTypes.func.isRequired,
     pageSize: PropTypes.number,
     setPageSize: PropTypes.func,
-    formAction: PropTypes.func,
-    selectedItems: PropTypes.array
+    selectedItems: PropTypes.array,
+    handleCreateForm: PropTypes.func.isRequired
+  }
+
+  handleCreateForm = () => {
+    this.props.handleCreateForm();
+  }
+  handleRefresh = () => {
+    this.props.refresh();
   }
 
   get paginationOptions() {
@@ -33,44 +42,35 @@ class FormsFilter extends Component {
       }
     ];
   }
-  get actionOptions() {
-    const number = this.props.selectedItems.length;
-    return [
-      {
-        key: 'delete',
-        label: 'Delete',
-        isDisabled: number === 0
-      }
-    ];
-  }
   render() {
-    const { pageSize, setPageSize, formAction } = this.props;
-    const iconStyle = {verticalAlign: 'text-bottom', marginRight: '6px'};
+    const { pageSize, setPageSize } = this.props;
     return (
       <div className={styles.filterContainer}>
         <ButtonToolbar className="pull-left">
-          <Button style="formButton">
-            <IoRefresh size={18} style={iconStyle} />
-            {' '}
-            Refresh
-          </Button>
-          <Button style="formButton">
-            <IoStatsBars size={18} style={iconStyle} />
-            {' '}
-            Customise
-          </Button>
-        </ButtonToolbar>
-        <ButtonToolbar className="pull-right">
           <SelectButton className={styles.formButton}
             optionsList={this.paginationOptions}
             label="Show"
             value={pageSize}
             onChange={setPageSize} />
-          <SelectButton className={styles.formButton}
-            optionsList={this.actionOptions}
-            value="Quick Actions"
+        </ButtonToolbar>
+        <ButtonToolbar className="pull-right">
+          <SelectButton
+            className={styles.formButton}
+            label={
+              <strong>
+                <Icon name="Refresh" height={37} width={15} className={styles.buttonIcon} />
+                {' '}
+                Refresh
+              </strong>}
             isStaticValue
-            onChange={formAction} />
+            onClick={this.handleRefresh} />
+          <AppButton
+            extraClass={classNames(styles.formButton, styles.createButton)}
+            onClick={this.handleCreateForm}>
+            <Icon name="Create" height={37} width={11} className={styles.buttonIcon} />
+            {' '}
+            Create
+          </AppButton>
         </ButtonToolbar>
         <div className="clearfix"></div>
       </div>

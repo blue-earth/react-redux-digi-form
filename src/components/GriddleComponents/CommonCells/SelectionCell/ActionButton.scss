@@ -1,0 +1,45 @@
+@import './mixins';
+@import './variables';
+
+.actionIconWrapper {
+  display: inline-block;
+  vertical-align: text-top;
+  margin: 0 9px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+:global {
+  .actionTooltip {
+    font-size: 12px;
+    .tooltip-arrow {
+      height: 0;
+    }
+    &.bottom .tooltip-arrow {
+      border-bottom-color: #CED0DA;
+      &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        left: -5px;
+        bottom: -7px;
+        width: 0;
+        height: 0;
+        border: 5px solid transparent;
+        border-bottom-color: $white;
+      }
+    }
+    &.tooltip.in {
+      opacity: 1;
+    }
+    .tooltip-inner {
+      font-weight: 400;
+      text-align: left;
+      border: 1px solid #CED0DA;
+      background-color: $white;
+      color: #354052;
+      padding: 0.5em 1em;
+      max-width: 300px;
+    }
+  }
+}

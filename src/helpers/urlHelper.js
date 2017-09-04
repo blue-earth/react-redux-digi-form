@@ -60,6 +60,9 @@ export const settingsUrl = (relativePath) =>
 export const signupUrl = (relativePath) =>
   formatUrl(`${rootPath}/${signupPath}/${relativePath}`);
 
+export const editFormUrl = (formId) =>
+  formsUrl(`${formId}/edit`);
+
 export const subHeaderType = (path) => {
 // TODO: is there a better way to figure out where we are?
   if (!path) {

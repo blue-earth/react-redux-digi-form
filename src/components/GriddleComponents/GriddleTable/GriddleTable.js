@@ -86,6 +86,13 @@ class GriddleTable extends Component {
     tableClassName: styles.resultsTable
   }
 
+  componentDidMount() {
+    this.refs.griddle.setState({
+      sortDirection: this.props.sortAscending ? 'asc': 'desc'
+    });
+    this.getExternalData();
+  }
+
   /*
    * setPage: what page is currently viewed
    * A Wrapper Component methods for External Data
@@ -101,14 +108,14 @@ class GriddleTable extends Component {
    * A Wrapper Component methods for External Data
    */
   changeSort = (sortColumn, sortAscending) => {
+    const { griddle } = this.refs;
+    griddle && griddle.setState({ sortDirection: sortAscending ? 'asc' : 'desc' });
+
     this.getExternalData({
       sortColumn,
       sortAscending
     });
-
     // Enable sort direction icon which is disabled when useExternal is set.
-    const { griddle } = this.refs;
-    griddle && griddle.setState({ sortDirection: sortAscending ? 'asc' : 'desc' });
   }
 
   /*
@@ -131,6 +138,12 @@ class GriddleTable extends Component {
 
   getExternalData(options) {
     const { fetchList } = this.props;
+    options = Object.assign(_.pick(this.props, [
+      'page', // current page number, can be overwritten by options.
+      'pageSize', // current page size, can be overwritten by options.
+      'sortColumn', // current sort column, can be overwritten by options.
+      'sortAscending' // current sort direction, can be overwritten by options.
+    ]), options);
     fetchList(options);
   }
 
@@ -183,7 +196,6 @@ class GriddleTable extends Component {
       pageSize,
       sortColumn,
       sortAscending,
-      initialSort,
       Pagination,
       tableClassName
     } = this.props;
@@ -203,7 +215,6 @@ class GriddleTable extends Component {
           resultsPerPage={pageSize}
           externalSortColumn={sortColumn}
           externalSortAscending={sortAscending}
-          initialSort={initialSort}
           useGriddleStyles={false}
           sortAscendingComponent={this.getSortIcon(true)}
           sortDescendingComponent={this.getSortIcon(false)}

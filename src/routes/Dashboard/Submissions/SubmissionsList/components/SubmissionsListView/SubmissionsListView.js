@@ -4,13 +4,13 @@ import React, {
 } from 'react';
 import {
   // ProgressHeaderCell,
-  StatusHeaderCell,
   ActionsHeaderCell,
-  // ContactInfoCell,
   StatusCell,
-  DateCell,
   ActionsCell
 } from '../CustomCells/CustomCells';
+import {
+  DateCell
+} from 'components/GriddleComponents/CommonCells';
 import SubmissionsFilter from '../SubmissionsFilter';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
@@ -118,7 +118,6 @@ class SubmissionsListView extends Component {
         locked: false,
         visible: true,
         displayName: 'Status',
-        customHeaderComponent: StatusHeaderCell,
         customComponent: StatusCell,
         cssClassName: styles.columnStatus
       },
@@ -195,7 +194,6 @@ class SubmissionsListView extends Component {
         sortColumn={sortColumn}
         sortAscending={sortAscending}
         Pagination={Pagination}
-        initialSort="response_id"
         isFetching={isFetching}
         showFilter
         useCustomFilterComponent

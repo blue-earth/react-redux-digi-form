@@ -16,37 +16,6 @@ import SubmissionStatus from '../SubmissionStatus';
 import _ from 'lodash';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import styles from './CustomCells.scss';
-import { DropdownHeaderCell, DateCell } from 'components/GriddleComponents/CommonCells/CommonCells';
-
-export { DateCell };
-
-export class ProgressHeaderCell extends DropdownHeaderCell {
-
-  get menuItems() {
-    return [
-      { key: 'new', text: 'New' },
-      { key: 'processing', text: 'Processing' },
-      { key: 'rejected', text: 'Rejected' },
-      { key: 'done', text: 'Done' }
-    ];
-  }
-
-}
-
-export class StatusHeaderCell extends DropdownHeaderCell {
-
-  get menuItems() {
-    return [
-      { key: 'abandoned', text: 'Abandoned' },
-      { key: 'unopen', text: 'Unopen' },
-      { key: 'opened', text: 'Opened' },
-      { key: 'saved', text: 'Saved' },
-      { key: 'submitted', text: 'Submitted' },
-      { key: 'autosave', text: 'Auto Save' }
-    ];
-  }
-
-}
 
 export class ActionsHeaderCell extends Component {
   static propTypes = {

@@ -5,15 +5,21 @@ import { buildQueryString } from 'helpers/pureFunctions';
 import { getPageQueryParamsObject } from 'helpers/pageListingHelpers';
 import { createAction, handleActions } from 'redux-actions';
 import _ from 'lodash';
+import { goTo } from './router';
+import { editFormUrl } from 'helpers/urlHelper';
+import { hide } from 'redux-modal';
 
 export const RECEIVE_FORMSLIST = 'RECEIVE_FORMSLIST';
 export const REQUEST_FORMSLIST = 'REQUEST_FORMSLIST';
 export const DONE_FETCHING_FORMSLIST = 'DONE_FETCHING_FORMSLIST';
 export const SELECT_FORM_ITEMS = 'SELECT_FORM_ITEMS';
 
-const SET_PAGE_SIZE = 'SET_PAGE_SIZE';
-const NEXT_PAGE = 'NEXT_PAGE';
-const PREVIOUS_PAGE = 'PREVIOUS_PAGE';
+const REQUEST_SEND_FORM_LINK = 'REQUEST_SEND_FORM_LINK';
+const DONE_SEND_FORM_LINK = 'DONE_SEND_FORM_LINK';
+
+const SET_FORMSLIST_PAGE_SIZE = 'SET_FORMSLIST_PAGE_SIZE';
+const NEXT_FORMSLIST_PAGE = 'NEXT_FORMSLIST_PAGE';
+const PREVIOUS_FORMSLIST_PAGE = 'PREVIOUS_FORMSLIST_PAGE';
 
 export const INIT_FORMSLIST_STATE = {
   id: 0,
@@ -23,8 +29,9 @@ export const INIT_FORMSLIST_STATE = {
   pageSize: 5, // indicates number of items per page.
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: 'id', // indicates the column name to sort by
-  sortAscending: true, // indicates the sort direction (true: ascending | false: descending)
-  selectedItems: [] // holds the selected items id.
+  sortAscending: false, // indicates the sort direction (true: ascending | false: descending)
+  selectedItems: [], // holds the selected items id.
+  isPageBusy: false // indicates the busy status of send form link
 };
 
 // ------------------------------------
@@ -42,20 +49,23 @@ export const receiveFormsList = createAction(RECEIVE_FORMSLIST);
 // ------------------------------------
 export const doneFetchingFormsList = createAction(DONE_FETCHING_FORMSLIST);
 
+export const requestSendFormLink = createAction(REQUEST_SEND_FORM_LINK);
+export const doneSendFormLink = createAction(DONE_SEND_FORM_LINK);
+
 // ------------------------------------
 // Action: selectItems
 // ------------------------------------
 export const selectItems = createAction(SELECT_FORM_ITEMS);
 
-const goToNextPage = createAction(NEXT_PAGE);
-const goToPreviousPage = createAction(PREVIOUS_PAGE);
+const goToNextPage = createAction(NEXT_FORMSLIST_PAGE);
+const goToPreviousPage = createAction(PREVIOUS_FORMSLIST_PAGE);
 
-export const setPageSize = createAction(SET_PAGE_SIZE);
+export const setPageSize = createAction(SET_FORMSLIST_PAGE_SIZE);
 export const next = () => {
   return (dispatch, getState) => {
     dispatch(goToNextPage());
     dispatch(fetchFormsList({
-      page: getState().submissionsList.page
+      page: getState().formsList.page
     }));
   };
 };
@@ -63,7 +73,7 @@ export const previous = () => {
   return (dispatch, getState) => {
     dispatch(goToPreviousPage());
     dispatch(fetchFormsList({
-      page: getState().submissionsList.page
+      page: getState().formsList.page
     }));
   };
 };
@@ -83,6 +93,113 @@ export const fetchFormsList = (options) => {
     dispatch(requestFormsList());
     dispatch(processFetchFormsList(options));
   };
+};
+
+// ------------------------------------
+// Action: ArchiveForm
+// ------------------------------------
+export const archiveForm = (id) => {
+  return (dispatch, getState) => {
+    dispatch(processArchiveForm(id));
+  };
+};
+
+export const archiveForms = (items) => {
+  return (dispatch, getState) => {
+    items.map((item) => {
+      dispatch(processArchiveForm(item));
+    });
+  };
+};
+
+const processArchiveForm = (id) => {
+  var apiURL = `${API_URL}/form_document/api/form/${id}/archive/`;
+  const body = {};
+  const fetchParams = assignDefaults({
+    method: 'DELETE',
+    body
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(fetchFormsList());
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+    };
+  };
+
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+// ------------------------------------
+// Action: DuplicateForm
+// ------------------------------------
+export const duplicateForm = (id) => {
+  return (dispatch, getState) => {
+    dispatch(processDuplicateForm(id));
+  };
+};
+
+const processDuplicateForm = (id) => {
+  const apiURL = `${API_URL}/form_document/api/form/${id}/duplicate/`;
+  const body = {};
+  const fetchParams = assignDefaults({
+    method: 'POST',
+    body
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(goTo(editFormUrl(value.id)));
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      // Todo: Handler for failed duplicate form
+    };
+  };
+
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+export const sendFormLink = (id, email, firstName, lastName) => {
+  return (dispatch, getState) => {
+    dispatch(requestSendFormLink());
+    dispatch(processSendForm(id, email, firstName, lastName));
+  };
+};
+
+const processSendForm = (id, email, firstName, lastName) => {
+  const apiURL = `${API_URL}/form_document/api/form/${id}/email_form_tracking_link/`;
+  let body = {
+    email
+  };
+  if (firstName) {
+    Object.assign(body, {first_name: firstName});
+  }
+  if (lastName) {
+    Object.assign(body, {last_name: lastName});
+  }
+  const fetchParams = assignDefaults({
+    method: 'POST',
+    body
+  });
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(doneSendFormLink());
+      dispatch(hide('sendFormLinkModal'));
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      // Todo: Handler for failed send form link
+      dispatch(doneSendFormLink());
+    };
+  };
+  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
 };
 
 // ------------------------------------
@@ -151,6 +268,9 @@ const processFetchFormsList = (options) => {
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneFetchingFormsList()); // Hide loading spinner
+      if (options.page !== 1) {
+        dispatch(fetchFormsList({page: options.page - 1}));
+      }
     };
   };
 
@@ -166,6 +286,7 @@ const processReceiveFormsList = (res, options) => {
 
   return (dispatch, getState) => {
     dispatch(receiveFormsList({
+      selectedItems: [],
       page: options.page || 1,
       pageSize: options.pageSize,
       sortColumn: options.sortColumn,
@@ -194,21 +315,29 @@ const formsListReducer = handleActions({
     Object.assign({}, state, {
       isFetching: false
     }),
+  REQUEST_SEND_FORM_LINK: (state, action) =>
+    Object.assign({}, state, {
+      isPageBusy: true
+    }),
+  DONE_SEND_FORM_LINK: (state, action) =>
+    Object.assign({}, state, {
+      isPageBusy: false
+    }),
 
   SELECT_FORM_ITEMS: (state, action) =>
     Object.assign({}, state, {
       selectedItems: action.payload
     }),
-  SET_PAGE_SIZE: (state, action) =>
+  SET_FORMSLIST_PAGE_SIZE: (state, action) =>
     Object.assign({}, state, {
       pageSize: parseInt(action.payload),
       page: 1
     }),
-  NEXT_PAGE: (state, action) =>
+  NEXT_FORMSLIST_PAGE: (state, action) =>
     Object.assign({}, state, {
       page: state.page + 1
     }),
-  PREVIOUS_PAGE: (state, action) =>
+  PREVIOUS_FORMSLIST_PAGE: (state, action) =>
     Object.assign({}, state, {
       page: state.page - 1
     })

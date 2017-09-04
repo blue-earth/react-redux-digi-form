@@ -19,6 +19,12 @@ import Statement from './Statement';
 import Upload from './Upload';
 import StandardInput from './StandardInput';
 import BlockInput from './BlockInput';
+import Refresh from './Refresh';
+import Create from './Create';
+import Send from './Send';
+import File from './File';
+import BoxIn from './BoxIn';
+import Trash from './Trash';
 
 export default class Icon extends Component {
 
@@ -46,7 +52,14 @@ export default class Icon extends Component {
       Statement: <Statement />,
       Upload: <Upload />,
       StandardInput: <StandardInput />,
-      BlockInput: <BlockInput />
+      BlockInput: <BlockInput />,
+      Refresh: <Refresh />,
+      Create: <Create />,
+      Send: <Send />,
+      Duplicate: <File />,
+      Archive: <BoxIn />,
+      Trash: <Trash />,
+      Delete: <Trash />
     };
     return (
       <BaseIcon {...this.props}>
