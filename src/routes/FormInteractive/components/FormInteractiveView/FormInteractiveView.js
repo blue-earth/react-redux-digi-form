@@ -12,6 +12,7 @@ import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import FormEnterButton from 'components/Buttons/FormEnterButton';
 import { MdKeyboardBackspace } from 'react-icons/lib/md';
 import {
+  compileTemplate,
   getContextFromAnswer,
   shouldDisableNextButton,
   shouldDisablePrevButton,
@@ -93,15 +94,6 @@ class FormInteractiveView extends Component {
     };
   }
 
-  compileTemplate(template, context) {
-    if (template) {
-      var t = Hogan.compile(template);
-      return t.render(context);
-    } else {
-      return '';
-    }
-  }
-
   valueIsVerified() {
     const { currentQuestion, verificationStatus, isVerifying } = this.props;
     if (isVerifying) return false;
@@ -172,8 +164,8 @@ class FormInteractiveView extends Component {
       if (typeof prefill === 'object') optionals['value'] = prefill.value;
     }
     const finalQuestion = _.merge({}, question, {
-      questionInstruction: this.compileTemplate(question.questionInstruction, context),
-      questionDescription: this.compileTemplate(question.questionDescription, context)
+      questionInstruction: compileTemplate(question.questionInstruction, context),
+      questionDescription: compileTemplate(question.questionDescription, context)
     });
     const filteredVerifications = _.filter(verificationStatus, { id: question.id });
     return (
@@ -212,7 +204,7 @@ class FormInteractiveView extends Component {
       <div className={styles.prevQuestionRow}>
         <div className={styles.prevQuestionCell}>
           <h3 className={styles.neighborInstruction}>
-            {this.compileTemplate(question.questionInstruction, context)}
+            {compileTemplate(question.questionInstruction, context)}
           </h3>
           {answer &&
             <div className={styles.prevQuestionAnswer}>
@@ -240,7 +232,7 @@ class FormInteractiveView extends Component {
       <div className={styles.nextQuestionRow}>
         <div className={styles.nextQuestionCell}>
           <h3 className={styles.neighborInstruction}>
-            {this.compileTemplate(question.questionInstruction, context)}
+            {compileTemplate(question.questionInstruction, context)}
           </h3>
         </div>
       </div>
