@@ -2,7 +2,10 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import styles from './DropdownQuestion.scss';
+import Dropdown from '../../QuestionInputs/Dropdown';
+import {
+  valueIsValid
+} from 'helpers/validationHelper';
 
 class DropdownQuestion extends Component {
 
@@ -13,51 +16,52 @@ class DropdownQuestion extends Component {
   static propTypes = {
     compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.string,
-    storeAnswer: PropTypes.func.isRequired,
     handleEnter: PropTypes.func.isRequired,
-    changeCurrentState: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
     value: ''
   };
 
-  handleChange = (e) => {
-    const value = e.target.value;
-    var id = this.props.compiledQuestion.id;
-    this.props.changeCurrentState({
-      answerValue: value
-    });
-    this.props.storeAnswer({
-      id,
-      value
-    });
-    this.props.handleEnter();
+  constructor(props) {
+    super(props);
+    this.state = {
+      errors: []
+    };
+  }
+
+  handleChange = (value) => {
+    this.setState({'errors': []});
+    this.props.onChange(value);
   };
+
+  onEnterKeyDown = () => {
+    const {
+      value,
+      compiledQuestion: { validations }
+    } = this.props;
+    var errors = valueIsValid(value, validations);
+    if (errors.length > 0) {
+      this.setState({
+        'errors': errors
+      });
+      return;
+    }
+    this.props.handleEnter();
+  }
 
   render() {
     const { value, compiledQuestion: { choices } } = this.props;
-    const { primaryColour } = this.context;
-    var optionals = {};
-    if (typeof primaryColour !== 'undefined') {
-      optionals['style'] = {
-        color: primaryColour
-      };
-    }
-    console.log(choices);
-    var choicesList = choices.map((item, index) => {
-      return <option value={item.text} key={index}>{item.text}</option>;
-    });
-
-    choicesList.unshift(<option value="" key="empty_field"></option>);
-
     return (
-      <select className={styles.dropdownInput}
-        onChange={this.handleChange}
+      <Dropdown
         value={value}
-        {...optionals}>
-        {choicesList}
-      </select>
+        placeholder={this.props.compiledQuestion.placeholder}
+        errors={this.state.errors}
+        choices={choices}
+        onChange={this.handleChange}
+        onEnterKey={this.onEnterKeyDown}
+      />
     );
   }
 }
