@@ -192,11 +192,15 @@ export const sendFormLink = (id, email, firstName, lastName) => {
 
 const processSendForm = (id, email, firstName, lastName) => {
   const apiURL = `${API_URL}/form_document/api/form/${id}/email_form_tracking_link/`;
-  const body = {
-    email,
-    first_name: firstName,
-    last_name: lastName
+  let body = {
+    email
   };
+  if (firstName) {
+    Object.assign(body, {first_name: firstName});
+  }
+  if (lastName) {
+    Object.assign(body, {last_name: lastName});
+  }
   const fetchParams = assignDefaults({
     method: 'POST',
     body
