@@ -12,10 +12,12 @@ export const validateIsEmail = (value) => {
 };
 
 export const validateMinLength = (value, length) => {
+  value = value.trim();
   return (typeof value !== 'undefined' && value.length >= length);
 };
 
 export const validateMaxLength = (value, length) => {
+  value = value.trim();
   return !(typeof value !== 'undefined' && value.length > length);
 };
 
