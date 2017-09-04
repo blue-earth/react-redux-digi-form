@@ -81,6 +81,9 @@ class FloatTextInput extends Component {
     } else {
       this.refs.errorMessage.hide();
     }
+    if (props.value.length > 0) {
+      this.setState({ filled: true });
+    }
   }
 
   handleChange = (event) => {

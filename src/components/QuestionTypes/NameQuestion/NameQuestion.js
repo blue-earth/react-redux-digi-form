@@ -21,30 +21,30 @@ class NameQuestion extends Component {
   };
 
   static defaultProps = {
-    value: {fname: '', lname: ''}
+    value: {first_name: '', last_name: ''}
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      errors: {fname: [], lname: []},
+      errors: {first_name: [], last_name: []},
       isDisabled: false
     };
   }
 
   resetError = () => {
-    this.setState({'errors': {fname: [], lname: []}});
+    this.setState({'errors': {first_name: [], last_name: []}});
   }
 
   onChange = () => {
     var id = this.props.compiledQuestion.id;
     this.resetError();
     var newValue = {
-      fname: this.refs.fname.refs.input.value,
-      lname: this.refs.lname.refs.input.value
+      first_name: this.refs.first_name.refs.input.value,
+      last_name: this.refs.last_name.refs.input.value
     };
     if (this.props.compiledQuestion.includeMiddleName) {
-      newValue.mname = this.refs.mname.refs.input.value;
+      newValue.middle_name = this.refs.middle_name.refs.input.value;
     }
     this.props.changeCurrentState({
       answerValue: newValue,
@@ -67,9 +67,9 @@ class NameQuestion extends Component {
       compiledQuestion: { validations }
     } = this.props;
     var errors = this.state.errors;
-    errors.fname = valueIsValid(value.fname, validations);
-    errors.lname = valueIsValid(value.lname, validations);
-    if (errors.fname.length > 0 || errors.lname.length > 0) {
+    errors.first_name = valueIsValid(value.first_name, validations);
+    errors.last_name = valueIsValid(value.last_name, validations);
+    if (errors.first_name.length > 0 || errors.last_name.length > 0) {
       this.setState({
         'errors': errors
       });
@@ -88,11 +88,11 @@ class NameQuestion extends Component {
           <FloatTextInput
             label="First name"
             onChange={this.onChange}
-            onEnterKey={function () { that.onEnterKeyDown(includeMiddleName ? 'mname' : 'lname'); }}
-            value={this.props.value.fname}
-            errors={this.state.errors.fname}
-            name="fname"
-            ref="fname"
+            onEnterKey={function () { that.onEnterKeyDown(includeMiddleName ? 'middle_name' : 'last_name'); }}
+            value={this.props.value.first_name}
+            errors={this.state.errors.first_name}
+            name="first_name"
+            ref="first_name"
           />
         </Col>
         {includeMiddleName &&
@@ -100,10 +100,10 @@ class NameQuestion extends Component {
             <FloatTextInput
               label="Middle name"
               onChange={this.onChange}
-              onEnterKey={function () { that.onEnterKeyDown('lname'); }}
-              value={this.props.value.mname}
-              name="mname"
-              ref="mname"
+              onEnterKey={function () { that.onEnterKeyDown('last_name'); }}
+              value={this.props.value.middle_name}
+              name="middle_name"
+              ref="middle_name"
             />
           </Col>
         }
@@ -112,10 +112,10 @@ class NameQuestion extends Component {
             label="Last name"
             onChange={this.onChange}
             onEnterKey={this.onEnterKeyDown}
-            value={this.props.value.lname}
-            errors={this.state.errors.lname}
-            name="lname"
-            ref="lname"
+            value={this.props.value.last_name}
+            errors={this.state.errors.last_name}
+            name="last_name"
+            ref="last_name"
           />
         </Col>
       </Row>
