@@ -86,6 +86,7 @@ class FormsListView extends Component {
     previous: PropTypes.func.isRequired,
     duplicateForm: PropTypes.func.isRequired,
     archiveForm: PropTypes.func.isRequired,
+    archiveForms: PropTypes.func.isRequired,
     sendFormLink: PropTypes.func.isRequired,
     isPageBusy: PropTypes.bool.isRequired,
 
@@ -109,7 +110,8 @@ class FormsListView extends Component {
       toggleSelectItem,
       goTo,
       duplicateForm,
-      archiveForm
+      archiveForm,
+      archiveForms
     } = this.props;
     return [
       {
@@ -204,8 +206,10 @@ class FormsListView extends Component {
           dropdownMenus: [{
             name: 'archive',
             label: 'Archive',
-            icon: 'Archive'
+            icon: 'Archive',
+            onClick: (items) => archiveForms(items)
           }],
+          selectedItems,
           selectAllItems,
           isAllSelected: forms.length === selectedItems.length
         }

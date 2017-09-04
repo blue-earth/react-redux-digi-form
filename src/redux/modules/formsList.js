@@ -104,6 +104,14 @@ export const archiveForm = (id) => {
   };
 };
 
+export const archiveForms = (items) => {
+  return (dispatch, getState) => {
+    items.map((item) => {
+      dispatch(processArchiveForm(item));
+    });
+  };
+};
+
 const processArchiveForm = (id) => {
   var apiURL = `${API_URL}/form_document/api/form/${id}/archive/`;
   const body = {};

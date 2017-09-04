@@ -8,6 +8,7 @@ import {
   next,
   previous,
   archiveForm,
+  archiveForms,
   duplicateForm,
   deleteForm,
   sendFormLink
@@ -56,6 +57,7 @@ const mapActionCreators = {
   next,
   previous,
   archiveForm,
+  archiveForms,
   duplicateForm,
   deleteForm,
   sendFormLink,
