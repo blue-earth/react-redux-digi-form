@@ -26,8 +26,7 @@ class DropdownQuestion extends Component {
     const value = e.target.value;
     var id = this.props.compiledQuestion.id;
     this.props.changeCurrentState({
-      answerValue: value,
-      inputState: 'changed'
+      answerValue: value
     });
     this.props.storeAnswer({
       id,

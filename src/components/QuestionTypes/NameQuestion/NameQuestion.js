@@ -47,8 +47,7 @@ class NameQuestion extends Component {
       newValue.middle_name = this.refs.middle_name.refs.input.value;
     }
     this.props.changeCurrentState({
-      answerValue: newValue,
-      inputState: 'changed'
+      answerValue: newValue
     });
     this.props.storeAnswer({
       id,

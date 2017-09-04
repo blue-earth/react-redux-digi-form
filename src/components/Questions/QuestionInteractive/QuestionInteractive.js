@@ -38,14 +38,6 @@ class QuestionInteractive extends Component {
       PropTypes.object,
       PropTypes.array
     ]),
-
-    /*
-     * inputState: Redux state to keep the current input state('init', 'changed', 'focus', 'blur', 'enter').
-     */
-    inputState: PropTypes.oneOf([
-      'init', 'changed', 'enter'
-    ]).isRequired,
-
     /*
      * changeCurrentState: Redux action to change the update the current answer value on change,
      * input state to redux store.
@@ -87,8 +79,7 @@ class QuestionInteractive extends Component {
   handleChange = (value) => {
     const {changeCurrentState, storeAnswer, question: {id}} = this.props;
     changeCurrentState({
-      answerValue: value,
-      inputState: 'changed'
+      answerValue: value
     });
     storeAnswer({
       id,

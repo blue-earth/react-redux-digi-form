@@ -43,8 +43,7 @@ class StatementQuestion extends Component {
     var id = this.props.compiledQuestion.id;
     this.resetError();
     this.props.changeCurrentState({
-      answerValue: value,
-      inputState: 'changed'
+      answerValue: value
     });
     this.props.storeAnswer({
       id,

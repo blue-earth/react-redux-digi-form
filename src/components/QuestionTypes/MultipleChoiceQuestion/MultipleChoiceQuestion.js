@@ -34,8 +34,7 @@ class MultipleChoiceQuestion extends Component {
     this._resetError();
     var id = this.props.compiledQuestion.id;
     this.props.changeCurrentState({
-      answerValue: value,
-      inputState: 'changed'
+      answerValue: value
     });
     this.props.storeAnswer({
       id,

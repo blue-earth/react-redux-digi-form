@@ -52,8 +52,7 @@ export const UPDATE_ACCESS_CODE = 'UPDATE_ACCESS_CODE';
 
 export const INIT_CURRENT_QUESTION = {
   id: 0,
-  answerValue: '',
-  inputState: 'init'
+  answerValue: ''
 };
 
 // TODO: Implement the structure of form_config field.
