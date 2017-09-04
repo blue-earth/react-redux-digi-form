@@ -121,34 +121,7 @@ const processArchiveForm = (id) => {
   });
   const fetchSuccess = ({value}) => {
     return (dispatch, getState) => {
-      dispatch(fetchFormsList({page: 1}));
-    };
-  };
-
-  const fetchFail = (data) => {
-    return (dispatch, getState) => {
-    };
-  };
-
-  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
-};
-
-export const deleteForm = (id) => {
-  return (dispatch, getState) => {
-    dispatch(processDeleteForm(id));
-  };
-};
-
-const processDeleteForm = (id) => {
-  var apiURL = `${API_URL}/form_document/api/form/${id}/`;
-  const body = {};
-  const fetchParams = assignDefaults({
-    method: 'DELETE',
-    body
-  });
-  const fetchSuccess = ({value}) => {
-    return (dispatch, getState) => {
-      dispatch(fetchFormsList({page: 1}));
+      dispatch(fetchFormsList());
     };
   };
 
@@ -295,6 +268,9 @@ const processFetchFormsList = (options) => {
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneFetchingFormsList()); // Hide loading spinner
+      if (options.page !== 1) {
+        dispatch(fetchFormsList({page: options.page - 1}));
+      }
     };
   };
 
