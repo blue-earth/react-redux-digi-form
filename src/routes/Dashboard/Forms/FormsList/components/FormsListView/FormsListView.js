@@ -2,17 +2,23 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import { formsUrl, editFormUrl } from 'helpers/urlHelper';
+import {
+  formsUrl,
+  editFormUrl
+} from 'helpers/urlHelper';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import FormsFilter from '../FormsFilter';
 import SendFormLinkModal from '../SendFormLinkModal';
 import styles from './FormsListView.scss';
 import classNames from 'classnames';
-import DateCell from 'components/GriddleComponents/CommonCells/DateCell';
-import SelectionHeaderCell from 'components/GriddleComponents/CommonCells/SelectionHeaderCell';
-import SelectionCell from 'components/GriddleComponents/CommonCells/SelectionCell';
-import LinkCell from 'components/GriddleComponents/CommonCells/LinkCell';
+import {
+  DateCell,
+  LinkCell,
+  SelectionCell,
+  SelectionHeaderCell,
+  SortableHeaderCell
+} from 'components/GriddleComponents/CommonCells';
 import Icon from 'components/Icon';
 
 class FormsListView extends Component {
@@ -116,6 +122,7 @@ class FormsListView extends Component {
         idName: 'id',
         goTo,
         url: editFormUrl,
+        customHeaderComponent: SortableHeaderCell,
         cssClassName: styles.columnID
       },
       {
@@ -128,6 +135,7 @@ class FormsListView extends Component {
         idName: 'id',
         goTo,
         url: editFormUrl,
+        customHeaderComponent: SortableHeaderCell,
         cssClassName: styles.columnName
       },
       {
@@ -136,6 +144,7 @@ class FormsListView extends Component {
         locked: false,
         visible: true,
         displayName: 'Created by',
+        customHeaderComponent: SortableHeaderCell,
         cssClassName: styles.columnCreatedBy
       },
       {
@@ -145,6 +154,7 @@ class FormsListView extends Component {
         visible: true,
         displayName: 'Created',
         customComponent: DateCell,
+        customHeaderComponent: SortableHeaderCell,
         cssClassName: styles.columnCreated
       },
       {
@@ -153,6 +163,7 @@ class FormsListView extends Component {
         locked: false,
         visible: true,
         displayName: 'Status',
+        customHeaderComponent: SortableHeaderCell,
         cssClassName: styles.columnStatus
       },
       {
