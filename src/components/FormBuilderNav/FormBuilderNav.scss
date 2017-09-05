@@ -12,7 +12,7 @@
 }
 
 .breadcrumbs {
-  position: absolute;
+  display: table-cell;
   left: 25px;
   width: 25%;
   color: $grey;
@@ -35,7 +35,7 @@
 }
 
 .actions {
-  position: absolute;
+  display: table-cell;
   right: 25px;
   text-align: right;
   width: 25%;
@@ -55,6 +55,7 @@
 
 .formStepsNav {
   z-index: 10;
+  display: table-cell;
   position: relative;
   margin: 0 25%;
   padding: 0;
