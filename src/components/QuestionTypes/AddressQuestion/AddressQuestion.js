@@ -16,11 +16,13 @@ class AddressQuestion extends Component {
   static propTypes = {
     compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.object,
+    isInputLocked: PropTypes.bool,
     handleEnter: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
+    isInputLocked: false,
     value: {
       unit_number: '',
       address_line1: '',
@@ -38,8 +40,7 @@ class AddressQuestion extends Component {
         suburb: [],
         state: [],
         postcode: []
-      },
-      isDisabled: false
+      }
     };
   }
 
@@ -220,7 +221,6 @@ class AddressQuestion extends Component {
 
   render() {
     const { value } = this.props;
-    const { isDisabled } = this.state;
     const { primaryColour } = this.context;
     const that = this;
     return (
@@ -231,7 +231,7 @@ class AddressQuestion extends Component {
               label="Unit number"
               value={value.unit_number}
               errors={this.state.errors.unit_number}
-              isDisabled={isDisabled}
+              isDisabled={this.props.isInputLocked}
               onChange={this.handleChange}
               onEnterKey={function () { that.onEnterKeyDown('address_line1'); }}
               name="unit_number"
@@ -244,7 +244,7 @@ class AddressQuestion extends Component {
               label="Address Line 1"
               value={value.address_line1}
               errors={this.state.errors.address_line1}
-              isDisabled={isDisabled}
+              isDisabled={this.props.isInputLocked}
               autoFocus={value.address_line1.length === 0}
               onChange={this.handleChange}
               onFocus={this.handleFocusAddressLine1}
@@ -261,7 +261,7 @@ class AddressQuestion extends Component {
               label="City"
               value={value.suburb}
               errors={this.state.errors.suburb}
-              isDisabled={isDisabled}
+              isDisabled={this.props.isInputLocked}
               onChange={this.handleChange}
               onEnterKey={function () { that.onEnterKeyDown('state'); }}
               name="suburb"
@@ -274,7 +274,7 @@ class AddressQuestion extends Component {
               label="State"
               value={value.state}
               errors={this.state.errors.state}
-              isDisabled={isDisabled}
+              isDisabled={this.props.isInputLocked}
               onChange={this.handleChange}
               onEnterKey={function () { that.onEnterKeyDown('postcode'); }}
               name="state"
@@ -289,7 +289,7 @@ class AddressQuestion extends Component {
               label="Postal Code"
               value={value.postcode}
               errors={this.state.errors.postcode}
-              isDisabled={isDisabled}
+              isDisabled={this.props.isInputLocked}
               onChange={this.handleChange}
               onEnterKey={function () { that.onEnterKeyDown(); }}
               name="postcode"
