@@ -87,6 +87,24 @@ class QuestionInteractive extends Component {
     });
   };
 
+  validateAndVerify(successCb) {
+    const inputComponent = this.refs.inputComponent;
+    inputComponent.validate(function (result) {
+      if (result) {
+        // continue with verification
+        if (typeof inputComponent.verify === 'function') {
+          inputComponent.verify(function (result) {
+            if (result) {
+              successCb();
+            }
+          });
+        } else {
+          successCb();
+        }
+      }
+    });
+  }
+
   getQuestionInputComponent() {
     var InputComponent = null;
     const { value, question, question: { type },
@@ -156,7 +174,7 @@ class QuestionInteractive extends Component {
       default:
         InputComponent = (<p>`Question input not found for ${type}`</p>);
     }
-    return (<InputComponent {...props} />);
+    return (<InputComponent ref="inputComponent" {...props} />);
   }
 
   render() {

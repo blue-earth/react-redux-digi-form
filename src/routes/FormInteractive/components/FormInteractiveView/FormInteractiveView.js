@@ -123,14 +123,7 @@ class FormInteractiveView extends Component {
   };
 
   handleEnter = () => {
-    // We only do validation and verification on enter, onChange submits the answer if valid.
-    const { handleEnter, currentQuestion } = this.props;
-    const { questions } = this.state;
-    const question = findItemById(questions, currentQuestion.id);
-    if (!question) {
-      return false;
-    }
-    handleEnter();
+    this.refs.questionInteractive.validateAndVerify(() => this.handleEnter());
   };
 
   shouldPrefillValue() {
@@ -161,6 +154,7 @@ class FormInteractiveView extends Component {
       <div className={styles.currentQuestionRow}>
         <div className={styles.currentQuestionCell}>
           <QuestionInteractive
+            ref="questionInteractive"
             question={finalQuestion}
             key={question.id}
             verifications={filteredVerifications}

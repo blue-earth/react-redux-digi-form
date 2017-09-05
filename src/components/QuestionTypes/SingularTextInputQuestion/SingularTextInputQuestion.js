@@ -51,42 +51,50 @@ class SingularTextInputQuestion extends Component {
     });
   };
 
-  onEnterKeyDown = () => {
-    var self = this;
+  validate(cb) {
     const {
       value,
-      compiledQuestion,
-      compiledQuestion: { validations, verifications }
+      compiledQuestion: { validations }
     } = this.props;
     var errors = valueIsValid(value, validations);
     if (errors.length > 0) {
       this.setState({
         'errors': errors
       });
-      return;
+      return cb(false);
+    } else {
+      return cb(true);
     }
+  }
 
-    if (compiledQuestion.verifications && compiledQuestion.verifications.length) {
+  verify(cb) {
+    const {
+      value,
+      compiledQuestion: { verifications }
+    } = this.props;
+    var self = this;
+    if (verifications && verifications.length) {
       // Check Verifications
       this.setState({
         'isDisabled': true
       });
       var verificationPromises = aggregateVerifications(verifications, value);
       Promise.all(verificationPromises)
-        .then(function (verifications) {
+        .then(function (results) {
           // todo: verifications format is [boolean...]
           // check they are all verified
-          self.props.handleEnter();
+          cb(true);
         }, function (errors) {
+          cb(false);
           self.setState({
             'errors': errors,
             'isDisabled': false
           });
         });
     } else {
-      self.props.handleEnter();
+      cb(true);
     }
-  };
+  }
 
   render() {
     return (
