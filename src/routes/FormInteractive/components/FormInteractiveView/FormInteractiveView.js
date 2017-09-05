@@ -7,7 +7,6 @@ import {
   RightNavButton
 } from '../NavButton';
 import classNames from 'classnames';
-import Hogan from 'hogan.js';
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import FormEnterButton from 'components/Buttons/FormEnterButton';
 import { MdKeyboardBackspace } from 'react-icons/lib/md';
