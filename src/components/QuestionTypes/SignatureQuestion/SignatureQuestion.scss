@@ -1,0 +1,13 @@
+@import './mixins';
+
+.signatureImage {
+  max-height: 324px;
+  min-width: 432px;
+  @include media('<sm') {
+    max-width: 100%;
+    min-width: 0;
+  }
+  &:focus {
+    outline: none;
+  }
+}

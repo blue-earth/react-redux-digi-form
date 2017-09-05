@@ -165,6 +165,7 @@ class FormInteractiveView extends Component {
             getStoreAnswerByQuestionId={this.getStoreAnswerByQuestionId}
             formId={this.props.formId}
             sessionId={this.props.sessionId}
+            formTitle={this.props.title}
             {...optionals}
           />
         </div>

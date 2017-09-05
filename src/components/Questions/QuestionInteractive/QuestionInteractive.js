@@ -7,7 +7,6 @@ import QuestionInstruction from 'components/Questions/QuestionInstruction';
 import SingularTextInputQuestion from '../../QuestionTypes/SingularTextInputQuestion';
 import LongTextQuestion from '../../QuestionTypes/LongTextQuestion';
 import NameQuestion from '../../QuestionTypes/NameQuestion';
-import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
 import DropdownQuestion from '../../QuestionTypes/DropdownQuestion';
 import MultipleChoiceQuestion from '../../QuestionTypes/MultipleChoiceQuestion';
 import StatementQuestion from '../../QuestionTypes/StatementQuestion';
@@ -15,6 +14,7 @@ import PhoneNumberQuestion from '../../QuestionTypes/PhoneNumberQuestion';
 import DateQuestion from '../../QuestionTypes/DateQuestion';
 import AddressQuestion from '../../QuestionTypes/AddressQuestion';
 import FileUpload from '../../QuestionInputs/FileUpload';
+import Signature from '../../QuestionInputs/Signature/Signature';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -65,7 +65,8 @@ class QuestionInteractive extends Component {
     showModal: PropTypes.func.isRequired,
 
     formId: PropTypes.number,
-    sessionId: PropTypes.number
+    sessionId: PropTypes.number,
+    formTitle: PropTypes.string
   };
 
   static contextTypes = {
@@ -123,7 +124,8 @@ class QuestionInteractive extends Component {
       isInputLocked: this.props.isInputLocked,
       value: value,
       formId: this.props.formId,
-      sessionId: this.props.sessionId
+      sessionId: this.props.sessionId,
+      formTitle: this.props.formTitle
     };
 
     switch (type) {
@@ -170,7 +172,7 @@ class QuestionInteractive extends Component {
         InputComponent = AddressQuestion;
         break;
       case 'SignatureField':
-        InputComponent = SignatureQuestion;
+        InputComponent = Signature;
         break;
       case 'FileUploadField':
         InputComponent = FileUpload;
