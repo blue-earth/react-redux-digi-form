@@ -20,19 +20,20 @@ class SingularTextInputQuestion extends Component {
     onChange: PropTypes.func.isRequired,
     storeAnswer: PropTypes.func.isRequired,
     handleEnter: PropTypes.func.isRequired,
+    isInputLocked: PropTypes.bool,
     changeCurrentState: PropTypes.func.isRequired,
     type: PropTypes.string
   };
 
   static defaultProps = {
-    type: 'text'
+    type: 'text',
+    isInputLocked: false
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      errors: [],
-      isDisabled: false
+      errors: []
     };
   }
 
@@ -68,10 +69,6 @@ class SingularTextInputQuestion extends Component {
     } = this.props;
     var self = this;
     if (verifications && verifications.length) {
-      // Check Verifications
-      this.setState({
-        'isDisabled': true
-      });
       var verificationPromises = aggregateVerifications(verifications, value);
       Promise.all(verificationPromises)
         .then(function (results) {
@@ -81,8 +78,7 @@ class SingularTextInputQuestion extends Component {
         }, function (errors) {
           cb(false);
           self.setState({
-            'errors': errors,
-            'isDisabled': false
+            'errors': errors
           });
         });
     } else {
@@ -99,7 +95,7 @@ class SingularTextInputQuestion extends Component {
           type={this.props.type}
           errors={this.state.errors}
           value={this.props.value}
-          isDisabled={this.state.isDisabled}
+          isDisabled={this.props.isInputLocked}
         />
       </div>
     );

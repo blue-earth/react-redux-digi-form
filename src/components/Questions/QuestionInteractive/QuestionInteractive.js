@@ -48,12 +48,8 @@ class QuestionInteractive extends Component {
      * verifications: Array of verifications status for the current question, ex. EmondoEmailService
      */
     verifications: PropTypes.array,
-
-    /*
-     * isVerifying: Redux state that holds the status whether verification is in prgress
-     */
-    isVerifying: PropTypes.bool,
-
+    isInputLocked: PropTypes.bool,
+    setInputLocked: PropTypes.func,
     /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
@@ -76,6 +72,10 @@ class QuestionInteractive extends Component {
     primaryColour: PropTypes.string
   };
 
+  static defaultProps = {
+    isInputLocked: false
+  };
+
   handleChange = (value) => {
     const {changeCurrentState, storeAnswer, question: {id}} = this.props;
     changeCurrentState({
@@ -89,14 +89,18 @@ class QuestionInteractive extends Component {
 
   validateAndVerify(successCb) {
     const inputComponent = this.refs.inputComponent;
+    const { setInputLocked } = this.props;
     inputComponent.validate(function (result) {
       if (result) {
         // continue with verification
         if (typeof inputComponent.verify === 'function') {
+          console.log('setInputLocked', setInputLocked);
+          setInputLocked(true);
           inputComponent.verify(function (result) {
             if (result) {
               successCb();
             }
+            setInputLocked(false);
           });
         } else {
           successCb();
@@ -117,6 +121,7 @@ class QuestionInteractive extends Component {
       changeCurrentState: changeCurrentState,
       storeAnswer: storeAnswer,
       handleEnter: this.props.handleEnter,
+      isInputLocked: this.props.isInputLocked,
       value: value,
       formId: this.props.formId,
       sessionId: this.props.sessionId

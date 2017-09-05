@@ -45,10 +45,6 @@ class FormBuilderSteps extends Component {
      * isFetching: Redux state that indicates whether the requested form is being fetched from backend
      */
     isFetching: PropTypes.bool.isRequired,
-
-    /*
-     * isVerifying: Redux state that indicates the status whether the form is being submitted
-     */
     isSubmitting: PropTypes.bool.isRequired,
 
     /*

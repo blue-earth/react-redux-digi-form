@@ -57,10 +57,6 @@ class FormInteractiveView extends Component {
      */
     handleEnter: PropTypes.func.isRequired,
     /*
-     * isVerifying: Redux state that indicates the status whether verification is in prgress with backend
-     */
-    isVerifying: PropTypes.bool.isRequired,
-    /*
      * goToNextQuestion: Redux action to move to next question when the current answer is qualified.
      */
     goToNextQuestion: PropTypes.func.isRequired,
@@ -76,6 +72,8 @@ class FormInteractiveView extends Component {
      * showModal: redux-modal action to show modal
      */
     showModal: PropTypes.func.isRequired,
+    setInputLocked: PropTypes.func.isRequired,
+    isInputLocked: PropTypes.bool.isRequired,
     /*
      * verificationStatus: Redux state that holds the status of verification, ex. EmondoEmailService
      */
@@ -133,7 +131,7 @@ class FormInteractiveView extends Component {
 
   renderCurrentQuestion() {
     const { currentQuestion, verificationStatus, changeCurrentState,
-      answers, prefills, storeAnswer, isVerifying, showModal } = this.props;
+      answers, prefills, storeAnswer, showModal, setInputLocked, isInputLocked } = this.props;
     const { questions } = this.state;
     const question = findItemById(questions, currentQuestion.id);
     const context = getContextFromAnswer(answers);
@@ -159,9 +157,10 @@ class FormInteractiveView extends Component {
             key={question.id}
             verifications={filteredVerifications}
             changeCurrentState={changeCurrentState}
+            setInputLocked={setInputLocked}
+            isInputLocked={isInputLocked}
             storeAnswer={storeAnswer}
             handleEnter={this.handleEnter}
-            isVerifying={isVerifying}
             showModal={showModal}
             getStoreAnswerByQuestionId={this.getStoreAnswerByQuestionId}
             formId={this.props.formId}
@@ -223,16 +222,16 @@ class FormInteractiveView extends Component {
   }
 
   renderEnterbutton() {
-    const { isVerifying } = this.props;
+    const { isInputLocked } = this.props;
     const mobileEnterButton = (<FormEnterButton
       onClick={this.handleEnter}
-      isDisabled={isVerifying}
+      isDisabled={isInputLocked}
       displayIcon={false}
       buttonLabel="SUBMIT"
     />);
     const desktopEnterButton = (<FormEnterButton
       onClick={this.handleEnter}
-      isDisabled={isVerifying}
+      isDisabled={isInputLocked}
     />);
     return (
       <div>
@@ -243,18 +242,18 @@ class FormInteractiveView extends Component {
   }
 
   renderNavButtons() {
-    const { form, currentQuestion, isVerifying, goToPrevQuestion, goToNextQuestion } = this.props;
+    const { form, currentQuestion, isInputLocked, goToPrevQuestion, goToNextQuestion } = this.props;
 
     return (
       <div className={styles.navButtonsWrapper}>
         <ul className={styles.arrowNavs}>
           <li>
             <LeftNavButton className={styles.navButton} onClick={goToPrevQuestion}
-              isDisabled={shouldDisablePrevButton(form, currentQuestion.id) || isVerifying} />
+              isDisabled={shouldDisablePrevButton(form, currentQuestion.id) || isInputLocked} />
           </li>
           <li>
             <RightNavButton className={styles.navButton} onClick={goToNextQuestion}
-              isDisabled={shouldDisableNextButton(form, currentQuestion.id) || isVerifying} />
+              isDisabled={shouldDisableNextButton(form, currentQuestion.id) || isInputLocked} />
           </li>
           <li className={styles.enterWrapper}>
             <div className={this.enterButtonClass}>

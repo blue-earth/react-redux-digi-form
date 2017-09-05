@@ -67,12 +67,6 @@ class FormInteractive extends Component {
      * isFetchingForm: Redux state that indicates whether the requested form is being fetched from backend
      */
     isFetchingForm: PropTypes.bool.isRequired,
-
-    /*
-     * isVerifying: Redux state that indicates the status whether verification is in prgress with backend
-     */
-    isVerifying: PropTypes.bool.isRequired,
-
     /*
      * changeCurrentState: Redux action to change the update the current answer value on change,
      * input state to redux store.
@@ -169,6 +163,8 @@ class FormInteractive extends Component {
      */
     updateAccessCode: PropTypes.func,
 
+    setInputLocked: PropTypes.func.isRequired,
+    isInputLocked: PropTypes.bool.isRequired,
     /*
      * isAccessCodeProtected: Redux state to indicate the form is access code protected.
      */
