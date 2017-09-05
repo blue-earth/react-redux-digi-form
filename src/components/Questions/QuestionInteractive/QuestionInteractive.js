@@ -94,7 +94,6 @@ class QuestionInteractive extends Component {
       if (result) {
         // continue with verification
         if (typeof inputComponent.verify === 'function') {
-          console.log('setInputLocked', setInputLocked);
           setInputLocked(true);
           inputComponent.verify(function (result) {
             if (result) {
