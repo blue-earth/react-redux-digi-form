@@ -184,11 +184,14 @@ class AddressQuestion extends Component {
   };
 
   onEnterKeyDown = (nextRef=false) => {
-    var self = this;
     if (nextRef) {
       this.refs[nextRef].refs.input.focus();
       return;
     }
+    this.props.handleEnter();
+  };
+
+  validate(cb) {
     const {
       value,
       compiledQuestion: { validations }
@@ -206,9 +209,14 @@ class AddressQuestion extends Component {
         break;
       }
     }
-    // no verifications for address field
-    if (!hasErrors) { self.props.handleEnter(); }
-  };
+    if (hasErrors) {
+      return cb(false);
+    } else {
+      return cb(true);
+    }
+  }
+
+  // no verifications currently required for this question type
 
   render() {
     const { value } = this.props;
