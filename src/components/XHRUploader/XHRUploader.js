@@ -136,10 +136,9 @@ export default class XHRUploader extends React.Component {
   }
 
   cancelFile() {
-    // this.xhr.upload.removeEventListener('progress');
-    // this.xhr.removeEventListener('load');
     this.xhr.abort();
     this.xhr = null;
+    this.refs.fileInput.value = '';
     this.setState({ item: null });
     const { onCancel } = this.props;
     onCancel();
@@ -217,8 +216,6 @@ export default class XHRUploader extends React.Component {
     const fileSize = fileSizeWithUnit(file.size);
     const timeLeft = 1; // TODO: calculate time left
     const fileSizeUploaded = fileSizeWithUnit(file.size * item.progress / 100);
-
-    // const progress = this.state.progress;
     return (
       <div className={styles.fileset}>
         <div key={item.index}>
@@ -227,7 +224,7 @@ export default class XHRUploader extends React.Component {
               <FaFileTextO />
             </span>
             <span className={styles.fileDetails}>
-              <span className={styles.fileName}>{file.name}</span>
+              <div className={styles.fileName}>{file.name}</div>
               <span className={styles.fileSize}>{fileSize}</span>
             </span>
             <a className={styles.removeButton} tabIndex={0}
