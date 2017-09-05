@@ -25,6 +25,7 @@ class NameFieldAdvancedTab extends Component {
       <div>
         <EditSection>
           <CollapsibleSection
+            isInitiallyOpened={false}
             title={'Default value'}
             onToggleClosed={function () { setQuestionInfo({'value': ''}); }}
           >
@@ -36,6 +37,7 @@ class NameFieldAdvancedTab extends Component {
         </EditSection>
         <EditSection>
           <CollapsibleSection
+            isInitiallyOpened={false}
             title={'Placeholder text'}
             onToggleClosed={function () { setQuestionInfo({'placeholder': ''}); }}
           >
