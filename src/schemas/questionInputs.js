@@ -51,6 +51,49 @@ export const shortTextFieldSchema = {
   ]
 };
 
+export const nameFieldSchema = {
+  name: 'NameField',
+  componentName: 'NameInput',
+  displayText: 'Name',
+  displayIcon: 'ShortText',
+  inputType: 'text',
+  validations: [
+    'is_required'
+  ],
+  logicOperations: [
+    'equal_to',
+    'not_equal_to',
+    'begins_with',
+    'ends_with',
+    'contains',
+    'does_not_contain'
+  ],
+  selectionTypes: [
+    formBuilderBoxMappingType.STANDARD,
+    formBuilderBoxMappingType.BLOCK
+  ],
+  group: STANDARD,
+  availableFields: [
+    [
+      {
+        'displayName': 'First name',
+        'key': 'first_name',
+        'group': formBuilderBoxMappingType.STANDARD
+      },
+      {
+        'displayName': 'Middle name',
+        'key': 'middle_name',
+        'group': formBuilderBoxMappingType.STANDARD
+      },
+      {
+        'displayName': 'Last name',
+        'key': 'last_name',
+        'group': formBuilderBoxMappingType.STANDARD
+      }
+    ]
+  ]
+};
+
 export const emailFieldSchema = {
   name: 'EmailField',
   componentName: 'ShortTextInput',
@@ -393,6 +436,7 @@ export const signatureFieldSchema = {
 
 export const questionInputSchemas = {
   shortTextFieldSchema,
+  nameFieldSchema,
   emailFieldSchema,
   phoneNumberFieldSchema,
   addressFieldSchema,
@@ -412,6 +456,8 @@ export function getQuestionInputSchema(questionTypeName) {
   switch (questionTypeName) {
     case 'ShortTextField':
       return shortTextFieldSchema;
+    case 'NameField':
+      return nameFieldSchema;
     case 'EmailField':
       return emailFieldSchema;
     case 'LongTextField':
