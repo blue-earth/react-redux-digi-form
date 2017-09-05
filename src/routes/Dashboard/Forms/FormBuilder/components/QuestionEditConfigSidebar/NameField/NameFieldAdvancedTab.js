@@ -35,17 +35,6 @@ class NameFieldAdvancedTab extends Component {
               placeholder="Select name" />
           </CollapsibleSection>
         </EditSection>
-        <EditSection>
-          <CollapsibleSection
-            isInitiallyOpened={false}
-            title={'Placeholder text'}
-            onToggleClosed={function () { setQuestionInfo({'placeholder': ''}); }}
-          >
-            <TextInput value={currentElement.question.placeholder} fullWidth
-              onChange={function (newValue) { setQuestionInfo({'placeholder': newValue}); }}
-            />
-          </CollapsibleSection>
-        </EditSection>
       </div>
     );
   }
