@@ -6,30 +6,23 @@ import LongTextInput from '../../QuestionInputs/LongTextInput';
 import {
   valueIsValid
 } from 'helpers/validationHelper';
-import {
-  aggregateVerifications
-} from 'helpers/verificationHelpers';
 
 class LongTextQuestion extends Component {
   static propTypes = {
     compiledQuestion: PropTypes.object.isRequired,
-    value: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
-    handleEnter: PropTypes.func.isRequired,
-    type: PropTypes.string
+    value: PropTypes.string,
+    isInputLocked: PropTypes.bool,
+    onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    type: 'text'
+    isInputLocked: false
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      errors: [],
-      isDisabled: false
+      errors: []
     };
   }
 
@@ -37,58 +30,38 @@ class LongTextQuestion extends Component {
     this.setState({'errors': []});
   }
 
-  onChange = (value) => {
+  handleChange = (value) => {
     this.resetError();
     this.props.onChange(value);
   };
 
-  onEnterKeyDown = () => {
-    var self = this;
+  validate(cb) {
     const {
       value,
-      compiledQuestion,
-      compiledQuestion: { validations, verifications }
+      compiledQuestion: { validations }
     } = this.props;
     var errors = valueIsValid(value, validations);
     if (errors.length > 0) {
       this.setState({
         'errors': errors
       });
-      return;
-    }
-
-    if (compiledQuestion.verifications && compiledQuestion.verifications.length) {
-      // Check Verifications
-      this.setState({
-        'isDisabled': true
-      });
-      var verificationPromises = aggregateVerifications(verifications, value);
-      Promise.all(verificationPromises)
-        .then(function (verifications) {
-          // todo: verifications format is [boolean...]
-          // check they are all verified
-          self.props.handleEnter();
-        }, function (errors) {
-          self.setState({
-            'errors': errors,
-            'isDisabled': false
-          });
-        });
+      return cb(false);
     } else {
-      self.props.handleEnter();
+      return cb(true);
     }
-  };
+  }
+
+  // no verifications currently required for this question type
 
   render() {
     return (
       <div style={{'overflow': 'hidden', 'width': '100%'}}>
         <LongTextInput
-          onEnterKey={this.onEnterKeyDown}
-          onChange={this.onChange}
+          onChange={this.handleChange}
           errors={this.state.errors}
           value={this.props.value}
           placeholder={this.props.compiledQuestion.placeholder}
-          isDisabled={this.state.isDisabled}
+          isDisabled={this.props.isInputLocked}
         />
       </div>
     );
