@@ -75,7 +75,6 @@ class FloatTextInput extends Component {
   }
 
   componentWillReceiveProps(props) {
-    console.log('componentWillReceiveProps, errors', props.errors);
     if (props.errors.length > 0) {
       this.refs.errorMessage.show();
     } else {
