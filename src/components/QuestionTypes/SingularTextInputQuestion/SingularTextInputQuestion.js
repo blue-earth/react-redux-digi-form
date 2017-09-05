@@ -17,6 +17,7 @@ class SingularTextInputQuestion extends Component {
       PropTypes.string,
       PropTypes.number
     ]),
+    onChange: PropTypes.func.isRequired,
     storeAnswer: PropTypes.func.isRequired,
     handleEnter: PropTypes.func.isRequired,
     changeCurrentState: PropTypes.func.isRequired,
@@ -40,15 +41,8 @@ class SingularTextInputQuestion extends Component {
   }
 
   onChange = (value) => {
-    var id = this.props.compiledQuestion.id;
     this.resetError();
-    this.props.changeCurrentState({
-      answerValue: value
-    });
-    this.props.storeAnswer({
-      id,
-      value
-    });
+    this.props.onChange(value);
   };
 
   validate(cb) {
@@ -100,7 +94,7 @@ class SingularTextInputQuestion extends Component {
     return (
       <div style={{'overflow': 'hidden', 'width': '100%'}}>
         <FloatTextInput
-          onEnterKey={this.onEnterKeyDown}
+          onEnterKey={this.props.handleEnter}
           onChange={this.onChange}
           type={this.props.type}
           errors={this.state.errors}
