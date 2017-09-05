@@ -209,7 +209,7 @@ class FormBuilder extends Component {
 
   getAvailableSelectionFields = () => {
     const questionTypeName = this.props.currentElement.question.type;
-    if (questionTypeName === 'CheckboxField') {
+    if (questionTypeName === 'CheckboxField' || questionTypeName === 'MultipleChoiceField') {
       var choices = this.props.currentElement.question.choices;
       if (!choices || !choices.length > 0) {
         return [];

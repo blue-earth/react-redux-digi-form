@@ -232,7 +232,7 @@ export const dateFieldSchema = {
 };
 
 export const multipleChoiceSchema = {
-  name: 'MultipleChoice',
+  name: 'MultipleChoiceField',
   componentName: 'MultipleChoice',
   displayText: 'Multiple Choice',
   displayIcon: 'List',
