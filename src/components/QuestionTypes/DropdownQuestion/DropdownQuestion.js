@@ -16,12 +16,14 @@ class DropdownQuestion extends Component {
   static propTypes = {
     compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.string,
+    isInputLocked: PropTypes.bool,
     handleEnter: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    value: ''
+    value: '',
+    isInputLocked: false
   };
 
   constructor(props) {
@@ -36,7 +38,7 @@ class DropdownQuestion extends Component {
     this.props.onChange(value);
   };
 
-  onEnterKeyDown = () => {
+  validate(cb) {
     const {
       value,
       compiledQuestion: { validations }
@@ -46,10 +48,13 @@ class DropdownQuestion extends Component {
       this.setState({
         'errors': errors
       });
-      return;
+      return cb(false);
+    } else {
+      return cb(true);
     }
-    this.props.handleEnter();
   }
+
+  // no verifications currently required for this question type
 
   render() {
     const { value, compiledQuestion: { choices } } = this.props;
@@ -60,7 +65,8 @@ class DropdownQuestion extends Component {
         errors={this.state.errors}
         choices={choices}
         onChange={this.handleChange}
-        onEnterKey={this.onEnterKeyDown}
+        onEnterKey={this.props.handleEnter}
+        isDisabled={this.props.isInputLocked}
       />
     );
   }
