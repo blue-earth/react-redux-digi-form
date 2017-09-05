@@ -17,9 +17,7 @@ class LongTextQuestion extends Component {
       PropTypes.string,
       PropTypes.number
     ]),
-    storeAnswer: PropTypes.func.isRequired,
     handleEnter: PropTypes.func.isRequired,
-    changeCurrentState: PropTypes.func.isRequired,
     type: PropTypes.string
   };
 
@@ -40,15 +38,8 @@ class LongTextQuestion extends Component {
   }
 
   onChange = (value) => {
-    var id = this.props.compiledQuestion.id;
     this.resetError();
-    this.props.changeCurrentState({
-      answerValue: value
-    });
-    this.props.storeAnswer({
-      id,
-      value
-    });
+    this.props.onChange(value);
   };
 
   onEnterKeyDown = () => {

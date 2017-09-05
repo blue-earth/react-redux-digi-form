@@ -15,9 +15,8 @@ class NameQuestion extends Component {
   static propTypes = {
     compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.object,
-    storeAnswer: PropTypes.func.isRequired,
     handleEnter: PropTypes.func.isRequired,
-    changeCurrentState: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -46,13 +45,7 @@ class NameQuestion extends Component {
     if (this.props.compiledQuestion.includeMiddleName) {
       newValue.middle_name = this.refs.middle_name.refs.input.value;
     }
-    this.props.changeCurrentState({
-      answerValue: newValue
-    });
-    this.props.storeAnswer({
-      id,
-      newValue
-    });
+    this.props.onChange(newValue);
   };
 
   onEnterKeyDown = (nextRef=false) => {

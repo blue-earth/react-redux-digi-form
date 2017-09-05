@@ -18,10 +18,8 @@ class SingularTextInputQuestion extends Component {
       PropTypes.number
     ]),
     onChange: PropTypes.func.isRequired,
-    storeAnswer: PropTypes.func.isRequired,
     handleEnter: PropTypes.func.isRequired,
     isInputLocked: PropTypes.bool,
-    changeCurrentState: PropTypes.func.isRequired,
     type: PropTypes.string
   };
 

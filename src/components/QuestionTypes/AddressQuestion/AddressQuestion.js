@@ -16,10 +16,8 @@ class AddressQuestion extends Component {
   static propTypes = {
     compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.object,
-    storeAnswer: PropTypes.func.isRequired,
     handleEnter: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired,
-    changeCurrentState: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {

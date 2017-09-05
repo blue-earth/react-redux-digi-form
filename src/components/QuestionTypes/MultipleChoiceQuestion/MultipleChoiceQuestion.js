@@ -10,8 +10,7 @@ class MultipleChoiceQuestion extends Component {
     compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.array,
     handleEnter: PropTypes.func,
-    changeCurrentState: PropTypes.func,
-    storeAnswer: PropTypes.func
+    onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -32,14 +31,7 @@ class MultipleChoiceQuestion extends Component {
   }
   handleChange = (value) => {
     this._resetError();
-    var id = this.props.compiledQuestion.id;
-    this.props.changeCurrentState({
-      answerValue: value
-    });
-    this.props.storeAnswer({
-      id,
-      value
-    });
+    this.props.onChange(value);
   }
 
   handleEnter = () => {
