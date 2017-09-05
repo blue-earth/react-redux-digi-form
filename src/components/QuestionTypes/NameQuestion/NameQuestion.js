@@ -37,7 +37,6 @@ class NameQuestion extends Component {
   }
 
   onChange = () => {
-    var id = this.props.compiledQuestion.id;
     this.resetError();
     var newValue = {
       first_name: this.refs.first_name.refs.input.value,
