@@ -48,6 +48,12 @@ $progressbar-bg-color: #e8e6e7;
 }
 
 .fileName {
+  display: inline-block;
+  width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: text-bottom;
+  white-space: nowrap;
   margin-right: 10px;
   color: $dashboard-text-color;
 }
