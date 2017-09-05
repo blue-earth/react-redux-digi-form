@@ -43,18 +43,6 @@ export default class ElementsListPanel extends Component {
     };
   }
 
-  componentWillMount() {
-
-  }
-
-  componentWillReceiveProps(props) {
-
-  }
-
-  componentDidMount() {
-
-  }
-
   createEmptyQuestion = (questionTypeName, boxMappingType=null) => {
     const {
       setQuestionEditMode,

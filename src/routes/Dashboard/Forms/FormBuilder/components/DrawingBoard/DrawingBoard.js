@@ -190,6 +190,10 @@ class DrawingBoard extends Component {
   handleBoardMouseDown = (event) => {
     const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
     if (!activeBoxPath || event.button !== 0) return; // mouse left button
+    if (activeBoxPath) {
+      // If there is a box in active state (toolbar is shown), commit the change
+      this.handleToolbarSave();
+    }
     const board = this.refs.board;
     const orgPos = this.getElementPos(board);
     const mousePos = this.getMousePos(event);

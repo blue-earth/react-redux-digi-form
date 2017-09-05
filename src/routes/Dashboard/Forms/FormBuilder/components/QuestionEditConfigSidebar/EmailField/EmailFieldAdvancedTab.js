@@ -41,6 +41,7 @@ class EmailFieldAdvancedTab extends Component {
       <div>
         <EditSection>
           <CollapsibleSection
+            isInitiallyOpened={false}
             title={'Default value'}
             onToggleClosed={function () { setQuestionInfo({'value': ''}); }}
           >

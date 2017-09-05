@@ -22,6 +22,7 @@ class ShortTextFieldAdvancedTab extends Component {
       <div>
         <EditSection>
           <CollapsibleSection
+            isInitiallyOpened={false}
             questionPropKey={'value'}
             title={'Default value'}
             onToggleClosed={function () { setQuestionInfo({'value': ''}); }}
@@ -32,6 +33,7 @@ class ShortTextFieldAdvancedTab extends Component {
         </EditSection>
         <EditSection>
           <CollapsibleSection
+            isInitiallyOpened={false}
             questionPropKey={'placeholder_text'}
             title={'Placeholder'}
             onToggleClosed={function () { setQuestionInfo({'placeholder_text': ''}); }}
