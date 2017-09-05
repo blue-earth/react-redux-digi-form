@@ -382,8 +382,9 @@ export const getQuestionsById = function (questions, targetQuestionId, includeTa
 
 export const mapQuestionsToDropdown = function (questions) {
   return questions.map(function (q) {
+    var instructionNoHTML = q.question_instruction.replace(/(<([^>]+)>)/ig, '');
     return {
-      'label': (<span><b>{q.id}.</b> {q.question_instruction}</span>),
+      'label': (<span><span>{q.id}. </span><span>{instructionNoHTML}</span></span>),
       'value': q.id,
       'id': q.id,
       'type': q.type
