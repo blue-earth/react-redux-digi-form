@@ -6,28 +6,26 @@ import DateInput from '../../QuestionInputs/DateInput/DateInput';
 import {
   valueIsValid
 } from 'helpers/validationHelper';
-import {
-  aggregateVerifications
-} from 'helpers/verificationHelpers';
 
 class DateQuestion extends Component {
 
   static propTypes = {
     compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.object,
+    isInputLocked: PropTypes.bool,
     handleEnter: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    value: null
+    value: null,
+    isInputLocked: false
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      errors: [],
-      isDisabled: false
+      errors: []
     };
   }
 
@@ -40,52 +38,31 @@ class DateQuestion extends Component {
     this.props.onChange(value);
   };
 
-  onEnterKeyDown = () => {
-    var self = this;
+  validate(cb) {
     const {
       value,
-      compiledQuestion,
-      compiledQuestion: { validations, verifications }
+      compiledQuestion: { validations }
     } = this.props;
     var errors = valueIsValid(value, validations);
     if (errors.length > 0) {
       this.setState({
         'errors': errors
       });
-      return;
-    }
-
-    if (compiledQuestion.verifications && compiledQuestion.verifications.length) {
-      // Check Verifications
-      this.setState({
-        'isDisabled': true
-      });
-      var verificationPromises = aggregateVerifications(verifications, value);
-      Promise.all(verificationPromises)
-        .then(function (verifications) {
-          // todo: verifications format is [boolean...]
-          // check they are all verified
-          self.props.handleEnter();
-        }, function (errors) {
-          self.setState({
-            'errors': errors,
-            'isDisabled': false
-          });
-        });
+      return cb(false);
     } else {
-      self.props.handleEnter();
+      return cb(true);
     }
-  };
+  }
 
   render() {
     return (
       <DateInput
-        onEnterKey={this.onEnterKeyDown}
+        onEnterKey={this.props.handleEnter}
         onChange={this.handleChange}
         errors={this.state.errors}
         value={this.props.value}
         dateFormat={this.props.compiledQuestion.dateFormat}
-        isDisabled={this.state.isDisabled}
+        isDisabled={this.props.isInputLocked}
       />
     );
   }
