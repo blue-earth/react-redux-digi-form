@@ -224,11 +224,21 @@ class FormBuilder extends Component {
         fieldsGroup.push({'displayName': otherLabel, 'key': 'other', 'group': 'STANDARD'});
       }
       return [fieldsGroup];
-    } else {
-      var schema = getQuestionInputSchema(questionTypeName);
-      var result = schema['availableFields'];
-      return result;
     }
+    if (questionTypeName === 'NameField') {
+      var nameSchema = getQuestionInputSchema(questionTypeName);
+      const nameFields = nameSchema['availableFields'];
+      var includeMName = this.props.currentElement.question.include_middle_name;
+      if (includeMName) {
+        return nameFields;
+      } else {
+        // remove middle name
+        return [_.filter(nameFields[0], function (o) { return o.key !== 'middle_name'; })];
+      }
+    }
+    var schema = getQuestionInputSchema(questionTypeName);
+    var result = schema['availableFields'];
+    return result;
   }
 
   get activeLabel() {
