@@ -121,7 +121,7 @@ class FormInteractiveView extends Component {
   };
 
   handleEnter = () => {
-    this.refs.questionInteractive.validateAndVerify(() => this.handleEnter());
+    this.refs.questionInteractive.validateAndVerify(() => this.props.handleEnter());
   };
 
   shouldPrefillValue() {
