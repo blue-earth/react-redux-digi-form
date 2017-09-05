@@ -9,13 +9,14 @@ class MultipleChoiceQuestion extends Component {
   static propTypes = {
     compiledQuestion: PropTypes.object.isRequired,
     value: PropTypes.array,
+    isInputLocked: PropTypes.bool,
     handleEnter: PropTypes.func,
     onChange: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    choices: [],
-    value: []
+    value: [],
+    isInputLocked: false
   };
 
   constructor(props) {
@@ -47,6 +48,27 @@ class MultipleChoiceQuestion extends Component {
     }
   };
 
+  validate(cb) {
+    const {
+      value,
+      compiledQuestion: { validations }
+    } = this.props;
+    if (validations && validations.indexOf('isRequired') > -1) {
+      if (value.length === 0) {
+        this.setState({
+          'errors': ['This question is mandatory']
+        });
+        return cb(false);
+      } else {
+        return cb(true);
+      }
+    } else {
+      return cb(true);
+    }
+  }
+
+  // no verifications currently required for this question type
+
   render() {
     const {
       choices,
@@ -55,13 +77,13 @@ class MultipleChoiceQuestion extends Component {
     } = this.props.compiledQuestion;
     const { value } = this.props;
     return (<MultipleChoice
-      onChange={this.handleChange}
-      choices={choices}
-      includeOther={includeOther}
-      onEnterKey={this.handleEnter}
       value={value}
+      choices={choices}
       errors={this.state.errors}
-      allowMultiple={allowMultiple} />
+      includeOther={includeOther}
+      allowMultiple={allowMultiple}
+      onChange={this.handleChange}
+      onEnterKey={this.props.handleEnter} />
     );
   }
 }
