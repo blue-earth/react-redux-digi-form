@@ -5,7 +5,6 @@ import React, {
 import CollapsibleSection from 'components/QuestionEditFields/CollapsibleSection';
 import EditSection from 'components/QuestionEditFields/EditSection';
 import SelectBox from 'components/SelectBox';
-import TextInput from 'components/TextInput';
 import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
 
 class NameFieldAdvancedTab extends Component {
