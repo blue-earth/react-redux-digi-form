@@ -93,16 +93,6 @@ class FormInteractiveView extends Component {
     };
   }
 
-  valueIsVerified() {
-    const { currentQuestion, verificationStatus, isVerifying } = this.props;
-    if (isVerifying) return false;
-    const unavailables = _.filter(verificationStatus, {
-      id: currentQuestion.id,
-      status: false
-    });
-    return unavailables.length === 0;
-  }
-
   get enterButtonClass() {
     const { currentQuestion } = this.props;
     const { questions } = this.state;
