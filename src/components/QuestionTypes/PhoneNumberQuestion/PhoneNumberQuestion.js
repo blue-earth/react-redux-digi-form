@@ -6,9 +6,6 @@ import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberI
 import {
   valueIsValid
 } from 'helpers/validationHelper';
-import {
-  aggregateVerifications
-} from 'helpers/verificationHelpers';
 
 class PhoneNumberQuestion extends Component {
 
