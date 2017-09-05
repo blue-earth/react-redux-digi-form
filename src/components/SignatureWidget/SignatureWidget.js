@@ -13,7 +13,6 @@ import {
 } from 'react-bootstrap';
 import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import ImageUploader from './ImageUploader';
-import { connectModal } from 'redux-modal';
 import styles from './SignatureWidget.scss';
 import classNames from 'classnames';
 import moment from 'moment';
@@ -24,7 +23,7 @@ import { valueIsValid } from 'helpers/validationHelper';
 
 const WRITE = 'write';
 
-class SignatureModal extends Component {
+class SignatureWidget extends Component {
   static propTypes = {
     value: PropTypes.object,
     formTitle: PropTypes.string,
@@ -285,10 +284,10 @@ class SignatureModal extends Component {
 
   render() {
     const {
-      errors,
       isPageBusy
     } = this.props;
     const {
+      errors,
       isConsented
     } = this.state;
     const isSignDisabled = !isConsented && errors.email.length > 0;

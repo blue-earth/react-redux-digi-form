@@ -80,8 +80,8 @@ class FormInteractiveView extends Component {
     verificationStatus: PropTypes.array,
 
     formId: PropTypes.number,
-    sessionId: PropTypes.number
-
+    sessionId: PropTypes.number,
+    title: PropTypes.string
   };
 
   constructor(props) {

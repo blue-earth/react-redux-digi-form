@@ -14,7 +14,7 @@ import PhoneNumberQuestion from '../../QuestionTypes/PhoneNumberQuestion';
 import DateQuestion from '../../QuestionTypes/DateQuestion';
 import AddressQuestion from '../../QuestionTypes/AddressQuestion';
 import FileUpload from '../../QuestionInputs/FileUpload';
-import Signature from '../../QuestionInputs/Signature/Signature';
+import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -172,7 +172,7 @@ class QuestionInteractive extends Component {
         InputComponent = AddressQuestion;
         break;
       case 'SignatureField':
-        InputComponent = Signature;
+        InputComponent = SignatureQuestion;
         break;
       case 'FileUploadField':
         InputComponent = FileUpload;

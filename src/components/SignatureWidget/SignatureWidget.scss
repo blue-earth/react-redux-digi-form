@@ -63,6 +63,7 @@
 }
 .signatureWidgetConsent {
   background-color: $signature-modal-bg-color;
+  padding: 10px;
   .consent {
     font-size: 14px;
     font-weight: 400;
@@ -98,6 +99,8 @@
 }
 .signatureWidgetFooter {
   background-color: $signature-modal-bg-color;
+  padding: 10px;
+  text-align: right;
 }
 .cancelButton {
   font-size: 16px;

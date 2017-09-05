@@ -2,9 +2,12 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import {
+  Modal
+} from 'react-bootstrap';
 import FormEnterButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import AppButton from 'components/Buttons/AppButton/AppButton';
-import SignatureModal from 'containers/SignatureVerification';
+import SignatureWidget from 'components/SignatureWidget/SignatureWidget';
 import styles from './SignatureQuestion.scss';
 import { signatureFonts } from 'schemas/signatureSchema';
 
@@ -15,13 +18,13 @@ class SignatureQuestion extends Component {
   };
 
   static propTypes = {
-    isDisabled: PropTypes.bool,
+    isInputLocked: PropTypes.bool,
     isReadOnly: PropTypes.bool,
     autoFocus: PropTypes.bool,
     value: PropTypes.object,
     onChange: PropTypes.func,
     showModal: PropTypes.func,
-    onEnterKey: PropTypes.func,
+    handleEnter: PropTypes.func,
     formTitle: PropTypes.string
   };
 
@@ -36,7 +39,7 @@ class SignatureQuestion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false;
+      showSignatureModal: false
     };
   };
 
@@ -49,8 +52,8 @@ class SignatureQuestion extends Component {
     this.props.onChange;
   }
 
-  toggleModal = () => {
-    this.setState({showModal: !this.state.showModal});
+  toggleSignatureModal = () => {
+    this.setState({showSignatureModal: !this.state.showSignatureModal});
   }
 
   focusSignatureImage() {
@@ -68,17 +71,18 @@ class SignatureQuestion extends Component {
   }
 
   handleKeyDown = (event) => {
-    const { onEnterKey } = this.props;
+    const { handleEnter } = this.props;
     if (event.keyCode === 13) {
-      onEnterKey();
+      handleEnter();
     }
   }
 
   render() {
-    const { showModal, value, isReadOnly, isDisabled, autoFocus } = this.props;
+    const { value, isReadOnly, isInputLocked, autoFocus } = this.props;
     const preloadFonts = signatureFonts.map((font, index) => (
       <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>
     ));
+    const that = this;
     return (
       <div className={styles.signature}>
         {value.dataUrl &&
@@ -89,21 +93,21 @@ class SignatureQuestion extends Component {
               tabIndex={0} onKeyDown={this.handleKeyDown}
             />
             <AppButton
-              isDisabled={isDisabled}
+              isDisabled={isInputLocked}
               size="lg"
               autoFocus={!value.dataUrl && autoFocus}
-              onClick={function () { showModal('signatureModal', {value, isConsented: true}); }}>
+              onClick={function () { that.toggleSignatureModal(); }}>
               Re-sign
             </AppButton>
           </div>
         }
         {!isReadOnly && !value.dataUrl &&
           <FormEnterButton buttonLabel="Sign"
-            isDisabled={isDisabled}
+            isDisabled={isInputLocked}
             autoFocus={!value.dataUrl && autoFocus}
-            onClick={function () { showModal('signatureModal', {value}); }} />
+            onClick={function () { that.toggleSignatureModal(); }} />
         }
-        <Modal show={this.state.showModal} onHide={this.toggleModal}>
+        <Modal show={this.state.showSignatureModal} onHide={that.toggleSignatureModal}>
           <Modal.Header>
             <Modal.Title>YOUR SIGNATURE</Modal.Title>
           </Modal.Header>
@@ -113,7 +117,7 @@ class SignatureQuestion extends Component {
               formTitle={this.props.formTitle}
               isConsented={false}
               onChange={this.handleChange}
-              closeModal={this.toggleModal}
+              closeModal={that.toggleSignatureModal}
             />
           </Modal.Body>
         </Modal>
