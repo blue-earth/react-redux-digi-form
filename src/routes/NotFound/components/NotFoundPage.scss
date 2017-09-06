@@ -1,0 +1,28 @@
+@import './mixins';
+@import './variables';
+
+.header {
+  height: 60px;
+  padding: 12px 0;
+}
+.notFoundPage {
+  @include full-size;
+  background-color: $white;
+  text-align: center;
+}
+.imageSection {
+  background-color: $grayblue;
+  padding-top: 80px;
+  padding-bottom: 90px;
+}
+.image {
+  @include media('<sm') {
+    max-width: 60%;
+  }
+}
+.infoSection {
+  margin-top: 70px;
+  font-size: 18px;
+  font-weight: 600;
+  color: $frontend-text-color1;
+}
