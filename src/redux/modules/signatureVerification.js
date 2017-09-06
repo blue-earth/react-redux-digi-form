@@ -3,11 +3,12 @@ import { fetch } from 'redux-effects-fetch';
 import { assignDefaults } from 'redux/utils/request';
 import { createAction, handleActions } from 'redux-actions';
 import { submitAnswer, FORM_USER_SUBMISSION, handleEnter, storeAnswer } from 'redux/modules/formInteractive';
-import { show, hide } from 'redux-modal';
+// import { show, hide } from 'redux-modal';
 
 export const INIT_SIGNATURE_STATE = {
   isPageBusy: false,
-  isCodeVerifyingModalOpen: false,
+  // isCodeVerifyingModalOpen: false,
+  verificationWidgetIsActive: false,
   isCodeVerified: true,
   hasCodeVerified: false,
   commitValue: {}
@@ -19,6 +20,8 @@ const IS_CODE_VERIFIED = 'IS_CODE_VERIFIED';
 const RESET_CODE_VERIFIED = 'RESET_CODE_VERIFIED';
 const REQUEST_VERIFY_CODE = 'REQUEST_VERIFY_CODE';
 const DONE_VERIFYING_CODE = 'DONE_VERIFYING_CODE';
+const SHOW_VERIFICATION_WIDGET = 'SHOW_VERIFICATION_WIDGET';
+const HIDE_VERIFICATION_WIDGET = 'HIDE_VERIFICATION_WIDGET';
 
 export const requestVerifyEmail = createAction(REQUEST_VERIFY_EMAIL);
 export const doneVerifyingEmail = createAction(DONE_VERIFYING_EMAIL);
@@ -27,6 +30,9 @@ export const doneVerifyingCode = createAction(DONE_VERIFYING_CODE);
 
 export const isCodeVerified = createAction(IS_CODE_VERIFIED);
 export const resetCodeVerified = createAction(RESET_CODE_VERIFIED);
+
+export const showVerificationWidget = createAction(SHOW_VERIFICATION_WIDGET);
+export const hideVerificationWidget = createAction(HIDE_VERIFICATION_WIDGET);
 
 export const updateSessionId = () => {
   return (dispatch, getState) => {
@@ -37,7 +43,8 @@ export const updateSessionId = () => {
 export const closeVerificationModal = () => {
   return (dispatch, getState) => {
     dispatch(resetCodeVerified());
-    dispatch(hide('signatureVerificationModal'));
+    // dispatch(hide('signatureVerificationModal'));
+    dispatch(hideVerificationWidget());
   };
 };
 
@@ -63,9 +70,8 @@ const processVerifyEmail = (commitValue, responseId, questionId) => {
         dispatch(submitSignature(questionId, commitValue));
       } else {
         dispatch(requestVerificationCode(commitValue));
-        dispatch(show('signatureVerificationModal', {
-          commitValue
-        }));
+        // dispatch(show('signatureVerificationModal', {commitValue}));
+        dispatch(showVerificationWidget());
       }
     };
   };
@@ -176,6 +182,14 @@ const signatureReducer = handleActions({
   RESET_CODE_VERIFIED: (state, action) =>
     Object.assign({}, state, {
       isCodeVerified: true
+    }),
+  SHOW_VERIFICATION_WIDGET: (state, action) =>
+    Object.assign({}, state, {
+      verificationWidgetIsActive: true
+    }),
+  HIDE_VERIFICATION_WIDGET: (state, action) =>
+    Object.assign({}, state, {
+      verificationWidgetIsActive: false
     })
 }, INIT_SIGNATURE_STATE);
 

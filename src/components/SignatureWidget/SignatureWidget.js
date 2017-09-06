@@ -37,7 +37,7 @@ class SignatureWidget extends Component {
     // requestVerificationCode: PropTypes.func,
     // resetCodeVerified: PropTypes.func,
     onChange: PropTypes.func,
-    closeModal: PropTypes.func
+    closeWidget: PropTypes.func
   };
 
   constructor(props) {
@@ -248,8 +248,8 @@ class SignatureWidget extends Component {
         </div>
         {this.consentSection}
         <div className={styles.signatureWidgetFooter}>
-          {typeof this.props.closeModal === 'function' &&
-            <Button onClick={this.props.closeModal} bsStyle="link" className={styles.cancelButton}>
+          {typeof this.props.closeWidget === 'function' &&
+            <Button onClick={this.props.closeWidget} bsStyle="link" className={styles.cancelButton}>
               Cancel
             </Button>
           }

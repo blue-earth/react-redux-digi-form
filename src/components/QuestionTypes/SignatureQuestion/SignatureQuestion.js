@@ -8,6 +8,7 @@ import {
 import FormEnterButton from 'components/Buttons/FormEnterButton/FormEnterButton';
 import AppButton from 'components/Buttons/AppButton/AppButton';
 import SignatureWidget from 'components/SignatureWidget/SignatureWidget';
+import VerificationWidget from 'components/SignatureWidget/VerificationWidget';
 import styles from './SignatureQuestion.scss';
 import { signatureFonts } from 'schemas/signatureSchema';
 import { valueIsValid } from 'helpers/validationHelper';
@@ -19,7 +20,6 @@ class SignatureQuestion extends Component {
   };
 
   static propTypes = {
-    isInputLocked: PropTypes.bool,
     isReadOnly: PropTypes.bool,
     autoFocus: PropTypes.bool,
     value: PropTypes.object,
@@ -27,11 +27,23 @@ class SignatureQuestion extends Component {
     showModal: PropTypes.func,
     handleEnter: PropTypes.func,
     formTitle: PropTypes.string,
-    useModal: PropTypes.bool
+
+    // flag to determine if widgets should be displayed in modals
+    useModal: PropTypes.bool,
+
+    // email verification props
+    isPageBusy: PropTypes.bool,
+    verificationWidgetIsActive: PropTypes.bool,
+    isCodeVerified: PropTypes.bool,
+    hasCodeVerified: PropTypes.bool,
+    verifyEmailCode: PropTypes.func,
+    requestVerificationCode: PropTypes.func,
+    resetCodeVerified: PropTypes.func,
+    submitValue: PropTypes.func.isRequired,
+    closeVerificationModal: PropTypes.func.isRequired
   };
 
   static defaultProps = {
-    isInputLocked: false,
     isReadOnly: false,
     value: {'name': '', 'email': '', 'dataUrl': ''},
     useModal: true
@@ -41,7 +53,6 @@ class SignatureQuestion extends Component {
     super(props);
     this.state = {
       signatureWidgetIsActive: false,
-      shouldValidate: false, // flag to trigger this.props.handleEnter()
       errors: {'name': [], 'email': [], 'dataUrl': []}
     };
   };
@@ -52,10 +63,6 @@ class SignatureQuestion extends Component {
 
   componentDidUpdate() {
     this.focusSignatureImage();
-    // need to trigger validation here to ensure validate() gets the updated value
-    if (this.state.shouldValidate) {
-      this.props.handleEnter();
-    }
   }
 
   showSignatureWidget = () => {
@@ -90,8 +97,34 @@ class SignatureQuestion extends Component {
   handleChange = (value) => {
     this.resetErrors();
     this.props.onChange(value);
-    this.hideSignatureWidget();
-    this.setState({shouldValidate: true});
+    // this.hideSignatureWidget();
+    // this.setState({shouldValidate: true});
+    var errors = this.state.errors;
+    let isValid = true;
+    // Empty signature error handle
+    if (value.dataUrl === '') {
+      errors.dataUrl = ['Please sign your signature.'];
+      isValid = false;
+    }
+    var emailErrors = valueIsValid(value.email, [{'type': 'isEmail'}]);
+    if (emailErrors.length > 0) {
+      errors.email = emailErrors;
+      isValid = false;
+    }
+    // Empty signature name error handle
+    var nameErrors = valueIsValid(value.name, [{'type': 'isRequired'}]);
+    if (nameErrors.length > 0) {
+      errors.name = nameErrors;
+      isValid = false;
+    }
+    if (isValid) {
+      this.hideSignatureWidget();
+      // TODO: trigger verification
+      this.props.submitValue(value);
+    } else {
+      this.setState({errors: errors});
+      this.showSignatureWidget();
+    }
   }
 
   handleKeyDown = (event) => {
@@ -101,38 +134,8 @@ class SignatureQuestion extends Component {
     }
   }
 
-  validate(cb) {
-    var errors = {'name': [], 'email': [], 'dataUrl': []};
-    let isValid = true;
-    // Empty signature error handle
-    if (this.props.value.dataUrl === '') {
-      errors.dataUrl = ['Please sign your signature.'];
-      isValid = false;
-    }
-    var emailErrors = valueIsValid(this.props.value.email, [{'type': 'isEmail'}]);
-    if (emailErrors.length > 0) {
-      errors.email = emailErrors;
-      isValid = false;
-    }
-    // Empty signature name error handle
-    var nameErrors = valueIsValid(this.props.value.name, [{'type': 'isRequired'}]);
-    if (nameErrors.length > 0) {
-      errors.name = nameErrors;
-      isValid = false;
-    }
-    this.setState({shouldValidate: false});
-    if (isValid) {
-      this.hideSignatureWidget();
-      return cb(true);
-    } else {
-      this.setState({errors: errors});
-      this.showSignatureWidget();
-      return cb(false);
-    }
-  }
-
   render() {
-    const { value, isReadOnly, isInputLocked, autoFocus, useModal } = this.props;
+    const { value, isReadOnly, isPageBusy, autoFocus, useModal, verificationWidgetIsActive } = this.props;
     const { signatureWidgetIsActive } = this.state;
     const preloadFonts = signatureFonts.map((font, index) => (
       <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>
@@ -140,7 +143,7 @@ class SignatureQuestion extends Component {
     const that = this;
     return (
       <div className={styles.signature}>
-        {(useModal || (!useModal && !signatureWidgetIsActive)) && value.dataUrl &&
+        {(useModal || (!useModal && !signatureWidgetIsActive && !verificationWidgetIsActive)) && value.dataUrl &&
           <div>
             <img src={value.dataUrl} alt="signature"
               className={styles.signatureImage}
@@ -148,7 +151,7 @@ class SignatureQuestion extends Component {
               tabIndex={0} onKeyDown={this.handleKeyDown}
             />
             <AppButton
-              isDisabled={isInputLocked}
+              isDisabled={isPageBusy}
               size="lg"
               autoFocus={!value.dataUrl && autoFocus}
               onClick={that.showSignatureWidget}>
@@ -156,9 +159,10 @@ class SignatureQuestion extends Component {
             </AppButton>
           </div>
         }
-        {(useModal || (!useModal && !signatureWidgetIsActive)) && !isReadOnly && !value.dataUrl &&
+        {(useModal || (!useModal && !signatureWidgetIsActive && !verificationWidgetIsActive)) &&
+          !isReadOnly && !value.dataUrl &&
           <FormEnterButton buttonLabel="Sign"
-            isDisabled={isInputLocked}
+            isDisabled={isPageBusy}
             autoFocus={!value.dataUrl && autoFocus}
             onClick={that.showSignatureWidget} />
         }
@@ -169,8 +173,20 @@ class SignatureQuestion extends Component {
             resetErrors={this.resetErrors}
             formTitle={this.props.formTitle}
             onChange={this.handleChange}
-            isPageBusy={isInputLocked}
-            closeModal={that.hideSignatureWidget}
+            isPageBusy={this.props.isPageBusy}
+            closeWidget={this.hideSignatureWidget}
+          />
+        }
+        {!useModal && verificationWidgetIsActive &&
+          <VerificationWidget
+            isPageBusy={this.props.isPageBusy}
+            hasCodeVerified={this.props.hasCodeVerified}
+            hasError={!this.props.isCodeVerified}
+            verifyEmailCode={this.props.verifyEmailCode}
+            resendCode={this.props.requestVerificationCode}
+            resetCodeVerified={this.props.resetCodeVerified}
+            commitValue={this.props.value}
+            closeWidget={this.props.closeVerificationModal}
           />
         }
         {useModal &&
@@ -185,8 +201,24 @@ class SignatureQuestion extends Component {
                 resetErrors={this.resetErrors}
                 formTitle={this.props.formTitle}
                 onChange={this.handleChange}
-                isPageBusy={isInputLocked}
-                closeModal={that.hideSignatureWidget}
+                isPageBusy={this.props.isPageBusy}
+                closeWidget={this.hideSignatureWidget}
+              />
+            </Modal.Body>
+          </Modal>
+        }
+        {useModal &&
+          <Modal show={verificationWidgetIsActive}>
+            <Modal.Body>
+              <VerificationWidget
+                isPageBusy={this.props.isPageBusy}
+                hasCodeVerified={this.props.hasCodeVerified}
+                hasError={!this.props.isCodeVerified}
+                verifyEmailCode={this.props.verifyEmailCode}
+                resendCode={this.props.requestVerificationCode}
+                resetCodeVerified={this.props.resetCodeVerified}
+                commitValue={this.props.value}
+                closeWidget={this.props.closeVerificationModal}
               />
             </Modal.Body>
           </Modal>
