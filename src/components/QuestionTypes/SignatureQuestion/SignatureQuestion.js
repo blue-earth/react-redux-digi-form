@@ -26,20 +26,22 @@ class SignatureQuestion extends Component {
     onChange: PropTypes.func.isRequired,
     showModal: PropTypes.func,
     handleEnter: PropTypes.func,
-    formTitle: PropTypes.string
+    formTitle: PropTypes.string,
+    useModal: PropTypes.bool
   };
 
   static defaultProps = {
     isInputLocked: false,
     isReadOnly: false,
-    value: {'name': '', 'email': '', 'dataUrl': ''}
+    value: {'name': '', 'email': '', 'dataUrl': ''},
+    useModal: true
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      showSignatureModal: false,
-      shouldValidate: false,
+      signatureWidgetIsActive: false,
+      shouldValidate: false, // flag to trigger this.props.handleEnter()
       errors: {'name': [], 'email': [], 'dataUrl': []}
     };
   };
@@ -56,11 +58,11 @@ class SignatureQuestion extends Component {
     }
   }
 
-  showSignatureModal = () => {
-    this.setState({showSignatureModal: true});
+  showSignatureWidget = () => {
+    this.setState({signatureWidgetIsActive: true});
   }
-  hideSignatureModal = () => {
-    this.setState({showSignatureModal: false});
+  hideSignatureWidget = () => {
+    this.setState({signatureWidgetIsActive: false});
   }
 
   resetErrors = (key=false) => {
@@ -88,7 +90,7 @@ class SignatureQuestion extends Component {
   handleChange = (value) => {
     this.resetErrors();
     this.props.onChange(value);
-    this.hideSignatureModal();
+    this.hideSignatureWidget();
     this.setState({shouldValidate: true});
   }
 
@@ -120,24 +122,25 @@ class SignatureQuestion extends Component {
     }
     this.setState({shouldValidate: false});
     if (isValid) {
-      this.hideSignatureModal();
+      this.hideSignatureWidget();
       return cb(true);
     } else {
       this.setState({errors: errors});
-      this.showSignatureModal();
+      this.showSignatureWidget();
       return cb(false);
     }
   }
 
   render() {
-    const { value, isReadOnly, isInputLocked, autoFocus } = this.props;
+    const { value, isReadOnly, isInputLocked, autoFocus, useModal } = this.props;
+    const { signatureWidgetIsActive } = this.state;
     const preloadFonts = signatureFonts.map((font, index) => (
       <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>
     ));
     const that = this;
     return (
       <div className={styles.signature}>
-        {value.dataUrl &&
+        {(useModal || (!useModal && !signatureWidgetIsActive)) && value.dataUrl &&
           <div>
             <img src={value.dataUrl} alt="signature"
               className={styles.signatureImage}
@@ -148,32 +151,46 @@ class SignatureQuestion extends Component {
               isDisabled={isInputLocked}
               size="lg"
               autoFocus={!value.dataUrl && autoFocus}
-              onClick={that.showSignatureModal}>
+              onClick={that.showSignatureWidget}>
               Re-sign
             </AppButton>
           </div>
         }
-        {!isReadOnly && !value.dataUrl &&
+        {(useModal || (!useModal && !signatureWidgetIsActive)) && !isReadOnly && !value.dataUrl &&
           <FormEnterButton buttonLabel="Sign"
             isDisabled={isInputLocked}
             autoFocus={!value.dataUrl && autoFocus}
-            onClick={that.showSignatureModal} />
+            onClick={that.showSignatureWidget} />
         }
-        <Modal show={this.state.showSignatureModal} onHide={that.hideSignatureModal}>
-          <Modal.Header>
-            <Modal.Title>YOUR SIGNATURE</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <SignatureWidget
-              value={this.props.value}
-              errors={this.state.errors}
-              resetErrors={this.resetErrors}
-              formTitle={this.props.formTitle}
-              onChange={this.handleChange}
-              closeModal={that.hideSignatureModal}
-            />
-          </Modal.Body>
-        </Modal>
+        {!useModal && signatureWidgetIsActive &&
+          <SignatureWidget
+            value={this.props.value}
+            errors={this.state.errors}
+            resetErrors={this.resetErrors}
+            formTitle={this.props.formTitle}
+            onChange={this.handleChange}
+            isPageBusy={isInputLocked}
+            closeModal={that.hideSignatureWidget}
+          />
+        }
+        {useModal &&
+          <Modal show={signatureWidgetIsActive} onHide={that.hideSignatureWidget}>
+            <Modal.Header>
+              <Modal.Title>YOUR SIGNATURE</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <SignatureWidget
+                value={this.props.value}
+                errors={this.state.errors}
+                resetErrors={this.resetErrors}
+                formTitle={this.props.formTitle}
+                onChange={this.handleChange}
+                isPageBusy={isInputLocked}
+                closeModal={that.hideSignatureWidget}
+              />
+            </Modal.Body>
+          </Modal>
+        }
         {preloadFonts}
       </div>
     );
