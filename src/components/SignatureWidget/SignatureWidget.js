@@ -19,16 +19,16 @@ import moment from 'moment';
 import AppButton from 'components/Buttons/AppButton';
 import DrawSignature from './DrawSignature';
 import WriteSignature from './WriteSignature';
-import { valueIsValid } from 'helpers/validationHelper';
 
 const WRITE = 'write';
 
 class SignatureWidget extends Component {
   static propTypes = {
     value: PropTypes.object,
+    errors: PropTypes.object,
+    resetErrors: PropTypes.func,
     formTitle: PropTypes.string,
     isPageBusy: PropTypes.bool,
-    isConsented: PropTypes.bool,
     // TODO: email verification?
     // isCodeVerifyingModalOpen: PropTypes.bool,
     // isCodeVerified: PropTypes.bool,
@@ -46,82 +46,36 @@ class SignatureWidget extends Component {
     this.state = {
       name: name || '',
       email: email || '',
-      isConsented: props.isConsented || false,
-      isSignatureValidated: true,
-      activeTabName: WRITE,
-      errors: {'name': [], 'email': []}
+      isConsented: false,
+      activeTabName: WRITE
     };
   };
-
-  resetErrors = (key=false) => {
-    var newErrors = this.state.errors;
-    if (key) {
-      newErrors[key] = [];
-    } else {
-      newErrors = {'name': [], 'email': []};
-    }
-    this.setState({
-      errors: newErrors
-    });
-  }
 
   handleSubmit = () => {
     const { activeTabName, name, email } = this.state;
     const dataUrl = this.refs[activeTabName].dataUrl;
-    let isValid = true;
-    var errors = this.state.errors;
-    // Empty signature error handle
-    if (dataUrl === '') {
-      this.refs.errorMessageFocus.focus();
-      this.setState({
-        isSignatureValidated: false
-      });
-      isValid = false;
-    }
-    var emailErrors = valueIsValid(email, [{'type': 'isEmail'}]);
-    if (emailErrors.length > 0) {
-      this.refs.emailInput.refs.input.focus();
-      errors.email = emailErrors;
-      this.setState({
-        errors: errors
-      });
-      isValid = false;
-    }
-    // Empty signature name error handle
-    var nameErrors = valueIsValid(name, [{'type': 'isRequired'}]);
-    if (nameErrors.length > 0) {
-      this.refs.nameInput.refs.input.focus();
-      errors.name = nameErrors;
-      this.setState({
-        errors: errors
-      });
-      isValid = false;
-    }
-    if (isValid) {
-      this.props.onChange({dataUrl, email, name});
-    }
+    this.props.onChange({dataUrl, email, name});
   }
 
   handleTabSelect = (activeTabName) => {
     this.setState({
       activeTabName
     });
-    this.resetErrors;
+    this.props.resetErrors;
   }
 
   handleNameChange = (value) => {
     this.setState({
-      name: value,
-      isSignatureValidated: true
+      name: value
     });
-    this.resetErrors('name');
+    this.props.resetErrors('name');
   }
 
   handleEmailChange = (value) => {
     this.setState({
       email: value
     });
-    this.resetErrors('email');
+    this.props.resetErrors('email');
   }
 
   handleToggleConsent = (event) => {
@@ -135,29 +89,21 @@ class SignatureWidget extends Component {
   }
 
   handleSignatureChange = () => {
-    this.setState({
-      isSignatureValidated: true
-    });
+    this.props.resetErrors('dataUrl');
   }
 
   get signatureHeader() {
-    const {
-      name,
-      email,
-      errors,
-      isSignatureValidated
-    } = this.state;
     return (
       <div>
         <Row>
           <div className={classNames(styles.inputWrapper, styles.inputLeft)}>
             <FloatTextInput
               ref="nameInput"
-              errors={errors.name}
+              errors={this.props.errors.name}
               extraClass={styles.signatureInput}
               size="md"
               autoFocus
-              value={name}
+              value={this.state.name}
               label="Full name"
               onChange={this.handleNameChange}
               errorPlacement="top" />
@@ -166,10 +112,10 @@ class SignatureWidget extends Component {
             <FloatTextInput
               ref="emailInput"
               type="EmailField"
-              errors={errors.email}
+              errors={this.props.errors.email}
               extraClass={styles.signatureInput}
               size="md"
-              value={email}
+              value={this.state.email}
               label="Email"
               onChange={this.handleEmailChange} />
           </div>
@@ -181,11 +127,10 @@ class SignatureWidget extends Component {
             <span className={styles.info}>{moment().format('L')}</span>
           </Col>
         </Row>
-        <div className={classNames(styles.errorMessageWrapper, {
-          [styles.noErrorMessage]: isSignatureValidated
-        })}>
+        <div className={classNames(styles.errorMessageWrapper)}>
           <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
-          {!isSignatureValidated && <span className={styles.errorMessage}>Please sign your signature</span>}
+          {this.props.errors.dataUrl.length > 0 &&
+            <span className={styles.errorMessage}>Please sign your signature</span>}
         </div>
       </div>
     );
@@ -284,13 +229,16 @@ class SignatureWidget extends Component {
 
   render() {
     const {
-      isPageBusy
+      isPageBusy,
+      errors
     } = this.props;
     const {
-      errors,
       isConsented
     } = this.state;
-    const isSignDisabled = !isConsented && errors.email.length > 0;
+    const isSignDisabled = !isConsented ||
+      errors.email.length > 0 ||
+      errors.name.length > 0 ||
+      errors.dataUrl.length > 0;
     moment.locale('en-au');
     return (
       <form>

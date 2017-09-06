@@ -10,6 +10,7 @@ import AppButton from 'components/Buttons/AppButton/AppButton';
 import SignatureWidget from 'components/SignatureWidget/SignatureWidget';
 import styles from './SignatureQuestion.scss';
 import { signatureFonts } from 'schemas/signatureSchema';
+import { valueIsValid } from 'helpers/validationHelper';
 
 class SignatureQuestion extends Component {
 
@@ -22,24 +23,24 @@ class SignatureQuestion extends Component {
     isReadOnly: PropTypes.bool,
     autoFocus: PropTypes.bool,
     value: PropTypes.object,
-    onChange: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
     showModal: PropTypes.func,
     handleEnter: PropTypes.func,
     formTitle: PropTypes.string
   };
 
   static defaultProps = {
-    isDisabled: false,
+    isInputLocked: false,
     isReadOnly: false,
-    value: {},
-    onChange: () => {},
-    showModal: () => {}
+    value: {'name': '', 'email': '', 'dataUrl': ''}
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      showSignatureModal: false
+      showSignatureModal: false,
+      shouldValidate: false,
+      errors: {'name': [], 'email': [], 'dataUrl': []}
     };
   };
 
@@ -49,11 +50,29 @@ class SignatureQuestion extends Component {
 
   componentDidUpdate() {
     this.focusSignatureImage();
-    this.props.onChange;
+    // need to trigger validation here to ensure validate() gets the updated value
+    if (this.state.shouldValidate) {
+      this.props.handleEnter();
+    }
   }
 
-  toggleSignatureModal = () => {
-    this.setState({showSignatureModal: !this.state.showSignatureModal});
+  showSignatureModal = () => {
+    this.setState({showSignatureModal: true});
+  }
+  hideSignatureModal = () => {
+    this.setState({showSignatureModal: false});
+  }
+
+  resetErrors = (key=false) => {
+    var newErrors = this.state.errors;
+    if (key) {
+      newErrors[key] = [];
+    } else {
+      newErrors = {'name': [], 'email': [], 'dataUrl': []};
+    }
+    this.setState({
+      errors: newErrors
+    });
   }
 
   focusSignatureImage() {
@@ -67,13 +86,46 @@ class SignatureQuestion extends Component {
   }
 
   handleChange = (value) => {
-    console.log('SignatureQuestion ', value);
+    this.resetErrors();
+    this.props.onChange(value);
+    this.hideSignatureModal();
+    this.setState({shouldValidate: true});
   }
 
   handleKeyDown = (event) => {
     const { handleEnter } = this.props;
     if (event.keyCode === 13) {
       handleEnter();
+    }
+  }
+
+  validate(cb) {
+    var errors = {'name': [], 'email': [], 'dataUrl': []};
+    let isValid = true;
+    // Empty signature error handle
+    if (this.props.value.dataUrl === '') {
+      errors.dataUrl = ['Please sign your signature.'];
+      isValid = false;
+    }
+    var emailErrors = valueIsValid(this.props.value.email, [{'type': 'isEmail'}]);
+    if (emailErrors.length > 0) {
+      errors.email = emailErrors;
+      isValid = false;
+    }
+    // Empty signature name error handle
+    var nameErrors = valueIsValid(this.props.value.name, [{'type': 'isRequired'}]);
+    if (nameErrors.length > 0) {
+      errors.name = nameErrors;
+      isValid = false;
+    }
+    this.setState({shouldValidate: false});
+    if (isValid) {
+      this.hideSignatureModal();
+      return cb(true);
+    } else {
+      this.setState({errors: errors});
+      this.showSignatureModal();
+      return cb(false);
     }
   }
 
@@ -96,7 +148,7 @@ class SignatureQuestion extends Component {
               isDisabled={isInputLocked}
               size="lg"
               autoFocus={!value.dataUrl && autoFocus}
-              onClick={function () { that.toggleSignatureModal(); }}>
+              onClick={that.showSignatureModal}>
               Re-sign
             </AppButton>
           </div>
@@ -105,19 +157,20 @@ class SignatureQuestion extends Component {
           <FormEnterButton buttonLabel="Sign"
             isDisabled={isInputLocked}
             autoFocus={!value.dataUrl && autoFocus}
-            onClick={function () { that.toggleSignatureModal(); }} />
+            onClick={that.showSignatureModal} />
         }
-        <Modal show={this.state.showSignatureModal} onHide={that.toggleSignatureModal}>
+        <Modal show={this.state.showSignatureModal} onHide={that.hideSignatureModal}>
           <Modal.Header>
             <Modal.Title>YOUR SIGNATURE</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <SignatureWidget
               value={this.props.value}
+              errors={this.state.errors}
+              resetErrors={this.resetErrors}
               formTitle={this.props.formTitle}
-              isConsented={false}
               onChange={this.handleChange}
-              closeModal={that.toggleSignatureModal}
+              closeModal={that.hideSignatureModal}
             />
           </Modal.Body>
         </Modal>
