@@ -6,6 +6,7 @@ import DashboardRoute from './Dashboard';
 import IdentityVerificationRoute from './IdentityVerification';
 import LoginRoute from './Login';
 import SignUpRoute from './SignUp';
+import NotFoundRoute from './NotFound';
 import {
   rootPath,
   loginUrl
@@ -25,6 +26,7 @@ export default (store) => ({
     DashboardRoute(store),
     IdentityVerificationRoute(store),
     LoginRoute(store),
-    SignUpRoute(store)
+    SignUpRoute(store),
+    NotFoundRoute(store)
   ]
 });
