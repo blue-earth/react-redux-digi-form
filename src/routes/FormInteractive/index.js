@@ -40,10 +40,8 @@ export default (store) => ({
     require.ensure([], (require) => {
       const reducer = require('redux/modules/formInteractive').default;
       const formReducer = require('redux/modules/idVerificationForm').default;
-      const signatureReducer = require('redux/modules/signatureVerification').default;
       injectReducer(store, { key: 'formInteractive', reducer });
       injectReducer(store, { key: 'idVerificationForm', reducer: formReducer });
-      injectReducer(store, { key: 'signatureVerification', reducer: signatureReducer });
       cb(null, routes);
     });
   }
