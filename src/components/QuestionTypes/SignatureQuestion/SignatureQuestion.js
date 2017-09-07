@@ -33,6 +33,7 @@ class SignatureQuestion extends Component {
     handleEnter: PropTypes.func,
     formTitle: PropTypes.string,
     sessionId: PropTypes.number,
+    ensureSessionExists: PropTypes.func,
     // flag to determine if this question should launch modals to display widgets
     useModal: PropTypes.bool
   };
@@ -52,6 +53,13 @@ class SignatureQuestion extends Component {
       errors: {'name': [], 'email': [], 'dataUrl': [], 'code': []}
     };
   };
+
+  componentDidMount() {
+    var self = this;
+    this.props.ensureSessionExists().then(function () {
+      self.setState({'isFormSessionCreated': true});
+    });
+  }
 
   showSignatureWidget = () => {
     this.setState({activeWidget: 'signature'});
@@ -250,7 +258,7 @@ class SignatureQuestion extends Component {
     }
   }
 
-  render() {
+  _renderSignatureQuestion() {
     const { isReadOnly, isInputLocked, autoFocus, useModal } = this.props;
     const { value, signatureWidgetIsActive, verificationWidgetIsActive } = this.state;
     const widgetIsActive = signatureWidgetIsActive || verificationWidgetIsActive;
@@ -288,6 +296,18 @@ class SignatureQuestion extends Component {
         {preloadFonts}
       </div>
     );
+  }
+
+  _renderPlaceHolder() {
+    return (<span></span>);
+  }
+
+  render() {
+    if (this.state.isFormSessionCreated) {
+      return this._renderSignatureQuestion();
+    } else {
+      return this._renderPlaceHolder();
+    }
   }
 }
 

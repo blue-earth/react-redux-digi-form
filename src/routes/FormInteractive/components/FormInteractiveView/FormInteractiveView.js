@@ -34,6 +34,7 @@ class FormInteractiveView extends Component {
     /*
      * answers: Redux state that stores the array of answered values
      */
+    saveForm: PropTypes.func,
     answers: PropTypes.array.isRequired,
     /*
      * changeCurrentState: Redux action to change the update the current answer value on change,
@@ -166,6 +167,7 @@ class FormInteractiveView extends Component {
             formId={this.props.formId}
             sessionId={this.props.sessionId}
             formTitle={this.props.title}
+            saveForm={this.props.saveForm}
             {...optionals}
           />
         </div>

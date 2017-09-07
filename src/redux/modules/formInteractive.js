@@ -421,11 +421,12 @@ export const handleEnter = () => {
 export const submitAnswer = (requestAction, onSuccess) => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
+
     if (requestAction === FORM_USER_SUBMISSION) {
       dispatch(requestSubmitAnswer());
       dispatch(processSubmitAnswer(requestAction, formInteractive, onSuccess));
     }
-    if (requestAction === FORM_AUTOSAVE && formInteractive.isModified) {
+    if (requestAction === FORM_AUTOSAVE) {
       dispatch(processSubmitAnswer(requestAction, formInteractive, onSuccess));
     }
   };

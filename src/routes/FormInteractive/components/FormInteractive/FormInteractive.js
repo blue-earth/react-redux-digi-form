@@ -206,6 +206,17 @@ class FormInteractive extends Component {
     }, 30000);  // todo: Will optimise this later
   }
 
+  saveForm = () => {
+    var self = this;
+    console.log('forminteractive -> saveform');
+    return new Promise(function (resolve, reject) {
+      self.props.submitAnswer(FORM_AUTOSAVE, function () {
+        // check submission succeed
+        resolve();
+      });
+    });
+  }
+
   componentWillReceiveProps(props) {
     const { showModal } = this.props;
     if (this.props.formAccessStatus !== props.formAccessStatus &&
@@ -296,7 +307,7 @@ class FormInteractive extends Component {
               onItemChange={this.setActiveGroup}
               percentage={this.percentage}
             />
-            {this.isInProgress && <FormInteractiveView {...this.props} />}
+            {this.isInProgress && <FormInteractiveView {...this.props} saveForm={this.saveForm} />}
             {shouldShowFinalSubmit && !this.isCompleted && <Summary {...this.props} />}
             {this.isCompleted && <FormCompletion title={title} {...this.props} />}
             {this.needsAccessCode && <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />}

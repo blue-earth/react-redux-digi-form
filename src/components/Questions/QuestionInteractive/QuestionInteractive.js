@@ -66,7 +66,8 @@ class QuestionInteractive extends Component {
 
     formId: PropTypes.number,
     sessionId: PropTypes.number,
-    formTitle: PropTypes.string
+    formTitle: PropTypes.string,
+    saveForm: PropTypes.func
   };
 
   static contextTypes = {
@@ -108,6 +109,19 @@ class QuestionInteractive extends Component {
       }
     });
   }
+
+  ensureSessionExists = () => {
+    const { saveForm } = this.props;
+    var self = this;
+    return new Promise(function (resolve, reject) {
+      if (self.props.sessionId) {
+        resolve();
+      }
+      saveForm().then(function () {
+        resolve();
+      });
+    });
+  };
 
   getQuestionInputComponent() {
     var InputComponent = null;
@@ -173,6 +187,9 @@ class QuestionInteractive extends Component {
         break;
       case 'SignatureField':
         InputComponent = SignatureQuestion;
+        props = Object.assign({}, props, {
+          'ensureSessionExists': this.ensureSessionExists
+        });
         break;
       case 'FileUploadField':
         InputComponent = FileUpload;
