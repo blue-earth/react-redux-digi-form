@@ -48,20 +48,10 @@ class SignatureQuestion extends Component {
     this.state = {
       activeWidget: '', // 'signature', 'verification'
       verificationStatus: '', // 'code_sent', 'verifying', 'success', 'failed'
+      value: this.props.value,
       errors: {'name': [], 'email': [], 'dataUrl': [], 'code': []}
     };
   };
-
-  componentDidUpdate(prevProps) {
-    const { value } = this.props;
-    if (value.name !== prevProps.value.name ||
-      value.email !== prevProps.value.email ||
-      value.dataUrl !== prevProps.value.dataUrl
-    ) {
-      // need to trigger handleEnter here to avoid a race condition with onChange
-      this.props.handleEnter();
-    }
-  }
 
   showSignatureWidget = () => {
     this.setState({activeWidget: 'signature'});
@@ -90,11 +80,10 @@ class SignatureQuestion extends Component {
 
   handleSignatureChange = (value) => {
     // check if email has changed
-    if (value.email !== this.props.value.email) {
+    if (value.email !== this.state.value.email) {
       this.setState({verificationStatus: ''});
     }
-    this.props.onChange(value);
-    // this.props.handleEnter();
+    this.setState({value: value}, () => { this.props.handleEnter(); });
   }
 
   handleKeyDown = (event) => {
@@ -105,7 +94,7 @@ class SignatureQuestion extends Component {
   }
 
   validate(cb) {
-    const { value } = this.props;
+    const { value } = this.state;
     var errors = this._getEmptyErrors();
     var isValid = true;
     if (value.dataUrl === '') {
@@ -133,7 +122,8 @@ class SignatureQuestion extends Component {
 
   verify(cb) {
     const that = this;
-    const { value: { email }, sessionId } = this.props;
+    const { value: { email } } = this.state;
+    const { sessionId } = this.props;
     request.get(`${apiUrl}/check_email/?email=${email}&response_id=${sessionId}`)
       .set('X-CSRFToken', getCsrfToken())
       .send()
@@ -145,6 +135,7 @@ class SignatureQuestion extends Component {
         var serverResult = JSON.parse(res.text)['is_verified'];
         if (serverResult) {
           // email is already verified
+          that.props.onChange(that.state.value);
           cb(true);
         } else {
           // email has not been verified yet
@@ -162,7 +153,8 @@ class SignatureQuestion extends Component {
 
   sendVerificationCode = () => {
     const that = this;
-    const { value: { name, email }, sessionId } = this.props;
+    const { value: { name, email } } = this.state;
+    const { sessionId } = this.props;
     request.post(`${apiUrl}/request_email_verification_code/`)
       .set('X-CSRFToken', getCsrfToken())
       .send({ display_name: name, email: email, response_id: sessionId })
@@ -177,7 +169,8 @@ class SignatureQuestion extends Component {
 
   verifyCode = (code) => {
     const that = this;
-    const { value: { email }, sessionId } = this.props;
+    const { value: { email } } = this.state;
+    const { sessionId } = this.props;
     this.setState({verificationStatus: 'verifying'});
     request.post(`${apiUrl}/verify_email_code/`)
       .set('X-CSRFToken', getCsrfToken())
@@ -189,6 +182,7 @@ class SignatureQuestion extends Component {
           var serverResult = JSON.parse(res.text)['is_verified'];
           if (serverResult) {
             that.setState({verificationStatus: 'success'});
+            that.props.onChange(that.state.value);
             that.props.handleEnter();
           } else {
             that.setState({verificationStatus: 'failed'});
@@ -202,7 +196,7 @@ class SignatureQuestion extends Component {
 
   renderSignatureWidget() {
     var widgetProps = {
-      value: this.props.value,
+      value: this.state.value,
       errors: this.state.errors,
       resetErrors: this.resetErrors,
       formTitle: this.props.formTitle,
@@ -230,7 +224,7 @@ class SignatureQuestion extends Component {
 
   renderVerificationWidget() {
     var widgetProps = {
-      value: this.props.value,
+      value: this.state.value,
       errors: this.state.errors.code,
       resetErrors: this.resetErrors,
       isInputLocked: this.props.isInputLocked,
@@ -257,8 +251,8 @@ class SignatureQuestion extends Component {
   }
 
   render() {
-    const { value, isReadOnly, isInputLocked, autoFocus, useModal } = this.props;
-    const { signatureWidgetIsActive, verificationWidgetIsActive } = this.state;
+    const { isReadOnly, isInputLocked, autoFocus, useModal } = this.props;
+    const { value, signatureWidgetIsActive, verificationWidgetIsActive } = this.state;
     const widgetIsActive = signatureWidgetIsActive || verificationWidgetIsActive;
     const preloadFonts = signatureFonts.map((font, index) => (
       <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>
