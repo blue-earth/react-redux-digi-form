@@ -150,6 +150,9 @@
     &.bottom .tooltip-arrow {
       border-bottom-color: $cf-error-color;
     }
+    &.top .tooltip-arrow {
+      border-top-color: $cf-error-color;
+    }
     &.tooltip.in {
       opacity: 1;
     }

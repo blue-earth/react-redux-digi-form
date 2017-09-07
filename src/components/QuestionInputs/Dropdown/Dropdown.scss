@@ -4,8 +4,8 @@
 :global {
   .dropdownWrapper {
     height: 64px;
-    overflow-y: hidden;
     outline: none !important;
+    position: relative;
     &:hover, &:focus, &:active {
       .Dropdown-control {
         background-color: darken($cf-input-bg-color, 2%);
@@ -16,16 +16,10 @@
     }
   }
   .Dropdown-root {
-    position: absolute;
+    position: relative;
     font-size: 23px;  /* eMonDoHaCk */
     font-family: "Lato"; /* eMonDoHaCk */
     width: 100%; /* eMonDoHaCk */
-    @include media('>sm') { /* eMonDoHaCk */
-      width: 500px;
-    }
-    @include media('>md') { /* eMonDoHaCk */
-      width: 580px;
-    }
     cursor: pointer;  /* eMonDoHaCk */
   }
 
@@ -149,5 +143,66 @@
     cursor: default;
     display: block;
     padding: 8px 10px;
+  }
+}
+
+.errorIconWrapper {
+  display: inline;
+  cursor: pointer;
+  color: $cf-error-color;
+  position: absolute;
+  right: -1.2em;
+  top: 1em;
+  font-size: 24px;
+}
+.hide {
+  display: none;
+}
+.errorTip {
+  @include hcenter;
+  line-height: 1em;
+  font-size: 0.6em;
+}
+.errorTipInner {
+  position: relative;
+  top: 7px;
+  padding: 1.5em;
+  color: #fff;
+  white-space: nowrap;
+  background-color: $cf-error-color;
+  @include border-radius(0.4em);
+}
+.errorTipArrow {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  margin-left: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: $cf-error-color;
+}
+
+:global {
+  .inputTooltip {
+    font-size: 14px;
+    font-family: 'Lato';
+    .tooltip-arrow {
+      height: 0;
+    }
+    &.bottom .tooltip-arrow {
+      border-bottom-color: $cf-error-color;
+    }
+    &.tooltip.in {
+      opacity: 1;
+    }
+    .tooltip-inner {
+      text-align: left;
+      background-color: $cf-error-color;
+      padding: 0.7em 2em;
+      max-width: 300px;
+    }
   }
 }

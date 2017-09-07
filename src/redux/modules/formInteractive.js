@@ -1,6 +1,6 @@
 import { bind } from 'redux-effects';
 import { fetch } from 'redux-effects-fetch';
-import { findIndexById, findItemById, mergeItemIntoArray, removeItemFromArray } from 'helpers/pureFunctions';
+import { findItemById, mergeItemIntoArray, removeItemFromArray } from 'helpers/pureFunctions';
 import { createAction, handleActions } from 'redux-actions';
 import { getNextQuestionId, getOutcomeWithQuestionId } from 'helpers/formInteractiveHelper';
 import { assignDefaults } from 'redux/utils/request';
@@ -23,17 +23,13 @@ export const GOTO_QUESTION = 'GOTO_QUESTION';
 export const STORE_ANSWER = 'STORE_ANSWER';
 
 export const ANSWER_PREFILL = 'ANSWER_PREFILL';
-export const VERIFY_EMAIL = 'VERIFY_EMAIL';
-
-export const REQUEST_VERIFICATION = 'REQUEST_VERIFICATION';
-export const DONE_VERIFICATION = 'DONE_VERIFICATION';
-export const RECEIVE_VERIFICATION = 'RECEIVE_VERIFICATION';
 
 export const REQUEST_SUBMIT = 'REQUEST_SUBMIT';
 export const DONE_SUBMIT = 'DONE_SUBMIT';
 export const UPDATE_SESSION_ID = 'UPDATE_SESSION_ID';
 
 export const SHOW_FINAL_SUBMIT = 'SHOW_FINAL_SUBMIT';
+export const SET_INPUT_LOCKED = 'SET_INPUT_LOCKED';
 
 export const RESET_FORM_SUBMIT_STATUS = 'RESET_FORM_SUBMIT_STATUS';
 
@@ -52,8 +48,7 @@ export const UPDATE_ACCESS_CODE = 'UPDATE_ACCESS_CODE';
 
 export const INIT_CURRENT_QUESTION = {
   id: 0,
-  answerValue: '',
-  inputState: 'init'
+  answerValue: ''
 };
 
 // TODO: Implement the structure of form_config field.
@@ -94,7 +89,6 @@ export const INIT_FORM_STATE = {
   isFetchingForm: false, // indicates the form request is being processed.
   isFetchingAnswers: false, // indicates the form answers are being fetched.
   isSubmitting: false, // indicates the form answers submission is being processed.
-  isVerifying: false, // indicates the verifying request is being processed.
   isModified: false, // indicates the form answer modified after submission.
   lastUpdated: Date.now(), // last form-questions received time.
   isSendingContinueLink: false,
@@ -107,6 +101,7 @@ export const INIT_FORM_STATE = {
   title: 'Title',
   slug: 'slug',
   currentQuestion: INIT_CURRENT_QUESTION,
+  isInputLocked: false,
   answers: [],
   prefills: [],
   verificationStatus: [],
@@ -154,6 +149,11 @@ export const fetchForm = (formIdSlug, accessCode) => {
 };
 
 // ------------------------------------
+// Action: setInputLocked
+// ------------------------------------
+export const setInputLocked = createAction(SET_INPUT_LOCKED);
+
+// ------------------------------------
 // Action: requestForm
 // ------------------------------------
 export const requestForm = createAction(REQUEST_FORM);
@@ -175,12 +175,20 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => ({
 // ------------------------------------
 const _receiveForm = (state, { payload }) => {
   const id = _validateQuestionId(payload.form);
+  const allQuestions = payload.form.questions;
+  const prefilledAnswers = allQuestions
+    .filter(question => Boolean(question.value) === true) // All questions with prefills
+    .map(question => ({id: question.id, value: question.value}));
+
+  const currentQuestionAnswer = findItemById(prefilledAnswers, id);
+  const currentQuestion = Object.assign({}, state.currentQuestion, {
+    id,
+    answerValue: _.get(currentQuestionAnswer, 'value', null)
+  });
   return Object.assign({}, state, payload, {
+    answers: prefilledAnswers,
     lastUpdated: Date.now(),
-    currentQuestion: _.merge({}, state.currentQuestion, {
-      id,
-      answerValue: _.defaultTo(findItemById(state.answers, id), {}).value
-    }),
+    currentQuestion: currentQuestion,
     formAccessStatus: !payload.form ? (state.formAccessStatus === 'init' ? 'required' : 'fail') : 'success'
   });
 };
@@ -309,8 +317,7 @@ const _loadQuestion = (state, action) => {
   return Object.assign({}, state, {
     currentQuestion: {
       id: action.payload,
-      answerValue: _.defaultTo(findItemById(answers, action.payload), {}).value,
-      inputState: 'init'
+      answerValue: _.defaultTo(findItemById(answers, action.payload), {}).value
     },
     shouldShowFinalSubmit: false
   });
@@ -377,14 +384,10 @@ export const goToPrevQuestion = () => {
 // Action Handler: _getPrevQuestionId
 // ------------------------------------
 const _getPrevQuestionId = (questions, questionId) => {
-  var curIdx, prevIdx;
-  curIdx = prevIdx = _.findIndex(questions, function (o) { return o.id === questionId; });
-  while (prevIdx > 1) {
-    var q = questions[--prevIdx];
-    if (q.type !== 'Group') break;
-  }
-  if (questions[prevIdx].type === 'Group') prevIdx = curIdx; // In case it reaches index 0 and question type is 'Group'
-  return questions[prevIdx].id;
+  const questionsNoGroup = questions.filter(question => question.type.toLowerCase() !== 'group');
+  const questionIndex = questionsNoGroup.findIndex(question => question.id === questionId);
+  const consolidatedIndex = Math.max(0, questionIndex-1);
+  return questions[consolidatedIndex].id;
 };
 
 // ------------------------------------
@@ -404,133 +407,11 @@ export const answerPrefill = createAction(ANSWER_PREFILL, ({ id, value }) => ({
 }));
 
 // ------------------------------------
-// Action: verifyEmail
-// ------------------------------------
-export const verifyEmail = (questionId, email) => {
-  return (dispatch, getState) => {
-    // if (!getState().isVerifying) {
-    dispatch(requestVerification());
-    dispatch(processVerifyEmail(questionId, email));
-    // }
-  };
-};
-
-// ------------------------------------
-// Action: requestVerification
-// ------------------------------------
-export const requestVerification = createAction(REQUEST_VERIFICATION);
-
-// ------------------------------------
-// Action: processVerifyEmail
-// ------------------------------------
-export const processVerifyEmail = (questionId, email) => {
-  const apiURL = `${API_URL}/verifications/api/email/verify/`;
-  const body = { email };
-  const fetchParams = assignDefaults({
-    method: 'POST',
-    body
-  });
-
-  const fetchSuccess = ({value: {result}}) => {
-    return (dispatch, getState) => {
-      dispatch(receiveVerification({
-        id: questionId,
-        type: 'EmondoEmailFieldService',
-        status: result
-      }));
-      dispatch(doneVerification()); // Hide loading spinner
-    };
-  };
-
-  const fetchFail = (data) => {
-    return (dispatch, getState) => {
-      dispatch(receiveVerification({
-        id: questionId,
-        type: 'EmondoEmailFieldService',
-        status: false
-      }));
-      dispatch(doneVerification()); // Hide loading spinner
-    };
-  };
-
-  return bind(fetch(apiURL, fetchParams), fetchSuccess, fetchFail);
-};
-
-// const shouldVerifyEmail = (state, id) => {
-//   const { formInteractive: { form: { questions } } } = state;
-//   const idx = findIndexById(questions, id);
-
-//   if (_.indexOf(questions[idx].verifications, 'EmondoEmailFieldService') != -1)
-//     return true;
-//   else
-//     return false;
-// }
-
-const shouldVerify = (formInteractive) => {
-  const { form: { questions }, currentQuestion } = formInteractive;
-  const idx = findIndexById(questions, currentQuestion.id);
-  if (typeof questions[idx].verifications !== 'undefined' && questions[idx].verifications.length > 0) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
-// ------------------------------------
-// Action: nextQuestionAfterVerification
-// ------------------------------------
-export const nextQuestionAfterVerification = () => {
-  return (dispatch, getState) => {
-    const formInteractive = getState().formInteractive;
-    const { form: { questions }, currentQuestion, answers } = formInteractive;
-    const idx = findIndexById(questions, currentQuestion.id);
-
-    dispatch(requestVerification());
-    for (var verification of questions[idx].verifications) {
-      if (verification === 'EmondoEmailFieldService') {
-        const answerIndex = findIndexById(answers, currentQuestion.id);
-        dispatch(verifyEmail(currentQuestion.id, answers[answerIndex].value));
-      }
-    }
-  };
-};
-
-const doneVerification = createAction(DONE_VERIFICATION);
-
-// ------------------------------------
-// Action: receiveVerification
-// ------------------------------------
-export const receiveVerification = (verification) => {
-  return (dispatch, getState) => {
-    dispatch(updateVerificationStatus(verification));
-    const formInteractive = getState().formInteractive;
-    const { verificationStatus, currentQuestion, form: { questions } } = formInteractive;
-    const verifiedStatuses = _.filter(verificationStatus, {id: currentQuestion.id, status: true});
-    const idx = findIndexById(questions, currentQuestion.id);
-    // If all verified as true go to next question.
-    if (verifiedStatuses.length === questions[idx].verifications.length) {
-      dispatch(goToNextQuestion());
-    }
-  };
-};
-
-// ------------------------------------
-// Action: updateVerificationStatus
-// ------------------------------------
-export const updateVerificationStatus = createAction(RECEIVE_VERIFICATION);
-
-// ------------------------------------
 // Action: handleEnter
 // ------------------------------------
 export const handleEnter = () => {
   return (dispatch, getState) => {
-    const formInteractive = getState().formInteractive;
-    // check if verification is required.
-    if (shouldVerify(formInteractive)) {
-      dispatch(nextQuestionAfterVerification());
-    } else {
-      dispatch(goToNextQuestion());
-    }
+    dispatch(goToNextQuestion());
   };
 };
 
@@ -540,11 +421,12 @@ export const handleEnter = () => {
 export const submitAnswer = (requestAction, onSuccess) => {
   return (dispatch, getState) => {
     const formInteractive = getState().formInteractive;
+
     if (requestAction === FORM_USER_SUBMISSION) {
       dispatch(requestSubmitAnswer());
       dispatch(processSubmitAnswer(requestAction, formInteractive, onSuccess));
     }
-    if (requestAction === FORM_AUTOSAVE && formInteractive.isModified) {
+    if (requestAction === FORM_AUTOSAVE) {
       dispatch(processSubmitAnswer(requestAction, formInteractive, onSuccess));
     }
   };
@@ -711,26 +593,19 @@ const formInteractiveReducer = handleActions({
       currentQuestion: Object.assign({}, state.currentQuestion, action.payload),
       verificationStatus: removeItemFromArray(state.verificationStatus, {id: state.currentQuestion.id})
     }),
-  STORE_ANSWER: (state, action) =>
+
+  SET_INPUT_LOCKED: (state, action) =>
     Object.assign({}, state, {
+      isInputLocked: action.payload
+    }),
+
+  STORE_ANSWER: (state, action) => {
+    var State = Object.assign({}, state, {
       answers: mergeItemIntoArray(state.answers, action.payload),
       isModified: true
-    }),
-
-  REQUEST_VERIFICATION: (state, action) =>
-    Object.assign({}, state, {
-      isVerifying: true
-    }),
-
-  DONE_VERIFICATION: (state, action) =>
-    Object.assign({}, state, {
-      isVerifying: false
-    }),
-
-  RECEIVE_VERIFICATION: (state, action) =>
-    Object.assign({}, state, {
-      verificationStatus: mergeItemIntoArray(state.verificationStatus, action.payload)
-    }),
+    });
+    return State;
+  },
 
   UPDATE_SESSION_ID: (state, action) =>
     Object.assign({}, state, {

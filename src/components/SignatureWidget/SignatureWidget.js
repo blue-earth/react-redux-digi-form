@@ -3,7 +3,6 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  Modal,
   Button,
   Tabs,
   Tab,
@@ -13,37 +12,25 @@ import {
   OverlayTrigger
 } from 'react-bootstrap';
 import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
-import ImageUploader from 'components/SignatureWidget/ImageUploader';
-import { connectModal } from 'redux-modal';
-import styles from './SignatureModal.scss';
+import ImageUploader from './ImageUploader';
+import styles from './SignatureWidget.scss';
 import classNames from 'classnames';
 import moment from 'moment';
 import AppButton from 'components/Buttons/AppButton';
-import DrawSignature from 'components/SignatureWidget/DrawSignature';
-import WriteSignature from 'components/SignatureWidget/WriteSignature';
-import CompletionModal from './CompletionModal';
-import { validateIsEmail } from 'helpers/validationHelper';
-import { FaClose } from 'react-icons/lib/fa';
+import DrawSignature from './DrawSignature';
+import WriteSignature from './WriteSignature';
 
 const WRITE = 'write';
 
-class SignatureModal extends Component {
+class SignatureWidget extends Component {
   static propTypes = {
-    handleHide: PropTypes.func.isRequired, // Current modal hide function
-    show: PropTypes.bool,                 // Modal display status
-    hide: PropTypes.func.isRequired,      // Hide modal function from 'redux-modal'
     value: PropTypes.object,
-    title: PropTypes.string,
-    isPageBusy: PropTypes.bool,
-    isConsented: PropTypes.bool,
-    isCodeVerifyingModalOpen: PropTypes.bool.isRequired,
-    isCodeVerified: PropTypes.bool.isRequired,
-    hasCodeVerified: PropTypes.bool,
-    verifyEmailCode: PropTypes.func.isRequired,
-    updateSessionId: PropTypes.func.isRequired,
-    requestVerificationCode: PropTypes.func.isRequired,
-    resetCodeVerified: PropTypes.func.isRequired,
-    submitValue: PropTypes.func.isRequired
+    errors: PropTypes.object,
+    resetErrors: PropTypes.func,
+    formTitle: PropTypes.string,
+    isInputLocked: PropTypes.bool,
+    onChange: PropTypes.func,
+    closeWidget: PropTypes.func
   };
 
   constructor(props) {
@@ -52,71 +39,36 @@ class SignatureModal extends Component {
     this.state = {
       name: name || '',
       email: email || '',
-      isConsented: props.isConsented || false,
-      isNameValidated: true,
-      isSignatureValidated: true,
-      isEmailValidated: true,
+      isConsented: false,
       activeTabName: WRITE
     };
   };
 
-  componentDidMount() {
-    this.props.updateSessionId();
-  }
-
   handleSubmit = () => {
-    const { submitValue } = this.props;
     const { activeTabName, name, email } = this.state;
     const dataUrl = this.refs[activeTabName].dataUrl;
-    let isValid = true;
-    // Empty signature error handle
-    if (dataUrl === '') {
-      this.refs.errorMessageFocus.focus();
-      this.setState({
-        isSignatureValidated: false
-      });
-      isValid = false;
-    }
-    if (!validateIsEmail(email)) {
-      this.refs.emailInput.refs.input.focus();
-      this.setState({
-        isEmailValidated: false
-      });
-      isValid = false;
-    }
-    // Empty signature name error handle
-    if (name.length === 0) {
-      this.refs.nameInput.refs.input.focus();
-      this.setState({
-        isNameValidated: false
-      });
-      isValid = false;
-    }
-    if (isValid) {
-      submitValue({dataUrl, email, name});
-    }
+    this.props.onChange({dataUrl, email, name});
   }
 
   handleTabSelect = (activeTabName) => {
     this.setState({
-      activeTabName,
-      isSignatureValidated: true,
-      isEmailValidated: true
+      activeTabName
     });
+    this.props.resetErrors;
   }
 
   handleNameChange = (value) => {
     this.setState({
-      name: value,
-      isNameValidated: true,
-      isSignatureValidated: true
+      name: value
     });
+    this.props.resetErrors('name');
   }
+
   handleEmailChange = (value) => {
     this.setState({
-      email: value,
-      isEmailValidated: true
+      email: value
     });
+    this.props.resetErrors('email');
   }
 
   handleToggleConsent = (event) => {
@@ -130,31 +82,21 @@ class SignatureModal extends Component {
   }
 
   handleSignatureChange = () => {
-    this.setState({
-      isSignatureValidated: true
-    });
+    this.props.resetErrors('dataUrl');
   }
 
   get signatureHeader() {
-    const {
-      name,
-      email,
-      isNameValidated,
-      isEmailValidated,
-      isSignatureValidated
-    } = this.state;
     return (
       <div>
         <Row>
           <div className={classNames(styles.inputWrapper, styles.inputLeft)}>
             <FloatTextInput
               ref="nameInput"
-              errorMessage={<span>Please enter your full name.</span>}
-              hasError={!isNameValidated}
+              errors={this.props.errors.name}
               extraClass={styles.signatureInput}
               size="md"
               autoFocus
-              value={name}
+              value={this.state.name}
               label="Full name"
               onChange={this.handleNameChange}
               errorPlacement="top" />
@@ -163,11 +105,10 @@ class SignatureModal extends Component {
             <FloatTextInput
               ref="emailInput"
               type="EmailField"
-              errorMessage={<span>Please enter a valid email.</span>}
-              hasError={!isEmailValidated}
+              errors={this.props.errors.email}
               extraClass={styles.signatureInput}
               size="md"
-              value={email}
+              value={this.state.email}
               label="Email"
               onChange={this.handleEmailChange} />
           </div>
@@ -179,12 +120,12 @@ class SignatureModal extends Component {
             <span className={styles.info}>{moment().format('L')}</span>
           </Col>
         </Row>
-        <div className={classNames(styles.errorMessageWrapper, {
-          [styles.noErrorMessage]: isSignatureValidated
-        })}>
-          <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
-          {!isSignatureValidated && <span className={styles.errorMessage}>Please sign your signature</span>}
-        </div>
+        {this.props.errors.dataUrl.length > 0 &&
+          <div className={classNames(styles.errorMessageWrapper)}>
+            <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
+            <span className={styles.errorMessage}>Please sign your signature</span>
+          </div>
+        }
       </div>
     );
   }
@@ -245,7 +186,7 @@ class SignatureModal extends Component {
 
   get consentSection() {
     const { isConsented, name } = this.state;
-    const { title } = this.props;
+    const { formTitle } = this.props;
     const termsNConditions = (
       <Popover id="terms-and-conditions" title="Terms & Conditions">
         <p>By continuing,
@@ -256,15 +197,12 @@ class SignatureModal extends Component {
         electronic signature for the purposes of authorizing and authenticating
         electronic forms.</p>
         <p>I acknowledge that on the {moment().format('L')}, at {moment().format('LT')} the
-          form {title} was electronically signed by the signer {name} using his/her electronic signature.
+          form {formTitle} was electronically signed by the signer {name} using his/her electronic signature.
         </p>
       </Popover>
     );
     return (
-      <div className={classNames(
-        styles.signatureModalConsent,
-        styles.signatureModalWrapper
-      )}>
+      <div className={styles.signatureWidgetConsent}>
         <div className={styles.consent}>
           <div style={{width: '30px', float: 'left'}}>
             <input id="consent" type="checkbox" className={styles.checkbox}
@@ -283,82 +221,43 @@ class SignatureModal extends Component {
     );
   }
 
-  get verifyCodeModal() {
-    const {
-      isPageBusy,
-      isCodeVerified,
-      hasCodeVerified,
-      verifyEmailCode,
-      requestVerificationCode,
-      resetCodeVerified
-    } = this.props;
-    return (
-      <CompletionModal
-        isPageBusy={isPageBusy}
-        hasCodeVerified={hasCodeVerified}
-        hasError={!isCodeVerified}
-        verifyEmailCode={verifyEmailCode}
-        resendCode={requestVerificationCode}
-        resetCodeVerified={resetCodeVerified} />
-    );
-  }
-
   render() {
     const {
-      handleHide,
-      show,
-      isPageBusy,
-      isCodeVerifyingModalOpen
+      isInputLocked,
+      errors
     } = this.props;
     const {
-      isConsented,
-      isEmailValidated,
-      isSignatureValidated
+      isConsented
     } = this.state;
-
+    const isSignDisabled = isInputLocked || !isConsented ||
+      errors.email.length > 0 ||
+      errors.name.length > 0 ||
+      errors.dataUrl.length > 0;
     moment.locale('en-au');
     return (
-      <form>
-        <Modal
-          backdrop="static"
-          show={show}
-          className={classNames(styles.signatureModal, {
-            'hide': isCodeVerifyingModalOpen
-          })}
-          aria-labelledby="ModalHeader">
-          <Modal.Header>
-            <Modal.Title bsClass={styles.signatureModalTitle}>
-              YOUR SIGNATURE
-              <button className={styles.closeModalButton} onClick={handleHide}>
-                <FaClose size={16} />
-              </button>
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body bsClass={styles.signatureModalWrapper}>
-            {this.signatureHeader}
-            {this.signatureTabs}
-          </Modal.Body>
-          {this.consentSection}
-          <Modal.Footer className={classNames(
-            styles.signatureModalFooter,
-            styles.signatureModalWrapper
-          )}>
-            <Button onClick={handleHide} bsStyle="link" className={styles.cancelButton}>
+      <form className={styles.signatureWidgetWrapper}>
+        <div className={styles.signatureWidgetBody}>
+          {this.signatureHeader}
+          {this.signatureTabs}
+        </div>
+        {this.consentSection}
+        <div className={styles.signatureWidgetFooter}>
+          {typeof this.props.closeWidget === 'function' &&
+            <Button onClick={this.props.closeWidget} bsStyle="link" className={styles.cancelButton}>
               Cancel
             </Button>
-            <AppButton
-              onClick={this.handleSubmit}
-              isDisabled={!(isConsented && isEmailValidated && isSignatureValidated)}
-              isBusy={isPageBusy}
-              extraClass={styles.signButton}>
-              Sign
-            </AppButton>
-          </Modal.Footer>
-        </Modal>
-        {this.verifyCodeModal}
+          }
+          <AppButton
+            onClick={this.handleSubmit}
+            isDisabled={isSignDisabled}
+            isBusy={isInputLocked}
+            extraClass={styles.signButton}>
+            Sign
+          </AppButton>
+        </div>
       </form>
     );
   }
 }
 
-export default connectModal({ name: 'signatureModal' })(SignatureModal);
+export default SignatureWidget;

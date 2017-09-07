@@ -8,9 +8,6 @@
     outline: none;
   }
 }
-.choicesRow {
-  // margin: 0 -10px;
-}
 .choiceItem {
   border: 1px solid $choice-border-color;
   @include input-box-shadow;
@@ -60,4 +57,7 @@
     cursor: default;
     opacity: .5;
   }
+}
+.error {
+  color: $red;
 }

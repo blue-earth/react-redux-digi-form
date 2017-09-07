@@ -1,16 +1,7 @@
 @import './mixins';
 @import './variables';
 
-.addressWrapper {
-  padding: 0 5px;
-}
-.addressRow {
-  margin: 0 -5px 10px -5px;
-}
-.addressCol {
-  padding: 0 5px;
-}
-.addressInput {
+.dropdownInput {
   padding: 15px;
   border: 1px solid $text-border-color;
   @include border-radius($input-border-radius);
@@ -19,6 +10,7 @@
   display: block;
   width: 100%;
   height: 64px;
+  cursor: pointer;
   -webkit-text-fill-color: $text-dark-color;
   &[disabled] {
     opacity: .5;
@@ -26,17 +18,5 @@
   &:hover, &:focus {
     border: 1px solid $text-hover-border-color;
     outline: none;
-  }
-}
-
-:global {
-  .pac-container {
-    width: 280px !important;
-    @include media('>=sm') {
-      width: 400px !important;
-    }
-  }
-  .pac-logo:after {
-    content: none !important;
   }
 }

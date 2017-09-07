@@ -2,23 +2,19 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import _ from 'lodash';
 import styles from './QuestionInteractive.scss';
-import FloatTextInput from '../../QuestionInputs/FloatTextInput';
-import DropdownInput from '../../QuestionInputs/Dropdown';
-import FieldError from '../../QuestionInputs/FieldError';
 import QuestionInstruction from 'components/Questions/QuestionInstruction';
-import LongTextInput from '../../QuestionInputs/LongTextInput/LongTextInput';
-import MultipleChoice from '../../QuestionInputs/MultipleChoice/MultipleChoice';
-import Statement from '../../QuestionInputs/Statement/Statement';
-import PhoneNumberInput from '../../QuestionInputs/PhoneNumberInput/PhoneNumberInput';
-import DateInput from '../../QuestionInputs/DateInput/DateInput';
-import AddressInput from '../../QuestionInputs/AddressInput/AddressInput';
-import Signature from '../../QuestionInputs/Signature/Signature';
-import FileUploadContainer from '../../QuestionInputs/FileUpload/FileUploadContainer';
-import validateField, {
-  valueIsValid
-} from 'helpers/validationHelper';
+import SingularTextInputQuestion from '../../QuestionTypes/SingularTextInputQuestion';
+import LongTextQuestion from '../../QuestionTypes/LongTextQuestion';
+import NameQuestion from '../../QuestionTypes/NameQuestion';
+import DropdownQuestion from '../../QuestionTypes/DropdownQuestion';
+import MultipleChoiceQuestion from '../../QuestionTypes/MultipleChoiceQuestion';
+import StatementQuestion from '../../QuestionTypes/StatementQuestion';
+import PhoneNumberQuestion from '../../QuestionTypes/PhoneNumberQuestion';
+import DateQuestion from '../../QuestionTypes/DateQuestion';
+import AddressQuestion from '../../QuestionTypes/AddressQuestion';
+import FileUpload from '../../QuestionInputs/FileUpload';
+import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
 
 /**
  * This component joins QuestionDisplay and one of the question input
@@ -42,14 +38,6 @@ class QuestionInteractive extends Component {
       PropTypes.object,
       PropTypes.array
     ]),
-
-    /*
-     * inputState: Redux state to keep the current input state('init', 'changed', 'focus', 'blur', 'enter').
-     */
-    inputState: PropTypes.oneOf([
-      'init', 'changed', 'enter'
-    ]).isRequired,
-
     /*
      * changeCurrentState: Redux action to change the update the current answer value on change,
      * input state to redux store.
@@ -60,12 +48,8 @@ class QuestionInteractive extends Component {
      * verifications: Array of verifications status for the current question, ex. EmondoEmailService
      */
     verifications: PropTypes.array,
-
-    /*
-     * isVerifying: Redux state that holds the status whether verification is in prgress
-     */
-    isVerifying: PropTypes.bool,
-
+    isInputLocked: PropTypes.bool,
+    setInputLocked: PropTypes.func,
     /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
@@ -78,27 +62,26 @@ class QuestionInteractive extends Component {
     /*
      * showModal: redux-modal action to show modal
      */
-    showModal: PropTypes.func.isRequired
-  };
+    showModal: PropTypes.func.isRequired,
 
-  constructor(props) {
-    super(props);
-    this.handleEnterKeyPress = this.handleEnterKeyPress.bind(this);
-    this.state = {
-      'hasError': false
-    };
-  }
+    formId: PropTypes.number,
+    sessionId: PropTypes.number,
+    formTitle: PropTypes.string,
+    saveForm: PropTypes.func
+  };
 
   static contextTypes = {
     primaryColour: PropTypes.string
   };
 
+  static defaultProps = {
+    isInputLocked: false
+  };
+
   handleChange = (value) => {
     const {changeCurrentState, storeAnswer, question: {id}} = this.props;
-
     changeCurrentState({
-      answerValue: value,
-      inputState: 'changed'
+      answerValue: value
     });
     storeAnswer({
       id,
@@ -106,101 +89,126 @@ class QuestionInteractive extends Component {
     });
   };
 
-  handleEnterKeyPress = () => {
-    const {
-      getStoreAnswerByQuestionId,
-      handleEnter,
-      question
-    } = this.props;
-    const answer = getStoreAnswerByQuestionId(question.id);
-    const isValid = valueIsValid(answer, question.validations);
-    if (isValid) {
-      this.setState({
-        'hasError': false
-      }, function () {
-        handleEnter();
+  validateAndVerify(successCb) {
+    const inputComponent = this.refs.inputComponent;
+    const { setInputLocked } = this.props;
+    inputComponent.validate(function (result) {
+      if (result) {
+        // continue with verification
+        if (typeof inputComponent.verify === 'function') {
+          setInputLocked(true);
+          inputComponent.verify(function (result) {
+            if (result) {
+              successCb();
+            }
+            setInputLocked(false);
+          });
+        } else {
+          successCb();
+        }
+      }
+    });
+  }
+
+  ensureSessionExists = () => {
+    const { saveForm } = this.props;
+    var self = this;
+    return new Promise(function (resolve, reject) {
+      if (self.props.sessionId) {
+        resolve();
+      }
+      saveForm().then(function () {
+        resolve();
       });
-    } else {
-      this.setState({
-        'hasError': true
-      });
-    }
+    });
   };
 
-  shouldShowValidation() {
-    return this.props.inputState === 'enter';
-  }
-
-  get hasError() {
-    const {verifications, value, question: { validations }} = this.props;
-    const failedValidations = _.filter(validations, function (validation) {
-      return !validateField(validation, value);
-    });
-    const failedVerifications = _.filter(verifications, {status: false});
-    return (this.shouldShowValidation() && failedValidations.length > 0) || failedVerifications.length > 0;
-  }
-
   getQuestionInputComponent() {
-    const { question: { type } } = this.props;
     var InputComponent = null;
+    const { value, question, question: { type },
+      getStoreAnswerByQuestionId, storeAnswer, changeCurrentState } = this.props;
+    var props = {
+      primaryColour: this.context.primaryColour,
+      onChange: this.handleChange,
+      compiledQuestion: question,
+      getStoreAnswerByQuestionId: getStoreAnswerByQuestionId,
+      changeCurrentState: changeCurrentState,
+      storeAnswer: storeAnswer,
+      handleEnter: this.props.handleEnter,
+      isInputLocked: this.props.isInputLocked,
+      value: value,
+      formId: this.props.formId,
+      sessionId: this.props.sessionId,
+      formTitle: this.props.formTitle
+    };
+
     switch (type) {
       case 'ShortTextField':
+        InputComponent = SingularTextInputQuestion;
+        props = Object.assign({}, props, {
+          'type': 'text'
+        });
+        break;
       case 'EmailField':
+        InputComponent = SingularTextInputQuestion;
+        props = Object.assign({}, props, {
+          'type': 'email'
+        });
+        break;
       case 'NumberField':
-        InputComponent = FloatTextInput;
+        InputComponent = SingularTextInputQuestion;
+        props = Object.assign({}, props, {
+          'type': 'number'
+        });
         break;
-      case 'MultipleChoice':
-        InputComponent = MultipleChoice;
-        break;
-      case 'LongTextField':
-        InputComponent = LongTextInput;
-        break;
-      case 'StatementField':
-        InputComponent = Statement;
+      case 'NameField':
+        InputComponent = NameQuestion;
         break;
       case 'PhoneNumberField':
-        InputComponent = PhoneNumberInput;
+        InputComponent = PhoneNumberQuestion;
+        break;
+      case 'StatementField':
+        InputComponent = StatementQuestion;
+        break;
+      case 'LongTextField':
+        InputComponent = LongTextQuestion;
+        break;
+      case 'MultipleChoice':
+        InputComponent = MultipleChoiceQuestion;
         break;
       case 'DropdownField':
-        InputComponent = DropdownInput;
+        InputComponent = DropdownQuestion;
         break;
       case 'DateField':
-        InputComponent = DateInput;
+        InputComponent = DateQuestion;
         break;
       case 'AddressField':
-        InputComponent = AddressInput;
+        InputComponent = AddressQuestion;
         break;
       case 'SignatureField':
-        InputComponent = Signature;
+        InputComponent = SignatureQuestion;
+        props = Object.assign({}, props, {
+          'ensureSessionExists': this.ensureSessionExists
+        });
         break;
       case 'FileUploadField':
-        InputComponent = FileUploadContainer;
+        InputComponent = FileUpload;
         break;
       default:
         InputComponent = (<p>`Question input not found for ${type}`</p>);
     }
-    return InputComponent;
+    return (<InputComponent ref="inputComponent" {...props} />);
   }
 
   render() {
-    const { verifications, value, question, question: { validations } } = this.props;
-    var extraProps = {
-      autoFocus: true,
-      primaryColour: this.context.primaryColour,
-      onChange: this.handleChange,
-      hasError: this.state.hasError,
-      onEnterKey: this.handleEnterKeyPress,
-      errorMessage: <FieldError
-        value={value} validations={validations} verifications={verifications} />
-    };
-    const InputComponent = this.getQuestionInputComponent();
+    const { question } = this.props;
     return (
       <div className={styles.wrapper}>
         <QuestionInstruction
           instruction={question.questionInstruction}
           description={question.questionDescription}
-          />
-        <InputComponent {...this.props} {...extraProps} />
+        />
+        {this.getQuestionInputComponent()}
       </div>
     );
   }

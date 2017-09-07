@@ -67,12 +67,6 @@ class FormInteractive extends Component {
      * isFetchingForm: Redux state that indicates whether the requested form is being fetched from backend
      */
     isFetchingForm: PropTypes.bool.isRequired,
-
-    /*
-     * isVerifying: Redux state that indicates the status whether verification is in prgress with backend
-     */
-    isVerifying: PropTypes.bool.isRequired,
-
     /*
      * changeCurrentState: Redux action to change the update the current answer value on change,
      * input state to redux store.
@@ -169,6 +163,8 @@ class FormInteractive extends Component {
      */
     updateAccessCode: PropTypes.func,
 
+    setInputLocked: PropTypes.func.isRequired,
+    isInputLocked: PropTypes.bool.isRequired,
     /*
      * isAccessCodeProtected: Redux state to indicate the form is access code protected.
      */
@@ -208,6 +204,17 @@ class FormInteractive extends Component {
     this.autosaveIntervalId = setInterval(function () {
       submitAnswer(FORM_AUTOSAVE, that.checkRedirectAfterSubmit);
     }, 30000);  // todo: Will optimise this later
+  }
+
+  saveForm = () => {
+    var self = this;
+    console.log('forminteractive -> saveform');
+    return new Promise(function (resolve, reject) {
+      self.props.submitAnswer(FORM_AUTOSAVE, function () {
+        // check submission succeed
+        resolve();
+      });
+    });
   }
 
   componentWillReceiveProps(props) {
@@ -300,7 +307,7 @@ class FormInteractive extends Component {
               onItemChange={this.setActiveGroup}
               percentage={this.percentage}
             />
-            {this.isInProgress && <FormInteractiveView {...this.props} />}
+            {this.isInProgress && <FormInteractiveView {...this.props} saveForm={this.saveForm} />}
             {shouldShowFinalSubmit && !this.isCompleted && <Summary {...this.props} />}
             {this.isCompleted && <FormCompletion title={title} {...this.props} />}
             {this.needsAccessCode && <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />}

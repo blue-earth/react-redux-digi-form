@@ -7,6 +7,9 @@ import _ from 'lodash';
 import { FaCloudUpload, FaClose, FaSpinner, FaExclamationTriangle } from 'react-icons/lib/fa';
 import styles from './FileUpload.scss';
 import classNames from 'classnames/bind';
+import {
+  valueIsValid
+} from 'helpers/validationHelper';
 
 const fileSizeWithUnit = (fileSize) =>
   fileSize < 1024 * 1000
@@ -20,6 +23,8 @@ const XHR_WAITING = 'XHR_WAITING';
 const XHR_FAIL = 'XHR_FAIL';
 const REMOVED = 'REMOVED';
 
+const cx = classNames.bind(styles);
+
 class FileUpload extends Component {
 
   static contextTypes = {
@@ -32,7 +37,7 @@ class FileUpload extends Component {
     [{file_name: 'sheep.png', attachment_id: 1, file_size: 10000}]
     */
     value: PropTypes.array,
-
+    compiledQuestion: PropTypes.object.isRequired,
     /*
     file types to accept
     */
@@ -40,7 +45,7 @@ class FileUpload extends Component {
     maxNumberOfFiles: PropTypes.number,
     maxBytesPerFile: PropTypes.number,
     onChange: PropTypes.func,
-    onEnterKey: PropTypes.func,
+    handleEnter: PropTypes.func.isRequired,
     formId: PropTypes.number,
     sessionId: PropTypes.number
   };
@@ -56,17 +61,16 @@ class FileUpload extends Component {
     super(props);
     this.state = {
       items: this.props.value,
-      uploadError: null
+      errors: []
     };
-    // this.xhr = null;
   }
 
   hasMaxFiles = () => {
     const { items } = this.state;
     // count items where (has attachment_id && status not REMOVED) or status not XHR_FAIL
     var numFiles = 0;
-    _.forEach(items, function (value) {
-      if ((value.attachment_id && value.status !== REMOVED) && value.status !== XHR_FAIL) {
+    _.forEach(items, function (item) {
+      if ((item.attachment_id && item.status !== REMOVED) && item.status !== XHR_FAIL) {
         numFiles += 1;
       }
     });
@@ -77,29 +81,39 @@ class FileUpload extends Component {
   }
 
   handleChange = () => {
-    var values = [];
-    _.forEach(this.state.items, function (value) {
-      if (value.status !== REMOVED && value.attachment_id) {
-        var s = value.file_size || value.file.size;
-        var x = {file_name: value.file_name, file_size: s, attachment_id: value.attachment_id};
-        values.push(x);
+    var newValue = [];
+    _.forEach(this.state.items, function (item) {
+      if (item.status !== REMOVED && item.attachment_id) {
+        var s = item.file_size || item.file.size;
+        var x = {file_name: item.file_name, file_size: s, attachment_id: item.attachment_id};
+        newValue.push(x);
       }
     });
-    // console.log(values);
-    this.props.onChange(values);
+    this.props.onChange(newValue);
   }
 
   handleKeyDown = (event) => {
-    const { onEnterKey } = this.props;
-    if (event.keyCode === 13 && typeof onEnterKey === 'function') {
-      onEnterKey();
-      // this.refs.fileInput.blur();
+    const {
+      value,
+      compiledQuestion: { validations }
+    } = this.props;
+    // only validation for file upload is Required - validates array.length > 0
+    var errors = valueIsValid(value, validations);
+    if (errors.length > 0) {
+      this.setState({
+        'errors': errors
+      });
+      return;
+    }
+    const { handleEnter } = this.props;
+    if (event.keyCode === 13 && typeof handleEnter === 'function') {
+      handleEnter();
     }
   }
 
   handleClick = () => {
     this.refs.fileInput.click();
-    this.setState({ uploadError: null }); // remove error message
+    this.setState({ errors: [] }); // remove error message
   }
 
   handleFileSelect = (event) => {
@@ -110,7 +124,7 @@ class FileUpload extends Component {
       // check file size
       if (item.file.size > maxBytesPerFile) {
         this.setState({
-          uploadError: 'The maximum file size allowed is ' + maxFileSize
+          errors: ['The maximum file size allowed is ' + maxFileSize]
         });
         return false;
       } else {
@@ -210,7 +224,7 @@ class FileUpload extends Component {
     newItems[index] = Object.assign({}, this.state.items[index], {
       status: REMOVED
     });
-    this.setState({items: newItems, uploadError: null}, function () {
+    this.setState({items: newItems, errors: []}, function () {
       this.handleChange();
     });
   }
@@ -240,7 +254,6 @@ class FileUpload extends Component {
   }
 
   renderFileSet() {
-    const cx = classNames.bind(styles);
     const { items } = this.state;
     if (!items || items.length<1) return false;
     const that = this;
@@ -317,16 +330,20 @@ class FileUpload extends Component {
     );
   }
 
-  renderError() {
-    const cx = classNames.bind(styles);
-    if (this.state.uploadError && this.state.uploadError !== null) {
-      return (<div className={cx('uploadError')}>{this.state.uploadError}</div>);
+  renderErrors() {
+    if (this.state.errors.length > 0) {
+      return (
+        <div className={cx('uploadError')}>
+          {this.state.errors.map((error, index) => {
+            return (<p key={index}>{error}</p>);
+          })}
+        </div>
+      );
     }
     return false;
   }
 
   render() {
-    const cx = classNames.bind(styles); // eslint-disable-line
     const { primaryColour } = this.context;
     var optionals = {};
     if (this.hasMaxFiles()) {
@@ -344,7 +361,7 @@ class FileUpload extends Component {
         </button>
         <span className={cx('limits')}>max. {this.props.maxNumberOfFiles} files,
           up to {fileSizeWithUnit(this.props.maxBytesPerFile)} each</span>
-        {this.renderError()}
+        {this.renderErrors()}
         {this.renderFileSet()}
         <input style={{display: 'none'}}
           type="file"

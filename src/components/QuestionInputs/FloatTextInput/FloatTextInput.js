@@ -10,6 +10,8 @@ import styles from './FloatTextInput.scss';
 import classNames from 'classnames/bind';
 import { IoAndroidAlert } from 'react-icons/lib/io';
 
+const cx = classNames.bind(styles);
+
 class FloatTextInput extends Component {
   static propTypes = {
     placeholder: PropTypes.string,
@@ -22,25 +24,25 @@ class FloatTextInput extends Component {
     onEnterKey: PropTypes.func,
     primaryColour: PropTypes.string,
     autoFocus: PropTypes.bool,
-    hasError: PropTypes.bool,
     isDisabled: PropTypes.bool,
-    errorMessage: PropTypes.element,
     errorPlacement: PropTypes.string,
     extraClass: PropTypes.string,
     type: PropTypes.string,
-    refName: PropTypes.string,
     backgroundColour: PropTypes.string,
-    size: PropTypes.oneOf(['sm', 'md', 'lg'])
+    size: PropTypes.oneOf(['sm', 'md', 'lg']),
+    errors: PropTypes.array
   }
+
   static defaultProps = {
     primaryColour: '#3893d0',
     errorPlacement: 'bottom',
-    hasError: false,
     isDisabled: false,
-    placeholder: '',
-    type: 'text',
     value: '',
-    size: 'lg'
+    placeholder: '',
+    label: '',
+    type: 'text',
+    size: 'lg',
+    errors: []
   }
 
   static counter = 0;
@@ -48,17 +50,24 @@ class FloatTextInput extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      savedValue: props.value,
-      filled: props.value,
-      hasError: props.hasError,
       active: false,
+      filled: props.value,
       inputId: FloatTextInput.counter ++
     };
   }
+
+  get isFilled() {
+    return this.props.value.length > 0;
+  };
+
+  get hasError() {
+    return this.props.errors.length > 0;
+  }
+
   componentDidMount() {
-    const { hasError, autoFocus } = this.props;
+    const { autoFocus } = this.props;
     const input = this.refs.input;
-    if (hasError) {
+    if (this.hasError) {
       this.refs.errorMessage.show();
     }
     input.blur();
@@ -66,78 +75,56 @@ class FloatTextInput extends Component {
       setTimeout(() => input.focus(), 10);
     }
   }
+
   componentWillReceiveProps(props) {
-    if (props.hasError) {
+    if (props.errors.length > 0) {
       this.refs.errorMessage.show();
     } else {
       this.refs.errorMessage.hide();
     }
-    this.setState({
-      hasError: props.hasError,
-      savedValue: props.value
-    });
-    if (!this.state.active) {
-      this.setState({
-        filled: props.value && props.value.length > 0
-      });
+    if (props.value.length > 0) {
+      this.setState({ filled: true });
     }
   }
-  inputType(type) {
-    switch (type) {
-      case 'EmailField':
-        return 'email';
-      case 'NumberField':
-        return 'number';
-      default:
-        return 'text';
-    }
-  }
+
   handleChange = (event) => {
     const value = event.target.value;
-    this.setState({
-      savedValue: value
-    });
     const { onChange } = this.props;
     if (typeof onChange === 'function') {
       onChange(value);
     }
-  }
+  };
+
   handleFocus = (event) => {
-    if (this.state.savedValue.length === 0) {
-      this.setState({
-        filled: true
-      });
-    }
     this.setState({
-      active: true
+      active: true,
+      filled: true
     });
     const { onFocus } = this.props;
     if (typeof onFocus === 'function') {
       onFocus(event);
     }
-  }
+  };
+
   handleBlur = (event) => {
-    if (this.state.savedValue.length === 0) {
-      this.setState({
-        filled: false
-      });
-    }
     this.setState({
       active: false,
-      hasError: false
+      filled: this.isFilled
     });
     this.refs.errorMessage.hide();
     const { onBlur } = this.props;
     if (typeof onBlur === 'function') {
       onBlur(event);
     }
-  }
+  };
+
   handleKeyDown = (event) => {
     const { onEnterKey } = this.props;
     if (event.keyCode === 13 && typeof onEnterKey === 'function') {
       onEnterKey();
     }
-  }
+  };
+
   get activeColour() {
     const { backgroundColour } = this.props;
     let style = { backgroundColor: backgroundColour };
@@ -163,19 +150,19 @@ class FloatTextInput extends Component {
       placeholder,
       label,
       name,
-      errorMessage,
+      errors,
       extraClass,
       type,
       isDisabled,
       size,
+      value,
       errorPlacement
     } = this.props;
-    let { filled, active, savedValue, hasError, inputId } = this.state;
-    const cx = classNames.bind(styles); // eslint-disable-line
+    let { filled, active, inputId } = this.state;
     const controlId = name || `floatTextInput_${inputId}`;
     const tooltip = (
       <Tooltip className="floatTextInputTooltip" id={`tooltipQuestion_${inputId}`}>
-        {errorMessage}
+        {errors.map((error, i) => <p key={i}>{error}</p>)}
       </Tooltip>
     );
     return (
@@ -184,7 +171,7 @@ class FloatTextInput extends Component {
           htmlFor={controlId}
           className={cx('textInputLabel', {
             filled: filled && placeholder.length === 0,
-            hasError: hasError,
+            hasError: this.hasError,
             hide: filled && placeholder.length > 0
           })}
           style={this.activeColour}>
@@ -192,11 +179,12 @@ class FloatTextInput extends Component {
         </label>
         <input
           id={controlId}
-          type={this.inputType(type)}
-          value={savedValue}
+          type={type}
+          value={value}
+          name={name}
           ref="input"
           className={cx('textInput', {
-            isErrorInput: hasError,
+            isErrorInput: this.hasError,
             filledInput: active || filled,
             disabled: isDisabled
           })}
@@ -211,7 +199,7 @@ class FloatTextInput extends Component {
         <OverlayTrigger ref="errorMessage" placement={errorPlacement} overlay={tooltip} trigger={['hover', 'focus']}>
           <div className={cx('errorIconWrapper')}>
             <IoAndroidAlert className={cx({
-              hide: !hasError
+              hide: !this.hasError
             })} />
           </div>
         </OverlayTrigger>

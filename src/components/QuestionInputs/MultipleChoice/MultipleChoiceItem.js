@@ -1,4 +1,7 @@
-import React, { Component, PropTypes} from 'react';
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import styles from './MultipleChoice.scss';
 import classNames from 'classnames';
 
@@ -11,7 +14,6 @@ class MultipleChoiceItem extends Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
-    disabled: PropTypes.bool,
     active: PropTypes.bool,
     onClick: PropTypes.func.isRequired
   };
@@ -23,22 +25,14 @@ class MultipleChoiceItem extends Component {
   handleClick = () => {
     const { onClick, label, text } = this.props;
     onClick({ label, text });
-  }
-
-  handleKeyDown = (event) => {
-    if (event.keyCode === 32) {
-      this.handleClick();
-    }
-  }
+  };
 
   render() {
-    const { label, text, active, disabled } = this.props;
+    const { label, text, active } = this.props;
     const { primaryColour } = this.context;
-
     const choiceItemClasses = classNames({
       [styles.choiceItem]: true,
-      [styles.active]: active,
-      [styles.disabled]: disabled
+      [styles.active]: active
     });
 
     var optionals = {};
@@ -47,13 +41,11 @@ class MultipleChoiceItem extends Component {
         borderColor: primaryColour
       };
     }
-    if (!disabled) {
-      optionals['onClick'] = this.handleClick;
-      optionals['onKeyDown'] = this.handleKeyDown;
-    }
-
     return (
-      <div ref="divForMultipleChoiceItem" className={choiceItemClasses} tabIndex={0} {...optionals}>
+      <div ref="divForMultipleChoiceItem"
+        className={choiceItemClasses}
+        onClick={this.handleClick}
+        {...optionals}>
         <label className={styles.label}>{label}</label>
         <span className={styles.text}>{text}</span>
       </div>

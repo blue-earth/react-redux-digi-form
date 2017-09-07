@@ -25,7 +25,6 @@ class DateInput extends Component {
   static propTypes = {
     isDisabled: PropTypes.bool,
     isReadOnly: PropTypes.bool,
-    choices: PropTypes.array.isRequired,
     value: PropTypes.object,
     dateFormat: PropTypes.string,
     onChange: PropTypes.func,
@@ -33,31 +32,22 @@ class DateInput extends Component {
     onBlur: PropTypes.func,
     onEnterKey: PropTypes.func,
     autoFocus: PropTypes.bool,
-    hasError: PropTypes.bool,
-    errorMessage: PropTypes.element
+    errors: PropTypes.array
   };
 
   static defaultProps = {
     isDisabled: false,
     isReadOnly: false,
-    hasError: false,
-    choices: [],
+    errors: [],
     value: null,
     dateFormat: 'YYYY/MM/DD',
     onChange: () => {},
     onEnterKey: () => {}
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      savedDate: typeof props.value !== 'undefined' ? props.value : null
-    };
-  }
-
   componentDidMount() {
-    const { isReadOnly, hasError } = this.props;
-    if (hasError) {
+    const { isReadOnly, errors } = this.props;
+    if (errors.length > 0) {
       this.refs.errorMessage.show();
     }
     if (!isReadOnly) {
@@ -68,7 +58,7 @@ class DateInput extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.hasError) {
+    if (props.errors.length > 0) {
       this.refs.errorMessage.show();
     } else {
       this.refs.errorMessage.hide();
@@ -85,9 +75,6 @@ class DateInput extends Component {
         year: date.year()
       };
     }
-    this.setState({
-      savedDate: jsonDate
-    });
     if (typeof onChange === 'function') {
       onChange(jsonDate);
     }
@@ -120,19 +107,18 @@ class DateInput extends Component {
   }
 
   render() {
-    const { isDisabled, isReadOnly, hasError, errorMessage, dateFormat, autoFocus } = this.props;
-    const { savedDate } = this.state;
+    const { value, isDisabled, isReadOnly, errors, dateFormat, autoFocus } = this.props;
     const tooltip = (
       <Tooltip className="dateInputTooltip" id="tooltipQuestion_date">
-        {errorMessage}
+        {errors.map((error, i) => <p key={i}>{error}</p>)}
       </Tooltip>
     );
     var optionals = {};
-    if (typeof savedDate === 'object' && savedDate !== null) {
+    if (typeof value === 'object' && value !== null) {
       if (isReadOnly) {
-        optionals['value'] = moment(savedDate).format(dateFormat);
+        optionals['value'] = moment(value).format(dateFormat);
       } else {
-        optionals['selected'] = moment(savedDate);
+        optionals['selected'] = moment(value);
       }
     }
     if (isDisabled) {
@@ -150,7 +136,7 @@ class DateInput extends Component {
       );
     } else {
       return (
-        <div className={cx('dateInputWrap', {dateInputError: hasError})}>
+        <div className={cx('dateInputWrap', {dateInputError: errors.length > 0})}>
           <DatePicker className={cx('dateInput')}
             dateFormat={dateFormat}
             placeholderText={dateFormat}
@@ -168,7 +154,7 @@ class DateInput extends Component {
             trigger={['hover', 'focus']}>
             <div className={cx('errorIconWrapper')}>
               <IoAndroidAlert className={cx({
-                hide: !hasError
+                hide: errors.length === 0
               })} />
             </div>
           </OverlayTrigger>

@@ -7,11 +7,11 @@ import {
   RightNavButton
 } from '../NavButton';
 import classNames from 'classnames';
-import Hogan from 'hogan.js';
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import FormEnterButton from 'components/Buttons/FormEnterButton';
 import { MdKeyboardBackspace } from 'react-icons/lib/md';
 import {
+  compileTemplate,
   getContextFromAnswer,
   shouldDisableNextButton,
   shouldDisablePrevButton,
@@ -26,11 +26,6 @@ import styles from './FormInteractiveView.scss';
 import _ from 'lodash';
 
 class FormInteractiveView extends Component {
-
-  static contextTypes = {
-    primaryColour: React.PropTypes.string
-  };
-
   static propTypes = {
     /*
      * form: form_data of response, consists of questions and logics.
@@ -39,6 +34,7 @@ class FormInteractiveView extends Component {
     /*
      * answers: Redux state that stores the array of answered values
      */
+    saveForm: PropTypes.func,
     answers: PropTypes.array.isRequired,
     /*
      * changeCurrentState: Redux action to change the update the current answer value on change,
@@ -62,10 +58,6 @@ class FormInteractiveView extends Component {
      */
     handleEnter: PropTypes.func.isRequired,
     /*
-     * isVerifying: Redux state that indicates the status whether verification is in prgress with backend
-     */
-    isVerifying: PropTypes.bool.isRequired,
-    /*
      * goToNextQuestion: Redux action to move to next question when the current answer is qualified.
      */
     goToNextQuestion: PropTypes.func.isRequired,
@@ -81,11 +73,16 @@ class FormInteractiveView extends Component {
      * showModal: redux-modal action to show modal
      */
     showModal: PropTypes.func.isRequired,
+    setInputLocked: PropTypes.func.isRequired,
+    isInputLocked: PropTypes.bool.isRequired,
     /*
      * verificationStatus: Redux state that holds the status of verification, ex. EmondoEmailService
      */
-    verificationStatus: PropTypes.array
+    verificationStatus: PropTypes.array,
 
+    formId: PropTypes.number,
+    sessionId: PropTypes.number,
+    title: PropTypes.string
   };
 
   constructor(props) {
@@ -93,25 +90,6 @@ class FormInteractiveView extends Component {
     this.state = {
       questions: props.form ? transformQuestions(props.form.questions) : []
     };
-  }
-
-  compileTemplate(template, context) {
-    if (template) {
-      var t = Hogan.compile(template);
-      return t.render(context);
-    } else {
-      return '';
-    }
-  }
-
-  valueIsVerified() {
-    const { currentQuestion, verificationStatus, isVerifying } = this.props;
-    if (isVerifying) return false;
-    const unavailables = _.filter(verificationStatus, {
-      id: currentQuestion.id,
-      status: false
-    });
-    return unavailables.length === 0;
   }
 
   get enterButtonClass() {
@@ -144,27 +122,17 @@ class FormInteractiveView extends Component {
   };
 
   handleEnter = () => {
-    // We only do validation and verification on enter, onChange submits the answer if valid.
-    const { handleEnter, changeCurrentState, currentQuestion } = this.props;
-    const { questions } = this.state;
-    const question = findItemById(questions, currentQuestion.id);
-    if (!question) {
-      return false;
-    }
-    changeCurrentState({
-      inputState: 'enter'
-    });
-    handleEnter();
+    this.refs.questionInteractive.validateAndVerify(() => this.props.handleEnter());
   };
 
   shouldPrefillValue() {
     const { currentQuestion } = this.props;
-    return !currentQuestion.answerValue && currentQuestion.inputState === 'init';
+    return !currentQuestion.answerValue;
   }
 
   renderCurrentQuestion() {
     const { currentQuestion, verificationStatus, changeCurrentState,
-      answers, prefills, storeAnswer, isVerifying, showModal } = this.props;
+      answers, prefills, storeAnswer, showModal, setInputLocked, isInputLocked } = this.props;
     const { questions } = this.state;
     const question = findItemById(questions, currentQuestion.id);
     const context = getContextFromAnswer(answers);
@@ -177,24 +145,29 @@ class FormInteractiveView extends Component {
       if (typeof prefill === 'object') optionals['value'] = prefill.value;
     }
     const finalQuestion = _.merge({}, question, {
-      questionInstruction: this.compileTemplate(question.questionInstruction, context),
-      questionDescription: this.compileTemplate(question.questionDescription, context)
+      questionInstruction: compileTemplate(question.questionInstruction, context),
+      questionDescription: compileTemplate(question.questionDescription, context)
     });
     const filteredVerifications = _.filter(verificationStatus, { id: question.id });
     return (
       <div className={styles.currentQuestionRow}>
         <div className={styles.currentQuestionCell}>
           <QuestionInteractive
+            ref="questionInteractive"
             question={finalQuestion}
             key={question.id}
-            inputState={currentQuestion.inputState}
             verifications={filteredVerifications}
             changeCurrentState={changeCurrentState}
+            setInputLocked={setInputLocked}
+            isInputLocked={isInputLocked}
             storeAnswer={storeAnswer}
             handleEnter={this.handleEnter}
-            isVerifying={isVerifying}
             showModal={showModal}
             getStoreAnswerByQuestionId={this.getStoreAnswerByQuestionId}
+            formId={this.props.formId}
+            sessionId={this.props.sessionId}
+            formTitle={this.props.title}
+            saveForm={this.props.saveForm}
             {...optionals}
           />
         </div>
@@ -216,7 +189,7 @@ class FormInteractiveView extends Component {
       <div className={styles.prevQuestionRow}>
         <div className={styles.prevQuestionCell}>
           <h3 className={styles.neighborInstruction}>
-            {this.compileTemplate(question.questionInstruction, context)}
+            {compileTemplate(question.questionInstruction, context)}
           </h3>
           {answer &&
             <div className={styles.prevQuestionAnswer}>
@@ -244,7 +217,7 @@ class FormInteractiveView extends Component {
       <div className={styles.nextQuestionRow}>
         <div className={styles.nextQuestionCell}>
           <h3 className={styles.neighborInstruction}>
-            {this.compileTemplate(question.questionInstruction, context)}
+            {compileTemplate(question.questionInstruction, context)}
           </h3>
         </div>
       </div>
@@ -252,16 +225,16 @@ class FormInteractiveView extends Component {
   }
 
   renderEnterbutton() {
-    const { isVerifying } = this.props;
+    const { isInputLocked } = this.props;
     const mobileEnterButton = (<FormEnterButton
       onClick={this.handleEnter}
-      isDisabled={isVerifying}
+      isDisabled={isInputLocked}
       displayIcon={false}
       buttonLabel="SUBMIT"
     />);
     const desktopEnterButton = (<FormEnterButton
       onClick={this.handleEnter}
-      isDisabled={isVerifying}
+      isDisabled={isInputLocked}
     />);
     return (
       <div>
@@ -272,18 +245,18 @@ class FormInteractiveView extends Component {
   }
 
   renderNavButtons() {
-    const { form, currentQuestion, isVerifying, goToPrevQuestion, goToNextQuestion } = this.props;
+    const { form, currentQuestion, isInputLocked, goToPrevQuestion, goToNextQuestion } = this.props;
 
     return (
       <div className={styles.navButtonsWrapper}>
         <ul className={styles.arrowNavs}>
           <li>
             <LeftNavButton className={styles.navButton} onClick={goToPrevQuestion}
-              isDisabled={shouldDisablePrevButton(form, currentQuestion.id) || isVerifying} />
+              isDisabled={shouldDisablePrevButton(form, currentQuestion.id) || isInputLocked} />
           </li>
           <li>
             <RightNavButton className={styles.navButton} onClick={goToNextQuestion}
-              isDisabled={shouldDisableNextButton(form, currentQuestion.id) || isVerifying} />
+              isDisabled={shouldDisableNextButton(form, currentQuestion.id) || isInputLocked} />
           </li>
           <li className={styles.enterWrapper}>
             <div className={this.enterButtonClass}>
