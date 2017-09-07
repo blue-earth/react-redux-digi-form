@@ -45,6 +45,8 @@ class FloatTextInput extends Component {
     errors: []
   }
 
+  static counter = 0;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -166,6 +168,7 @@ class FloatTextInput extends Component {
     return (
       <div className={cx('textInputWrap', size, extraClass)}>
         <label
+          htmlFor={controlId}
           className={cx('textInputLabel', {
             filled: filled && placeholder.length === 0,
             hasError: this.hasError,
