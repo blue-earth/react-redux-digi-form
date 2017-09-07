@@ -1,6 +1,13 @@
 @import './mixins';
 @import './variables';
 
+
+.signatureWidgetWrapper {
+  padding: 20px 40px;
+  font-family: Lato;
+  font-size: 13px;
+  font-weight: 600;
+}
 .inputWrapper {
   width: 50%;
   float: left;
@@ -63,7 +70,8 @@
 }
 .signatureWidgetConsent {
   background-color: $signature-modal-bg-color;
-  padding: 10px;
+  padding: 20px 40px;
+  margin: 0 -40px;
   .consent {
     font-size: 14px;
     font-weight: 400;
@@ -99,7 +107,9 @@
 }
 .signatureWidgetFooter {
   background-color: $signature-modal-bg-color;
-  padding: 10px;
+  padding: 20px 40px;
+  margin: 0 -40px;
+  border-top: 1px solid #e5e5e5;
   text-align: right;
 }
 .cancelButton {
@@ -143,6 +153,13 @@
     @include media('<sm') {
       padding: 10px;
     }
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 0 25px;
+    margin: 10px 0;
+    letter-spacing: 1px;
   }
   .nav-tabs{
     @include media('<xs') {

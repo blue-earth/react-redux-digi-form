@@ -216,9 +216,7 @@ class SignatureQuestion extends Component {
           <Modal.Header>
             <Modal.Title>YOUR SIGNATURE</Modal.Title>
           </Modal.Header>
-          <Modal.Body>
-            <SignatureWidget {...widgetProps} />
-          </Modal.Body>
+          <SignatureWidget {...widgetProps} />
         </Modal>
       );
     } else if (this.state.activeWidget === 'signature') {

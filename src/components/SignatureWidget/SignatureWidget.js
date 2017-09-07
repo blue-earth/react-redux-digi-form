@@ -120,11 +120,12 @@ class SignatureWidget extends Component {
             <span className={styles.info}>{moment().format('L')}</span>
           </Col>
         </Row>
-        <div className={classNames(styles.errorMessageWrapper)}>
-          <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
-          {this.props.errors.dataUrl.length > 0 &&
-            <span className={styles.errorMessage}>Please sign your signature</span>}
-        </div>
+        {this.props.errors.dataUrl.length > 0 &&
+          <div className={classNames(styles.errorMessageWrapper)}>
+            <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
+            <span className={styles.errorMessage}>Please sign your signature</span>
+          </div>
+        }
       </div>
     );
   }
@@ -234,7 +235,7 @@ class SignatureWidget extends Component {
       errors.dataUrl.length > 0;
     moment.locale('en-au');
     return (
-      <form>
+      <form className={styles.signatureWidgetWrapper}>
         <div className={styles.signatureWidgetBody}>
           {this.signatureHeader}
           {this.signatureTabs}
