@@ -28,14 +28,7 @@ class SignatureWidget extends Component {
     errors: PropTypes.object,
     resetErrors: PropTypes.func,
     formTitle: PropTypes.string,
-    isPageBusy: PropTypes.bool,
-    // TODO: email verification?
-    // isCodeVerifyingModalOpen: PropTypes.bool,
-    // isCodeVerified: PropTypes.bool,
-    // hasCodeVerified: PropTypes.bool,
-    // verifyEmailCode: PropTypes.func,
-    // requestVerificationCode: PropTypes.func,
-    // resetCodeVerified: PropTypes.func,
+    isInputLocked: PropTypes.bool,
     onChange: PropTypes.func,
     closeWidget: PropTypes.func
   };
@@ -229,13 +222,13 @@ class SignatureWidget extends Component {
 
   render() {
     const {
-      isPageBusy,
+      isInputLocked,
       errors
     } = this.props;
     const {
       isConsented
     } = this.state;
-    const isSignDisabled = !isConsented ||
+    const isSignDisabled = isInputLocked || !isConsented ||
       errors.email.length > 0 ||
       errors.name.length > 0 ||
       errors.dataUrl.length > 0;
@@ -256,7 +249,7 @@ class SignatureWidget extends Component {
           <AppButton
             onClick={this.handleSubmit}
             isDisabled={isSignDisabled}
-            isBusy={isPageBusy}
+            isBusy={isInputLocked}
             extraClass={styles.signButton}>
             Sign
           </AppButton>

@@ -14,8 +14,7 @@ import PhoneNumberQuestion from '../../QuestionTypes/PhoneNumberQuestion';
 import DateQuestion from '../../QuestionTypes/DateQuestion';
 import AddressQuestion from '../../QuestionTypes/AddressQuestion';
 import FileUpload from '../../QuestionInputs/FileUpload';
-// import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
-import SignatureQuestion from 'containers/SignatureVerification/SignatureVerificationContainer';
+import SignatureQuestion from '../../QuestionTypes/SignatureQuestion';
 
 /**
  * This component joins QuestionDisplay and one of the question input
