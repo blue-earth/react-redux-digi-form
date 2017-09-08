@@ -6,7 +6,7 @@ var Node = React.createClass({
   displayName: 'UITreeNode',
 
   propTypes: {
-    dragging: PropTypes.bool,
+    dragging: PropTypes.number,
     index: PropTypes.object,
     onCollapse: PropTypes.func,
     onDragStart: PropTypes.func,

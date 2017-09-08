@@ -19,7 +19,6 @@ export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
 export const REQUEST_FORM_SUBMIT = 'REQUEST_FORM_SUBMIT';
 export const DONE_FORM_SUBMIT = 'DONE_FORM_SUBMIT';
 
-export const SET_ACTIVE_INPUT_NAME = 'SET_ACTIVE_INPUT_NAME';
 export const EDIT_ELEMENT = 'EDIT_ELEMENT';
 export const SAVE_ELEMENT = 'SAVE_ELEMENT';
 export const DELETE_ELEMENT = 'DELETE_ELEMENT';
@@ -45,9 +44,14 @@ export const UPDATE_STORE = 'UPDATE_STORE';
 
 export const SET_FORM_STATUS = 'SET_FORM_STATUS';
 
+export const ADD_NEW_GROUP = 'ADD_NEW_GROUP';
+export const UPDATE_GROUP = 'UPDATE_GROUP';
+
+export const SET_BUILDER_STATE = 'SET_BUILDER_STATE';
+
 export const INIT_DEFAULT_GROUP = { // Assign default group to questions
   id: 0,
-  title: 'Default Group',
+  title: 'Default Section',
   type: 'Group'
 };
 
@@ -255,7 +259,7 @@ export const processSubmitForm = (formData) => {
 // ------------------------------------
 export const saveForm = () => {
   return (dispatch, getState) => {
-    dispatch(saveElement()); // Hide submitting spinner
+    dispatch(saveElement());
     dispatch(submitForm());
   };
 };
@@ -390,11 +394,13 @@ const _setMappingInfo = (state, action) => {
     mappingInfo: Object.assign({}, mappingInfo, action.payload)
   });
 };
+
 // ------------------------------------
 // Action: resetMappingInfo
 // replace mappingInfo with a new object
 // ------------------------------------
 export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
+
 // ------------------------------------
 // Helper: _resetMappingInfo
 // ------------------------------------
@@ -459,10 +465,19 @@ export const setPageZoom = createAction(SET_PAGE_ZOOM);
 // ------------------------------------
 export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
 
+// ------------------------------------
+// Action: setCurrentElement
+// ------------------------------------
 export const setCurrentElement = createAction(SET_CURRENT_ELEMENT);
 
+// ------------------------------------
+// Action: setActiveBox
+// ------------------------------------
 export const setActiveBox = createAction(SET_ACTIVE_BOX);
 
+// ------------------------------------
+// Helper: _setActiveBox
+// ------------------------------------
 const _setActiveBox = (state, action) => {
   const { currentElement } = state;
   const { mappingInfo } = currentElement;
@@ -587,6 +602,7 @@ export const submitPublishStep = (formData) => {
 
   return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
 };
+
 // ------------------------------------
 // Action: updateStore
 // ------------------------------------
@@ -601,6 +617,37 @@ const _setFormStatus = (state, action) => {
     status: action.payload
   });
 };
+
+// ------------------------------------
+// Action: addNewGroup
+// ------------------------------------
+export const addNewGroup = createAction(ADD_NEW_GROUP);
+const _addNewGroup = (state, action) => {
+  const lastQuestionId = state.lastQuestionId + 1;
+  return Object.assign({}, state, {
+    lastQuestionId,
+    questions: _.concat([{
+      id: lastQuestionId,
+      title: 'New Section',
+      type: 'Group'
+    }], state.questions)
+  });
+};
+
+// ------------------------------------
+// Action: updateGroup
+// ------------------------------------
+export const updateGroup = createAction(UPDATE_GROUP);
+const _updateGroup = (state, action) => {
+  return Object.assign({}, state, {
+    questions: mergeItemIntoArray(state.questions, _.pick(action.payload, ['id', 'title']))
+  });
+};
+
+// ------------------------------------
+// Action: setBuilderState
+// ------------------------------------
+export const setBuilderState = createAction(SET_BUILDER_STATE);
 
 // ------------------------------------
 // Reducer
@@ -690,7 +737,16 @@ const formBuilderReducer = handleActions({
     _setCurrentElement(state, action),
 
   SET_ACTIVE_BOX: (state, action) =>
-    _setActiveBox(state, action)
+    _setActiveBox(state, action),
+
+  ADD_NEW_GROUP: (state, action) =>
+    _addNewGroup(state, action),
+
+  UPDATE_GROUP: (state, action) =>
+    _updateGroup(state, action),
+
+  SET_BUILDER_STATE: (state, action) =>
+    Object.assign({}, state, action.payload)
 
 }, INIT_BUILDER_STATE);
 

@@ -42,6 +42,13 @@ export const buildQueryString = (query) =>
 
 export const stripeTags = (html) => html.replace(/(<([^>]+)>)/ig, '');
 
+export const propsChanged = (propKeys, props, nextProps) => {
+  for (let key of propKeys) {
+    if (!_.isEqual(props[key], nextProps[key])) return true;
+  }
+  return false;
+};
+
 const fnToString = (fn) => Function.prototype.toString.call(fn);
 
 /**

@@ -22,7 +22,10 @@ import {
   setActiveBox,
   submitConfigureStep,
   submitPublishStep,
-  setFormStatus
+  setFormStatus,
+  addNewGroup,
+  updateGroup,
+  setBuilderState
 } from 'redux/modules/formBuilder';
 
 import FormBuilderSteps from '../components/FormBuilderSteps';
@@ -49,6 +52,9 @@ const mapActionCreators = {
   submitConfigureStep,
   submitPublishStep,
   setFormStatus,
+  addNewGroup,
+  updateGroup,
+  setBuilderState,
   show
 };
 

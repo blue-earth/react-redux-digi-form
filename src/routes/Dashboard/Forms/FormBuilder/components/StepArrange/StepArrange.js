@@ -9,7 +9,8 @@ import {
 } from 'react-bootstrap';
 import classNames from 'classnames';
 // import SortableTree from 'react-sortable-tree';
-import { getTreeDataFromQuestions } from 'helpers/formBuilderHelper';
+import { propsChanged } from 'helpers/pureFunctions';
+import { getTreeDataFromQuestions, getQuestionsFromTreeData } from 'helpers/formBuilderHelper';
 import AppButton from 'components/Buttons/AppButton';
 import styles from './StepArrange.scss';
 import QuestionsTree from 'components/QuestionsTree';
@@ -32,25 +33,28 @@ export default class StepArrange extends Component {
     logics: PropTypes.array.isRequired,
 
     /*
-     * setQuestionInfo: Redux action to add or update a specific item into current question.
+     * addNewGroup: Redux action to add a new group to questions.
      */
-    setQuestionInfo: PropTypes.func.isRequired,
+    addNewGroup: PropTypes.func.isRequired,
 
     /*
-     * resetQuestionInfo: Redux action to remove a specific item into current question.
+     * setBuilderState: Redux action to change any field formBuilderState.
      */
-    resetQuestionInfo: PropTypes.func.isRequired
+    setBuilderState: PropTypes.func.isRequired
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      treeData: getTreeDataFromQuestions(props.questions)
-    };
+  shouldComponentUpdate(nextProps, nextState) {
+    return propsChanged(['questions'], this.props, nextProps);
   }
 
   handleTreeChange = (treeData) => {
-    this.setState({ treeData });
+    const { setBuilderState } = this.props;
+    setBuilderState({ questions: getQuestionsFromTreeData(treeData) });
+  }
+
+  handleNewSection = () => {
+    const { addNewGroup } = this.props;
+    addNewGroup();
   }
 
   renderNode(node) {
@@ -62,12 +66,17 @@ export default class StepArrange extends Component {
   }
 
   render() {
-    const { treeData } = this.state;
+    const { questions } = this.props;
+    const treeData = getTreeDataFromQuestions(questions);
     return (
       <div className={classNames(styles.panelWrapper, 'container')}>
         <div className={styles.panelHeader}>
           <Row>
-            <Col xs={6}>New Section</Col>
+            <Col xs={6}>
+              <AppButton type="secondary" onClick={this.handleNewSection}>
+                New Section
+              </AppButton>
+            </Col>
             <Col xs={6} className={styles.rightActions}>
               <AppButton type="secondary">View logic maps</AppButton>
               <AppButton>Save & continue</AppButton>

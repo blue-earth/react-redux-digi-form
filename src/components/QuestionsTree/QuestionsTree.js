@@ -11,7 +11,7 @@ module.exports = React.createClass({
     onChange: PropTypes.func,
     paddingLeft: PropTypes.number,
     renderNode: PropTypes.func.isRequired,
-    tree: PropTypes.oneOf([
+    tree: PropTypes.oneOfType([
       PropTypes.array,
       PropTypes.object
     ]).isRequired
@@ -109,8 +109,7 @@ module.exports = React.createClass({
       w: dom.offsetWidth,
       h: dom.offsetHeight,
       x: dom.offsetLeft,
-      y: dom.offsetTop,
-      dom
+      y: dom.offsetTop
     };
 
     this._startX = dom.offsetLeft;

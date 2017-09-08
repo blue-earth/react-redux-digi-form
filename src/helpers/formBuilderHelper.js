@@ -418,24 +418,22 @@ export const getTreeDataFromQuestions = (questions) => {
     var group = tempGroup.groups[groupId];
     newGroup.push({
       id: group.id,
-      title: 'Test 1'
-    });
-    newGroup.push({
-      id: group.id,
       title: group.title,
-      children: tempGroup[group.id]
-    });
-    newGroup.push({
-      id: group.id,
-      title: 'Test 2',
-      children: tempGroup[group.id]
-    });
-    newGroup.push({
-      id: group.id,
-      title: 'Test 3',
+      question: group.question,
       children: tempGroup[group.id]
     });
   }
 
   return newGroup;
+};
+
+export const getQuestionsFromTreeData = (treeData) => {
+  let questions = [];
+  _.each(treeData.children, group => {
+    questions.push(group.question);
+    _.each(group.children, item => {
+      questions.push(_.merge(item.question, { group: group.question.id }));
+    });
+  });
+  return questions;
 };

@@ -151,7 +151,22 @@ class FormBuilderSteps extends Component {
     submitConfigureStep: PropTypes.func,
     submitPublishStep: PropTypes.func,
 
-    setFormStatus: PropTypes.func
+    setFormStatus: PropTypes.func,
+
+    /*
+     * addNewGroup: Redux action to add a new group to questions.
+     */
+    addNewGroup: PropTypes.func.isRequired,
+
+    /*
+     * updateGroup: Redux action to change group name.
+     */
+    updateGroup: PropTypes.func.isRequired,
+
+    /*
+     * setBuilderState: Redux action to change any field formBuilderState.
+     */
+    setBuilderState: PropTypes.func.isRequired
   };
 
   get currentStepComponent() {
@@ -165,7 +180,10 @@ class FormBuilderSteps extends Component {
             'questions',
             'logics',
             'setQuestionInfo',
-            'resetQuestionInfo'
+            'resetQuestionInfo',
+            'addNewGroup',
+            'updateGroup',
+            'setBuilderState'
           ])
         };
       case 'configure':
