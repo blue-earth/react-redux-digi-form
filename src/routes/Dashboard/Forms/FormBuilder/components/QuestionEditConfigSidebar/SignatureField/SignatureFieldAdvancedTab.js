@@ -18,11 +18,17 @@ class SignatureFieldAdvancedTab extends Component {
 
   handlePrefillName = (nameValue='') => {
     var newValue = this.props.currentElement.question.value || {};
+    if (nameValue !== '') {
+      nameValue = `{{ answer_${nameValue} }}`;
+    }
     newValue.name = nameValue;
     this.props.setQuestionInfo({'value': newValue});
   }
   handlePrefillEmail = (emailValue='') => {
     var newValue = this.props.currentElement.question.value || {};
+    if (emailValue !== '') {
+      emailValue = `{{ answer_${emailValue} }}`;
+    }
     newValue.email = emailValue;
     this.props.setQuestionInfo({'value': newValue});
   }
