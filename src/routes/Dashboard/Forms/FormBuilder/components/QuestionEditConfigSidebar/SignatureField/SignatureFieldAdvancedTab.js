@@ -7,6 +7,7 @@ import EditSection from 'components/QuestionEditFields/EditSection';
 import SelectBox from 'components/SelectBox';
 import SwitchRow from 'components/QuestionEditFields/SwitchRow';
 import { getQuestionsByType, mapQuestionsToDropdown } from 'helpers/formBuilderHelper';
+import _ from 'lodash';
 
 class SignatureFieldAdvancedTab extends Component {
   static propTypes = {
@@ -40,6 +41,8 @@ class SignatureFieldAdvancedTab extends Component {
       currentElement,
       questions
     } = this.props;
+    const name = _.get(currentElement, 'question.value.name', '');
+    const email = _.get(currentElement, 'question.value.email', '');
     var nameQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'NameField'));
     var emailQuestions = mapQuestionsToDropdown(getQuestionsByType(questions, 'EmailField'));
     var hasConsentCheckbox = currentElement.question.consent_checkbox || false;
@@ -52,7 +55,7 @@ class SignatureFieldAdvancedTab extends Component {
             title={'Prefill signer\'s name'}
             onToggleClosed={this.handlePrefillName}
           >
-            <SelectBox value={currentElement.question.value.name} appearance="shiny" fullWidth
+            <SelectBox value={name} appearance="shiny" fullWidth
               onChange={this.handlePrefillName}
               optionsList={nameQuestions}
               placeholder="Select name" />
@@ -65,7 +68,7 @@ class SignatureFieldAdvancedTab extends Component {
             title={'Prefill signer\'s email'}
             onToggleClosed={this.handlePrefillEmail}
           >
-            <SelectBox value={currentElement.question.value.email} appearance="shiny" fullWidth
+            <SelectBox value={email} appearance="shiny" fullWidth
               onChange={this.handlePrefillEmail}
               optionsList={emailQuestions}
               placeholder="Select email" />
