@@ -1,36 +1,38 @@
-.f-no-select {
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+@import './mixins';
+@import './variables';
 
-.m-tree {
+.tree {
   position: relative;
   overflow: hidden;
-  .f-no-select;
+  @include user-select(none);
 }
 
-.m-draggable {
+.draggable {
   position: absolute;
   opacity: 0.8;
-  .f-no-select;
+  @include user-select(none);
 }
 
-.m-node {
+.node {
   &.placeholder > * {
     visibility: hidden;
   }
 
   &.placeholder {
-    border: 1px dashed #ccc;
+    position: relative;
+    &:before {
+      content: '';
+      border: 1px dashed #ccc;
+      @include full-size;
+      z-index: 0;
+      cursor: pointer;
+    }
   }
-
   .inner {
     position: relative;
     cursor: pointer;
     padding-left: 10px;
+    z-index: 1;
   }
 
   .collapse {
@@ -39,11 +41,11 @@
     cursor: pointer;
   }
 
-  .caret-right:before {
+  .caretRight:before {
     content: '\25B8';
   }
 
-  .caret-down:before {
+  .caretDown:before {
     content: '\25BE';
   }
 }

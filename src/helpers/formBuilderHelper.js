@@ -399,7 +399,9 @@ export const transformQuestionsToTreeData = (questions) => (
       {
         title: stripeTags(question.question_instruction || question.title),
         id: question.id,
-        type: question.type
+        type: question.type,
+        leaf: true,
+        question
       },
       _.isNil(question.group) ? {} : { group: question.group }
     )
@@ -416,7 +418,21 @@ export const getTreeDataFromQuestions = (questions) => {
     var group = tempGroup.groups[groupId];
     newGroup.push({
       id: group.id,
+      title: 'Test 1'
+    });
+    newGroup.push({
+      id: group.id,
       title: group.title,
+      children: tempGroup[group.id]
+    });
+    newGroup.push({
+      id: group.id,
+      title: 'Test 2',
+      children: tempGroup[group.id]
+    });
+    newGroup.push({
+      id: group.id,
+      title: 'Test 3',
       children: tempGroup[group.id]
     });
   }

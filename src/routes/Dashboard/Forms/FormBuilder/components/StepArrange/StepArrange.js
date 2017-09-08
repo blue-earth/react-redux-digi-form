@@ -8,10 +8,11 @@ import {
   Row
 } from 'react-bootstrap';
 import classNames from 'classnames';
-import SortableTree from 'react-sortable-tree';
+// import SortableTree from 'react-sortable-tree';
 import { getTreeDataFromQuestions } from 'helpers/formBuilderHelper';
 import AppButton from 'components/Buttons/AppButton';
 import styles from './StepArrange.scss';
+import QuestionsTree from 'components/QuestionsTree';
 
 export default class StepArrange extends Component {
   static propTypes = {
@@ -52,9 +53,16 @@ export default class StepArrange extends Component {
     this.setState({ treeData });
   }
 
+  renderNode(node) {
+    return (
+      <div className={styles.node}>
+        {node.title}
+      </div>
+    );
+  }
+
   render() {
     const { treeData } = this.state;
-
     return (
       <div className={classNames(styles.panelWrapper, 'container')}>
         <div className={styles.panelHeader}>
@@ -67,10 +75,11 @@ export default class StepArrange extends Component {
           </Row>
         </div>
         <Panel className={styles.panel}>
-          <SortableTree
-            treeData={treeData}
-            maxDepth={2}
+          <QuestionsTree
+            paddingLeft={20}
+            tree={treeData}
             onChange={this.handleTreeChange}
+            renderNode={this.renderNode}
           />
         </Panel>
       </div>

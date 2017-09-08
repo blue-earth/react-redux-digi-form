@@ -1,20 +1,30 @@
-var cx = require('classnames');
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React, { PropTypes } from 'react';
+import cx from 'classnames';
+import styles from './QuestionsTree.scss';
 
 var Node = React.createClass({
   displayName: 'UITreeNode',
 
+  propTypes: {
+    dragging: PropTypes.bool,
+    index: PropTypes.object,
+    onCollapse: PropTypes.func,
+    onDragStart: PropTypes.func,
+    paddingLeft: PropTypes.number,
+    root: PropTypes.bool,
+    tree: PropTypes.object.isRequired
+  },
+
   renderCollapse() {
     var index = this.props.index;
 
-    if(index.children && index.children.length) {
+    if (index.children && index.children.length) {
       var collapsed = index.node.collapsed;
 
       return (
         <span
-          className={cx('collapse', collapsed ? 'caret-right' : 'caret-down')}
-          onMouseDown={function(e) {e.stopPropagation()}}
+          className={cx(styles.collapse, collapsed ? styles.caretRight : styles.caretDown)}
+          onMouseDown={function (e) { e.stopPropagation(); }}
           onClick={this.handleCollapse}>
         </span>
       );
@@ -28,13 +38,13 @@ var Node = React.createClass({
     var tree = this.props.tree;
     var dragging = this.props.dragging;
 
-    if(index.children && index.children.length) {
+    if (index.children && index.children.length) {
       var childrenStyles = {};
-      if(index.node.collapsed) childrenStyles.display = 'none';
+      if (index.node.collapsed) childrenStyles.display = 'none';
       childrenStyles['paddingLeft'] = this.props.paddingLeft + 'px';
 
       return (
-        <div className="children" style={childrenStyles}>
+        <div className={styles.children} style={childrenStyles}>
           {index.children.map((child) => {
             var childIndex = tree.getIndex(child);
             return (
@@ -57,20 +67,18 @@ var Node = React.createClass({
   },
 
   render() {
-    var tree = this.props.tree;
-    var index = this.props.index;
-    var dragging = this.props.dragging;
-    var node = index.node;
-    var styles = {};
+    const { dragging, index, tree, root } = this.props;
+    const { node } = index;
 
     return (
-      <div className={cx('m-node', {
-        'placeholder': index.id === dragging
-      })} style={styles}>
-        <div className="inner" ref="inner" onMouseDown={this.handleMouseDown}>
+      <div className={cx(styles.node, {
+        [styles.placeholder]: index.id === dragging,
+        [styles.root]: root
+      })}>
+        {!root && <div className={styles.inner} ref="inner" onMouseDown={this.handleMouseDown}>
           {this.renderCollapse()}
           {tree.renderNode(node)}
-        </div>
+        </div>}
         {this.renderChildren()}
       </div>
     );
@@ -79,14 +87,15 @@ var Node = React.createClass({
   handleCollapse(e) {
     e.stopPropagation();
     var nodeId = this.props.index.id;
-    if(this.props.onCollapse) this.props.onCollapse(nodeId);
+    if (this.props.onCollapse) this.props.onCollapse(nodeId);
   },
 
   handleMouseDown(e) {
+    if (e.button !== 0) return;
     var nodeId = this.props.index.id;
     var dom = this.refs.inner;
 
-    if(this.props.onDragStart) {
+    if (this.props.onDragStart) {
       this.props.onDragStart(nodeId, dom, e);
     }
   }
