@@ -135,6 +135,9 @@ export default class QuestionEditPanel extends Component {
 
   handleSave = () => {
     const { saveForm } = this.props;
+    if (this.props.currentElement.question.type === 'SignatureField') {
+      this.props.setQuestionInfo({'question_instruction': 'Electronic Signature'});
+    }
     saveForm();
   }
 

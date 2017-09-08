@@ -14,10 +14,6 @@ class SignatureFieldBasicTab extends Component {
     resetValidationInfo: PropTypes.func.isRequired
   };
 
-  componentDidMount() {
-    this.props.setQuestionInfo({'question_instruction': 'Electronic Signature'});
-  }
-
   render() {
     const {
       currentElement,
