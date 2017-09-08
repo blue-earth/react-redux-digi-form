@@ -16,6 +16,10 @@ import {
   EmailFieldAdvancedTab
 } from './EmailField';
 import {
+  AddressFieldBasicTab,
+  AddressFieldAdvancedTab
+} from './AddressField';
+import {
   NumberFieldBasicTab,
   NumberFieldAdvancedTab
 } from './NumberField';
@@ -114,6 +118,12 @@ export const getQuestionTypeConfigComponent = function (questionTypeName, tabNam
       }
       break;
     case 'AddressField':
+      if (tabName === 'general') {
+        ConfigComponent = AddressFieldBasicTab;
+      } else {
+        ConfigComponent = AddressFieldAdvancedTab;
+      }
+      break;
     case 'UploadField':
       if (tabName === 'general') {
         ConfigComponent = UploadFieldBasicTab;

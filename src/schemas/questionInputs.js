@@ -170,7 +170,35 @@ export const addressFieldSchema = {
     formBuilderBoxMappingType.STANDARD,
     formBuilderBoxMappingType.BLOCK
   ],
-  group: STANDARD
+  group: STANDARD,
+  availableFields: [
+    [
+      {
+        'displayName': 'Unit number',
+        'key': 'unit_number',
+        'group': formBuilderBoxMappingType.STANDARD
+      },{
+        'displayName': 'Address line 1',
+        'key': 'address_line1',
+        'group': formBuilderBoxMappingType.STANDARD
+      },
+      {
+        'displayName': 'Suburb',
+        'key': 'suburb',
+        'group': formBuilderBoxMappingType.STANDARD
+      },
+      {
+        'displayName': 'State',
+        'key': 'state',
+        'group': formBuilderBoxMappingType.STANDARD
+      },
+      {
+        'displayName': 'Postcode',
+        'key': 'postcode',
+        'group': formBuilderBoxMappingType.STANDARD
+      }
+    ]
+  ]
 };
 
 export const yesNoChoiceSchema = {
