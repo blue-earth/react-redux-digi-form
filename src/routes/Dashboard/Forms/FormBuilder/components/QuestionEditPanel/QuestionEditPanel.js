@@ -134,8 +134,12 @@ export default class QuestionEditPanel extends Component {
   }
 
   handleSave = () => {
-    const { saveForm } = this.props;
+    const {
+      saveForm,
+      setActiveBox
+    } = this.props;
     saveForm();
+    setActiveBox(null);
   }
 
   renderViewHeader() {
