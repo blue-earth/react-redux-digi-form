@@ -431,7 +431,18 @@ export const signatureFieldSchema = {
   selectionTypes: [
     formBuilderBoxMappingType.STANDARD
   ],
-  group: STANDARD
+  group: STANDARD,
+  availableFields: [
+    [
+      {
+        'displayName': 'Signature',
+        'key': 'signature',
+        'group': formBuilderBoxMappingType.STANDARD,
+        'maxSelection': 1,
+        'minSelection': 1
+      }
+    ]
+  ]
 };
 
 export const questionInputSchemas = {
