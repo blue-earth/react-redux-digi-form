@@ -177,7 +177,8 @@ export const addressFieldSchema = {
         'displayName': 'Unit number',
         'key': 'unit_number',
         'group': formBuilderBoxMappingType.STANDARD
-      },{
+      },
+      {
         'displayName': 'Address line 1',
         'key': 'address_line1',
         'group': formBuilderBoxMappingType.STANDARD
