@@ -8,12 +8,12 @@ import {
   Row
 } from 'react-bootstrap';
 import classNames from 'classnames';
-// import SortableTree from 'react-sortable-tree';
 import { propsChanged } from 'helpers/pureFunctions';
 import { getTreeDataFromQuestions, getQuestionsFromTreeData } from 'helpers/formBuilderHelper';
 import AppButton from 'components/Buttons/AppButton';
 import styles from './StepArrange.scss';
 import QuestionsTree from 'components/QuestionsTree';
+import GroupNode from '../GroupNode';
 
 export default class StepArrange extends Component {
   static propTypes = {
@@ -38,12 +38,18 @@ export default class StepArrange extends Component {
     addNewGroup: PropTypes.func.isRequired,
 
     /*
+     * updateGroup: Redux action to change group name.
+     */
+    updateGroup: PropTypes.func.isRequired,
+
+    /*
      * setBuilderState: Redux action to change any field formBuilderState.
      */
     setBuilderState: PropTypes.func.isRequired
   };
 
   shouldComponentUpdate(nextProps, nextState) {
+    console.log(propsChanged(['questions'], this.props, nextProps));
     return propsChanged(['questions'], this.props, nextProps);
   }
 
@@ -57,17 +63,17 @@ export default class StepArrange extends Component {
     addNewGroup();
   }
 
-  renderNode(node) {
-    return (
-      <div className={styles.node}>
-        {node.title}
-      </div>
-    );
+  renderNode = (node) => {
+    const { updateGroup } = this.props;
+    return node.leaf
+    ? <div className={styles.node}>{node.title}</div>
+    : <GroupNode node={node} updateGroup={updateGroup} />;
   }
 
   render() {
     const { questions } = this.props;
     const treeData = getTreeDataFromQuestions(questions);
+    console.log(treeData);
     return (
       <div className={classNames(styles.panelWrapper, 'container')}>
         <div className={styles.panelHeader}>

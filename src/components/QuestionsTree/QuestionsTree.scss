@@ -3,14 +3,16 @@
 
 .tree {
   position: relative;
-  overflow: hidden;
   @include user-select(none);
+  font-size: 14px;
+  color: $text-light-color;
 }
 
 .draggable {
   position: absolute;
   opacity: 0.8;
   @include user-select(none);
+  z-index: 9;
 }
 
 .node {
@@ -28,24 +30,75 @@
       cursor: pointer;
     }
   }
-  .inner {
-    position: relative;
-    cursor: pointer;
-    padding-left: 10px;
-    z-index: 1;
-  }
+}
 
-  .collapse {
-    position: absolute;
-    left: 0;
-    cursor: pointer;
-  }
+.nodeInner {
+  position: relative;
+  z-index: 1;
+  padding: 7px 0;
+}
 
-  .caretRight:before {
-    content: '\25B8';
+.box {
+  background-color: $bg-color1;
+  border-radius: 5px;
+  border: 1px solid $panel-border-color;
+  position: relative;
+  @include box-shadow-custom(0 2px 2px rgba(0, 0, 0, .1));
+  &.group {
+    background-color: $panel-body-bg-color;
+    padding: 0 $arrange-node-height;
+    .itemNo {
+      border-right: none;
+    }
   }
+}
 
-  .caretDown:before {
-    content: '\25BE';
-  }
+.collapse {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+  width: $arrange-node-height;
+  border-right: 1px solid $panel-border-color;
+}
+
+.icon {
+  font-size: 0;
+  line-height: 0;
+  @include vhcenter;
+}
+
+.handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  cursor: move;
+  width: $arrange-node-height;
+  border-left: 1px solid $panel-border-color;
+}
+
+.boxInner {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.itemNo {
+  display: table-cell;
+  vertical-align: middle;
+  width: $arrange-node-height;
+  text-align: center;
+  font-weight: 300;
+  color: $grey;
+  height: 100%;
+  border-right: 1px solid $panel-border-color;
+}
+
+.boxContent {
+  display: table-cell;
+  width: 100%;
+  vertical-align: middle;
+  height: $arrange-node-height;
 }

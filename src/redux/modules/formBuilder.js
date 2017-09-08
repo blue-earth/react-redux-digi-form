@@ -622,6 +622,7 @@ const _setFormStatus = (state, action) => {
 // Action: addNewGroup
 // ------------------------------------
 export const addNewGroup = createAction(ADD_NEW_GROUP);
+
 const _addNewGroup = (state, action) => {
   const lastQuestionId = state.lastQuestionId + 1;
   return Object.assign({}, state, {
@@ -638,9 +639,14 @@ const _addNewGroup = (state, action) => {
 // Action: updateGroup
 // ------------------------------------
 export const updateGroup = createAction(UPDATE_GROUP);
+
 const _updateGroup = (state, action) => {
   return Object.assign({}, state, {
-    questions: mergeItemIntoArray(state.questions, _.pick(action.payload, ['id', 'title']))
+    questions: mergeItemIntoArray(
+      state.questions,
+      _.pick(action.payload, ['id', 'title']),
+      true
+    )
   });
 };
 
@@ -648,6 +654,23 @@ const _updateGroup = (state, action) => {
 // Action: setBuilderState
 // ------------------------------------
 export const setBuilderState = createAction(SET_BUILDER_STATE);
+
+const _setBuilderState = (state, action) => {
+  const { questions } = action.payload;
+  let extra = {};
+  if (questions) {
+    extra = {
+      lastQuestionId: Math.max(
+        state.lastQuestionId,
+        _.max(_.map(questions, question => question.id))
+      )
+    };
+  }
+  return Object.assign({}, state, {
+    ...action.payload,
+    ...extra
+  });
+};
 
 // ------------------------------------
 // Reducer
@@ -746,7 +769,7 @@ const formBuilderReducer = handleActions({
     _updateGroup(state, action),
 
   SET_BUILDER_STATE: (state, action) =>
-    Object.assign({}, state, action.payload)
+    _setBuilderState(state, action)
 
 }, INIT_BUILDER_STATE);
 

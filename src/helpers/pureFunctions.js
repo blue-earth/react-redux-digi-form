@@ -21,9 +21,9 @@ export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false, iterat
     if (deepMerge) {
       newItem = _.merge({}, itemArray[index], newItem);
     }
-    // var newItemArray = itemArray.slice(0);
-    itemArray[index] = newItem;
-    return itemArray;
+    var newItemArray = itemArray.slice(0);
+    newItemArray[index] = newItem;
+    return newItemArray;
   } else {
     return _.concat(itemArray, [newItem]);
   }
