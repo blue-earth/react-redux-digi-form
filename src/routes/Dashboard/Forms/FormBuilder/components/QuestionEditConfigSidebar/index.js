@@ -39,6 +39,10 @@ import {
   CheckboxFieldBasicTab,
   CheckboxFieldAdvancedTab
 } from './CheckboxField';
+import {
+  SignatureFieldBasicTab,
+  SignatureFieldAdvancedTab
+} from './SignatureField';
 
 export const getQuestionTypeConfigComponent = function (questionTypeName, tabName = 'general', componentProps) {
   var ConfigComponent;
@@ -118,6 +122,11 @@ export const getQuestionTypeConfigComponent = function (questionTypeName, tabNam
       }
       break;
     case 'SignatureField':
+      if (tabName === 'general') {
+        ConfigComponent = SignatureFieldBasicTab;
+      } else {
+        ConfigComponent = SignatureFieldAdvancedTab;
+      }
       break;
   }
   return <ConfigComponent {...componentProps} />;

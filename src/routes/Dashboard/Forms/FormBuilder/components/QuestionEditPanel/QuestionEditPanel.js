@@ -138,6 +138,9 @@ export default class QuestionEditPanel extends Component {
       saveForm,
       setActiveBox
     } = this.props;
+    if (this.props.currentElement.question.type === 'SignatureField') {
+      this.props.setQuestionInfo({'question_instruction': 'Electronic Signature'});
+    }
     saveForm();
     setActiveBox(null);
   }

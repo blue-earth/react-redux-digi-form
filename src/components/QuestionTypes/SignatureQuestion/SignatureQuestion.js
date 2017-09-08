@@ -14,6 +14,7 @@ import { signatureFonts } from 'schemas/signatureSchema';
 import { valueIsValid } from 'helpers/validationHelper';
 import getCsrfToken from 'redux/utils/csrf';
 import request from 'superagent';
+import _ from 'lodash';
 
 const apiUrl = `${API_URL}/form_document/api/signing_verification`;
 
@@ -24,6 +25,7 @@ class SignatureQuestion extends Component {
   };
 
   static propTypes = {
+    compiledQuestion: PropTypes.object.isRequired,
     isReadOnly: PropTypes.bool,
     isInputLocked: PropTypes.bool,
     autoFocus: PropTypes.bool,
@@ -102,23 +104,27 @@ class SignatureQuestion extends Component {
   }
 
   validate(cb) {
+    const validations = this.props.compiledQuestion['validations'];
+    const isRequired = typeof _.find(validations, { type: 'isRequired' }) !== 'undefined';
     const { value } = this.state;
-    var errors = this._getEmptyErrors();
     var isValid = true;
-    if (value.dataUrl === '') {
-      errors.dataUrl = ['Please sign your signature.'];
-      isValid = false;
-    }
-    var emailErrors = valueIsValid(value.email, [{'type': 'isEmail'}]);
-    if (emailErrors.length > 0) {
-      errors.email = emailErrors;
-      isValid = false;
-    }
-    // Empty signature name error handle
-    var nameErrors = valueIsValid(value.name, [{'type': 'isRequired'}]);
-    if (nameErrors.length > 0) {
-      errors.name = nameErrors;
-      isValid = false;
+    var errors = this._getEmptyErrors();
+    if (isRequired) {
+      if (value.dataUrl === '') {
+        errors.dataUrl = ['Please sign your signature.'];
+        isValid = false;
+      }
+      var emailErrors = valueIsValid(value.email, [{'type': 'isEmail'}]);
+      if (emailErrors.length > 0) {
+        errors.email = emailErrors;
+        isValid = false;
+      }
+      // Empty signature name error handle
+      var nameErrors = valueIsValid(value.name, [{'type': 'isRequired'}]);
+      if (nameErrors.length > 0) {
+        errors.name = nameErrors;
+        isValid = false;
+      }
     }
     if (isValid) {
       cb(true);
@@ -129,34 +135,41 @@ class SignatureQuestion extends Component {
   }
 
   verify(cb) {
+    const validations = this.props.compiledQuestion['validations'];
+    const isRequired = typeof _.find(validations, { type: 'isRequired' }) !== 'undefined';
     const that = this;
     const { value: { email } } = this.state;
     const { sessionId } = this.props;
-    request.get(`${apiUrl}/check_email/?email=${email}&response_id=${sessionId}`)
-      .set('X-CSRFToken', getCsrfToken())
-      .send()
-      .end(function (err, res) {
-        if (err) {
-          console.error('request error', err); // TODO: deal with this potential error
-          cb(false);
-        }
-        var serverResult = JSON.parse(res.text)['is_verified'];
-        if (serverResult) {
-          // email is already verified
-          that.props.onChange(that.state.value);
-          cb(true);
-        } else {
-          // email has not been verified yet
-          that.showVerificationWidget();
-          // do we need to send a code?
-          // TODO: is there a way to check from the backend if a code was already sent?
-          if (that.state.verificationStatus === '') {
-            // send code
-            that.sendVerificationCode();
+    if (isRequired) {
+      request.get(`${apiUrl}/check_email/?email=${email}&response_id=${sessionId}`)
+        .set('X-CSRFToken', getCsrfToken())
+        .send()
+        .end(function (err, res) {
+          if (err) {
+            console.error('request error', err); // TODO: deal with this potential error
+            cb(false);
           }
-          cb(false);
-        }
-      });
+          var serverResult = JSON.parse(res.text)['is_verified'];
+          if (serverResult) {
+            // email is already verified
+            that.props.onChange(that.state.value);
+            cb(true);
+          } else {
+            // email has not been verified yet
+            that.showVerificationWidget();
+            // do we need to send a code?
+            // TODO: is there a way to check from the backend if a code was already sent?
+            if (that.state.verificationStatus === '') {
+              // send code
+              that.sendVerificationCode();
+            }
+            cb(false);
+          }
+        });
+    } else {
+      this.props.onChange(this.state.value);
+      cb(true);
+    }
   }
 
   sendVerificationCode = () => {
@@ -210,6 +223,7 @@ class SignatureQuestion extends Component {
       formTitle: this.props.formTitle,
       onChange: this.handleSignatureChange,
       isInputLocked: this.props.isInputLocked,
+      hasConsentCheckbox: this.props.compiledQuestion.consentCheckbox || false,
       closeWidget: this.hideWidget
     };
     if (this.props.useModal) {

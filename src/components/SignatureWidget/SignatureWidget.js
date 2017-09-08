@@ -28,6 +28,7 @@ class SignatureWidget extends Component {
     errors: PropTypes.object,
     resetErrors: PropTypes.func,
     formTitle: PropTypes.string,
+    hasConsentCheckbox: PropTypes.bool,
     isInputLocked: PropTypes.bool,
     onChange: PropTypes.func,
     closeWidget: PropTypes.func
@@ -39,7 +40,7 @@ class SignatureWidget extends Component {
     this.state = {
       name: name || '',
       email: email || '',
-      isConsented: false,
+      isConsented: !this.props.hasConsentCheckbox,
       activeTabName: WRITE
     };
   };
@@ -240,7 +241,7 @@ class SignatureWidget extends Component {
           {this.signatureHeader}
           {this.signatureTabs}
         </div>
-        {this.consentSection}
+        {this.props.hasConsentCheckbox && this.consentSection}
         <div className={styles.signatureWidgetFooter}>
           {typeof this.props.closeWidget === 'function' &&
             <Button onClick={this.props.closeWidget} bsStyle="link" className={styles.cancelButton}>
