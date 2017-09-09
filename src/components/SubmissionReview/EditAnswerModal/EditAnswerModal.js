@@ -6,7 +6,9 @@ import {
   Modal,
   Button
 } from 'react-bootstrap';
+import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import { connectModal } from 'redux-modal';
+import styles from './EditAnswerModal.scss';
 
 class EditAnswerModal extends Component {
   static contextTypes = {
@@ -20,39 +22,66 @@ class EditAnswerModal extends Component {
       PropTypes.array,
       PropTypes.object,
       PropTypes.string
-    ]).isRequired,
+    ]),
     question: PropTypes.object,
-    onUpdate: PropTypes.func
+    formId: PropTypes.number,
+    sessionId: PropTypes.number,
+    formTitle: PropTypes.string,
+    isInputLocked: PropTypes.bool,
+    setInputLocked: PropTypes.func,
+    onUpdateAnswer: PropTypes.func,
+    ensureSessionExists: PropTypes.func
   };
 
-  handleUpdate = () => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: this.props.value
+    };
   }
 
+  handleChange = (value) => {
+    this.setState({value: value});
+  }
+
+  handleUpdateAnswer = () => {
+    this.refs.questionInteractive.validateAndVerify(
+      () => {
+        this.props.onUpdateAnswer(this.props.question.questionId, this.state.value);
+        this.props.handleHide();
+      }
+    );
+  };
+
   render() {
-    const { handleHide, show, question } = this.props;
-    const { primaryColour } = this.context;
+    const { handleHide, show } = this.props;
 
     return (
-      <Modal show={show} onHide={handleHide}
-        aria-labelledby="ModalHeader">
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <span style={{color: primaryColour}}>
-              {question.questionInstruction}
-            </span>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          content
-        </Modal.Body>
-        <Modal.Footer className="text-right">
+      <Modal show={show} onHide={handleHide}>
+        <div className={styles.editQuestionWrapper}>
+          <QuestionInteractive
+            ref="questionInteractive"
+            question={this.props.question}
+            value={this.state.value}
+            formId={this.props.formId}
+            sessionId={this.props.sessionId}
+            formTitle={this.props.formTitle}
+            isInputLocked={this.props.isInputLocked}
+            setInputLocked={this.props.setInputLocked}
+            handleChange={this.handleChange}
+            handleEnter={this.handleUpdateAnswer}
+            ensureSessionExists={this.props.ensureSessionExists}
+            isEditAnswerModal
+          />
+        </div>
+        <div className={styles.editFooter}>
           <Button bsStyle="link" onClick={handleHide}>
             Cancel
           </Button>
-          <Button bsStyle="primary" onClick={this.handleUpdate}>
+          <Button bsStyle="primary" onClick={this.handleUpdateAnswer}>
             Update
           </Button>
-        </Modal.Footer>
+        </div>
       </Modal>
     );
   }

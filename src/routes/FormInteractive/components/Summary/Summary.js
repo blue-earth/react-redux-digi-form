@@ -27,6 +27,7 @@ export default class Summary extends Component {
     /*
      * form: form_data of response, consists of questions and logics.
      */
+    title: PropTypes.string,
     form: PropTypes.object,
     /*
      * formConfig: form configuration data.
@@ -68,8 +69,21 @@ export default class Summary extends Component {
     /*
      * setIDVerifyStatus: Set ID verification related data and status
      */
-    setIDVerifyStatus: PropTypes.func.isRequired
+    setIDVerifyStatus: PropTypes.func.isRequired,
+
+    changeCurrentState: PropTypes.func,
+    isInputLocked: PropTypes.bool,
+    setInputLocked: PropTypes.func,
+
+    ensureSessionExists: PropTypes.func
   };
+
+  handleUpdateAnswer = (id, value) => {
+    this.props.storeAnswer({
+      id,
+      value
+    });
+  }
 
   handleFinalSubmit = () => {
     const { submitAnswer } = this.props;
@@ -98,11 +112,22 @@ export default class Summary extends Component {
         <h2 className={styles.summaryTitle}>Summary</h2>
         <div className={styles.innerWrapper}>
           <div className={styles.submissionReviewWrapper}>
-            <SubmissionReview questions={questions} answers={answers} showModal={showModal} />
+            <SubmissionReview
+              questions={questions}
+              answers={answers}
+              formTitle={this.props.title}
+              formId={this.props.formId}
+              sessionId={this.props.sessionId}
+              isInputLocked={this.props.isInputLocked}
+              setInputLocked={this.props.setInputLocked}
+              onUpdateAnswer={this.handleUpdateAnswer}
+              ensureSessionExists={this.props.ensureSessionExists}
+              showModal={showModal}
+            />
           </div>
           <div className={styles.submitButtonWrapper}>
             <p className={styles.whenReady} style={{ color: primaryColour }}>
-              When you're ready...
+              When you&apos;re ready...
             </p>
             <Button onClick={this.handleFinalSubmit} className={styles.submitButton}
               style={{ backgroundColor: primaryColour }}>
@@ -117,4 +142,3 @@ export default class Summary extends Component {
   }
 
 }
-

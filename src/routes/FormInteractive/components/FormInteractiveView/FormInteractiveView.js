@@ -34,7 +34,6 @@ class FormInteractiveView extends Component {
     /*
      * answers: Redux state that stores the array of answered values
      */
-    saveForm: PropTypes.func,
     answers: PropTypes.array.isRequired,
     /*
      * changeCurrentState: Redux action to change the update the current answer value on change,
@@ -82,7 +81,9 @@ class FormInteractiveView extends Component {
 
     formId: PropTypes.number,
     sessionId: PropTypes.number,
-    title: PropTypes.string
+    title: PropTypes.string,
+
+    saveForm: PropTypes.func
   };
 
   constructor(props) {
@@ -111,6 +112,7 @@ class FormInteractiveView extends Component {
     });
   }
 
+  // TODO: this get passed to all questions but doesn't appear to be used
   getStoreAnswerByQuestionId = (questionId) => {
     const { answers } = this.props;
     var answerResult = answers.filter((answer) => answer.id === questionId);
@@ -119,6 +121,17 @@ class FormInteractiveView extends Component {
     } else {
       return null;
     }
+  };
+
+  handleChange = (value) => {
+    const {changeCurrentState, storeAnswer, currentQuestion: {id}} = this.props;
+    changeCurrentState({
+      answerValue: value
+    });
+    storeAnswer({
+      id,
+      value
+    });
   };
 
   handleEnter = () => {
@@ -131,8 +144,8 @@ class FormInteractiveView extends Component {
   }
 
   renderCurrentQuestion() {
-    const { currentQuestion, verificationStatus, changeCurrentState,
-      answers, prefills, storeAnswer, showModal, setInputLocked, isInputLocked } = this.props;
+    const { currentQuestion, verificationStatus,
+      answers, prefills, showModal, setInputLocked, isInputLocked } = this.props;
     const { questions } = this.state;
     const question = findItemById(questions, currentQuestion.id);
     const context = getContextFromAnswer(answers);
@@ -157,10 +170,9 @@ class FormInteractiveView extends Component {
             question={finalQuestion}
             key={question.id}
             verifications={filteredVerifications}
-            changeCurrentState={changeCurrentState}
             setInputLocked={setInputLocked}
             isInputLocked={isInputLocked}
-            storeAnswer={storeAnswer}
+            handleChange={this.handleChange}
             handleEnter={this.handleEnter}
             showModal={showModal}
             getStoreAnswerByQuestionId={this.getStoreAnswerByQuestionId}

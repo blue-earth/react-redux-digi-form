@@ -206,17 +206,6 @@ class FormInteractive extends Component {
     }, 30000);  // todo: Will optimise this later
   }
 
-  saveForm = () => {
-    var self = this;
-    console.log('forminteractive -> saveform');
-    return new Promise(function (resolve, reject) {
-      self.props.submitAnswer(FORM_AUTOSAVE, function () {
-        // check submission succeed
-        resolve();
-      });
-    });
-  }
-
   componentWillReceiveProps(props) {
     const { showModal } = this.props;
     if (this.props.formAccessStatus !== props.formAccessStatus &&
@@ -227,6 +216,17 @@ class FormInteractive extends Component {
 
   componentWillUnmount() {
     this.autosaveIntervalId && clearInterval(this.autosaveIntervalId);
+  }
+
+  saveForm = () => {
+    var self = this;
+    console.log('forminteractive -> saveform');
+    return new Promise(function (resolve, reject) {
+      self.props.submitAnswer(FORM_AUTOSAVE, function () {
+        // check submission succeed
+        resolve();
+      });
+    });
   }
 
   checkRedirectAfterSubmit = ({ sessionId, requestAction }) => {

@@ -36,7 +36,14 @@ export default class SubmissionReview extends Component {
     /*
      * showModal: Redux modal show
      */
-    showModal: PropTypes.func.isRequired
+    showModal: PropTypes.func.isRequired,
+    formTitle: PropTypes.string,
+    formId: PropTypes.number,
+    sessionId: PropTypes.number,
+    isInputLocked: PropTypes.bool,
+    setInputLocked: PropTypes.func,
+    onUpdateAnswer: PropTypes.func,
+    ensureSessionExists: PropTypes.func
   };
 
   constructor(props) {
@@ -70,20 +77,19 @@ export default class SubmissionReview extends Component {
           _.map(groupQuestions, function (question, index) {
             const finalQuestion = getCompiledQuestion(question, answers);
             const answer = findItemById(answers, finalQuestion.questionId);
+            const value = _.get(answer, 'value');
             return (
               <li className={styles.questionListItem} key={index}>
                 <div className={styles.questionListItemInner}>
-                  <div className={styles.questionInstruction}>
-                    {
-                      finalQuestion.questionInstruction ||
-                      finalQuestion.instruction}
+                  <div className={styles.questionInstruction}
+                    dangerouslySetInnerHTML={{__html: finalQuestion.questionInstruction}}>
                   </div>
                   <div className={styles.answer}>
                     {answer && <AnswerValue value={answer.value} question={question} />}
                   </div>
                   <div className={styles.editButtonWrapper}>
                     <EditButton onClick={function () {
-                      showModal('editAnswerModal', { question: finalQuestion, value: answer.value });
+                      showModal('editAnswerModal', { question: finalQuestion, value: value });
                     }} />
                   </div>
                 </div>
@@ -121,8 +127,8 @@ export default class SubmissionReview extends Component {
     const that = this;
     const { questions } = this.props;
     return (
-      <Panel key={0} collapsible expanded className={classNames({[styles.panel]: true, [styles.open]: true})}
-        header={that.renderPanelHeader('Form Submission Review', 0)}>
+      <Panel key={0} className={classNames({[styles.panel]: true, [styles.open]: true})}
+        header={'Form Submission Review'}>
         {that.renderGroupQuestions(transformQuestions(questions))}
       </Panel>
     );
@@ -139,7 +145,15 @@ export default class SubmissionReview extends Component {
     return (
       <div className={styles.submissionReview}>
         {contents}
-        <EditAnswerModal />
+        <EditAnswerModal
+          formId={this.props.formId}
+          sessionId={this.props.sessionId}
+          formTitle={this.props.formTitle}
+          isInputLocked={this.props.isInputLocked}
+          setInputLocked={this.props.setInputLocked}
+          onUpdateAnswer={this.props.onUpdateAnswer}
+          ensureSessionExists={this.props.ensureSessionExists}
+        />
       </div>
     );
   }

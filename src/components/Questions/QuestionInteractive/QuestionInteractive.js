@@ -38,36 +38,17 @@ class QuestionInteractive extends Component {
       PropTypes.object,
       PropTypes.array
     ]),
-    /*
-     * changeCurrentState: Redux action to change the update the current answer value on change,
-     * input state to redux store.
-     */
-    changeCurrentState: PropTypes.func.isRequired,
-
-    /*
-     * verifications: Array of verifications status for the current question, ex. EmondoEmailService
-     */
-    verifications: PropTypes.array,
-    isInputLocked: PropTypes.bool,
-    setInputLocked: PropTypes.func,
-    /*
-     * storeAnswer: Redux action to store the answer value to Redux store.
-     */
-    storeAnswer: PropTypes.func.isRequired,
-
-    handleEnter: PropTypes.func.isRequired,
-
-    getStoreAnswerByQuestionId: PropTypes.func.isRequired,
-
-    /*
-     * showModal: redux-modal action to show modal
-     */
-    showModal: PropTypes.func.isRequired,
-
     formId: PropTypes.number,
     sessionId: PropTypes.number,
     formTitle: PropTypes.string,
-    saveForm: PropTypes.func
+    isInputLocked: PropTypes.bool,
+    setInputLocked: PropTypes.func,
+    handleChange: PropTypes.func.isRequired,
+    handleEnter: PropTypes.func.isRequired,
+
+    saveForm: PropTypes.func,
+
+    isEditAnswerModal: PropTypes.bool
   };
 
   static contextTypes = {
@@ -75,18 +56,8 @@ class QuestionInteractive extends Component {
   };
 
   static defaultProps = {
-    isInputLocked: false
-  };
-
-  handleChange = (value) => {
-    const {changeCurrentState, storeAnswer, question: {id}} = this.props;
-    changeCurrentState({
-      answerValue: value
-    });
-    storeAnswer({
-      id,
-      value
-    });
+    isInputLocked: false,
+    isEditAnswerModal: false
   };
 
   validateAndVerify(successCb) {
@@ -116,30 +87,28 @@ class QuestionInteractive extends Component {
     return new Promise(function (resolve, reject) {
       if (self.props.sessionId) {
         resolve();
+      } else {
+        saveForm().then(function () {
+          resolve();
+        });
       }
-      saveForm().then(function () {
-        resolve();
-      });
     });
   };
 
   getQuestionInputComponent() {
     var InputComponent = null;
-    const { value, question, question: { type },
-      getStoreAnswerByQuestionId, storeAnswer, changeCurrentState } = this.props;
+    const { value, question, question: { type } } = this.props;
     var props = {
       primaryColour: this.context.primaryColour,
-      onChange: this.handleChange,
+      onChange: this.props.handleChange,
       compiledQuestion: question,
-      getStoreAnswerByQuestionId: getStoreAnswerByQuestionId,
-      changeCurrentState: changeCurrentState,
-      storeAnswer: storeAnswer,
       handleEnter: this.props.handleEnter,
       isInputLocked: this.props.isInputLocked,
       value: value,
       formId: this.props.formId,
       sessionId: this.props.sessionId,
-      formTitle: this.props.formTitle
+      formTitle: this.props.formTitle,
+      isEditAnswerModal: this.props.isEditAnswerModal
     };
 
     switch (type) {

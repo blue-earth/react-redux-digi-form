@@ -3,10 +3,14 @@
 
 
 .signatureWidgetWrapper {
-  padding: 20px 40px;
+  padding: 20px 40px 0;
   font-family: Lato;
   font-size: 13px;
   font-weight: 600;
+  &.isEditAnswerModal {
+    border: 1px solid #e5e5e5;
+    @include border-radius(4px);
+  }
 }
 .inputWrapper {
   width: 50%;
@@ -111,6 +115,7 @@
   margin: 0 -40px;
   border-top: 1px solid #e5e5e5;
   text-align: right;
+  @include border-radius(0 0 4px 4px);
 }
 .cancelButton {
   font-size: 16px;
