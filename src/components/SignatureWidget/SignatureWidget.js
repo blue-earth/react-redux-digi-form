@@ -14,13 +14,14 @@ import {
 import FloatTextInput from 'components/QuestionInputs/FloatTextInput';
 import ImageUploader from './ImageUploader';
 import styles from './SignatureWidget.scss';
-import classNames from 'classnames';
+import classNames from 'classnames/bind';
 import moment from 'moment';
 import AppButton from 'components/Buttons/AppButton';
 import DrawSignature from './DrawSignature';
 import WriteSignature from './WriteSignature';
 
 const WRITE = 'write';
+const cx = classNames.bind(styles);
 
 class SignatureWidget extends Component {
   static propTypes = {
@@ -31,7 +32,8 @@ class SignatureWidget extends Component {
     hasConsentCheckbox: PropTypes.bool,
     isInputLocked: PropTypes.bool,
     onChange: PropTypes.func,
-    closeWidget: PropTypes.func
+    closeWidget: PropTypes.func,
+    isEditAnswerModal: PropTypes.bool
   };
 
   constructor(props) {
@@ -90,7 +92,7 @@ class SignatureWidget extends Component {
     return (
       <div>
         <Row>
-          <div className={classNames(styles.inputWrapper, styles.inputLeft)}>
+          <div className={cx(styles.inputWrapper, styles.inputLeft)}>
             <FloatTextInput
               ref="nameInput"
               errors={this.props.errors.name}
@@ -102,7 +104,7 @@ class SignatureWidget extends Component {
               onChange={this.handleNameChange}
               errorPlacement="top" />
           </div>
-          <div className={classNames(styles.inputWrapper, styles.inputRight)}>
+          <div className={cx(styles.inputWrapper, styles.inputRight)}>
             <FloatTextInput
               ref="emailInput"
               type="EmailField"
@@ -122,7 +124,7 @@ class SignatureWidget extends Component {
           </Col>
         </Row>
         {this.props.errors.dataUrl.length > 0 &&
-          <div className={classNames(styles.errorMessageWrapper)}>
+          <div className={cx(styles.errorMessageWrapper)}>
             <input tabIndex={-1} ref="errorMessageFocus" style={{padding: '0', border: '0', width: '0'}} />
             <span className={styles.errorMessage}>Please sign your signature</span>
           </div>
@@ -141,7 +143,7 @@ class SignatureWidget extends Component {
         activeKey={activeTabName}
         id="SignatureTabs"
         onSelect={this.handleTabSelect}
-        className={classNames({'activeTab': activeTabName === 'write'})}>
+        className={cx({'activeTab': activeTabName === 'write'})}>
         <Tab eventKey="write" title={
           <div>
             <img className={styles.tabIcon} src={writeLogo} />
@@ -225,7 +227,8 @@ class SignatureWidget extends Component {
   render() {
     const {
       isInputLocked,
-      errors
+      errors,
+      isEditAnswerModal
     } = this.props;
     const {
       isConsented
@@ -236,7 +239,7 @@ class SignatureWidget extends Component {
       errors.dataUrl.length > 0;
     moment.locale('en-au');
     return (
-      <form className={styles.signatureWidgetWrapper}>
+      <form className={cx(styles.signatureWidgetWrapper, {'isEditAnswerModal': isEditAnswerModal})}>
         <div className={styles.signatureWidgetBody}>
           {this.signatureHeader}
           {this.signatureTabs}
