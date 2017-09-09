@@ -81,10 +81,8 @@ export default class SubmissionReview extends Component {
             return (
               <li className={styles.questionListItem} key={index}>
                 <div className={styles.questionListItemInner}>
-                  <div className={styles.questionInstruction}>
-                    {
-                      finalQuestion.questionInstruction ||
-                      finalQuestion.instruction}
+                  <div className={styles.questionInstruction}
+                    dangerouslySetInnerHTML={{__html: finalQuestion.questionInstruction}}>
                   </div>
                   <div className={styles.answer}>
                     {answer && <AnswerValue value={answer.value} question={question} />}
