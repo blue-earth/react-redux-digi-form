@@ -34,7 +34,6 @@ class FormInteractiveView extends Component {
     /*
      * answers: Redux state that stores the array of answered values
      */
-    saveForm: PropTypes.func,
     answers: PropTypes.array.isRequired,
     /*
      * changeCurrentState: Redux action to change the update the current answer value on change,
@@ -82,7 +81,9 @@ class FormInteractiveView extends Component {
 
     formId: PropTypes.number,
     sessionId: PropTypes.number,
-    title: PropTypes.string
+    title: PropTypes.string,
+
+    ensureSessionExists: PropTypes.func
   };
 
   constructor(props) {
@@ -111,6 +112,7 @@ class FormInteractiveView extends Component {
     });
   }
 
+  // TODO: this get passed to all questions but doesn't appear to be used
   getStoreAnswerByQuestionId = (questionId) => {
     const { answers } = this.props;
     var answerResult = answers.filter((answer) => answer.id === questionId);
@@ -167,7 +169,7 @@ class FormInteractiveView extends Component {
             formId={this.props.formId}
             sessionId={this.props.sessionId}
             formTitle={this.props.title}
-            saveForm={this.props.saveForm}
+            ensureSessionExists={this.props.ensureSessionExists}
             {...optionals}
           />
         </div>

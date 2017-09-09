@@ -38,18 +38,17 @@ class QuestionInteractive extends Component {
       PropTypes.object,
       PropTypes.array
     ]),
+    formId: PropTypes.number,
+    sessionId: PropTypes.number,
+    formTitle: PropTypes.string,
+
+    isInputLocked: PropTypes.bool,
+    setInputLocked: PropTypes.func,
     /*
      * changeCurrentState: Redux action to change the update the current answer value on change,
      * input state to redux store.
      */
     changeCurrentState: PropTypes.func.isRequired,
-
-    /*
-     * verifications: Array of verifications status for the current question, ex. EmondoEmailService
-     */
-    verifications: PropTypes.array,
-    isInputLocked: PropTypes.bool,
-    setInputLocked: PropTypes.func,
     /*
      * storeAnswer: Redux action to store the answer value to Redux store.
      */
@@ -57,17 +56,7 @@ class QuestionInteractive extends Component {
 
     handleEnter: PropTypes.func.isRequired,
 
-    getStoreAnswerByQuestionId: PropTypes.func.isRequired,
-
-    /*
-     * showModal: redux-modal action to show modal
-     */
-    showModal: PropTypes.func.isRequired,
-
-    formId: PropTypes.number,
-    sessionId: PropTypes.number,
-    formTitle: PropTypes.string,
-    saveForm: PropTypes.func
+    ensureSessionExists: PropTypes.func
   };
 
   static contextTypes = {
@@ -110,28 +99,13 @@ class QuestionInteractive extends Component {
     });
   }
 
-  ensureSessionExists = () => {
-    const { saveForm } = this.props;
-    var self = this;
-    return new Promise(function (resolve, reject) {
-      if (self.props.sessionId) {
-        resolve();
-      }
-      saveForm().then(function () {
-        resolve();
-      });
-    });
-  };
-
   getQuestionInputComponent() {
     var InputComponent = null;
-    const { value, question, question: { type },
-      getStoreAnswerByQuestionId, storeAnswer, changeCurrentState } = this.props;
+    const { value, question, question: { type }, storeAnswer, changeCurrentState } = this.props;
     var props = {
       primaryColour: this.context.primaryColour,
       onChange: this.handleChange,
       compiledQuestion: question,
-      getStoreAnswerByQuestionId: getStoreAnswerByQuestionId,
       changeCurrentState: changeCurrentState,
       storeAnswer: storeAnswer,
       handleEnter: this.props.handleEnter,
@@ -188,7 +162,7 @@ class QuestionInteractive extends Component {
       case 'SignatureField':
         InputComponent = SignatureQuestion;
         props = Object.assign({}, props, {
-          'ensureSessionExists': this.ensureSessionExists
+          'ensureSessionExists': this.props.ensureSessionExists
         });
         break;
       case 'FileUploadField':
