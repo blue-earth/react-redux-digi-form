@@ -8,6 +8,7 @@ import {
 } from 'react-bootstrap';
 import QuestionInteractive from 'components/Questions/QuestionInteractive';
 import { connectModal } from 'redux-modal';
+import styles from './EditAnswerModal.scss';
 
 class EditAnswerModal extends Component {
   static contextTypes = {
@@ -29,42 +30,61 @@ class EditAnswerModal extends Component {
     formTitle: PropTypes.string,
     isInputLocked: PropTypes.bool,
     setInputLocked: PropTypes.func,
-    changeCurrentState: PropTypes.func,
-    storeAnswer: PropTypes.func,
+    onUpdateAnswer: PropTypes.func,
     ensureSessionExists: PropTypes.func
   };
 
-  handleUpdate = () => {
-    console.log('EditAnswerModal -> handleUpdate');
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: this.props.value
+    };
   }
 
+  handleChange = (value) => {
+    this.setState({value: value});
+  }
+
+  handleUpdateAnswer = () => {
+    console.log('EditAnswerModal -> handleUpdateAnswer 1');
+    this.refs.questionInteractive.validateAndVerify(
+      () => {
+        console.log('EditAnswerModal -> handleUpdateAnswer 2');
+        this.props.onUpdateAnswer(this.props.question.questionId, this.state.value);
+        this.props.handleHide();
+      }
+    );
+  };
+
   render() {
-    const { handleHide, show, question } = this.props;
+    const { handleHide, show } = this.props;
 
     return (
       <Modal show={show} onHide={handleHide}>
-        <Modal.Body>
-          {question.questionInstruction}
+        <div className={styles.editQuestionWrapper}>
           <QuestionInteractive
+            ref="questionInteractive"
             question={this.props.question}
-            value={this.props.value}
+            value={this.state.value}
             formId={this.props.formId}
             sessionId={this.props.sessionId}
             formTitle={this.props.formTitle}
             isInputLocked={this.props.isInputLocked}
             setInputLocked={this.props.setInputLocked}
-            changeCurrentState={this.props.changeCurrentState}
-            storeAnswer={this.props.storeAnswer}
-            handleEnter={this.handleUpdate}
+            handleChange={this.handleChange}
+            handleEnter={this.handleUpdateAnswer}
             ensureSessionExists={this.props.ensureSessionExists}
+            isEditAnswerModal
           />
+        </div>
+        <div className={styles.editFooter}>
           <Button bsStyle="link" onClick={handleHide}>
             Cancel
           </Button>
-          <Button bsStyle="primary" onClick={this.handleUpdate}>
+          <Button bsStyle="primary" onClick={this.handleUpdateAnswer}>
             Update
           </Button>
-        </Modal.Body>
+        </div>
       </Modal>
     );
   }

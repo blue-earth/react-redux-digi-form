@@ -42,8 +42,7 @@ export default class SubmissionReview extends Component {
     sessionId: PropTypes.number,
     isInputLocked: PropTypes.bool,
     setInputLocked: PropTypes.func,
-    changeCurrentState: PropTypes.func,
-    storeAnswer: PropTypes.func,
+    onUpdateAnswer: PropTypes.func,
     ensureSessionExists: PropTypes.func
   };
 
@@ -154,8 +153,7 @@ export default class SubmissionReview extends Component {
           formTitle={this.props.formTitle}
           isInputLocked={this.props.isInputLocked}
           setInputLocked={this.props.setInputLocked}
-          changeCurrentState={this.props.changeCurrentState}
-          storeAnswer={this.props.storeAnswer}
+          onUpdateAnswer={this.props.onUpdateAnswer}
           ensureSessionExists={this.props.ensureSessionExists}
         />
       </div>

@@ -218,18 +218,16 @@ class FormInteractive extends Component {
     this.autosaveIntervalId && clearInterval(this.autosaveIntervalId);
   }
 
-  ensureSessionExists = () => {
+  saveForm = () => {
     var self = this;
+    console.log('forminteractive -> saveform');
     return new Promise(function (resolve, reject) {
-      if (self.props.sessionId) {
-        resolve();
-      }
       self.props.submitAnswer(FORM_AUTOSAVE, function () {
         // check submission succeed
         resolve();
       });
     });
-  };
+  }
 
   checkRedirectAfterSubmit = ({ sessionId, requestAction }) => {
     const { goTo, params, showModal } = this.props;
@@ -309,8 +307,7 @@ class FormInteractive extends Component {
               onItemChange={this.setActiveGroup}
               percentage={this.percentage}
             />
-            {this.isInProgress &&
-              <FormInteractiveView {...this.props} ensureSessionExists={this.ensureSessionExists} />}
+            {this.isInProgress && <FormInteractiveView {...this.props} saveForm={this.saveForm} />}
             {shouldShowFinalSubmit && !this.isCompleted && <Summary {...this.props} />}
             {this.isCompleted && <FormCompletion title={title} {...this.props} />}
             {this.needsAccessCode && <AccessCodeModal onSuccess={this.loadFormSession} {...this.props} />}

@@ -83,7 +83,7 @@ class FormInteractiveView extends Component {
     sessionId: PropTypes.number,
     title: PropTypes.string,
 
-    ensureSessionExists: PropTypes.func
+    saveForm: PropTypes.func
   };
 
   constructor(props) {
@@ -123,6 +123,18 @@ class FormInteractiveView extends Component {
     }
   };
 
+  handleChange = (value) => {
+    console.log('FormInteractiveView -> handleChange');
+    const {changeCurrentState, storeAnswer, currentQuestion: {id}} = this.props;
+    changeCurrentState({
+      answerValue: value
+    });
+    storeAnswer({
+      id,
+      value
+    });
+  };
+
   handleEnter = () => {
     this.refs.questionInteractive.validateAndVerify(() => this.props.handleEnter());
   };
@@ -133,8 +145,8 @@ class FormInteractiveView extends Component {
   }
 
   renderCurrentQuestion() {
-    const { currentQuestion, verificationStatus, changeCurrentState,
-      answers, prefills, storeAnswer, showModal, setInputLocked, isInputLocked } = this.props;
+    const { currentQuestion, verificationStatus,
+      answers, prefills, showModal, setInputLocked, isInputLocked } = this.props;
     const { questions } = this.state;
     const question = findItemById(questions, currentQuestion.id);
     const context = getContextFromAnswer(answers);
@@ -159,17 +171,16 @@ class FormInteractiveView extends Component {
             question={finalQuestion}
             key={question.id}
             verifications={filteredVerifications}
-            changeCurrentState={changeCurrentState}
             setInputLocked={setInputLocked}
             isInputLocked={isInputLocked}
-            storeAnswer={storeAnswer}
+            handleChange={this.handleChange}
             handleEnter={this.handleEnter}
             showModal={showModal}
             getStoreAnswerByQuestionId={this.getStoreAnswerByQuestionId}
             formId={this.props.formId}
             sessionId={this.props.sessionId}
             formTitle={this.props.title}
-            ensureSessionExists={this.props.ensureSessionExists}
+            saveForm={this.props.saveForm}
             {...optionals}
           />
         </div>

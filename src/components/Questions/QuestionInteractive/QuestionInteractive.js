@@ -41,22 +41,14 @@ class QuestionInteractive extends Component {
     formId: PropTypes.number,
     sessionId: PropTypes.number,
     formTitle: PropTypes.string,
-
     isInputLocked: PropTypes.bool,
     setInputLocked: PropTypes.func,
-    /*
-     * changeCurrentState: Redux action to change the update the current answer value on change,
-     * input state to redux store.
-     */
-    changeCurrentState: PropTypes.func.isRequired,
-    /*
-     * storeAnswer: Redux action to store the answer value to Redux store.
-     */
-    storeAnswer: PropTypes.func.isRequired,
-
+    handleChange: PropTypes.func.isRequired,
     handleEnter: PropTypes.func.isRequired,
 
-    ensureSessionExists: PropTypes.func
+    saveForm: PropTypes.func,
+
+    isEditAnswerModal: PropTypes.bool
   };
 
   static contextTypes = {
@@ -64,18 +56,8 @@ class QuestionInteractive extends Component {
   };
 
   static defaultProps = {
-    isInputLocked: false
-  };
-
-  handleChange = (value) => {
-    const {changeCurrentState, storeAnswer, question: {id}} = this.props;
-    changeCurrentState({
-      answerValue: value
-    });
-    storeAnswer({
-      id,
-      value
-    });
+    isInputLocked: false,
+    isEditAnswerModal: false
   };
 
   validateAndVerify(successCb) {
@@ -99,21 +81,34 @@ class QuestionInteractive extends Component {
     });
   }
 
+  ensureSessionExists = () => {
+    const { saveForm } = this.props;
+    var self = this;
+    return new Promise(function (resolve, reject) {
+      if (self.props.sessionId) {
+        resolve();
+      } else {
+        saveForm().then(function () {
+          resolve();
+        });
+      }
+    });
+  };
+
   getQuestionInputComponent() {
     var InputComponent = null;
-    const { value, question, question: { type }, storeAnswer, changeCurrentState } = this.props;
+    const { value, question, question: { type } } = this.props;
     var props = {
       primaryColour: this.context.primaryColour,
-      onChange: this.handleChange,
+      onChange: this.props.handleChange,
       compiledQuestion: question,
-      changeCurrentState: changeCurrentState,
-      storeAnswer: storeAnswer,
       handleEnter: this.props.handleEnter,
       isInputLocked: this.props.isInputLocked,
       value: value,
       formId: this.props.formId,
       sessionId: this.props.sessionId,
-      formTitle: this.props.formTitle
+      formTitle: this.props.formTitle,
+      isEditAnswerModal: this.props.isEditAnswerModal
     };
 
     switch (type) {
@@ -162,7 +157,7 @@ class QuestionInteractive extends Component {
       case 'SignatureField':
         InputComponent = SignatureQuestion;
         props = Object.assign({}, props, {
-          'ensureSessionExists': this.props.ensureSessionExists
+          'ensureSessionExists': this.ensureSessionExists
         });
         break;
       case 'FileUploadField':

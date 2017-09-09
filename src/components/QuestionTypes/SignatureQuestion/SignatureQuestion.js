@@ -37,13 +37,13 @@ class SignatureQuestion extends Component {
     sessionId: PropTypes.number,
     ensureSessionExists: PropTypes.func,
     // flag to determine if this question should launch modals to display widgets
-    useModal: PropTypes.bool
+    isEditAnswerModal: PropTypes.bool
   };
 
   static defaultProps = {
     isReadOnly: false,
     value: {'name': '', 'email': '', 'dataUrl': ''},
-    useModal: true
+    isEditAnswerModal: false
   };
 
   constructor(props) {
@@ -224,9 +224,10 @@ class SignatureQuestion extends Component {
       onChange: this.handleSignatureChange,
       isInputLocked: this.props.isInputLocked,
       hasConsentCheckbox: this.props.compiledQuestion.consentCheckbox || false,
-      closeWidget: this.hideWidget
+      closeWidget: this.hideWidget,
+      isEditAnswerModal: this.props.isEditAnswerModal
     };
-    if (this.props.useModal) {
+    if (!this.props.isEditAnswerModal) {
       return (
         <Modal show={this.state.activeWidget === 'signature'}>
           <Modal.Header>
@@ -255,7 +256,7 @@ class SignatureQuestion extends Component {
       resendCode: this.sendVerificationCode,
       closeWidget: this.hideWidget
     };
-    if (this.props.useModal) {
+    if (!this.props.isEditAnswerModal) {
       return (
         <Modal show={this.state.activeWidget === 'verification'}>
           <Modal.Body>
@@ -273,16 +274,15 @@ class SignatureQuestion extends Component {
   }
 
   _renderSignatureQuestion() {
-    const { isReadOnly, isInputLocked, autoFocus, useModal } = this.props;
-    const { value, signatureWidgetIsActive, verificationWidgetIsActive } = this.state;
-    const widgetIsActive = signatureWidgetIsActive || verificationWidgetIsActive;
+    const { isReadOnly, isInputLocked, autoFocus, isEditAnswerModal } = this.props;
+    const { value, activeWidget } = this.state;
     const preloadFonts = signatureFonts.map((font, index) => (
       <div className={`signature-font-preload preload-${font.name}`} key={index}>font</div>
     ));
     const that = this;
     return (
       <div className={styles.signature}>
-        {(useModal || !widgetIsActive) && value.dataUrl &&
+        {(!isEditAnswerModal || activeWidget === '') && value.dataUrl &&
           <div>
             <img src={value.dataUrl} alt="signature"
               className={styles.signatureImage}
@@ -298,7 +298,7 @@ class SignatureQuestion extends Component {
             </AppButton>
           </div>
         }
-        {(useModal || !widgetIsActive) && !isReadOnly && !value.dataUrl &&
+        {(!isEditAnswerModal || activeWidget === '') && !isReadOnly && !value.dataUrl &&
           <FormEnterButton buttonLabel="Sign"
             isDisabled={isInputLocked}
             autoFocus={!value.dataUrl && autoFocus}

@@ -78,6 +78,13 @@ export default class Summary extends Component {
     ensureSessionExists: PropTypes.func
   };
 
+  handleUpdateAnswer = (id, value) => {
+    this.props.storeAnswer({
+      id,
+      value
+    });
+  }
+
   handleFinalSubmit = () => {
     const { submitAnswer } = this.props;
     submitAnswer(FORM_USER_SUBMISSION, this.handlePostSubmit);
@@ -113,8 +120,7 @@ export default class Summary extends Component {
               sessionId={this.props.sessionId}
               isInputLocked={this.props.isInputLocked}
               setInputLocked={this.props.setInputLocked}
-              changeCurrentState={this.props.changeCurrentState}
-              storeAnswer={this.props.storeAnswer}
+              onUpdateAnswer={this.handleUpdateAnswer}
               ensureSessionExists={this.props.ensureSessionExists}
               showModal={showModal}
             />
