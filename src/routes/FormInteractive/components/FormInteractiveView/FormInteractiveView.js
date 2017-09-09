@@ -124,7 +124,6 @@ class FormInteractiveView extends Component {
   };
 
   handleChange = (value) => {
-    console.log('FormInteractiveView -> handleChange');
     const {changeCurrentState, storeAnswer, currentQuestion: {id}} = this.props;
     changeCurrentState({
       answerValue: value

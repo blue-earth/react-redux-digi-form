@@ -24,7 +24,6 @@ class EditAnswerModal extends Component {
       PropTypes.string
     ]),
     question: PropTypes.object,
-    onUpdate: PropTypes.func,  // TODO: where the ... does this come from?
     formId: PropTypes.number,
     sessionId: PropTypes.number,
     formTitle: PropTypes.string,
@@ -46,10 +45,8 @@ class EditAnswerModal extends Component {
   }
 
   handleUpdateAnswer = () => {
-    console.log('EditAnswerModal -> handleUpdateAnswer 1');
     this.refs.questionInteractive.validateAndVerify(
       () => {
-        console.log('EditAnswerModal -> handleUpdateAnswer 2');
         this.props.onUpdateAnswer(this.props.question.questionId, this.state.value);
         this.props.handleHide();
       }
