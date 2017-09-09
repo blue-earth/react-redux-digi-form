@@ -127,8 +127,8 @@ export default class SubmissionReview extends Component {
     const that = this;
     const { questions } = this.props;
     return (
-      <Panel key={0} collapsible expanded className={classNames({[styles.panel]: true, [styles.open]: true})}
-        header={that.renderPanelHeader('Form Submission Review', 0)}>
+      <Panel key={0} className={classNames({[styles.panel]: true, [styles.open]: true})}
+        header={'Form Submission Review'}>
         {that.renderGroupQuestions(transformQuestions(questions))}
       </Panel>
     );
