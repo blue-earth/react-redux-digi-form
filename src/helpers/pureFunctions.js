@@ -21,9 +21,9 @@ export const mergeItemIntoArray = (itemArray, newItem, deepMerge = false, iterat
     if (deepMerge) {
       newItem = _.merge({}, itemArray[index], newItem);
     }
-    // var newItemArray = itemArray.slice(0);
-    itemArray[index] = newItem;
-    return itemArray;
+    var newItemArray = itemArray.slice(0);
+    newItemArray[index] = newItem;
+    return newItemArray;
   } else {
     return _.concat(itemArray, [newItem]);
   }
@@ -39,6 +39,15 @@ export const removeItemFromArray = (itemArray, item, iteratee = 'id') => {
 
 export const buildQueryString = (query) =>
   _.join(_.map(_.toPairs(query), pair => `${pair[0]}=${pair[1]}`), '&');
+
+export const stripeTags = (html) => html.replace(/(<([^>]+)>)/ig, '');
+
+export const propsChanged = (propKeys, props, nextProps) => {
+  for (let key of propKeys) {
+    if (!_.isEqual(props[key], nextProps[key])) return true;
+  }
+  return false;
+};
 
 const fnToString = (fn) => Function.prototype.toString.call(fn);
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import { stripeTags } from './pureFunctions';
 import {
   INIT_QUESTION_STATE
 } from 'redux/modules/formBuilder';
@@ -390,4 +391,49 @@ export const mapQuestionsToDropdown = function (questions) {
       'type': q.type
     };
   });
+};
+
+export const transformQuestionsToTreeData = (questions) => (
+  _.map(questions, (question) => (
+    _.merge(
+      {
+        title: stripeTags(question.question_instruction || question.title),
+        id: question.id,
+        type: question.type,
+        leaf: true,
+        question
+      },
+      _.isNil(question.group) ? {} : { group: question.group }
+    )
+  ))
+);
+
+export const getTreeDataFromQuestions = (questions) => {
+  const tempGroup = _.groupBy(transformQuestionsToTreeData(questions), (q) => (
+    q.type === 'Group' ? 'groups' : typeof q.group !== 'undefined' ? q.group : 'orphans'
+  ));
+
+  var newGroup = [];
+  for (var groupId in tempGroup.groups) {
+    var group = tempGroup.groups[groupId];
+    newGroup.push({
+      id: group.id,
+      title: group.title,
+      question: group.question,
+      children: tempGroup[group.id]
+    });
+  }
+
+  return newGroup;
+};
+
+export const getQuestionsFromTreeData = (treeData) => {
+  let questions = [];
+  _.each(treeData.children, group => {
+    questions.push(group.question);
+    _.each(group.children, item => {
+      questions.push(_.merge(item.question, { group: group.question.id }));
+    });
+  });
+  return questions;
 };

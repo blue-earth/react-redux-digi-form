@@ -36,11 +36,6 @@ class DrawingBoard extends Component {
     documents: PropTypes.array.isRequired,
 
     /*
-     * questions: Redux state to store the array of questions.
-     */
-    questions: PropTypes.array.isRequired,
-
-    /*
      * isModified: Redux state that indicates whether the form is modified since last save or load.
      */
     isModified: PropTypes.bool.isRequired,

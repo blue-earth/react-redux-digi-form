@@ -19,7 +19,6 @@ export const DONE_FETCHING_FORM = 'DONE_FETCHING_FORM';
 export const REQUEST_FORM_SUBMIT = 'REQUEST_FORM_SUBMIT';
 export const DONE_FORM_SUBMIT = 'DONE_FORM_SUBMIT';
 
-export const SET_ACTIVE_INPUT_NAME = 'SET_ACTIVE_INPUT_NAME';
 export const EDIT_ELEMENT = 'EDIT_ELEMENT';
 export const SAVE_ELEMENT = 'SAVE_ELEMENT';
 export const DELETE_ELEMENT = 'DELETE_ELEMENT';
@@ -45,6 +44,17 @@ export const UPDATE_STORE = 'UPDATE_STORE';
 
 export const SET_FORM_STATUS = 'SET_FORM_STATUS';
 
+export const ADD_NEW_GROUP = 'ADD_NEW_GROUP';
+export const UPDATE_GROUP = 'UPDATE_GROUP';
+
+export const SET_BUILDER_STATE = 'SET_BUILDER_STATE';
+
+export const INIT_DEFAULT_GROUP = { // Assign default group to questions
+  id: 0,
+  title: 'Default Section',
+  type: 'Group'
+};
+
 export const INIT_BUILDER_STATE = {
   id: 0,
   isFetching: false, // indicates the form is being loaded.
@@ -53,7 +63,7 @@ export const INIT_BUILDER_STATE = {
   title: 'New form',
   slug: 'new-form',
   subdomain: '',
-  questions: [],
+  questions: [INIT_DEFAULT_GROUP],
   logics: [],
   documents: [
     // {
@@ -79,7 +89,7 @@ export const INIT_BUILDER_STATE = {
   },
   documentMapping: {},
   currentElement: null, // holds the current element state being added or edited.
-  lastQuestionId: 0, // indicates lastly added question id
+  lastQuestionId: INIT_DEFAULT_GROUP.id, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
   currentStep: 'select', // select, arrange, configure or publish
@@ -141,7 +151,9 @@ export const requestForm = createAction(REQUEST_FORM);
 // Action: receiveForm
 // ------------------------------------
 export const receiveForm = createAction(RECEIVE_FORM, (data) => {
-  const questions = data.form_data ? _.defaultTo(data.form_data.questions, []) : [];
+  const questions = data.form_data
+    ? _.defaultTo(data.form_data.questions, [INIT_DEFAULT_GROUP])
+    : [INIT_DEFAULT_GROUP];
   const logics = data.form_data ? _.defaultTo(data.form_data.logics, []) : [];
   return {
     id: data.id,
@@ -247,7 +259,7 @@ export const processSubmitForm = (formData) => {
 // ------------------------------------
 export const saveForm = () => {
   return (dispatch, getState) => {
-    dispatch(saveElement()); // Hide submitting spinner
+    dispatch(saveElement());
     dispatch(submitForm());
   };
 };
@@ -266,7 +278,7 @@ export const saveElement = createAction(SAVE_ELEMENT);
 // Helper: _saveElement
 // ------------------------------------
 const _saveElement = (state, action) => {
-  const { currentElement } = state;
+  const { currentElement, lastQuestionId } = state;
   const id = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
   var question = _.merge({}, INIT_QUESTION_STATE, currentElement.question, { id });
   // TODO: Update mappingInfo assignment
@@ -274,7 +286,7 @@ const _saveElement = (state, action) => {
   return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
     documentMapping: _.merge({}, state.documentMapping, { [id]: currentElement.mappingInfo }),
-    lastQuestionId: id,
+    lastQuestionId: _.max(id, lastQuestionId),
     currentElement: _.merge({}, currentElement, { id }),
     isModified
   });
@@ -291,9 +303,9 @@ export const deleteElement = createAction(DELETE_ELEMENT);
 const _deleteElement = (state, action) => {
   const id = action.payload;
   return Object.assign({}, state, {
-    questions: _.pullAllBy(state.questions, [{id}], 'id'),
-    documentMapping: _.pullAllBy(state.documentMapping, [{id}], 'id'),
-    questionEditMode: false,
+    questions: _.differenceBy(state.questions, [{id}], 'id'),
+    documentMapping: _.omit(state.documentMapping, [id]),
+    questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
     currentElement: null,
     isModified: true
   });
@@ -310,7 +322,9 @@ export const setQuestionInfo = createAction(SET_QUESTION_INFO);
 const _setQuestionInfo = (state, action) => {
   const question = _.get(state, ['currentElement', 'question'], {});
   return _updateCurrentElement(state, {
-    question: Object.assign({}, question, action.payload)
+    question: Object.assign({
+      group: INIT_DEFAULT_GROUP.id
+    }, question, action.payload)
   });
 };
 
@@ -380,11 +394,13 @@ const _setMappingInfo = (state, action) => {
     mappingInfo: Object.assign({}, mappingInfo, action.payload)
   });
 };
+
 // ------------------------------------
 // Action: resetMappingInfo
 // replace mappingInfo with a new object
 // ------------------------------------
 export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
+
 // ------------------------------------
 // Helper: _resetMappingInfo
 // ------------------------------------
@@ -449,10 +465,19 @@ export const setPageZoom = createAction(SET_PAGE_ZOOM);
 // ------------------------------------
 export const setQuestionEditMode = createAction(SET_QUESTION_EDIT_MODE);
 
+// ------------------------------------
+// Action: setCurrentElement
+// ------------------------------------
 export const setCurrentElement = createAction(SET_CURRENT_ELEMENT);
 
+// ------------------------------------
+// Action: setActiveBox
+// ------------------------------------
 export const setActiveBox = createAction(SET_ACTIVE_BOX);
 
+// ------------------------------------
+// Helper: _setActiveBox
+// ------------------------------------
 const _setActiveBox = (state, action) => {
   const { currentElement } = state;
   const { mappingInfo } = currentElement;
@@ -577,6 +602,7 @@ export const submitPublishStep = (formData) => {
 
   return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
 };
+
 // ------------------------------------
 // Action: updateStore
 // ------------------------------------
@@ -589,6 +615,69 @@ export const setFormStatus = createAction(SET_FORM_STATUS);
 const _setFormStatus = (state, action) => {
   return Object.assign({}, state, {
     status: action.payload
+  });
+};
+
+// ------------------------------------
+// Action: addNewGroup
+// ------------------------------------
+export const addNewGroup = createAction(ADD_NEW_GROUP);
+
+const _addNewGroup = (state, action) => {
+  const lastQuestionId = state.lastQuestionId + 1;
+  return Object.assign({}, state, {
+    lastQuestionId,
+    questions: _.concat([{
+      id: lastQuestionId,
+      title: 'New Section',
+      type: 'Group'
+    }], state.questions)
+  });
+};
+
+// ------------------------------------
+// Action: updateGroup
+// ------------------------------------
+export const updateGroup = createAction(UPDATE_GROUP);
+
+const _updateGroup = (state, action) => {
+  return Object.assign({}, state, {
+    questions: mergeItemIntoArray(
+      state.questions,
+      _.pick(action.payload, ['id', 'title']),
+      true
+    )
+  });
+};
+
+// ------------------------------------
+// Action: deleteGroup
+// ------------------------------------
+export const deleteGroup = (id) => {
+  return (dispatch, getState) => {
+    dispatch(deleteElement(id));
+  };
+};
+
+// ------------------------------------
+// Action: setBuilderState
+// ------------------------------------
+export const setBuilderState = createAction(SET_BUILDER_STATE);
+
+const _setBuilderState = (state, action) => {
+  const { questions } = action.payload;
+  let extra = {};
+  if (questions) {
+    extra = {
+      lastQuestionId: Math.max(
+        state.lastQuestionId,
+        _.max(_.map(questions, question => question.id))
+      )
+    };
+  }
+  return Object.assign({}, state, {
+    ...action.payload,
+    ...extra
   });
 };
 
@@ -680,7 +769,16 @@ const formBuilderReducer = handleActions({
     _setCurrentElement(state, action),
 
   SET_ACTIVE_BOX: (state, action) =>
-    _setActiveBox(state, action)
+    _setActiveBox(state, action),
+
+  ADD_NEW_GROUP: (state, action) =>
+    _addNewGroup(state, action),
+
+  UPDATE_GROUP: (state, action) =>
+    _updateGroup(state, action),
+
+  SET_BUILDER_STATE: (state, action) =>
+    _setBuilderState(state, action)
 
 }, INIT_BUILDER_STATE);
 

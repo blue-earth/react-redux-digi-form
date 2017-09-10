@@ -1,0 +1,45 @@
+@import './mixins';
+@import './variables';
+
+.wrapper {
+  width: 100%;
+  display: table;
+}
+
+.titleCell,
+.actionCell {
+  padding: 0 10px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.titleCell {
+  font-weight: 700;
+  font-size: 16px;
+  width: 100%;
+  height: $arrange-node-height;
+  padding-right: 10px;
+  :global {
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.actionCell {
+  white-space: nowrap;
+  border-left: 1px solid $panel-border-color;
+}
+
+.buttonLabel {
+  margin-left: 3px;
+  vertical-align: middle;
+}
+
+.actionButton {
+  padding: 0 !important;
+  text-transform: uppercase;
+  &:hover {
+    text-decoration: none;
+  }
+}

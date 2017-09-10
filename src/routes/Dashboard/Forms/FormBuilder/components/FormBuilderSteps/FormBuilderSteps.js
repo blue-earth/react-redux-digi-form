@@ -2,9 +2,12 @@ import React, {
   Component,
   PropTypes
 } from 'react';
+import _ from 'lodash';
 import FormBuilder from '../FormBuilder';
+import StepArrange from '../StepArrange';
 import StepConfigure from '../StepConfigure';
 import StepPublish from '../StepPublish';
+import styles from './FormBuilderSteps.scss';
 
 class FormBuilderSteps extends Component {
 
@@ -148,7 +151,32 @@ class FormBuilderSteps extends Component {
     submitConfigureStep: PropTypes.func,
     submitPublishStep: PropTypes.func,
 
-    setFormStatus: PropTypes.func
+    setFormStatus: PropTypes.func,
+
+    /*
+     * addNewGroup: Redux action to add a new group to questions.
+     */
+    addNewGroup: PropTypes.func.isRequired,
+
+    /*
+     * updateGroup: Redux action to change group name.
+     */
+    updateGroup: PropTypes.func.isRequired,
+
+    /*
+     * deleteGroup: Redux action to remove an empty group by id.
+     */
+    deleteGroup: PropTypes.func.isRequired,
+
+    /*
+     * setBuilderState: Redux action to change any field formBuilderState.
+     */
+    setBuilderState: PropTypes.func.isRequired,
+
+    /*
+     * submitForm: Redux action to submit form to the backend.
+     */
+    submitForm: PropTypes.func.isRequired
   };
 
   get currentStepComponent() {
@@ -156,8 +184,20 @@ class FormBuilderSteps extends Component {
     switch (props.currentStep) {
       case 'arrange':
         return {
-          Component: TempStepArrange,
-          props: props
+          Component: StepArrange,
+          props: _.pick(props, [
+            'addNewGroup',
+            'deleteGroup',
+            'id',
+            'logics',
+            'questions',
+            'resetQuestionInfo',
+            'setBuilderState',
+            'setQuestionInfo',
+            'show',
+            'submitForm',
+            'updateGroup'
+          ])
         };
       case 'configure':
         return {
@@ -227,18 +267,11 @@ class FormBuilderSteps extends Component {
   render() {
     const { Component, props } = this.currentStepComponent;
     return (
-      <Component {...props} />
+      <div className={styles.wrapper}>
+        <Component {...props} />
+      </div>
     );
   }
 }
 
 export default FormBuilderSteps;
-
-// TODO: replace these temporary components with the real ones
-class TempStepArrange extends Component {
-  render() {
-    return (
-      <div>Arrange</div>
-    );
-  }
-}
