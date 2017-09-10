@@ -164,6 +164,11 @@ class FormBuilderSteps extends Component {
     updateGroup: PropTypes.func.isRequired,
 
     /*
+     * deleteGroup: Redux action to remove an empty group by id.
+     */
+    deleteGroup: PropTypes.func.isRequired,
+
+    /*
      * setBuilderState: Redux action to change any field formBuilderState.
      */
     setBuilderState: PropTypes.func.isRequired
@@ -176,14 +181,16 @@ class FormBuilderSteps extends Component {
         return {
           Component: StepArrange,
           props: _.pick(props, [
-            'id',
-            'questions',
-            'logics',
-            'setQuestionInfo',
-            'resetQuestionInfo',
             'addNewGroup',
-            'updateGroup',
-            'setBuilderState'
+            'deleteGroup',
+            'id',
+            'logics',
+            'questions',
+            'resetQuestionInfo',
+            'setBuilderState',
+            'setQuestionInfo',
+            'show',
+            'updateGroup'
           ])
         };
       case 'configure':

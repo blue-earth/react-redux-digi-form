@@ -33,9 +33,13 @@
 
 .buttonLabel {
   margin-left: 3px;
+  vertical-align: middle;
 }
 
 .actionButton {
   padding: 0 !important;
   text-transform: uppercase;
+  &:hover {
+    text-decoration: none;
+  }
 }

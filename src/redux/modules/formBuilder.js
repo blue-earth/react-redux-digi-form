@@ -303,9 +303,9 @@ export const deleteElement = createAction(DELETE_ELEMENT);
 const _deleteElement = (state, action) => {
   const id = action.payload;
   return Object.assign({}, state, {
-    questions: _.pullAllBy(state.questions, [{id}], 'id'),
-    documentMapping: _.pullAllBy(state.documentMapping, [{id}], 'id'),
-    questionEditMode: false,
+    questions: _.differenceBy(state.questions, [{id}], 'id'),
+    documentMapping: _.omit(state.documentMapping, [id]),
+    questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
     currentElement: null,
     isModified: true
   });
@@ -648,6 +648,15 @@ const _updateGroup = (state, action) => {
       true
     )
   });
+};
+
+// ------------------------------------
+// Action: deleteGroup
+// ------------------------------------
+export const deleteGroup = (id) => {
+  return (dispatch, getState) => {
+    dispatch(deleteElement(id));
+  };
 };
 
 // ------------------------------------

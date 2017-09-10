@@ -25,6 +25,7 @@ import {
   setFormStatus,
   addNewGroup,
   updateGroup,
+  deleteGroup,
   setBuilderState
 } from 'redux/modules/formBuilder';
 
@@ -54,6 +55,7 @@ const mapActionCreators = {
   setFormStatus,
   addNewGroup,
   updateGroup,
+  deleteGroup,
   setBuilderState,
   show
 };

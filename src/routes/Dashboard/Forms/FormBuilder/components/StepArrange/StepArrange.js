@@ -43,13 +43,22 @@ export default class StepArrange extends Component {
     updateGroup: PropTypes.func.isRequired,
 
     /*
+     * deleteGroup: Redux action to remove an empty group by id.
+     */
+    deleteGroup: PropTypes.func.isRequired,
+
+    /*
      * setBuilderState: Redux action to change any field formBuilderState.
      */
-    setBuilderState: PropTypes.func.isRequired
+    setBuilderState: PropTypes.func.isRequired,
+
+    /*
+     * show: Redux modal show
+     */
+    show: PropTypes.func.isRequired
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(propsChanged(['questions'], this.props, nextProps));
     return propsChanged(['questions'], this.props, nextProps);
   }
 
@@ -64,16 +73,16 @@ export default class StepArrange extends Component {
   }
 
   renderNode = (node) => {
-    const { updateGroup } = this.props;
+    const { deleteGroup, show, updateGroup } = this.props;
     return node.leaf
     ? <div className={styles.node}>{node.title}</div>
-    : <GroupNode node={node} updateGroup={updateGroup} />;
+    : <GroupNode node={node} updateGroup={updateGroup} deleteGroup={deleteGroup} showModal={show} />;
   }
 
   render() {
     const { questions } = this.props;
     const treeData = getTreeDataFromQuestions(questions);
-    console.log(treeData);
+
     return (
       <div className={classNames(styles.panelWrapper, 'container')}>
         <div className={styles.panelHeader}>

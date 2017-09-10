@@ -14,11 +14,14 @@ import {
   FormControl
 } from 'react-bootstrap';
 import classNames from 'classnames';
+import DeleteGroupFailureModal from '../DeleteGroupFailureModal';
 import styles from './GroupNode.scss';
 
 export default class GroupNode extends Component {
   static propTypes = {
+    deleteGroup: PropTypes.func.isRequired,
     node: PropTypes.object.isRequired,
+    showModal: PropTypes.func.isRequired,
     updateGroup: PropTypes.func.isRequired
   };
 
@@ -38,12 +41,20 @@ export default class GroupNode extends Component {
 
   handleEditClick = () => {
     const { isEditing } = this.state;
-    this.setState({ isEditing: !isEditing });
+    const { node: { question } } = this.props;
+    this.setState({
+      isEditing: !isEditing,
+      title: question.title
+    });
   }
 
   handleDeleteClick = () => {
-    const { node } = this.props;
-    console.log(node);
+    const { deleteGroup, node, node: { question }, showModal } = this.props;
+    if (node.children) {
+      showModal('deleteGroupFailureModal');
+    } else {
+      deleteGroup(question.id);
+    }
   }
 
   handleChangeTitle = (event) => {
@@ -96,6 +107,7 @@ export default class GroupNode extends Component {
             <span className={styles.buttonLabel}>Delete</span>
           </Button>
         </div>
+        <DeleteGroupFailureModal />
       </div>
     );
   }
