@@ -294,9 +294,9 @@ class FormBuilder extends Component {
       <div className={styles.formBuilderContainer}>
         {DocumentHeaderElement}
         <div className={leftPanelClass}>
-          {questionEditMode
-            ? <QuestionEditPanel {...this.props} />
-            : <ElementsListPanel {...this.props} />
+          {questionEditMode === formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW
+            ? <ElementsListPanel {...this.props} />
+            : <QuestionEditPanel {...this.props} />
           }
         </div>
         <div className={rightPanelClass}>
