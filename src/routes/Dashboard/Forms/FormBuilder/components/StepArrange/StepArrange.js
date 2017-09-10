@@ -55,7 +55,12 @@ export default class StepArrange extends Component {
     /*
      * show: Redux modal show
      */
-    show: PropTypes.func.isRequired
+    show: PropTypes.func.isRequired,
+
+    /*
+     * submitForm: Redux action to submit form to the backend.
+     */
+    submitForm: PropTypes.func.isRequired
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -79,6 +84,11 @@ export default class StepArrange extends Component {
     : <GroupNode node={node} updateGroup={updateGroup} deleteGroup={deleteGroup} showModal={show} />;
   }
 
+  handleSaveContinue = () => {
+    const { submitForm } = this.props;
+    submitForm();
+  }
+
   render() {
     const { questions } = this.props;
     const treeData = getTreeDataFromQuestions(questions);
@@ -94,7 +104,7 @@ export default class StepArrange extends Component {
             </Col>
             <Col xs={6} className={styles.rightActions}>
               <AppButton type="secondary">View logic maps</AppButton>
-              <AppButton>Save & continue</AppButton>
+              <AppButton onClick={this.handleSaveContinue}>Save & continue</AppButton>
             </Col>
           </Row>
         </div>

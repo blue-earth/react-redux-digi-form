@@ -171,7 +171,12 @@ class FormBuilderSteps extends Component {
     /*
      * setBuilderState: Redux action to change any field formBuilderState.
      */
-    setBuilderState: PropTypes.func.isRequired
+    setBuilderState: PropTypes.func.isRequired,
+
+    /*
+     * submitForm: Redux action to submit form to the backend.
+     */
+    submitForm: PropTypes.func.isRequired
   };
 
   get currentStepComponent() {
@@ -190,6 +195,7 @@ class FormBuilderSteps extends Component {
             'setBuilderState',
             'setQuestionInfo',
             'show',
+            'submitForm',
             'updateGroup'
           ])
         };
