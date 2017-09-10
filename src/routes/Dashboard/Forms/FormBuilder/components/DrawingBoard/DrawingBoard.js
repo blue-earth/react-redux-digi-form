@@ -190,10 +190,6 @@ class DrawingBoard extends Component {
   handleBoardMouseDown = (event) => {
     const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
     if (!activeBoxPath || event.button !== 0) return; // mouse left button
-    if (activeBoxPath) {
-      // If there is a box in active state (toolbar is shown), commit the change
-      this.handleToolbarSave();
-    }
     const board = this.refs.board;
     const orgPos = this.getElementPos(board);
     const mousePos = this.getMousePos(event);
@@ -222,6 +218,12 @@ class DrawingBoard extends Component {
   }
 
   handleBoardMouseUp = (event) => {
+    const checkActiveBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
+    if (!this.state.isDrawing && checkActiveBoxPath) {
+      // If there is a box in active state (toolbar is shown), commit the change
+      this.handleToolbarSave();
+      return;
+    }
     if (event.button !== 0 || !this.state.isDrawing) return; // mouse left button
     const board = this.refs.board;
     const orgPos = this.getElementPos(board);
