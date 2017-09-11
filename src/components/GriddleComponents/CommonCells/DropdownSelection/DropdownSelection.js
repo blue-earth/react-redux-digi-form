@@ -26,6 +26,7 @@ export default class DropdownSelection extends Component {
 
   static propTypes = {
     id: PropTypes.number,
+    formStatus: PropTypes.string,
     selectedItems: PropTypes.array,
     checked: PropTypes.bool,
     actionsMenu: PropTypes.array,
@@ -84,7 +85,7 @@ export default class DropdownSelection extends Component {
   }
 
   render() {
-    const { checked, actionsMenu, id, selectedItems } = this.props;
+    const { checked, actionsMenu, id, formStatus, selectedItems } = this.props;
     const isHeaderCell = isNaN(id);
     const multipleSelected = selectedItems && selectedItems.length > 1;
     const singleSelected = selectedItems && selectedItems.length === 1;
@@ -100,6 +101,9 @@ export default class DropdownSelection extends Component {
             }
             var isItemDisabled = false;
             if (isHeaderCell && noneSelected) {
+              isItemDisabled = true;
+            }
+            if (formStatus && actionItem.withStatus.indexOf(formStatus) === -1) {
               isItemDisabled = true;
             }
             if (multipleSelected && (!actionItem.allowMultiple || !thisRowSelected)) {
