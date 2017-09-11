@@ -123,6 +123,7 @@ class DrawingBoard extends Component {
 
   constructor(props) {
     super(props);
+    this.interactable = null;
     this.state = {
       isDrawing: false,
       isDragging: false,
@@ -133,14 +134,19 @@ class DrawingBoard extends Component {
   componentDidMount() {
     const element = this.refs.board;
 
-    interact(element)
+    this.interactable = interact(element)
       .dropzone({
         accept: '.interactWrapper'
       })
       .on('drop', this.handleDrop);
     this.refs.board.addEventListener('mousemove', this.handleBoardMouseMove);
     this.refs.board.addEventListener('mouseup', this.handleBoardMouseUp);
+  }
 
+  componentWillUnmount() {
+    this.refs.board.removeEventListener('mousemove', this.handleBoardMouseMove);
+    this.refs.board.removeEventListener('mouseup', this.handleBoardMouseUp);
+    this.interactable.unset();
   }
 
   handleDrop = (event) => {
