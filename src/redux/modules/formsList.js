@@ -17,6 +17,7 @@ export const SELECT_FORM_ITEMS = 'SELECT_FORM_ITEMS';
 const REQUEST_SEND_FORM_LINK = 'REQUEST_SEND_FORM_LINK';
 const DONE_SEND_FORM_LINK = 'DONE_SEND_FORM_LINK';
 
+const SET_FORMSLIST_STATUS = 'SET_FORMSLIST_STATUS';
 const SET_FORMSLIST_PAGE_SIZE = 'SET_FORMSLIST_PAGE_SIZE';
 const NEXT_FORMSLIST_PAGE = 'NEXT_FORMSLIST_PAGE';
 const PREVIOUS_FORMSLIST_PAGE = 'PREVIOUS_FORMSLIST_PAGE';
@@ -30,6 +31,7 @@ export const INIT_FORMSLIST_STATE = {
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: 'id', // indicates the column name to sort by
   sortAscending: false, // indicates the sort direction (true: ascending | false: descending)
+  selectedStatus: '0,1',
   selectedItems: [], // holds the selected items id.
   isPageBusy: false // indicates the busy status of send form link
 };
@@ -61,6 +63,17 @@ const goToNextPage = createAction(NEXT_FORMSLIST_PAGE);
 const goToPreviousPage = createAction(PREVIOUS_FORMSLIST_PAGE);
 
 export const setPageSize = createAction(SET_FORMSLIST_PAGE_SIZE);
+
+export const setFormslistStatus = createAction(SET_FORMSLIST_STATUS);
+export const setStatus = (newStatus) => {
+  return (dispatch, getState) => {
+    dispatch(setFormslistStatus(newStatus));
+    dispatch(fetchFormsList({
+      selectedStatus: newStatus
+    }));
+  };
+}
+
 export const next = () => {
   return (dispatch, getState) => {
     dispatch(goToNextPage());
@@ -88,7 +101,8 @@ export const fetchFormsList = (options) => {
       'page', // current page number, can be overwritten by options.
       'pageSize', // current page size, can be overwritten by options.
       'sortColumn', // current sort column, can be overwritten by options.
-      'sortAscending' // current sort direction, can be overwritten by options.
+      'sortAscending', // current sort direction, can be overwritten by options.
+      'selectedStatus'
     ]), options);
     dispatch(requestFormsList());
     dispatch(processFetchFormsList(options));
@@ -331,6 +345,11 @@ const formsListReducer = handleActions({
   SET_FORMSLIST_PAGE_SIZE: (state, action) =>
     Object.assign({}, state, {
       pageSize: parseInt(action.payload),
+      page: 1
+    }),
+  SET_FORMSLIST_STATUS: (state, action) =>
+    Object.assign({}, state, {
+      selectedStatus: action.payload,
       page: 1
     }),
   NEXT_FORMSLIST_PAGE: (state, action) =>

@@ -17,7 +17,8 @@ import {
   LinkCell,
   SelectionCell,
   SelectionHeaderCell,
-  SortableHeaderCell
+  SortableHeaderCell,
+  StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
 import Icon from 'components/Icon';
 
@@ -95,7 +96,9 @@ class FormsListView extends Component {
     /*
      * selectedItems: Redux state in array to hold selected item ids.
      */
-    selectedItems: PropTypes.array.isRequired
+    selectedItems: PropTypes.array.isRequired,
+    selectedStatus: PropTypes.string,
+    setStatus: PropTypes.func
   };
 
   openSendFormModal = (id) => {
@@ -111,7 +114,9 @@ class FormsListView extends Component {
       goTo,
       duplicateForm,
       archiveForm,
-      archiveForms
+      archiveForms,
+      selectedStatus,
+      setStatus
     } = this.props;
     return [
       {
@@ -132,7 +137,7 @@ class FormsListView extends Component {
         order: 2,
         locked: false,
         visible: true,
-        displayName: 'Name',
+        displayName: 'Form name',
         customComponent: LinkCell,
         idName: 'id',
         goTo,
@@ -164,9 +169,18 @@ class FormsListView extends Component {
         order: 5,
         locked: false,
         visible: true,
+        sortable: false,
         displayName: 'Status',
-        customHeaderComponent: SortableHeaderCell,
-        cssClassName: styles.columnStatus
+        customHeaderComponent: StatusHeaderCell,
+        cssClassName: styles.columnStatus,
+        customHeaderComponentProps: {
+          statusList: [
+            {label: 'Live', value: '1'},
+            {label: 'Draft', value: '0'}
+          ],
+          selectedStatus: selectedStatus,
+          setStatus: setStatus
+        }
       },
       {
         columnName: 'actions',
