@@ -16,8 +16,6 @@ import {
   formBuilderSelectMode
 } from 'constants/formBuilder';
 import {
-  getActiveLabel,
-  getNextBoxIndex,
   getChoiceLabelByIndex
 } from 'helpers/formBuilderHelper';
 import { getQuestionInputSchema } from 'schemas/questionInputs';
@@ -243,17 +241,6 @@ class FormBuilder extends Component {
     var schema = getQuestionInputSchema(questionTypeName);
     var result = schema['availableFields'];
     return result;
-  }
-
-  get activeLabel() {
-    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
-    return getActiveLabel(activeBoxPath);
-  }
-
-  setActiveLabel = (label) => {
-    const { currentElement, setActiveBox } = this.props;
-    const index = getNextBoxIndex(label, currentElement);
-    setActiveBox(_.join([label, 'positions', index], '.'));
   }
 
   getMappedFieldsForCurrentQuestion() {

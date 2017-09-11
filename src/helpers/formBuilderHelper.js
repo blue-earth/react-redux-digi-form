@@ -9,17 +9,6 @@ import {
   formBuilderPathIndex
 } from 'constants/formBuilder';
 
-export const getImageDimension = (url, callback) => {
-  var img = new Image();
-  img.onload = function () {
-    callback({
-      width: this.width,
-      height: this.height
-    });
-  };
-  img.src = url;
-};
-
 export const getActiveLabel = (activeBoxPath) => {
   const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
   return pathArray[formBuilderPathIndex.LABEL];

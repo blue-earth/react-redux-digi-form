@@ -6,7 +6,6 @@ import _ from 'lodash';
 import interact from 'interact.js';
 import {
   adjustModifiedBlocksPosition,
-  getActiveLabel,
   getArrangedBlocksPosition,
   getDragSnappingTargets,
   getNextBoxIndex,

@@ -79,7 +79,6 @@ class PageView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDrawing: false,
       viewportWidth: 0,
       viewportHeight: 0
     };
