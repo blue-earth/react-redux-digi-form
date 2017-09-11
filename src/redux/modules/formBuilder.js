@@ -38,6 +38,7 @@ export const SET_CURRENT_ELEMENT = 'SET_CURRENT_ELEMENT';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
 export const SET_ACTIVE_BOX = 'SET_ACTIVE_BOX';
+export const SET_ACTIVE_LABEL = 'SET_ACTIVE_LABEL';
 
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
 export const UPDATE_STORE = 'UPDATE_STORE';
@@ -70,11 +71,6 @@ export const INIT_BUILDER_STATE = {
     //   url: 'http://localhost:3000/doc_example1.jpg', // for temp purpose, should fetch from backend.
     //   width: 1020,
     //   height: 1441
-    // },
-    // {
-    //   url: 'http://localhost:3000/doc_example2.jpg', // for temp purpose, should fetch from backend.
-    //   width: 620,
-    //   height: 877
     // }
   ],
   formConfig: {
@@ -88,7 +84,9 @@ export const INIT_BUILDER_STATE = {
     security: []
   },
   documentMapping: {},
-  currentElement: null, // holds the current element state being added or edited.
+  currentElement: {
+    activeLabel: ''
+  }, // holds the current element state being added or edited.
   lastQuestionId: INIT_DEFAULT_GROUP.id, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
@@ -167,7 +165,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
     slug: data.slug,
     subdomain: data.subdomain,
     isModified: false,
-    lastQuestionId: _.defaultTo(_.max(_.map(questions, 'id')), 0)
+    lastQuestionId: Math.max(_.max(_.map(questions, 'id')), 0)
   };
 });
 
@@ -286,7 +284,7 @@ const _saveElement = (state, action) => {
   return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
     documentMapping: _.merge({}, state.documentMapping, { [id]: currentElement.mappingInfo }),
-    lastQuestionId: _.max(id, lastQuestionId),
+    lastQuestionId: Math.max(id, lastQuestionId),
     currentElement: _.merge({}, currentElement, { id }),
     isModified
   });
@@ -419,7 +417,7 @@ export const setMappingPositionInfo = createAction(SET_MAPPING_POSITION_INFO);
 // Helper: _setMappingPositionInfo
 // ------------------------------------
 const _setMappingPositionInfo = (state, action) => {
-  const currentElement = _.assign({}, _.get(state, ['currentElement']));
+  const currentElement = state.currentElement;
 
   const { activeBoxPath, defaultMappingType } = currentElement;
   const activePathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
@@ -438,7 +436,7 @@ const _setMappingPositionInfo = (state, action) => {
     _.pick(action.payload, fields)
   );
   _.set(currentElement, positionPathArray, newPosition);
-
+  console.log('formBuilder: positionPathArray', positionPathArray, 'newPosition', newPosition);
   return _.assign({}, state, {
     currentElement
   });
@@ -503,6 +501,11 @@ const _setActiveBox = (state, action) => {
     })
   });
 };
+
+// ------------------------------------
+// Action: setActiveLabel
+// ------------------------------------
+export const setActiveLabel = createAction(SET_ACTIVE_LABEL);
 
 // ------------------------------------
 // Action: setCurrentStep
@@ -770,6 +773,13 @@ const formBuilderReducer = handleActions({
 
   SET_ACTIVE_BOX: (state, action) =>
     _setActiveBox(state, action),
+
+  SET_ACTIVE_LABEL: (state, action) =>
+    Object.assign({}, state, {
+      currentElement: _.assign({}, state.currentElement, {
+        activeLabel: action.payload
+      })
+    }),
 
   ADD_NEW_GROUP: (state, action) =>
     _addNewGroup(state, action),

@@ -37,13 +37,6 @@ class DocumentFieldsSelectionHeader extends Component {
     style: {}
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedLabel: this.props.activeLabel
-    };
-  }
-
   componentDidMount() {
     // If the toolbar only has one group and it contains only 1 label(field),
     // select it automatically
@@ -66,7 +59,7 @@ class DocumentFieldsSelectionHeader extends Component {
     var label = '';
     // if selecting an existing selected button,
     // toggle the selection off
-    if (name !== this.state.selectedLabel) {
+    if (name !== this.props.activeLabel) {
       label = name;
     } else {
       if (this.props.finalisedFields.indexOf(name) > -1) {
@@ -74,18 +67,15 @@ class DocumentFieldsSelectionHeader extends Component {
         return;
       }
     }
-    this.setState({
-      selectedLabel: label
-    });
     setActiveLabel(label);
   }
 
   isLabelSelected = (labelName) => {
-    return labelName === this.state.selectedLabel;
+    return labelName === this.props.activeLabel;
   }
 
   get currentSelectedGroup() {
-    var selectedLabel = this.state.selectedLabel;
+    var selectedLabel = this.props.activeLabel;
     var selectedGroup = null;
     for (let labelGroupArray of this.props.availableFields) {
       var results = labelGroupArray.filter((labelObj) => labelObj.key === selectedLabel);

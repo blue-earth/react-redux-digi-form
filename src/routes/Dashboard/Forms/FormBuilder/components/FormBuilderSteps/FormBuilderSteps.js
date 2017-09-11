@@ -110,6 +110,7 @@ class FormBuilderSteps extends Component {
      * setPageZoom: Redux action to set page zoom ratio.
      */
     setPageZoom: PropTypes.func.isRequired,
+    setActiveLabel: PropTypes.func.isRequired,
 
     /*
      * questionEditMode: Redux state to indicate question edit mode
@@ -243,6 +244,7 @@ class FormBuilderSteps extends Component {
             setCurrentElement: props.setCurrentElement,
             deleteElement: props.deleteElement,
             setActiveBox: props.setActiveBox,
+            setActiveLabel: props.setActiveLabel,
             setQuestionInfo: props.setQuestionInfo,
             resetQuestionInfo: props.resetQuestionInfo,
             setValidationInfo: props.setValidationInfo,

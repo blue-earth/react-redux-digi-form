@@ -143,6 +143,7 @@ class FormBuilder extends Component {
      * setActiveBox: Redux action to set activeBoxPath path.
      */
     setActiveBox: PropTypes.func.isRequired,
+    setActiveLabel: PropTypes.func.isRequired,
     deleteElement: PropTypes.func.isRequired,
     /*
      * newForm: Redux action to reset form with initial state for new form
@@ -263,7 +264,7 @@ class FormBuilder extends Component {
   }
 
   render() {
-    const { saveElement, setQuestionEditMode, questionEditMode } = this.props;
+    const { saveElement, setQuestionEditMode, questionEditMode, currentElement } = this.props;
     const leftPanelClass = classNames({
       [styles.leftPanel]: true,
       [styles.open]: questionEditMode
@@ -278,11 +279,13 @@ class FormBuilder extends Component {
       var availableFields = this.getAvailableSelectionFields();
       // only display this component if availableFields is configured in the the schema
       if (availableFields) {
+        console.log('activeLabel', currentElement.activeLabel);
         DocumentHeaderElement = <DocumentFieldsSelectionHeader
           backLinkClickHandler={this.goToQuestionTypeListView}
           availableFields={availableFields}
           className={styles.fieldsSelectorHeader}
-          activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel}
+          activeLabel={currentElement.activeLabel}
+          setActiveLabel={this.props.setActiveLabel}
           finalisedFields={this.getMappedFieldsForCurrentQuestion()}
           saveAndContinueClickHandler={this.saveAndContinue}
           deleteClickHandler={this.deleteCurrentQuestion}
