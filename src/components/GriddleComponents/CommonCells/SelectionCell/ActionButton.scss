@@ -4,10 +4,15 @@
 .actionIconWrapper {
   display: inline-block;
   vertical-align: text-top;
-  margin: 0 9px;
+  margin: 0 5px;
   width: 16px;
   height: 16px;
+  font-size: 16px;
   cursor: pointer;
+  &.disabled {
+    cursor: default;
+    opacity: .3;
+  }
 }
 :global {
   .actionTooltip {

@@ -21,6 +21,7 @@ import {
   StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
 import Icon from 'components/Icon';
+import { FaEdit, FaEye } from 'react-icons/lib/fa';
 
 class FormsListView extends Component {
   static propTypes = {
@@ -190,29 +191,45 @@ class FormsListView extends Component {
         displayName: '',
         customHeaderComponent: SelectionHeaderCell,
         customComponent: SelectionCell,
-        inlineActions: [{
-          name: 'send',
-          label: 'Send',
-          icon: <Icon name="Send" height={16} width={16} style={{verticalAlign: 'top'}} />,
-          onClick: (id) => this.openSendFormModal(id)
-        }],
+        inlineActions: [
+          {
+            name: 'send',
+            label: 'Send',
+            icon: <Icon name="Send" height={16} width={16} style={{verticalAlign: 'top'}} />,
+            onClick: (id) => this.openSendFormModal(id)
+          },
+          {
+            name: 'view',
+            label: 'View',
+            icon: <FaEye style={{verticalAlign: 'top'}} />,
+            onClick: (id) => this.props.goTo(`/forms/${id}`)
+          },
+          {
+            name: 'edit',
+            label: 'Edit',
+            icon: <FaEdit style={{verticalAlign: 'top'}} />,
+            onClick: (id) => this.props.goTo(editFormUrl(id))
+          }
+        ],
         idName: 'id',
-        dropdownMenus: [{
-          name: 'send',
-          label: 'Send',
-          icon: 'Send',
-          onClick: (id) => this.openSendFormModal(id)
-        }, {
-          name: 'archive',
-          label: 'Archive',
-          icon: 'Archive',
-          onClick: (id) => archiveForm(id)
-        }, {
-          name: 'duplicate',
-          label: 'Duplicate',
-          icon: 'Duplicate',
-          onClick: (id) => duplicateForm(id)
-        }],
+        dropdownMenus: [
+          {
+            name: 'send',
+            label: 'Send',
+            icon: 'Send',
+            onClick: (id) => this.openSendFormModal(id)
+          }, {
+            name: 'archive',
+            label: 'Archive',
+            icon: 'Archive',
+            onClick: (id) => archiveForm(id)
+          }, {
+            name: 'duplicate',
+            label: 'Duplicate',
+            icon: 'Duplicate',
+            onClick: (id) => duplicateForm(id)
+          }
+        ],
         selectedItems,
         toggleSelectItem,
         cssClassName: styles.columnActions,

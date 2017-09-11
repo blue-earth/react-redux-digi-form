@@ -7,19 +7,36 @@ import {
   Tooltip,
   OverlayTrigger
 } from 'react-bootstrap';
+import classNames from 'classnames/bind';
+
+const cx = classNames.bind(styles);
 
 export default class ActionButton extends Component {
 
   static propTypes = {
     id: PropTypes.number,
     index: PropTypes.number,
-    action: PropTypes.object
+    action: PropTypes.object,
+    formStatus: PropTypes.string.isRequired
+  }
+
+  get isDisabled() {
+    const { formStatus, action } = this.props;
+    if (formStatus === 'Draft' && (action.name === 'send' || action.name === 'view')) {
+      return true;
+    }
+    if (formStatus === 'Live' && action.name === 'edit') {
+      return true;
+    }
+    return false;
   }
 
   handleClick = () => {
     const { action, id } = this.props;
-    action.onClick(id);
-    this.refs.actionTrigger.hide();
+    if (!this.isDisabled) {
+      action.onClick(id);
+      this.refs.actionTrigger.hide();
+    }
   }
   render() {
     const { action, index } = this.props;
@@ -34,7 +51,7 @@ export default class ActionButton extends Component {
         trigger={['hover', 'focus']}
         placement="bottom"
         overlay={tooltip}>
-        <div className={styles.actionIconWrapper} onClick={this.handleClick}>
+        <div className={cx('actionIconWrapper', {'disabled': this.isDisabled})} onClick={this.handleClick}>
           {action.icon}
         </div>
       </OverlayTrigger>

@@ -34,7 +34,11 @@ export default class SelectionCell extends Component {
       <div ref="root" className={styles.selectionCell}>
         {
           inlineActions.map((item, index) => (
-            <ActionButton key={index} id={rowData[idName]} index={index} action={item} />
+            <ActionButton key={index}
+              id={rowData[idName]}
+              index={index}
+              action={item}
+              formStatus={rowData['status']} />
           ))
         }
         <DropdownSelection

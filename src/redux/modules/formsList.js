@@ -72,7 +72,7 @@ export const setStatus = (newStatus) => {
       selectedStatus: newStatus
     }));
   };
-}
+};
 
 export const next = () => {
   return (dispatch, getState) => {
