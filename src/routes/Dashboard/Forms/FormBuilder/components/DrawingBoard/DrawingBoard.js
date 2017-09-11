@@ -138,9 +138,9 @@ class DrawingBoard extends Component {
         accept: '.interactWrapper'
       })
       .on('drop', this.handleDrop);
+    this.refs.board.addEventListener('mousemove', this.handleBoardMouseMove);
+    this.refs.board.addEventListener('mouseup', this.handleBoardMouseUp);
 
-    document.addEventListener('mousemove', this.handleBoardMouseMove);
-    document.addEventListener('mouseup', this.handleBoardMouseUp);
   }
 
   handleDrop = (event) => {
