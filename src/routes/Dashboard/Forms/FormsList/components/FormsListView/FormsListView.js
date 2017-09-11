@@ -21,7 +21,7 @@ import {
   StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
 import Icon from 'components/Icon';
-import { FaEdit, FaEye } from 'react-icons/lib/fa';
+import { FaEdit, FaEye, FaChain, FaDownload } from 'react-icons/lib/fa';
 
 class FormsListView extends Component {
   static propTypes = {
@@ -102,8 +102,111 @@ class FormsListView extends Component {
     setStatus: PropTypes.func
   };
 
+  /*
+   * functions for actions menu
+   */
+  editForm = (id) => {
+    if (!Array.isArray(id)) {
+      this.props.goTo(editFormUrl(id));
+    }
+  }
   openSendFormModal = (id) => {
-    this.props.showModal('sendFormLinkModal', { formId: id });
+    if (!Array.isArray(id)) {
+      this.props.showModal('sendFormLinkModal', { formId: id });
+    }
+  }
+  viewForm = (id) => {
+    if (!Array.isArray(id)) {
+      this.props.goTo(`/forms/${id}`);
+    }
+  }
+  copyLink = (id) => {
+    console.log('TODO copy link action', id);
+  }
+  duplicateFormAction = (id) => {
+    if (!Array.isArray(id)) {
+      this.props.duplicateForm(id);
+    }
+  }
+  downloadCSV = (id) => {
+    console.log('TODO download CSV action', id);
+  }
+  archiveFormAction = (id) => {
+    if (Array.isArray(id)) {
+      this.props.archiveForms(id);
+    } else {
+      this.props.archiveForm(id);
+    }
+  }
+  /*
+   * actions menu
+   */
+  get actionsMenu() {
+    return [
+      {
+        name: 'edit',
+        label: 'Edit',
+        icon: <FaEdit style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        withStatus: ['Draft'],
+        onClick: this.editForm
+      },
+      {
+        name: 'send',
+        label: 'Send',
+        icon: <Icon name="Send" style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        withStatus: ['Live'],
+        onClick: this.openSendFormModal
+      },
+      {
+        name: 'view',
+        label: 'View',
+        icon: <FaEye style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        withStatus: ['Live'],
+        onClick: this.viewForm
+      },
+      {
+        name: 'copyLink',
+        label: 'Copy link',
+        icon: <FaChain style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: false,
+        withStatus: ['Draft', 'Live'],
+        onClick: this.copyLink
+      },
+      {
+        name: 'duplicate',
+        label: 'Duplicate',
+        icon: <Icon name="Duplicate" style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: false,
+        withStatus: ['Draft', 'Live'],
+        onClick: this.duplicateFormAction
+      },
+      {
+        name: 'csv',
+        label: 'Download CSV',
+        icon: <FaDownload style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: false,
+        withStatus: ['Draft', 'Live'],
+        onClick: this.downloadCSV
+      },
+      {
+        name: 'archive',
+        label: 'Archive',
+        icon: <Icon name="Archive" style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        withStatus: ['Draft', 'Live'],
+        onClick: this.archiveFormAction
+      }
+    ];
   }
 
   get columnMetadata() {
@@ -113,12 +216,10 @@ class FormsListView extends Component {
       selectedItems,
       toggleSelectItem,
       goTo,
-      duplicateForm,
-      archiveForm,
-      archiveForms,
       selectedStatus,
       setStatus
     } = this.props;
+    const getActions = this.actionsMenu;
     return [
       {
         columnName: 'id',
@@ -191,55 +292,13 @@ class FormsListView extends Component {
         displayName: '',
         customHeaderComponent: SelectionHeaderCell,
         customComponent: SelectionCell,
-        inlineActions: [
-          {
-            name: 'send',
-            label: 'Send',
-            icon: <Icon name="Send" height={16} width={16} style={{verticalAlign: 'top'}} />,
-            onClick: (id) => this.openSendFormModal(id)
-          },
-          {
-            name: 'view',
-            label: 'View',
-            icon: <FaEye style={{verticalAlign: 'top'}} />,
-            onClick: (id) => this.props.goTo(`/forms/${id}`)
-          },
-          {
-            name: 'edit',
-            label: 'Edit',
-            icon: <FaEdit style={{verticalAlign: 'top'}} />,
-            onClick: (id) => this.props.goTo(editFormUrl(id))
-          }
-        ],
         idName: 'id',
-        dropdownMenus: [
-          {
-            name: 'send',
-            label: 'Send',
-            icon: 'Send',
-            onClick: (id) => this.openSendFormModal(id)
-          }, {
-            name: 'archive',
-            label: 'Archive',
-            icon: 'Archive',
-            onClick: (id) => archiveForm(id)
-          }, {
-            name: 'duplicate',
-            label: 'Duplicate',
-            icon: 'Duplicate',
-            onClick: (id) => duplicateForm(id)
-          }
-        ],
+        actionsMenu: getActions,
         selectedItems,
         toggleSelectItem,
         cssClassName: styles.columnActions,
         customHeaderComponentProps: {
-          dropdownMenus: [{
-            name: 'archive',
-            label: 'Archive',
-            icon: 'Archive',
-            onClick: (items) => archiveForms(items)
-          }],
+          actionsMenu: getActions,
           selectedItems,
           selectAllItems,
           isAllSelected: forms.length === selectedItems.length

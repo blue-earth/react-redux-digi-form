@@ -23,13 +23,13 @@ export default class SelectionCell extends Component {
   render() {
     const {
       metadata: {
-        inlineActions,
         selectedItems,
-        dropdownMenus,
+        actionsMenu,
         idName
       },
       rowData
     } = this.props;
+    const inlineActions = _.filter(actionsMenu, function (o) { return o.isInlineAction; });
     return (
       <div ref="root" className={styles.selectionCell}>
         {
@@ -43,8 +43,10 @@ export default class SelectionCell extends Component {
         }
         <DropdownSelection
           id={rowData[idName]}
+          formStatus={rowData['status']}
+          selectedItems={selectedItems}
           onSelect={this.handleSelectItem}
-          dropdownMenus={dropdownMenus}
+          actionsMenu={actionsMenu}
           checked={_.includes(selectedItems, rowData.id)} />
       </div>
     );

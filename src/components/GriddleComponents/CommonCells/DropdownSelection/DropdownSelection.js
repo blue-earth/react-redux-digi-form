@@ -9,10 +9,10 @@ import {
 import {
   FaCaretDown
 } from 'react-icons/lib/fa';
-import Icon from 'components/Icon';
-
-import classNames from 'classnames';
+import classNames from 'classnames/bind';
 import styles from './DropdownSelection.scss';
+
+const cx = classNames.bind(styles);
 
 export default class DropdownSelection extends Component {
 
@@ -28,7 +28,7 @@ export default class DropdownSelection extends Component {
     id: PropTypes.number,
     selectedItems: PropTypes.array,
     checked: PropTypes.bool,
-    dropdownMenus: PropTypes.array,
+    actionsMenu: PropTypes.array,
     onSelect: PropTypes.func
   }
 
@@ -68,32 +68,62 @@ export default class DropdownSelection extends Component {
   }
 
   handleMenuClick = (event) => {
-    const { dropdownMenus, id, selectedItems } = this.props;
-    const menu = dropdownMenus[event.currentTarget.dataset.index];
+    const { actionsMenu, id, selectedItems } = this.props;
+    const actionItem = actionsMenu[event.currentTarget.dataset.index];
     if (selectedItems && selectedItems.length > 0) {
-      menu.onClick(selectedItems);
+      if (selectedItems.length > 1 && actionItem.allowMultiple) {
+        actionItem.onClick(selectedItems);
+      }
+      if (selectedItems.length === 1) {
+        actionItem.onClick(selectedItems[0]);
+      }
     } else {
-      menu.onClick(id);
+      actionItem.onClick(id);
     }
     this.refs.dropdownTrigger.hide();
   }
 
   render() {
-    const { checked, dropdownMenus, id } = this.props;
+    const { checked, actionsMenu, id, selectedItems } = this.props;
+    const isHeaderCell = isNaN(id);
+    const multipleSelected = selectedItems && selectedItems.length > 1;
+    const singleSelected = selectedItems && selectedItems.length === 1;
+    const noneSelected = !selectedItems || selectedItems.length < 1;
+    const thisRowSelected = (selectedItems && selectedItems.indexOf(id) !== -1) || isHeaderCell;
     const dropdown = (
       <Popover arrowOffsetLeft={124} className="dropdownMenuContent" id={`dropdownmenu-${id}`} placement="bottom">
-        <ul className={styles.dropdownMenus}>
-          {dropdownMenus.map((menu, index) =>
-            <li
-              key={index}
-              data-index={index}
-              className={styles.dropdownMenu}
-              onClick={this.handleMenuClick}>
-              <div className={styles.actionIconWrapper}>
-                <Icon name={menu.icon} height={16} style={{verticalAlign: 'top'}} />
-              </div>
-              {menu.label}
-            </li>)}
+        <ul className={styles.actionsMenu}>
+          {actionsMenu.map((actionItem, index) => {
+            var isItemHidden = false;
+            if (isHeaderCell && !actionItem.allowMultiple) {
+              isItemHidden = true;
+            }
+            var isItemDisabled = false;
+            if (isHeaderCell && noneSelected) {
+              isItemDisabled = true;
+            }
+            if (multipleSelected && (!actionItem.allowMultiple || !thisRowSelected)) {
+              isItemDisabled = true;
+            }
+            if (singleSelected && !thisRowSelected) {
+              isItemDisabled = true;
+            }
+            return (!isItemHidden &&
+              <li
+                key={index}
+                data-index={index}
+                className={cx(
+                  'actionItem',
+                  {'disabled': isItemDisabled}
+                )}
+                onClick={!isItemDisabled && this.handleMenuClick}>
+                <div className={styles.actionIconWrapper}>
+                  {actionItem.icon}
+                </div>
+                {actionItem.label}
+              </li>
+            );
+          })}
         </ul>
       </Popover>);
     return (
@@ -105,7 +135,7 @@ export default class DropdownSelection extends Component {
         overlay={dropdown}
         onEnter={this.handleMenuOpen}
         onExit={this.handleMenuClose}>
-        <div className={classNames(styles.checkBoxWrapper, {[styles.hover]: this.state.hover})}
+        <div className={cx(styles.checkBoxWrapper, {[styles.hover]: this.state.hover})}
           onMouseOver={this.onMouseOver}
           onMouseOut={this.onMouseOut}>
           <input

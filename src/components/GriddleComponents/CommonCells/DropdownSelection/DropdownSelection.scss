@@ -1,14 +1,14 @@
 @import './mixins';
 @import './variables';
 
-.dropdownMenus {
+.actionsMenu {
   font-family: 'Open Sans';
   list-style: none;
   padding: 0;
   margin: 0;
   font-size: 12px;
   cursor: pointer;
-  .dropdownMenu {
+  .actionItem {
     color: $select-button-color;
     padding: 0 10px;
     height: 38px;
@@ -17,6 +17,11 @@
     &:hover {
       color: $select-button-hover-color;
       background-color: $select-button-hover-bg-color;
+    }
+    &.disabled {
+      opacity: 0.3;
+      color: $select-button-color;
+      background-color: none;
     }
   }
 }
@@ -27,6 +32,7 @@
   margin: 0 9px;
   width: 16px;
   height: 16px;
+  font-size: 16px;
   cursor: pointer;
 }
 

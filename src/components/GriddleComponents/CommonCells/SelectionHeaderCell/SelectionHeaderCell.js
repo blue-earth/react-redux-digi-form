@@ -11,7 +11,7 @@ class SelectionHeaderCell extends Component {
     selectedItems: PropTypes.array,
     selectAllItems: PropTypes.func,
     isAllSelected: PropTypes.bool,
-    dropdownMenus: PropTypes.array
+    actionsMenu: PropTypes.array
   }
 
   handleSelectItem = () => {
@@ -20,14 +20,14 @@ class SelectionHeaderCell extends Component {
   }
 
   render() {
-    const { isAllSelected, dropdownMenus, selectedItems } = this.props;
+    const { isAllSelected, actionsMenu, selectedItems } = this.props;
     return (
       <div className={styles.selectionCell}>
         <DropdownSelection
           selectedItems={selectedItems}
           checked={isAllSelected}
           onSelect={this.handleSelectItem}
-          dropdownMenus={dropdownMenus} />
+          actionsMenu={actionsMenu} />
       </div>
     );
   }
