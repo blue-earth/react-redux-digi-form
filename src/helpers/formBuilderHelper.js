@@ -14,10 +14,9 @@ export const getActiveLabel = (activeBoxPath) => {
   return pathArray[formBuilderPathIndex.LABEL];
 };
 
-export const getNextBoxIndex = (label, currentElement) =>
-  currentElement
-  ? Object.keys(_.get(currentElement, ['mappingInfo', label, 'positions'], {})).length
-  : 0;
+export const getNextBoxIndex = (label, currentElement) => {
+  return Object.keys(_.get(currentElement, ['mappingInfo', label, 'positions'], {})).length;
+}
 
 export const isCurrentElementId = (id, currentElement) =>
   (currentElement && _.isEqual(parseInt(id, 10), currentElement.id)) || _.isEqual(parseInt(id, 10), 0);
