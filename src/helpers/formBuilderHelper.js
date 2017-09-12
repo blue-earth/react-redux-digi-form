@@ -5,8 +5,7 @@ import {
   INIT_QUESTION_STATE
 } from 'redux/modules/formBuilder';
 import {
-  formBuilderBox,
-  formBuilderPathIndex
+  formBuilderBox
 } from 'constants/formBuilder';
 
 export const getNextBoxIndex = (label, currentElement) => {
