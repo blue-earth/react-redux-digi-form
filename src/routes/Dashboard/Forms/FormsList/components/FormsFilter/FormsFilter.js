@@ -47,13 +47,6 @@ class FormsFilter extends Component {
     return (
       <div className={styles.filterContainer}>
         <ButtonToolbar className="pull-left">
-          <SelectButton className={styles.formButton}
-            optionsList={this.paginationOptions}
-            label="Show"
-            value={pageSize}
-            onChange={setPageSize} />
-        </ButtonToolbar>
-        <ButtonToolbar className="pull-right">
           <SelectButton
             className={styles.formButton}
             label={
@@ -64,6 +57,13 @@ class FormsFilter extends Component {
               </strong>}
             isStaticValue
             onClick={this.handleRefresh} />
+          <SelectButton className={styles.formButton}
+            optionsList={this.paginationOptions}
+            label="Show"
+            value={pageSize}
+            onChange={setPageSize} />
+        </ButtonToolbar>
+        <ButtonToolbar className="pull-right">
           <AppButton
             extraClass={classNames(styles.formButton, styles.createButton)}
             onClick={this.handleCreateForm}>
