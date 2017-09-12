@@ -4,7 +4,7 @@
 .FormBuilderNavWrapper {
   background-color: #fff;
   margin: 0;
-  padding: 0 25px;
+  padding: 0;
   line-height: $dashboard-tabs-height;
   font-size: 14px;
   font-family: "roble_alt_boldbold";
@@ -13,7 +13,6 @@
 
 .breadcrumbs {
   display: table-cell;
-  left: 25px;
   width: 25%;
   color: $grey;
 }
@@ -36,7 +35,6 @@
 
 .actions {
   display: table-cell;
-  right: 25px;
   text-align: right;
   width: 25%;
   min-width: 280px;
@@ -47,6 +45,8 @@
     margin-left: 0;
   }
   @include media('<lg') {
+    min-width: 170px;
+    width: 170px;
     .prev, .next {
       display: none;
     }
@@ -57,7 +57,7 @@
   z-index: 10;
   display: table-cell;
   position: relative;
-  margin: 0 25%;
+  margin: 0;
   padding: 0;
   list-style-type: none;
   text-align: center;
