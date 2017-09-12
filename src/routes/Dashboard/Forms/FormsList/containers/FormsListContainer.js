@@ -5,15 +5,14 @@ import {
   selectAllItems,
   toggleSelectItem,
   setPageSize,
-  setStatus,
-  next,
-  previous,
+  filterFormsByStatus,
+  goToNextPage,
+  goToPreviousPage,
   archiveForm,
   archiveForms,
   duplicateForm,
-  deleteForm,
   sendFormLink,
-  updateFormStatus
+  setFormStatus
 } from 'redux/modules/formsList';
 import { goTo } from 'redux/modules/router.js';
 import { show } from 'redux-modal';
@@ -32,9 +31,9 @@ const mapStateToProps = (state) => {
     totalCount,
     page,
     pageSize,
-    selectedStatus,
+    selectedStatusFilterOptions,
     sortColumn,
-    sortAscending,
+    isSortAscending,
     selectedItems,
     isPageBusy
   } = formsList || INIT_FORMSLIST_STATE;
@@ -44,9 +43,9 @@ const mapStateToProps = (state) => {
     totalCount,
     page,
     pageSize,
-    selectedStatus,
+    selectedStatusFilterOptions,
     sortColumn,
-    sortAscending,
+    isSortAscending,
     selectedItems,
     isPageBusy
   };
@@ -56,17 +55,16 @@ const mapActionCreators = {
   fetchFormsList,
   selectAllItems,
   toggleSelectItem,
-  goTo,
   setPageSize,
-  setStatus,
-  next,
-  previous,
+  filterFormsByStatus,
+  goToNextPage,
+  goToPreviousPage,
   archiveForm,
   archiveForms,
   duplicateForm,
-  deleteForm,
   sendFormLink,
-  updateFormStatus,
+  setFormStatus,
+  goTo,
   showModal: show
 };
 

@@ -17,7 +17,7 @@ export const SELECT_FORM_ITEMS = 'SELECT_FORM_ITEMS';
 const REQUEST_SEND_FORM_LINK = 'REQUEST_SEND_FORM_LINK';
 const DONE_SEND_FORM_LINK = 'DONE_SEND_FORM_LINK';
 
-const SET_FORMSLIST_STATUS = 'SET_FORMSLIST_STATUS';
+const SET_STATUS_FILTER_OPTIONS = 'SET_STATUS_FILTER_OPTIONS';
 const SET_FORMSLIST_PAGE_SIZE = 'SET_FORMSLIST_PAGE_SIZE';
 const NEXT_FORMSLIST_PAGE = 'NEXT_FORMSLIST_PAGE';
 const PREVIOUS_FORMSLIST_PAGE = 'PREVIOUS_FORMSLIST_PAGE';
@@ -30,8 +30,8 @@ export const INIT_FORMSLIST_STATE = {
   pageSize: 5, // indicates number of items per page.
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: 'id', // indicates the column name to sort by
-  sortAscending: false, // indicates the sort direction (true: ascending | false: descending)
-  selectedStatus: '0,1',
+  isSortAscending: false, // indicates the sort direction (true: ascending | false: descending)
+  selectedStatusFilterOptions: '0,1',
   selectedItems: [], // holds the selected items id.
   isPageBusy: false // indicates the busy status of send form link
 };
@@ -59,32 +59,32 @@ export const doneSendFormLink = createAction(DONE_SEND_FORM_LINK);
 // ------------------------------------
 export const selectItems = createAction(SELECT_FORM_ITEMS);
 
-const goToNextPage = createAction(NEXT_FORMSLIST_PAGE);
-const goToPreviousPage = createAction(PREVIOUS_FORMSLIST_PAGE);
+const nextFormslistPage = createAction(NEXT_FORMSLIST_PAGE);
+const previousFormslistPage = createAction(PREVIOUS_FORMSLIST_PAGE);
 
 export const setPageSize = createAction(SET_FORMSLIST_PAGE_SIZE);
 
-export const setFormslistStatus = createAction(SET_FORMSLIST_STATUS);
-export const setStatus = (newStatus) => {
+const setStatusFilterOptions = createAction(SET_STATUS_FILTER_OPTIONS);
+export const filterFormsByStatus = (newStatus) => {
   return (dispatch, getState) => {
-    dispatch(setFormslistStatus(newStatus));
+    dispatch(setStatusFilterOptions(newStatus));
     dispatch(fetchFormsList({
-      selectedStatus: newStatus
+      status: newStatus
     }));
   };
 };
 
-export const next = () => {
+export const goToNextPage = () => {
   return (dispatch, getState) => {
-    dispatch(goToNextPage());
+    dispatch(nextFormslistPage());
     dispatch(fetchFormsList({
       page: getState().formsList.page
     }));
   };
 };
-export const previous = () => {
+export const goToPreviousPage = () => {
   return (dispatch, getState) => {
-    dispatch(goToPreviousPage());
+    dispatch(previousFormslistPage());
     dispatch(fetchFormsList({
       page: getState().formsList.page
     }));
@@ -101,8 +101,8 @@ export const fetchFormsList = (options) => {
       'page', // current page number, can be overwritten by options.
       'pageSize', // current page size, can be overwritten by options.
       'sortColumn', // current sort column, can be overwritten by options.
-      'sortAscending', // current sort direction, can be overwritten by options.
-      'selectedStatus'
+      'isSortAscending', // current sort direction, can be overwritten by options.
+      'status'
     ]), options);
     dispatch(requestFormsList());
     dispatch(processFetchFormsList(options));
@@ -262,7 +262,7 @@ export const selectItem = ({id, selected}) => {
 // ------------------------------------
 // Helper Action: processFetchFormsList
 // Params
-//   options: object with fields - page, pageSize, sortAscending, sortColumn
+//   options: object with fields - page, pageSize, isSortAscending, sortColumn
 // ------------------------------------
 const processFetchFormsList = (options) => {
   var apiURL = `${API_URL}/form_document/api/form/`;
@@ -304,7 +304,7 @@ const processReceiveFormsList = (res, options) => {
       page: options.page || 1,
       pageSize: options.pageSize,
       sortColumn: options.sortColumn,
-      sortAscending: options.sortAscending,
+      isSortAscending: options.isSortAscending,
       forms: data,
       totalCount
     }));
@@ -313,20 +313,20 @@ const processReceiveFormsList = (res, options) => {
 };
 
 // ------------------------------------
-// Action: updateFormStatus
+// Action: setFormStatus
 // ------------------------------------
-export const updateFormStatus = (formId, newStatus) => {
+export const setFormStatus = (formId, newStatus) => {
   return (dispatch, getState) => {
     if (Array.isArray(formId)) {
       formId.map((id) => {
-        dispatch(processUpdateFormStatus(id, newStatus));
+        dispatch(processSetFormStatus(id, newStatus));
       });
     } else {
-      dispatch(processUpdateFormStatus(formId, newStatus));
+      dispatch(processSetFormStatus(formId, newStatus));
     }
   };
 };
-export const processUpdateFormStatus = (formId, newStatus) => {
+export const processSetFormStatus = (formId, newStatus) => {
   var body = {id: formId, status: newStatus};
   var method = 'PUT';
   var requestURL = `${API_URL}/form_document/api/form/${formId}/`;
@@ -385,9 +385,9 @@ const formsListReducer = handleActions({
       pageSize: parseInt(action.payload),
       page: 1
     }),
-  SET_FORMSLIST_STATUS: (state, action) =>
+  SET_STATUS_FILTER_OPTIONS: (state, action) =>
     Object.assign({}, state, {
-      selectedStatus: action.payload,
+      selectedStatusFilterOptions: action.payload,
       page: 1
     }),
   NEXT_FORMSLIST_PAGE: (state, action) =>

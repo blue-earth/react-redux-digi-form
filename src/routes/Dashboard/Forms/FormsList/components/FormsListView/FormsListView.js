@@ -27,120 +27,66 @@ import { FaEdit, FaEye, FaChain, FaCog } from 'react-icons/lib/fa';
 class FormsListView extends Component {
   static propTypes = {
     /*
-     * isFetching: Redux state that indicates whether the requested form is being fetched from backend
+     * redux state props
      */
     isFetching: PropTypes.bool.isRequired,
-
-    /*
-     * forms: Redux state that indicates whether the requested form is being fetched from backend
-     */
     forms: PropTypes.array.isRequired,
-
-    /*
-     * fetchFormsList: Redux action to fetch form from backend with ID specified by request parameters
-     */
-    fetchFormsList: PropTypes.func.isRequired,
-
-    /*
-     * page: Current page number
-     */
-    page: PropTypes.number.isRequired,
-
-    /*
-     * pageSize: Number of items per page.
-     */
-    pageSize: PropTypes.number.isRequired,
-
-    /*
-     * totalCount: Total number of items from backend.
-     */
     totalCount: PropTypes.number.isRequired,
-
-    /*
-     * goTo: Redux action to go to specific url.
-     */
-    goTo: PropTypes.func.isRequired,
-
-    /*
-     * sortColumn: Column ID to sort by.
-     */
+    page: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+    selectedStatusFilterOptions: PropTypes.string.isRequired,
     sortColumn: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object
     ]).isRequired,
-
-    /*
-     * sortAscending: true if ascending, false if descending
-     */
-    sortAscending: PropTypes.bool.isRequired,
-
-    /*
-     * selectAllItems: Redux action to select all the rows in table
-     */
-    selectAllItems: PropTypes.func.isRequired,
-
-    /*
-     * toggleSelectItem: Redux action to select or deselect item by id.
-     */
-    toggleSelectItem: PropTypes.func.isRequired,
-
-    setPageSize: PropTypes.func.isRequired,
-    next: PropTypes.func.isRequired,
-    previous: PropTypes.func.isRequired,
-    duplicateForm: PropTypes.func.isRequired,
-    archiveForm: PropTypes.func.isRequired,
-    archiveForms: PropTypes.func.isRequired,
-    sendFormLink: PropTypes.func.isRequired,
+    isSortAscending: PropTypes.bool.isRequired,
+    selectedItems: PropTypes.array.isRequired,
     isPageBusy: PropTypes.bool.isRequired,
 
-    showModal: PropTypes.func.isRequired,
-
     /*
-     * selectedItems: Redux state in array to hold selected item ids.
+     * reducer actions
      */
-    selectedItems: PropTypes.array.isRequired,
-    selectedStatus: PropTypes.string,
-    setStatus: PropTypes.func,
-    updateFormStatus: PropTypes.func.isRequired
+    fetchFormsList: PropTypes.func.isRequired,
+    selectAllItems: PropTypes.func.isRequired,
+    toggleSelectItem: PropTypes.func.isRequired,
+    setPageSize: PropTypes.func.isRequired,
+    filterFormsByStatus: PropTypes.func.isRequired,
+    goToNextPage: PropTypes.func.isRequired,
+    goToPreviousPage: PropTypes.func.isRequired,
+    archiveForm: PropTypes.func.isRequired,
+    archiveForms: PropTypes.func.isRequired,
+    duplicateForm: PropTypes.func.isRequired,
+    sendFormLink: PropTypes.func.isRequired,
+    setFormStatus: PropTypes.func.isRequired,
+
+    goTo: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired
   };
 
   /*
    * functions for actions menu
    */
   makeLive = (id) => {
-    this.props.updateFormStatus(id, 1);
+    this.props.setFormStatus(id, 1);
   }
   makeDraft = (id) => {
-    this.props.updateFormStatus(id, 0);
+    this.props.setFormStatus(id, 0);
   }
   editForm = (id) => {
-    if (!Array.isArray(id)) {
-      this.props.goTo(editFormUrl(id));
-    }
+    this.props.goTo(editFormUrl(id));
   }
   openSendFormModal = (id) => {
-    if (!Array.isArray(id)) {
-      this.props.showModal('sendFormLinkModal', { formId: id });
-    }
+    this.props.showModal('sendFormLinkModal', { formId: id });
   }
   viewForm = (id) => {
-    if (!Array.isArray(id)) {
-      this.props.goTo(`/forms/${id}`);
-    }
+    this.props.goTo(`/forms/${id}`);
   }
   copyLink = (id, subdomain, slug) => {
-    if (!Array.isArray(id)) {
-      this.props.showModal('copyFormLinkModal', { formId: id, subdomain: subdomain, slug: slug });
-    }
+    this.props.showModal('copyFormLinkModal', { formId: id, subdomain: subdomain, slug: slug });
   }
   duplicateFormAction = (id) => {
-    if (!Array.isArray(id)) {
-      this.props.duplicateForm(id);
-    }
+    this.props.duplicateForm(id);
   }
-  // downloadCSV = (id) => {
-  //   console.log('TODO download CSV action', id);
-  // }
   archiveFormAction = (id) => {
     if (Array.isArray(id)) {
       this.props.archiveForms(id);
@@ -223,17 +169,6 @@ class FormsListView extends Component {
         hiddenWithStatus: [],
         onClick: this.duplicateFormAction
       },
-      // CSV download to be added later
-      // {
-      //   name: 'csv',
-      //   label: 'Download CSV',
-      //   icon: <FaDownload style={{verticalAlign: 'top'}} />,
-      //   isInlineAction: false,
-      //   allowMultiple: false,
-      //   disabledWithStatus: [],
-      //   hiddenWithStatus: [],
-      //   onClick: this.downloadCSV
-      // },
       {
         name: 'archive',
         label: 'Archive',
@@ -254,8 +189,8 @@ class FormsListView extends Component {
       selectedItems,
       toggleSelectItem,
       goTo,
-      selectedStatus,
-      setStatus
+      selectedStatusFilterOptions,
+      filterFormsByStatus
     } = this.props;
     const getActions = this.actionsMenu;
     return [
@@ -318,8 +253,8 @@ class FormsListView extends Component {
             {label: 'Live', value: '1'},
             {label: 'Draft', value: '0'}
           ],
-          selectedStatus: selectedStatus,
-          setStatus: setStatus
+          selectedStatusFilterOptions: selectedStatusFilterOptions,
+          filterFormsByStatus: filterFormsByStatus
         }
       },
       {
@@ -357,7 +292,7 @@ class FormsListView extends Component {
       page,
       pageSize,
       sortColumn,
-      sortAscending,
+      isSortAscending,
       fetchFormsList,
       totalCount
     } = this.props;
@@ -370,7 +305,7 @@ class FormsListView extends Component {
         pageSize={pageSize}
         totalCount={totalCount}
         sortColumn={sortColumn}
-        sortAscending={sortAscending}
+        sortAscending={isSortAscending}
         Pagination={Pagination}
         isFetching={isFetching}
       />
@@ -385,8 +320,8 @@ class FormsListView extends Component {
       totalCount,
       setPageSize,
       selectedItems,
-      next,
-      previous,
+      goToNextPage,
+      goToPreviousPage,
       sendFormLink,
       isPageBusy
     } = this.props;
@@ -405,8 +340,8 @@ class FormsListView extends Component {
         <Pagination
           currentPage={page}
           maxPage={Math.ceil(totalCount / pageSize)}
-          previous={previous}
-          next={next} />
+          previous={goToPreviousPage}
+          next={goToNextPage} />
         <SendFormLinkModal sendFormLink={sendFormLink} isPageBusy={isPageBusy} />
         <CopyFormLinkModal />
       </div>

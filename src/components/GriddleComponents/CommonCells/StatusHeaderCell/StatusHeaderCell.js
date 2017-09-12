@@ -16,15 +16,15 @@ class StatusHeaderCell extends Component {
 
   static propTypes = {
     statusList: PropTypes.array,
-    selectedStatus: PropTypes.string,
-    setStatus: PropTypes.func.isRequired
+    selectedStatusFilterOptions: PropTypes.string,
+    filterFormsByStatus: PropTypes.func.isRequired
   }
 
   constructor(props) {
     super(props);
     this.state = {
       isMenuOpen: false,
-      selectedStatusArray: this.props.selectedStatus.split(',')
+      selectedStatusArray: this.props.selectedStatusFilterOptions.split(',')
     };
   }
 
@@ -41,7 +41,7 @@ class StatusHeaderCell extends Component {
     this.setState({ isMenuOpen: true });
   }
   handleMenuClose = () => {
-    this.setState({selectedStatusArray: this.props.selectedStatus.split(',')});
+    this.setState({selectedStatusArray: this.props.selectedStatusFilterOptions.split(',')});
     this.setState({
       isMenuOpen: false,
       hover: false
@@ -61,11 +61,11 @@ class StatusHeaderCell extends Component {
 
   handleOK = () => {
     var newStatus = this.state.selectedStatusArray.join();
-    this.props.setStatus(newStatus);
+    this.props.filterFormsByStatus(newStatus);
     this.refs.dropdownTrigger.hide();
   }
   handleCancel = () => {
-    this.setState({selectedStatusArray: this.props.selectedStatus.split(',')});
+    this.setState({selectedStatusArray: this.props.selectedStatusFilterOptions.split(',')});
     this.refs.dropdownTrigger.hide();
   }
 
