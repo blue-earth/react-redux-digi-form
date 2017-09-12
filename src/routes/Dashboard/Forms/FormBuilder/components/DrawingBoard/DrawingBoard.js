@@ -282,7 +282,7 @@ class DrawingBoard extends Component {
     const { activeBoxPath } = currentElement;
 
     this.setState({ isResizing: false });
-    const box = [
+    const parentBox = [
       rect.left / pageZoom,
       rect.top / pageZoom,
       rect.width / pageZoom,
@@ -290,13 +290,15 @@ class DrawingBoard extends Component {
     ];
 
     const position = _.get(currentElement.mappingInfo, activeBoxPath);
+    const fontSize = position.font_size;
+    const numOfBlocks = position.blocks.length;
     let blocks;
     if (position.blocks) {
-      const arrangedBlocks = getArrangedBlocksPosition(box, position.font_size, _.size(position.blocks));
+      const arrangedBlocks = getArrangedBlocksPosition(parentBox, fontSize, numOfBlocks);
       blocks = adjustModifiedBlocksPosition(arrangedBlocks, position);
     }
 
-    setMappingPositionInfo({ blocks, box });
+    setMappingPositionInfo({ blocks, parentBox });
 
     // Reset SnappingHelper
     this.resetSnappingHelper();

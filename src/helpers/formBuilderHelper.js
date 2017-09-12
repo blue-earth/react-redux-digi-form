@@ -32,12 +32,17 @@ export const getArrangedBlocksPosition = (box, fontSize, blockCount) => {
   const blockMaxWidth = box[WIDTH] / blockCount;
   const blockWidth = Math.min(fontSize * ratio, blockMaxWidth);
   const blockHeight = box[HEIGHT];
-  return _.map(new Array(blockCount), (block, index) => ([
-    blockMaxWidth * index + (blockMaxWidth - blockWidth) / 2, // left
-    0,  // top
-    blockWidth,  // width
-    blockHeight  // height
-  ]));
+  var blocks = [];
+  var i = 0;
+  for (; i < blockCount; i++) {
+    blocks.push([
+      blockMaxWidth * i + (blockMaxWidth - blockWidth) / 2, // left
+      0,  // top
+      blockWidth,  // width
+      blockHeight  // height
+    ]);
+  }
+  return blocks;
 };
 
 export const adjustModifiedBlocksPosition = (newBlocks, position) => {
