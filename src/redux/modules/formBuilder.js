@@ -39,6 +39,7 @@ export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
 export const SET_ACTIVE_BOX = 'SET_ACTIVE_BOX';
 export const SET_ACTIVE_LABEL = 'SET_ACTIVE_LABEL';
+export const DELETE_BOX_BY_PATH = 'DELETE_BOX_BY_PATH';
 
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
 export const UPDATE_STORE = 'UPDATE_STORE';
@@ -308,6 +309,8 @@ const _deleteElement = (state, action) => {
     isModified: true
   });
 };
+
+export const deleteBoxByPath = createAction('DELETE_BOX_BY_PATH');
 
 // ------------------------------------
 // Action: setQuestionInfo
@@ -746,7 +749,13 @@ const formBuilderReducer = handleActions({
 
   SET_MAPPING_POSITION_INFO: (state, action) =>
     _setMappingPositionInfo(state, action),
-
+  DELETE_BOX_BY_PATH: (state, action) => {
+    const activeBoxPath = action.payload;
+    var stateClone = Object.assign({}, state);
+    _.unset(stateClone.currentElement.mappingInfo, activeBoxPath);
+    stateClone.currentElement.activeBoxPath = null;
+    return stateClone;
+  },
   SET_VALIDATION_INFO: (state, action) =>
     _setValidationInfo(state, action),
 

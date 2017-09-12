@@ -39,6 +39,7 @@ class PageView extends Component {
      * setMappingPositionInfo: Action to update the document mapping position info of active selection.
      */
     setMappingPositionInfo: PropTypes.func.isRequired,
+    deleteBoxByPath: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.
@@ -152,6 +153,7 @@ class PageView extends Component {
           <DrawingBoard
             documents={this.props.documents}
             questions={this.props.questions}
+            deleteBoxByPath={this.props.deleteBoxByPath}
             isModified={this.props.isModified}
             saveElement={this.props.saveElement}
             documentMapping={this.props.documentMapping}

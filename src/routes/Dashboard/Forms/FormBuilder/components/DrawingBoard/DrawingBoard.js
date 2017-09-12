@@ -63,6 +63,7 @@ class DrawingBoard extends Component {
      * setActiveBox: Redux action to set activeBoxPath path.
      */
     setActiveBox: PropTypes.func.isRequired,
+    deleteBoxByPath: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.
@@ -446,12 +447,10 @@ class DrawingBoard extends Component {
   }
 
   handleDeleteBox = () => {
-    const { currentElement, setMappingInfo } = this.props;
-    if (!currentElement) return;
-    const mappingInfo = _.assign({}, currentElement.mappingInfo);
-    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
-    setMappingInfo(_.unset(mappingInfo, activeBoxPath));
-  }
+    const activeBoxPath = this.props.currentElement.activeBoxPath;
+    this.props.deleteBoxByPath(activeBoxPath);
+    this.forceUpdate(); // todo: fix renderActiveBox to remove this
+  };
 
   renderBlocks(position, isActive, id) {
     const { pageZoom } = this.props;
