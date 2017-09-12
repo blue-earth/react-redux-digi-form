@@ -26,7 +26,7 @@ export const getNextBoxIndex = (label, currentElement) => {
     result = largest + 1;
   }
   return result;
-}
+};
 
 export const isCurrentElementId = (id, currentElement) =>
   (currentElement && _.isEqual(parseInt(id, 10), currentElement.id)) || _.isEqual(parseInt(id, 10), 0);
