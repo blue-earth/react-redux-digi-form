@@ -10,6 +10,7 @@ import {
   previous
 } from 'redux/modules/submissionsList';
 import { goTo } from 'redux/modules/router.js';
+import { show } from 'redux-modal';
 import SubmissionsListView from '../components/SubmissionsListView';
 
 /*  Object of action creators (can also be function that returns object).
@@ -56,7 +57,8 @@ const mapActionCreators = {
   setPageSize,
   next,
   previous,
-  goTo
+  goTo,
+  showModal: show
 };
 
 export default connect(mapStateToProps, mapActionCreators)(SubmissionsListView);

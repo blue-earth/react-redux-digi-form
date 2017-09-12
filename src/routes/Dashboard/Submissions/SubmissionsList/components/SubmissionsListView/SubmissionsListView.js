@@ -21,6 +21,7 @@ import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import SelectButton from 'components/Buttons/SelectButton';
 import EnvironmentSaving from 'components/EnvironmentSaving';
+import DownloadModal from '../DownloadModal';
 import Icon from 'components/Icon';
 import { FaCheck, FaClose, FaEye, FaFilePdfO, FaFileTextO, FaCog } from 'react-icons/lib/fa';
 import classNames from 'classnames';
@@ -93,7 +94,8 @@ class SubmissionsListView extends Component {
     analytics: PropTypes.object,
     activities: PropTypes.array,
     environmentalSavings: PropTypes.object,
-    goTo: PropTypes.func.isRequired
+    goTo: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired
   };
 
   /*
@@ -111,6 +113,11 @@ class SubmissionsListView extends Component {
   }
   downloadSubmissionCSV = (idList) => {
     console.log('TODO download csv');
+    var id = idList[0];
+    this.props.showModal('downloadModal', {
+      responseId: id,
+      fileType: 'CSV'
+    });
   }
   sendResumeLink = (idList) => {
     console.log('TODO send link');
@@ -427,18 +434,6 @@ class SubmissionsListView extends Component {
     );
   }
 
-  formAction = (action) => {
-    const { selectedItems, submissions } = this.props;
-    switch (action) {
-      case 'edit':
-        selectedItems.map(item => {
-          const formId = submissions.filter(submission => submission.response_id === item)[0].form_id;
-          window.open(`/forms/${formId}/${item}`);
-        });
-        break;
-    }
-  }
-
   render() {
     const {
       page,
@@ -453,9 +448,9 @@ class SubmissionsListView extends Component {
       <div className={styles.submissionsList}>
         <div className={classNames(styles.widgetPanel, styles.submissionsListInner)}>
           <SubmissionsFilter
+            refresh={this.props.fetchSubmissions}
             setPageSize={setPageSize}
             pageSize={pageSize}
-            formAction={this.formAction}
             selectedItems={selectedItems}
           />
           {this.renderSubmissionsList()}
@@ -466,6 +461,7 @@ class SubmissionsListView extends Component {
           previous={previous}
           next={next} />
         {this.renderEnvironmentalSavings()}
+        <DownloadModal />
       </div>
     );
   }
