@@ -264,7 +264,6 @@ class FormBuilder extends Component {
       var availableFields = this.getAvailableSelectionFields();
       // only display this component if availableFields is configured in the the schema
       if (availableFields) {
-        console.log('activeLabel', currentElement.activeLabel);
         DocumentHeaderElement = <DocumentFieldsSelectionHeader
           backLinkClickHandler={this.goToQuestionTypeListView}
           availableFields={availableFields}
