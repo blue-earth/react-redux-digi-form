@@ -294,11 +294,9 @@ class DrawingBoard extends Component {
     const numOfBlocks = position.blocks.length;
     let blocks;
     if (position.blocks) {
-      const arrangedBlocks = getArrangedBlocksPosition(parentBox, fontSize, numOfBlocks);
-      blocks = adjustModifiedBlocksPosition(arrangedBlocks, position);
+      blocks = getArrangedBlocksPosition(parentBox, fontSize, numOfBlocks);
     }
-
-    setMappingPositionInfo({ blocks, parentBox });
+    setMappingPositionInfo({ blocks, box: parentBox });
 
     // Reset SnappingHelper
     this.resetSnappingHelper();
