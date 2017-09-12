@@ -54,7 +54,6 @@ class FormsListView extends Component {
     filterFormsByStatus: PropTypes.func.isRequired,
     goToNextPage: PropTypes.func.isRequired,
     goToPreviousPage: PropTypes.func.isRequired,
-    archiveForm: PropTypes.func.isRequired,
     archiveForms: PropTypes.func.isRequired,
     duplicateForm: PropTypes.func.isRequired,
     sendFormLink: PropTypes.func.isRequired,
@@ -67,33 +66,34 @@ class FormsListView extends Component {
   /*
    * functions for actions menu
    */
-  makeLive = (id) => {
-    this.props.setFormStatus(id, FormTemplatStatus.LIVE.value);
+  makeLive = (idList) => {
+    this.props.setFormStatus(idList, FormTemplatStatus.LIVE.value);
   }
-  makeDraft = (id) => {
-    this.props.setFormStatus(id, FormTemplatStatus.DRAFT.value);
+  makeDraft = (idList) => {
+    this.props.setFormStatus(idList, FormTemplatStatus.DRAFT.value);
   }
-  editForm = (id) => {
+  editForm = (idList) => {
+    var id = idList[0];
     this.props.goTo(editFormUrl(id));
   }
-  openSendFormModal = (id) => {
+  openSendFormModal = (idList) => {
+    var id = idList[0];
     this.props.showModal('sendFormLinkModal', { formId: id });
   }
-  viewForm = (id) => {
+  viewForm = (idList) => {
+    var id = idList[0];
     this.props.goTo(`/forms/${id}`);
   }
-  copyLink = (id, subdomain, slug) => {
+  copyLink = (idList, subdomain, slug) => {
+    var id = idList[0];
     this.props.showModal('copyFormLinkModal', { formId: id, subdomain: subdomain, slug: slug });
   }
-  duplicateFormAction = (id) => {
+  duplicateFormAction = (idList) => {
+    var id = idList[0];
     this.props.duplicateForm(id);
   }
-  archiveFormAction = (id) => {
-    if (Array.isArray(id)) {
-      this.props.archiveForms(id);
-    } else {
-      this.props.archiveForm(id);
-    }
+  archiveFormAction = (idList) => {
+    this.props.archiveForms(idList);
   }
   /*
    * actions menu

@@ -74,14 +74,9 @@ export default class ActionsDropdown extends Component {
     const { actionsMenu, id, subdomain, slug, selectedItems } = this.props;
     const actionItem = actionsMenu[event.currentTarget.dataset.index];
     if (selectedItems && selectedItems.length > 0) {
-      if (selectedItems.length > 1 && actionItem.allowMultiple) {
-        actionItem.onClick(selectedItems);
-      }
-      if (selectedItems.length === 1) {
-        actionItem.onClick(selectedItems[0], subdomain, slug);
-      }
+      actionItem.onClick(selectedItems, subdomain, slug);
     } else {
-      actionItem.onClick(id, subdomain, slug);
+      actionItem.onClick([id], subdomain, slug);
     }
     this.refs.dropdownTrigger.hide();
   }

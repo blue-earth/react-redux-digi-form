@@ -39,7 +39,8 @@
 .checkBoxWrapper {
   display: inline-block;
   cursor: pointer;
-  padding-left: 9px;
+  padding: 5px 0 5px 9px;
+  line-height: normal;
   border: 1px solid transparent;
   @include border-radius(3px);
   &.hover {

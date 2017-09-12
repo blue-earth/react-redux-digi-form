@@ -112,12 +112,6 @@ export const fetchFormsList = (options) => {
 // ------------------------------------
 // Action: ArchiveForm
 // ------------------------------------
-export const archiveForm = (id) => {
-  return (dispatch, getState) => {
-    dispatch(processArchiveForm(id));
-  };
-};
-
 export const archiveForms = (items) => {
   return (dispatch, getState) => {
     items.map((item) => {
@@ -315,15 +309,11 @@ const processReceiveFormsList = (res, options) => {
 // ------------------------------------
 // Action: setFormStatus
 // ------------------------------------
-export const setFormStatus = (formId, newStatus) => {
+export const setFormStatus = (formIdList, newStatus) => {
   return (dispatch, getState) => {
-    if (Array.isArray(formId)) {
-      formId.map((id) => {
-        dispatch(processSetFormStatus(id, newStatus));
-      });
-    } else {
-      dispatch(processSetFormStatus(formId, newStatus));
-    }
+    formIdList.map((id) => {
+      dispatch(processSetFormStatus(id, newStatus));
+    });
   };
 };
 export const processSetFormStatus = (formId, newStatus) => {
