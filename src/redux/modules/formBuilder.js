@@ -507,7 +507,6 @@ const _setCurrentElement = (state, action) => {
   } else { // If it's for loading from existing questions & mappings.
     const activeBoxPath = action.payload.activeBoxPath;
     const mappingInfo = state.documentMapping[id];
-    const question = state.questions.filter(question => question.id === id)[0];
     return Object.assign({}, state, {
       currentElement: {
         id: action.payload.id,
@@ -515,7 +514,7 @@ const _setCurrentElement = (state, action) => {
         mappingInfo,
         activeBoxPath,
         isModified: false,
-        defaultMappingType: question.defaultMappingType
+        defaultMappingType: mappingInfo[Object.keys(mappingInfo)[0]].type
       }
     });
   }
