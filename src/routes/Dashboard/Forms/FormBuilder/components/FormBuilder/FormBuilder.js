@@ -108,7 +108,7 @@ class FormBuilder extends Component {
      * setMappingPositionInfo: Redux action to update the document mapping position info of active selection.
      */
     setMappingPositionInfo: PropTypes.func.isRequired,
-    deleteBoxByPath: PropTypes.func.isRequired,
+    deleteMappingInfoByPath: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.

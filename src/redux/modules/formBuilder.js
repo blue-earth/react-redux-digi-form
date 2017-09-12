@@ -39,7 +39,7 @@ export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
 export const SET_ACTIVE_BOX = 'SET_ACTIVE_BOX';
 export const SET_ACTIVE_LABEL = 'SET_ACTIVE_LABEL';
-export const DELETE_BOX_BY_PATH = 'DELETE_BOX_BY_PATH';
+export const DELETE_MAPPING_INFO_BY_PATH = 'DELETE_MAPPING_INFO_BY_PATH';
 
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
 export const UPDATE_STORE = 'UPDATE_STORE';
@@ -306,7 +306,7 @@ const _deleteElement = (state, action) => {
   });
 };
 
-export const deleteBoxByPath = createAction('DELETE_BOX_BY_PATH');
+export const deleteMappingInfoByPath = createAction(DELETE_MAPPING_INFO_BY_PATH);
 
 // ------------------------------------
 // Action: setQuestionInfo
@@ -375,35 +375,6 @@ const _resetValidationInfo = (state, action) => {
   const validations = _.differenceBy(currentValidations, [{type}], 'type');
   return _setQuestionInfo(state, {
     payload: { validations }
-  });
-};
-
-// ------------------------------------
-// Action: setMappingInfo
-// ------------------------------------
-export const setMappingInfo = createAction(SET_MAPPING_INFO);
-// ------------------------------------
-// Helper: _setMappingInfo
-// ------------------------------------
-const _setMappingInfo = (state, action) => {
-  const mappingInfo = _.get(state, ['currentElement', 'mappingInfo'], {});
-  return _updateCurrentElement(state, {
-    mappingInfo: Object.assign({}, mappingInfo, action.payload)
-  });
-};
-
-// ------------------------------------
-// Action: resetMappingInfo
-// replace mappingInfo with a new object
-// ------------------------------------
-export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
-
-// ------------------------------------
-// Helper: _resetMappingInfo
-// ------------------------------------
-const _resetMappingInfo = (state, action) => {
-  return _updateCurrentElement(state, {
-    mappingInfo: action.payload
   });
 };
 
@@ -752,15 +723,9 @@ const formBuilderReducer = handleActions({
   RESET_QUESTION_INFO: (state, action) =>
     _resetQuestionInfo(state, action),
 
-  SET_MAPPING_INFO: (state, action) =>
-    _setMappingInfo(state, action),
-
-  RESET_MAPPING_INFO: (state, action) =>
-    _resetMappingInfo(state, action),
-
   SET_MAPPING_POSITION_INFO: (state, action) =>
     _setMappingPositionInfo(state, action),
-  DELETE_BOX_BY_PATH: (state, action) => {
+  DELETE_MAPPING_INFO_BY_PATH: (state, action) => {
     const activeBoxPath = action.payload;
     var stateClone = Object.assign({}, state);
     _.unset(stateClone.currentElement.mappingInfo, activeBoxPath);

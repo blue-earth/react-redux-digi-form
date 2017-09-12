@@ -73,7 +73,7 @@ class FormBuilderSteps extends Component {
      * setQuestionInfo: Redux action to add or update a specific item into current question.
      */
     setQuestionInfo: PropTypes.func.isRequired,
-    deleteBoxByPath: PropTypes.func.isRequired,
+    deleteMappingInfoByPath: PropTypes.func.isRequired,
 
     /*
      * resetQuestionInfo: Redux action to remove a specific item into current question.
@@ -244,7 +244,7 @@ class FormBuilderSteps extends Component {
             currentElement: props.currentElement,
             setCurrentElement: props.setCurrentElement,
             deleteElement: props.deleteElement,
-            deleteBoxByPath: props.deleteBoxByPath,
+            deleteMappingInfoByPath: props.deleteMappingInfoByPath,
             setActiveBox: props.setActiveBox,
             setActiveLabel: props.setActiveLabel,
             setQuestionInfo: props.setQuestionInfo,

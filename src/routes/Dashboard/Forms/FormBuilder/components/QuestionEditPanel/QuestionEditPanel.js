@@ -75,6 +75,7 @@ export default class QuestionEditPanel extends Component {
     setMappingInfo: PropTypes.func.isRequired,
 
     resetMappingInfo: PropTypes.func.isRequired,
+    deleteMappingInfoByPath: PropTypes.func.isRequired,
 
     /*
      * isModified: Redux state that indicates whether the form is modified since last save or load.
@@ -183,7 +184,8 @@ export default class QuestionEditPanel extends Component {
       resetValidationInfo: this.props.resetValidationInfo,
       setMappingInfo: this.props.setMappingInfo,
       resetMappingInfo: this.props.resetMappingInfo,
-      setActiveBox: this.props.setActiveBox
+      setActiveBox: this.props.setActiveBox,
+      deleteMappingInfoByPath: this.props.deleteMappingInfoByPath
     };
 
     var questionType = this.props.currentElement.question.type;
