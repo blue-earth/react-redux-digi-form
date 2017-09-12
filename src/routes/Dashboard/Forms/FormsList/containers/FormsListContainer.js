@@ -26,7 +26,7 @@ import FormsListView from '../components/FormsListView/FormsListView';
 const mapStateToProps = (state) => {
   const { formsList } = state;
   const {
-    isFetching,
+    isFetchingForms,
     forms,
     totalCount,
     page,
@@ -35,10 +35,10 @@ const mapStateToProps = (state) => {
     sortColumn,
     isSortAscending,
     selectedItems,
-    isPageBusy
+    isSendingEmail
   } = formsList || INIT_FORMSLIST_STATE;
   return {
-    isFetching,
+    isFetchingForms,
     forms,
     totalCount,
     page,
@@ -47,7 +47,7 @@ const mapStateToProps = (state) => {
     sortColumn,
     isSortAscending,
     selectedItems,
-    isPageBusy
+    isSendingEmail
   };
 };
 

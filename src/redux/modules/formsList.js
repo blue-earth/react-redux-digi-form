@@ -24,7 +24,7 @@ const PREVIOUS_FORMSLIST_PAGE = 'PREVIOUS_FORMSLIST_PAGE';
 
 export const INIT_FORMSLIST_STATE = {
   id: 0,
-  isFetching: false, // indicates the FormsList is being loaded.
+  isFetchingForms: false, // indicates the FormsList is being loaded.
   forms: [],
   page: 1, // indicates the current page number submission table page.
   pageSize: 5, // indicates number of items per page.
@@ -33,7 +33,7 @@ export const INIT_FORMSLIST_STATE = {
   isSortAscending: false, // indicates the sort direction (true: ascending | false: descending)
   selectedStatusFilterOptions: '0,1',
   selectedItems: [], // holds the selected items id.
-  isPageBusy: false // indicates the busy status of send form link
+  isSendingEmail: false // indicates an email is being sent by the backend
 };
 
 // ------------------------------------
@@ -360,20 +360,20 @@ const formsListReducer = handleActions({
 
   REQUEST_FORMSLIST: (state, action) =>
     Object.assign({}, state, {
-      isFetching: true
+      isFetchingForms: true
     }),
 
   DONE_FETCHING_FORMSLIST: (state, action) =>
     Object.assign({}, state, {
-      isFetching: false
+      isFetchingForms: false
     }),
   REQUEST_SEND_FORM_LINK: (state, action) =>
     Object.assign({}, state, {
-      isPageBusy: true
+      isSendingEmail: true
     }),
   DONE_SEND_FORM_LINK: (state, action) =>
     Object.assign({}, state, {
-      isPageBusy: false
+      isSendingEmail: false
     }),
 
   SELECT_FORM_ITEMS: (state, action) =>

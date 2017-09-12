@@ -29,7 +29,7 @@ class FormsListView extends Component {
     /*
      * redux state props
      */
-    isFetching: PropTypes.bool.isRequired,
+    isFetchingForms: PropTypes.bool.isRequired,
     forms: PropTypes.array.isRequired,
     totalCount: PropTypes.number.isRequired,
     page: PropTypes.number.isRequired,
@@ -41,7 +41,7 @@ class FormsListView extends Component {
     ]).isRequired,
     isSortAscending: PropTypes.bool.isRequired,
     selectedItems: PropTypes.array.isRequired,
-    isPageBusy: PropTypes.bool.isRequired,
+    isSendingEmail: PropTypes.bool.isRequired,
 
     /*
      * reducer actions
@@ -287,7 +287,7 @@ class FormsListView extends Component {
 
   renderFormsList() {
     const {
-      isFetching,
+      isFetchingForms,
       forms,
       page,
       pageSize,
@@ -307,7 +307,7 @@ class FormsListView extends Component {
         sortColumn={sortColumn}
         sortAscending={isSortAscending}
         Pagination={Pagination}
-        isFetching={isFetching}
+        isFetching={isFetchingForms}
       />
     );
   }
@@ -323,7 +323,7 @@ class FormsListView extends Component {
       goToNextPage,
       goToPreviousPage,
       sendFormLink,
-      isPageBusy
+      isSendingEmail
     } = this.props;
     return (
       <div className={styles.formsList}>
@@ -342,7 +342,7 @@ class FormsListView extends Component {
           maxPage={Math.ceil(totalCount / pageSize)}
           previous={goToPreviousPage}
           next={goToNextPage} />
-        <SendFormLinkModal sendFormLink={sendFormLink} isPageBusy={isPageBusy} />
+        <SendFormLinkModal sendFormLink={sendFormLink} isPageBusy={isSendingEmail} />
         <CopyFormLinkModal />
       </div>
     );
