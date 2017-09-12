@@ -15,8 +15,8 @@ export default class ActionsCell extends Component {
   }
 
   handleSelectItem = () => {
-    const { metadata: { toggleSelectItem, idName }, rowData } = this.props;
-    toggleSelectItem(rowData[idName]);
+    const { metadata: { toggleSelectItem, idColumnName }, rowData } = this.props;
+    toggleSelectItem(rowData[idColumnName]);
   }
 
   render() {
@@ -24,7 +24,7 @@ export default class ActionsCell extends Component {
       metadata: {
         selectedItems,
         actionsMenu,
-        idName
+        idColumnName
       },
       rowData
     } = this.props;
@@ -34,21 +34,19 @@ export default class ActionsCell extends Component {
         {
           inlineActions.map((item, index) => (
             <ActionButton key={index}
-              id={rowData[idName]}
+              id={rowData[idColumnName]}
+              rowData={rowData}
               index={index}
-              action={item}
-              formStatus={rowData['status']} />
+              action={item} />
           ))
         }
         <ActionsDropdown
-          id={rowData[idName]}
-          formStatus={rowData['status']}
-          subdomain={rowData['subdomain']}
-          slug={rowData['slug']}
+          id={rowData[idColumnName]}
+          rowData={rowData}
           selectedItems={selectedItems}
           onSelect={this.handleSelectItem}
           actionsMenu={actionsMenu}
-          checked={_.includes(selectedItems, rowData.id)} />
+          checked={_.includes(selectedItems, rowData[idColumnName])} />
       </div>
     );
   }

@@ -84,9 +84,13 @@ class FormsListView extends Component {
     var id = idList[0];
     this.props.goTo(`/forms/${id}`);
   }
-  copyLink = (idList, subdomain, slug) => {
+  copyLink = (idList, rowData) => {
     var id = idList[0];
-    this.props.showModal('copyFormLinkModal', { formId: id, subdomain: subdomain, slug: slug });
+    this.props.showModal('copyFormLinkModal', {
+      formId: id,
+      subdomain: rowData['subdomain'],
+      slug: rowData['slug']
+    });
   }
   duplicateFormAction = (idList) => {
     var id = idList[0];
@@ -266,7 +270,7 @@ class FormsListView extends Component {
         displayName: '',
         customHeaderComponent: ActionsHeaderCell,
         customComponent: ActionsCell,
-        idName: 'id',
+        idColumnName: 'id',
         actionsMenu: getActions,
         selectedItems,
         toggleSelectItem,

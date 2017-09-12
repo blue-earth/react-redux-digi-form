@@ -3,19 +3,23 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  // ProgressHeaderCell,
-  ActionsHeaderCell,
-  StatusCell,
-  ActionsCell
+  StatusCell
 } from '../CustomCells/CustomCells';
 import {
-  DateCell
+  DateCell,
+  // LinkCell,
+  ActionsCell,
+  ActionsHeaderCell,
+  SortableHeaderCell
+  // StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
 import SubmissionsFilter from '../SubmissionsFilter';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import SelectButton from 'components/Buttons/SelectButton';
 import EnvironmentSaving from 'components/EnvironmentSaving';
+import Icon from 'components/Icon';
+import { FaCheck, FaClose, FaEye, FaFilePdfO, FaFileTextO, FaCog } from 'react-icons/lib/fa';
 import classNames from 'classnames';
 import styles from './SubmissionsListView.scss';
 
@@ -88,6 +92,110 @@ class SubmissionsListView extends Component {
     environmentalSavings: PropTypes.object
   };
 
+  /*
+   * functions for actions menu
+   */
+  viewSubmission = (idList, rowData) => {
+    var id = idList[0];
+    this.props.goTo(dashboardUrl(`submissions/${rowData.form_id}/${id}/`));
+  }
+  assignSubmission = (idList) => {
+    console.log('TODO assign submission');
+  }
+  downloadSubmissionPDF = (idList) => {
+    console.log('TODO download pdf');
+  }
+  downloadSubmissionCSV = (idList) => {
+    console.log('TODO download csv');
+  }
+  sendResumeLink = (idList) => {
+    console.log('TODO send link');
+  }
+  acceptSubmission = (idList) => {
+    console.log('TODO accept');
+  }
+  cancelSubmission = (idList) => {
+    console.log('TODO cancel');
+  }
+
+  /*
+   * actions menu
+   */
+  get actionsMenu() {
+    return [
+      {
+        name: 'view',
+        label: 'View',
+        icon: <FaEye style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.viewSubmission
+      },
+      {
+        name: 'assign',
+        label: 'Assign',
+        icon: <FaCog style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.assignSubmission
+      },
+      {
+        name: 'downloadPDF',
+        label: 'Download PDF',
+        icon: <FaFilePdfO style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.downloadSubmissionPDF
+      },
+      {
+        name: 'downloadCSV',
+        label: 'Download CSV',
+        icon: <FaFileTextO style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.downloadSubmissionCSV
+      },
+      {
+        name: 'sendResumeLink',
+        label: 'Send resume link',
+        icon: <Icon name="Send" style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.sendResumeLink
+      },
+      {
+        name: 'accept',
+        label: 'Accept',
+        icon: <FaCheck style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.acceptSubmission
+      },
+      {
+        name: 'cancel',
+        label: 'Cancel',
+        icon: <FaClose style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.cancelSubmission
+      }
+    ];
+  }
+
   get columnMetadata() {
     const {
       selectAllItems,
@@ -95,6 +203,7 @@ class SubmissionsListView extends Component {
       selectedItems,
       toggleSelectItem
     } = this.props;
+    const getActions = this.actionsMenu;
     return [
       {
         columnName: 'response_id',
@@ -109,12 +218,46 @@ class SubmissionsListView extends Component {
         order: 2,
         locked: false,
         visible: true,
-        displayName: 'Name',
+        displayName: 'Form name',
         cssClassName: styles.columnName
       },
       {
-        columnName: 'status',
+        columnName: 'completed_by_name',
         order: 3,
+        locked: false,
+        visible: true,
+        displayName: 'Completed by',
+        cssClassName: styles.columnAuthor
+      },
+      {
+        columnName: 'created',
+        order: 4,
+        locked: false,
+        visible: true,
+        displayName: 'Received',
+        cssClassName: styles.columnCreated,
+        customComponent: DateCell,
+        customHeaderComponent: SortableHeaderCell
+      },
+      {
+        columnName: 'assigned_to',
+        order: 5,
+        locked: false,
+        visible: true,
+        displayName: 'Assigned to',
+        cssClassName: styles.assignedTo
+      },
+      {
+        columnName: 'completion_percent',
+        order: 6,
+        locked: false,
+        visible: true,
+        displayName: '%',
+        cssClassName: styles.columnPercent
+      },
+      {
+        columnName: 'status',
+        order: 7,
         locked: false,
         visible: true,
         displayName: 'Status',
@@ -122,49 +265,29 @@ class SubmissionsListView extends Component {
         cssClassName: styles.columnStatus
       },
       {
-        columnName: 'completion_percent',
-        order: 4,
+        columnName: 'identification_status',
+        order: 8,
         locked: false,
         visible: true,
-        displayName: '%',
-        cssClassName: styles.columnPercent
-      },
-      {
-        columnName: 'completed_by_name',
-        order: 5,
-        locked: false,
-        visible: true,
-        displayName: 'Completed by',
-        cssClassName: styles.columnAuthor
-      },
-      {
-        columnName: 'sent_channel',
-        order: 6,
-        locked: false,
-        visible: true,
-        displayName: 'Channel',
-        cssClassName: styles.columnChanel
-      },
-      {
-        columnName: 'created',
-        order: 7,
-        locked: false,
-        visible: true,
-        displayName: 'Created',
-        cssClassName: styles.columnCreated,
-        customComponent: DateCell
+        displayName: 'Identification',
+        cssClassName: styles.idStatus
       },
       {
         columnName: 'actions',
+        order: 9,
         locked: true,
         sortable: false,
         displayName: '',
         customHeaderComponent: ActionsHeaderCell,
         customComponent: ActionsCell,
+        idColumnName: 'response_id',
+        actionsMenu: getActions,
         selectedItems,
         toggleSelectItem,
         cssClassName: styles.columnActions,
         customHeaderComponentProps: {
+          actionsMenu: getActions,
+          selectedItems,
           selectAllItems,
           isAllSelected: submissions.length === selectedItems.length
         }

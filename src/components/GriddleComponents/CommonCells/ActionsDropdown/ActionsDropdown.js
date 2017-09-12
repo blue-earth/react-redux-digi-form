@@ -26,9 +26,7 @@ export default class ActionsDropdown extends Component {
 
   static propTypes = {
     id: PropTypes.number,
-    formStatus: PropTypes.string,
-    subdomain: PropTypes.string,
-    slug: PropTypes.string,
+    rowData: PropTypes.object,
     selectedItems: PropTypes.array,
     checked: PropTypes.bool,
     actionsMenu: PropTypes.array,
@@ -40,7 +38,6 @@ export default class ActionsDropdown extends Component {
       isHovering: true
     });
   }
-
   onMouseOut = () => {
     if (!this.state.isMenuOpen) {
       this.setState({
@@ -54,7 +51,6 @@ export default class ActionsDropdown extends Component {
       isMenuOpen: true
     });
   }
-
   handleMenuClose = () => {
     this.setState({
       isMenuOpen: false,
@@ -71,18 +67,22 @@ export default class ActionsDropdown extends Component {
   }
 
   handleMenuClick = (event) => {
-    const { actionsMenu, id, subdomain, slug, selectedItems } = this.props;
+    const { actionsMenu, id, rowData, selectedItems } = this.props;
     const actionItem = actionsMenu[event.currentTarget.dataset.index];
     if (selectedItems && selectedItems.length > 0) {
-      actionItem.onClick(selectedItems, subdomain, slug);
+      actionItem.onClick(selectedItems, rowData);
     } else {
-      actionItem.onClick([id], subdomain, slug);
+      actionItem.onClick([id], rowData);
     }
     this.refs.dropdownTrigger.hide();
   }
 
   render() {
-    const { checked, actionsMenu, id, formStatus, selectedItems } = this.props;
+    const { checked, actionsMenu, id, selectedItems } = this.props;
+    var rowStatus = '';
+    if (this.props.rowData) {
+      rowStatus = this.props.rowData['status'];
+    }
     const isHeaderCell = isNaN(id);
     const multipleSelected = selectedItems && selectedItems.length > 1;
     const singleSelected = selectedItems && selectedItems.length === 1;
@@ -96,14 +96,14 @@ export default class ActionsDropdown extends Component {
             if (isHeaderCell && !actionItem.allowMultiple) {
               isItemHidden = true;
             }
-            if (formStatus && actionItem.hiddenWithStatus.indexOf(formStatus) > -1) {
+            if (rowStatus && actionItem.hiddenWithStatus.indexOf(rowStatus) > -1) {
               isItemHidden = true;
             }
             var isItemDisabled = false;
             if (isHeaderCell && noneSelected) {
               isItemDisabled = true;
             }
-            if (formStatus && actionItem.disabledWithStatus.indexOf(formStatus) > -1) {
+            if (rowStatus && actionItem.disabledWithStatus.indexOf(rowStatus) > -1) {
               isItemDisabled = true;
             }
             if (multipleSelected && (!actionItem.allowMultiple || !thisRowSelected)) {

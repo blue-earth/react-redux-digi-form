@@ -17,21 +17,21 @@ export default class ActionButton extends Component {
     id: PropTypes.number,
     index: PropTypes.number,
     action: PropTypes.object,
-    formStatus: PropTypes.string.isRequired
+    rowData: PropTypes.object
   }
 
   get isDisabled() {
-    const { formStatus, action } = this.props;
-    if (action.disabledWithStatus.indexOf(formStatus) > -1) {
+    const { rowData, action } = this.props;
+    if (action.disabledWithStatus.indexOf(rowData['status']) > -1) {
       return true;
     }
     return false;
   }
 
   handleClick = () => {
-    const { action, id } = this.props;
+    const { action, id, rowData } = this.props;
     if (!this.isDisabled) {
-      action.onClick(id);
+      action.onClick([id], rowData);
       this.refs.actionTrigger.hide();
     }
   }
