@@ -338,7 +338,7 @@ export const resetQuestionInfo = createAction(RESET_QUESTION_INFO);
 // Helper: _resetQuestionInfo
 // ------------------------------------
 const _resetQuestionInfo = (state, action) => {
-  const question = _.get(state, ['currentElement', 'question'], {});
+  const question = state.currentElement.question;
   return _updateCurrentElement(state, {
     question: Object.assign({}, _.omit(question, _.flatten([action.payload])))
   });
@@ -423,8 +423,7 @@ const _setMappingPositionInfo = (state, action) => {
   const currentElement = state.currentElement;
 
   const { activeBoxPath, defaultMappingType } = currentElement;
-  const activePathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
-
+  const activePathArray = activeBoxPath.split('.') || [];
   const positionPathArray = _.concat(['mappingInfo'], activePathArray);
   const fields = _.isEqual(defaultMappingType, formBuilderBoxMappingType.STANDARD)
     ? ['box', 'font_size', 'page']

@@ -517,12 +517,9 @@ class DrawingBoard extends Component {
     } = formBuilderBox;
 
     var boardOptionals = {};
-    if (activeBoxPath) {
-      boardOptionals['style'] = _.merge(boardOptionals['style'], {
-        cursor: 'crosshair'
-      });
+    if (activeSelectionLabel) {
+      boardOptionals['style'] = {'cursor': 'crosshair'};
     }
-
     const finalMapping = currentElement
       ? _.assign({}, documentMapping, {
         [currentElement.id || 0]: currentElement.mappingInfo
@@ -655,12 +652,10 @@ class DrawingBoard extends Component {
     const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
     const { isDrawing, startX, startY, endX, endY } = this.state;
     var boardOptionals = {};
-    if (activeBoxPath) {
-      boardOptionals['style'] = _.merge(boardOptionals['style'], {
-        cursor: 'crosshair'
-      });
+    if (this.props.currentElement &&
+      this.props.currentElement.activeLabel) {
+      boardOptionals['style'] = {cursor: 'crosshair'};
     }
-
     return (
       <div className={styles.board}
         onMouseDown={this.handleBoardMouseDown}
