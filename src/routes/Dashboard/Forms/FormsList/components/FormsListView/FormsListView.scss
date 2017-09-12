@@ -21,26 +21,26 @@ $slt-border-color:          rgba(204, 204, 204, .3);
 }
 
 .columnID {
-  width: 100px;
+  width: 80px;
 }
 .columnName {
-  width: 40%;
+  width: auto;
   font-weight: 700;
 }
 .columnCreatedBy {
-  width: auto;
-  max-width: 15%;
+  min-width: 110px;
+  width: 15%;
 }
 .columnCreated {
-  width: auto;
-  max-width: 20%;
+  min-width: 110px;
+  width: 15%;
 }
 .columnStatus {
-  width: auto;
-  max-width: 20%;
+  min-width: 110px;
+  width: 15%;
 }
 .columnActions {
-  width: 120px;
+  width: 160px;
   border-left: 1px solid $table-line-color;
 }
 
