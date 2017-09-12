@@ -439,8 +439,9 @@ const _setMappingPositionInfo = (state, action) => {
     _.pick(action.payload, fields)
   );
   _.set(currentElement, positionPathArray, newPosition);
-  console.log('formBuilder: positionPathArray', positionPathArray, 'newPosition', newPosition);
-  return _.assign({}, state, {
+
+  // _.merge here is a must to do deep merging!
+  return _.merge({}, state, {
     currentElement
   });
 };
