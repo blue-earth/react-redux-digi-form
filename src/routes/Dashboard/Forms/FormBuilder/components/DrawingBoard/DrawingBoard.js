@@ -402,15 +402,11 @@ class DrawingBoard extends Component {
     if (isCurrentElementId(metaData.id, currentElement)) {
       setActiveBox(metaData.path);
     } else {
-      if (isModified && currentElement) {
-        show('cancelConfirmModal');
-      } else {
-        setQuestionEditMode(formBuilderSelectMode.QUESTION_DETAIL_VIEW);
-        setCurrentElement({
-          id: parseInt(metaData.id, 10),
-          activeBoxPath: metaData.path
-        });
-      }
+      setQuestionEditMode(formBuilderSelectMode.QUESTION_DETAIL_VIEW);
+      setCurrentElement({
+        id: parseInt(metaData.id, 10)
+      });
+      setActiveBox(metaData.path);
     }
   };
 
