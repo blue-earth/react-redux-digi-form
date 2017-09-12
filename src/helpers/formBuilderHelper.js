@@ -9,11 +9,6 @@ import {
   formBuilderPathIndex
 } from 'constants/formBuilder';
 
-export const getActiveLabel = (activeBoxPath) => {
-  const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
-  return pathArray[formBuilderPathIndex.LABEL];
-};
-
 export const getNextBoxIndex = (label, currentElement) => {
   // positions are stored as a map
   // This function should always return the next value that is next to largest index
