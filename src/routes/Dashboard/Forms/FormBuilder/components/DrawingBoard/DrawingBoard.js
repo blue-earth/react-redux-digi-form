@@ -222,6 +222,7 @@ class DrawingBoard extends Component {
       return;
     }
     this.handleToolbarSave();
+    const activeLabel = this.props.currentElement.activeLabel;
     const board = this.refs.board;
     const orgPos = this.getElementPos(board);
     const mousePos = this.getMousePos(event);
@@ -658,7 +659,6 @@ class DrawingBoard extends Component {
   }
 
   render() {
-    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
     const {
       isDrawing,
       startX,
