@@ -16,8 +16,6 @@ import {
   formBuilderSelectMode
 } from 'constants/formBuilder';
 import {
-  getActiveLabel,
-  getNextBoxIndex,
   getChoiceLabelByIndex
 } from 'helpers/formBuilderHelper';
 import { getQuestionInputSchema } from 'schemas/questionInputs';
@@ -95,21 +93,11 @@ class FormBuilder extends Component {
      * resetValidationInfo: Redux action to remove a specific item in validations array.
      */
     resetValidationInfo: PropTypes.func.isRequired,
-
-    /*
-     * setMappingInfo: Redux action to update the document mapping info.
-     */
-    setMappingInfo: PropTypes.func.isRequired,
-
-    /*
-     * resetMappingInfo: Redux action to update the document mapping info.
-     */
-    resetMappingInfo: PropTypes.func.isRequired,
-
     /*
      * setMappingPositionInfo: Redux action to update the document mapping position info of active selection.
      */
     setMappingPositionInfo: PropTypes.func.isRequired,
+    deleteMappingInfoByPath: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.
@@ -143,6 +131,7 @@ class FormBuilder extends Component {
      * setActiveBox: Redux action to set activeBoxPath path.
      */
     setActiveBox: PropTypes.func.isRequired,
+    setActiveLabel: PropTypes.func.isRequired,
     deleteElement: PropTypes.func.isRequired,
     /*
      * newForm: Redux action to reset form with initial state for new form
@@ -244,26 +233,12 @@ class FormBuilder extends Component {
     return result;
   }
 
-  get activeLabel() {
-    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
-    return getActiveLabel(activeBoxPath);
-  }
-
-  setActiveLabel = (label) => {
-    const { currentElement, setActiveBox } = this.props;
-    const index = getNextBoxIndex(label, currentElement);
-    setActiveBox(_.join([label, 'positions', index], '.'));
-  }
-
   getMappedFieldsForCurrentQuestion() {
-    var fieldsWithValidMapping = _.pickBy(this.props.currentElement.mappingInfo, function (value, key, object) {
-      return value && Object.keys(value['positions']).length > 0;
-    });
-    return Object.keys(fieldsWithValidMapping);
+    return Object.keys(this.props.currentElement.mappingInfo);
   }
 
   render() {
-    const { saveElement, setQuestionEditMode, questionEditMode } = this.props;
+    const { saveElement, setQuestionEditMode, questionEditMode, currentElement } = this.props;
     const leftPanelClass = classNames({
       [styles.leftPanel]: true,
       [styles.open]: questionEditMode
@@ -282,7 +257,8 @@ class FormBuilder extends Component {
           backLinkClickHandler={this.goToQuestionTypeListView}
           availableFields={availableFields}
           className={styles.fieldsSelectorHeader}
-          activeLabel={this.activeLabel} setActiveLabel={this.setActiveLabel}
+          activeLabel={currentElement.activeLabel}
+          setActiveLabel={this.props.setActiveLabel}
           finalisedFields={this.getMappedFieldsForCurrentQuestion()}
           saveAndContinueClickHandler={this.saveAndContinue}
           deleteClickHandler={this.deleteCurrentQuestion}

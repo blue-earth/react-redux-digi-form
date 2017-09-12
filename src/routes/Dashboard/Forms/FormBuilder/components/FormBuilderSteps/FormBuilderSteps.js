@@ -73,6 +73,7 @@ class FormBuilderSteps extends Component {
      * setQuestionInfo: Redux action to add or update a specific item into current question.
      */
     setQuestionInfo: PropTypes.func.isRequired,
+    deleteMappingInfoByPath: PropTypes.func.isRequired,
 
     /*
      * resetQuestionInfo: Redux action to remove a specific item into current question.
@@ -90,13 +91,6 @@ class FormBuilderSteps extends Component {
     resetValidationInfo: PropTypes.func.isRequired,
 
     /*
-     * setMappingInfo: Action to update the document mapping info.
-     */
-    setMappingInfo: PropTypes.func.isRequired,
-
-    resetMappingInfo: PropTypes.func.isRequired,
-
-    /*
      * setMappingPositionInfo: Action to update the document mapping position info of active selection.
      */
     setMappingPositionInfo: PropTypes.func.isRequired,
@@ -110,6 +104,7 @@ class FormBuilderSteps extends Component {
      * setPageZoom: Redux action to set page zoom ratio.
      */
     setPageZoom: PropTypes.func.isRequired,
+    setActiveLabel: PropTypes.func.isRequired,
 
     /*
      * questionEditMode: Redux state to indicate question edit mode
@@ -242,13 +237,13 @@ class FormBuilderSteps extends Component {
             currentElement: props.currentElement,
             setCurrentElement: props.setCurrentElement,
             deleteElement: props.deleteElement,
+            deleteMappingInfoByPath: props.deleteMappingInfoByPath,
             setActiveBox: props.setActiveBox,
+            setActiveLabel: props.setActiveLabel,
             setQuestionInfo: props.setQuestionInfo,
             resetQuestionInfo: props.resetQuestionInfo,
             setValidationInfo: props.setValidationInfo,
             resetValidationInfo: props.resetValidationInfo,
-            setMappingInfo: props.setMappingInfo,
-            resetMappingInfo: props.resetMappingInfo,
             setMappingPositionInfo: props.setMappingPositionInfo,
             pageZoom: props.pageZoom,
             setPageZoom: props.setPageZoom,

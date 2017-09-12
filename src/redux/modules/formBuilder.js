@@ -38,6 +38,8 @@ export const SET_CURRENT_ELEMENT = 'SET_CURRENT_ELEMENT';
 export const SET_PAGE_ZOOM = 'SET_PAGE_ZOOM';
 
 export const SET_ACTIVE_BOX = 'SET_ACTIVE_BOX';
+export const SET_ACTIVE_LABEL = 'SET_ACTIVE_LABEL';
+export const DELETE_MAPPING_INFO_BY_PATH = 'DELETE_MAPPING_INFO_BY_PATH';
 
 export const SET_CURRENT_STEP = 'SET_CURRENT_STEP';
 export const UPDATE_STORE = 'UPDATE_STORE';
@@ -70,11 +72,6 @@ export const INIT_BUILDER_STATE = {
     //   url: 'http://localhost:3000/doc_example1.jpg', // for temp purpose, should fetch from backend.
     //   width: 1020,
     //   height: 1441
-    // },
-    // {
-    //   url: 'http://localhost:3000/doc_example2.jpg', // for temp purpose, should fetch from backend.
-    //   width: 620,
-    //   height: 877
     // }
   ],
   formConfig: {
@@ -88,7 +85,9 @@ export const INIT_BUILDER_STATE = {
     security: []
   },
   documentMapping: {},
-  currentElement: null, // holds the current element state being added or edited.
+  currentElement: {
+    activeLabel: ''
+  }, // holds the current element state being added or edited.
   lastQuestionId: INIT_DEFAULT_GROUP.id, // indicates lastly added question id
   pageZoom: 1, // zoom ratio of PageView
   questionEditMode: formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW,
@@ -167,7 +166,7 @@ export const receiveForm = createAction(RECEIVE_FORM, (data) => {
     slug: data.slug,
     subdomain: data.subdomain,
     isModified: false,
-    lastQuestionId: _.defaultTo(_.max(_.map(questions, 'id')), 0)
+    lastQuestionId: Math.max(_.max(_.map(questions, 'id')), 0)
   };
 });
 
@@ -278,17 +277,13 @@ export const saveElement = createAction(SAVE_ELEMENT);
 // Helper: _saveElement
 // ------------------------------------
 const _saveElement = (state, action) => {
-  const { currentElement, lastQuestionId } = state;
-  const id = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
-  var question = _.merge({}, INIT_QUESTION_STATE, currentElement.question, { id });
+  const { currentElement } = state;
+  const id = currentElement.id; // todo: make sure currentElement always has an id
+  var question = Object.assign({}, INIT_QUESTION_STATE, currentElement.question, { id });
   // TODO: Update mappingInfo assignment
-  var isModified = state.isModified || currentElement.isModified;
   return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
-    documentMapping: _.merge({}, state.documentMapping, { [id]: currentElement.mappingInfo }),
-    lastQuestionId: _.max(id, lastQuestionId),
-    currentElement: _.merge({}, currentElement, { id }),
-    isModified
+    documentMapping: _.merge({}, state.documentMapping, { [id]: currentElement.mappingInfo })
   });
 };
 
@@ -310,6 +305,8 @@ const _deleteElement = (state, action) => {
     isModified: true
   });
 };
+
+export const deleteMappingInfoByPath = createAction(DELETE_MAPPING_INFO_BY_PATH);
 
 // ------------------------------------
 // Action: setQuestionInfo
@@ -337,7 +334,7 @@ export const resetQuestionInfo = createAction(RESET_QUESTION_INFO);
 // Helper: _resetQuestionInfo
 // ------------------------------------
 const _resetQuestionInfo = (state, action) => {
-  const question = _.get(state, ['currentElement', 'question'], {});
+  const question = state.currentElement.question;
   return _updateCurrentElement(state, {
     question: Object.assign({}, _.omit(question, _.flatten([action.payload])))
   });
@@ -382,35 +379,6 @@ const _resetValidationInfo = (state, action) => {
 };
 
 // ------------------------------------
-// Action: setMappingInfo
-// ------------------------------------
-export const setMappingInfo = createAction(SET_MAPPING_INFO);
-// ------------------------------------
-// Helper: _setMappingInfo
-// ------------------------------------
-const _setMappingInfo = (state, action) => {
-  const mappingInfo = _.get(state, ['currentElement', 'mappingInfo'], {});
-  return _updateCurrentElement(state, {
-    mappingInfo: Object.assign({}, mappingInfo, action.payload)
-  });
-};
-
-// ------------------------------------
-// Action: resetMappingInfo
-// replace mappingInfo with a new object
-// ------------------------------------
-export const resetMappingInfo = createAction(RESET_MAPPING_INFO);
-
-// ------------------------------------
-// Helper: _resetMappingInfo
-// ------------------------------------
-const _resetMappingInfo = (state, action) => {
-  return _updateCurrentElement(state, {
-    mappingInfo: action.payload
-  });
-};
-
-// ------------------------------------
 // Action: setMappingPositionInfo
 // ------------------------------------
 export const setMappingPositionInfo = createAction(SET_MAPPING_POSITION_INFO);
@@ -419,15 +387,19 @@ export const setMappingPositionInfo = createAction(SET_MAPPING_POSITION_INFO);
 // Helper: _setMappingPositionInfo
 // ------------------------------------
 const _setMappingPositionInfo = (state, action) => {
-  const currentElement = _.assign({}, _.get(state, ['currentElement']));
+  const currentElement = state.currentElement;
 
   const { activeBoxPath, defaultMappingType } = currentElement;
-  const activePathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
-
+  const activePathArray = activeBoxPath.split('.') || [];
+  // this create an array of [""] if activeBoxPath is empty
   const positionPathArray = _.concat(['mappingInfo'], activePathArray);
-  const fields = _.isEqual(defaultMappingType, formBuilderBoxMappingType.STANDARD)
-    ? ['box', 'font_size', 'page']
-    : ['box', 'font_size', 'page', 'blocks'];
+  var fields = [];
+  if (defaultMappingType === formBuilderBoxMappingType.STANDARD) {
+    fields = ['box', 'font_size', 'page'];
+  } else {
+    fields = ['box', 'font_size', 'page', 'blocks'];
+  }
+
   let position = _.get(currentElement, positionPathArray, {});
   if (action.payload.blocks) {
     position = _.omit(position, ['blocks']);
@@ -439,7 +411,8 @@ const _setMappingPositionInfo = (state, action) => {
   );
   _.set(currentElement, positionPathArray, newPosition);
 
-  return _.assign({}, state, {
+  // _.merge here is a must to do deep merging!
+  return _.merge({}, state, {
     currentElement
   });
 };
@@ -505,21 +478,35 @@ const _setActiveBox = (state, action) => {
 };
 
 // ------------------------------------
+// Action: setActiveLabel
+// ------------------------------------
+export const setActiveLabel = createAction(SET_ACTIVE_LABEL);
+
+// ------------------------------------
 // Action: setCurrentStep
 // ------------------------------------
 export const setCurrentStep = createAction(SET_CURRENT_STEP);
 
 const _setCurrentElement = (state, action) => {
-  const id = _.get(action, ['payload', 'id']);
-  if (_.isNil(id)) { // If it's for creating a new question and mapping.
+  if (!action.payload) {
     return Object.assign({}, state, {
-      currentElement: action.payload
+      currentElement: null
+    });
+  }
+
+  const id = action.payload.id;
+  if (!id) {
+    var newId = _.max(_.map(state.questions, question => question.id)) + 1;
+    return Object.assign({}, state, {
+      currentElement: Object.assign({},
+        state.currentElement,
+        action.payload,
+        {id: newId}
+      )
     });
   } else { // If it's for loading from existing questions & mappings.
     const activeBoxPath = action.payload.activeBoxPath;
     const mappingInfo = state.documentMapping[id];
-    const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
-    const label = pathArray[formBuilderPathIndex.LABEL];
     return Object.assign({}, state, {
       currentElement: {
         id: action.payload.id,
@@ -527,7 +514,7 @@ const _setCurrentElement = (state, action) => {
         mappingInfo,
         activeBoxPath,
         isModified: false,
-        defaultMappingType: mappingInfo[label].type
+        defaultMappingType: mappingInfo[Object.keys(mappingInfo)[0]].type
       }
     });
   }
@@ -735,15 +722,15 @@ const formBuilderReducer = handleActions({
   RESET_QUESTION_INFO: (state, action) =>
     _resetQuestionInfo(state, action),
 
-  SET_MAPPING_INFO: (state, action) =>
-    _setMappingInfo(state, action),
-
-  RESET_MAPPING_INFO: (state, action) =>
-    _resetMappingInfo(state, action),
-
   SET_MAPPING_POSITION_INFO: (state, action) =>
     _setMappingPositionInfo(state, action),
-
+  DELETE_MAPPING_INFO_BY_PATH: (state, action) => {
+    const activeBoxPath = action.payload;
+    var stateClone = Object.assign({}, state);
+    _.unset(stateClone.currentElement.mappingInfo, activeBoxPath);
+    stateClone.currentElement.activeBoxPath = null;
+    return stateClone;
+  },
   SET_VALIDATION_INFO: (state, action) =>
     _setValidationInfo(state, action),
 
@@ -770,6 +757,13 @@ const formBuilderReducer = handleActions({
 
   SET_ACTIVE_BOX: (state, action) =>
     _setActiveBox(state, action),
+
+  SET_ACTIVE_LABEL: (state, action) =>
+    Object.assign({}, state, {
+      currentElement: _.assign({}, state.currentElement, {
+        activeLabel: action.payload
+      })
+    }),
 
   ADD_NEW_GROUP: (state, action) =>
     _addNewGroup(state, action),

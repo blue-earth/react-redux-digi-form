@@ -31,14 +31,10 @@ class PageView extends Component {
     documentMapping: PropTypes.object.isRequired,
 
     /*
-     * setMappingInfo: Action to update the document mapping info.
-     */
-    setMappingInfo: PropTypes.func.isRequired,
-
-    /*
      * setMappingPositionInfo: Action to update the document mapping position info of active selection.
      */
     setMappingPositionInfo: PropTypes.func.isRequired,
+    deleteMappingInfoByPath: PropTypes.func.isRequired,
 
     /*
      * pageZoom: Redux state to keep the page zoom ratio.
@@ -79,7 +75,6 @@ class PageView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDrawing: false,
       viewportWidth: 0,
       viewportHeight: 0
     };
@@ -140,42 +135,40 @@ class PageView extends Component {
   renderDocuments() {
     const { documents, pageZoom } = this.props;
     const { viewportWidth, viewportHeight } = this.state;
-    return documents
-      ? documents.map((document, index) => {
-        const zoomedWidth = document.width * pageZoom;
-        const pageStyle = {width: zoomedWidth};
-        const pageNumber = index + 1;
-        return (
-          <div className={styles.page} key={index}
-            ref={`page_${pageNumber}`}
-            style={pageStyle}>
-            <img src={document.url} alt={`Page Image ${pageNumber}`}
-              className={styles.pageImage} ref={`pageImage${pageNumber}`} />
-            <DrawingBoard
-              documents={this.props.documents}
-              questions={this.props.questions}
-              isModified={this.props.isModified}
-              saveElement={this.props.saveElement}
-              documentMapping={this.props.documentMapping}
-              setMappingInfo={this.props.setMappingInfo}
-              setMappingPositionInfo={this.props.setMappingPositionInfo}
-              pageZoom={this.props.pageZoom}
-              setPageZoom={this.props.setPageZoom}
-              questionEditMode={this.props.questionEditMode}
-              setQuestionEditMode={this.props.setQuestionEditMode}
-              currentElement={this.props.currentElement}
-              setCurrentElement={this.props.setCurrentElement}
-              show={this.props.show}
-              setActiveBox={this.props.setActiveBox}
-              pageNumber={pageNumber}
-              viewportWidth={viewportWidth}
-              viewportHeight={viewportHeight}
-              getPageDOM={this.getPageDOM}
-              containerId="clientArea" />
-          </div>
-        );
-      })
-      : false;
+    return documents.map((document, index) => {
+      const zoomedWidth = document.width * pageZoom;
+      const pageStyle = {width: zoomedWidth};
+      const pageNumber = index + 1;
+      return (
+        <div className={styles.page} key={index}
+          ref={`page_${pageNumber}`}
+          style={pageStyle}>
+          <img src={document.url} alt={`Page Image ${pageNumber}`}
+            className={styles.pageImage} ref={`pageImage${pageNumber}`} />
+          <DrawingBoard
+            documents={this.props.documents}
+            questions={this.props.questions}
+            deleteMappingInfoByPath={this.props.deleteMappingInfoByPath}
+            isModified={this.props.isModified}
+            saveElement={this.props.saveElement}
+            documentMapping={this.props.documentMapping}
+            setMappingPositionInfo={this.props.setMappingPositionInfo}
+            pageZoom={this.props.pageZoom}
+            setPageZoom={this.props.setPageZoom}
+            questionEditMode={this.props.questionEditMode}
+            setQuestionEditMode={this.props.setQuestionEditMode}
+            currentElement={this.props.currentElement}
+            setCurrentElement={this.props.setCurrentElement}
+            show={this.props.show}
+            setActiveBox={this.props.setActiveBox}
+            pageNumber={pageNumber}
+            viewportWidth={viewportWidth}
+            viewportHeight={viewportHeight}
+            getPageDOM={this.getPageDOM}
+            containerId="clientArea" />
+        </div>
+      );
+    });
   }
 
   renderToolBox() {

@@ -27,8 +27,7 @@ class AnswerOutputArea extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     title: PropTypes.string,
-    setMappingInfo: PropTypes.func.isRequired,
-    resetMappingInfo: PropTypes.func.isRequired,
+    deleteMappingInfoByPath: PropTypes.func.isRequired,
     setQuestionInfo: PropTypes.func.isRequired,
     /*
      * setActiveBox: Redux action to set activeBoxPath path.
@@ -83,7 +82,7 @@ class AnswerOutputArea extends Component {
   }
 
   handleDeleteSelection = (choiceIndex) => {
-    const { setQuestionInfo, resetMappingInfo, setActiveBox } = this.props;
+    const { setQuestionInfo } = this.props;
     const choices = this.choices;
     var oldMappingInfo = this.props.currentElement.mappingInfo;
     const deleteKey = choices[choiceIndex].label;
@@ -99,25 +98,21 @@ class AnswerOutputArea extends Component {
     if (this.includeOther) {
       newMappingInfo['other'] = oldMappingInfo['other'];
     }
-    resetMappingInfo(newMappingInfo);
     setQuestionInfo({ choices });
-    setActiveBox(null);
   }
 
   handleAddChoice = () => {
-    const { setQuestionInfo, setMappingInfo, setActiveBox } = this.props;
+    const {
+      setQuestionInfo
+    } = this.props;
     const choices = this.choices;
     const newItem = {
       label: this.newLabel,
       text: ''
     };
-    var newMappingInfo = this.props.currentElement.mappingInfo;
-    var newMappingItem = {[newItem.label]: {'positions': {}, 'type': 'STANDARD'}};
-    setMappingInfo(Object.assign({}, newMappingInfo, newMappingItem));
     setQuestionInfo({
       choices: _.concat(choices, [newItem])
     });
-    setActiveBox(_.join([newItem.label, 'positions', 0], '.'));
   }
 
   handleChangeText = (index, text) => {
@@ -130,26 +125,13 @@ class AnswerOutputArea extends Component {
   }
 
   handleIncludeOther = (isOn) => {
-    const { setQuestionInfo, setMappingInfo, resetMappingInfo, setActiveBox } = this.props;
+    const { setQuestionInfo } = this.props;
     setQuestionInfo({
       include_other: !this.includeOther
     });
-    var newMappingInfo = this.props.currentElement.mappingInfo;
-    if (isOn) {
-      var newMappingItem = {'other': {'positions': {}, 'type': 'STANDARD'}};
-      setMappingInfo(Object.assign({}, newMappingInfo, newMappingItem));
-      setActiveBox(_.join(['other', 'positions', 0], '.'));
-    } else {
-      delete newMappingInfo['other'];
-      resetMappingInfo(newMappingInfo);
-      setActiveBox(null);
+    if (!isOn) {
+      this.props.deleteMappingInfoByPath('other');
     }
-  }
-
-  handlePreviewButtonClick = (activeIndex) => {
-    // TODO: this function
-    const { setMappingInfo } = this.props;
-    setMappingInfo({ activeIndex });
   }
 
   renderList() {

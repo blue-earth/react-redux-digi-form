@@ -13,8 +13,7 @@ class CheckboxFieldBasicTab extends Component {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
     setQuestionInfo: PropTypes.func.isRequired,
-    setMappingInfo: PropTypes.func.isRequired,
-    resetMappingInfo: PropTypes.func.isRequired,
+    deleteMappingInfoByPath: PropTypes.func.isRequired,
     setValidationInfo: PropTypes.func.isRequired,
     resetValidationInfo: PropTypes.func.isRequired,
     setActiveBox: PropTypes.func.isRequired
@@ -39,9 +38,8 @@ class CheckboxFieldBasicTab extends Component {
       <AnswerOutputArea
         currentElement={currentElement}
         title="Checkbox choices"
-        setMappingInfo={this.props.setMappingInfo}
-        resetMappingInfo={this.props.resetMappingInfo}
         setQuestionInfo={this.props.setQuestionInfo}
+        deleteMappingInfoByPath={this.props.deleteMappingInfoByPath}
         setActiveBox={this.props.setActiveBox} />
       <RequiredValidation
         setValidationInfo={setValidationInfo}
