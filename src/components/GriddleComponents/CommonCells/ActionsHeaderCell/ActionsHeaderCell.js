@@ -2,10 +2,10 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import DropdownSelection from '../DropdownSelection';
-import styles from './SelectionHeaderCell.scss';
+import ActionsDropdown from '../ActionsDropdown';
+import styles from './ActionsHeaderCell.scss';
 
-class SelectionHeaderCell extends Component {
+class ActionsHeaderCell extends Component {
 
   static propTypes = {
     selectedItems: PropTypes.array,
@@ -23,7 +23,7 @@ class SelectionHeaderCell extends Component {
     const { isAllSelected, actionsMenu, selectedItems } = this.props;
     return (
       <div className={styles.selectionCell}>
-        <DropdownSelection
+        <ActionsDropdown
           selectedItems={selectedItems}
           checked={isAllSelected}
           onSelect={this.handleSelectItem}
@@ -33,4 +33,4 @@ class SelectionHeaderCell extends Component {
   }
 }
 
-export default SelectionHeaderCell;
+export default ActionsHeaderCell;

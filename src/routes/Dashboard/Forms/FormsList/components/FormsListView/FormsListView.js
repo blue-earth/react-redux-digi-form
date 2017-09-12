@@ -16,8 +16,8 @@ import classNames from 'classnames';
 import {
   DateCell,
   LinkCell,
-  SelectionCell,
-  SelectionHeaderCell,
+  ActionsCell,
+  ActionsHeaderCell,
   SortableHeaderCell,
   StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
@@ -264,8 +264,8 @@ class FormsListView extends Component {
         locked: true,
         sortable: false,
         displayName: '',
-        customHeaderComponent: SelectionHeaderCell,
-        customComponent: SelectionCell,
+        customHeaderComponent: ActionsHeaderCell,
+        customComponent: ActionsCell,
         idName: 'id',
         actionsMenu: getActions,
         selectedItems,

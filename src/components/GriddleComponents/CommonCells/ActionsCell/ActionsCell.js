@@ -3,12 +3,11 @@ import React, {
   PropTypes
 } from 'react';
 import ActionButton from './ActionButton';
-import DropdownSelection from '../DropdownSelection';
+import ActionsDropdown from '../ActionsDropdown';
 import _ from 'lodash';
+import styles from './ActionsCell.scss';
 
-import styles from './SelectionCell.scss';
-
-export default class SelectionCell extends Component {
+export default class ActionsCell extends Component {
 
   static propTypes = {
     metadata: PropTypes.object,
@@ -41,7 +40,7 @@ export default class SelectionCell extends Component {
               formStatus={rowData['status']} />
           ))
         }
-        <DropdownSelection
+        <ActionsDropdown
           id={rowData[idName]}
           formStatus={rowData['status']}
           subdomain={rowData['subdomain']}

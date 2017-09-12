@@ -10,11 +10,11 @@ import {
   FaCaretDown
 } from 'react-icons/lib/fa';
 import classNames from 'classnames/bind';
-import styles from './DropdownSelection.scss';
+import styles from './ActionsDropdown.scss';
 
 const cx = classNames.bind(styles);
 
-export default class DropdownSelection extends Component {
+export default class ActionsDropdown extends Component {
 
   constructor(props) {
     super(props);
