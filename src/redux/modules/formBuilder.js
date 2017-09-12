@@ -424,10 +424,15 @@ const _setMappingPositionInfo = (state, action) => {
 
   const { activeBoxPath, defaultMappingType } = currentElement;
   const activePathArray = activeBoxPath.split('.') || [];
+  // this create an array of [""] if activeBoxPath is empty
   const positionPathArray = _.concat(['mappingInfo'], activePathArray);
-  const fields = _.isEqual(defaultMappingType, formBuilderBoxMappingType.STANDARD)
-    ? ['box', 'font_size', 'page']
-    : ['box', 'font_size', 'page', 'blocks'];
+  var fields = [];
+  if (defaultMappingType === formBuilderBoxMappingType.STANDARD) {
+    fields = ['box', 'font_size', 'page'];
+  } else {
+    fields = ['box', 'font_size', 'page', 'blocks'];
+  }
+
   let position = _.get(currentElement, positionPathArray, {});
   if (action.payload.blocks) {
     position = _.omit(position, ['blocks']);

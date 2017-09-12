@@ -446,10 +446,13 @@ class DrawingBoard extends Component {
   }
 
   handleToolbarSave = () => {
-    const { saveElement, setActiveBox } = this.props;
+    const {
+      saveElement,
+      setActiveBox
+    } = this.props;
     saveElement();
     setActiveBox(null);
-  }
+  };
 
   handleDeleteBox = () => {
     const activeBoxPath = this.props.currentElement.activeBoxPath;
@@ -608,13 +611,21 @@ class DrawingBoard extends Component {
   }
 
   renderActiveBox() {
-    const { documentMapping, pageZoom, currentElement,
-      viewportWidth, viewportHeight } = this.props;
-    if (!currentElement) return false;
-    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
-
+    const {
+      documentMapping,
+      pageZoom,
+      currentElement,
+      viewportWidth,
+      viewportHeight
+    } = this.props;
+    const activeBoxPath = currentElement.activeBoxPath;
+    if (!activeBoxPath) {
+      return;
+    }
     const position = _.get(currentElement.mappingInfo, activeBoxPath);
-    if (!this.belongsToPage(position)) return false;
+    if (!this.belongsToPage(position)) {
+      return false;
+    }
     const isActive = true;
     const box = position.box;
     const zIndex = isActive ? 101 : 100;
@@ -650,7 +661,14 @@ class DrawingBoard extends Component {
 
   render() {
     const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
-    const { isDrawing, startX, startY, endX, endY } = this.state;
+    const {
+      isDrawing,
+      startX,
+      startY,
+      endX,
+      endY
+    } = this.state;
+
     var boardOptionals = {};
     if (this.props.currentElement &&
       this.props.currentElement.activeLabel) {
@@ -665,7 +683,6 @@ class DrawingBoard extends Component {
         tabIndex={0}
         ref="board"
         {...boardOptionals}>
-
         {this.renderDocumentMappingComponents()}
         {this.renderActiveBox()}
         {this.renderToolbar()}
@@ -677,8 +694,7 @@ class DrawingBoard extends Component {
               width: Math.abs(endX - startX),
               height: Math.abs(endY - startY)
             }}>
-          </div>
-        }
+          </div>}
         <div className={styles.snappingHelper} ref="snappingHelper"></div>
       </div>
     );
