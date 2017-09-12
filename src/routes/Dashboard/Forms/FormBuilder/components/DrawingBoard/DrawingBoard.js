@@ -5,7 +5,6 @@ import React, {
 import _ from 'lodash';
 import interact from 'interact.js';
 import {
-  adjustModifiedBlocksPosition,
   getArrangedBlocksPosition,
   getDragSnappingTargets,
   getNextBoxIndex,
