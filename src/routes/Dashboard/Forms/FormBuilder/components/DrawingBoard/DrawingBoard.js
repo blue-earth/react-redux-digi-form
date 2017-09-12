@@ -185,8 +185,10 @@ class DrawingBoard extends Component {
   }
 
   handleBoardMouseDown = (event) => {
-    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
-    if (!activeBoxPath || event.button !== 0) return; // mouse left button
+    const activeLabel = this.props.currentElement.activeLabel;
+    if (!activeLabel || event.button !== 0) {
+      return;  // mouse left button
+    }
     const board = this.refs.board;
     const orgPos = this.getElementPos(board);
     const mousePos = this.getMousePos(event);
@@ -234,25 +236,29 @@ class DrawingBoard extends Component {
       endX,
       endY
     });
-    const { currentElement, pageZoom, pageNumber, setActiveBox, setMappingPositionInfo } = this.props;
+    const {
+      currentElement,
+      pageZoom,
+      pageNumber,
+      setActiveBox,
+      setMappingPositionInfo
+    } = this.props;
 
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
     }
-    const { activeBoxPath, defaultMappingType } = currentElement;
-    const label = getActiveLabel(activeBoxPath);
-    const index = getNextBoxIndex(label, currentElement);
     setActiveBox(_.join([label, 'positions', index], '.'));
 
+    const { defaultMappingType } = currentElement;
+    const index = getNextBoxIndex(activeLabel, currentElement);
+    const newActiveBoxPath = _.join([activeLabel, 'positions', index], '.');
     const box = [
       Math.min(startX, endX) / pageZoom,
       Math.min(startY, endY) / pageZoom,
       Math.abs(endX - startX) / pageZoom,
       Math.abs(endY - startY) / pageZoom
     ];
-
     const { BLOCK } = formBuilderBoxMappingType;
-
     const blocks = _.isEqual(defaultMappingType, BLOCK)
       ? getArrangedBlocksPosition(box, formBuilderFontSize, 1)
       : undefined;
@@ -388,8 +394,13 @@ class DrawingBoard extends Component {
   }
 
   handleBoxClick = (metaData) => {
-    const { setCurrentElement, setQuestionEditMode, setActiveBox,
-      currentElement, isModified, show } = this.props;
+    const {
+      setCurrentElement,
+      setQuestionEditMode,
+      setActiveBox,
+      currentElement
+    } = this.props;
+
     if (isCurrentElementId(metaData.id, currentElement)) {
       setActiveBox(metaData.path);
     } else {
@@ -495,11 +506,22 @@ class DrawingBoard extends Component {
   }
 
   renderDocumentMappingComponents() {
-    // todo: Fix this, disable this function temporary to get other parts working
-    const { documentMapping, currentElement, pageZoom,
-      viewportWidth, viewportHeight } = this.props;
-    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
-    const { LEFT, TOP, WIDTH, HEIGHT } = formBuilderBox;
+    const {
+      documentMapping,
+      currentElement,
+      pageZoom,
+      viewportWidth,
+      viewportHeight
+    } = this.props;
+    const activeSelectionLabel = this.props.currentElement.activeLabel;
+    const activeBoxPath = this.props.currentElement.activeBoxPath;
+    const {
+      LEFT,
+      TOP,
+      WIDTH,
+      HEIGHT
+    } = formBuilderBox;
+
     var boardOptionals = {};
     if (activeBoxPath) {
       boardOptionals['style'] = _.merge(boardOptionals['style'], {
