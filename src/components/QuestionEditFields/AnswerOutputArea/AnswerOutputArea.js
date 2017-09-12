@@ -10,7 +10,6 @@ import {
   Popover
 } from 'react-bootstrap';
 import {
-  getActiveLabel,
   getChoiceLabelByIndex
 } from 'helpers/formBuilderHelper';
 import popoverTexts from 'schemas/popoverTexts';
@@ -68,17 +67,6 @@ class AnswerOutputArea extends Component {
 
   get newLabel() {
     return getChoiceLabelByIndex(this.choices.length);
-  }
-
-  get activeBoxIndex() {
-    const { activeBoxPath } = this.props.currentElement;
-    const choices = this.choices;
-    const label = getActiveLabel(activeBoxPath);
-    if (label === 'other') {
-      return choices.length;
-    } else {
-      return _.findIndex(choices, function (o) { return o.label === label; });
-    }
   }
 
   handleDeleteSelection = (choiceIndex) => {
