@@ -15,23 +15,21 @@ class NameFieldBasicTab extends Component {
     currentElement: PropTypes.object.isRequired,
     questions: PropTypes.array.isRequired,
     setQuestionInfo: PropTypes.func.isRequired,
-    resetMappingInfo: PropTypes.func.isRequired,
     setValidationInfo: PropTypes.func.isRequired,
-    resetValidationInfo: PropTypes.func.isRequired
+    resetValidationInfo: PropTypes.func.isRequired,
+    deleteMappingInfoByPath: PropTypes.func.isRequired
   };
 
   handleMiddleNameChange = (isOn) => {
-    const { setQuestionInfo, resetMappingInfo } = this.props;
+    const { setQuestionInfo, deleteMappingInfoByPath } = this.props;
     if (isOn) {
       setQuestionInfo({include_middle_name: true});
     } else {
-      // remove from mappingInfo
-      var mappingInfo = this.props.currentElement.mappingInfo;
-      delete mappingInfo['mname'];
-      resetMappingInfo(mappingInfo);
       setQuestionInfo({include_middle_name: false});
+      // remove from mappingInfo
+      deleteMappingInfoByPath('middle_name');
     }
-  }
+  };
 
   render() {
     const {
