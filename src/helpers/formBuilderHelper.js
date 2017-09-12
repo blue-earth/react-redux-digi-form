@@ -15,7 +15,17 @@ export const getActiveLabel = (activeBoxPath) => {
 };
 
 export const getNextBoxIndex = (label, currentElement) => {
-  return Object.keys(_.get(currentElement, ['mappingInfo', label, 'positions'], {})).length;
+  // positions are stored as a map
+  // This function should always return the next value that is next to largest index
+  // {0: {}, 1: {}, 3: {}} --> next value will be 4
+  var positions = _.get(currentElement, ['mappingInfo', label, 'positions']);
+  var result = 0;
+  if (positions) {
+    var mappingIds = Object.keys(positions).map(x => parseInt(x, 10));
+    var largest = Math.max.apply(null, mappingIds);
+    result = largest + 1;
+  }
+  return result;
 }
 
 export const isCurrentElementId = (id, currentElement) =>
