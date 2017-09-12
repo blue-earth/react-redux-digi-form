@@ -25,7 +25,7 @@ class DocumentFieldsSelectionHeader extends Component {
     style: PropTypes.object,
     className: PropTypes.string,
     setActiveLabel: PropTypes.func.isRequired,
-    activeLabel: PropTypes.string.isRequired
+    activeLabel: PropTypes.string
   };
 
   static defaultProps = {
