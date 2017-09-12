@@ -277,17 +277,13 @@ export const saveElement = createAction(SAVE_ELEMENT);
 // Helper: _saveElement
 // ------------------------------------
 const _saveElement = (state, action) => {
-  const { currentElement, lastQuestionId } = state;
-  const id = currentElement.id ? currentElement.id : state.lastQuestionId + 1;
-  var question = _.merge({}, INIT_QUESTION_STATE, currentElement.question, { id });
+  const { currentElement } = state;
+  const id = currentElement.id; // todo: make sure currentElement always has an id
+  var question = Object.assign({}, INIT_QUESTION_STATE, currentElement.question, { id });
   // TODO: Update mappingInfo assignment
-  var isModified = state.isModified || currentElement.isModified;
   return _.merge({}, state, {
     questions: mergeItemIntoArray(state.questions, question),
-    documentMapping: _.merge({}, state.documentMapping, { [id]: currentElement.mappingInfo }),
-    lastQuestionId: Math.max(id, lastQuestionId),
-    currentElement: _.merge({}, currentElement, { id }),
-    isModified
+    documentMapping: _.merge({}, state.documentMapping, { [id]: currentElement.mappingInfo })
   });
 };
 
