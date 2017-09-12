@@ -81,11 +81,6 @@ export default class BlockMappingToolbar extends Component {
   }
 
   handleArrange = (arranged) => {
-    if (arranged) {
-      const { onChange, values: { box, blocks: currentBlocks, font_size: fontSize } } = this.props;
-      const blocks = getArrangedBlocksPosition(box, fontSize, _.size(currentBlocks));
-      onChange({ blocks });
-    }
     this.setState({ arranged });
   }
 
