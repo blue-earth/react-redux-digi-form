@@ -22,7 +22,7 @@ import {
   StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
 import Icon from 'components/Icon';
-import { FaEdit, FaEye, FaChain, FaDownload, FaCog } from 'react-icons/lib/fa';
+import { FaEdit, FaEye, FaChain, FaCog } from 'react-icons/lib/fa';
 
 class FormsListView extends Component {
   static propTypes = {
@@ -138,9 +138,9 @@ class FormsListView extends Component {
       this.props.duplicateForm(id);
     }
   }
-  downloadCSV = (id) => {
-    console.log('TODO download CSV action', id);
-  }
+  // downloadCSV = (id) => {
+  //   console.log('TODO download CSV action', id);
+  // }
   archiveFormAction = (id) => {
     if (Array.isArray(id)) {
       this.props.archiveForms(id);
@@ -223,16 +223,17 @@ class FormsListView extends Component {
         hiddenWithStatus: [],
         onClick: this.duplicateFormAction
       },
-      {
-        name: 'csv',
-        label: 'Download CSV',
-        icon: <FaDownload style={{verticalAlign: 'top'}} />,
-        isInlineAction: false,
-        allowMultiple: false,
-        disabledWithStatus: [],
-        hiddenWithStatus: [],
-        onClick: this.downloadCSV
-      },
+      // CSV download to be added later
+      // {
+      //   name: 'csv',
+      //   label: 'Download CSV',
+      //   icon: <FaDownload style={{verticalAlign: 'top'}} />,
+      //   isInlineAction: false,
+      //   allowMultiple: false,
+      //   disabledWithStatus: [],
+      //   hiddenWithStatus: [],
+      //   onClick: this.downloadCSV
+      // },
       {
         name: 'archive',
         label: 'Archive',
