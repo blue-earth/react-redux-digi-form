@@ -574,16 +574,27 @@ class DrawingBoard extends Component {
   }
 
   renderToolbar() {
-    const { currentElement, pageZoom, setMappingPositionInfo,
-      viewportWidth, viewportHeight } = this.props;
-    const { isDragging, isDrawing, isResizing } = this.state;
+    const {
+      currentElement,
+      pageZoom,
+      setMappingPositionInfo,
+      viewportWidth,
+      viewportHeight
+    } = this.props;
+    const {
+      isDragging,
+      isDrawing,
+      isResizing
+    } = this.state;
 
-    if (!currentElement) return false;
-    const activeBoxPath = _.get(this.props, ['currentElement', 'activeBoxPath']);
-
+    if (!currentElement || isDrawing || isDragging || isResizing) {
+      return false;
+    }
+    const activeBoxPath = currentElement.activeBoxPath;
     const position = _.get(currentElement.mappingInfo, activeBoxPath);
-    if (!this.belongsToPage(position)) return false;
-
+    if (!this.belongsToPage(position)) {
+      return false;
+    }
     const toolbarProps = {
       values: position,
       onChange: setMappingPositionInfo,
@@ -594,8 +605,7 @@ class DrawingBoard extends Component {
       viewportHeight
     };
 
-    if (!currentElement || isDrawing || isDragging || isResizing) return false;
-    if (_.isEqual(currentElement.defaultMappingType, formBuilderBoxMappingType.STANDARD)) {
+    if (currentElement.defaultMappingType === formBuilderBoxMappingType.STANDARD) {
       return <StandardMappingToolbar {...toolbarProps} />;
     } else if (_.isEqual(currentElement.defaultMappingType, formBuilderBoxMappingType.BLOCK)) {
       return <BlockMappingToolbar {...toolbarProps} />;
