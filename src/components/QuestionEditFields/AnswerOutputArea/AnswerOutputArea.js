@@ -27,7 +27,6 @@ class AnswerOutputArea extends Component {
   static propTypes = {
     currentElement: PropTypes.object.isRequired,
     title: PropTypes.string,
-    setMappingInfo: PropTypes.func.isRequired,
     deleteMappingInfoByPath: PropTypes.func.isRequired,
     setQuestionInfo: PropTypes.func.isRequired,
     /*

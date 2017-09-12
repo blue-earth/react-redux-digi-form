@@ -93,17 +93,6 @@ class FormBuilder extends Component {
      * resetValidationInfo: Redux action to remove a specific item in validations array.
      */
     resetValidationInfo: PropTypes.func.isRequired,
-
-    /*
-     * setMappingInfo: Redux action to update the document mapping info.
-     */
-    setMappingInfo: PropTypes.func.isRequired,
-
-    /*
-     * resetMappingInfo: Redux action to update the document mapping info.
-     */
-    resetMappingInfo: PropTypes.func.isRequired,
-
     /*
      * setMappingPositionInfo: Redux action to update the document mapping position info of active selection.
      */

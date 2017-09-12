@@ -71,10 +71,6 @@ export default class QuestionEditPanel extends Component {
      * resetValidationInfo: Redux action to remove a specific item in validations array.
      */
     resetValidationInfo: PropTypes.func.isRequired,
-
-    setMappingInfo: PropTypes.func.isRequired,
-
-    resetMappingInfo: PropTypes.func.isRequired,
     deleteMappingInfoByPath: PropTypes.func.isRequired,
 
     /*
@@ -182,8 +178,6 @@ export default class QuestionEditPanel extends Component {
       setQuestionInfo: this.props.setQuestionInfo,
       setValidationInfo: this.props.setValidationInfo,
       resetValidationInfo: this.props.resetValidationInfo,
-      setMappingInfo: this.props.setMappingInfo,
-      resetMappingInfo: this.props.resetMappingInfo,
       setActiveBox: this.props.setActiveBox,
       deleteMappingInfoByPath: this.props.deleteMappingInfoByPath
     };

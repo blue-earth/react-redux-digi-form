@@ -50,11 +50,6 @@ class DrawingBoard extends Component {
     documentMapping: PropTypes.object.isRequired,
 
     /*
-     * setMappingInfo: Action to update the document mapping info.
-     */
-    setMappingInfo: PropTypes.func.isRequired,
-
-    /*
      * setMappingPositionInfo: Action to update the document mapping position info of active selection.
      */
     setMappingPositionInfo: PropTypes.func.isRequired,

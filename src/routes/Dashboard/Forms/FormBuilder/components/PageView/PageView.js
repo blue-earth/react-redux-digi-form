@@ -31,11 +31,6 @@ class PageView extends Component {
     documentMapping: PropTypes.object.isRequired,
 
     /*
-     * setMappingInfo: Action to update the document mapping info.
-     */
-    setMappingInfo: PropTypes.func.isRequired,
-
-    /*
      * setMappingPositionInfo: Action to update the document mapping position info of active selection.
      */
     setMappingPositionInfo: PropTypes.func.isRequired,
@@ -157,7 +152,6 @@ class PageView extends Component {
             isModified={this.props.isModified}
             saveElement={this.props.saveElement}
             documentMapping={this.props.documentMapping}
-            setMappingInfo={this.props.setMappingInfo}
             setMappingPositionInfo={this.props.setMappingPositionInfo}
             pageZoom={this.props.pageZoom}
             setPageZoom={this.props.setPageZoom}
