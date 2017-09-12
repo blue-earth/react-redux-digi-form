@@ -27,6 +27,8 @@ export default class DropdownSelection extends Component {
   static propTypes = {
     id: PropTypes.number,
     formStatus: PropTypes.string,
+    subdomain: PropTypes.string,
+    slug: PropTypes.string,
     selectedItems: PropTypes.array,
     checked: PropTypes.bool,
     actionsMenu: PropTypes.array,
@@ -69,17 +71,17 @@ export default class DropdownSelection extends Component {
   }
 
   handleMenuClick = (event) => {
-    const { actionsMenu, id, selectedItems } = this.props;
+    const { actionsMenu, id, subdomain, slug, selectedItems } = this.props;
     const actionItem = actionsMenu[event.currentTarget.dataset.index];
     if (selectedItems && selectedItems.length > 0) {
       if (selectedItems.length > 1 && actionItem.allowMultiple) {
         actionItem.onClick(selectedItems);
       }
       if (selectedItems.length === 1) {
-        actionItem.onClick(selectedItems[0]);
+        actionItem.onClick(selectedItems[0], subdomain, slug);
       }
     } else {
-      actionItem.onClick(id);
+      actionItem.onClick(id, subdomain, slug);
     }
     this.refs.dropdownTrigger.hide();
   }
@@ -99,11 +101,14 @@ export default class DropdownSelection extends Component {
             if (isHeaderCell && !actionItem.allowMultiple) {
               isItemHidden = true;
             }
+            if (formStatus && actionItem.hiddenWithStatus.indexOf(formStatus) > -1) {
+              isItemHidden = true;
+            }
             var isItemDisabled = false;
             if (isHeaderCell && noneSelected) {
               isItemDisabled = true;
             }
-            if (formStatus && actionItem.withStatus.indexOf(formStatus) === -1) {
+            if (formStatus && actionItem.disabledWithStatus.indexOf(formStatus) > -1) {
               isItemDisabled = true;
             }
             if (multipleSelected && (!actionItem.allowMultiple || !thisRowSelected)) {

@@ -12,7 +12,8 @@ import {
   archiveForms,
   duplicateForm,
   deleteForm,
-  sendFormLink
+  sendFormLink,
+  updateFormStatus
 } from 'redux/modules/formsList';
 import { goTo } from 'redux/modules/router.js';
 import { show } from 'redux-modal';
@@ -65,6 +66,7 @@ const mapActionCreators = {
   duplicateForm,
   deleteForm,
   sendFormLink,
+  updateFormStatus,
   showModal: show
 };
 

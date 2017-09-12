@@ -22,10 +22,10 @@ export default class ActionButton extends Component {
 
   get isDisabled() {
     const { formStatus, action } = this.props;
-    if (action.withStatus.indexOf(formStatus) > -1) {
-      return false;
+    if (action.disabledWithStatus.indexOf(formStatus) > -1) {
+      return true;
     }
-    return true;
+    return false;
   }
 
   handleClick = () => {

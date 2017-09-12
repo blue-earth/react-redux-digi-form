@@ -44,6 +44,8 @@ export default class SelectionCell extends Component {
         <DropdownSelection
           id={rowData[idName]}
           formStatus={rowData['status']}
+          subdomain={rowData['subdomain']}
+          slug={rowData['slug']}
           selectedItems={selectedItems}
           onSelect={this.handleSelectItem}
           actionsMenu={actionsMenu}

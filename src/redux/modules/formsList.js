@@ -313,6 +313,44 @@ const processReceiveFormsList = (res, options) => {
 };
 
 // ------------------------------------
+// Action: updateFormStatus
+// ------------------------------------
+export const updateFormStatus = (formId, newStatus) => {
+  return (dispatch, getState) => {
+    if (Array.isArray(formId)) {
+      formId.map((id) => {
+        dispatch(processUpdateFormStatus(id, newStatus));
+      });
+    } else {
+      dispatch(processUpdateFormStatus(formId, newStatus));
+    }
+  };
+};
+export const processUpdateFormStatus = (formId, newStatus) => {
+  var body = {id: formId, status: newStatus};
+  var method = 'PUT';
+  var requestURL = `${API_URL}/form_document/api/form/${formId}/`;
+  const fetchParams = assignDefaults({
+    method,
+    body
+  });
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(fetchFormsList());
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      console.error('Failed to update form status');
+    };
+  };
+
+  return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const formsListReducer = handleActions({

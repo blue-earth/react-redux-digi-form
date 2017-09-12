@@ -10,6 +10,7 @@ import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import FormsFilter from '../FormsFilter';
 import SendFormLinkModal from '../SendFormLinkModal';
+import CopyFormLinkModal from '../CopyFormLinkModal';
 import styles from './FormsListView.scss';
 import classNames from 'classnames';
 import {
@@ -21,7 +22,7 @@ import {
   StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
 import Icon from 'components/Icon';
-import { FaEdit, FaEye, FaChain, FaDownload } from 'react-icons/lib/fa';
+import { FaEdit, FaEye, FaChain, FaDownload, FaCog } from 'react-icons/lib/fa';
 
 class FormsListView extends Component {
   static propTypes = {
@@ -99,12 +100,19 @@ class FormsListView extends Component {
      */
     selectedItems: PropTypes.array.isRequired,
     selectedStatus: PropTypes.string,
-    setStatus: PropTypes.func
+    setStatus: PropTypes.func,
+    updateFormStatus: PropTypes.func.isRequired
   };
 
   /*
    * functions for actions menu
    */
+  makeLive = (id) => {
+    this.props.updateFormStatus(id, 1);
+  }
+  makeDraft = (id) => {
+    this.props.updateFormStatus(id, 0);
+  }
   editForm = (id) => {
     if (!Array.isArray(id)) {
       this.props.goTo(editFormUrl(id));
@@ -120,8 +128,10 @@ class FormsListView extends Component {
       this.props.goTo(`/forms/${id}`);
     }
   }
-  copyLink = (id) => {
-    console.log('TODO copy link action', id);
+  copyLink = (id, subdomain, slug) => {
+    if (!Array.isArray(id)) {
+      this.props.showModal('copyFormLinkModal', { formId: id, subdomain: subdomain, slug: slug });
+    }
   }
   duplicateFormAction = (id) => {
     if (!Array.isArray(id)) {
@@ -144,12 +154,33 @@ class FormsListView extends Component {
   get actionsMenu() {
     return [
       {
+        name: 'makeLive',
+        label: 'Make live',
+        icon: <FaCog style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: ['Live'],
+        onClick: this.makeLive
+      },
+      {
+        name: 'makeDraft',
+        label: 'Make draft',
+        icon: <FaCog style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: ['Draft'],
+        onClick: this.makeDraft
+      },
+      {
         name: 'edit',
         label: 'Edit',
         icon: <FaEdit style={{verticalAlign: 'top'}} />,
         isInlineAction: true,
         allowMultiple: false,
-        withStatus: ['Draft'],
+        disabledWithStatus: ['Live'],
+        hiddenWithStatus: [],
         onClick: this.editForm
       },
       {
@@ -158,7 +189,8 @@ class FormsListView extends Component {
         icon: <Icon name="Send" style={{verticalAlign: 'top'}} />,
         isInlineAction: true,
         allowMultiple: false,
-        withStatus: ['Live'],
+        disabledWithStatus: ['Draft'],
+        hiddenWithStatus: [],
         onClick: this.openSendFormModal
       },
       {
@@ -167,7 +199,8 @@ class FormsListView extends Component {
         icon: <FaEye style={{verticalAlign: 'top'}} />,
         isInlineAction: true,
         allowMultiple: false,
-        withStatus: ['Live'],
+        disabledWithStatus: ['Draft'],
+        hiddenWithStatus: [],
         onClick: this.viewForm
       },
       {
@@ -176,7 +209,8 @@ class FormsListView extends Component {
         icon: <FaChain style={{verticalAlign: 'top'}} />,
         isInlineAction: false,
         allowMultiple: false,
-        withStatus: ['Draft', 'Live'],
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
         onClick: this.copyLink
       },
       {
@@ -185,7 +219,8 @@ class FormsListView extends Component {
         icon: <Icon name="Duplicate" style={{verticalAlign: 'top'}} />,
         isInlineAction: false,
         allowMultiple: false,
-        withStatus: ['Draft', 'Live'],
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
         onClick: this.duplicateFormAction
       },
       {
@@ -194,7 +229,8 @@ class FormsListView extends Component {
         icon: <FaDownload style={{verticalAlign: 'top'}} />,
         isInlineAction: false,
         allowMultiple: false,
-        withStatus: ['Draft', 'Live'],
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
         onClick: this.downloadCSV
       },
       {
@@ -203,7 +239,8 @@ class FormsListView extends Component {
         icon: <Icon name="Archive" style={{verticalAlign: 'top'}} />,
         isInlineAction: false,
         allowMultiple: true,
-        withStatus: ['Draft', 'Live'],
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
         onClick: this.archiveFormAction
       }
     ];
@@ -370,6 +407,7 @@ class FormsListView extends Component {
           previous={previous}
           next={next} />
         <SendFormLinkModal sendFormLink={sendFormLink} isPageBusy={isPageBusy} />
+        <CopyFormLinkModal />
       </div>
     );
   }
