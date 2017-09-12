@@ -135,12 +135,6 @@ class AnswerOutputArea extends Component {
     }
   }
 
-  handlePreviewButtonClick = (activeIndex) => {
-    // TODO: this function
-    const { setMappingInfo } = this.props;
-    setMappingInfo({ activeIndex });
-  }
-
   renderList() {
     const choices = this.finalChoices;
     const that = this;
