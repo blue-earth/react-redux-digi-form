@@ -3,6 +3,9 @@ import React, {
   PropTypes
 } from 'react';
 import {
+  dashboardUrl
+} from 'helpers/urlHelper';
+import {
   StatusCell
 } from '../CustomCells/CustomCells';
 import {
@@ -89,7 +92,8 @@ class SubmissionsListView extends Component {
     analyticsPeriod: PropTypes.string.isRequired,
     analytics: PropTypes.object,
     activities: PropTypes.array,
-    environmentalSavings: PropTypes.object
+    environmentalSavings: PropTypes.object,
+    goTo: PropTypes.func.isRequired
   };
 
   /*
