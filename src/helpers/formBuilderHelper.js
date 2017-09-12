@@ -12,9 +12,9 @@ export const getNextBoxIndex = (label, currentElement) => {
   // positions are stored as a map
   // This function should always return the next value that is next to largest index
   // {0: {}, 1: {}, 3: {}} --> next value will be 4
-  var positions = _.get(currentElement, ['mappingInfo', label, 'positions']);
+  var positions = _.get(currentElement, ['mappingInfo', label, 'positions'], {});
   var result = 0;
-  if (positions) {
+  if (Object.keys(positions).length > 0) {
     var mappingIds = Object.keys(positions).map(x => parseInt(x, 10));
     var largest = Math.max.apply(null, mappingIds);
     result = largest + 1;
