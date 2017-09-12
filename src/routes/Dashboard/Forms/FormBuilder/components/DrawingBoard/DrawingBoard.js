@@ -245,8 +245,6 @@ class DrawingBoard extends Component {
     if (Math.abs(startX - endX) < 5 && Math.abs(startY - endY) < 5) {
       return; // no need to add too small-sized box.
     }
-    setActiveBox(_.join([label, 'positions', index], '.'));
-
     const { defaultMappingType } = currentElement;
     const index = getNextBoxIndex(activeLabel, currentElement);
     const newActiveBoxPath = _.join([activeLabel, 'positions', index], '.');
@@ -260,7 +258,7 @@ class DrawingBoard extends Component {
     const blocks = _.isEqual(defaultMappingType, BLOCK)
       ? getArrangedBlocksPosition(box, formBuilderFontSize, 1)
       : undefined;
-
+    setActiveBox(newActiveBoxPath);
     setMappingPositionInfo({
       page: pageNumber,
       box,
