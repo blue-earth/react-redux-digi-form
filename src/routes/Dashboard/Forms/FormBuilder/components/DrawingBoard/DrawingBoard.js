@@ -290,9 +290,9 @@ class DrawingBoard extends Component {
 
     const position = _.get(currentElement.mappingInfo, activeBoxPath);
     const fontSize = position.font_size;
-    const numOfBlocks = position.blocks.length;
     let blocks;
     if (position.blocks) {
+      const numOfBlocks = position.blocks.length;
       blocks = getArrangedBlocksPosition(parentBox, fontSize, numOfBlocks);
     }
     setMappingPositionInfo({ blocks, box: parentBox });
