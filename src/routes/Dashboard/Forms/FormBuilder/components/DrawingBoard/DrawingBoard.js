@@ -395,7 +395,7 @@ class DrawingBoard extends Component {
     if (isCurrentElementId(metaData.id, currentElement)) {
       setActiveBox(metaData.path);
     } else {
-      setQuestionEditMode(formBuilderSelectMode.QUESTION_DETAIL_VIEW);
+      setQuestionEditMode(formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW);
       setCurrentElement({
         id: parseInt(metaData.id, 10)
       });
