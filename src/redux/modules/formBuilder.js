@@ -239,14 +239,12 @@ export const processSubmitForm = (formData) => {
       const { id } = value;
       id && dispatch(updateFormId(id));
       dispatch(doneSubmitForm()); // Hide submitting spinner
-      dispatch(setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW));
     };
   };
 
   const fetchFail = (data) => {
     return (dispatch, getState) => {
       dispatch(doneSubmitForm()); // Hide submitting spinner
-      dispatch(setQuestionEditMode(formBuilderSelectMode.QUESTION_TYPE_LIST_VIEW));
     };
   };
 
@@ -489,9 +487,11 @@ export const setCurrentStep = createAction(SET_CURRENT_STEP);
 
 const _setCurrentElement = (state, action) => {
   if (!action.payload) {
-    return Object.assign({}, state, {
-      currentElement: null
-    });
+    var newState = Object.assign({}, state);
+    newState.currentElement = {
+      activeLabel: ''
+    };
+    return newState;
   }
 
   const id = action.payload.id;

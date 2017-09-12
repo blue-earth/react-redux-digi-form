@@ -186,11 +186,13 @@ class FormBuilder extends Component {
   saveAndContinue = () => {
     const {
       saveForm,
-      setActiveBox
+      setActiveBox,
+      setCurrentElement
     } = this.props;
     saveForm();
     this.goToQuestionTypeListView();
     setActiveBox(null);
+    setCurrentElement(null);
   }
 
   deleteCurrentQuestion = () => {
