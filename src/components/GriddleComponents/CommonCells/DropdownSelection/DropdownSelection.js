@@ -19,7 +19,7 @@ export default class DropdownSelection extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      hover: false,
+      isHovering: false,
       isMenuOpen: false
     };
   }
@@ -37,14 +37,14 @@ export default class DropdownSelection extends Component {
 
   onMouseOver = () => {
     this.setState({
-      hover: true
+      isHovering: true
     });
   }
 
   onMouseOut = () => {
     if (!this.state.isMenuOpen) {
       this.setState({
-        hover: false
+        isHovering: false
       });
     }
   }
@@ -58,7 +58,7 @@ export default class DropdownSelection extends Component {
   handleMenuClose = () => {
     this.setState({
       isMenuOpen: false,
-      hover: false
+      isHovering: false
     });
   }
 
@@ -66,7 +66,7 @@ export default class DropdownSelection extends Component {
     const { onSelect } = this.props;
     onSelect();
     this.setState({
-      hover: true
+      isHovering: true
     });
   }
 
@@ -144,7 +144,7 @@ export default class DropdownSelection extends Component {
         overlay={dropdown}
         onEnter={this.handleMenuOpen}
         onExit={this.handleMenuClose}>
-        <div className={cx(styles.checkBoxWrapper, {[styles.hover]: this.state.hover})}
+        <div className={cx(styles.checkBoxWrapper, {[styles.hover]: this.state.isHovering})}
           onMouseOver={this.onMouseOver}
           onMouseOut={this.onMouseOut}>
           <input
