@@ -210,8 +210,8 @@ class QuestionRichTextEditor extends Component {
         </Button>
         <Dropdown.Menu>
           {filteredQuestions.length > 0
-            ? filteredQuestions.map(item => (
-              <MenuItem key={item.value} eventKey={`{{ answer_${item.value} }}`}>{item.label}</MenuItem>
+            ? filteredQuestions.map((item, index) => (
+              <MenuItem key={index} eventKey={`{{ answer_${item.value} }}`}>{item.label}</MenuItem>
             ))
             : <MenuItem disabled>No questions available</MenuItem>
           }
