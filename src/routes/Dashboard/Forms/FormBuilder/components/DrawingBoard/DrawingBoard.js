@@ -139,13 +139,9 @@ class DrawingBoard extends Component {
         accept: '.interactWrapper'
       })
       .on('drop', this.handleDrop);
-    this.refs.board.addEventListener('mousemove', this.handleBoardMouseMove);
-    this.refs.board.addEventListener('mouseup', this.handleBoardMouseUp);
   }
 
   componentWillUnmount() {
-    this.refs.board.removeEventListener('mousemove', this.handleBoardMouseMove);
-    this.refs.board.removeEventListener('mouseup', this.handleBoardMouseUp);
     this.interactable.unset();
   }
 
@@ -643,6 +639,8 @@ class DrawingBoard extends Component {
     return (
       <div className={styles.board}
         onMouseDown={this.handleBoardMouseDown}
+        onMouseMove={this.handleBoardMouseMove}
+        onMouseUp={this.handleBoardMouseUp}
         onKeyDown={this.handleKeyDown}
         tabIndex={0}
         ref="board"
