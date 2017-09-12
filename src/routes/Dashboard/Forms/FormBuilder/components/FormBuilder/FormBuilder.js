@@ -244,10 +244,7 @@ class FormBuilder extends Component {
   }
 
   getMappedFieldsForCurrentQuestion() {
-    var fieldsWithValidMapping = _.pickBy(this.props.currentElement.mappingInfo, function (value, key, object) {
-      return value && Object.keys(value['positions']).length > 0;
-    });
-    return Object.keys(fieldsWithValidMapping);
+    return Object.keys(this.props.currentElement.mappingInfo);
   }
 
   render() {
