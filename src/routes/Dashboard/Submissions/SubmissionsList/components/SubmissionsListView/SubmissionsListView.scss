@@ -131,6 +131,7 @@
   width: auto;
 }
 .columnActions {
-  width: 160px;
+  width: 125px;
+  box-sizing: content-box;
   border-left: 1px solid $table-line-color;
 }

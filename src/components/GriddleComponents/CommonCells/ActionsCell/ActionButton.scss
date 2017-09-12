@@ -3,11 +3,11 @@
 
 .actionIconWrapper {
   display: inline-block;
-  vertical-align: text-top;
+  vertical-align: middle;
   margin: 0 5px;
-  width: 16px;
-  height: 16px;
-  font-size: 16px;
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
   cursor: pointer;
   &.disabled {
     cursor: default;

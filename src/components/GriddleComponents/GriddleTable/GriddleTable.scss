@@ -20,9 +20,7 @@
   }
   th {
     height: 38px;
-    line-height: 28px;
     padding: 0 15px;
-    word-wrap: break-word;
     color: $text-light-color !important;
     border-bottom: none !important;
     position: relative;
@@ -39,6 +37,11 @@
     }
     &:last-child {
       @include border-radius-separate(0, 6px, 0, 6px);
+    }
+  }
+  @include media('<lg') {
+    th, td {
+      padding: 0 12px;
     }
   }
   tbody {
