@@ -516,16 +516,26 @@ export const setActiveLabel = createAction(SET_ACTIVE_LABEL);
 export const setCurrentStep = createAction(SET_CURRENT_STEP);
 
 const _setCurrentElement = (state, action) => {
-  const id = _.get(action, ['payload', 'id']);
-  if (_.isNil(id)) { // If it's for creating a new question and mapping.
+  if (!action.payload) {
     return Object.assign({}, state, {
-      currentElement: action.payload
+      currentElement: null
+    });
+  }
+
+  const id = action.payload.id;
+  if (!id) {
+    var newId = _.max(_.map(state.questions, question => question.id)) + 1;
+    return Object.assign({}, state, {
+      currentElement: Object.assign({},
+        state.currentElement,
+        action.payload,
+        {id: newId}
+      )
     });
   } else { // If it's for loading from existing questions & mappings.
     const activeBoxPath = action.payload.activeBoxPath;
     const mappingInfo = state.documentMapping[id];
-    const pathArray = _.defaultTo(_.split(activeBoxPath, '.'), []);
-    const label = pathArray[formBuilderPathIndex.LABEL];
+    const question = state.questions.filter(question => question.id === id)[0];
     return Object.assign({}, state, {
       currentElement: {
         id: action.payload.id,
@@ -533,7 +543,7 @@ const _setCurrentElement = (state, action) => {
         mappingInfo,
         activeBoxPath,
         isModified: false,
-        defaultMappingType: mappingInfo[label].type
+        defaultMappingType: question.defaultMappingType
       }
     });
   }
