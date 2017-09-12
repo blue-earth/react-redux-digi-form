@@ -23,6 +23,7 @@ import {
 } from 'components/GriddleComponents/CommonCells';
 import Icon from 'components/Icon';
 import { FaEdit, FaEye, FaChain, FaCog } from 'react-icons/lib/fa';
+import { FormTemplatStatus } from 'constants/formsList';
 
 class FormsListView extends Component {
   static propTypes = {
@@ -67,10 +68,10 @@ class FormsListView extends Component {
    * functions for actions menu
    */
   makeLive = (id) => {
-    this.props.setFormStatus(id, 1);
+    this.props.setFormStatus(id, FormTemplatStatus.LIVE.value);
   }
   makeDraft = (id) => {
-    this.props.setFormStatus(id, 0);
+    this.props.setFormStatus(id, FormTemplatStatus.DRAFT.value);
   }
   editForm = (id) => {
     this.props.goTo(editFormUrl(id));
@@ -106,7 +107,7 @@ class FormsListView extends Component {
         isInlineAction: false,
         allowMultiple: true,
         disabledWithStatus: [],
-        hiddenWithStatus: ['Live'],
+        hiddenWithStatus: [FormTemplatStatus.LIVE.label],
         onClick: this.makeLive
       },
       {
@@ -116,7 +117,7 @@ class FormsListView extends Component {
         isInlineAction: false,
         allowMultiple: true,
         disabledWithStatus: [],
-        hiddenWithStatus: ['Draft'],
+        hiddenWithStatus: [FormTemplatStatus.DRAFT.label],
         onClick: this.makeDraft
       },
       {
@@ -125,7 +126,7 @@ class FormsListView extends Component {
         icon: <FaEdit style={{verticalAlign: 'top'}} />,
         isInlineAction: true,
         allowMultiple: false,
-        disabledWithStatus: ['Live'],
+        disabledWithStatus: [FormTemplatStatus.LIVE.label],
         hiddenWithStatus: [],
         onClick: this.editForm
       },
@@ -135,7 +136,7 @@ class FormsListView extends Component {
         icon: <Icon name="Send" style={{verticalAlign: 'top'}} />,
         isInlineAction: true,
         allowMultiple: false,
-        disabledWithStatus: ['Draft'],
+        disabledWithStatus: [FormTemplatStatus.DRAFT.label],
         hiddenWithStatus: [],
         onClick: this.openSendFormModal
       },
@@ -145,7 +146,7 @@ class FormsListView extends Component {
         icon: <FaEye style={{verticalAlign: 'top'}} />,
         isInlineAction: true,
         allowMultiple: false,
-        disabledWithStatus: ['Draft'],
+        disabledWithStatus: [FormTemplatStatus.DRAFT.label],
         hiddenWithStatus: [],
         onClick: this.viewForm
       },
@@ -250,8 +251,8 @@ class FormsListView extends Component {
         cssClassName: styles.columnStatus,
         customHeaderComponentProps: {
           statusList: [
-            {label: 'Live', value: '1'},
-            {label: 'Draft', value: '0'}
+            FormTemplatStatus.LIVE,
+            FormTemplatStatus.DRAFT
           ],
           selectedStatusFilterOptions: selectedStatusFilterOptions,
           filterFormsByStatus: filterFormsByStatus
