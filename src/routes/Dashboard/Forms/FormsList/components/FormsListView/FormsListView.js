@@ -23,7 +23,7 @@ import {
 } from 'components/GriddleComponents/CommonCells';
 import Icon from 'components/Icon';
 import { FaEdit, FaEye, FaChain, FaCog } from 'react-icons/lib/fa';
-import { FormTemplatStatus } from 'constants/formsList';
+import { FormTemplateStatus } from 'constants/formsList';
 
 class FormsListView extends Component {
   static propTypes = {
@@ -67,10 +67,10 @@ class FormsListView extends Component {
    * functions for actions menu
    */
   makeLive = (idList) => {
-    this.props.setFormStatus(idList, FormTemplatStatus.LIVE.value);
+    this.props.setFormStatus(idList, FormTemplateStatus.LIVE.value);
   }
   makeDraft = (idList) => {
-    this.props.setFormStatus(idList, FormTemplatStatus.DRAFT.value);
+    this.props.setFormStatus(idList, FormTemplateStatus.DRAFT.value);
   }
   editForm = (idList) => {
     var id = idList[0];
@@ -107,7 +107,7 @@ class FormsListView extends Component {
         isInlineAction: false,
         allowMultiple: true,
         disabledWithStatus: [],
-        hiddenWithStatus: [FormTemplatStatus.LIVE.label],
+        hiddenWithStatus: [FormTemplateStatus.LIVE.label],
         onClick: this.makeLive
       },
       {
@@ -117,7 +117,7 @@ class FormsListView extends Component {
         isInlineAction: false,
         allowMultiple: true,
         disabledWithStatus: [],
-        hiddenWithStatus: [FormTemplatStatus.DRAFT.label],
+        hiddenWithStatus: [FormTemplateStatus.DRAFT.label],
         onClick: this.makeDraft
       },
       {
@@ -126,7 +126,7 @@ class FormsListView extends Component {
         icon: <FaEdit style={{verticalAlign: 'top'}} />,
         isInlineAction: true,
         allowMultiple: false,
-        disabledWithStatus: [FormTemplatStatus.LIVE.label],
+        disabledWithStatus: [FormTemplateStatus.LIVE.label],
         hiddenWithStatus: [],
         onClick: this.editForm
       },
@@ -136,7 +136,7 @@ class FormsListView extends Component {
         icon: <Icon name="Send" style={{verticalAlign: 'top'}} />,
         isInlineAction: true,
         allowMultiple: false,
-        disabledWithStatus: [FormTemplatStatus.DRAFT.label],
+        disabledWithStatus: [FormTemplateStatus.DRAFT.label],
         hiddenWithStatus: [],
         onClick: this.openSendFormModal
       },
@@ -146,7 +146,7 @@ class FormsListView extends Component {
         icon: <FaEye style={{verticalAlign: 'top'}} />,
         isInlineAction: true,
         allowMultiple: false,
-        disabledWithStatus: [FormTemplatStatus.DRAFT.label],
+        disabledWithStatus: [FormTemplateStatus.DRAFT.label],
         hiddenWithStatus: [],
         onClick: this.viewForm
       },
@@ -251,8 +251,8 @@ class FormsListView extends Component {
         cssClassName: styles.columnStatus,
         customHeaderComponentProps: {
           statusList: [
-            FormTemplatStatus.LIVE,
-            FormTemplatStatus.DRAFT
+            FormTemplateStatus.LIVE,
+            FormTemplateStatus.DRAFT
           ],
           selectedStatusFilterOptions: selectedStatusFilterOptions,
           filterFormsByStatus: filterFormsByStatus
