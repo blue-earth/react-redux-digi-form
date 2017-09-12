@@ -504,8 +504,6 @@ class DrawingBoard extends Component {
       viewportWidth,
       viewportHeight
     } = this.props;
-    const activeSelectionLabel = this.props.currentElement.activeLabel;
-    const activeBoxPath = this.props.currentElement.activeBoxPath;
     const {
       LEFT,
       TOP,
@@ -514,8 +512,12 @@ class DrawingBoard extends Component {
     } = formBuilderBox;
 
     var boardOptionals = {};
-    if (activeSelectionLabel) {
+    if (currentElement && currentElement.activeLabel) {
       boardOptionals['style'] = {'cursor': 'crosshair'};
+    }
+    var activeBoxPath = null;
+    if (currentElement && currentElement.activeBoxPath) {
+      activeBoxPath = currentElement.activeBoxPath;
     }
     const finalMapping = currentElement
       ? _.assign({}, documentMapping, {
@@ -612,7 +614,10 @@ class DrawingBoard extends Component {
       viewportWidth,
       viewportHeight
     } = this.props;
-    const activeBoxPath = currentElement.activeBoxPath;
+    var activeBoxPath = null;
+    if (currentElement && currentElement.activeBoxPath) {
+      activeBoxPath = currentElement.activeBoxPath;
+    }
     if (!activeBoxPath) {
       return;
     }
