@@ -395,11 +395,13 @@ class DrawingBoard extends Component {
     if (isCurrentElementId(metaData.id, currentElement)) {
       setActiveBox(metaData.path);
     } else {
-      setQuestionEditMode(formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW);
       setCurrentElement({
         id: parseInt(metaData.id, 10)
       });
       setActiveBox(metaData.path);
+      // box mapping view require to read information from currentElement
+      // must set after setting current element!
+      setQuestionEditMode(formBuilderSelectMode.QUESTION_BOX_MAPPING_VIEW);
     }
   };
 
