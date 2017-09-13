@@ -1,0 +1,73 @@
+@import './mixins';
+@import './variables';
+
+.modalWrapper {
+  top: 20%;
+  @include media('<xs') {
+    top: 50%;
+    @include transform(translateY(-50%) !important);
+  }
+}
+.sendFormLinkModal {
+  text-align: center;
+  font-family: 'Lato';
+  font-size: 13px;
+  font-weight: 400;
+  overflow: hidden;
+}
+.sendFormLinkModalWrapper {
+  padding: 30px 40px;
+  @include media('<xs') {
+    padding: 10px;
+  }
+}
+.modalHeader {
+  font-family: 'roble_alt_boldbold';
+  margin: 0;
+  margin-top: 50px;
+  @include media('<xs') {
+    margin-top: 0;
+    padding: 40px;
+    padding-bottom: 0;
+  }
+}
+.cancelButton {
+  font-size: 16px;
+  font-weight: 300;
+  padding: 6px 0;
+  color: $signature-modal-text-light-color;
+  text-decoration: underline;
+  cursor: pointer;
+  &:active, &:focus {
+    outline: 0;
+  }
+  &:hover {
+    color: $signature-modal-text-light-color;
+  }
+}
+.info {
+  font-weight: 400;
+  font-size: 14px;
+  color: $signature-modal-info-color;
+}
+
+.downloadButton {
+  display: inline-block;
+  margin: 0 auto;
+  padding: 0 22px;
+  height: $button-height-lg;
+  line-height: $button-height-lg;
+  font-size: 20px;
+  background: $blue;
+  color: $white;
+  text-align: center;
+  @include border-radius($input-border-radius);
+  cursor: pointer;
+  text-transform: uppercase;
+  &:hover, &:active, &:focus {
+    outline: none;
+    background-color: darken($blue, 5%);
+    color: $white;
+    text-decoration: none;
+  }
+}

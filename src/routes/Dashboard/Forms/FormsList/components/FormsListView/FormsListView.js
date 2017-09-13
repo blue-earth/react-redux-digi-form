@@ -10,96 +10,181 @@ import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import FormsFilter from '../FormsFilter';
 import SendFormLinkModal from '../SendFormLinkModal';
+import CopyFormLinkModal from '../CopyFormLinkModal';
 import styles from './FormsListView.scss';
 import classNames from 'classnames';
 import {
   DateCell,
   LinkCell,
-  SelectionCell,
-  SelectionHeaderCell,
-  SortableHeaderCell
+  ActionsCell,
+  ActionsHeaderCell,
+  SortableHeaderCell,
+  StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
 import Icon from 'components/Icon';
+import { FaEdit, FaEye, FaChain, FaCog } from 'react-icons/lib/fa';
+import { FormTemplateStatus } from 'constants/formsList';
 
 class FormsListView extends Component {
   static propTypes = {
     /*
-     * isFetching: Redux state that indicates whether the requested form is being fetched from backend
+     * redux state props
      */
-    isFetching: PropTypes.bool.isRequired,
-
-    /*
-     * forms: Redux state that indicates whether the requested form is being fetched from backend
-     */
+    isFetchingForms: PropTypes.bool.isRequired,
     forms: PropTypes.array.isRequired,
-
-    /*
-     * fetchFormsList: Redux action to fetch form from backend with ID specified by request parameters
-     */
-    fetchFormsList: PropTypes.func.isRequired,
-
-    /*
-     * page: Current page number
-     */
-    page: PropTypes.number.isRequired,
-
-    /*
-     * pageSize: Number of items per page.
-     */
-    pageSize: PropTypes.number.isRequired,
-
-    /*
-     * totalCount: Total number of items from backend.
-     */
     totalCount: PropTypes.number.isRequired,
-
-    /*
-     * goTo: Redux action to go to specific url.
-     */
-    goTo: PropTypes.func.isRequired,
-
-    /*
-     * sortColumn: Column ID to sort by.
-     */
+    page: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+    selectedStatusFilterOptions: PropTypes.string.isRequired,
     sortColumn: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object
     ]).isRequired,
+    isSortAscending: PropTypes.bool.isRequired,
+    selectedItems: PropTypes.array.isRequired,
+    isSendingEmail: PropTypes.bool.isRequired,
 
     /*
-     * sortAscending: true if ascending, false if descending
+     * reducer actions
      */
-    sortAscending: PropTypes.bool.isRequired,
-
-    /*
-     * selectAllItems: Redux action to select all the rows in table
-     */
+    fetchFormsList: PropTypes.func.isRequired,
     selectAllItems: PropTypes.func.isRequired,
-
-    /*
-     * toggleSelectItem: Redux action to select or deselect item by id.
-     */
     toggleSelectItem: PropTypes.func.isRequired,
-
     setPageSize: PropTypes.func.isRequired,
-    next: PropTypes.func.isRequired,
-    previous: PropTypes.func.isRequired,
-    duplicateForm: PropTypes.func.isRequired,
-    archiveForm: PropTypes.func.isRequired,
+    filterFormsByStatus: PropTypes.func.isRequired,
+    goToNextPage: PropTypes.func.isRequired,
+    goToPreviousPage: PropTypes.func.isRequired,
     archiveForms: PropTypes.func.isRequired,
+    duplicateForm: PropTypes.func.isRequired,
     sendFormLink: PropTypes.func.isRequired,
-    isPageBusy: PropTypes.bool.isRequired,
+    setFormStatus: PropTypes.func.isRequired,
 
-    showModal: PropTypes.func.isRequired,
-
-    /*
-     * selectedItems: Redux state in array to hold selected item ids.
-     */
-    selectedItems: PropTypes.array.isRequired
+    goTo: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired
   };
 
-  openSendFormModal = (id) => {
+  /*
+   * functions for actions menu
+   */
+  makeLive = (idList) => {
+    this.props.setFormStatus(idList, FormTemplateStatus.LIVE.value);
+  }
+  makeDraft = (idList) => {
+    this.props.setFormStatus(idList, FormTemplateStatus.DRAFT.value);
+  }
+  editForm = (idList) => {
+    var id = idList[0];
+    this.props.goTo(editFormUrl(id));
+  }
+  openSendFormModal = (idList) => {
+    var id = idList[0];
     this.props.showModal('sendFormLinkModal', { formId: id });
+  }
+  viewForm = (idList) => {
+    var id = idList[0];
+    this.props.goTo(`/forms/${id}`);
+  }
+  copyLink = (idList, rowData) => {
+    var id = idList[0];
+    this.props.showModal('copyFormLinkModal', {
+      formId: id,
+      subdomain: rowData['subdomain'],
+      slug: rowData['slug']
+    });
+  }
+  duplicateFormAction = (idList) => {
+    var id = idList[0];
+    this.props.duplicateForm(id);
+  }
+  archiveFormAction = (idList) => {
+    this.props.archiveForms(idList);
+  }
+  /*
+   * actions menu
+   */
+  get actionsMenu() {
+    return [
+      {
+        name: 'makeLive',
+        label: 'Make live',
+        icon: <FaCog style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: [FormTemplateStatus.LIVE.label],
+        onClick: this.makeLive
+      },
+      {
+        name: 'makeDraft',
+        label: 'Make draft',
+        icon: <FaCog style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: [FormTemplateStatus.DRAFT.label],
+        onClick: this.makeDraft
+      },
+      {
+        name: 'edit',
+        label: 'Edit',
+        icon: <FaEdit style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        disabledWithStatus: [FormTemplateStatus.LIVE.label],
+        hiddenWithStatus: [],
+        onClick: this.editForm
+      },
+      {
+        name: 'send',
+        label: 'Send',
+        icon: <Icon name="Send" style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        disabledWithStatus: [FormTemplateStatus.DRAFT.label],
+        hiddenWithStatus: [],
+        onClick: this.openSendFormModal
+      },
+      {
+        name: 'view',
+        label: 'View',
+        icon: <FaEye style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        disabledWithStatus: [FormTemplateStatus.DRAFT.label],
+        hiddenWithStatus: [],
+        onClick: this.viewForm
+      },
+      {
+        name: 'copyLink',
+        label: 'Copy link',
+        icon: <FaChain style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.copyLink
+      },
+      {
+        name: 'duplicate',
+        label: 'Duplicate',
+        icon: <Icon name="Duplicate" style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.duplicateFormAction
+      },
+      {
+        name: 'archive',
+        label: 'Archive',
+        icon: <Icon name="Archive" style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.archiveFormAction
+      }
+    ];
   }
 
   get columnMetadata() {
@@ -109,10 +194,10 @@ class FormsListView extends Component {
       selectedItems,
       toggleSelectItem,
       goTo,
-      duplicateForm,
-      archiveForm,
-      archiveForms
+      selectedStatusFilterOptions,
+      filterFormsByStatus
     } = this.props;
+    const getActions = this.actionsMenu;
     return [
       {
         columnName: 'id',
@@ -132,7 +217,7 @@ class FormsListView extends Component {
         order: 2,
         locked: false,
         visible: true,
-        displayName: 'Name',
+        displayName: 'Form name',
         customComponent: LinkCell,
         idName: 'id',
         goTo,
@@ -164,9 +249,18 @@ class FormsListView extends Component {
         order: 5,
         locked: false,
         visible: true,
+        sortable: false,
         displayName: 'Status',
-        customHeaderComponent: SortableHeaderCell,
-        cssClassName: styles.columnStatus
+        customHeaderComponent: StatusHeaderCell,
+        cssClassName: styles.columnStatus,
+        customHeaderComponentProps: {
+          statusList: [
+            FormTemplateStatus.LIVE,
+            FormTemplateStatus.DRAFT
+          ],
+          selectedStatusFilterOptions: selectedStatusFilterOptions,
+          filterFormsByStatus: filterFormsByStatus
+        }
       },
       {
         columnName: 'actions',
@@ -174,41 +268,15 @@ class FormsListView extends Component {
         locked: true,
         sortable: false,
         displayName: '',
-        customHeaderComponent: SelectionHeaderCell,
-        customComponent: SelectionCell,
-        inlineActions: [{
-          name: 'send',
-          label: 'Send',
-          icon: <Icon name="Send" height={16} width={16} style={{verticalAlign: 'top'}} />,
-          onClick: (id) => this.openSendFormModal(id)
-        }],
-        idName: 'id',
-        dropdownMenus: [{
-          name: 'send',
-          label: 'Send',
-          icon: 'Send',
-          onClick: (id) => this.openSendFormModal(id)
-        }, {
-          name: 'archive',
-          label: 'Archive',
-          icon: 'Archive',
-          onClick: (id) => archiveForm(id)
-        }, {
-          name: 'duplicate',
-          label: 'Duplicate',
-          icon: 'Duplicate',
-          onClick: (id) => duplicateForm(id)
-        }],
+        customHeaderComponent: ActionsHeaderCell,
+        customComponent: ActionsCell,
+        idColumnName: 'id',
+        actionsMenu: getActions,
         selectedItems,
         toggleSelectItem,
         cssClassName: styles.columnActions,
         customHeaderComponentProps: {
-          dropdownMenus: [{
-            name: 'archive',
-            label: 'Archive',
-            icon: 'Archive',
-            onClick: (items) => archiveForms(items)
-          }],
+          actionsMenu: getActions,
           selectedItems,
           selectAllItems,
           isAllSelected: forms.length === selectedItems.length
@@ -224,12 +292,12 @@ class FormsListView extends Component {
 
   renderFormsList() {
     const {
-      isFetching,
+      isFetchingForms,
       forms,
       page,
       pageSize,
       sortColumn,
-      sortAscending,
+      isSortAscending,
       fetchFormsList,
       totalCount
     } = this.props;
@@ -242,9 +310,9 @@ class FormsListView extends Component {
         pageSize={pageSize}
         totalCount={totalCount}
         sortColumn={sortColumn}
-        sortAscending={sortAscending}
+        sortAscending={isSortAscending}
         Pagination={Pagination}
-        isFetching={isFetching}
+        isFetching={isFetchingForms}
       />
     );
   }
@@ -257,10 +325,10 @@ class FormsListView extends Component {
       totalCount,
       setPageSize,
       selectedItems,
-      next,
-      previous,
+      goToNextPage,
+      goToPreviousPage,
       sendFormLink,
-      isPageBusy
+      isSendingEmail
     } = this.props;
     return (
       <div className={styles.formsList}>
@@ -277,9 +345,10 @@ class FormsListView extends Component {
         <Pagination
           currentPage={page}
           maxPage={Math.ceil(totalCount / pageSize)}
-          previous={previous}
-          next={next} />
-        <SendFormLinkModal sendFormLink={sendFormLink} isPageBusy={isPageBusy} />
+          previous={goToPreviousPage}
+          next={goToNextPage} />
+        <SendFormLinkModal sendFormLink={sendFormLink} isPageBusy={isSendingEmail} />
+        <CopyFormLinkModal />
       </div>
     );
   }

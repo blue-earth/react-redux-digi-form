@@ -2,12 +2,12 @@ import React, {
   Component,
   PropTypes
 } from 'react';
-import styles from './SubmissionStatus.scss';
+import styles from './StatusText.scss';
 import classNames from 'classnames/bind';
 
 const cx = classNames.bind(styles);
 
-class SubmissionStatus extends Component {
+class StatusText extends Component {
 
   static propTypes = {
     status: PropTypes.string
@@ -25,4 +25,4 @@ class SubmissionStatus extends Component {
   }
 }
 
-export default SubmissionStatus;
+export default StatusText;

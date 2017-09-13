@@ -1,0 +1,73 @@
+@import './mixins';
+@import './variables';
+
+.statusCell {
+  position: relative;
+}
+
+.dropdownMenu {
+  font-family: 'Open Sans';
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  font-size: 12px;
+  cursor: pointer;
+  .dropdownMenuItem {
+    color: $select-button-color;
+    padding: 0;
+    height: 38px;
+    line-height: 38px;
+    font-weight: 600;
+    label {
+      display: block;
+      padding: 0 10px;
+      cursor: pointer;
+      input {
+        margin-right: 5px;
+      }
+    }
+    &:hover {
+      color: $select-button-hover-color;
+      background-color: $select-button-hover-bg-color;
+    }
+  }
+}
+
+.titleWrapper {
+  display: inline-block;
+  cursor: pointer;
+  padding: 5px 0 5px 9px;
+  border: 1px solid transparent;
+  @include border-radius(3px);
+  &.hover {
+    border-color: #c7c8c8;
+    background-color: $white;
+    .dropdownCaret {
+      visibility: visible;
+    }
+  }
+}
+.dropdownCaret {
+  visibility: hidden;
+  margin: 0 5px;
+}
+
+:global {
+  .dropdownMenuContent.bottom {
+    @include transform(translateX(-40px));
+    @include border-radius(5px);
+    border-color: $select-button-border-color;
+    padding: 0;
+    min-width: 160px;
+    margin-top: 5px;
+    box-shadow: none;
+    .popover-content {
+      padding: 4px;
+    }
+    >.arrow {
+      margin-left: 46px;
+      border-width: 5px;
+      top: -11px;
+    }
+  }
+}

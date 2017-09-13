@@ -10,6 +10,18 @@
     @include border-radius(50%);
     margin-right: 5px;
   }
+  &.hidden .statusIcon {
+    border-color: #898989;
+  }
+  &.unopen .statusIcon {
+    border-color: #898989;
+  }
+  &.opened .statusIcon {
+    border-color: #898989;
+  }
+  &.autosaved .statusIcon {
+    border-color: #dc9939;
+  }
   &.received .statusIcon {
     border-color: #2fadd9;
   }

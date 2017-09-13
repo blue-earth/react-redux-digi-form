@@ -6,10 +6,14 @@ import {
   selectAnalyticsPeriod,
   toggleSelectItem,
   setPageSize,
-  next,
-  previous
+  goToNextPage,
+  goToPreviousPage,
+  filterSubmissionsByStatus,
+  fetchCompanyUsers,
+  setAssignee
 } from 'redux/modules/submissionsList';
-
+import { goTo } from 'redux/modules/router.js';
+import { show } from 'redux-modal';
 import SubmissionsListView from '../components/SubmissionsListView';
 
 /*  Object of action creators (can also be function that returns object).
@@ -26,12 +30,18 @@ const mapStateToProps = (state) => {
     pageSize,
     sortColumn,
     sortAscending,
+    selectedStatusFilterOptions,
     selectedItems,
+    companyUsers,
     analyticsPeriod,
     analytics,
     activities,
     environmentalSavings
   } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
+  const { auth } = state;
+  const {
+    user
+  } = auth;
   return {
     isFetching,
     submissions,
@@ -40,11 +50,14 @@ const mapStateToProps = (state) => {
     pageSize,
     sortColumn,
     sortAscending,
+    selectedStatusFilterOptions,
     selectedItems,
+    companyUsers,
     analyticsPeriod,
     analytics,
     activities,
-    environmentalSavings
+    environmentalSavings,
+    user
   };
 };
 
@@ -54,8 +67,13 @@ const mapActionCreators = {
   toggleSelectItem,
   selectAnalyticsPeriod,
   setPageSize,
-  next,
-  previous
+  goToNextPage,
+  goToPreviousPage,
+  filterSubmissionsByStatus,
+  setAssignee,
+  fetchCompanyUsers,
+  goTo,
+  showModal: show
 };
 
 export default connect(mapStateToProps, mapActionCreators)(SubmissionsListView);

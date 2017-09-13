@@ -7,8 +7,9 @@ export const getPageQueryParamsObject = (options) => {
   var query = {};
   options.page && (query['page'] = options.page);
   options.pageSize && (query['page_size'] = options.pageSize);
+  options.status && (query['status'] = options.status);
   if (options.sortColumn) {
-    query['ordering'] = options.sortAscending ? options.sortColumn : '-' + options.sortColumn;
+    query['ordering'] = options.isSortAscending ? options.sortColumn : '-' + options.sortColumn;
   }
   return query;
 };

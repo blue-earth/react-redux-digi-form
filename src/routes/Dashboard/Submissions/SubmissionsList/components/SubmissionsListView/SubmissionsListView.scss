@@ -108,23 +108,20 @@
 }
 
 .columnID {
-  width: auto;
+  width: 80px;
 }
 .columnName {
   width: auto;
-  font-weight: 800;
+  font-weight: 700;
 }
 .columnProgress {
   width: auto;
 }
 .columnPercent {
-  width: auto;
+  width: 80px;
   font-weight: 800;
 }
 .columnAuthor {
-  width: auto;
-}
-.columnChanel {
   width: auto;
 }
 .columnCreated {
@@ -133,16 +130,8 @@
 .columnStatus {
   width: auto;
 }
-.columnType {
-  width: auto;
-}
-.columnLanguage {
-  width: auto;
-}
-.columnDuration {
-  width: auto;
-}
 .columnActions {
-  width: 60px;
+  width: 125px;
+  box-sizing: content-box;
   border-left: 1px solid $table-line-color;
 }

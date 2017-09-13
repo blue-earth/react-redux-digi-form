@@ -40,7 +40,8 @@ $slt-border-color:          rgba(204, 204, 204, .3);
   width: 15%;
 }
 .columnActions {
-  width: 160px;
+  width: 125px;
+  box-sizing: content-box;
   border-left: 1px solid $table-line-color;
 }
 

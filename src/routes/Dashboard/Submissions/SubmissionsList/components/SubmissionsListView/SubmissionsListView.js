@@ -3,21 +3,29 @@ import React, {
   PropTypes
 } from 'react';
 import {
-  // ProgressHeaderCell,
-  ActionsHeaderCell,
-  StatusCell,
-  ActionsCell
-} from '../CustomCells/CustomCells';
+  dashboardUrl
+} from 'helpers/urlHelper';
 import {
-  DateCell
+  DateCell,
+  // LinkCell,
+  ActionsCell,
+  StatusCell,
+  ActionsHeaderCell,
+  SortableHeaderCell,
+  StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
 import SubmissionsFilter from '../SubmissionsFilter';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
 import Pagination from '../../containers/PaginationContainer';
 import SelectButton from 'components/Buttons/SelectButton';
 import EnvironmentSaving from 'components/EnvironmentSaving';
+import DownloadModal from '../DownloadModal';
+import AssignSubmissionModal from '../AssignSubmissionModal';
+import Icon from 'components/Icon';
+import { FaCheck, FaClose, FaEye, FaFilePdfO, FaFileTextO, FaCog } from 'react-icons/lib/fa';
 import classNames from 'classnames';
 import styles from './SubmissionsListView.scss';
+import { FormResponseStatus } from 'constants/formsList';
 
 class SubmissionsListView extends Component {
   static propTypes = {
@@ -64,6 +72,8 @@ class SubmissionsListView extends Component {
      */
     sortAscending: PropTypes.bool.isRequired,
 
+    selectedStatusFilterOptions: PropTypes.string.isRequired,
+
     /*
      * selectAllItems: Redux action to select all the rows in table
      */
@@ -76,25 +86,160 @@ class SubmissionsListView extends Component {
     selectAnalyticsPeriod: PropTypes.func.isRequired,
 
     setPageSize: PropTypes.func.isRequired,
-    next: PropTypes.func.isRequired,
-    previous: PropTypes.func.isRequired,
+    goToNextPage: PropTypes.func.isRequired,
+    goToPreviousPage: PropTypes.func.isRequired,
+    filterSubmissionsByStatus: PropTypes.func.isRequired,
     /*
      * selectedItems: Redux state in array to hold selected item ids.
      */
     selectedItems: PropTypes.array.isRequired,
+    setAssignee: PropTypes.func.isRequired,
+    fetchCompanyUsers: PropTypes.func.isRequired,
+    companyUsers: PropTypes.array,
     analyticsPeriod: PropTypes.string.isRequired,
     analytics: PropTypes.object,
     activities: PropTypes.array,
-    environmentalSavings: PropTypes.object
+    environmentalSavings: PropTypes.object,
+    user: PropTypes.object.isRequired,
+    goTo: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired
   };
+
+  componentDidMount() {
+    this.props.fetchCompanyUsers();
+  }
+
+  /*
+   * functions for actions menu
+   */
+  viewSubmission = (idList, rowData) => {
+    var id = idList[0];
+    this.props.goTo(dashboardUrl(`submissions/${rowData.form_id}/${id}/`));
+  }
+  assignSubmission = (idList) => {
+    if (this.props.companyUsers.length < 1) {
+      // no company users; assign to current user
+      this.props.setAssignee(idList, this.props.user.id);
+    } else {
+      this.props.showModal('assignSubmissionModal', {
+        idList: idList,
+        companyUsers: this.props.companyUsers,
+        setAssignee: this.props.setAssignee
+      });
+    }
+  }
+  downloadSubmissionPDF = (idList) => {
+    var id = idList[0];
+    this.props.showModal('downloadModal', {
+      responseId: id,
+      fileType: 'PDF'
+    });
+  }
+  downloadSubmissionCSV = (idList) => {
+    var id = idList[0];
+    this.props.showModal('downloadModal', {
+      responseId: id,
+      fileType: 'CSV'
+    });
+  }
+  sendResumeLink = (idList) => {
+    console.log('TODO send link');
+  }
+  acceptSubmission = (idList) => {
+    console.log('TODO accept');
+  }
+  cancelSubmission = (idList) => {
+    console.log('TODO cancel');
+  }
+
+  /*
+   * actions menu
+   */
+  get actionsMenu() {
+    return [
+      {
+        name: 'view',
+        label: 'View',
+        icon: <FaEye style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.viewSubmission
+      },
+      {
+        name: 'assign',
+        label: 'Assign',
+        icon: <FaCog style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.assignSubmission
+      },
+      {
+        name: 'downloadPDF',
+        label: 'Download PDF',
+        icon: <FaFilePdfO style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.downloadSubmissionPDF
+      },
+      {
+        name: 'downloadCSV',
+        label: 'Download CSV',
+        icon: <FaFileTextO style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.downloadSubmissionCSV
+      },
+      {
+        name: 'sendResumeLink',
+        label: 'Send resume link',
+        icon: <Icon name="Send" style={{verticalAlign: 'top'}} />,
+        isInlineAction: true,
+        allowMultiple: false,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.sendResumeLink
+      },
+      {
+        name: 'accept',
+        label: 'Accept',
+        icon: <FaCheck style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.acceptSubmission
+      },
+      {
+        name: 'cancel',
+        label: 'Cancel',
+        icon: <FaClose style={{verticalAlign: 'top'}} />,
+        isInlineAction: false,
+        allowMultiple: true,
+        disabledWithStatus: [],
+        hiddenWithStatus: [],
+        onClick: this.cancelSubmission
+      }
+    ];
+  }
 
   get columnMetadata() {
     const {
       selectAllItems,
       submissions,
       selectedItems,
-      toggleSelectItem
+      toggleSelectItem,
+      selectedStatusFilterOptions,
+      filterSubmissionsByStatus
     } = this.props;
+    const getActions = this.actionsMenu;
     return [
       {
         columnName: 'response_id',
@@ -109,62 +254,92 @@ class SubmissionsListView extends Component {
         order: 2,
         locked: false,
         visible: true,
-        displayName: 'Name',
+        displayName: 'Form name',
         cssClassName: styles.columnName
       },
       {
-        columnName: 'status',
-        order: 3,
-        locked: false,
-        visible: true,
-        displayName: 'Status',
-        customComponent: StatusCell,
-        cssClassName: styles.columnStatus
-      },
-      {
-        columnName: 'completion_percent',
-        order: 4,
-        locked: false,
-        visible: true,
-        displayName: '%',
-        cssClassName: styles.columnPercent
-      },
-      {
         columnName: 'completed_by_name',
-        order: 5,
+        order: 3,
         locked: false,
         visible: true,
         displayName: 'Completed by',
         cssClassName: styles.columnAuthor
       },
       {
-        columnName: 'sent_channel',
+        columnName: 'created',
+        order: 4,
+        locked: false,
+        visible: true,
+        displayName: 'Received',
+        cssClassName: styles.columnCreated,
+        customComponent: DateCell,
+        customHeaderComponent: SortableHeaderCell
+      },
+      {
+        columnName: 'assigned_to',
+        order: 5,
+        locked: false,
+        visible: true,
+        displayName: 'Assigned to',
+        cssClassName: styles.assignedTo
+      },
+      {
+        columnName: 'completion_percent',
         order: 6,
         locked: false,
         visible: true,
-        displayName: 'Channel',
-        cssClassName: styles.columnChanel
+        displayName: '%',
+        cssClassName: styles.columnPercent
       },
       {
-        columnName: 'created',
+        columnName: 'status',
         order: 7,
         locked: false,
         visible: true,
-        displayName: 'Created',
-        cssClassName: styles.columnCreated,
-        customComponent: DateCell
+        sortable: false,
+        displayName: 'Status',
+        customComponent: StatusCell,
+        customHeaderComponent: StatusHeaderCell,
+        cssClassName: styles.columnStatus,
+        customHeaderComponentProps: {
+          statusList: [
+            FormResponseStatus.HIDDEN,
+            FormResponseStatus.UNOPENED,
+            FormResponseStatus.OPENED,
+            FormResponseStatus.SAVED,
+            FormResponseStatus.RECEIVED,
+            FormResponseStatus.ABANDONED,
+            FormResponseStatus.AUTO_SAVED,
+            FormResponseStatus.ADMIN_EDITED
+          ],
+          selectedStatusFilterOptions: selectedStatusFilterOptions,
+          filterFormsByStatus: filterSubmissionsByStatus
+        }
+      },
+      {
+        columnName: 'identification_status',
+        order: 8,
+        locked: false,
+        visible: true,
+        displayName: 'Identification',
+        cssClassName: styles.idStatus
       },
       {
         columnName: 'actions',
+        order: 9,
         locked: true,
         sortable: false,
         displayName: '',
         customHeaderComponent: ActionsHeaderCell,
         customComponent: ActionsCell,
+        idColumnName: 'response_id',
+        actionsMenu: getActions,
         selectedItems,
         toggleSelectItem,
         cssClassName: styles.columnActions,
         customHeaderComponentProps: {
+          actionsMenu: getActions,
+          selectedItems,
           selectAllItems,
           isAllSelected: submissions.length === selectedItems.length
         }
@@ -202,11 +377,6 @@ class SubmissionsListView extends Component {
       />
     );
   }
-
-  /* TODO: the SubmissionsFilter component is currently
-  in render() because filters aren't rendered in griddle
-  unless there is data in the table
-  */
 
   renderActivityPanel() {
     const selectOptions = [
@@ -300,18 +470,6 @@ class SubmissionsListView extends Component {
     );
   }
 
-  formAction = (action) => {
-    const { selectedItems, submissions } = this.props;
-    switch (action) {
-      case 'edit':
-        selectedItems.map(item => {
-          const formId = submissions.filter(submission => submission.response_id === item)[0].form_id;
-          window.open(`/forms/${formId}/${item}`);
-        });
-        break;
-    }
-  }
-
   render() {
     const {
       page,
@@ -319,16 +477,16 @@ class SubmissionsListView extends Component {
       totalCount,
       setPageSize,
       selectedItems,
-      next,
-      previous
+      goToNextPage,
+      goToPreviousPage
     } = this.props;
     return (
       <div className={styles.submissionsList}>
         <div className={classNames(styles.widgetPanel, styles.submissionsListInner)}>
           <SubmissionsFilter
+            refresh={this.props.fetchSubmissions}
             setPageSize={setPageSize}
             pageSize={pageSize}
-            formAction={this.formAction}
             selectedItems={selectedItems}
           />
           {this.renderSubmissionsList()}
@@ -336,9 +494,11 @@ class SubmissionsListView extends Component {
         <Pagination
           currentPage={page}
           maxPage={Math.ceil(totalCount / pageSize)}
-          previous={previous}
-          next={next} />
+          previous={goToPreviousPage}
+          next={goToNextPage} />
         {this.renderEnvironmentalSavings()}
+        <DownloadModal />
+        <AssignSubmissionModal />
       </div>
     );
   }

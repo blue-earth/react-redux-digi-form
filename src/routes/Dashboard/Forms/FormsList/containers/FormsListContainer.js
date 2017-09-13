@@ -5,13 +5,13 @@ import {
   selectAllItems,
   toggleSelectItem,
   setPageSize,
-  next,
-  previous,
-  archiveForm,
+  filterFormsByStatus,
+  goToNextPage,
+  goToPreviousPage,
   archiveForms,
   duplicateForm,
-  deleteForm,
-  sendFormLink
+  sendFormLink,
+  setFormStatus
 } from 'redux/modules/formsList';
 import { goTo } from 'redux/modules/router.js';
 import { show } from 'redux-modal';
@@ -25,26 +25,28 @@ import FormsListView from '../components/FormsListView/FormsListView';
 const mapStateToProps = (state) => {
   const { formsList } = state;
   const {
-    isFetching,
+    isFetchingForms,
     forms,
     totalCount,
     page,
     pageSize,
+    selectedStatusFilterOptions,
     sortColumn,
-    sortAscending,
+    isSortAscending,
     selectedItems,
-    isPageBusy
+    isSendingEmail
   } = formsList || INIT_FORMSLIST_STATE;
   return {
-    isFetching,
+    isFetchingForms,
     forms,
     totalCount,
     page,
     pageSize,
+    selectedStatusFilterOptions,
     sortColumn,
-    sortAscending,
+    isSortAscending,
     selectedItems,
-    isPageBusy
+    isSendingEmail
   };
 };
 
@@ -52,15 +54,15 @@ const mapActionCreators = {
   fetchFormsList,
   selectAllItems,
   toggleSelectItem,
-  goTo,
   setPageSize,
-  next,
-  previous,
-  archiveForm,
+  filterFormsByStatus,
+  goToNextPage,
+  goToPreviousPage,
   archiveForms,
   duplicateForm,
-  deleteForm,
   sendFormLink,
+  setFormStatus,
+  goTo,
   showModal: show
 };
 
