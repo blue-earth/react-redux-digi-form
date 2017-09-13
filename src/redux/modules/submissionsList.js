@@ -18,6 +18,8 @@ export const SET_SUBMISSIONS_PAGE_SIZE = 'SET_SUBMISSIONS_PAGE_SIZE';
 const NEXT_SUBMISSIONS_PAGE = 'NEXT_SUBMISSIONS_PAGE';
 const PREVIOUS_SUBMISSIONS_PAGE = 'PREVIOUS_SUBMISSIONS_PAGE';
 
+const SET_COMPANY_USERS = 'SET_COMPANY_USERS';
+
 export const INIT_SUBMISSIONS_STATE = {
   id: 0,
   isFetching: false, // indicates the Submissions is being loaded.
@@ -29,6 +31,7 @@ export const INIT_SUBMISSIONS_STATE = {
   sortAscending: false, // indicates the sort direction (true: ascending | false: descending)
   selectedStatusFilterOptions: '1,2,3,4,5,6,7',
   selectedItems: [], // holds the selected items id.
+  companyUsers: [],
   analyticsPeriod: 'today', // indicates the selected period of analytics
   analytics: {
     today: {
@@ -246,6 +249,64 @@ const processReceiveSubmissions = (res, options) => {
 };
 
 // ------------------------------------
+// Action: fetchCompanyUsers
+// ------------------------------------
+export const fetchCompanyUsers = () => {
+  var requestUrl = `${API_URL}/accounts/api/company_users/`;
+  var method = 'GET';
+  const fetchParams = assignDefaults({method});
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(setCompanyUsers(value));
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      console.error('Failed to fetch users');
+    };
+  };
+
+  return bind(fetch(requestUrl, fetchParams), fetchSuccess, fetchFail);
+};
+const setCompanyUsers = createAction(SET_COMPANY_USERS);
+
+// ------------------------------------
+// Action: setAssignee
+// ------------------------------------
+export const setAssignee = (submissionIdList, userId) => {
+  return (dispatch, getState) => {
+    submissionIdList.map((id) => {
+      dispatch(processSetAssignee(id, userId));
+    });
+  };
+};
+export const processSetAssignee = (id, userId) => {
+  var body = {user_id: userId};
+  var method = 'POST';
+  var requestURL = `${API_URL}/form_document/api/form_response/${id}/assign/`;
+  const fetchParams = assignDefaults({
+    method,
+    body
+  });
+
+  const fetchSuccess = ({value}) => {
+    return (dispatch, getState) => {
+      dispatch(fetchSubmissions());
+    };
+  };
+
+  const fetchFail = (data) => {
+    return (dispatch, getState) => {
+      console.error('Failed to assign form response');
+    };
+  };
+
+  return bind(fetch(requestURL, fetchParams), fetchSuccess, fetchFail);
+};
+
+// ------------------------------------
 // Reducer
 // ------------------------------------
 const submissionsReducer = handleActions({
@@ -289,6 +350,10 @@ const submissionsReducer = handleActions({
   PREVIOUS_SUBMISSIONS_PAGE: (state, action) =>
     Object.assign({}, state, {
       page: state.page - 1
+    }),
+  SET_COMPANY_USERS: (state, action) =>
+    Object.assign({}, state, {
+      companyUsers: action.payload
     })
 }, INIT_SUBMISSIONS_STATE);
 

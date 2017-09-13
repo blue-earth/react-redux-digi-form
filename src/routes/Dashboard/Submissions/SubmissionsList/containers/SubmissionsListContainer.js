@@ -8,7 +8,8 @@ import {
   setPageSize,
   goToNextPage,
   goToPreviousPage,
-  filterSubmissionsByStatus
+  filterSubmissionsByStatus,
+  setAssignee
 } from 'redux/modules/submissionsList';
 import { goTo } from 'redux/modules/router.js';
 import { show } from 'redux-modal';
@@ -30,11 +31,16 @@ const mapStateToProps = (state) => {
     sortAscending,
     selectedStatusFilterOptions,
     selectedItems,
+    companyUsers,
     analyticsPeriod,
     analytics,
     activities,
     environmentalSavings
   } = submissionsList || INIT_SUBMISSIONSLIST_STATE;
+  const { auth } = state;
+  const {
+    user
+  } = auth;
   return {
     isFetching,
     submissions,
@@ -45,10 +51,12 @@ const mapStateToProps = (state) => {
     sortAscending,
     selectedStatusFilterOptions,
     selectedItems,
+    companyUsers,
     analyticsPeriod,
     analytics,
     activities,
-    environmentalSavings
+    environmentalSavings,
+    user
   };
 };
 
@@ -61,6 +69,7 @@ const mapActionCreators = {
   goToNextPage,
   goToPreviousPage,
   filterSubmissionsByStatus,
+  setAssignee,
   goTo,
   showModal: show
 };

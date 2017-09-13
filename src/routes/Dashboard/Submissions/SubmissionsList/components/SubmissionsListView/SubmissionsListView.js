@@ -20,6 +20,7 @@ import Pagination from '../../containers/PaginationContainer';
 import SelectButton from 'components/Buttons/SelectButton';
 import EnvironmentSaving from 'components/EnvironmentSaving';
 import DownloadModal from '../DownloadModal';
+import AssignSubmissionModal from '../AssignSubmissionModal';
 import Icon from 'components/Icon';
 import { FaCheck, FaClose, FaEye, FaFilePdfO, FaFileTextO, FaCog } from 'react-icons/lib/fa';
 import classNames from 'classnames';
@@ -92,10 +93,13 @@ class SubmissionsListView extends Component {
      * selectedItems: Redux state in array to hold selected item ids.
      */
     selectedItems: PropTypes.array.isRequired,
+    setAssignee: PropTypes.func.isRequired,
+    companyUsers: PropTypes.array,
     analyticsPeriod: PropTypes.string.isRequired,
     analytics: PropTypes.object,
     activities: PropTypes.array,
     environmentalSavings: PropTypes.object,
+    user: PropTypes.object.isRequired,
     goTo: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired
   };
@@ -108,7 +112,16 @@ class SubmissionsListView extends Component {
     this.props.goTo(dashboardUrl(`submissions/${rowData.form_id}/${id}/`));
   }
   assignSubmission = (idList) => {
-    console.log('TODO assign submission');
+    if (this.props.companyUsers.length < 1) {
+      // no company users; assign to current user
+      this.props.setAssignee(idList, this.props.user.id);
+    } else {
+      this.props.showModal('assignSubmissionModal', {
+        idList: idList,
+        companyUsers: this.props.companyUsers,
+        setAssignee: this.props.setAssignee
+      });
+    }
   }
   downloadSubmissionPDF = (idList) => {
     var id = idList[0];
@@ -480,6 +493,7 @@ class SubmissionsListView extends Component {
           next={goToNextPage} />
         {this.renderEnvironmentalSavings()}
         <DownloadModal />
+        <AssignSubmissionModal />
       </div>
     );
   }
