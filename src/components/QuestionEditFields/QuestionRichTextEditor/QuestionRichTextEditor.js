@@ -15,8 +15,10 @@ import {
   Entity,
   CompositeDecorator
 } from 'draft-js';
-import { stateToHTML } from 'draft-js-export-html';
-import { stateFromHTML } from 'draft-js-import-html';
+import {
+  convertToHTML,
+  convertFromHTML
+} from 'draft-convert';
 import classNames from 'classnames';
 import {
   FaChain,
@@ -79,7 +81,7 @@ class QuestionRichTextEditor extends Component {
     ]);
     this.state = {
       editorState: EditorState.createWithContent(
-        stateFromHTML(_.defaultTo(value, '')),
+        convertFromHTML(_.defaultTo(value, '')),
         answerBlockDecorator
       )
     };
@@ -105,7 +107,7 @@ class QuestionRichTextEditor extends Component {
   handleValueChange = (editorState) => {
     this.setState({editorState});
     const { setValue } = this.props;
-    setValue(stateToHTML(editorState.getCurrentContent()));
+    setValue(convertToHTML(editorState.getCurrentContent()));
   }
 
   handleAnswerSelect = (value) => {
