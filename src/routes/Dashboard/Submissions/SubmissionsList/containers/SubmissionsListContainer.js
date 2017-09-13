@@ -7,7 +7,8 @@ import {
   toggleSelectItem,
   setPageSize,
   next,
-  previous
+  previous,
+  filterSubmissionsByStatus
 } from 'redux/modules/submissionsList';
 import { goTo } from 'redux/modules/router.js';
 import { show } from 'redux-modal';
@@ -27,6 +28,7 @@ const mapStateToProps = (state) => {
     pageSize,
     sortColumn,
     sortAscending,
+    selectedStatusFilterOptions,
     selectedItems,
     analyticsPeriod,
     analytics,
@@ -41,6 +43,7 @@ const mapStateToProps = (state) => {
     pageSize,
     sortColumn,
     sortAscending,
+    selectedStatusFilterOptions,
     selectedItems,
     analyticsPeriod,
     analytics,
@@ -57,6 +60,7 @@ const mapActionCreators = {
   setPageSize,
   next,
   previous,
+  filterSubmissionsByStatus,
   goTo,
   showModal: show
 };

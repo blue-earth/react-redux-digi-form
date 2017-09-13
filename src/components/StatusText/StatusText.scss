@@ -1,0 +1,43 @@
+@import './mixins';
+
+.submissionStatusWrapper {
+
+  .statusIcon {
+    display: inline-block;
+    width: 0.7em;
+    height: 0.7em;
+    border: 2px solid #f8f8f8;
+    @include border-radius(50%);
+    margin-right: 5px;
+  }
+  &.hidden .statusIcon {
+    border-color: #898989;
+  }
+  &.unopen .statusIcon {
+    border-color: #898989;
+  }
+  &.opened .statusIcon {
+    border-color: #898989;
+  }
+  &.autosaved .statusIcon {
+    border-color: #dc9939;
+  }
+  &.received .statusIcon {
+    border-color: #2fadd9;
+  }
+  &.edited .statusIcon {
+    border-color: #e174ad;
+  }
+  &.saved .statusIcon {
+    border-color: #dc9939;
+  }
+  &.abandoned .statusIcon {
+    border-color: #898989;
+  }
+  &.accepted .statusIcon {
+    border-color: #67b930;
+  }
+  &.cancelled .statusIcon {
+    border-color: #000;
+  }
+}

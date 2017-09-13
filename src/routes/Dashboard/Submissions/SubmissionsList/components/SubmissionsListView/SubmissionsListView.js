@@ -6,15 +6,13 @@ import {
   dashboardUrl
 } from 'helpers/urlHelper';
 import {
-  StatusCell
-} from '../CustomCells/CustomCells';
-import {
   DateCell,
   // LinkCell,
   ActionsCell,
+  StatusCell,
   ActionsHeaderCell,
-  SortableHeaderCell
-  // StatusHeaderCell
+  SortableHeaderCell,
+  StatusHeaderCell
 } from 'components/GriddleComponents/CommonCells';
 import SubmissionsFilter from '../SubmissionsFilter';
 import GriddleTable from 'components/GriddleComponents/GriddleTable';
@@ -26,6 +24,7 @@ import Icon from 'components/Icon';
 import { FaCheck, FaClose, FaEye, FaFilePdfO, FaFileTextO, FaCog } from 'react-icons/lib/fa';
 import classNames from 'classnames';
 import styles from './SubmissionsListView.scss';
+import { FormResponseStatus } from 'constants/formsList';
 
 class SubmissionsListView extends Component {
   static propTypes = {
@@ -72,6 +71,8 @@ class SubmissionsListView extends Component {
      */
     sortAscending: PropTypes.bool.isRequired,
 
+    selectedStatusFilterOptions: PropTypes.string.isRequired,
+
     /*
      * selectAllItems: Redux action to select all the rows in table
      */
@@ -86,6 +87,7 @@ class SubmissionsListView extends Component {
     setPageSize: PropTypes.func.isRequired,
     next: PropTypes.func.isRequired,
     previous: PropTypes.func.isRequired,
+    filterSubmissionsByStatus: PropTypes.func.isRequired,
     /*
      * selectedItems: Redux state in array to hold selected item ids.
      */
@@ -109,10 +111,13 @@ class SubmissionsListView extends Component {
     console.log('TODO assign submission');
   }
   downloadSubmissionPDF = (idList) => {
-    console.log('TODO download pdf');
+    var id = idList[0];
+    this.props.showModal('downloadModal', {
+      responseId: id,
+      fileType: 'PDF'
+    });
   }
   downloadSubmissionCSV = (idList) => {
-    console.log('TODO download csv');
     var id = idList[0];
     this.props.showModal('downloadModal', {
       responseId: id,
@@ -212,7 +217,9 @@ class SubmissionsListView extends Component {
       selectAllItems,
       submissions,
       selectedItems,
-      toggleSelectItem
+      toggleSelectItem,
+      selectedStatusFilterOptions,
+      filterSubmissionsByStatus
     } = this.props;
     const getActions = this.actionsMenu;
     return [
@@ -271,9 +278,25 @@ class SubmissionsListView extends Component {
         order: 7,
         locked: false,
         visible: true,
+        sortable: false,
         displayName: 'Status',
         customComponent: StatusCell,
-        cssClassName: styles.columnStatus
+        customHeaderComponent: StatusHeaderCell,
+        cssClassName: styles.columnStatus,
+        customHeaderComponentProps: {
+          statusList: [
+            FormResponseStatus.HIDDEN,
+            FormResponseStatus.UNOPENED,
+            FormResponseStatus.OPENED,
+            FormResponseStatus.SAVED,
+            FormResponseStatus.RECEIVED,
+            FormResponseStatus.ABANDONED,
+            FormResponseStatus.AUTO_SAVED,
+            FormResponseStatus.ADMIN_EDITED
+          ],
+          selectedStatusFilterOptions: selectedStatusFilterOptions,
+          filterFormsByStatus: filterSubmissionsByStatus
+        }
       },
       {
         columnName: 'identification_status',
@@ -336,11 +359,6 @@ class SubmissionsListView extends Component {
       />
     );
   }
-
-  /* TODO: the SubmissionsFilter component is currently
-  in render() because filters aren't rendered in griddle
-  unless there is data in the table
-  */
 
   renderActivityPanel() {
     const selectOptions = [

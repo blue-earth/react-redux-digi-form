@@ -13,6 +13,7 @@ export const SELECT_SUBMISSION_ITEMS = 'SELECT_SUBMISSION_ITEMS';
 
 export const SELECT_ANALYTICS_PERIOD = 'SELECT_ANALYTICS_PERIOD';
 
+const SET_STATUS_FILTER_OPTIONS = 'SET_STATUS_FILTER_OPTIONS';
 export const SET_SUBMISSIONS_PAGE_SIZE = 'SET_SUBMISSIONS_PAGE_SIZE';
 const NEXT_SUBMISSIONS_PAGE = 'NEXT_SUBMISSIONS_PAGE';
 const PREVIOUS_SUBMISSIONS_PAGE = 'PREVIOUS_SUBMISSIONS_PAGE';
@@ -26,6 +27,7 @@ export const INIT_SUBMISSIONS_STATE = {
   totalCount: 0, // indicates total number of submission items available on server.
   sortColumn: 'response_id', // indicates the column name to sort by
   sortAscending: false, // indicates the sort direction (true: ascending | false: descending)
+  selectedStatusFilterOptions: '1,2,3,4,5,6,7',
   selectedItems: [], // holds the selected items id.
   analyticsPeriod: 'today', // indicates the selected period of analytics
   analytics: {
@@ -118,6 +120,16 @@ export const previous = () => {
   };
 };
 
+const setStatusFilterOptions = createAction(SET_STATUS_FILTER_OPTIONS);
+export const filterSubmissionsByStatus = (newStatus) => {
+  return (dispatch, getState) => {
+    dispatch(setStatusFilterOptions(newStatus));
+    dispatch(fetchSubmissions({
+      status: newStatus
+    }));
+  };
+};
+
 // ------------------------------------
 // Action: fetchSubmissions
 // ------------------------------------
@@ -128,7 +140,8 @@ export const fetchSubmissions = (options) => {
       'page', // current page number, can be overwritten by options.
       'pageSize', // current page size, can be overwritten by options.
       'sortColumn', // current sort column, can be overwritten by options.
-      'sortAscending' // current sort direction, can be overwritten by options.
+      'sortAscending', // current sort direction, can be overwritten by options.
+      'status'
     ]), options);
     dispatch(requestSubmissions());
     dispatch(processFetchSubmissions(options));
@@ -262,6 +275,11 @@ const submissionsReducer = handleActions({
   SET_SUBMISSIONS_PAGE_SIZE: (state, action) =>
     Object.assign({}, state, {
       pageSize: parseInt(action.payload),
+      page: 1
+    }),
+  SET_STATUS_FILTER_OPTIONS: (state, action) =>
+    Object.assign({}, state, {
+      selectedStatusFilterOptions: action.payload,
       page: 1
     }),
   NEXT_SUBMISSIONS_PAGE: (state, action) =>

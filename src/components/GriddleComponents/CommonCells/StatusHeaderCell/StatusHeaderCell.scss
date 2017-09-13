@@ -22,6 +22,9 @@
       display: block;
       padding: 0 10px;
       cursor: pointer;
+      input {
+        margin-right: 5px;
+      }
     }
     &:hover {
       color: $select-button-hover-color;
@@ -33,7 +36,7 @@
 .titleWrapper {
   display: inline-block;
   cursor: pointer;
-  padding-left: 9px;
+  padding: 5px 0 5px 9px;
   border: 1px solid transparent;
   @include border-radius(3px);
   &.hover {
