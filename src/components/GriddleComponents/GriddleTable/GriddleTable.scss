@@ -19,7 +19,6 @@
     }
   }
   th {
-    height: 38px;
     padding: 0 15px;
     color: $text-light-color !important;
     border-bottom: none !important;
@@ -37,11 +36,6 @@
     }
     &:last-child {
       @include border-radius-separate(0, 6px, 0, 6px);
-    }
-  }
-  @include media('<lg') {
-    th, td {
-      padding: 0 12px;
     }
   }
   tbody {
@@ -66,12 +60,13 @@
       th:after {
         display: block;
         width: 1px;
-        height: 20px;
-        background: $table-line-color;
+        height: 30%;
+        background: #e7e9ed;
         content: ' ';
         position: absolute;
-        top: 10px;
-        right: 0px;
+        top: 35%;
+        right: 0;
+        vertical-align: middle;
       }
       th:nth-last-child(2):after {
         display: none;
