@@ -16,7 +16,6 @@ $page-toolbar-bg-color: #f4f4f4;
   &:hover {
     .toolBox {
       opacity: 1;
-      top: 30px;
     }
   }
 }
@@ -53,7 +52,6 @@ $page-toolbar-bg-color: #f4f4f4;
     @include full-size;
     border: 1px solid $page-border-color;
   }
-  // @include box-shadow-custom(1px 1px 3px 0px rgba(0,0,0,0.6));
   &:first-child {
     margin-top: 0;
   }
@@ -69,8 +67,8 @@ $page-toolbar-bg-color: #f4f4f4;
 
 .toolBox {
   @include hcenter;
-  top: 0;
-  background-color: $page-toolbar-bg-color;
+  bottom: 60px;
+  background-color: rgba(31, 31, 31, 0.58);
   padding: 10px;
   position: absolute;
   z-index: 200;
@@ -79,19 +77,18 @@ $page-toolbar-bg-color: #f4f4f4;
   vertical-align: middle;
   @include transition(all .15s);
 }
-.zoomPercent {
-  font-size: 14px;
-  display: inline-block;
-  margin: 0 20px;
-  vertical-align: middle;
-}
 .zoomButton {
   @include border-radius(50%);
   width: 24px;
   height: 24px;
+  color: $white;
   padding: 0;
+  margin: 0 10px;
   line-height: 20px;
   text-align: center;
   background-color: transparent;
   border: 2px solid $toolbutton-border-color;
+  &:active, &:focus {
+    outline: none;
+  }
 }
