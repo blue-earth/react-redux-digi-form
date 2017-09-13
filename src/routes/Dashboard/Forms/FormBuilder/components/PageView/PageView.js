@@ -108,7 +108,7 @@ class PageView extends Component {
 
   handleClickZoomOut = () => {
     const { pageZoom, setPageZoom } = this.props;
-    setPageZoom(Math.max(pageZoom - 0.05, 0.25));
+    setPageZoom(Math.max(pageZoom - 0.05, this._getMinimiumPageZoomValue()));
   }
 
   _getMinimiumPageZoomValue = () => {
