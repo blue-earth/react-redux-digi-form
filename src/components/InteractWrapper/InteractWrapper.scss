@@ -18,6 +18,7 @@ $handle-size: 12px;
   }
   &:before {
     background-color: $box-bg-color;
+    opacity: 0.9;
   }
   &:after {
     pointer-events: none;
