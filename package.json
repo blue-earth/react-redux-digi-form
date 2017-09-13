@@ -136,7 +136,7 @@
     "react-dropzone": "^3.6.0",
     "react-icons": "^2.0.1",
     "react-intl-tel-input": "^3.1.1",
-    "react-maskedinput": "^3.2.4",
+    "react-maskedinput": "git+https://github.com/insin/react-maskedinput.git#e39c44fb2c2f0f85d2ef6fc27797f7c7b9d811ec",
     "react-redux": "^4.0.0",
     "react-router": "^2.2.0",
     "react-router-redux": "^4.0.0",
