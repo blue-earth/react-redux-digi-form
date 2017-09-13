@@ -159,6 +159,10 @@ class FormBuilder extends Component {
     goTo: PropTypes.func.isRequired
   };
 
+  static defaultProps = {
+    documents: []
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const { id, goTo, params, fetchForm } = this.props;
     // If it was redirected from forms/new, fetchForm again.
@@ -267,7 +271,10 @@ class FormBuilder extends Component {
         />;
       }
     }
-
+    let DocumentView = (<div>Loading</div>);
+    if (this.props.documents.length) {
+      DocumentView = (<PageView {...this.props} />);
+    }
     return (
       <div className={styles.formBuilderContainer}>
         {DocumentHeaderElement}
@@ -278,7 +285,7 @@ class FormBuilder extends Component {
           }
         </div>
         <div className={rightPanelClass}>
-          <PageView {...this.props} />
+          {DocumentView}
         </div>
         <UploadModal {...this.props} />
         <CancelConfirmModal
