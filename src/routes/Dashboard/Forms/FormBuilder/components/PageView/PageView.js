@@ -83,12 +83,12 @@ class PageView extends Component {
   componentWillMount() {
     window.addEventListener('resize', this.getViewportSize);
   }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.getViewportSize);
-  }
-
   componentDidMount() {
     this.getViewportSize();
+    this.props.setPageZoom(this._getMinimiumPageZoomValue());
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.getViewportSize);
   }
 
   getViewportSize = () => {
@@ -111,20 +111,18 @@ class PageView extends Component {
     setPageZoom(Math.max(pageZoom - 0.25, 0.25));
   }
 
-  handleClickFitWidth = () => {
-    const { setPageZoom } = this.props;
-    const maxPageWidth = this.getMaxPageWidth();
-    const newPageZoom = this.refs.spacer.offsetWidth / maxPageWidth;
-    setPageZoom(newPageZoom);
+  _getMinimiumPageZoomValue = () => {
+    const maxPageWidth = this.getMaxDocumentWidth();
+    return this.refs.spacer.offsetWidth / maxPageWidth;
   }
 
   getPageDOM = (pageNumber) => {
     return this.refs[`page_${pageNumber}`];
   }
 
-  getMaxPageWidth = () => {
+  getMaxDocumentWidth = () => {
     const { documents = [] } = this.props;
-    return documents.length > 0 ? _.maxBy(documents, o => o.width).width : 100;
+    return _.maxBy(documents, o => o.width).width;
   }
 
   renderDocuments() {
@@ -177,19 +175,25 @@ class PageView extends Component {
     );
   }
 
-  render() {
-    const { pageZoom } = this.props;
-    const maxPageWidth = this.getMaxPageWidth();
-    const zoomedWidth = maxPageWidth * pageZoom;
-    const pageStyle = { width: zoomedWidth };
+  _getPageWrapperStyle = () => {
+    if (!this.props.documents.length) {
+      return {'width': '100%'};
+    } else {
+      const { pageZoom } = this.props;
+      const maxPageWidth = this.getMaxDocumentWidth();
+      const zoomedWidth = maxPageWidth * pageZoom;
+      return { width: zoomedWidth };
+    }
+  };
 
+  render() {
     return (
       <div className={styles.pageView}>
         {this.renderToolBox()}
         <div className={styles.clientArea} data-id="clientArea">
           <div className={styles.spacer} ref="spacer"></div>
           <div className={styles.clientAreaInner}>
-            <div className={styles.pagesWrapper} ref="pagesWrapper" style={pageStyle}>
+            <div className={styles.pagesWrapper} ref="pagesWrapper" style={this._getPageWrapperStyle()}>
               {this.renderDocuments()}
             </div>
           </div>
