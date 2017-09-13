@@ -8,7 +8,6 @@ import {
 } from 'react-bootstrap';
 import DrawingBoard from '../DrawingBoard';
 import _ from 'lodash';
-import { pageZoomPercent } from 'helpers/formBuilderHelper';
 
 class PageView extends Component {
   static propTypes = {
@@ -165,11 +164,9 @@ class PageView extends Component {
   }
 
   renderToolBox() {
-    const { pageZoom } = this.props;
     return (
       <div className={styles.toolBox}>
         <Button onClick={this.handleClickZoomOut} className={styles.zoomButton}>-</Button>
-        <div className={styles.zoomPercent}>{pageZoomPercent(pageZoom)}</div>
         <Button onClick={this.handleClickZoomIn} className={styles.zoomButton}>+</Button>
       </div>
     );
