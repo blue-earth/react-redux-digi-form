@@ -118,11 +118,6 @@ class PageView extends Component {
     setPageZoom(newPageZoom);
   }
 
-  handleClickOriginalSize = () => {
-    const { setPageZoom } = this.props;
-    setPageZoom(1);
-  }
-
   getPageDOM = (pageNumber) => {
     return this.refs[`page_${pageNumber}`];
   }
