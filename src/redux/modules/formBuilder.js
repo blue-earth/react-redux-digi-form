@@ -279,6 +279,7 @@ const _saveElement = (state, action) => {
   const { currentElement } = state;
   const id = currentElement.id;
   var question = Object.assign({}, INIT_QUESTION_STATE, currentElement.question);
+  question.id = id;
   newState.questions = mergeItemIntoArray(state.questions, question);
   var newMappingInfo = Object.assign({}, state.documentMapping);
   newMappingInfo[id] = currentElement.mappingInfo;
