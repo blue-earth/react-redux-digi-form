@@ -85,8 +85,8 @@ class SubmissionsListView extends Component {
     selectAnalyticsPeriod: PropTypes.func.isRequired,
 
     setPageSize: PropTypes.func.isRequired,
-    next: PropTypes.func.isRequired,
-    previous: PropTypes.func.isRequired,
+    goToNextPage: PropTypes.func.isRequired,
+    goToPreviousPage: PropTypes.func.isRequired,
     filterSubmissionsByStatus: PropTypes.func.isRequired,
     /*
      * selectedItems: Redux state in array to hold selected item ids.
@@ -459,8 +459,8 @@ class SubmissionsListView extends Component {
       totalCount,
       setPageSize,
       selectedItems,
-      next,
-      previous
+      goToNextPage,
+      goToPreviousPage
     } = this.props;
     return (
       <div className={styles.submissionsList}>
@@ -476,8 +476,8 @@ class SubmissionsListView extends Component {
         <Pagination
           currentPage={page}
           maxPage={Math.ceil(totalCount / pageSize)}
-          previous={previous}
-          next={next} />
+          previous={goToPreviousPage}
+          next={goToNextPage} />
         {this.renderEnvironmentalSavings()}
         <DownloadModal />
       </div>

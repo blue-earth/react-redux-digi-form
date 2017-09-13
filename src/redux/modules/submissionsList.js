@@ -101,19 +101,19 @@ export const selectItems = createAction(SELECT_SUBMISSION_ITEMS);
 
 export const selectAnalyticsPeriod = createAction(SELECT_ANALYTICS_PERIOD);
 
-const goToNextPage = createAction(NEXT_SUBMISSIONS_PAGE);
-const goToPreviousPage = createAction(PREVIOUS_SUBMISSIONS_PAGE);
-export const next = () => {
+const nextSubmissionsPage = createAction(NEXT_SUBMISSIONS_PAGE);
+const previousSubmissionsPage = createAction(PREVIOUS_SUBMISSIONS_PAGE);
+export const goToNextPage = () => {
   return (dispatch, getState) => {
-    dispatch(goToNextPage());
+    dispatch(nextSubmissionsPage());
     dispatch(fetchSubmissions({
       page: getState().submissionsList.page
     }));
   };
 };
-export const previous = () => {
+export const goToPreviousPage = () => {
   return (dispatch, getState) => {
-    dispatch(goToPreviousPage());
+    dispatch(previousSubmissionsPage());
     dispatch(fetchSubmissions({
       page: getState().submissionsList.page
     }));

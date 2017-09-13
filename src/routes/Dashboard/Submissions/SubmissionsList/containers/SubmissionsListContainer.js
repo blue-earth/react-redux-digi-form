@@ -6,8 +6,8 @@ import {
   selectAnalyticsPeriod,
   toggleSelectItem,
   setPageSize,
-  next,
-  previous,
+  goToNextPage,
+  goToPreviousPage,
   filterSubmissionsByStatus
 } from 'redux/modules/submissionsList';
 import { goTo } from 'redux/modules/router.js';
@@ -58,8 +58,8 @@ const mapActionCreators = {
   toggleSelectItem,
   selectAnalyticsPeriod,
   setPageSize,
-  next,
-  previous,
+  goToNextPage,
+  goToPreviousPage,
   filterSubmissionsByStatus,
   goTo,
   showModal: show
