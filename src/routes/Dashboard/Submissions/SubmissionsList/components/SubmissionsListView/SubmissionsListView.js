@@ -94,6 +94,7 @@ class SubmissionsListView extends Component {
      */
     selectedItems: PropTypes.array.isRequired,
     setAssignee: PropTypes.func.isRequired,
+    fetchCompanyUsers: PropTypes.func.isRequired,
     companyUsers: PropTypes.array,
     analyticsPeriod: PropTypes.string.isRequired,
     analytics: PropTypes.object,
@@ -103,6 +104,10 @@ class SubmissionsListView extends Component {
     goTo: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired
   };
+
+  componentDidMount() {
+    this.props.fetchCompanyUsers();
+  }
 
   /*
    * functions for actions menu

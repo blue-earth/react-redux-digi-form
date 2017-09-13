@@ -9,6 +9,7 @@ import {
   goToNextPage,
   goToPreviousPage,
   filterSubmissionsByStatus,
+  fetchCompanyUsers,
   setAssignee
 } from 'redux/modules/submissionsList';
 import { goTo } from 'redux/modules/router.js';
@@ -70,6 +71,7 @@ const mapActionCreators = {
   goToPreviousPage,
   filterSubmissionsByStatus,
   setAssignee,
+  fetchCompanyUsers,
   goTo,
   showModal: show
 };
