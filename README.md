@@ -1,4 +1,4 @@
-# Emondo Front-end Web App
+# Digi Form Builder & Electronical Signature - Built with React & Redux
 
 ## Requirements
 * node `^4.2.0`
@@ -6,8 +6,8 @@
 
 ## Setup
 
-1. `git clone git@bitbucket.org:lihan/emondo-fe.git emondo-fe`
-2. `cd emondo-fe && npm install`
+1. `git clone https://github.com/denislevin/react-redux-digi-form.git react-redux-digi-form`
+2. `cd react-redux-digi-form && npm install`
 3. `npm start`
 4. <http://localhost:3000>
 
